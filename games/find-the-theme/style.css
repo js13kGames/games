@@ -1,0 +1,279 @@
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+	margin: 0;
+	background-color: whitesmoke;
+}
+
+h1 {
+	margin: 0;
+	padding: 1em 0;
+}
+
+p {
+	margin: 0.75em 0;
+}
+
+section > * {
+	text-align: center;
+	font-size: 3em;
+	font-family: "sans";
+}
+
+#puzzle {
+	padding: 1em 0;
+	border: 1pt grey solid;
+	border-radius: 12pt;
+	box-shadow: 1pt 1pt 1pt grey;
+	background: white;
+}
+
+#pick {
+	display: inline-block;
+	min-width: 1em;
+}
+
+.ch {
+	display: inline-block;
+	width: 1em;
+	border: 1px solid #AAA;
+	box-shadow: 1pt 1pt 0.5pt grey;
+}
+
+.box {
+	box-sizing: border-box;
+	box-shadow: 1px 1px 2px #800;
+	display: inline-block;
+	width: 1em;
+}
+.box.c {
+	border: 1px solid #AAA;
+	background: aliceblue;
+}
+#not .box {
+	transition: max-width 1s ease;
+	max-width: 1em;
+}
+#not.vanish .box {
+	max-width: 0em;
+}
+
+.th0 .vanish {
+	transition: opacity 1s ease, transform 1s ease;
+	display: inline-block;
+	opacity: 0;
+	transform: scale(0);
+	transform-origin: 90% 50%;
+}
+
+.th1.done {
+	animation: skew 1s ease both;
+}
+
+.th2 {
+	transition: background-color 1s ease, color 1s ease;
+}
+.th2.off {
+	background: black;
+	color: white;
+}
+.th2.off .box.c {
+	background: dimgrey;
+}
+
+.th3 #all {
+	display: inline-block;
+	transition: transform 1s cubic-bezier(.18,.89,.32,1.28);
+	transform-origin: 0% 100%;
+}
+.th3 #all.rot {
+	transform: rotate(90deg);
+}
+.th3 #all.rot.drop {
+	transition: transform 1s ease;
+	transform: rotate(90deg) translate(40em, 0);
+}
+
+.th4 #puzzle > span {
+	transition: color 1s ease;
+}
+
+.th4 .glitch {
+	--offp: 1px;
+	--offm: calc(0px - var(--offp));
+	display: inline-block;
+	animation: textglitch .3s ease infinite;
+}
+
+.th4 #puzzle.burn > span {
+	color: transparent;
+	background-image: linear-gradient(red, yellow, red);
+	background-size: 200% 200%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	animation: fire 3s linear infinite;
+}
+
+.th4 #puzzle.burn > #y {
+	--offp: 2px;
+	--del: 0s;
+}
+.th4 #puzzle.burn > .glitch {
+	--delay: calc(var(--del) / 10);
+	animation: textglitch .3s var(--delay) ease infinite, fire 3s linear infinite;
+}
+
+.th4 #puzzle.boom .box {
+	animation: boom 1s ease-out both;
+}
+
+.th5 .box {
+	transition: transform 3s 1s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.th5 .rev .box {
+	transform: translate(var(--d), 0em);
+}
+
+.th6 #wa .box {
+	transition: color 1s ease, text-shadow 1s ease, box-shadow 1s ease, border-radius 1s ease;
+}
+.th6 #ea .box {
+	transition: text-shadow 1s ease, border 1s ease;
+}
+.th6 #wi .box {
+	transition: transform 1s ease, color 1s ease, border 1s ease, box-shadow 1s ease;
+}
+.th6 #fi .box {
+	transition: color 1s ease, filter 1s ease;
+}
+.th6 #wa.tr .box {
+	color: transparent;
+	text-shadow: 0px 0px 1px blue;
+	box-shadow: 1pt 1pt 12pt blue;
+	border-radius: 10pt;
+}
+.th6 #ea.tr .box {
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	background-image: linear-gradient(#ae3d3d 75%, #662b2b);
+	border-width: 2px;
+	border-color: black;
+}
+.th6 #wi.tr .box {
+	color: transparent;
+	-webkit-background-clip: text;
+	background-clip: text;
+	background-image: linear-gradient(blue, white);
+	border-color: white;
+	box-shadow: 1px 1px 2px gray;
+	transform: skew(16deg, 0);
+	display: inline-block;
+}
+.th6 #fi.tr .box {
+	color: white;
+	background-image: linear-gradient(yellow, red, yellow);
+	background-size: 200% 200%;
+	filter: blur(1pt);
+	animation: fire 2s linear infinite;
+}
+
+.th7 h1, .th7 p {
+	transition: opacity 1s ease;
+}
+.th7 #puzzle {
+	transition: border 1s ease, background 1s ease, box-shadow 1s ease, border-radius 1s ease;
+}
+.th7.black {
+	animation: blacken 2s ease-in-out both;
+}
+.th7.done {
+	background-image: radial-gradient(circle, black 14%, #c44b07 15%, #67060e 24%, #be4a12 25%, #59030e 34%, #ab3e06 35%, #4f050c 44%, #8e3106 45%, #3e020b 54%, #6d2504 55%, #2c0207 64%, black);
+	background-position: center;
+	animation: zoom 1s ease-in-out both;
+}
+.th7.done h1, .th7.black p {
+	opacity: 0;
+}
+.th7.black #puzzle {
+	border: 0;
+	background: transparent;
+	box-shadow: 0 0;
+}
+
+.th8 .box {
+	transition: color 1s ease-in-out;
+	color: transparent;
+}
+
+@keyframes textglitch {
+	0% {
+		transform: translate(0px)
+	}
+	20% {
+		transform: translate(var(--offm), var(--offp))
+	}
+	40% {
+		transform: translate(var(--offm), var(--offm))
+	}
+	60% {
+		transform: translate(var(--offp), var(--offp))
+	}
+	80% {
+		transform: translate(var(--offp), var(--offm))
+	}
+	to {
+		transform: translate(0px)
+	}
+}
+
+@keyframes fire {
+	0% {
+		background-position: 0% 0%;
+	}
+	to {
+		background-position: 0% 200%;
+	}
+}
+
+@keyframes boom {
+	0% {
+		opacity: 1;
+		color: transparent;
+		transform: scale(1) translate(0px, 0px) rotate(0deg);
+	}
+	to {
+		opacity: 0;
+		color: orange;
+		transform: scale(3) translate(var(--dist), 0px) rotate(900deg);
+	}
+}
+
+@keyframes blacken {
+	0% {
+		background-color: whitesmoke;
+	}
+	100% {
+		background-color: black;
+	}
+}
+
+@keyframes zoom {
+	0% {
+		background-size: 999% 999%;
+	}
+	100% {
+		background-size: 100% 100%;
+	}
+}
+
+@keyframes skew {
+	0% {
+		transform: skew(0deg) translateX(0);
+	}
+	100% {
+		transform: skew(90deg) translateX(-90%);
+	}
+}

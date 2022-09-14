@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        td{
+            /*background-color: #7d7d7d;*/
+            background-color: white;
+            /*background-image: url("tile.png"); */ 
+            min-width: 40px;
+            min-height: 90px;  
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #ctxMenu{
+            display:none;
+            z-index:100;
+        }
+        #notepad{
+            position:absolute;
+            left:25%;
+            top:10%;
+            width:300px;
+            height:300px;
+            background-color:red;
+        }
+        menu {
+            position:absolute;
+            display:block;
+            left:0px;
+            top:0px;
+            height:20px;
+            width:20px;
+            padding:0;
+            margin:0;
+            border:1px solid;
+            background-color:white;
+            font-weight:normal;
+            white-space:nowrap;
+        }
+        menu:hover{
+            background-color:#eef;
+            font-weight:bold;
+        }
+        menu:hover > menu{
+            display:block;
+        }
+        menu > menu{
+            display:none;
+            position:relative;
+            top:-20px;
+            left:100%;
+            width:55px;
+        }
+        menu[title]:before{
+            content:attr(title);
+        }
+        menu:not([title]):before{
+            content:"\2630";
+        }
+
+       #hud{
+           margin-left: 5%;
+           position: fixed;
+           min-height: 20px;
+           width: 100em;
+           background-color: white;
+           border: 3px solid #73AD21; 
+           padding: 1%;
+           overflow: hidden;
+           font-family:Courier New; 
+        }
+    
+        a{
+            background-color: #8a3434;
+            color:white;
+            font-weight: bold;
+            text-decoration: none;
+            padding-top: 1%;
+            padding-bottom: 1%;
+            padding-left: 2%;
+            padding-right: 2%;
+        }
+    </style>
+</head>
+<body>
+
+<!--    <menu id="ctxMenu">
+        <menu title="File">
+            <menu title="Save"></menu>
+            <menu title="Save As"></menu>
+            <menu title="Open"></menu>
+        </menu>
+        <menu title="Edit">
+            <menu title="Cut"></menu>
+            <menu title="Copy"></menu>
+            <menu title="Paste"></menu>
+        </menu>
+    </menu>
+    <div id="notepad">
+    </div>-->
+        <div id="hud">
+            <div id="commentbox" style="width:40%;float: left;min-width: 70px; padding-top: 5%; text-align: center; "></div>
+            <div id="inventory" style="width:40%;float: left; min-width: 70px; padding: 5%; background-color: #363434; color: white; font-weight: bold; text-align: center;">Let's start the game! Collect all possible 404 error variations, to win the game!<br>Click on a tile to see how to use it!<br> Move on map by pressing wheel of mouse.</div>
+        </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>

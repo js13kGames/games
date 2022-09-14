@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>js13kgames 👾 2019</title>
+
+    <style>
+      body {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        background-color: #fedede;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        margin: 0;
+      }
+
+      .container {
+        border: 5px solid transparent;
+        margin: 16px;
+        width: 100%;
+        min-width: 525px;
+        min-height: 345px;
+        position: relative;
+      }
+
+      .my-game {
+        width: 100%;
+        background-color: #fedede;
+        border: 5px solid #fecece;
+        transition: all 200ms ease-in-out;
+      }
+
+      .game-menu {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 5px solid #fecece;
+        background-color: #111;
+        transition: all 200ms ease-in-out;
+
+        color: white;
+      }
+
+      .game-instructions {
+        margin: 48px;
+      }
+
+      .game-score {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-flow: column;
+      }
+
+      .game-score p {
+        font-size: 24px;
+      }
+
+      .game-ui {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        justify-content: space-between;
+        color: #111;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      @media screen and (min-width: 1280px) {
+        .container {
+          width: 1280px;
+          height: 800px;
+        }
+      }
+
+      button {
+        padding: 8px 16px;
+        background-color: salmon;
+        border-radius: 2px;
+        border: none;
+        font-size: 16px;
+        text-transform: lowercase;
+        letter-spacing: 1px;
+        color: white;
+      }
+
+      button:hover {
+        background-color: #ff8069;
+        cursor: pointer;
+      }
+
+      button:active {
+        background-color: #ff784f;
+      }
+
+      button:disabled {
+        background-color: #c1c1c1;
+      }
+
+      button:disabled:hover {
+        background-color: #c1c1c1;
+        cursor: not-allowed;
+      }
+
+      button:disabled:active {
+        background-color: #c1c1c1;
+      }
+
+      .button-secondary {
+        background-color: transparent;
+        text-decoration: underline;
+      }
+
+      .button-secondary:hover {
+        background-color: transparent;
+        cursor: pointer;
+      }
+
+      .button-secondary:active {
+        background-color: transparent;
+      }
+
+      .button-small {
+        padding: 4px 8px;
+      }
+
+      [data-levels-list] > * {
+        margin-right: 8px;
+      }
+
+      .hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .none {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <canvas class="my-game" width="1280" height="800"></canvas>
+      <section class="game-ui" data-game-ui>
+        <div>⏱ <span data-current-seconds>0</span></div>
+
+        <div>
+          <span data-used-platforms>0</span>/<span data-available-platforms
+            >0</span
+          >
+        </div>
+      </section>
+      <section class="game-menu" data-game-menu>
+        <div class="game-instructions">
+          <p>
+            This is a game about returning one step to enable two or more.
+            <br />
+            Sometimes you will have to rewind your jump in order to create a
+            temporary platform.
+          </p>
+          <p>Game commands:</p>
+          <ul>
+            <li><strong>w, arrow up or space</strong>: jump</li>
+            <li><strong>a or arrow left</strong>: move left</li>
+            <li><strong>d or arrow right</strong>: move right</li>
+            <li><strong>shift</strong>: rewind</li>
+            <li><strong>enter</strong>: restart level</li>
+          </ul>
+
+          <div data-start-game-info>
+            <button style="margin-top: 12px;" data-start-game-button>
+              Start
+            </button>
+            <span style="margin-left: 12px;"
+              >or press <strong>space</strong></span
+            >
+          </div>
+
+          <div class="none" style="margin-top: 12px;" data-levels-container>
+            <p>Try them again:</p>
+
+            <div data-levels-list></div>
+          </div>
+
+          <p class="none" data-highscore-label>👑 Highscore:</p>
+          <ul class="none" data-highscore-menu></ul>
+        </div>
+        <div class="game-score none">
+          <p>⏱ <strong data-level-duration>0</strong> seconds</p>
+          <span
+            style="margin-top: -16px; margin-bottom: 16px;"
+            data-level-message
+          ></span>
+
+          <div style="margin-top: 12px;">
+            <button class="button-secondary" data-restart-level-button>
+              Restart Level
+            </button>
+            <button style="margin-left: 12px;" data-next-level-button>
+              Next Level
+            </button>
+          </div>
+
+          <p style="font-size: 16px;">Refresh page to see previous levels</p>
+        </div>
+      </section>
+    </section>
+
+    <script src="js13kgame-2019.min.js"></script>
+  </body>
+</html>

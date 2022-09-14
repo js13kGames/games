@@ -1,0 +1,45 @@
+newmtl Body
+Ns 10.3
+Ka 1 1 1
+Kd 0.1 0.1 0.1
+Ks 0.5 0.5 0.5
+Ke 0 0 0
+Ni 1.5
+d 1
+illum 2
+newmtl Cockpit
+Ns 10.3
+Ka 1 1 1
+Kd 0.6 0.6 0.6
+Ks 0.5 0.5 0.5
+Ke 0 0 0
+Ni 1.45
+d 1
+illum 2
+newmtl Fins
+Ns 10.3
+Ka 1 1 1
+Kd 0.9 0.3 0
+Ks 0.5 0.5 0.5
+Ke 0.5 0.1 0
+Ni 1.5
+d 1
+illum 2
+newmtl Glass
+Ns 10.3
+Ka 1 1 1
+Kd 0.2 0.6 1
+Ks 0.5 0.5 0.5
+Ke 0 0 0
+Ni 1.5
+d 1
+illum 2
+newmtl Wings
+Ns 10.3
+Ka 1 1 1
+Kd 0.6 0.6 0.6
+Ks 0.5 0.5 0.5
+Ke 0 0 0
+Ni 1.5
+d 1
+illum 2

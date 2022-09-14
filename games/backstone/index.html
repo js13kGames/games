@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BackStone</title>
+    <style>
+        body {
+            margin: 0 10%;
+        }
+
+        .gameStart {
+            /* display: none; */
+            background-color: black;
+        }
+
+        .scoreBoard {
+            /* display: none; */
+            position: fixed;
+            top: 5%;
+            left: 15%;
+            color: wheat;
+            font-family: cursive;
+            text-shadow: 2px 2px 5px #CE93D8;
+        }
+
+        .backStoneBoard {
+            /* display: none; */
+            position: fixed;
+            top: 7%;
+            left: 15%;
+            color: wheat;
+            font-family: cursive;
+            text-shadow: 2px 2px 5px #CE93D8;
+        }
+
+        .warning {
+            /* display: none; */
+            position: fixed;
+            top: 10%;
+            left: 15%;
+            color: wheat;
+            font-family: cursive;
+            animation: blinkingText 1s infinite;
+            display: none;
+        }
+
+        @keyframes blinkingText {
+            0% {
+                color: wheat;
+            }
+
+            49% {
+                color: rgba(245, 222, 179, 0.5);
+            }
+
+            50% {
+                color: wheat;
+            }
+
+            99% {
+                color: rgba(245, 222, 179, 0.5);
+            }
+
+            100% {
+                color: wheat;
+            }
+        }
+
+        .gameMenu {
+            margin: auto;
+            position: fixed;
+            top: 10%;
+            /* background-color: black; */
+            color: wheat;
+            height: 90%;
+            overflow: scroll;
+        }
+
+        .content {
+            margin: 3%;
+            padding-bottom: 7%;
+            font-family: cursive;
+        }
+
+        button {
+            position: absolute;
+            bottom: 6%;
+            margin: auto;
+            min-width: 100px;
+            display: inline-block;
+            padding: 15px 25px;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #58bfca;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            font-family: cursive;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        button>p {
+            margin: 0px;
+            font-size: 12px;
+        }
+
+        button:hover {
+            background-color: #49a6b1
+        }
+
+        button:active {
+            background-color: #49a6b1;
+            box-shadow: 4px 7px rgba(88, 191, 202, 0.5294117647058824);
+            transform: translateY(4px);
+        }
+
+        .obsinfo {
+            display: none;
+        }
+
+        .stone{
+            margin-top: 25%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" class="gameStart"></canvas>
+    <span id="scoreBoard" class="scoreBoard">Score: <span id="score">0</span> </span>
+    <span id="backStoneBoard" class="backStoneBoard">BackStones: <span id="backStones">0</span> </span>
+    <span id="warning" class="warning">Alert! Meteor shower incoming!</span>
+    <div id="menu" class="gameMenu">
+        <div id="intro" class="content">
+            <h1>Highest Score: <span id="highestScore">0</span></h1>
+            <div id="story">
+                <p>
+                    </p><h1>Story: </h1>
+                    <p>
+                        The world is on the verge of destruction and you are one of the last surviving ships left of our
+                        species.
+                        In the modern age of discoveries and technology, we've found a stone capable of doing something
+                        that
+                        we
+                        never even dreamt of, "get you <b>BACK</b> in time".
+                        We started calling these stones as BackStones.
+                        These stones can be found spread across the galaxy.
+                    </p>
+                <p></p>
+                <p>
+                    </p><h1>Instructions: </h1>
+                    <ul>
+                        <li>Use &larr; and &rarr; to move left and right</li>
+                        <li>Collect as many BackStones as possible</li>
+                        <li>Avoid asteroids</li>
+                        <li>In a critical situation you can use the &darr; to use a BackStone to reverse the flow of
+                            time
+                        </li>
+                        <li>But don't forget you only have a limited number of BackStones</li>
+                    </ul>
+                <p></p>
+            </div>
+
+            <button id="startGame">
+                <p>Press "Enter/Spacebar"</p>
+                Next
+            </button>
+        </div>
+
+    </div>
+<script type="text/javascript" src="main.js"></script></body>
+
+</html>

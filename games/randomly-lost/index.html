@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Randomly Lost</title>
+</head>
+<body>
+    <img src="circle.gif" style="position: fixed;" width="100px" height="100px" id="image" onclick="count()">
+    <script>
+        alert('Fade away circle by clicking on it before it redraws itself.');
+
+        var score=0,chance=0,clock,timeout=1000;
+
+        function count(){
+            score++;
+            document.getElementById('image').style.opacity='0.1';
+        }
+
+        function reposition(){
+            if(chance++ < 10){
+              document.getElementById('image').style.top = Math.floor((Math.random() * 200) + 1);
+              document.getElementById('image').style.left = Math.floor((Math.random() * 200) + 1);
+              document.getElementById('image').style.opacity = '1';
+              timeout -= chance*10;
+              setTimeout(reposition, timeout);
+            }
+            else{
+                if(score==10){
+                    alert('You scored 10 and won the game');
+                } else {
+                 alert('You scored '+score+', score 10 to win the game. Refresh the page to play again');
+                }
+                clearInterval(clock);
+            }
+        }
+
+        reposition();
+
+    </script>
+</body>
+</html>

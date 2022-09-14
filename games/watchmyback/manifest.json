@@ -1,0 +1,19 @@
+{
+	"name": "watchmyback",
+	"short_name": "b422",
+	"description": "watchmyback HTML5 Game built using craters.js.",
+	"start_url": "./",
+	"display": "standalone",
+	"orientation": "portrait",
+	"background_color": "#B06623",
+	"theme_color": "#B06623",
+	"icons": [],
+	"author": {
+		"name": "John Swana",
+		"website": "https://swashvirus.github.io",
+		"github": "https://github.com/swashvirus",
+		"source-repo": "https://github.com/swashvirus/watchmyback"
+	},
+	"gcm_sender_id": "847244712742",
+	"gcm_user_visible_only": true
+}

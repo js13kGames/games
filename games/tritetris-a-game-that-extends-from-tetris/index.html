@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Tritetris</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" href="./style/main.css" type="text/css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta property="og:title" content="Tritetris"/>
+  <meta property="og:site_name" content="Tritetris"/>
+  <meta property="og:description" content="A quite interesting game that extends from Tetris."/>
+</head>
+<body>
+  <div class="container">
+    <div class="heading">
+      <h1 class="title">Tritetris</h1>
+    </div>
+    <div class="game-container">
+      <div class="lose-container">
+        <div class="lose">
+          <p>Oops, you lose!</p>
+          <div class="replay-btn">Enjoy Again</div>
+        </div>
+      </div>
+      
+      <div class="top-area">
+        <div class="landing-interval">Landing Interval:     
+          <span class="interval-value"></span>
+        </div>
+        <div class="about-score">
+          <div class="score-and-best">
+            <div class="best"></div>
+            <div class="score"></div>
+          </div>
+        </div>
+      </div>
+
+      <canvas width="500" height="500" class="game-canvas" style="background-color:rgb(200,180,150)"></canvas>
+      
+      <div class="bottom-area">
+        <div class="pause-or-continue-btn">Pause</div>
+        <div class="deform-btn">Deform</span></div>
+        <div class="clockwise-btn">Clockwise</span></div>
+        <div class="anticlockwise-btn">Anticlockwise</div>
+      </div>     
+    </div>
+
+    <div class="introduction">
+      <div class="how-to-play">
+        <h3>HOW TO PLAY:</h3>
+        <h4>[for Desktop]  <span style="font-style: italic;">(Recommended)</span></h4>
+        <p>Use the <strong>arrow keys</strong> to move and deform the block, and key <strong>"A" and "D"</strong> to rotate the triangle.</p>
+
+        <h4>[for Mobile]</h4>
+        <p>Use the <strong>center gray area</strong> to move and deform the block, and the <strong>buttons</strong> to rotate the triangle.</p>
+      </div>
+
+      <div class="note">
+        <h3>NOTE:</h3>
+        <ul>
+          <li>When the falling tetromino is totally under the middle thin line, you can't rotate the triangle.</li>
+          <li>When the falling tetromino hits the squares fixed on the triangle after rotating, the tetromino goes up to avoid covering the still squares.</li>
+        </ul>
+      </div>
+
+      <div class="reminder">
+        <h3>REMINDER:</h3>
+        <p>The more rows of squares you remove one time, the higher score you get!</p>
+      </div>
+
+      <div class="about">
+        <p>a Li Enze game</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/vector.min.js"></script> 
+  <script src="./js/triangle.min.js"></script>
+  <script src="./js/line.min.js"></script>
+  <script src="./js/square.min.js"></script>
+  <script src="./js/block.min.js"></script>
+  <script src="./js/input_manager.min.js"></script>
+  <script src="./js/local_storage_manager.min.js"></script>
+  <script src="./js/ui_manager.min.js"></script>
+  <script src="./js/game.min.js"></script>
+  
+  <script>
+    (function(){
+      var cv = document.querySelector("canvas");
+      var squareSide = 0.032*cv.width;
+      var cx = cv.getContext("2d");
+      cx.translate(cv.width/2, cv.height/2);
+      var game = new Game(squareSide, cx);
+    })(); 
+  </script>
+</body>
+</html>

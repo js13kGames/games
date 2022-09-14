@@ -1,0 +1,734 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            
+            function getRandom(min, max){
+                return min + Math.floor(Math.random() * (max - min + 1));
+            }
+            
+            //continue exec f() every one second for sec and finally exec e()
+            var Timer = function(f, e, sec) {
+                var timer;
+                var event = function() {
+                    f(sec);
+                    sec--;
+                    if (sec >= 0) {
+                        timer = setTimeout(event, 1000);
+                    } else {
+                        e();//occur once when timer end
+                    }
+                }
+                this.start = event;
+                this.stop = function() {
+                    clearTimeout(timer);
+                }
+                this.pause = function(sec) {
+                    this.stop();
+                    setTimeout(event, sec * 1000);
+                }
+                this.stopWithDelay = function(_sec) {
+                    sec = _sec;
+                }
+            }
+            
+            //continue exec f() at interval i(ms) and next exec e()
+            //f() need to return boolean(true:continued false:finished)
+            var Timer2 = function(f, e, i){
+                var timer;
+                var event = function() {
+                    if(f()){
+                        timer = setTimeout(event, i);
+                    } else {
+                        e();
+                    }
+                }
+                this.start = event;
+            }
+            
+            //param:array of timerObject({f,interval})
+            var Cascade = function(f_arr){
+                var idx = 0;
+                var f = f_arr[idx].f;
+                var interval = f_arr[idx].i;
+                var timer;
+                var event = function() {
+                    if(f()){
+                        timer = setTimeout(event, interval);
+                    } else {
+                        if(idx == f_arr.length - 1){
+                            return false;//finish of cascade
+                        }
+                        idx++;//switch to next function
+                        f = f_arr[idx].f;
+                        interval = f_arr[idx].i;
+                    }
+                }
+                this.start = event;
+            }
+
+            var bitmap0 = [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var bitmap1 = [
+                [0, 1, 0],
+                [0, 1, 0],
+                [0, 1, 0],
+                [0, 1, 0],
+                [0, 1, 0]
+            ];
+
+            var bitmap2 = [
+                [1, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1],
+                [1, 0, 0],
+                [1, 1, 1]
+            ];
+
+            var bitmap3 = [
+                [1, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var bitmap4 = [
+                [1, 0, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [0, 0, 1],
+                [0, 0, 1]
+            ];
+
+            var bitmap5 = [
+                [1, 1, 1],
+                [1, 0, 0],
+                [1, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var bitmap6 = [
+                [1, 1, 1],
+                [1, 0, 0],
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var bitmap7 = [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 0, 1],
+                [0, 0, 1],
+                [0, 0, 1]
+            ];
+
+            var bitmap8 = [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var bitmap9 = [
+                [1, 1, 1],
+                [1, 0, 1],
+                [1, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1]
+            ];
+
+            var screen_w = 1200;
+            screen_h = 600;
+            
+            var block_h = 30;
+
+            var bitmaps = [bitmap0, bitmap1, bitmap2, bitmap3, bitmap4, bitmap5, bitmap6, bitmap7, bitmap8, bitmap9];
+
+            var interval = 10;
+            var canvas;
+            var ctx;
+
+            var blocks = [];
+
+            var Block = function(_x, _y, _w, _h, _md, _vx) {
+                var md = _md;
+                this.vx = _vx;
+                this.x = _x;
+                this.y = _y;
+                this.w = _w;
+                this.h = _h;
+                var img;
+                var mc = 0;//moving count for one direction
+                this.draw = function() {
+                    if (this.x - mainchar.x > screen_w || mainchar.x - this.x > screen_w)
+                        return;
+                    if (mc < md) {
+                        mc++;
+                        this.x = this.x + this.vx;
+                    } else {
+                        this.vx = -this.vx;//turn around
+                        mc = 0;
+                    }
+                    if (img) {
+                        var x1 = this.x - mainchar.x + offset_x;
+                        var x2 = canvas.width * x1 / screen_w;
+                        var y1 = this.y - mainchar.y + offset_y;
+                        var y2 = canvas.height * y1 / screen_h;
+                        //ctx.putImageData(img, x2, y2);
+                        ctx.putImageData(img, x1, y1);
+                    } else {
+                        ctx.fillStyle = "#000";
+                        ctx.fillRect(this.x - mainchar.x, this.y - mainchar.y, this.w, this.h);
+                        ctx.fillStyle = "#fff";
+                        ctx.fillText((this.x == 0 ? "kick off" : "task"), this.x - mainchar.x + 10, this.y - mainchar.y + 20);
+                    }
+                }
+                this.moveX = function(val) {
+                    this.x = this.x + val;
+                }
+                this.moveY = function(val) {
+                    this.y = this.y + val;
+                }
+                this.setImg = function(_img) {
+                    img = _img;
+                }
+                this.checkTouch = function(block, vy) {
+                    if (block.x + block.w < this.x || this.x + this.w < block.x)
+                        return false;
+                    if (block.y + block.h <= this.y) {
+                        if (block.y + block.h + vy >= this.y) {
+                            block.y = this.y - block.h;
+                            return true;
+                        }
+                    }
+                    if (block.y > this.y + this.h) {
+                        if (block.y + vy <= this.y + this.h) {
+                            //block.vy = -block.vy;
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+            }
+
+
+            var timer;
+            var vo = 0;
+            var x = 0;
+            t = 0;
+            var v = 0;
+            vh = 0;
+            var flying = false;
+            var muststop = false;
+            var loop = function() {
+                if (!flying) {
+                    if (kCode[39] == 1) {
+                        v = 10;
+                    }
+                    if (kCode[37] == 1) {
+                        v = -10;
+                    }
+                    if (kCode[39] == 0 && kCode[37] == 0) {
+                        v = 0;
+                    }
+                    if (kCode[38] == 1) {//up cursor
+                        flying = true;
+                        t = 0;
+                        vo = -15;
+                    }
+                }
+                draw();
+                if (muststop)
+                    return;
+                timer = setTimeout(loop, interval);
+            }
+
+            var i = 0, j = 0;
+            var test_str = 0;
+            var partner;
+            var bed_set = false;
+            var bed_block;
+            var timers = [];
+
+            //dayline
+            var lines = [];
+            var line = function(idx) {
+                var x = 50 * idx;
+                return function() {
+                    if (x - mainchar.x > 1200 || mainchar.x - x > 1200)
+                        return;
+                    ctx.beginPath();
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = "#000";
+                    ctx.moveTo(x - mainchar.x, -offset_y);
+                    ctx.lineTo(x - mainchar.x, screen_h - offset_y);
+                    ctx.stroke();
+                    ctx.fillStyle = "#000";
+                    ctx.font = "italic bold 20px Times New Roman";
+                    ctx.fillText("day ", x - mainchar.x + 8, -offset_y + 30);
+                    ctx.fillText(idx, x - mainchar.x + 12, -offset_y + 50);
+                }
+            }
+
+            //deadline
+            var deadline = function(x, y, sec,_title,_color) {
+                var title = "dead line";
+                var color = "#f00";
+                if(_title){
+                    title = _title;
+                }
+                if(_color){
+                    color = _color;
+                }
+                var f = function() {
+                    sec--;
+                }
+                var e = function() {
+                    for (var i = 0, l = animations.length; i < l; i++) {
+                        if (animations[i] == res) {
+                            animations.splice(i, 1);
+                            break;
+                        }
+                    }
+                    if (mainchar.x < x) {
+                        console.log("over...");
+                        stop("You missed the deadline!");
+                    }
+                }
+                var timer = new Timer(f, e, sec);
+                timers.push(timer);
+                timer.start();
+                var res = function() {
+                    if (x - mainchar.x > 1200)
+                        return;
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x - mainchar.x, -offset_y + 30, 30, 0, Math.PI * 2, false);
+                    ctx.fill();
+                    ctx.fillStyle = "#fff";
+                    ctx.font = "italic bold 55px Times New Roman";
+                    ctx.fillText(sec, x - mainchar.x - (sec >= 10 ? 27 : 17), -offset_y + 50);
+                    ctx.fillStyle = color;
+                    ctx.font = "italic bold 20px Times New Roman";
+                    ctx.fillText(title, x - mainchar.x + 30, -offset_y + 70);
+                    ctx.beginPath();
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = color;
+                    ctx.moveTo(x - mainchar.x, -offset_y + 60);
+                    ctx.lineTo(x - mainchar.x, screen_h - offset_y);
+                    ctx.stroke();
+                }
+                return res;
+            };
+
+            function drawHorizon() {
+                ctx.beginPath();
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = "#000";
+                ctx.moveTo(-offset_x, 2100 - mainchar.y);
+                ctx.lineTo(screen_w - offset_x, 2100 - mainchar.y);
+                ctx.stroke();
+            }
+
+            var animations = [];
+
+            function draw() {
+
+                getTime();
+
+                ctx.clearRect(-offset_x, -offset_y, screen_w, screen_h);
+                
+                //day lines
+                lines.forEach(function(e) {
+                    e();
+                });
+                
+                //deadlines
+                animations.forEach(function(e) {
+                    e();
+                });
+
+                //blocks
+                blocks.forEach(function(b) {
+                    b.draw()
+                });
+
+                if (!bed_set && mainchar.y >= 1500) {
+                    var vy = vo + 1 * t;
+                    var collision_t = -vy + Math.sqrt(vy * vy + 2 * 500);
+                    bed_block = new Block(mainchar.x + v * collision_t - 100, 2000, 200, 100, 0, 0);
+                    bed_block.setImg(bed);
+                    blocks.push(bed_block);
+                    drawHorizon();
+                    bed_set = true;
+                }
+                if (partner && partner == bed_block) {
+                    drawHorizon()
+                    ctx.clearRect(0, 0, 40, 80);
+                    ctx.putImageData(sleeping, offset_x - 120, offset_y + 80);
+                    stop("You dropped out!");
+                    return;
+                }
+
+                if (partner) {
+                    mainchar.moveX(partner.vx);
+                }
+                mainchar.moveX(v);
+                
+                if(mainchar.x >= 5000){
+                    stop("Project Complete!");
+                    return;
+                }
+
+                if (flying) {
+                    var vy = vo + 1 * t;
+                    t = t + 0.5;
+                    mainchar.moveY(vy);
+                    for (var i = 0; i < blocks.length; i++) {
+                        if (mainchar == blocks[i])
+                            continue;
+                        if (blocks[i].checkTouch(mainchar, vy)) {
+                            flying = false;
+                            partner = blocks[i];
+                            break;
+                        }
+                    }
+                } else {
+                    //when lost floor
+                    if (mainchar.x + mainchar.w < partner.x || partner.x + partner.w < mainchar.x) {
+                        partner = null;
+                    }
+                    if (!partner) {
+                        flying = true;
+                        vo = 0;
+                        t = 0;
+                    }
+                }
+
+            }
+
+            function stop(message) {
+                muststop = true;
+                animations = [];
+
+                clearTimeout(timer);
+                console.log("game over");
+
+                blocks = [];
+                timers.forEach(function(e) {
+                    e.stop();
+                });
+                timers = [];
+
+                ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+                ctx.fillStyle = "#000";
+                ctx.fillRect(200, 50, 650, 240);
+                ctx.fillStyle = "#fff";
+                ctx.font = "italic bold 40px Times New Roman";
+                ctx.fillText(message, 270, 120);
+
+                buttons.push(new Button("replay", 300, 220, jumpTo(game, temp_level)));
+                buttons.push(new Button("menu", 600, 220, function() {
+                    window.location.reload();
+                }));
+                buttons.forEach(function(e) {
+                    e.draw();
+                });
+            }
+
+            function start() {
+                loop();
+                $("#btn_start").attr("disabled", true);
+                $("#btn_stop").attr("disabled", false);
+            }
+
+            var h, m, s;
+            function getTime() {
+                var date = new Date();
+                //date.setTime(date.getTime() + forward);
+                h = date.getHours();
+                m = date.getMinutes();
+                s = date.getSeconds();
+                //return [parseInt(h / 10), h % 10, parseInt(m / 10), m % 10, parseInt(s / 10), s % 10]; 
+            }
+
+            function drawNum(idx) {
+                ctx.fillStyle = "rgb(0, 0, 0)";
+                var b = bitmaps[idx];
+                for (var i = 0; i < 5; i++) {
+                    for (var j = 0; j < 3; j++) {
+                        if (b[i][j] == 1) {
+                            ctx.fillRect(j * 10, i * 10, 10, 10);
+                        }
+                    }
+                }
+            }
+
+            var mainchar;
+            var offset_x, offset_y;
+            var bed;
+            var sleeping;
+
+            var buttons = [];
+
+            var Button = function(txt, x, y, f) {
+                this.padding = 20;
+                this.height = 45;
+                ctx.font = "italic bold 55px Times New Roman";
+                this.width = ctx.measureText(txt).width;
+                this.txt = txt;
+                this.draw = function() {
+                    ctx.fillStyle = "rgb(200, 0, 0)";
+                    ctx.fillRect(x - this.padding, y - this.height - this.padding, this.width + this.padding * 2, this.height + this.padding * 2);
+                    ctx.fillStyle = "#fff";
+                    ctx.fillText(txt, x, y);
+                }
+                this.include = function(_x, _y) {
+                    _x = screen_w * _x / canvas.width; //convert real px into canvas px
+                    _y = screen_h * _y / canvas.height;
+                    if (_x >= x - this.padding && _x <= x + this.width + this.padding &&
+                            _y >= y - this.height - this.padding && _y <= y + this.padding) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                this.click = f;
+            }
+
+            window.onload = function() {
+                canvas = document.getElementById('canvas');
+                if (!canvas || !canvas.getContext) {
+                    return false;
+                }
+                ctx = canvas.getContext('2d');
+//                var b = document.body;
+//                var d = document.documentElement;
+//                var wh_ratio = screen_w / screen_h;
+//                canvas.width = Math.max(b.clientWidth , b.scrollWidth, d.scrollWidth, d.clientWidth);
+//                canvas.height = canvas.width/wh_ratio;
+//                ctx.scale(canvas.width / screen_w, canvas.height / screen_h);
+                canvas.width = 1200;
+                canvas.height = 600;
+                canvas.onmousemove = function(e) {
+                    if (!e.hasOwnProperty('offsetX')) {
+                        e.offsetX = e.layerX - e.currentTarget.offsetLeft;
+                        e.offsetY = e.layerY - e.currentTarget.offsetTop;
+                    }
+                    for (var i = 0; i < buttons.length; i++) {
+                        if (buttons[i].include(e.offsetX, e.offsetY)) {
+                            document.body.style.cursor = 'pointer';
+                            return;
+                        }
+                    }
+                    document.body.style.cursor = 'default';
+                }
+                canvas.onmousedown = function(e) {
+                    if (!e.hasOwnProperty('offsetX')) {
+                        e.offsetX = e.layerX - e.currentTarget.offsetLeft;
+                        e.offsetY = e.layerY - e.currentTarget.offsetTop;
+                    }
+                    for (var i = 0; i < buttons.length; i++) {
+                        if (buttons[i].include(e.offsetX, e.offsetY)) {
+                            buttons[i].click();
+                            return;
+                        }
+                    }
+                }
+                menu();
+            }
+            
+            var fadeout = function(){
+                var mesh = 50;//mesh length
+                var mesh_cnt_x = screen_w / mesh;
+                var mesh_cnt_y = screen_h / mesh;
+                var mesh_cnt = mesh_cnt_x * mesh_cnt_y;
+                var mesh_ids = [];//unused mesh id pool
+                for(var i = 1;i <= mesh_cnt;i++){
+                    mesh_ids.push(i);
+                }
+                return function(){
+                    var sel_idx = getRandom(1, mesh_ids.length) - 1;
+                    var sel_mesh_id = mesh_ids[sel_idx];
+                    var x_idx = sel_mesh_id % mesh_cnt_x;//start from 0
+                    var y_idx = parseInt(sel_mesh_id / mesh_cnt_x);//start from 0
+                    ctx.fillStyle = "#fff";
+                    ctx.fillRect(mesh * x_idx, mesh * y_idx, mesh, mesh);
+                    mesh_ids.splice(sel_idx, 1);
+                    return (mesh_ids.length > 0);
+                }
+            }();
+            
+            function jumpTo(f, arg) {
+                return function() {
+                    buttons = [];
+                    var timer = new Timer2(fadeout, function(){f(arg)},10);
+                    timer.start();
+                }
+            }
+
+            var menu = function() {
+                ctx.fillStyle = "#000";
+                ctx.font = "italic bold 30px Times New Roman";
+                ctx.fillText("<Operations>",400,50);
+                ctx.fillText("up         cursor : jump",400,80);
+                ctx.fillText("left/right cursor : move to left/right",400,110);
+                buttons.push(new Button("Assistant Level", 430, 250, jumpTo(game, 1)));
+                buttons.push(new Button("Member Level", 430, 380, jumpTo(game, 2)));
+                buttons.push(new Button("Manager Level", 430, 510, jumpTo(game, 3)));
+                buttons.forEach(function(e) {
+                    e.draw();
+                });
+            }
+            var temp_level;
+            
+            var game = function(level) {
+                temp_level = level;
+                muststop = false;
+                bed_set = false;
+                flying = false;
+                ctx.clearRect(0, 0, 1200, 600);
+
+                partner = new Block(0, 200, 300, 30, 0, 0);
+                blocks.push(partner);
+
+                //lines
+                lines = [];
+                for (var i = 0; i < 100; i++) {
+                    lines.push(line(i));
+                }
+
+                //blocks
+                var prev_block = partner;
+                do{
+                    var w = getRandom(50, 400);
+                    //var x = prev_block.x + prev_block.w + prev_block.md;
+                    var x = prev_block.x + prev_block.w + getRandom(50, 100);
+                    var updown = getRandom(0,1) == 1 ? -1 : 1;//-1 or +1
+                    var y = prev_block.y + updown * getRandom(block_h,200);
+                    var md = getRandom(180, 400);//md:moving distance
+                    prev_block = new Block(x, y, w, block_h, md * level, 1);
+                    blocks.push(prev_block);
+                }while(prev_block.x + prev_block.w < 5000);
+                
+                //blocks.push(new Block(0, 300, 10000, block_h, 0, 0));//for debug of goal scene
+                
+                //mainchar
+                ctx.fillStyle = "rgb(30, 40, 50)";
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(20, 20, 20, 0, Math.PI * 2, false);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(20, 40);
+                ctx.lineTo(20, 60);
+                ctx.moveTo(20, 60);
+                ctx.lineTo(0, 80);
+                ctx.moveTo(20, 60);
+                ctx.lineTo(40, 80);
+                ctx.moveTo(0, 50);
+                ctx.lineTo(40, 50);
+                ctx.stroke();
+                var img = ctx.getImageData(0, 0, 40 * canvas.width/screen_w, 80 * canvas.height/screen_h);
+                //img.data return uint8clampedarray 
+
+                //bed making
+                ctx.clearRect(0, 0, 200, 100);
+                ctx.fillStyle = "#000";
+                ctx.fillRect(0, 50, 180, 50);
+                ctx.clearRect(20, 70, 160, 30);
+                ctx.fillRect(180, 0, 20, 100);
+                bed = ctx.getImageData(0, 0, 200, 100);
+
+                //sleeping
+                ctx.clearRect(0, 0, 180, 40);
+                ctx.beginPath();
+                ctx.arc(160, 20, 20, 0, Math.PI * 2, false);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(140, 20);
+                ctx.lineTo(70, 20);
+                ctx.lineTo(35, 0);
+                ctx.lineTo(0, 40);
+                ctx.moveTo(70, 20);
+                ctx.lineTo(70, 0);
+                ctx.lineTo(0, 20);
+                ctx.moveTo(130, 40);
+                ctx.lineTo(90, 40);
+                ctx.lineTo(130, 20);
+                ctx.lineTo(90, 0);
+                ctx.stroke();
+                sleeping = ctx.getImageData(0, 0, 180, 40);
+
+                //var img = new Image();
+                //img.src = data;
+                mainchar = new Block(0, 200 - img.height, img.width, img.height, 0, 0);
+                mainchar.setImg(img);
+                blocks.push(mainchar);
+
+                offset_x = screen_w / 2 - img.width / 2;
+                offset_y = screen_h / 2 - img.height / 2;
+
+                ctx.translate(offset_x, offset_y);
+
+                //deadlines
+                for (var i = 1; i <= 9; i++) {
+                    animations.push(deadline(500 * i, 10, 10 * i));
+                }
+                animations.push(deadline(5000, 10, 100, "goal!", "#000"));
+                loop();
+
+
+            };
+
+
+
+            //---------------------------
+            kCode = new Array(256);
+            for (i = 0; i < 256; i++) {
+                kCode[i] = 0;
+            }
+            document.onkeydown = function(e) {
+                kCode[getKeyCode(e)] = 1;
+
+            }
+            document.onkeyup = function(e) {
+                kCode[getKeyCode(e)] = 0;
+            }
+
+            function getKeyCode(e) {
+                if (document.all)
+                    return  e.keyCode;
+                else if (document.getElementById)
+                    return (e.keyCode) ? e.keyCode : e.charCode;
+                else if (document.layers)
+                    return  e.which;
+            }
+
+        </script>
+    </head>
+    <body>
+        <div style="text-align: center;font:italic bold 60px Times New Roman"><b>Death March 100 days</b></div>
+        <div style="width:1200px;height:600px;text-align: center;margin-left: auto;margin-right: auto;border:solid thick #000">
+            <canvas id="canvas"></canvas>
+        </div>
+    </body>
+</html>

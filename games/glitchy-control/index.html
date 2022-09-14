@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <title>Glitchy Control</title>
+        <meta name="author" content="Stefan Blamberg">
+        <meta name="description" content="Eat the blops to stay alive. Don't Starve!">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <style>
+            * { margin:0; padding:0; font-family: sans-serif;}
+            html, body { width:100%; height:100%; overflow: hidden;}
+            canvas { display:block; }
+            
+            #start {
+                text-align: center;
+            }
+            
+            #start > h1 {
+                color: cadetblue;
+                font-size: 32pt;
+                margin-top: 100px;
+                margin-top: 20vh;
+            }
+            
+            #instructions {
+                position: absolute;
+                top: 40vh; left: 0; right: 0; bottom: 100px;
+                height: 30px;
+                font-size: 16pt;
+            }
+            
+            #dev-note {
+                position: absolute;
+                bottom: 10px;
+                left: 0;
+                right: 0;
+                font-size: 16pt;
+            }
+            
+            #dev-note > a {
+                text-decoration: none;
+                color: cadetblue;
+            }
+            
+            #start_button {
+                width: 200px;
+                padding: 10px;
+                font-size: 20pt;
+                border-radius: 10px;
+                background-color: cadetblue;
+                color: white;
+                margin: auto;
+                cursor: pointer;
+                position: absolute;
+                left: 0; top: 0; right: 0; bottom: 0;
+                height: 30px;
+            }
+            
+            #game_over {
+                position: absolute;
+                top: 60vh;
+                font-size: 16pt;
+                left: 0;
+                right: 0;
+            }
+            
+            #content {
+                font-size: 20pt;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id="main">
+            <header id="start">
+                <h1>Glitchy Control</h1>
+                <div id="game_over"></div>
+                <p id="instructions">Eat the blops to stay alive. Don't Starve!</p>
+                <div id="start_button" onclick="Awake()">Play</div>
+                <p id="dev-note">Developed by <a target="_blank" href="https://twitter.com/StefanBlamberg">@StefanBlamberg</a> for <a target="_blank" href="https://twitter.com/hashtag/js13k">js13kGames 2016</a></p>
+            </header>
+            
+            <div id="content" style="display: none;">
+                <div style="position: fixed;">Score : <span id="score_info" style="color: green;">0</span></div>
+                <canvas id="game" width="900" height="1200"></canvas>
+            </div>
+        </div>
+        
+        <script>
+            var c = document.getElementById("game"),
+            ctx = c.getContext("2d"),
+            player = {
+                name: "Stefan",
+                score: 0,
+                highscore: localStorage.getItem("bb_js13_hs") || 0,
+                pos: [0,0], //x,y
+                c: "#FFFFFF", //Fill Color
+                s: "#000000", //Stroke Color
+                mouse: [0,0],
+                speed: 3,
+                inverted: [0,0],
+                power: 30,
+                init_power: 30
+            },
+            game = {
+                food: [],
+                nbr: 3,
+                lifetime: 5,
+                difficulty: 1
+            },w,h,m,in_m,timeout,lost = false;
+            
+            var init_p = clone(player);
+            var init_g = clone(game);
+            
+            function Awake () {
+                
+                if (lost) location.reload();
+                document.getElementById("start").style.display = "none";
+                document.getElementById("content").style.display = "block";
+                
+                c.width = document.body.clientWidth;
+                c.height = document.body.clientHeight;
+                canvasW = c.width;
+                canvasH = c.height;
+                c.style.width = window.innerWidth + "px";
+                c.style.height = window.innerHeight + "px";
+                w = c.width; h = c.height; in_m = h < w ? h/10 : w/10; m = in_m;
+
+                var r = randomColor();
+                player.c = r[0];
+                player.s = r[1];
+                player.pos = [w/2,h/2];
+                player.mouse = [w/2,h/2];
+                
+                for (var i = 0; i < game.nbr; i++) {
+                    game.food.push(SpawnFood()); //Spawn food at random pos
+                }
+                
+                Update();
+            }
+            
+            function SpawnFood () {
+                var food = {
+                    x: Math.floor((Math.random() * (w - 5)) + 5), 
+                    y: Math.floor((Math.random() * (h - 5)) + 5),
+                    r: 10,
+                    lifetime: game.lifetime
+                };
+                if (food.x > (player.pos[0]-m/2) && food.x < (player.pos[0]+m/2)) {food.x += m} //Move out of player
+                if (food.y > (player.pos[1]-m/2) && food.y < (player.pos[1]+m/2)) {food.y += m}
+                food.col = randomColor()[0];
+                return food;
+            }
+            
+            function Update () {
+                ctx.clearRect(0, 0, c.width, c.height);
+                
+                var x = player.mouse[0] - player.pos[0];
+                var y = player.mouse[1] - player.pos[1];
+                m = in_m * player.power / player.init_power;
+                if (!(Math.abs(x) <= /*m/2*/5 && Math.abs(y) <= /*m/2*/5)) { //Don't move when pointer over circle or out
+                    var diff_x = Math.abs(x) > Math.abs(y) ? 1 : Math.abs(x)/Math.abs(y);
+                    var diff_y = Math.abs(y) > Math.abs(x) ? 1 : Math.abs(y)/Math.abs(x);
+                    var sgn_x = Math.sign(x) * (1-player.inverted[0]*2);
+                    var sgn_y = Math.sign(y) * (1-player.inverted[1]*2);
+                    player.pos[0] += player.speed * diff_x * sgn_x;
+                    if (player.pos[0] < m/2) player.pos[0] = m/2;
+                    if (player.pos[0] > (w-m/2)) player.pos[0] = w-m/2;
+                    player.pos[1] += player.speed * diff_y * sgn_y;
+                    if (player.pos[1] < m/2) player.pos[1] = m/2;
+                    if (player.pos[1] > (h-m/2)) player.pos[1] = h-m/2;
+                }
+                
+                //Draw
+                ctx.beginPath();
+                ctx.fillStyle = player.c;
+                ctx.strokeStyle = player.s;
+                ctx.arc(player.pos[0],player.pos[1],m/2,0,2*Math.PI); 
+                ctx.lineWidth = m/7;
+                ctx.stroke();
+                ctx.fill();
+                ctx.closePath();
+                player.power -= 0.017 * game.difficulty;
+                if (player.power <= 0) {gameover(); return;}
+                
+                for (var i = 0; i < game.food.length; i++) {
+                    //Check Collision
+                    var dx = player.pos[0] - game.food[i].x;
+                    var dy = player.pos[1] - game.food[i].y;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < m/2 + game.food[i].r) {
+                        player.score++;
+                        game.food[i] = SpawnFood();
+                        player.inverted = [Math.round(Math.random()),Math.round(Math.random())];
+                        player.power += 1;
+                        document.getElementById("score_info").innerHTML = player.score;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.fillStyle = game.food[i].col;
+                    ctx.strokeStyle = game.food[i].col;
+                                 
+                    ctx.arc(game.food[i].x,game.food[i].y,game.food[i].r,0,2*Math.PI);
+                    ctx.lineWidth = 2;
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(game.food[i].x,game.food[i].y,game.food[i].r-1,0,game.food[i].lifetime/(game.lifetime/2)*Math.PI);
+                    ctx.lineTo(game.food[i].x,game.food[i].y);
+                    
+                    ctx.fill();
+                    ctx.closePath();
+                    game.food[i].lifetime -= 0.017;
+                    if (game.food[i].lifetime <= 0) {
+                        game.food[i] = SpawnFood();
+                    }
+                }
+                
+                timeout = setTimeout(Update, 17);
+            }
+            
+            function randomColor () {
+                var col = Math.random() * 0xFFFFFF << 0;
+                return ["#" + (col).toString(16), "#" + (((col & 0x7E7E7E) >> 1) | (col & 0x808080)).toString(16)]; //Generate Random Color + darker Version
+            }
+            
+            function gameover () {
+                //Clear Intervall
+                
+                var text = "<span style='font-size: 1.2em;'>Game Over. Your score: " + player.score + "</span>";
+                if (player.score > player.highscore) {
+                    player.highscore = player.score;
+                    text += "<br>New Highscore";
+                    //Save
+                    localStorage.setItem("bb_js13_hs", player.highscore);
+                }
+                else {
+                    text += "<br>Highscore: " + player.highscore;
+                }
+                document.getElementById("game_over").innerHTML = text;
+                document.getElementById("start").style.display = "block";
+                document.getElementById("content").style.display = "none";
+                
+                player = init_p;
+                game = init_g;
+                //clearTimeout(timeout);
+                lost = true;
+            }
+            
+            function getMousePosition(canvas, e) {
+                var rect = canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+            
+            c.addEventListener('mousemove', function(e) {
+                var mousePos = getMousePosition(c, e);
+                player.mouse = [mousePos.x, mousePos.y];
+            }, false);
+            
+            function clone(obj) {
+                if (null == obj || "object" != typeof obj) return obj;
+                    var copy = obj.constructor();
+                    for (var attr in obj) {
+                        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+                    }
+                return copy;
+            }
+            
+            //if (c.getContext) Awake();
+        </script>
+    </body>
+</html>

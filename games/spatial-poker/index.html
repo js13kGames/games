@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- Spatial Poker
+MIT License - Copyright 2021 David Sides
+https://github.com/davesides3/spatial-poker -->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Spatial Poker</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <h1>Spatial Poker</h1>
+    <div id="title_hand" class="card-container grid">
+      <div class="card-grid-item">🂡</div>
+      <div class="card-grid-item">🂮</div>
+      <div class="card-grid-item">🂭</div>
+      <div class="card-grid-item">🂫</div>
+      <div class="card-grid-item">🂪</div>
+    </div>
+    <p>
+      Use the <b>arrow keys</b> to move around the spaces on the board to
+      collect cards. When you meet your computer opponent the best 5-card poker
+      hand wins!*
+    </p>
+    <p>
+      Use the <b>t</b> key to move a card from the Tray to the Pile.<br /><br />
+      Use the number keys <b>1</b> to <b>5</b> to replace the card in your hand
+      with the card in the Tray.<br /><br />
+      When there is no card in the Tray you can reorder your hand by pressing
+      two number keys to swap. For example, with no card in the Tray, press
+      <b>1</b>, then
+      <b>2</b>
+      to swap cards 1 and 2 in your hand.<br /><br />
+      Press <b>x</b> or <b>q</b> to exit the game and return to this page.<br /><br />
+      Use the <b>browser refresh button</b> 🔄️ to shuffle and restart the
+      game.<br /><br />
+      Use <b>browser magnification</b> (e.g. Ctrl-+) to adjust sizing to taste
+      based on screen size.<br /><br />
+      <em>"Start where you are. Use what you have. Do what you can."</em> -
+      Arthur Ashe
+    </p>
+    <form action="game.html">
+      <p><b>Play mode:</b></p>
+      <input type="radio" name="play_mode" value="1" checked />
+      <label for="1">Day (face up, easy)</label><br />
+      <input type="radio" name="play_mode" value="2" />
+      <label for="2">Twilight (color known)</label><br />
+      <input type="radio" name="play_mode" value="3" />
+      <label for="3">Night (face down)<br /><br /></label>
+      <span><b>Sound:</b></span>
+      <input type="radio" name="sound_mode" value="1" checked />
+      <label for="1">On</label>
+      <input type="radio" name="sound_mode" value="0" />
+      <label for="2">Off</label><br /><br />
+      <input type="hidden" name="debug_mode" value="1" />
+      <input type="submit" class="start_button" value="Start Game" />
+    </form>
+    <br />
+    * Suit is not considered when ranking hands. Ace is always high.
+  </body>
+</html>

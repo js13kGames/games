@@ -1,0 +1,34 @@
+<!doctype HTML>
+
+<style>
+body {
+    background: #0A0A0A;
+    padding: 50px;
+}
+#container {
+    position: relative;
+    width: 960px;
+    height: 600px;
+    margin: auto;
+    top: 100px;
+}
+
+#container > * {
+    position: absolute;
+}
+#overlay {
+    color: white;
+}
+#game {
+    background: black;
+}
+</style>
+<body>
+<h2 style="color:#aaa;cursor:default" onclick="toggleSound();">Sound on/off</h2>
+<div id="container">
+<canvas id="game" width="960" height="600"></canvas>
+<div id="overlay"></div>
+</div>
+<script src="sound.js"></script>
+<script src="index.js"></script>
+</body>

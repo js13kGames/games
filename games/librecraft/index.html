@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><style>
+body{background:#DDDDDD}
+canvas{image-rendering:pixelated;box-sizing:border-box}
+body{text-align:center}
+button{border-radius:4px}
+.fixed{position:fixed;top:4px}
+.fps{right:4px;font-family:Impact,Charcoal,sans-serif;color:white;-webkit-text-stroke:1px black;font-variant:small-caps;font-size:20px}
+.hidables,.nosaving{display:none}
+#toolbar{left:4px}
+#lock,#save{background:none;background:#ffffff4d}
+#loading{
+  line-height: 100vh;
+  font-family: sans-serif
+}
+#lock:hover,
+#lock:hover:after,
+.extended #lock,
+.extended #lock:after{background:#ffffff;content:" Options"}
+#save:hover,
+#save:hover:after,
+.extended #save,
+.extended #save:after{background: #ffffff;content:" Save"}
+.extended .hidables,.show{display:initial}
+.text{color:#777;text-align:left;padding-left:20px;margin-bottom:80px}.text div{display:inline-block;width:48%}
+.text:hover{color:#000}
+.nosaving{color:red}
+/* Reset CSS */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main,details{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font:1em monospace,monospace}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font:1em monospace,monospace}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{margin:0;font:100%/1.15 inherit}button,input{overflow:visible}button,select{text-transform:none}button,[type="button"],[type="reset"],[type="submit"]{-webkit-appearance:button}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type="button"]:-moz-focusring,[type="reset"]:-moz-focusring,[type="submit"]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type="checkbox"],[type="radio"]{box-sizing:border-box;padding:0}[type="number"]::-webkit-inner-spin-button,[type="number"]::-webkit-outer-spin-button{height:auto}[type="search"]{-webkit-appearance:textfield;outline-offset:-2px}[type="search"]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:;font-style:normal;font-variant:normal;font-weight:normal;font-family:inherit}summary{display:list-item}[hidden],template{display:none}
+</style>
+</head><body> 
+  <div id=toolbar class=fixed>
+    <button id=lock>🔒</button>
+    <button id=save>💾</button>
+    <span class=hidables>
+      <button id=load>📂 Load</button>
+      <button id=newseeed>🌱 New Map</button>
+      <span> | </span>
+      <button id=minus>➖ Distance</button>
+      <button id=plus>➕ Distance</button>
+      <button id=interlace>⚡ Interlace</button>
+    </span>
+  </div>
+  <div class="fixed fps">0</div>
+  <h1 id=loading>Loading... Please Wait...</h1>
+  <canvas id=game></canvas>
+  <div class=nosaving>Saving Disabled! Error with window.localStorage</div>
+
+  <div class=text>
+    <h1>LibreCraft</h1>
+    <p>Bringing back voxels for all</p>
+    <div class=col-left>
+      <h2>Features:</h2>
+      <p>- Random Terrain Generation</p>
+      <p>- Procedural Caves, Trees, Water, Ore Veins, Textures</p>
+      <p>- Render Distance Adjustable under options</p>
+      <p>- Screen Interlacing to reduce CPU</p>
+      <p>- Save/Loading in localstorage! Saves only the diff + seed</p>
+      <p>- day/night cycle</p>
+      <p>- crafting with block requirements</p>
+      <p>- plays on any computer! No GPU required</p>
+    </div>
+
+    <div class=col-right>
+      <h2>Controls:</h2>
+      <p>- <b>[wasd]</b> to move</p>
+      <p>- <b>[e]</b> to toggle craftable items</p>
+      <p>- <b>[spacebar]</b> to jump</p>
+      <p>- hold <b>[shift]</b> to take/build on liquids</p>
+      <p>- <b>[left click]</b> to break a block</p>
+      <p>- <b>[right click]</b> to build a block</p>
+      <p>- <b>[number keys]</b> to change selected items</p>
+    </div>
+
+  </div>
+<script type="text/javascript" src="bundle.js"></script></body></html>

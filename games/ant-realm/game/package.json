@@ -1,0 +1,7 @@
+{
+  "name": "ant-realm",
+  "version": "0.0.1",
+  "main": "server.js",
+  "author": "Aurélio A. Heckert <aurium@colivre.coop.br>",
+  "license": "AGPL-3.0"
+}

@@ -1,0 +1,115 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+
+html{
+    height: 100%;
+}
+
+body {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+	align-items: center;
+	background-color: gray;
+}
+
+#game {
+	width: 1280px;
+	height: 720px;
+	background-color: black;
+	border-style: double;
+	border-color: blue;
+	border-width: 10px;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.playfield {
+	width: 1000px;
+	height: 700px;
+	background-color: black;
+	position: relative;
+	border-style: solid;
+	border-color: blue;
+	border-width: 0 4px 0 0 ;
+}
+
+#paddle {
+	background-color: white;
+	box-sizing: border-box;
+	position: absolute;
+}
+
+#ball {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: white;
+	position: absolute;
+	top: 500px;
+	left: 500px;
+}
+
+.block{
+	background-color: white;
+	box-sizing: border-box;
+	border: solid silver 1px;
+	width: 50px;
+	height: 15px;
+	position: absolute;
+}
+.blue{
+	background-color:blue
+}
+.red{
+	background-color:red
+}
+.green{
+	background-color:green
+}
+.yellow{
+	background-color:yellow
+}
+
+.menu{
+	position: absolute;
+	height: 720px;
+	width: 1280px;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	padding: 200px 0;
+	box-sizing: border-box;
+
+}
+.none{
+	display: none;
+}
+h2{
+	font-size: 48px;
+	color: white;
+}
+button{
+	font-size: 24px;
+	color: blue;
+}

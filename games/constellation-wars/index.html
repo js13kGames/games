@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/0.6.1/aframe-master.js"></script> 
+    <script src="stars_background.js"></script> <!-- source: https://www.npmjs.com/package/aframe-star-system-component -->
+    <meta charset="utf-8">
+</head>
+<body>
+    <a-scene>
+        <a-sky color="black"></a-sky>
+        <a-entity star-system></a-entity>
+        <a-entity id="constellations"></a-entity>
+       
+       <a-entity camera look-controls>
+          <a-entity cursor="fuse: true; fuseTimeout: 500"
+                    position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                    material="color: cyan; shader: flat">
+                    <a-text id="constellationName" value="" color="cyan" font="roboto"></a-text>
+
+                    <a-entity id="constellationPoints" visible=false>
+                        <a-text id="proPoints" value="p" color="cyan" font="roboto" height="12" width="auto" position="0 0.5 0"></a-text>
+                        <a-text id="slashpoints" value="/" color="white" font="roboto" height="12" width="auto" position="0.15 0.5 0"></a-text>
+                        <a-text id="contraPoints" value="p" color="red" font="roboto" height="12" width="auto"position="0.18 0.5 0"></a-text>
+                    </a-entity>
+
+                    <a-text id="mypoints" value="your current points: 10" color="cyan" position="-1.5 -0.5 0" height="12" width="auto"></a-text> 
+                    
+          </a-entity>
+        </a-entity>
+    </a-scene>
+    <script src="constellations.js"></script>
+    <script src="playerPoint.js"></script>
+    <script src="ai.js"></script>
+    <script src="time.js"></script>
+</body>
+</html>

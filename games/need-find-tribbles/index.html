@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="monetization" content="$coil.xrptipbot.com/[COIL-ID-HERE]">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=.75">
+
+  <title>Need Find Tribbles | Benjamin Fox | js13k 2021</title>
+</head>
+
+<body id="b" style="background-color: #111; opacity: 0;" class="loading">
+  <div id="wrapper">
+    <div id="top">
+      <div class="flex"></div>
+      <div id="cvWrap">
+        <div id="overlay">
+          <div id="content">
+            <div id="about">
+              <h2>Need <sub>to</sub> Find <sub>the</sub> Tribbles</h2>
+              <div class="info">
+                <p>This is a decentralized application (dApp) created by for the 2021 js13k games competition by <a
+                    href="https://benjaminwfox.com" target="_blank">Benjamin Fox</a>.</p>
+
+                <p>It makes use of the <a href="https://near.org/" target="_blank">NEAR Protocol</a> for on-chain
+                  storage of NFT metadata - all the information for each tribble.</p>
+
+                <p>Long-term off-chain storage of images is provided by <a href="https://nft.storage/"
+                    target="_blank">nft.storage</a>. Images for quick-access storage are stored in an <a
+                    href="https://aws.amazon.com/s3/" target="_blank">AWS S3 Bucket</a>.</p>
+
+                <p>You can <a href="https://twitter.com/BenjaminWFox" target="_blank">follow me on Twitter</a> in case I
+                  ever tweet anything interesting. Or ever tweet anything at all for that matter.</p>
+                <button onclick="fn.closeOverlay()">CLOSE</button>
+              </div>
+            </div>
+            <div id="foundTribble">
+              <h2>You Found a Tribble!!</h2>
+              <div class="info">
+                <p>Sorry for the interruption, but these tribbles are hard enough to find and I wouldn't want you blazing right past it.</p>
+                <p>You can claim it with the button in the right panel if it hasn't yet been claimed!</p>
+                <p>Since I don't know where you were frantically clicking (I mean, I do, but I'm also lazy) the button
+                  to close this overlay is also in the right panel.</p>
+              </div>
+            </div>
+            <div id="backTribbles">
+              <h2>Tribbles on the MainNet?!</h2>
+              <div class="info">
+                <p>My original plan with this dApp was to publish it to the NEAR MainNet.</p>
+                <p>Then I realized that A) minting over 10k NFTs is not cheap and B) it's very difficult to get NEAR wher I live.</p>
+                <p>I have some ideas to improve and extend these tribble NFTs and the overall experience.</p>
+                <p>Please consider donating some NEAR (benjaminwfox.near) if you'd be excited to see that happen!</p>
+                <button onclick="fn.closeOverlay()">CLOSE</button>
+              </div>
+            </div>
+            <div id="presignin">
+              <h2>Need <sub>to</sub> Find <sub>the</sub> Tribbles</h2>
+              <div class="info">
+                <p>10,048 tribbles are spread throughout the universe. </p>
+                <p>Today, nearing the end of the Great Tribble Hunt, only a few of the most unique and well disguised tribbles remain.</p>
+                <p>Find them quickly, before they start to multiply again!</p>
+                <p>The last time we left some alone the Universe was almost overrun...</p>
+                <hr />
+                <p>All tribbles are one-of-a-kind NFTs!</p>
+                <p>Click around the star map, and if you find one before anyone else it's yours to keep! You'll just need to create an account.</p>
+                <p>This dapp runs on the <a
+                    href="https://docs.near.org/docs/develop/basics/create-account#creating-a-testnet-account"
+                    target="_blank">Near testnet</a>, which is free to use!
+                </p>
+                <p>Sign up for an account at:
+                  <br />
+                  <a href="https://wallet.testnet.near.org" />https://wallet.testnet.near.org/</a>
+                </p>
+                <p class="split">
+                  <button class="inline nauth" onclick="fn.signIn();">Sign In</button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <button id="close" class="yauth" style="position: absolute; top: 5px; right: 5px;"
+            onclick="fn.closeOverlay()">X</button>
+        </div>
+        <canvas id="canvas" width="1000" height="1000"></canvas>
+      </div>
+      <div id="panel">
+        <h1>Need <sub>to</sub> Find <sub>the</sub> Tribbles</h1>
+        <p class="smtext nauth">
+          No account detected -
+          <button class="textlike" onclick="fn.signIn()">Sign Up/Sign In</button>
+        </p>
+        <p class="smtext yauth"><span id="cAcct">Account: need-find-tribbles-js13k.testnet</span> - <button
+            class="textlike" onclick="fn.signOut()">Sign Out</button></p>
+
+        <div id="display"></div>
+        <div id="loading"><img id="spinner"
+            src="https://js13k-2021-tribbles-other.s3.us-west-2.amazonaws.com/tribble-spinner.png" /></div>
+        <div id="download"><button title="Tribble Photoshoot!" onclick="fn.downloadStuffedTribble()"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAAADaua+7AAAABlBMVEX///////9VfPVsAAAAAXRSTlMAQObYZgAAADNJREFUeAFjwArqGBiYGw8w2AChAwMTQ4CNFUOAExB3AtmtQNwIxU4gOSawGvv/f7CZBAD0mQsFPv861gAAAABJRU5ErkJggg=="></button></div>
+
+        <div id="details" class="empty">
+          <div class="tabs">
+            <div onclick="fn.setTab(this.id)" id="sI" class="sel">Search Info</div>
+            <div onclick="fn.setTab(this.id)" id="tG" class="">Tribble Gear</div>
+          </div>
+          <div id="tabContent" class="sI">
+            <div class="info tgc">
+              <h2>Your Collection</h2>
+              <p>Just because it's a stuffed tribble, doesn't mean you love it any less!</p>
+              <p>Dress up your stuffed tribble with any gear you find!</p>
+              <div id="gC">
+                <ul>
+                  <li>
+                    <h3>Hair</h3>
+                    <ul id="hair">
+                      <li><input type="radio" id="None"
+                          onclick="fn.setGearImage(this.id, this.parentNode.parentNode.id)" name="hair" /><label
+                          for="None">None</label></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <h3>Eyes</h3>
+                    <ul id="eyes">
+                      <li><input type="radio" id="None"
+                          onclick="fn.setGearImage(this.id, this.parentNode.parentNode.id)" name="eyes" /><label
+                          for="None">None</label></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <h3>Face</h3>
+                    <ul id="face">
+                      <li><input type="radio" id="None"
+                          onclick="fn.setGearImage(this.id, this.parentNode.parentNode.id)" name="face" /><label
+                          for="None">None</label></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <h3>Mouth</h3>
+                    <ul id="mouth">
+                      <li><input type="radio" id="None"
+                          onclick="fn.setGearImage(this.id, this.parentNode.parentNode.id)" name="mouth" /><label
+                          for="None">None</label></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <h3>Feet</h3>
+                    <ul id="feet">
+                      <li><input type="radio" id="None"
+                          onclick="fn.setGearImage(this.id, this.parentNode.parentNode.id)" name="feet" /><label
+                          for="None">None</label></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- <div id="sicContent"> -->
+            <div class="info sic" id="nomatch">
+              <h2>Across the Universe!</h2>
+              <p>Oooh the vast emptiness.</p>
+              <p>There's nothing here, keep searching!</p>
+              <p>The tribbles are out there but there are only 10,048 in total, so they can be hard to find.</p>
+            </div>
+
+            <div class="info sic" id="stuffed">
+              <h2>You Found a Stuffed Tribble!</h2>
+              <p>You can dress it up with gear you find!</p>
+              <p>This tribble, and any gear you find, aren't NFTs. They'll only be stored here in your browser.</p>
+            </div>
+
+            <div class="info sic" id="gear">
+              <h2>Tribble Gear!</h2>
+              <p id="gearType"></p>
+              <p id="gearExtra"></p>
+            </div>
+
+            <div class="info sic" id="other">
+              <h2>What was it?</h2>
+              <p id="otherText">Who can say, but what it once was it is now not and never will be again.</p>
+            </div>
+
+            <div class="info sic" id="space">
+              <h2>Ooh, neat!</h2>
+              <p id="spaceText">Who can say, but what it once was it is now not and never will be again.</p>
+            </div>
+
+            <div class="info trib sic" id="trib">
+              <h2>You Found a Tribble!!</h2>
+              <span id="tid">Tribble_R1_361-823</span>
+              <div id="status">This tribble is <span id="ownership">currently unowned!</span></div>
+              <div id="claimGroup">
+                <button id="claim" onclick="fn.claimNFT()" class="important">CLAIM TRIBBLE</button>
+                <button id="closeClaim" class="yauth" onclick="fn.closeOverlay()">CLOSE OVERLAY</button>
+              </div>
+              <br />
+              <p><a id="ipfsmeta"
+                  href="https://ipfs.io/ipfs/bafyreiabq7jwgz6ufmhwo7pvzftxpullxsoduaxu6ozrqdelia3iqrruwy/metadata.json"
+                  target="_blank">See metadata from NFT.storage via IPFS</a></p>
+            </div>
+            <!-- </div> -->
+
+          </div>
+          <div class="info" id="more">
+            <h3>More!</h3>
+            <p><a href="https://wallet.testnet.near.org/?tab=collectibles" target="_blank">View your NEAR wallet</a>
+              (this is where tribbles you've collected hang out!)</p>
+              <p><a href="https://benjaminwfox.com/lab/js13k/2021/need-find-tribbles-browser" target="_blank">Browse the Tribbles</a></p>
+            <p><a id="tweet" class="twitter-share-button" target="_blank"
+                href="https://twitter.com/intent/tweet?text=Check out %27Need to Find Tribbles%27 - A hunt for cute %23NFT Tribbles by @benjaminwfox for the %23js13k game comp.%0A%0Ahttps://js13kgames.com/entries/need-find-tribbles">Share
+                on Twitter</a></p>
+            <p><button class="textlike" onclick="fn.showAbout()">About this Game</button></p>
+            <p><button class="textlike" onclick="fn.showBackTribbles()">Bring Tribbles to MainNet</button></p>
+          </div>
+        </div>
+      </div>
+      <div class="flex"></div>
+    </div>
+  </div>
+  <div id="bottom">
+
+  </div>
+  <script src="https://js13kgames.com/src/near-api-js.js" type="text/javascript" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.9/runtime.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/lib/alea.min.js" type="text/javascript"></script>
+<script src="./o.js"></script></body>
+
+</html>

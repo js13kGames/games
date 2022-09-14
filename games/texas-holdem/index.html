@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width" />
+  <title>Texas Hold'em</title>
+  <style>
+  * { margin: 0; padding: 0; }
+  body { overflow: hidden; text-align:center; background:#000; overflow:hidden; }
+  canvas { margin:0 auto; }
+  #controls {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:6px;
+    background:rgba(0,0,0,0.5);
+    border-top:1px #000 solid;
+    text-align:right;
+    min-width:480px;
+  }
+  .btn {
+    box-shadow:inset 0px -24px 0px 0px #c40000;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100));
+    background:-moz-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+    background:-webkit-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+    background:-o-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+    background:-ms-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+    background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100',GradientType=0);
+    background-color:#fe1a00;
+    border-radius:6px;
+    border:1px solid #4f0700;
+    display:inline-block;
+    color:#ffffff;
+    font:bold 15px Arial;
+    padding:0px 16px;
+    text-shadow:0px 1px 0px #b23e35;
+    text-align:center;
+    vertical-align:middle;
+    line-height:48px;
+  }
+  .ext {
+    line-height:24px !important;
+  }
+  .ext2 {
+    height:48px;
+    width:180px;
+    line-height:auto !important;
+  }
+  input.btn:hover,span.btn:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ce0100), color-stop(1, #fe1a00));
+    background:-moz-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+    background:-webkit-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+    background:-o-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+    background:-ms-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+    background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ce0100', endColorstr='#fe1a00',GradientType=0);
+    background-color:#ce0100;
+    cursor:pointer;
+  }
+  input.btn:active,span.btn:active {
+    position:relative;
+    top:1px;
+  }
+  #overlay {
+    position:absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.75);
+    z-index:2;
+  }
+  #overlay div {
+    position:absolute;
+    top:40%;
+    left:50%;
+    margin-left:-160px;
+    width:320px;
+    border:1px #ccc solid;
+    border-radius:4px;
+    background:#fff;
+    padding:10px;
+  }
+  #overlay input[type="text"] {
+    height:48px;
+    font:bold 15px arial;
+    margin-right:5px;
+    text-align:center;
+    width:220px;
+  }
+  #chat {
+    position:absolute;
+    top:25px;
+    left:5px;
+    width:200px;
+    overflow-x:hidden;
+    color:#fff;
+    text-align:left;
+    font:10pt arial;
+
+  }
+  #chat p:nth-child(2n) {
+    color:#ff0;
+  }
+  #chatinput {
+    background:transparent;
+    position:absolute;
+    top:5px;
+    left:5px;
+    width:150px;
+    height:15px;
+    color:#efefef;
+    border:0;
+    outline:0;
+  }
+
+  </style>
+</head>
+<body>
+
+<div id="overlay">
+  <div>
+    <input id="nick" type="text" placeholder="Enter Nick" maxlength="10" />
+    <input id="start" type="button" class="btn" value="Start" />
+  </div>
+</div>
+
+<input id="chatinput" type="text" placeholder="Chat..." maxlength="140" />
+<div id="chat"></div>
+
+<div id="controls">
+  <span id="fold" style="display:none" class="btn">FOLD</span>
+  <span id="check" style="display:none" class="btn">CHECK</span>
+  <span id="allin" style="display:none" class="btn">ALL IN</span>
+  <span id="call" style="display:none" class="btn ext">CALL<br /><span id="call_amount"><br /></span></span>
+  <span id="raise" style="display:none" class="btn ext">RAISE TO<br /><span id="raise_amount"><br /></span></span>
+  <div class="btn ext2">
+    <div id="wait">Waiting for players...</div>
+    <div id="betting" style="display:none">
+      betting
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="sprite.js"></script>
+<script>
+
+var socket = io(document.location.href, { reconnection: false });
+var playerId = 0;
+var players = {};
+var playerList = [];
+var hands = {};
+var dealerId = -1;
+var currentId = -1;
+var potSize = 0;
+var board = [];
+var hand = "";
+var maxBet = 0;
+
+var $allin = $("allin");
+var $chat = $("chat");
+var $call = $("call");
+var $fold = $("fold");
+var $check = $("check");
+var $raise = $("raise");
+var $betting = $("betting");
+var $wait = $("wait");
+var $call_amount = $("call_amount");
+var $raise_amount = $("raise_amount");
+
+socket.on('id', function(data) {
+  playerId = data;
+})
+
+socket.on('nick', function(data) {
+  if (data.id === playerId) {
+    $('overlay').style.display = 'none';
+  }
+  if (players[data.id]) {
+    players[data.id].name = data.name;
+  }
+})
+
+socket.on('chat', function(data) {
+  if (players[data.id]) {
+    var p = document.createElement("p");
+    p.innerText = "[" + (players[data.id].name || "Nick") + "]: " + data.message;
+    $chat.insertBefore(p,$chat.firstChild);
+    while ($chat.childNodes.length > 15) {
+      $chat.removeChild($chat.childNodes[15]);
+    }
+  }
+})
+
+socket.on('welcome', function(data) {
+  if (!players[data.id]) {
+    playerList.push(data.id);
+    players[data.id] = data;
+  }
+})
+
+socket.on('goodbye', function(data) {
+  if (players[data.id]) {
+    playerList.splice(playerList.indexOf(data.id), 1);
+    delete players[data.id];
+  }
+})
+
+socket.on('pot', function(data) {
+  potSize = data;
+})
+
+socket.on('round', function(data) {
+  for (var id in players) {
+    players[id].bet = 0;
+  }
+})
+
+socket.on('bet', function(data) {
+  if (players[data.id]) {
+    players[data.id].bet = data.bet;
+  }
+})
+
+socket.on('maxBet', function(data) {
+  maxBet = data;
+})
+
+socket.on('chips', function(data) {
+  if (players[data.id]) {
+    players[data.id].chips = data.chips;
+  }
+})
+
+socket.on('state', function(data) {
+  if (players[data.id]) {
+    players[data.id].state = data.state;
+  }
+})
+
+socket.on('fold', function(id) {
+  if (players[id]) {
+    players[id].state = 2;
+    if (id === playerId) {
+      hand = "";
+    }
+  }
+})
+
+socket.on('hand', function(msg) {
+  hand = msg;
+})
+
+socket.on('hands', function(data) {
+  if (players[data.id]) {
+    hands[data.id] = data.hand;
+  }
+})
+
+socket.on('dealerId', function(id) {
+  dealerId = id;
+})
+
+socket.on('currentId', function(id) {
+  currentId = id;
+})
+
+socket.on('board', function(data) {
+  console.log(board);
+  board = data;
+  for (var id in players) {
+    players[id].bet = 0;
+  }
+})
+
+socket.on('reset', function(data) {
+  potSize = 0;
+  hand = "";
+  hands = {};
+  board = [];
+  maxBet = 0;
+  for (var id in players) {
+    players[id].bet = 0;
+    players[id].state = 1;
+  }
+})
+
+/**/
+function $(id) { return document.getElementById(id) }
+
+/**/
+$("start").addEventListener("click", function() {
+  socket.emit("nick", $("nick").value);
+});
+$("chatinput").addEventListener("keydown", function(e) {
+  if (e.keyCode === 13 && this.value.trim()) {
+    socket.emit("chat", this.value.trim());
+    this.value = "";
+  }
+});
+$fold.addEventListener("click", function(e) {
+  socket.emit('fold');
+});
+$call.addEventListener("click", function(e) {
+  socket.emit('call');
+});
+$allin.addEventListener("click", function(e) {
+  socket.emit('call');
+});
+$check.addEventListener("click", function(e) {
+  socket.emit('call');
+});
+$raise.addEventListener("click", function(e) {
+  socket.emit('bet', maxBet + 20 - players[playerId].bet);
+});
+
+var resized = true;
+window.addEventListener("resize", function() { resized = true; });
+
+var canvas = document.createElement("canvas");
+var context = canvas.getContext("2d");
+document.body.appendChild(canvas);
+
+var sprites = {
+  "D": drawChip("#ddd", "D", 1),
+  "SB": drawChip("#ff0", "SB", 1),
+  "BB": drawChip("#f00", "BB", 1),
+  "1": drawChip("#4656d3", "1"),
+  "5": drawChip("#eb3d27", "5"),
+  "25": drawChip("#7bff58", "25"),
+  "100": drawChip("#444", "100"),
+  "500": drawChip("#ff58f5", "500"),
+  "1000": drawChip("#ff6c00", "1K"),
+  "5000": drawChip("#9ed3da", "5K"),
+  "25000": drawChip("#ffb258", "25K"),
+  "100000": drawChip("#fff58b", "100k")
+};
+
+var background;
+var blinkInterval = 0;
+var time = Date.now();
+var stateInterval = 0;
+var cardWidth = 60;
+
+function render() {
+
+  var elapsed = Date.now() - time;
+  time += elapsed;
+
+  /* check game state */
+  stateInterval += elapsed;
+  if (stateInterval > 500) {
+    stateInterval = 0;
+  
+    /* count players */
+    var count = 0;
+    for (var id in players) {
+      if (players[id].state === 1 && players[id].chips > 0) {
+        count++;
+      }
+    }
+    
+    /* reset ui */
+    $wait.style.display = '';
+    $fold.style.display = 'none';
+    $check.style.display = 'none';
+    $call.style.display = 'none';
+    $raise.style.display = 'none';
+    $betting.style.display = 'none';
+    $allin.style.display = 'none';
+
+    if (count >= 2) {
+      $wait.style.display = 'none';
+      $betting.style.display = '';
+
+      if (currentId === playerList.indexOf(playerId)) {
+        var diff = maxBet - players[playerId].bet;
+        if (diff > 0) {
+          $fold.style.display = '';
+
+          if (diff > players[playerId].chips) {
+            $allin.style.display = '';
+          } else {
+            $call.style.display = '';
+            $call_amount.innerText = diff;
+            if (players[playerId].chips >= maxBet + 20) {
+              $raise.style.display = '';
+              $raise_amount.innerText = maxBet + 20;
+            }
+          }
+        } else {
+          $check.style.display = '';
+          $raise.style.display = '';
+          $raise_amount.innerText = '20';
+        }
+      }
+    }
+  }
+
+  blinkInterval += elapsed;
+  if (blinkInterval > 1000) {
+    blinkInterval = 0;
+  }
+
+  /* resize game */
+  if (resized) {
+    resized = false;
+
+    canvas.width = Math.max(480, window.innerWidth);
+    canvas.height = Math.max(320, window.innerHeight);
+
+    background = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width/2);
+    background.addColorStop(0,"#494949");
+    background.addColorStop(1,"#000000");
+
+    updateCardSize( Math.max(canvas.width / 40 | 0, 30) );
+    for (var p in sprites) {
+      if (p[0] === "c") {
+        sprites[p] = null;
+      }
+    }
+  }
+
+  /* draw background */
+  context.fillStyle = background;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  /* draw hand */
+  if (hand != "") {
+    context.fillStyle = "#fff";
+    context.font = "bold 10pt Arial";
+    context.textAlign = "right";
+    context.fillText(hand, canvas.width - 10, 20);
+  }
+
+
+  /* draw table */
+  var radius = drawTable(context, 10, canvas.height * 0.1, canvas.width - 20, canvas.height * 0.9 - 100);
+
+  var l = canvas.width / 2 - radius;
+  var t = canvas.height / 2 - radius/2 - 50;
+  var w = radius * 2;
+  var h = radius;
+
+  //context.strokeStyle = "red";
+  //context.strokeRect(l,t,w,h);
+
+  // 8 spots
+  if (playerList.length > 0) {
+    var bw = Math.max(80, w / 10);
+    var bh = bw / 2;
+    
+    context.translate(l + radius, t + radius / 2);
+    
+    var k = playerList.indexOf(playerId);
+    for (var i = 90, j = 0; i < 450; i += 360 / playerList.length, j++) {
+
+      var m = (k + j) % playerList.length;
+      var y = Math.sin(i * Math.PI / 180) * h / 2;
+      var x = Math.cos(i * Math.PI / 180) * (w - 20) / 2;
+      var fontSize = Math.max(Math.floor(bh / 4 - 1), 6);
+
+      context.translate(x - bw / 2, y - bh / 2);
+
+
+      roundRect(context, bw, bh, 5);
+      
+      /* highlight */
+      if (currentId === m && blinkInterval > 500) {
+        context.fillStyle = "rgba(0,0,0,0.75)";
+      } else {
+        context.fillStyle = "rgba(0,0,0,0.6)";
+      }
+
+      context.fill();
+
+      /* highlight */
+      if (currentId === m && blinkInterval > 500) {
+        context.fillStyle = "#fff";
+      } else {
+        context.fillStyle = "#eee";
+      }
+
+      context.font = "bold " + fontSize + "pt Arial";
+      context.textAlign = "center";
+
+      var player = players[playerList[m]];
+      if (player) {
+        context.fillText(player.name, bw / 2, fontSize * 1.8);
+        context.fillText(
+          player.state === 0 ? "Sitting out" : "$" + player.chips.toLocaleString("en"),
+          bw / 2,
+          fontSize * 3.6
+        );
+
+        /* draw dealer button */
+        if (dealerId === m) {
+          context.drawImage( sprites.D, -10, bh / 2 );
+        }
+
+        var iy = Math.sin(i * Math.PI / 180) * 10;
+
+        /* draw cards */
+        if (hands.hasOwnProperty(player.id)) {
+          var image1, image2;
+          if (player.id === playerId && hands[player.id]) {
+
+            var hash1 = 'c' + hands[player.id][0].rank + hands[player.id][0].suit;
+            var hash2 = 'c' + hands[player.id][1].rank + hands[player.id][1].suit;
+
+            if (!sprites[hash1]) {
+              sprites[hash1] = drawCard(hands[player.id][0].rank, hands[player.id][0].suit);
+            }
+            image1 = sprites[hash1];
+
+            if (!sprites[hash2]) {
+              sprites[hash2] = drawCard(hands[player.id][1].rank, hands[player.id][1].suit);
+            }
+            image2 = sprites[hash2];
+
+          } else {
+
+            if (!sprites.cover) {
+              sprites.cover = drawCover();
+            }
+
+            image1 = image2 = sprites.cover;
+          }
+
+          context.drawImage(
+            image1, 
+            -(Math.cos(i * Math.PI / 180) * bh + 20) + image1.width - 5,
+            -(Math.sin(i * Math.PI / 180) * bh) - iy
+          );
+
+          context.drawImage(
+            image2, 
+            -(Math.cos(i * Math.PI / 180) * bh + 20) + 2 * image2.width ,
+            -(Math.sin(i * Math.PI / 180) * bh) - iy
+          );
+        }
+
+        /* draw chips */
+        if (player.bet > 0 && player.state === 1) {
+          drawChips(
+            context,
+            sprites,
+            player.bet,
+            -(Math.cos(i * Math.PI / 180) * bh + 20),
+            -(Math.sin(i * Math.PI / 180) * bh)
+          );
+
+          context.translate(-70, -10);
+          roundRect(context, 60, 12, 2);
+          context.fillStyle = "rgba(0,0,0,0.6)";
+          context.fill();
+
+          context.fillStyle = "#fff";
+          context.font = "bold 8pt Arial";
+          context.textAlign = "center";
+          context.fillText("$" + player.bet.toLocaleString("en"), 30, 10);
+          context.translate(70, 10);
+        }
+      }
+
+      context.translate(-(x - bw / 2), -(y - bh / 2));
+    }
+
+    /* draw board */
+    for (var i = 0; i < board.length; i++) {
+      var hash = 'c' + board[i].rank + board[i].suit;
+      if (!sprites[hash]) {
+        sprites[hash] = drawCard(board[i].rank, board[i].suit);
+      }
+      context.drawImage(
+        sprites[hash], 
+        -sprites[hash].width * (i),
+        -sprites[hash].height
+      );
+    }
+
+    /* draw pot size */
+    if (potSize > 0) {
+      drawChips(
+        context,
+        sprites,
+        potSize,
+        0,
+        20
+      );
+
+      context.translate(-80, -9 - bh - bh);
+      roundRect(context, 120, 18, 10);
+      context.fillStyle = "rgba(0,0,0,0.6)";
+      context.fill();
+
+      context.fillStyle = "#fff";
+      context.font = "bold 10pt Arial";
+      context.textAlign = "center";
+      context.fillText("Pot: $" + potSize.toLocaleString("en"), 60, 15);
+      context.translate(80, 9 + bh + bh);
+    }
+
+    context.translate(-(l + radius), -(t + radius / 2));
+  }
+}
+
+(function loop() {
+    requestAnimationFrame(loop);
+    render();
+})();
+
+</script>
+
+</body>
+</html>

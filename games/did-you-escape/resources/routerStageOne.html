@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/routerStageOne.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="uninstallMenu">
+    <h3>Uninstall Router</h3>
+    <p>Uninstalling the router will remove all data and saved preferences. Please select from the list below all that you want to remove.</p>
+    <p>Warning! Uninstall time may vary depending on the options selected.</p>
+    <ul>
+      <li><input type="checkbox" id="checked1" onclick="boxChecked1()"> Remove all saved data from the last 24 hours. <span id="afterCheck1" class="beforeCheck">(Uninstall time is +5.0 seconds higher)</span></li>
+
+      <li><input type="checkbox" id="checked2" onclick="boxChecked2()"> Remove all saved passwords and login information stored on the routed.<span id="afterCheck2" class="beforeCheck">(Uninstall time is +5.0 seconds higher)</span></li>
+
+      <li><input type="checkbox" id="checked3" onclick="boxChecked3()"> Remove all data saved on this router since it was installed.<span id="afterCheck3" class="beforeCheck">(Uninstall time is +5.0 seconds higher)</span></li>
+    </ul>
+
+    <div id="fileDelete">
+      <div id="progressBar">0%</div>
+    </div>
+    <br>
+    <button id="removeButton" onclick="move();removeButton()">Uninstall</button>
+  </div>
+
+  </div>
+
+
+
+<script src="../js/routerStageOne.js"></script>
+</body>
+</html>

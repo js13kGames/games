@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lost Key</title>
+	<style type="text/css">
+	#grids {
+    margin: 0 auto;
+    padding: 5px;
+    background: url("./4.jpg");
+    min-height: 500px;
+    border: 1px solid #eebb55;
+    border: 1px solid #000000;
+    border-radius: 7px;
+    padding-bottom: 100px;
+    padding-top: 80px;
+
+}
+#display,#moves{
+	font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+}
+.grid {
+    background: url("./Safe1.png");
+     background-size: cover;
+    color: #000000;
+    border: 1px solid #ccccff;
+    border-radius: 5px;
+    flex: 1;
+    width: 80px;
+    height: 120px;
+    text-align: center;
+	font-family: "Times New Roman", Times, serif;
+    vertical-align: middle;
+    font-size: 30px;
+}
+
+.mytable {
+	margin: 0 auto;
+}
+.grid:hover {
+    color: #E68B8B;*/
+    border-color: #C0C0C0;
+    color: #C0C0C0;
+    cursor: pointer;
+}
+
+.row {
+    display: flex;
+    flow-direction: row;
+}
+
+ fieldset {
+  	border-style: solid;
+    border: 20px ;
+    text-align: center;
+    border-radius:8px;
+	box-shadow:0 0 10px #999;
+}
+.myButton {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #70736e));
+	background:-moz-linear-gradient(top, #000000 5%, #70736e 100%);
+	background:-webkit-linear-gradient(top, #000000 5%, #70736e 100%);
+	background:-o-linear-gradient(top, #000000 5%, #70736e 100%);
+	background:-ms-linear-gradient(top, #000000 5%, #70736e 100%);
+	background:linear-gradient(to bottom, #000000 5%, #70736e 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#70736e',GradientType=0);
+	background-color:#000000;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #e0e0e0;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+	display: block;
+	margin: 0 auto;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #70736e), color-stop(1, #000000));
+	background:-moz-linear-gradient(top, #70736e 5%, #000000 100%);
+	background:-webkit-linear-gradient(top, #70736e 5%, #000000 100%);
+	background:-o-linear-gradient(top, #70736e 5%, #000000 100%);
+	background:-ms-linear-gradient(top, #70736e 5%, #000000 100%);
+	background:linear-gradient(to bottom, #70736e 5%, #000000 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#70736e', endColorstr='#000000',GradientType=0);
+	background-color:#70736e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+li {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	color: #8B0000;	
+}
+
+
+</style>
+</head>
+
+
+<body>
+<fieldset>
+<h1 id="display"></h1>
+<h1 id="moves"></h1>
+</fieldset>
+<br>
+<br>
+<h2 style="text-align: center;" id='head'></h2>
+<div id="grids">
+<h2 >Rules:</h2>
+<div style="background-color: #FFFFFF">
+<ul>
+  <li>Your key is <b>LOST</b> and you have to find it.</li>
+  <li>There are 100 lockers out of which 1 locker contains the key</li>
+  <li>Open lockers by clicking on them</li>
+  <li>Each locker contains hint to reach the box.</li>
+  <li>Five lockers contain Bombs and game ends if you open one of it game ends</li> 
+  <li>Clues in some lockers is lost and some contain misguiding clues.</li>
+  <li>Find the key in least number of moves</li>
+  <li><b>ENJOY PLAYING!!</b></li>
+</ul>  
+</div>
+<br>
+<br>
+<br>
+
+<button onclick="Create()" class="myButton">Start Game</button>
+</div>
+<script type="text/javascript">
+
+
+document.getElementById('display').innerHTML = "Key Locked";
+var ans;
+var clicked = [];
+var Bombs = [];
+var Lost = [];
+var moves = 0;
+
+
+var messageClose = [
+	"You are about to find it!",
+	"Damn! You just missed it!",
+	"So Close! So Close",
+	"You almost found that",
+	"Check nearby lockers Buddy!!",
+	"Differnce is not more than 3"
+];
+
+var messageToofarLarge = [
+	"Too far buddy. Too far!!",
+	"Poor Guess, Think Smaller",
+	"You're on Earth. Need to go to Sun,Imagine distance",
+	"Search in locker with much smaller number",
+	"Too large than actual locker",
+	"Go to smaller boxes else you'll get killed",
+	"Smaller numbers are way better",
+	"Way to go. Go for something lot lesser",
+	"Go to locker No. 1 ;) ",
+	"Cheers! Go for value which is not nearby and is much smaller",
+	"Don't Search nearby lockers... Search in lockers with much lesser value",
+	"Having fun? Search in boxes with lesser number to have more of it",
+	"Getting similar message again and again! Search in boxes which are less numbered and you'll find it",
+	"Key is in number like Ant"
+]
+
+var messagefarLarge = [
+	"Neither Too far, Neither Too Close, But smaller than this",
+	"Clues are flowing, So are you, go slow, go wise",
+	"Search in locker with lesser value",
+	"100 lockers, 1 locker with Key, 5 Bombs, Go for lesser valued box",
+	"Dont Search in nearby lockers, go down",
+	"Search is locker with small number",
+	"You are a fine distance away. Keep Going!",
+	"Lesser the value, the better it is!"
+]
+
+var messageToofarSmall = [
+	"Too far buddy. Too far!!",
+	"Poor Guess, Think Large",
+	"You're on Sun. Need to come to Earth, Imagine distance",
+	"Search in locker with much larger number",
+	"Too small than actual locker",
+	"Go to larger boxes else you'll get killed",
+	"I am in love with larger numbers",
+	"Go to 100! I am troller!",
+	"Large is the new small",
+	"Infinitely More?",
+	"Having fun? Search in boxes with larger number to have more of it",
+	"Key is in number like Elephant",
+	"Differnce is more than 20",
+	"Bomb is nearby!! Run away"
+]
+
+var messagefarSmall = [
+	"Neither Too far, Neither Too Close, But larger than this",
+	"Clues are flowing, So are you",
+	"Search in locker with larger value",
+	"100 lockers, 1 locker with Key, 5 Bombs, Go for larger valued box",
+	"Search Down Fast",
+	"Search is locker with large number",
+	"You are a fine distance away. Keep Going!",
+	"Greater the value, the better it is!",
+	"Go Down the locker lane",
+	"Trust me!! Go to 50 B) "
+]
+function Create()
+{
+	document.getElementById('grids').innerHTML = "";
+	document.getElementById('moves').innerHTML = 'Moves: ' + moves;
+	document.getElementById('display').innerHTML = "Game is On!";
+	document.getElementById('head').innerHTML = "Key Locked\n\n";
+	ans = Math.floor(Math.random()*100) + 1;
+	count = 5;
+	while(count > 0)
+	{
+		var p = Math.floor(Math.random()*100) + 1;
+		if(p!=ans)
+			Bombs.push(p);
+		count--;
+	}
+	count = 5;
+	while(count > 0)
+	{
+		var p = Math.floor(Math.random()*100) + 1;
+		if(p!=ans)
+			Lost.push(p);
+		count--;
+	}
+
+	grid = clickableGrid(10,10);
+	console.log(grid);
+	document.getElementById('grids').appendChild(grid);
+}
+function CheckBox(num){
+	var response;
+	if(Bombs.indexOf(num) != -1)
+	{
+		response = 'Boom! You got Killed';
+		alert('Boom! You Got Killed. Click OK to restart');
+		window.location.reload();	
+	}
+	else if(Lost.indexOf(num) == 0)
+		response = 'No Message my boy';
+	else if(Lost.indexOf(num) == 1 || Lost.indexOf(num) == 2 )
+		response = 'Message is Lost';
+	else if(Lost.indexOf(num) == 3)
+		response = 'One Bomb is Present in locker number ' + Bombs[0];	
+	else if(Lost.indexOf(num) == 4)
+		response = 'One Bomb is Present in locker number ' + Bombs[1];
+
+	else if(clicked.indexOf(num) != -1)
+		response = 'You have Already read this message';
+
+	else if(num === ans)
+	{
+		response = 'You win';
+		moves++;
+		alert("You Found the Key!!\nMoves = " + moves + "\nClick OK for restart");
+		window.location.reload();
+	}
+	else if(num > ans)
+	{
+		if(num-ans < 3)
+		{
+			response = messageClose[Math.floor(Math.random()*6)]
+		}
+
+		else if(num-ans < 20)
+			response = messagefarLarge[Math.floor(Math.random()*8)];
+		else
+			response = messageToofarLarge[Math.floor(Math.random()*14)];
+	}
+	else
+	{
+		if(ans-num < 3)
+			response = messageClose[Math.floor(Math.random()*6)]
+		else if(ans-num < 20)
+			response = messagefarSmall[Math.floor(Math.random()*10)];
+		else
+			response = messageToofarSmall[Math.floor(Math.random()*14)];
+
+	}
+	document.getElementById('display').innerHTML = 'Message: '+ response;
+	moves++;
+	document.getElementById('moves').innerHTML = 'Moves: ' + moves;
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+	// alert(response);
+}
+function clickableGrid( rows, cols)
+{
+  var i=0;
+  var grid = document.createElement('table');
+  grid.className = 'mytable';
+  for (var r=0;r<rows;++r){
+    var tr = grid.appendChild(document.createElement('tr'));
+    tr.className = 'row';
+    for (var c=0;c<cols;++c){
+      var cell = tr.appendChild(document.createElement('td'));
+      cell.innerHTML = ++i;
+      cell.className = 'grid';
+      cell.addEventListener('click',function(){CheckBox(parseInt(this.innerHTML)); clicked.push(parseInt(this.innerHTML));});	
+    }
+  }
+  return grid;
+}
+</script>
+</body>
+</html>

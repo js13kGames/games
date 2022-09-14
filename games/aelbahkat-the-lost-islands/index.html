@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>&AElig;LBAHKAT Exploration Game</title>
+<style>
+body {
+background: #000;
+padding: 0;
+margin: 0;
+color: #fff;
+font-size: 16px;
+font-family: "Lucida Console", Monaco, monospace;
+}
+button {
+font-family: inherit;
+font-size: inherit;
+padding: 1em 2em;
+border: solid 1px rgba(255,255,255,0.5);
+color: #fff;
+background: rgba(0,0,0,0.5);
+cursor: pointer;
+transition: all 1s;
+}
+button:hover {
+border-color: #fff;
+background: rgba(50,50,50,0.5);
+}
+#body {
+display: none;
+}
+#g {
+display: block;
+width: 100%;
+height: 700px;
+border: solid 2px #5252FF;
+box-sizing: border-box;
+}
+#title {
+padding: 2%;
+text-align: center;
+}
+#title h1 {
+font-size: 730%;
+letter-spacing: -0.1em;
+margin: 0.2em 0 0.1em 0;
+opacity: 0.4;
+}
+#intro {
+display: none;
+max-width: 36em;
+margin: 1em auto;
+}
+#intro button {
+display: block;
+margin: 0 auto;
+font-size: 200%;
+}
+#intro button span {
+font-size: 50%;
+display: block;
+margin-top: 0.5em;
+}
+#intro p { 
+margin: 2em 0; 
+line-height: 1.4em;
+color: #666666;
+}
+.ver {
+opacity: 0.4;
+}
+.sub {
+font-size: 350%;
+letter-spacing: -0.05em;
+}
+.credits {
+font-size: 120%;
+margin-top: 3em;
+}
+#loading { 
+font-size: 200%; 
+text-align: center;
+padding: 0.5em;
+color: #5252FF;
+}
+#time {
+position: fixed;
+top: 0;
+left: 0;
+padding: 1em;
+}
+#what, #verb {
+position: fixed;
+bottom: 0;
+left: 50%;
+width: 18em;
+margin-left: -9em;
+padding: 1em;
+text-align: center;
+}
+#what {
+border: solid 2px #5252FF;
+background: #000;
+}
+#verb {
+bottom: 3em;
+}
+#inventory {
+border: solid 2px #5252FF;
+max-width: 14em;
+background: #000;
+position: fixed;
+top: 0;
+bottom: 0;
+right: 0;
+padding: 1em;
+overflow: auto;
+}
+#inventory h2 {
+font-size: 100%;
+font-weight: bold;
+}
+#tips {
+font-size: 80%;
+}
+#virtueCount,
+#people {
+text-align: right;
+}
+ul {
+padding-left: 2em;
+}
+li {
+margin-bottom: 0.5em;
+}
+#win {
+color: red;
+font-size: 120%;
+text-align: center;
+}
+.winBig {
+font-size: 200%;
+}
+i {
+display: block;
+width: 2em;
+margin: 0 auto;
+font-size: 300%;
+font-style: normal;
+}
+.spin {
+animation: spin 3s infinite linear;
+}
+@keyframes spin {
+0%  { transform: rotate(0deg);}
+100% {transform: rotate(360deg);}   
+}
+</style>
+</head>
+<body>
+<div id="title">
+	<h1>&AElig;LBAHKAT</h1>
+	<div class="sub">The Lost Islands</div>
+	<p class="credits">
+	<span class="ver">v1.0</span>
+	By Luke @deathraygames for js13k 2017
+	</p>
+</div>
+<div id="intro">
+	<button type="button" id="beginButton">Begin Journey <span>[Enter]</span></button>
+	<p>
+		A cataclysm has shattered the known world and left islands adrift in the cosmos. Each island has only a handful of inhabitants, struggling to survive. All signs of civilization are gone, except for a few ancient shrines and stone gateways, and only the mystics seem to understand their signifigance.
+	</p>
+	<p>
+		You wake up on one of these islands as a Stranger, not remembering your past. Perhaps with some exploration and meditation you will be able to uncover a way home...
+	</p>
+</div>
+<div id="win" style="display:none">
+	You enter the red moon gate and teleport home.
+	<p class="winBig">YOU WIN!<i>&#9765;</i></p>
+</div>
+<div id="loading">
+	<i class="spin">&#9765;</i>
+	Loading...
+</div>
+<div id="body">
+	<canvas id="g"></canvas>
+	<div id="what"></div>
+	<div id="verb"></div>
+	<div id="time"></div>
+	<div id="inventory">
+		<h2>Inventory</h2>
+		<ul id="items">
+		</ul>
+		<h2>Virtues</h2>
+		<ul id="virtues">
+		</ul>
+		<div id="virtueCount"></div>
+		<h2>People</h2>
+		<div id="people"></div>
+		<h2>Tips</h2>
+		<ul id="tips">
+			<li>Move with arrow keys or WASD</li>
+			<li>[I] or [Tab] to toggle this inventory</li>
+			<li>[E] or [Space] will do actions when near people or objects</li>
+			<li>[M] to meditate</li>
+			<li>[+] &amp; [-] to zoom</li>
+			<li>Boats, coats, and water will increase your speed on the seas, mountains, and deserts</li>
+			<li>Tents will speed up time [E] when not near anything</li>
+			<li>Your goal is to explore: find all shrines, a mystic, and a way to leave</li>
+		</ul>
+	</div>	
+</div>
+<script src="game.min.js"></script>
+<script>
+	var g = new Game();
+	g.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- <html manifest="myGame.appcache">-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,user-scalable=no"/>  
+		<link rel="shortcut icon" href="favicon.ico">
+		<title>JS13K</title>
+	</head>
+	<body>
+		<div id="game"  touch-action="none"  unselectable="on" class="unselectable">
+			<canvas id="c0" height="610" width="610" touch-action="none" unselectable="on" class="unselectable"></canvas>
+		</div>
+	</body>
+	<script src="main.min.js"></script>
+	<script>
+document.addEventListener('pointerdown', function(e) { e.preventDefault(); }, false);
+document.addEventListener('pointermove', function(e) { e.preventDefault(); }, false);
+document.addEventListener('pointerup', function(e) { e.preventDefault(); }, false);
+	</script>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BounceBack</title>
+</head>
+<body style="background:#333;text-align:center;">
+	<div id="title">
+		<div style="font-size:128px;color:#ffffff">BounceBack</div>
+		<div style="max-width:800px;margin:auto;font-size:24px;color:#3399cc;text-align:left;">A simple shooting game.<br>The shield on your back can protect you.<br>Bullets will bounce back when they hit a wall or your shield.<br>The shield narrows after a hit and regenerates slowly.<br>A bullet damages whoever hits it.</div>
+		<div style="max-width:800px;margin:auto;font-size:24px;color:#66ccff;text-align:left;">Instructions:<br>Your character always faces your mouse pointer.<br>X to move forward.C to shoot bullets.P to pause/continue.</div>
+		<div style="font-size:64px;cursor:pointer;color:#ffffff" onclick="startclick();">START</div>
+	</div>
+	<!-- <div style="background:#0f0"> -->
+		<div id="levels" style="display:none;background:rgba(0,102,153,0.5);max-width:1024px;font-size:32px;color:#ffffff;display:none;"></div>
+	<!-- </div> -->
+	<script src="physics.js" type="text/javascript"></script>
+	<script src="canvas.js" type="text/javascript"></script>
+	<script src="levels.js" type="text/javascript"></script>
+	<script src="main.js" type="text/javascript"></script>
+</body>

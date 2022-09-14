@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>Adrift</title>
+    <style>
+		body{
+			background-color:#151515;
+			color:white;
+			font-family: sans-serif;
+		}
+		h1,p{
+			font-weight:normal;
+			letter-spacing:4px;
+		}
+		#container{
+			position:absolute;
+			top:0;
+			left:0;
+			right:0;
+			bottom:0;
+			display: flex;
+			flex-direction:column;
+			align-items: center;
+			justify-content: center;
+		}
+		#compass-control, #map-control {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+<div id="container">
+    <h1>Adrift</h1>
+    <div id="canvasContainer"></div>
+	<p>&#9664; / &#9654; : rudder&emsp;A / D : sail&emsp;F : furl sail</p>
+	<p><span id='compass-control'>C : compass</span>&emsp;<span id='map-control'>M : map</span></p>
+	<p>@dhmstark</p>
+</div>
+<script src="noise.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>nbody - A game for the 13kjs15 gamejam by Etienne Ott</title>
+        <style type="text/css">
+            body {
+                margin: 0;
+                background-color: #000;
+                overflow: hidden;
+            }
+            #screen {
+                margin: auto;
+            }
+            div {
+                text-align: center;
+                font-size: 18px;
+                line-height: 40px;
+                font-family: 'Lucida Console';
+                color: #fff;
+            }
+            .title {
+                font-size: 80px;
+            }
+            span[onClick] {
+                font-size: 25px;
+                cursor: pointer;
+            }
+            #menu, #tutorial, #save {
+                margin-top: 100px;
+            }
+            #tutorial {
+                line-height: 30px;
+            }
+            #hud {
+                position: absolute;
+                width: 100%;
+            }
+            #lvl {
+                float: left;
+                padding: 1%;
+                width: 20%;
+                text-align: left;
+            }
+            #skip {
+                width: 53%;
+                padding: 1%;
+                float: left;
+                display: none;
+            }
+            #ast {
+                float: right;
+                padding: 1%;
+                width: 20%;
+                text-align: right;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="menu">
+            <span class="title">nbody</span>
+            <br>
+            <br>
+            <span onClick="toggleGame();">Start game</span>
+            <br>
+            <span onClick="toggleTutorial();">How to play</span>
+            <br>
+            <span onClick="toggleSave();">Save game</span>
+            <br>
+            <span onClick="mute();">Mute sound</span>
+        </div>
+        <div id="tutorial" style="display: none;">
+            Collect the asteroids orbiting the planets,<br>
+            while avoiding crashing into them or<br>
+            flying off into space.
+            <br>
+            <br>
+            <span>Controls:</span><br>
+            <span>Hold space - Reverse movement</span><br>
+            <span>Escape - Goto menu</span><br>
+            <span>R - Reset level</span><br>
+            <span>Any other key - Reverse gravity</span><br>
+            <br>
+            <span>If the level seems impossible, it might be due<br>
+                to unfortunate level generation. Save the game<br>
+                and reload for another try.</span>
+            <br>
+            <br>
+            <span onClick="toggleTutorial();">Back to menu</span>
+        </div>
+        <div id="save" style="display: none;">
+            Copy this URL and save it to return to the game with your current progress:<br>
+            <span id="url"></span><br><br>
+            <span onClick="toggleSave();">Back to menu</span>
+        </div>
+        <div id="hud" style="display: none;">
+            <span id="lvl"></span>
+            <span id="skip" onClick="level(true)">Skip level?</span>
+            <span id="ast"></span>
+        </div>
+        <canvas id="screen" width="100" height="100" style="display: none;"></canvas>
+
+
+        <script type="text/javascript">
+var song={songData:[{i:[2,192,128,0,2,192,140,18,0,0,158,119,158,0,0,0,0,0,0,2,5,0,0,32,0,0,24,8],p:[1,2,3,1,2,3,4],c:[{n:[147,,,,,,,,,,,,,,,,149],f:[]},{n:[154,,,,,,,,,,,,,,,,152],f:[]},{n:[151,,,,,,,,,,,,,,,,149],f:[]},{n:[],f:[]}]},{i:[2,192,128,0,2,192,140,18,0,0,107,115,138,0,0,0,136,5,1,2,8,92,21,32,148,5,85,8],p:[,,,5,6,7],c:[{n:[],f:[]},{n:[],f:[]},{n:[],f:[]},{n:[],f:[]},{n:[123],f:[]},{n:[126],f:[]},{n:[122],f:[]}]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]}],rowLen:5513,patternLen:32,endPattern:8};
+var explosion={songData:[{i:[0,214,104,1,0,204,104,0,1,229,4,40,21,0,0,0,231,6,1,3,183,15,0,32,232,4,74,6],p:[1],c:[{n:[147,147,147],f:[]}]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]}],rowLen:5513,patternLen:32,endPattern:2};
+var pickup={songData:[{i:[1,192,128,0,1,191,116,9,0,0,6,22,34,0,0,0,69,3,1,1,23,167,0,32,77,6,25,6],p:[1],c:[{n:[164,166],f:[]}]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]}],rowLen:5513,patternLen:32,endPattern:2};
+var abscond={songData:[{i:[0,255,106,1,0,255,106,0,1,0,5,7,164,0,0,0,0,0,0,2,255,0,2,32,83,5,25,1],p:[1],c:[{n:[152],f:[]}]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]},{i:[2,100,128,0,3,201,128,0,0,0,5,6,58,0,0,0,195,6,1,2,135,0,0,32,147,6,121,6],p:[],c:[]}],rowLen:5513,patternLen:32,endPattern:2};
+
+function initMusic(){for(var t=0;4>t;t++){var e=new CPlayer,i=[song,explosion,pickup,abscond];e.init(i[t]),e.generate(),e.generate();var a=e.createWave();audio[t]=new Audio,audio[t].src=URL.createObjectURL(new Blob([a],{type:"audio/wav"})),0==t&&(audio[t].loop=!0,audio[t].volume=.5,audio[t].play())}}function play(t){audio[t].pause(),audio[t].currentTime=0,audio[t].play()}function mute(){muted=!muted;for(var t=0;t<audio.length;t++)audio[t].volume=muted?0:0==t?.5:1}function $(t){return document.getElementById(t)}function h(t,e){$(t).style.display=e?"block":"none"}function toggleGame(){isMenu=!isMenu,isMenu?window.clearInterval(loop):loop=window.setInterval("gameLoop()",15),h("menu",isMenu),h("screen",!isMenu),h("hud",!isMenu)}function toggleTutorial(){isTutorial=!isTutorial,h("tutorial",isTutorial),h("menu",!isTutorial)}function toggleSave(){isSave=!isSave,h("save",isSave),h("menu",!isSave);var t=window.location;$("url").innerHTML=t.origin+t.pathname+"?h="+(2353*levelCounter+3727)%1e4}function keyEvent(t,e){32==e?(1==t&&0==keyStatus[0]||0==t)&&(keyStatus[0]=t):27==e?keyStatus[2]=t:82==e&&(1==t&&0==keyStatus[3]||0==t)?keyStatus[3]=t:keyStatus[1]=t}function registerListeners(){window.addEventListener("keydown",function(t){keyEvent(1,t.keyCode)},!1),window.addEventListener("keyup",function(t){keyEvent(0,t.keyCode)},!1)}function inputUpdate(){1==keyStatus[1]&&(keyStatus[1]=2,g*=-1),1==keyStatus[2]&&(keyStatus[2]=2,toggleGame()),1==keyStatus[3]&&(keyStatus[3]=2,level(!1))}function circle(t,e,i,a,n,o){ctx.beginPath(),ctx.arc(t,e,i,0,2*pi,!1),ctx.lineWidth=n,ctx.strokeStyle=a,ctx.fillStyle=a,o?ctx.fill():ctx.stroke()}function drawBackground(){if(!img){ctx.fillStyle="#ffffff";for(var t=0;1e3>t;t++)ctx.fillRect(can.width*r()-shiftX,can.height*r()-shiftY,1,1);for(var t=0;50>t;t++)twinkles[t]=[can.width*r()-shiftX,can.height*r()-shiftY,[o(min(255,255*r())),o(min(255,255*r())),o(min(255,255*r()))],o(60*r())];img=new Image,img.src=can.toDataURL("image/png"),can.style.background="url("+img.src+")"}ctx.clearRect(-shiftX*scaleX,-shiftY*scaleY,can.width*scaleX,can.height*scaleY);for(var t=0;t<twinkles.length;t++){var e=(twinkles[t][3]+fc[0])%60/30;ctx.fillStyle="rgba("+twinkles[t][2][0]+","+twinkles[t][2][1]+","+twinkles[t][2][2]+","+(e>1?2-e:e)+")",ctx.fillRect(twinkles[t][0],twinkles[t][1],2,2)}}function drawExplosion(){for(var t=1;13>t;t+=2)circle(posX,posY,fc[1]*t,"#ff0000",2);var e=ctx.createRadialGradient(posX,posY,0,posX,posY,3*fc[1]);e.addColorStop(0,"#ffff00"),e.addColorStop(.5,"#ff0000"),e.addColorStop(1,"rgba(255,0,0,0.1)"),circle(posX,posY,3*fc[1],e,1,!0)}function drawPlayerAt(){ctx.beginPath(),ctx.strokeStyle="#696BFF",ctx.moveTo(posX,posY),hist.backIter(function(t){ctx.lineTo(t[0],t[1])}),ctx.stroke(),hist.backIter(function(t,e){e%3==0&&circle(t[0],t[1],1.5,"#696BFF",1,!0)});var t=ctx.createRadialGradient(posX,posY,0,posX,posY,50);t.addColorStop(0,"rgba(54,57,255,0.3)"),t.addColorStop(1,"rgba(54,57,255,0.0)"),circle(posX,posY,50,t,1,!0),rr(posX,posY,10,"rgba(54,57,255,1.0)",pi*(fc[0]%30)/30),rr(posX,posY,10,"rgba(54,57,255,1.0)",-pi*(fc[0]%30)/30)}function drawPlanets(){for(var t=0;t<planets.length;t++){var e=ctx.createRadialGradient(planets[t][0],planets[t][1],0,planets[t][0],planets[t][1],200);e.addColorStop(0,planetColor(planets[t],1,1)),e.addColorStop(1,planetColor(planets[t],0,1)),circle(planets[t][0],planets[t][1],200,e,1,!0),circle(planets[t][0],planets[t][1],10+20*planets[t][2],planetColor(planets[t],1,1.5),1,!0)}}function drawAsteroidAt(t,e){var i=ctx.createRadialGradient(t,e,0,t,e,50);i.addColorStop(0,"rgba(255,40,40,0.2)"),i.addColorStop(1,"rgba(255,40,40,0.0)"),circle(t,e,50,i,1,!0),circle(t,e,3,"#ff2828",1,!0)}function planetColor(t,e,i){return pl=0>g?[1,.6,.3]:[.3,1,.6],"rgba("+o(min(255,i*pl[0]*255*t[2]))+","+o(min(255,i*pl[1]*255*t[2]))+","+o(min(255,i*pl[2]*255*t[2]))+","+e+")"}function rr(t,e,i,a,n){ctx.fillStyle=a,ctx.translate(t,e),ctx.rotate(n),ctx.fillRect(-.5*i,-.5*i,i,i),ctx.rotate(-n),ctx.translate(-t,-e)}function doMovement(){for(var t=0;t<planets.length;t++){var e=posX-planets[t][0],i=posY-planets[t][1],a=sqrt(e*e+i*i),n=g*planets[t][2]/(a*a);if(vX+=n*sin(.5*pi*(e/a)),vY+=n*sin(.5*pi*(i/a)),a<10+20*planets[t][2])return void collided()}var o=!1;1==keyStatus[0]&&(o=hist.pop(),o?(posX=o[0],posY=o[1],vX=o[2],vY=o[3]):keyStatus[0]=2),o||(posX+=vX,posY+=vY,hist.add(posX,posY,vX,vY));for(var t=0;t<planets.length;t++)for(var r=0;4>r;r+=3)if(planets[t][3][2+r]){var s=2*pi*(fc[0]%planets[t][3][1+r]/planets[t][3][1+r]);ax=planets[t][0]+planets[t][3][0+r]*sin(s),ay=planets[t][1]+planets[t][3][0+r]*cos(s),drawAsteroidAt(ax,ay),sqrt((posX-ax)*(posX-ax)+(posY-ay)*(posY-ay))<30&&(planets[t][3][2+r]=!1,score++,$("ast").innerHTML="Asteroids "+score+"/"+winScore,play(2))}}function checkBounds(){return-2e3>posX||posX>2800||-1500>posY||posY>2100}function getPlanets(){for(var t=[],e=0;e<o(1+2*r());e++)t[e]=[o(100+600*r()),o(50+500*r()),.1+.9*r(),[o(60+25*r()),o(100+50*(r()-1)),!0,o(60+25*r()),o(100+50*(r()-1)),r()>.5]];return t}function getPositions(){for(var t=!1,e=resetPlanets;!t;){t=[o(100+600*r()),o(50+500*r()),o(1+2*r()),o(1+2*r())];for(var i=0;i<e.length;i++)(t&&Math.abs(e[i][0]-t[0])<100||Math.abs(e[i][1]-t[1])<100)&&(t=!1)}return t}function level(t){switch(levelCounter){case 0:planets=[[400,300,.5,[100,500,!0,0,0,!1]]],positions=[400,200,-5,0];break;case 1:planets=[[400,200,.5,[85,150,!0,80,40,!0]],[400,400,.5,[85,70,!0,90,100,!0]]],positions=[100,300,3,0];break;case 2:planets=[[400,300,.5,[50,120,!0,0,0,!1]]],positions=[400,200,5,0];break;case 3:planets=[[400,300,1,[50,50,!0,0,0,!1]],[200,200,.3,[150,250,!0,0,0,!1]]],positions=[550,100,1.5,2.5];break;default:t&&(resetPlanets=getPlanets(),resetPositions=getPositions(),fail=0),planets=clone(resetPlanets),positions=clone(resetPositions)}score=0,winScore=0;for(var e=0;e<planets.length;e++)winScore+=(planets[e][3][2]?1:0)+(planets[e][3][5]?1:0);posX=positions[0],posY=positions[1],vX=positions[2],vY=positions[3],g=-Math.abs(g),hist.reset(),$("lvl").innerHTML="Level "+(levelCounter+1),$("ast").innerHTML="Asteroids "+score+"/"+winScore,$("skip").style.display="none"}function collided(){gameState=2,fc[1]=0,play(1)}function gameLoop(){switch(fc[0]++,inputUpdate(),gameState){case 0:registerListeners(),gameState=1;var t=window.location.search;if(t.search(/h=/)>=0)for(var e=t.substr(t.search(/h=/)+2),i=0;1e3>=i;i++){var a=(2353*i+3727)%1e4;if(a==e){levelCounter=i;break}}level(!0);break;case 1:drawBackground(),drawPlanets(),doMovement(),drawPlayerAt(posX,posY),score>=winScore?gameState=3:checkBounds()&&(gameState=2,play(3),fc[1]=26),fail>=3&&levelCounter>3&&($("skip").style.display="block");break;case 2:fc[1]<=25?(drawBackground(),drawPlanets(),drawExplosion(),fc[1]++):(fc[1]=0,fail++,level(!1),gameState=1);break;case 3:levelCounter++,level(!0),fail=0,gameState=1}}function clone(t){var e,i;if(Array.isArray(t)){for(i=t.slice(0),e=0;e<i.length;e++)i[e]=clone(i[e]);return i}return t}var audio=[],muted=!1,CPlayer=function(){var t,e,i,a,n,o=function(t){return Math.sin(6.283184*t)},r=function(t){return 2*(t%1)-1},s=function(t){return.5>t%1?1:-1},l=function(t){var e=t%1*4;return 2>e?e-1:3-e},c=function(t){return.003959503758*Math.pow(2,(t-128)/12)},p=function(t,e,i){var a,n,o,r,s,l,p,u=h[t.i[0]],f=t.i[1],d=t.i[3],v=h[t.i[4]],g=t.i[5],w=t.i[8],y=t.i[9],k=t.i[10]*t.i[10]*4,m=t.i[11]*t.i[11]*4,S=t.i[12]*t.i[12]*4,x=1/S,X=t.i[13],Y=i*Math.pow(2,2-t.i[14]),M=new Int32Array(k+m+S),b=0,C=0;for(a=0,n=0;k+m+S>a;a++,n++)n>=0&&(X=X>>8|(255&X)<<4,n-=Y,l=c(e+(15&X)+t.i[2]-128),p=c(e+(15&X)+t.i[6]-128)*(1+8e-4*t.i[7])),o=1,k>a?o=a/k:a>=k+m&&(o-=(a-k-m)*x),r=l,d&&(r*=o*o),b+=r,s=u(b)*f,r=p,w&&(r*=o*o),C+=r,s+=v(C)*g,y&&(s+=(2*Math.random()-1)*y),M[a]=80*s*o|0;return M},h=[o,s,r,l];this.init=function(o){t=o,e=o.endPattern-2,i=0,a=o.rowLen*o.patternLen*(e+1)*2,n=new Int32Array(a)},this.generate=function(){var r,s,l,c,u,f,d,v,g,w,y,k,m,S,x=new Int32Array(a),X=t.songData[i],Y=t.rowLen,M=t.patternLen,b=0,C=0,P=!1,L=[];for(l=0;e>=l;++l)for(d=X.p[l],c=0;M>c;++c){var A=d?X.c[d-1].f[c]:0;A&&(X.i[A-1]=X.c[d-1].f[c+M]||0,15>A&&(L=[]));var T=h[X.i[15]],H=X.i[16]/512,I=Math.pow(2,X.i[17]-9)/Y,R=X.i[18],B=X.i[19],$=43.23529*X.i[20]*3.141592/44100,E=1-X.i[21]/255,G=1e-5*X.i[22],U=X.i[23]/32,q=X.i[24]/512,F=6.283184*Math.pow(2,X.i[25]-9)/Y,W=X.i[26]/255,D=X.i[27]*Y;for(y=(l*M+c)*Y,u=0;4>u;++u)if(f=d?X.c[d-1].n[c+u*M]:0){L[f]||(L[f]=p(X,f,Y));var j=L[f];for(s=0,r=2*y;s<j.length;s++,r+=2)x[r]+=j[s]}for(s=0;Y>s;s++)v=2*(y+s),w=x[v],w||P?(k=$,R&&(k*=T(I*v)*H+.5),k=1.5*Math.sin(k),b+=k*C,m=E*(w-C)-b,C+=k*m,w=3==B?C:1==B?m:b,G&&(w*=G,w=1>w?w>-1?o(.25*w):-1:1,w/=G),w*=U,P=w*w>1e-5,g=Math.sin(F*v)*q+.5,S=w*(1-g),w*=g):S=0,v>=D&&(S+=x[v-D+1]*W,w+=x[v-D]*W),x[v]=0|S,x[v+1]=0|w,n[v]+=0|S,n[v+1]+=0|w}return i++,i/8},this.createWave=function(){var t=2*a-8,e=t-36,i=44,o=new Uint8Array(i+2*a);o.set([82,73,70,70,255&t,t>>8&255,t>>16&255,t>>24&255,87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,255&e,e>>8&255,e>>16&255,e>>24&255]);for(var r=0,s=i;a>r;++r){var l=n[r];l=-32767>l?-32767:l>32767?32767:l,o[s++]=255&l,o[s++]=l>>8&255}return o},this.getData=function(t,e){for(var i=2*Math.floor(44100*t),a=new Array(e),o=0;2*e>o;o+=1){var r=i+o;a[o]=t>0&&r<n.length?n[r]/32768:0}return a}};initMusic();var isTutorial=!1,isMenu=!0,isSave=!1,loop;History=function(t){this.h=[];for(var e=0;2*t>e;e++)this.h[t]=[];this.n=t,this.li=0,this.hi=-1},History.prototype.add=function(t,e,i,a){this.hi++,this.hi-this.li>=this.n&&this.li++,this.h[this.hi]=[t,e,i,a],this.hi>=2*this.n-1&&(this.h=this.h.splice(this.li,this.hi-this.li),this.hi=this.hi-this.li-1,this.li=0)},History.prototype.backIter=function(t){for(var e=this.hi;e>=this.li;e--)t(this.h[e],e)},History.prototype.reset=function(){this.h=[],this.li=0,this.hi=-1},History.prototype.pop=function(){return this.hi>this.li?(this.hi--,this.h[this.hi+1]):!1};var r=Math.random,o=Math.round,min=Math.min,max=Math.max,sin=Math.sin,cos=Math.cos,sqrt=Math.sqrt,pi=Math.PI,can=$("screen"),ctx=can.getContext("2d"),levelCounter=0,score=0,winScore=0,fail=0,gameState=0,fc=[0,0,0,0];can.width=window.innerWidth-5,can.height=window.innerHeight-5,scaleX=max(1,1e3/can.width),scaleY=max(1,800/can.height),shiftX=max(.5*(can.width-1e3)),shiftY=max(.5*(can.height-800)),ctx.scale(1/scaleX,1/scaleY),ctx.translate(shiftX,shiftY);var img,twinkles=[],keyStatus=[0,0,0,0],posX,posY,vX,vY,hist=new History(200),g=-3e3,planets,resetPlanets,resetPositions;
+
+        </script>
+    </body>
+</html>

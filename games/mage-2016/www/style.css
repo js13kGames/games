@@ -1,0 +1,12 @@
+body
+{
+	background:#666;
+}
+#game
+{
+	border:1px solid black;
+	box-shadow:0 0 5px black;
+	position:absolute;
+	margin:auto;
+	top:0; bottom:0; left:0; right:0;
+}

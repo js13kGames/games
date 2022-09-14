@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+ 	<title>LettersRush</title>
+	<style>
+		#d1{
+			height:100px;
+			width:100px;	
+		   }
+		#canvas-container {
+ 			  width: 100%;
+   			  text-align:center;
+				}
+		#score
+			{	
+				border:2px solid black;
+				padding:10px;
+				 width: 100%;
+   			  	text-align:center;
+			}
+		body
+		{
+			background-image: linear-gradient(#C70039,#FFC300);
+		}
+	</style>
+ 	</head>
+	<body bgcolor="yellow">
+		<h1 style="color:black; text-align:center; font-family:Comic sans ms;">Letters Rush</h1>
+		<hr>
+		<p style="font-size:50px bold;  font-family:comic sans ms;  color:#581845 ;">Go to the textbox.click and start pressing the corresponding keys on the keyboard to blast the falling letters. You would lose once the letter reaches the bottom. Don't relax!! The speed of the letters falling increases as the score increases.</p>
+ 		<div id="canvas-container">
+		<canvas id="Canvas" width="600" height="600">
+ 		</canvas>
+		</div>
+ 	<script>
+	var score = 1;
+	var aflag = 1;
+	var bflag = 1;
+	var cflag = 1;
+	var dflag = 1;
+	var eflag = 1;
+	var fflag = 1;
+	var gflag = 1;
+	var hflag = 1;
+	var iflag = 1;
+	var jflag = 1;
+	var kflag = 1;
+	var speed = 1;
+	var a;
+	var b;
+	var c;
+	var d;
+	var e;
+	var f;
+	var g;
+	var h;
+	var i;
+	var j;
+	function random()
+	{
+		return Math.floor(Math.random() * (+max - +min)) + +min;
+	}
+ 	window.onload = function() {
+ 	var canvas = document.getElementById("Canvas"),
+ 	ctx = canvas.getContext("2d");
+ 
+ 	ctx.fillStyle = "black";
+ 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+ 
+	 ctx.fillStyle = "white";
+ 	 ctx.font = "50px Arial";
+	 ctx.fillText("OFFLINE", 200, 200);
+
+	var offline = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+	var min=0;
+    	var max=25;
+	var start = 0;
+	var start1= 20; 			
+	var start2= 0;
+	var start3 = 40;
+	var start4 = 15;
+	var start5 = 0;
+	var start6 = 30;
+	var start7 = 35;
+	var start8 = 20;
+	var start9 = 10;
+	var x=20;
+	var x1 = 80;
+	var x2 = 140;
+	var x3 = 200;
+	var x4 = 260;
+	var x5 = 300;
+	var x6 = 360;
+	var x7 = 420;
+	var x8 = 480;
+	var x9 = 540;
+	var random ;
+	var r,r1,r2,r3,r4,r5,r6,r7,r8,r9;
+	var random1 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random2 =Math.floor(Math.random() * (+max - +min)) + +min;	
+	var random3 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random4 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random5 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random6 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random7 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random8 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random9 =Math.floor(Math.random() * (+max - +min)) + +min;
+	var random10 =Math.floor(Math.random() * (+max - +min)) + +min;
+ 	setInterval(function(){
+	start += 2 + score/20;
+	start1 += 2 + score/20;
+	start2 += 2 + score/20;
+	start3 += 2 + score/20;
+	start4 += 2 + score/20;
+	start5 += 2 + score/20;
+	start6 += 2 +score/20;
+	start7 += 2 + score/20;
+	start8 += 2 + score/20;
+	start9 += 2 + score/20;
+ 	ctx.fillStyle = "black";
+ 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "white";
+ 	ctx.font = "50px Arial";
+	var rand = Math.floor(Math.random() * (+max - +min)) + +min;
+	if(aflag==0)
+	{		
+		start=20;
+		aflag=1;
+		random1=rand;
+	}
+	a=offline[random1];
+	ctx.fillText(a,x,start);	
+	var rand1 = Math.floor(Math.random() * (+max - +min)) + +min;
+	if(bflag==0)
+	{	
+		start1=0;
+		bflag=1;
+		random2=rand1;
+	}
+	b=offline[random2];
+	ctx.fillText(b,x1,start1);
+	var rand2 = Math.floor(Math.random() * (+max - +min)) + +min;
+	if(cflag==0)
+	{	
+		cflag=1;
+		start2=0;
+		random3=rand2;
+	}	
+	c=offline[random3];
+	ctx.fillText(c,x2,start2);
+	var rand3 = Math.floor(Math.random() * (+max - +min)) + +min;
+	if(dflag==0)
+	{	
+		dflag=1;
+		start3=0;
+		random4=rand3;
+	}
+	d=offline[random4];
+	ctx.fillText(d,x3,start3);
+	var rand4 = Math.floor(Math.random() * (+max - +min)) + +min;
+	if(eflag==0)
+	{
+		eflag=1;
+		start4=0;
+		random5=rand4;
+	}
+	e=offline[random5];	
+	ctx.fillText(e,x4,start4);
+	var rand5=Math.floor(Math.random() * (+max - +min)) + +min;
+	if(fflag==0)
+	{
+
+		fflag=1;
+		start5=0;
+		random6=rand5;
+	}
+	f=offline[random6];
+	ctx.fillText(f,x5,start5);
+	var rand6=Math.floor(Math.random() * (+max - +min)) + +min;
+	if(gflag==0)
+	{
+		gflag=1;
+		start6=0;
+		random7=rand6;
+	}
+	g=offline[random7];	
+	ctx.fillText(g,x6,start6);
+	var rand7=Math.floor(Math.random() * (+max - +min)) + +min;
+	if(hflag==0)
+	{
+		random8=rand7;
+		hflag=1;
+		start7=0;
+	}
+	h=offline[random8];
+	ctx.fillText(h,x7,start7);
+	
+	var rand8=Math.floor(Math.random() * (+max - +min)) + +min;
+	if(iflag==0)
+	{
+		random9=rand8;
+		iflag=1;
+		start8=0;
+	}
+	i=offline[random9];
+	ctx.fillText(i,x8,start8);
+
+	
+	var rand9=Math.floor(Math.random() * (+max - +min)) + +min;
+	if(jflag==0)
+	{
+		random10=rand9;
+		jflag=1;
+		start9=0;
+	}
+	j=offline[random10];
+	ctx.fillText(j,x9,start9);
+
+
+	if(start>canvas.height||start1>canvas.height||start2>canvas.height||start3>canvas.height||start4>canvas.height||start5>canvas.height||start6>canvas.height||start7>canvas.height||start8>canvas.height||start9>canvas.height)
+	{
+		document.write("Game over");
+		document.write("Your score is : " + score);
+		if (confirm("Do you want to play again?")) {
+			window.open("index.html", "_self");
+		} else {
+    		document.write("Game over.Your score is : " + score);
+		       } 
+	}
+	},40);
+	};
+	function myFunction(event)
+	{
+    	var x = event.which || event.keyCode;
+	if(x>=97)
+	{
+		x=x-32;
+	}
+    	var res = String.fromCharCode(x);
+  	if(res==a)
+	{
+		aflag=0;
+		score+=1;
+	}
+	if(res==b)
+	{
+		bflag=0;
+		score+=1;
+	}
+	if(res==c)
+	{
+		cflag=0;
+		score+=1;
+	}
+	if(res==d)
+	{
+		dflag=0;
+		score+=1;
+	}
+	if(res==e)
+	{
+		eflag=0;
+		score+=1;
+	}
+	if(res==f)
+	{
+		fflag=0;
+		score+=1;
+	}
+	if(res==g)
+	{
+		gflag=0;
+		score+=1;
+	}
+	if(res==h)
+	{
+		hflag=0;
+		score+=1;
+	}
+	if(res==i)
+	{
+		iflag = 0;
+		score+=1;	
+	}
+	if(res==j)
+	{
+		jflag = 0;
+		score+=1;
+	}
+	document.getElementById("demo").innerHTML = score;
+	}
+ </script>
+	<br>
+	<br>
+	<div style="float:left;" id="score">
+	<input id="ip" type="text" size="40" style=" border:2px solid black; text-align:center; font-size:40px;"  onkeypress="myFunction(event)">
+	<p style="font-size:40px;text-align:center; color:red;" id="demo"></p>
+	</div>
+ </body>
+</html>

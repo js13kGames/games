@@ -1,0 +1,235 @@
+<html>
+
+<head>
+    <script src="out.js"></script>
+
+    <style>
+        html, body {margin: 0; overflow: hidden; height: 100%}
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+
+<script>
+    (function () {
+
+        canvas = document.getElementById("canvas");
+        canvas.width = document.body.clientWidth; //document.width is obsolete
+        canvas.height = document.body.clientHeight; //document.height is obsolete
+        let collPlanet = false;
+        let collWh = false;
+        let collFrame = false;
+        let currentLvl = 0;
+        let kd_w = false;
+        let kd_a = false;
+        let kd_d = false;
+        let kd_x = false;
+        let s = null;
+
+
+        let world = initmenu();
+        //let world = init(lvls[6]);
+        draw(world);
+
+        function rand(min, max) {
+            return Math.random() * (max - min + 1) + min;
+        }
+
+        function randfloat(min, max) {
+            while (1) {
+                v = Math.random();
+                if (v > min && v < max)
+                    return v
+            }
+        }
+
+        function initmenu() {
+            let w = [];
+            w.push(new menu(0, 0));
+
+            document.onkeyup = function (e) {
+                if (e.key === 'Escape') {
+
+                    world = init(lvls[currentLvl]);
+                    draw(world);
+                }
+
+            };
+
+            for (let i = 0; i < 1000; i++) {
+                addStar(w, canvas.width);
+            }
+            return w;
+        }
+
+        function initend() {
+            let w = [];
+            w.push(new end(0, 0));
+
+            for (let i = 0; i < 1000; i++) {
+                addStar(w, canvas.width);
+            }
+            return w;
+        }
+
+        function init(lvl) {
+
+
+            let w = [];
+            s = new ship(lvl.s.x, lvl.s.y, lvl.s.f);
+
+            document.onkeydown = function (e) {
+                if (e.key === 'd') {
+                    kd_d = true;
+                }
+                if (e.key === 'a') {
+                    kd_a = true;
+                }
+                if (e.key === 'w') {
+                    kd_w = true;
+                }
+            };
+
+            document.onkeyup = function (e) {
+                if (e.key === 'w') {
+                    kd_w = false;
+                    s.speedEnd();
+                }
+
+                if (e.key === 'x') {
+                    kd_x = true; //no collision here only for reset
+                }
+
+                if (e.key === 'a') {
+                    kd_a = false;
+                    s.rotateEnd();
+                }
+
+                if (e.key === 'd') {
+                    kd_d = false;
+                    s.rotateEnd();
+                }
+            }
+
+            for (let i = 0; i < 1000; i++) {
+                addStar(w, canvas.width);
+            }
+
+            for (p of lvl.ps) {
+                p = new planet(p.x, p.y, p.r, p.m, p.t);
+                w.push(p);
+                s.addGravi(p)
+            }
+
+            for (a of lvl.ast) {
+                a = new asteroid(a.x, a.y, a.r, a.m, a.z, a.sx, a.sy);
+                w.push(a);
+                s.addGravi(a);
+            };
+
+            worm = new wormhole(lvl.wh.x, lvl.wh.y, lvl.wh.r, lvl.wh.m);
+            w.push(worm);
+            s.addGravi(worm);
+
+            w.push(s);
+
+            t = new tb(50, 50, s);
+            w.push(t)
+
+            let k = new key(canvas.width - 100, canvas.height - 100);
+            w.push(k);
+
+            let pr = new progress(50, canvas.height - 30, lvls, currentLvl);
+            w.push(pr);
+
+            return w;
+
+        }
+
+        function addStar(world, width) {
+            z = randfloat(0.1, 0.2);
+            y = rand(0.0, canvas.height);
+            x = rand(0.0, width);
+            world.push(new star(x, y, z));
+        }
+
+        function draw(w) {
+
+            let ctx = canvas.getContext('2d');
+            ctx.save();
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            if (kd_w) {
+                s.speedUp();
+            }
+            if (kd_a) {
+                s.rotate(-1);
+            }
+            if (kd_d) {
+                s.rotate(1);
+            }
+
+            for (let i = 0; i < w.length; i++) {
+                let obj = w[i];
+
+                coll = obj.update();
+
+                if (coll != null && coll.type === 'planet') {
+                    collPlanet = true;
+                }
+                else if (coll != null && coll.type === 'wormhole') {
+                    collWh = true;
+                }
+                else if (coll != null && coll.type === 'asteroid') {
+                    collPlanet = true;
+                }
+                else if (obj.type === 'ship') {
+                    if (obj.x < 0 || obj.x > canvas.width || obj.y < 0 || obj.y > canvas.height) {
+                        collFrame = true;
+                    }
+                }
+
+                ctx.save();
+                obj.draw(ctx);
+                ctx.restore();
+
+                if (obj.x > canvas.width && typeof star) {
+                    w.splice(i, 1);
+                    addStar(w, -10);
+                }
+            }
+
+            if (collPlanet || collFrame) {
+                collPlanet = false;
+                collFrame = false;
+                w = init(lvls[currentLvl]);
+            }
+            else if (collWh) {
+                collWh = false;
+
+                currentLvl += 1;
+                if(currentLvl == lvls.length) {
+                    w = initend();
+                } else {
+                    w = init(lvls[currentLvl]);
+                }
+
+            }
+
+            window.requestAnimationFrame(() => {
+                lastDraw = performance.now();
+                draw(w);
+            });
+
+        }
+    })();
+
+</script>
+
+</html>

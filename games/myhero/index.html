@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>M.Y.H.E.R.O.</title>
+  <style>
+    body{
+      margin:0;
+      background: black;
+    }
+    .textStyle{
+      font-size:75px;
+      font-family:sans-serif;
+      font-weight:bold;
+      text-align:center;
+      -webkit-text-stroke:5px gray;
+      -webkit-text-fill-color:blue;
+    }
+    .gData{
+      float:right;
+    }
+    .printString{
+      display:none;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+    canvas{
+      border: 1px solid gray;
+    }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+  <div id="gamesdata" class="textStyle gData">
+    <div id="score"></div>
+    <div id="pages"></div>
+    <div id="lives"></div>
+    <div id="laserTemperature"></div>  
+    <div id="timer"></div>
+    <div id="numMap"></div>
+  </div>
+  <div class="textStyle printString"></div>
+  <script src="./game.js"></script>
+  <script>
+    window.addEventListener('load',function(e){
+      var u = new Utils();
+      u.initLowRezCanvas(64,64,5,5);
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background: #303030;
+	display: flex;
+}
+
+.game-rendering {
+	background: black;
+	display: block;
+	margin: 0 auto;
+	align-self: center;
+}
+
+.resource,
+.game-image,
+.sprite-sheet-rendering,
+.individual-sprite-rendering {
+	display: none;
+}

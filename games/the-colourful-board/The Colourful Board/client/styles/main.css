@@ -1,0 +1,61 @@
+body{
+    background-color: #0be0fb;
+}
+.controllers-wrapper{
+    /* position: relative;
+    margin-left: 20px;
+    height: 60vh;
+    border: 1px solid;
+    background-color: skyblue;
+    margin: 5vw; */
+
+    position: relative;
+    margin-left: 20px;
+    height: 25vh;
+    border: 1px solid;
+    background-color: skyblue;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    margin-top: 25px;
+
+}
+
+.canvas-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.canvas-board {
+    background-color: #fff8dc;
+}
+
+.left-panel{
+    /* border: 1px solid red; */
+    margin-left: -8vw;
+}
+
+#events {
+    height: 18vh;
+    overflow-y: scroll;
+    background-color: azure;
+    margin: 5px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+}
+
+.chat-wrappers {
+position:absolute;
+bottom: 0;
+padding: 10px;
+}
+
+#chat-form {
+
+}
+
+#chat {
+    width: 30vw;
+}

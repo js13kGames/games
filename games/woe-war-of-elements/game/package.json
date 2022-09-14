@@ -1,0 +1,5 @@
+{
+  "name": "WoE - War of Elements",
+  "main": "server/server.js",
+  "author": "codelooksgood"
+}

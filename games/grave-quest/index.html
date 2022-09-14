@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>grave.quest</title>
+<style>
+*
+{
+	margin:		0px;
+	width:		100%;
+	height:		100vh;
+}
+button#StartXr
+{
+	font-size:		6vmax;
+	font-weight:	bold;
+	font-family:	sans-serif;
+	display:	none;
+	position:	absolute;
+	top:		0vh;
+	left:		0vw;
+	right:		0vw;
+	width:		10em;
+	height:		2em;
+	opacity:	0.5;
+}
+</style>
+</head>
+<body>
+<button id="StartXr">Play in XR</button>
+<canvas id=Canvas></canvas>
+<script src="./Micro.js"></script>
+<script>
+function StartXrCallback(Start)
+{
+	function OnClicked()
+	{
+		Button.style.display = null;
+		Start();
+	}
+	const Button = document.querySelector('#StartXr');
+	Button.style.display = 'block';
+	Button.onclick = OnClicked;
+}	
+Bootup(Canvas,StartXrCallback);
+</script>

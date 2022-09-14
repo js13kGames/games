@@ -1,0 +1,1 @@
+module.exports={io(o){o.on("J",(i=>o.broadcast.emit(i,o.id))),o.on("P",((i,t,d)=>o.to(d).emit("P",i,t,o.id)))}};

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BACK</title>
+<style>
+body { background-color: black; color: white; font-family: "Comic Sans", "Comic Sans MS", cursive; }
+#canvas { width: 600px; height: 300px; border: 2px solid white; position: relative; }
+#player { width: 10px; height: 60px; background-color: white; top: 50px; left: 50px; position: absolute; }
+.ball { width: 10px; height: 10px; position: absolute; background-color: white; }
+</style>
+<script>
+<!--
+
+(function() {
+
+ var lost = false;
+
+var ontop = false;
+
+var balls = [];
+
+var game, tick, anim, time = 2000, score= 0;
+
+window.addEventListener('popstate', function(event) {
+  document.getElementById('game').style.display = 'block';
+  document.getElementById('instruction').innerHTML = 'Go back to play.';
+  history.pushState({}, "BACK", "");
+
+  if (game) {
+    return game(event);
+  }
+
+  game = function() {
+    var player = document.getElementById('player');
+    if (ontop) {
+      player.style.top = '200px';
+    } else {
+      player.style.top = '50px';
+    }
+    ontop = !ontop;
+  };
+
+  tick = function() {
+    var ball = document.createElement('div');
+    ball.className = 'ball';
+    var canvas = document.getElementById('canvas');
+    canvas.appendChild(ball);
+    ball.style.left = '600px';
+    ball.style.top = (Math.random() > 0.5) ? '225px' : '75px';
+    balls.push(ball);
+    time *= 0.975;
+    setTimeout(tick, time);
+  };
+document.getElementById('music').play();
+
+  anim = function() {
+    for (var i=0; i < balls.length; i++) {
+if (!balls[i]) continue;
+      balls[i].style.left = parseInt(balls[i].style.left, 10) - 3 + 'px'; // i love jabascirpt
+    
+    if (parseInt(balls[i].style.left, 10) < 60) {
+       if ((parseInt(balls[i].style.top, 10) == "225" && !ontop) || (parseInt(balls[i].style.top, 10) == "75" && ontop)) {
+balls[i].remove();
+          balls[i] = null;
+score += 1;
+document.getElementById('score').innerHTML = 'score ' + score;
+continue;
+       }
+    }
+
+    if (parseInt(balls[i].style.left, 10) < 50) {
+document.getElementById('music').pause();
+      alert("U LOST"); lost= true;
+ return;
+    }
+}
+    requestAnimationFrame(anim);
+  };
+  requestAnimationFrame(anim);
+
+  tick();
+
+  return game(event);
+});
+
+document.addEventListener('DOMContentLoaded', function(event) {
+  history.pushState({}, "BACK", "");
+});
+
+})();
+-->
+</script>
+</head>
+<body>
+<p id="instruction">Go back to start.</p>
+<div id="game" style="display: none">
+<p id="score">score 0</p>
+<div id="canvas">
+<div id="player"></div>
+</div>
+<p>music <audio src="music.ogg" id="music" loop controls></audio></p>
+<p>made in 13 min (more or less)</p>
+<p>i'm so sorry</p>
+</div>
+</body>
+</html>

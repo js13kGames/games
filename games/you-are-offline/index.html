@@ -1,0 +1,341 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>You Are Offline</title>
+        <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+        <style>
+            body {background-color: black; color: white; font-family: 'Arial', sans-serif; font-size: 14pt; margin: 0;}
+            .start {height: calc(100vh - 40px); left: 0; overflow-y: auto; padding: 20px; position: absolute; text-align: center; top: 0; width: calc(100vw - 40px); z-index: 9;}
+            h1 {font-size: 26pt;}
+            button {background-color: #2196F3; border: 0; border-radius: 34px; color: white; cursor: pointer; padding: 15px 80px;}
+
+            hr {margin-top: 20px; opacity: 0.5;}
+            
+            h2 {font-size: 16pt;}
+            .quality > span {font-size: 11pt; margin: 0 8px; position: relative; top: -10px;}
+            
+            a-scene {background-color: white; display: none;}
+            
+            /*Toggle-switch*/
+            /* The switch - the box around the slider */
+            .switch {position: relative; display: inline-block; width: 60px; height: 34px;}
+            /* Hide default HTML checkbox */
+            .switch input {display: none;}
+            /* The slider */
+            .slider {border-radius: 30px; cursor: pointer; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s;}
+            .slider:before {border-radius: 50%; position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s;}
+            input:checked + .slider {background-color: #2196F3;}
+            input:focus + .slider {box-shadow: 0 0 1px #2196F3;}
+            input:checked + .slider:before {transform: translateX(26px);}
+            
+            .hint-button {background-color: red; font-size: 8pt; padding: 8px 30px;}
+            .hint {font-size: 12pt;}
+        </style>
+        <script src="canvas.js"></script>
+        <script src="player-small.js"></script>
+    </head>
+    <body>
+        
+        <div class="start">
+            <p>You are trapped in a room. There is no way out. Your only hope is to contact someone to rescue you. The only problem is:</p>
+            <h1>You Are Offline</h1>
+            <button>START</button>
+            <p>Look around and use the blue cursor to interact with objects. There is no need to move - everything you need is already within reach.</p>
+
+            <hr/>
+
+            <div class="quality">
+                <h2>Quality</h2>
+                <span>Medium </span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+                <span> High </span>
+            </div>
+            
+            <hr/>
+            
+            <h2>Hints</h2>
+            <button class="hint-button">SHOW HINT</button>
+            <p class="hint"></p>
+            
+        </div>
+        
+        <!--<a-scene stats>-->
+        <a-scene>
+            
+            <a-assets>
+                <canvas id="rack" crossorigin="anonymous"></canvas>
+                <canvas id="poster" crossorigin="anonymous"></canvas>
+                <img id="battery1" src="battery1.png"/>
+                <img id="battery2" src="battery2.png"/>
+                <img id="battery3" src="battery3.png"/>
+            </a-assets>
+            
+            <a-entity id="end-game1" position="0 0 5" rotation="0 180 0" visible="false">
+                <a-text position="0 2.1 0" color="black" id="end-game-title1" value="Well Done!" align="center" width="15"></a-text>
+                <a-text position="0 1.4 0" color="black" id="end-game-message1" value="You have gone online and have been rescued." align="center" width="5"></a-text>
+                <a-plane onclick="window.location.reload()" position="0 0.8 0" material="color: blue; shader: flat;" width="1.6" height="0.4" visible="false">
+                    <a-text color="white" value="Main Menu" align="center" width="5"></a-text>
+                </a-plane>
+            </a-entity>
+            
+            <a-entity id="end-game2" position="0 0 -5" visible="false">
+                <a-text position="0 2.1 0" color="black" id="end-game-title2" value="Well Done!" align="center" width="15"></a-text>
+                <a-text position="0 1.4 0" color="black" id="end-game-message2" value="You have gone online and have been rescued." align="center" width="5"></a-text>
+                <a-plane onclick="window.location.reload()" position="0 0.8 0" material="color: blue; shader: flat;" width="1.6" height="0.4" visible="false">
+                    <a-text color="white" value="Main Menu" align="center" width="5"></a-text>
+                </a-plane>
+            </a-entity>
+
+            <a-entity id="room">
+                <a-animation attribute="position" from="0 0 0" to="0 0 -50" dur="3000" begin="game-complete"></a-animation>
+            
+                <!-- locker -->
+                <a-entity position="9.5 -1.1 8.5" rotation="0 0 0">
+                    <a-box width="2.5" height="9" depth="0.1" color="#777" shadow="receive: true"></a-box>
+                    <a-box width="2.5" position="0 0 2.5" height="9" depth="0.1" color="#777" shadow="receive: true"></a-box>
+                    <a-box width="2.5" position="0 -4.5 1.27" height="0.1" depth="2.6" color="#777" shadow="receive: true"></a-box>
+                    <a-box width="2.5" position="0 4.5 1.27" height="0.1" depth="2.6" color="#777" shadow="receive: true"></a-box>
+                    <a-entity position="-1.193 0 2.448" id="locker-door">
+                        <a-animation attribute="rotation" from="0 0 0" to="0 90 0" dur="4000" begin="open-locker"></a-animation>
+                        <a-box width="0.1" position="0 0 -1.174" height="8.9" depth="2.3" color="#777" shadow="receive: true"></a-box>
+                        <a-box width="0.1" position="-0.14 0.5 -1.9" height="0.8" depth="0.3" color="#222"></a-box>
+                        <a-plane position="0.1 1.5 -1.2" rotation="0 90 0" height="4" width="1.8" material="src: #poster;" draw-canvas="poster"></a-plane>
+                    </a-entity>
+                </a-entity>
+
+
+                <!-- cupboard -->
+                <a-plane position="-15 0 0" rotation="0 90 0" width="14" height="11" color="#222"></a-plane>
+                <a-plane position="-14 -5.5 0" rotation="-90 0 0" width="3" height="14" color="#222"></a-plane>
+                <a-plane position="-14 5.5 0" rotation="90 0 0" width="3" height="14" color="#222"></a-plane>
+
+                <!-- rack -->
+                <a-box position="-15 -0.5 0" rotation="0 90 0" width="10" height="10" depth="2" color="black">
+                    <a-box id="card-reader" color="#559" width="4.5" height="1" depth="0.5" position="-2.4 4.2 0.8">
+                        <a-text value="ID Card Reader" position="-1.9 0 0.3" color="#ddd" width="8"></a-text>
+                        <a-plane id="card-reader-slot" color="#ddd" position="1.3 0 0.3" width="0.8" height="0.08"></a-plane>
+                    </a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 4.2 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 3 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 3 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 1.8 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 1.8 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 0.6 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 0.6 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 -0.6 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 -0.6 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 -1.8 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 -1.8 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 -3 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 -3 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="-2.4 -4.2 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                    <a-box width="4.5" height="1" depth="0.5" position="2.4 -4.2 0.8" material="src: #rack;" draw-canvas="rack"></a-box>
+                </a-box>
+
+                <!-- lamp -->
+                <a-cylinder position="-10 -5.85 10" material="color: gray; metalness: 0.7; roughness: 0.2;" radius="1.4" height="0.3"></a-cylinder>
+                <a-cylinder position="-10 -2 10" material="color: gray; metalness: 0.7; roughness: 0;" radius="0.15" height="9"></a-cylinder>
+                <a-entity position="-10 3 10" geometry="primitive: cone; radius-bottom: 2; radius-top: 0.8; height: 2.5; openEnded :true;" material="color: tomato; emissive: tomato; emissiveIntensity: 0.5; side: double;"></a-entity>
+                <a-light position="-10 3 10" type="point" color="tomato" intensity="0.8"></a-light>
+
+                <!-- bin -->
+                <a-entity position="9.8 -4.6 -9.8" geometry="primitive: cone; radius-bottom: 1; radius-top: 1.3; height: 2; openEnded :true;" material="color: #111; side: double;"></a-entity>
+
+                <!-- countdown timer -->
+                <a-box id="countdown" position="11.9 2 0" width="0.1" height="1.5" depth="3" material="color: #222; shader: flat;"></a-box>
+                <a-text id="countdown-text" value="13:00" position="11.8 2 0" rotation="0 270 0" color="red" width="23" align="center"></a-text>
+
+                <!-- desk -->
+                <a-box position="0 -2.5 -10" width="10" height="0.2" depth="4" color="#461818" shadow="receive: true"></a-box>
+                <a-box position="-4.6 -4.3 -11.6" width="0.6" height="3.4" depth="0.6" color="#461818" shadow="receive: true"></a-box>
+                <a-box position="-4.6 -4.3 -8.4" width="0.6" height="3.4" depth="0.6" color="#461818" shadow="receive: true"></a-box>
+                <a-box position="4.6 -4.3 -11.2" width="0.6" height="3.4" depth="0.6" color="#461818" shadow="receive: true"></a-box>
+                <a-box position="4.6 -4.3 -8.4" width="0.6" height="3.4" depth="0.6" color="#461818" shadow="receive: true"></a-box>
+
+                <!-- laptop -->
+                <a-box position="0 -2.3 -9.5" width="3" height="0.15" depth="2" color="#111" shadow="receive: true"></a-box>
+                <a-box position="0 -1.6 -9.7" rotation="70 0 0" width="3" height="0.1" depth="2" color="#111" shadow="receive: true"></a-box>
+                <a-plane position="0 -1.4 -9.5" material="color: white; shader: flat;" rotation="-20 0 0" width="2.6" height="1.4">
+                    <a-image id="battery" position="0.9 0.5 0.01" rotation="0 0 270" width="0.25" height="0.5" src="#battery1"></a-image>
+                    <a-text id="screen-text" position="0 0 0.01" value="You are offline" color="black" width="5" align="center"></a-text>
+                    <a-plane id="screen-button" material="color: red; shader: flat;" width="1.2" height="0.4" position="0 -0.35 0.01" visible="false">
+                        <a-animation attribute="opacity" from="1" to="0" dur="1000" direction="alternate" repeat="indefinite"></a-animation>
+                        <a-plane material="color: white; shader: flat;" width="1.15" height="0.35" position="0 0 0.01">
+                            <a-text value="GET HELP" position="0 0 0.1" rotation="0 0 0" color="red" width="4.5" align="center">
+                                <a-animation attribute="opacity" from="1" to="0" dur="1000" direction="alternate" repeat="indefinite"></a-animation>
+                            </a-text>
+                        </a-plane>
+                    </a-plane>
+                </a-plane>
+
+
+                <!-- walls -->
+                <a-plane position="0 0 -12" width="24" height="12" color="#62586a" shadow="receive: true"></a-plane>
+
+                <a-box position="0 4.5 12.5" width="6.5" height="2" color="#aaa" depth="1" shadow="receive: true"></a-box>
+                <a-box position="7.5 0 12.5" rotation="0 180 0" width="9" height="12" depth="1" color="#aaa" shadow="receive: true"></a-box>
+                <a-box position="-7.5 0 12.5" rotation="0 180 0" width="9" height="12" depth="1" color="#aaa" shadow="receive: true"></a-box>
+
+                <a-plane position="12 0 0" rotation="0 270 0" width="24" height="12" color="#aaa" shadow="receive: true"></a-plane>
+
+                <a-box class="sliding-wall" position="-13 0 6.4" rotation="0 90 0" width="13" height="12" depth="1" color="#aaa" shadow="receive: true">
+                    <a-animation attribute="position" from="-13 0 6.4" to="-13 0 12" dur="5000" begin="slide"></a-animation>
+                </a-box>
+                <a-box class="sliding-wall" position="-13 0 -6.4" rotation="0 90 0" width="13" height="12" depth="1" color="#aaa" shadow="receive: true">
+                    <a-animation attribute="position" from="-13 0 -6.4" to="-13 0 -12" dur="5000" begin="slide"></a-animation>
+
+                    <!-- combination lock -->
+                    <a-box position="-4 1 0.5" width="3.3" height="1.2" depth="0.5" material="color: #222; metalness: 0.8;">
+                        <a-box class="lock-number" position="-1.25 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                        <a-box class="lock-number" position="-0.75 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                        <a-box class="lock-number" position="-0.25 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                        <a-box class="lock-number" position="0.25 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                        <a-box class="lock-number" position="0.75 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                        <a-box class="lock-number" position="1.25 0 0.3" width="0.3" height="0.6" depth="0.1" material="color: #777; metalness: 0.8;">
+                            <a-text value="0" position="0 0 0.06" color="black" width="6" align="center"></a-text>
+                        </a-box>
+                    </a-box>
+
+                </a-box>
+
+
+                <!-- skirting boards -->
+                <a-box position="0 -5.6 -11.95" width="24" height="0.8" depth="0.05" color="#bbb"></a-box>
+                <a-box position="7.5 -5.6 11.95" rotation="0 180 0" width="9" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="-7.5 -5.6 11.95" rotation="0 180 0" width="9" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="-11.95 -5.6 0" rotation="0 90 0" width="24" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="11.95 -5.6 0" rotation="0 270 0" width="24" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="0 5.6 -11.95" width="24" height="0.8" depth="0.05" color="#bbb"></a-box>
+                <a-box position="0 5.6 11.95" rotation="0 180 0" width="24" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="-11.95 5.6 0" rotation="0 90 0" width="24" height="0.8" depth="0.1" color="#bbb"></a-box>
+                <a-box position="11.95 5.6 0" rotation="0 270 0" width="24" height="0.8" depth="0.1" color="#bbb"></a-box>
+
+                <!-- light switch -->
+                <a-box id="light-switch" position="4 0.5 11.95" width="0.9" height="0.9" material="color: white;" depth="0.2" shadow="receive: true">
+                    <a-box id="light-switch-rocker" position="0 0 -0.05" rotation="-20 0 0" width="0.2" height="0.4" material="color: white;" depth="0.2" shadow="receive: true"></a-box>
+                </a-box>            
+
+                <!-- door -->
+                <a-entity id="door" position="-3 -1 12.4">
+                    <a-animation attribute="rotation" from="0 0 0" to="0 -90 0" dur="5000" begin="open-door"></a-animation>
+                    <a-box position="3 0 0" rotation="0 180 0" width="6" height="10" depth="0.3" color="#461818" shadow="receive: true">
+                        <a-box position="2.5 0 0.3" width="1" height="10" depth="0.1" color="#461818" shadow="receive: true"></a-box>
+                        <a-box position="-2.5 0 0.3" width="1" height="10" depth="0.1" color="#461818" shadow="receive: true"></a-box>
+                        <a-box position="0 4 0.3" width="4.1" height="1" depth="0.1" color="#461818" shadow="receive: true"></a-box>
+                        <a-box position="0 -0.25 0.3" width="4.1" height="1" depth="0.1" color="#461818" shadow="receive: true"></a-box>
+                        <a-box position="0 -4.5 0.3" width="4.1" height="1" depth="0.1" color="#461818" shadow="receive: true"></a-box>
+                        <a-ring position="-2.4 -0.2 0.6" rotation="0 180 0" material="color: #555;" geometry="radiusInner:0.32;radiusOuter:0.2"></a-ring>
+                    </a-box>
+                </a-entity>
+
+                <!-- floor -->
+                <a-plane position="0 -6.01 0" rotation="-90 0 0" width="26" height="26" color="#222"></a-plane>
+                <a-plane position="10.1 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 10.1" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 7.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 4.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 1.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+
+                <a-box id="loose-tile" position="4.3 -6.09 -1.5" rotation="-90 0 0" width="2.8" height="2.8" depth="0.2" color="#7a7a7a" shadow="receive: true">
+                    <a-animation attribute="position" from="4.3 -6.09 -1.5" to="6 -5.89 0" dur="3000" begin="slide-out"></a-animation>
+                    <a-animation attribute="position" to="4.3 -6.09 -1.5" from="6 -5.89 0" dur="3000" begin="slide-in"></a-animation>
+                </a-box>
+                <a-box id="id-card" position="4 -6.05 -1.5" rotation="-90 0 0" width="1" height="0.5" depth="0.1" color="#ddd">
+                    <a-text value="ID Card" position="0 0 0.05" color="blue" width="4" align="center"></a-text>
+                </a-box>
+
+                <a-plane position="1.4 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 -1.5" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 -4.4" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 -7.3" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="10.1 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="7.2 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="4.3 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="1.4 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-1.5 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-4.4 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-7.3 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+                <a-plane position="-10.2 -5.99 -10.2" rotation="-90 0 0" width="2.8" height="2.8" color="#6a6a6a" shadow="receive: true"></a-plane>
+
+                <!-- ceiling -->
+                <a-plane position="0 6 0" rotation="90 0 0" width="24" height="24" material="color: #6a6a6a; metalness: 0.2; roughness: 0.8;"></a-plane>
+                <a-entity position="4.3 5.9 4.3" geometry="primitive: box; height: 0.09; width: 2.79; depth: 2.79;" material="color: #111; shader: flat;"></a-entity>
+                    <a-entity position="4.3 5.9 -4.4" geometry="primitive: box; height: 0.09; width: 2.79; depth: 2.79;" material="color: #111; shader: flat;"></a-entity>
+                    <a-entity position="-4.4 5.9 -4.4" geometry="primitive: box; height: 0.09; width: 2.79; depth: 2.79;" material="color: #111; shader: flat;"></a-entity>
+                    <a-entity position="-4.4 5.9 4.3" geometry="primitive: box; height: 0.09; width: 2.79; depth: 2.79;" material="color: #111; shader: flat;"></a-entity>
+                <a-text id="ceiling-code" value="I      E      A      J      B      D" position="0 5.9 -2" rotation="90 0 0" color="yellow" width="5" align="center" visible="false"></a-text>
+                
+
+            </a-entity>
+            
+            <a-entity camera look-controls position="0 1 0">
+                <a-entity cursor="fuse: true; fuseTimeout: 1000" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.024" material="color: blue; shader: flat"></a-entity>          
+            </a-entity>
+
+        </a-scene>
+        
+        <script src="audio.js"></script>
+        <script src="main.js"></script>
+        
+    </body>
+</html>

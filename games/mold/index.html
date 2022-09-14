@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mold</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script>
+    var _ = Object.defineProperty;
+    var S = (r, e, t) =>
+      e in r
+        ? _(r, e, { enumerable: !0, configurable: !0, writable: !0, value: t })
+        : (r[e] = t);
+    var a = (r, e, t) => (S(r, typeof e != "symbol" ? e + "" : e, t), t);
+    (function () {
+      const e = document.createElement("link").relList;
+      if (e && e.supports && e.supports("modulepreload")) return;
+      for (const s of document.querySelectorAll('link[rel="modulepreload"]'))
+        o(s);
+      new MutationObserver((s) => {
+        for (const n of s)
+          if (n.type === "childList")
+            for (const l of n.addedNodes)
+              l.tagName === "LINK" && l.rel === "modulepreload" && o(l);
+      }).observe(document, { childList: !0, subtree: !0 });
+      function t(s) {
+        const n = {};
+        return (
+          s.integrity && (n.integrity = s.integrity),
+          s.referrerpolicy && (n.referrerPolicy = s.referrerpolicy),
+          s.crossorigin === "use-credentials"
+            ? (n.credentials = "include")
+            : s.crossorigin === "anonymous"
+            ? (n.credentials = "omit")
+            : (n.credentials = "same-origin"),
+          n
+        );
+      }
+      function o(s) {
+        if (s.ep) return;
+        s.ep = !0;
+        const n = t(s);
+        fetch(s.href, n);
+      }
+    })();
+    class x {
+      constructor(e, t) {
+        a(this, "id");
+        a(this, "tIndex");
+        (this.tIndex = e), (this.id = t);
+      }
+      get index() {
+        return this.tIndex;
+      }
+      set index(e) {
+        (this.tIndex = e), this.setHooks();
+      }
+      setHooks() {
+        this.setStateAttr();
+      }
+      setStateAttr() {
+        let e = document.querySelector("#" + this.id);
+        switch (this.index) {
+          case 0:
+            (e.className = "grid grid-active"), (e.style.opacity = "1");
+            break;
+          case 1:
+            e.className = "grid grid-active mold";
+            break;
+          case 2:
+            e.className += " attractor";
+            break;
+          case 3:
+            e.className += " wall";
+            break;
+        }
+      }
+    }
+    class u {
+      constructor(e, t) {
+        a(this, "x");
+        a(this, "y");
+        (this.x = e), (this.y = t);
+      }
+      add(e) {
+        return new u(this.x + e[0], this.y + e[1]);
+      }
+    }
+    class m {
+      constructor(e, t) {
+        a(this, "id");
+        a(this, "_sIndex");
+        a(this, "coord");
+        a(this, "n_opacity");
+        (this.id = e),
+          (this.coord = t),
+          (this._sIndex = new x(0, this.id)),
+          (this.n_opacity = 1);
+      }
+      get opacity() {
+        return this.n_opacity;
+      }
+      set opacity(e) {
+        this.n_opacity = e;
+        let t = document.getElementById(this.id);
+        t && (t.style.opacity = e.toString());
+      }
+      get state() {
+        return this._sIndex.index;
+      }
+      set state(e) {
+        (this.state != 0 && e != 0) ||
+          ((this._sIndex.index = e), this.setHooks());
+      }
+      setHooks() {}
+      surrounding() {
+        let e = [];
+        return (
+          [
+            [-1, -1],
+            [0, -1],
+            [1, -1],
+            [-1, 0],
+            [1, 0],
+            [-1, 1],
+            [0, 1],
+            [1, 1],
+          ].forEach((o) => {
+            let s = this.coord.add(o),
+              n = w(`grid-${s.x}-${s.y}`);
+            n > -1 && e.push(i.gridArr[n]);
+          }),
+          e
+        );
+      }
+      distanceTo(e) {
+        return Math.sqrt(
+          Math.pow(this.coord.x - e.coord.x, 2) +
+            Math.pow(this.coord.y - e.coord.y, 2)
+        );
+      }
+    }
+    function w(r) {
+      for (let e = 0; e < i.gridArr.length; e++)
+        if (i.gridArr[e].id == r) return e;
+      return -1;
+    }
+    function M() {
+      document.querySelectorAll(".grid").forEach((e) => {
+        e.addEventListener("click", b);
+      });
+    }
+    async function E() {
+      document.querySelectorAll(".grid").forEach((e) => {
+        e.removeEventListener("click", b);
+      });
+    }
+    function b(r) {
+      let e = w(r.target.id),
+        t = i.gridArr[e];
+      (t.state = c.player),
+        !(
+          i.attractor.occupied.includes(t) ||
+          i.mold.occupied.includes(t) ||
+          i.walls.occupied.includes(t)
+        ) && i.attractor.occupied.push(t);
+    }
+    function k() {
+      var t, o, s, n, l;
+      if (i.attractor.occupied.length == 0)
+        return [
+          (o = i.mold) == null
+            ? void 0
+            : o.edges[
+                Math.floor(
+                  Math.random() *
+                    ((t = i.mold) == null ? void 0 : t.edges.length)
+                )
+              ],
+          0,
+        ];
+      let r = [];
+      (s = i.mold) == null ||
+        s.edges.forEach((d) => {
+          var f;
+          (f = i.attractor) == null ||
+            f.occupied.forEach((p) => {
+              let v = p.distanceTo(d) + (1 - p.opacity) * d.opacity;
+              r.push([d, v]);
+            });
+        });
+      let e = [void 0, 1 / 0];
+      return (
+        r.forEach((d) => {
+          d[1] < e[1] && (e = d);
+        }),
+        e[0] == null
+          ? [
+              (l = i.mold) == null
+                ? void 0
+                : l.edges[
+                    Math.floor(
+                      Math.random() *
+                        ((n = i.mold) == null ? void 0 : n.edges.length)
+                    )
+                  ],
+              0,
+            ]
+          : e
+      );
+    }
+    class A {
+      constructor(e) {
+        a(this, "source");
+        a(this, "occupied");
+        a(this, "p_edges");
+        (this.occupied = []),
+          (this.source = e),
+          this.source.forEach((t) => {
+            this.occupied.push(t);
+          }),
+          (this.p_edges = this.occupied);
+      }
+      calcEdges() {
+        let e = [];
+        return (
+          this.occupied.forEach((t) => {
+            let o = !0;
+            i.prefs.wall_barrier_type == "strict" &&
+              t.surrounding().forEach((s) => {
+                s.state == 3 && (o = !1);
+              }),
+              o &&
+                t.surrounding().forEach((s) => {
+                  s.state == 0 && !e.includes(t) && e.push(t);
+                });
+          }),
+          (this.edges = e),
+          e
+        );
+      }
+      get edges() {
+        return (this.p_edges = this.calcEdges()), this.p_edges;
+      }
+      set edges(e) {
+        this.p_edges = e;
+      }
+      grow() {
+        let e = k()[0];
+        e instanceof m &&
+          e.surrounding().forEach((t) => {
+            t.state == 0 && (this.occupied.push(t), (t.state = 1));
+          });
+      }
+      fade(e) {
+        this.occupied.forEach((t) => {
+          if (((t.opacity -= e), t.opacity <= 0)) {
+            t.opacity = 0;
+            let o = this.occupied.indexOf(t);
+            o > -1 && this.occupied.splice(o, 1),
+              (o = this.p_edges.indexOf(t)),
+              o > -1 && this.p_edges.splice(o, 1),
+              (t.state = 0),
+              (t.opacity = 1);
+          }
+        });
+      }
+    }
+    class L {
+      constructor() {
+        a(this, "occupied");
+        this.occupied = [];
+      }
+      fade(e) {
+        this.occupied.forEach((t) => {
+          if (((t.opacity -= e), t.opacity <= 0)) {
+            t.opacity = 0;
+            let o = this.occupied.indexOf(t);
+            o > -1 && this.occupied.splice(o, 1),
+              (t.state = 0),
+              (t.opacity = 1);
+          }
+        });
+      }
+    }
+    async function q() {
+      (i.board.innerHTML = ""), (i.gridArr = await I());
+      let r = [];
+      for (let e = 0; e < 10; e++)
+        r.push(i.gridArr[Math.floor(Math.random() * i.gridArr.length)]);
+      (i.mold = new A(r)), (i.attractor = new L());
+    }
+    async function I() {
+      let r = [];
+      for (let e = 0; e < i.globaly; e++) {
+        i.board.innerHTML += `<div class='row' id='row-${e}'><div>`;
+        let t = document.querySelector(`#row-${e}`);
+        t.style.height = `${i.board.clientHeight / i.globaly}px`;
+        for (let o = 0; o < i.globalx; o++) {
+          const s = `grid-${o}-${e}`;
+          t.innerHTML += `<div class='grid grid-dead' id='${s}'><div>`;
+          let n = new m(s, new u(o, e));
+          r.push(n);
+        }
+      }
+      return r;
+    }
+    function N(r) {
+      switch (r.state) {
+        case !0:
+          h("grid-dead", "grid-active");
+          break;
+        default:
+          h("grid-active", "grid-dead");
+          break;
+      }
+    }
+    function h(r, e) {
+      let t = document.getElementsByClassName(r);
+      Array.from(t).forEach(function (o) {
+        o.className = o.className.replace(r, e);
+      });
+    }
+    async function H(r) {
+      switch (r.state) {
+        case !0:
+          (i.board.style.cursor = "url('/cursor.png'), auto"), await M();
+          break;
+        default:
+          (i.board.style.cursor = "auto"), await E();
+          break;
+      }
+    }
+    async function B(r = 1e3) {
+      let e = 0,
+        t = setInterval(() => {
+          var o, s, n, l;
+          if (!c.running) {
+            clearInterval(t);
+            return;
+          }
+          e > 5 &&
+            ((o = i.mold) == null || o.fade(0.1),
+            (s = i.mold) == null || s.edges,
+            (e = 0)),
+            (n = i.attractor) == null || n.fade(0.002);
+          try {
+            (l = i.mold) == null || l.grow();
+          } catch {}
+          e += 1;
+        }, r);
+    }
+    class P {
+      constructor() {
+        a(this, "occupied");
+        this.occupied = [];
+      }
+    }
+    function G(r = i.prefs.num_walls, e = [i.prefs.wall_size]) {
+      i.walls = new P();
+      for (let t = 0; t < r; t++) {
+        let o = i.gridArr[Math.floor(Math.random() * i.gridArr.length)],
+          s = e[t % e.length];
+        o.state = 3;
+        for (let n = 0; n < s; n++) {
+          let l = o.surrounding(),
+            d = o;
+          i.prefs.wall_generation_mode == "lines"
+            ? (d = l[Math.floor(Math.random() * l.length) % 3])
+            : (d = l[Math.floor(Math.random() * l.length)]),
+            (d.state = 3),
+            (o = d),
+            i.walls.occupied.push(d);
+        }
+      }
+    }
+    let c = {
+      state: !1,
+      player: 2,
+      get running() {
+        return this.state;
+      },
+      set running(r) {
+        (this.state = r), this.setHooks();
+      },
+      setHooks() {
+        H(this).then(),
+          N(this),
+          this.running && (G(), B(1).then()),
+          this.running ||
+            i.gridArr.forEach((r) => {
+              r.opacity = 1;
+            });
+      },
+    };
+    function T() {
+      let r = document.querySelector("#start"),
+        e = document.querySelector("#stop");
+      (e.style.display = "none"),
+        r.addEventListener("click", async () => {
+          (e.style.display = "inline"),
+            (r.style.display = "none"),
+            await q(),
+            (c.running = !0);
+        }),
+        e.addEventListener("click", async () => {
+          (e.style.display = "none"),
+            (r.style.display = "inline"),
+            (c.running = !1);
+        });
+    }
+    class z {
+      constructor(e, t, o, s) {
+        a(this, "wall_generation_mode");
+        a(this, "num_walls");
+        a(this, "wall_size");
+        a(this, "wall_barrier_type");
+        (this.wall_generation_mode = e),
+          (this.num_walls = t),
+          (this.wall_size = o),
+          (this.wall_barrier_type = s);
+      }
+    }
+    async function W() {
+      await $(), await y(), await g();
+      const r = document.querySelector("#show-prefs"),
+        e = document.querySelector("#prefs-set");
+      r.addEventListener("click", async () => {
+        await y();
+      }),
+        e.addEventListener("click", async () => {
+          await g();
+        });
+    }
+    async function y() {
+      const r = document.querySelector("#prefs");
+      r.style.display === "none"
+        ? (r.style.display = "block")
+        : (r.style.display = "none"),
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    async function $() {
+      const r = document.querySelector("#prefs");
+      r.innerHTML = `
+<div id="prefs-content">
+    <h2>Preferences</h2>
+    <div id="prefs-wall-generation-mode" >
+        <label for="wall-generation-mode">Wall Generation Mode</label>
+        <select name="Wall Generation Mode" id="wall-generation-mode">
+            <option value="mass">Mass</option>
+            <option value="lines">Lines</option>
+        </select>
+    </div>
+    <div id="prefs-num-walls" >
+        <label for="num-walls">Number of Walls</label>
+        <input id="num-walls" type="number" value="2">
+    </div>
+    <div id="prefs-wall-size" >
+        <label for="wall-size">Wall Size</label>
+        <input id="wall-size" type="number" value="60">
+    </div>
+    <div id="prefs-wall-barrier-type">
+        <label for="wall-barrier-type">Wall Barrier Type</label>
+        <select name="Wall Barrier Type" id="wall-barrier-type">
+            <option value="strict">Strict</option>
+            <option value="lenient">Lenient</option>
+        </select>
+    </div>
+    <button id="prefs-set">Set</button>
+</div>
+  `;
+    }
+    async function g() {
+      let r = document.querySelector("#wall-generation-mode").value,
+        e = document.querySelector("#num-walls").value,
+        t = document.querySelector("#wall-barrier-type").value,
+        o = document.querySelector("#wall-size").value;
+      i.prefs = new z(r, Number(e), Number(o), t);
+    }
+    document.querySelector("#app").innerHTML = `
+<div id="sub-app">
+  <div id="board-holder">
+    <div id="board"></div>
+  </div>
+</div>
+  <button class="board-interface" id="start">Start</button>
+  <button class="board-interface" id="stop">Stop</button>
+  <button id="show-prefs">Preferences</button>
+  <div id="prefs" ></div>
+`;
+    let i = {
+      globalx: 50,
+      globaly: 50,
+      board: document.querySelector("#board"),
+      gridArr: void 0,
+      mold: void 0,
+      attractor: void 0,
+      walls: void 0,
+      prefs: void 0,
+    };
+    W().then();
+    T();
+  </script>
+  <style>
+    #board-holder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #board {
+      width: 88vmin;
+      height: 88vmin;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid black;
+    }
+    .row {
+      display: flex;
+      width: 100%;
+    }
+    .board-interface {
+      width: 90px;
+      height: 30px;
+      margin: 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ffb5b3;
+      transition: 0.2s;
+    }
+    .board-interface:hover {
+      box-shadow: 0 0 0 2px #989bff;
+    }
+    .board-interface:active {
+      background-color: #de9794;
+      box-shadow: 0 0 0 1px #989bff;
+    }
+    #app {
+      text-align: center;
+    }
+    #sub-app {
+      display: flex;
+      justify-content: center;
+    }
+    .grid {
+      width: 100%;
+      background-color: transparent;
+      border: 0.5px solid rgba(0, 0, 0, 0);
+    }
+    .grid-active:hover {
+      border: 0.5px solid black;
+      box-shadow: inset 0 0 10px 2px #cecece80;
+    }
+    .grid-dead {
+      border: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+    .mold {
+      background-color: #8cffb3;
+    }
+    .attractor {
+      background-color: #5ac7ff;
+    }
+    .wall {
+      background-color: #000;
+    }
+    #prefs {
+      display: none;
+    }
+    #show-prefs {
+      width: 90px;
+      height: 30px;
+      margin: 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ffb5b3;
+      transition: 0.2s;
+    }
+    #show-prefs:hover {
+      box-shadow: 0 0 0 2px #989bff;
+    }
+    #show-prefs:active {
+      background-color: #de9794;
+      box-shadow: 0 0 0 1px #989bff;
+    }
+  </style>
+</html>

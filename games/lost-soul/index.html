@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+  		<title>Lost Soul</title>
+  		<meta charset="utf-8"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <style>
+            body, html
+            {
+                width : 100%;
+                height: 100%;
+                margin : 0;
+                padding : 0;
+                overflow: hidden;
+                background-color: #222;
+            }
+            canvas
+            {
+                background-color: #000;
+                display: block;
+				width:100vh;
+				height:100vh;
+				max-width: 100vw;
+				max-height: 100vw;
+				margin: auto;
+            }
+
+			.canvasEdit
+			{
+				margin-left: auto;
+				margin-right : initial;
+			}
+			#editor
+			{
+				display : none;
+				position: fixed;
+				flex-direction: column;
+				left: 0;
+				height: 100vh;
+				width: calc(100% - 100vh);
+				top : 0;
+				background-color: #AAA;
+				min-width: 200px;
+			}
+
+			ul
+			{
+				overflow: auto;
+				background-color: #888;
+				list-style-type: none;
+				padding : 5px;
+				flex:  1;
+			}
+
+			li{
+				width: 100%;
+				cursor: pointer;
+				padding : 5px;
+				box-sizing: border-box;
+
+
+			}
+			li span
+			{
+				text-align: right;
+				float: right;
+				margin-right: 10px;
+			}
+
+			form
+			{
+				background-color: #888;
+				margin : 10px 0;
+				flex :2;
+				overflow: auto;
+			}
+
+			select{
+				max-width: 100%;
+			}
+
+			form div
+			{
+				margin: 10px;
+			}
+			button{
+				width: 100%;
+
+			}
+
+			#levelDisplay
+			{
+				position : fixed;
+				top : 10px;
+				left : 10px;
+				color : white;
+				font:monospace;
+			}
+
+			@media screen and (orientation:portrait) {
+			    #editor
+				{
+					bottom : 0;
+					left : auto;
+					top : auto;
+					height: calc(100% - 100vw);
+					width: 100%;
+					min-height: 200px;
+				}
+			}
+        </style>
+	</head>
+<body id="container">
+	<canvas id="canvas"></canvas>
+	<div id="levelDisplay"></div>
+	<div id="editor">
+		<ul id="list">
+			Add enemies by clicking the button.<br/>
+			Ennemies are bullet generator, they stay a certain amount of time and respect specific rule for firing and moving
+		</ul>
+		<button id="buttonAdd">Add Ennemy</button>
+		<form id="formEditor">
+			<div>position : (click on canvas to change)</div>
+			<div> x : <input type="text" id="posX"/></div>
+			<div> y : <input type="text" id="posY"/></div>
+			<div>Targeting : <select id="target"></select></div>
+			<div>First target multiplier  : <select id="firstMult"></select></div>
+			<div>Second target multiplier  : <select id="secondMult"></select></div>
+			<div>Fire rate  : <select id="fireRate"></select></div>
+			<div>Bullet type  : <select id="bulletType"></select></div>
+			<div>Target movement : <select id="movement"></select></div>
+			<div>Movement type: <select id="movementType"></select></div>
+			<div>speed : <select id="speed"></select></div>
+
+			<div>Begining frame (60frame = 1 sec) : <input id="start" type="number" max="65528"/></div>
+			<div>duration (in frame) : <input id="duration" type="number" max="65528"/></div>
+		</form>
+		<div style="padding : 20px 10px;">
+			load level : <input type="text" id="load"/>
+			<button id="buttonLoad">Load and edit a level</button>
+		</div>
+		<div style="padding : 10px;">
+			Level code output :<input type="text" id="code"></input>
+		</div>
+		<button id="buttonStart">test the level</button>
+	</div>
+	<script type="text/javascript" src="output.min.js"></script>
+</body>

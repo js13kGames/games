@@ -1,0 +1,73 @@
+<html>
+
+<head>
+	<title>Zero distraction</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="theme-color" content="#000000">
+	<link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+	<div class="phase phase-1 visible">
+		<h1>For this game <strong>zero distraction</strong> is required. Please turn off your network.</h1>
+	</div>
+
+	<div class="phase phase-2">
+		<p>The first task is simple. You'll see a grid of cubes <strong>4 times</strong>, but there's always one cube
+			missing. Tell me the numbers of the missing cubes.</p>
+		<table>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+			</tr>
+		</table>
+		<button>Start</button>
+	</div>
+	<div class="phase phase-3">
+		<input type="number" placeholder="Enter the code" />
+	</div>
+	<div class="phase phase-4">
+		<p>Now it's time for the real challenge. Select (or type) the missing number before the cubes are gone!</p>
+		<button>Start</button>
+	</div>
+	<div class="controls">
+		<table>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+				<td>8</td>
+				<td>9</td>
+			</tr>
+		</table>
+		<div class="rainbow-overlay"></div>
+		<div class="rainbow"></div>
+	</div>
+	<div class="phase phase-5" style="background: transparent;">
+		<div class="container">
+			<p>That's it, you reached the finish line!</p>
+			<p>This game was created for <a href="https://js13kgames.com/">JS13K</a>! It's made with <a href="https://github.com/vaneenige/phenomenon">Phenomenon</a>,
+				my 2kb WebGL library.</p>
+		</div>
+	</div>
+	<canvas></canvas>
+
+	<script src="./bundle.js"></script>
+</body>
+
+</html>

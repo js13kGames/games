@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Data Backup</title>
+<meta charset ="utf-8">
+<meta name = "viewport" content = "width = device-width,height = device-height, initial-scale =1">
+<meta name="monetization" content="$coil.xrptipbot.com/kM3Crzd2TSuwIznfZJgv4A">
+<script src="index.js"></script>
+<link rel = "stylesheet" type="text/css" href="index.css"/>
+</head>
+<body>
+	<div class="start_menu" id="start_menu">
+		<div class="me">Created By Shipra</div>
+		<div class="menu_title">[[ ThE DAta BAckUP ]]</div>
+		<div class="menu_btn" onclick="start_game();">PLAY ->></div>
+		</br>
+		<div class="menu_btn" style="top : 55%;" onclick="rules_show();">HELP (?)</div>
+	</div>
+	
+<div class="rules_panel" id="rulespanel">
+<div class="rules">
+<span class="cross" onclick="rules_hide();">X</span>
+HELP (?)</Br></br>
+<div class="rules_content">
+-- There are code units with their respective programming language protocol in the server space.
+</br></br>
+-- Player has to connect the units of same programming language and make a loop to confirm backup of that collection of data. Example: you connect all the "C#" units with other "C#" units and then connect the last with the first unit and then this collection will be backup and cleared from server space. 
+</br></br>
+-- Player have initial 60 seconds for performing backup and as player score time also increase and hence player can score as high he/she can within the available time.
+</br>
+</br>
+-- If time run out to ZERO, then GAME will be OVER.
+</br>
+</br>
+</div>
+</div>
+</div>
+
+<div class="game_panel" id="main_panel">
+<div>GAME OVER</div>
+<div class="rules_content" id="p_score" style="font-size:40px;"> You Scored: </div>
+<div class="menu_btn" onclick="try_again();">ReTRY <<</div>
+<div class="menu_btn" style="top : 55%;" onclick="rules_show();">HELP (?)</div>
+</div>
+
+
+
+	<div class="score" id="score">Score : </br>0 
+	</div>
+	<div class="score" id="time_left" style="left: 50%">Time Left:
+	</div>
+	
+	<div class="gameplay" id="gameplay">
+	<div id="lines_handler">
+	</div>
+	</div>
+</body>
+</html>

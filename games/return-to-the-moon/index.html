@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="description" content="game for js13k 2019">
+	<meta name="author" content="Luke Nickerson">
+	<link rel="stylesheet" href="moon.css" />
+</head>
+<body scroll="no">
+
+<!-- <canvas id=terrain width=800 height=600></canvas> -->
+
+<svg id=display width=100% height=100%>
+	<!-- <polygon points="0 600, 0 450,
+		100 400, 0 0, 20 0, 120 400,
+		680 400, 780 0, 800 0, 700 400,
+		800 450, 800 600" /> -->
+</svg>
+<dl class="info-left">
+	<dt>FUEL</dt><dd class="fuel"></dd><br>
+	<dt>INTEGRITY</dt><dd class="health"></dd>
+</dl>
+<dl class="info-right">
+	<dt>ALTITUDE</dt><dd class="altitude"></dd><br>
+	<dt>HORIZONTAL VELOCITY</dt><dd class="speedX"></dd><br>
+	<dt>VERTICAL VELOCITY</dt><dd class="speedY"></dd>
+</dl>
+<b class="intro">
+	<h1>Return to the Moon</h1>
+	<p>
+	In 1969, 50 years ago, humans first landed on the moon.
+	That very same year the first lunar lander game was made, which ended up spawning a popular genre of games.
+	This game is a tribute to both achievements.
+	</p>
+	<p>
+	You are headed BACK to the moon. Your only goal is to land very softly on the moon.
+	</p>
+	A,D,Left,Right = Rotate ... W,Up = Thrust ... v1.0
+	<p>PRESS UP or W TO BEGIN</p>
+</b>
+<b class="failure">You landed too hard and wrecked the lander. You'll never get back to Earth now.<br>Refresh the page to try again.</b>
+<b class="win">Success!<br>Refresh the page to try again.</b>
+
+
+<script src="scripts/Polygon.js"></script>
+<script src="scripts/CompositePolygon.js"></script>
+<script src="scripts/Ship.js"></script>
+<script src="scripts/Input.js"></script>
+<script src="scripts/physics.js"></script>
+<script src="scripts/lunar-lander.js"></script>
+
+</body>
+</html>

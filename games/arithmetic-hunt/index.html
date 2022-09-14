@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Game</title>
+    <style media="screen">
+        html, body {
+            background-color: #6A6A61;
+            font: 18px sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            padding: 0;
+            cursor: crosshair;
+        }
+
+        .help-outer {
+            position: fixed;
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            display: table;
+            width: 100%;
+            height: 100%;
+            color: #1D2326;
+        }
+
+        .help-inner {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .help-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+<canvas></canvas>
+<div class="help-outer">
+    <div class="help-inner">
+        <div class="help-content">
+            <h2>Arithmetic Hunt</h2>
+            <p>Move your circle by mouse in order to hit the right expressions and to avoid the incorrect ones.</p>
+            <p>Think fast! You have 15 seconds to find next correct expression.</p>
+            <p>Small balls are neither dangerous nor count as correct ones.</p>
+            <p>As the games goes, the expressions become a bit more complicated and their number increases.</p>
+            <p>To show / hide help (while the game is over) use «ESC»</p>
+            <p><strong>To start / restart the game hit «SPACE». Good luck!</strong></p>
+        </div>
+    </div>
+</div>
+<script src="dist/g.js"></script>
+</body>
+
+</html>

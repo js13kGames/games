@@ -1,0 +1,841 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>Space Quiz Shooter</title>
+	<meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <meta charset="utf-8" />
+    <style type="text/css"> 
+    /*body { margin:0; padding:0; overflow:hidden; background-color: yellow;} */
+	html, body { margin: 0;padding:0;border:0;width:100%;height:100%; font-family: Arial; background: #111; }
+    .centerWrap { position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width: 600px; height: 600px; background: #111; border-radius: 10px; cursor: crosshair; color: rgba(230,230,255,1); font-size: 22px; }
+    #menu { display: none; }
+    .noSel { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+	#c { background: #000; border-radius: 10px;  }
+	#qContainer { position: absolute; left: 0%; top: 2%;  text-align: center; width: 100%; background: transparent; opacity: 0; transition:opacity 700ms ease-in-out; }
+	#qFlex { display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap; }
+	#qFlex div { box-sizing: border-box; text-align: left; width: 45%; padding: 5px 0; }
+	#qFlex div#q { width: 90%; text-align: center; }
+	#gameEnd { position: absolute; width: 100%; margin-top: 250px; text-align: center; background: rgba(0,0,0,0.5); padding: 20px 0; cursor: pointer; display: none; }
+    </style>
+  </head>
+  
+  <body>
+  
+	<div class="centerWrap">
+		<div id="qContainer" class="noSel">  
+			<div id="qFlex">
+				<div id="q">Question? </div>
+				<div id="a1">1 </div>
+				<div id="a2">2 </div>
+				<div id="a3">3 </div>
+				<div id="a4">4 </div>
+			</div>
+        </div>	
+		
+		<div id="gameEnd" onclick="window.location.reload();"> 
+			<span id="gameEndText">Game over!</span> <br><br>
+			Click here to reload.
+		</div>
+        
+       <canvas id="c" width="600" height="600">No Canvas Support?</canvas>
+    </div>  
+
+    <script>
+	
+// ZzFX - Zuper Zmall Zound Zynth - Micro Edition
+// MIT License - Copyright 2019 Frank Force
+// https://github.com/KilledByAPixel/ZzFX
+
+// This is a tiny build of zzfx with only a zzfx function to play sounds.
+// You can use zzfxV to set volume.
+// Feel free to minify it further for your own needs!
+
+'use strict';let zzfx,zzfxV,zzfxX
+
+// ZzFXMicro - Zuper Zmall Zound Zynth - v1.1.8 ~ 884 bytes minified
+zzfxV=.3    // volume
+zzfx=       // play sound
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0)=>{let
+M=Math,R=44100,d=2*M.PI,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,g=0,H=0,a=0,n=1,I=0
+,J=0,f=0,x,h;e=R*e+9;m*=R;r*=R;t*=R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;for(h=e+m+
+r+t+c|0;a<h;k[a++]=f)++J%(100*F|0)||(f=q?1<q?2<q?3<q?M.sin((g%d)**3):M.max(M.min(M.tan(g),1)
+,-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.round(g/d)-g/d):M.sin(g),f=(l?1-B+B*M.sin(d*a/l):1)*(0<f?1:
+-1)*M.abs(f)**D*p*zzfxV*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/
+2+(c>a?0:(a<h-c?1:(h-a)/c)*k[a-c|0]/2):f),x=(b+=u+=y)*M.cos(A*H++),g+=x-x*E*(1-1E9*(M.sin(a)
++1)%2),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n=n||1);p=zzfxX.createBuffer(1,h,R);p.
+getChannelData(0).set(k);b=zzfxX.createBufferSource();b.buffer=p;b.connect(zzfxX.destination
+);b.start();return b};zzfxX=new (window.AudioContext||webkitAudioContext) // audio context
+
+
+
+
+// Note: a cleaner version of this game code will be available on GitHub...see js13kGames link on the game entry
+
+class SpaceObj {
+
+	constructor (x, y, size, color, dir) {
+		this.x = x;
+		this.y = y;
+		this.size = size;
+		this.color = color;
+		
+		this.dir = dir;
+		this.targetDir = this.dir;
+		this.acc = .1;
+		this.speed = 0;
+		this.damage = 0;
+		this.health = 100;	
+		this.lifespan = 10e7;
+
+		this.topSpeed = (20 / this.size) * rand(1, 1.5);
+		this.overflow = true;
+		this.creator = null;
+		this.friendType = F_NEUTRAL;
+		this.hitRenderCnt = 0;
+		
+		this.update();
+	}
+	
+	update (bounceX, bounceY) {
+	
+		if (this.dead()) {
+			this.color = '#fff';
+			this.speed = 0;
+			this.acc = 0;
+			return;
+		}
+		
+		this.speed += this.acc;
+		if (this.speed > this.topSpeed) {
+			this.speed = this.topSpeed;
+		}
+		
+		let dirDiff = this.targetDir - this.dir;
+		if (dirDiff > pi) dirDiff = pi2 - dirDiff;
+		else if (dirDiff < -pi) dirDiff = pi2 + dirDiff;
+		this.dir += 0.1 * dirDiff;
+		
+		// keep dir normalized in -pi2..pi2 TODO: review
+		if (this.dir > pi2) this.dir -= pi2;
+		else if (this.dir < -pi2) this.dir += pi2;
+		
+		
+		this.speedX = Math.sin(this.dir) * this.speed;
+		this.speedY = Math.cos(this.dir) * this.speed;		
+		this.x += this.speedX;
+		this.y += this.speedY;
+		
+		if (this.overflow) {
+			this.x = this.x < 0 ? canvas.width : this.x >= canvas.width ? 0 : this.x;
+			this.y = this.y < 0 ? canvas.height : this.y >= canvas.height ? 0 : this.y;
+		}	
+		
+		this.lifespan--;		
+	}
+	
+	hits (obj) {
+		return this.creator != obj && this.distance(obj.x, obj.y)  < this.size + obj.size; 
+	}
+	
+	hitBy (obj) {
+		this.health -= obj.damage;
+		this.hitRenderCnt = 10;
+	}
+	
+	distance (x, y) {
+		if (x instanceof SpaceObj) {		
+			y = x.y;
+			x = x.x;
+		}
+		//return Math.hypot(this.x - x, this.y - y);
+		return Math.sqrt((this.x - x) * (this.x - x)  + (this.y - y) * (this.y - y));
+	}
+	
+	getDir (obj) {
+		return Math.atan2(this.y - obj.y, -this.x + obj.x) + pi/2;
+	}
+	
+	dead () {
+		return this.health <= 0 || this.lifespan <= 0;
+	}
+	
+	render() {
+	
+		let p, tx, ty;
+		
+		p = this;
+		ctx.fillStyle = p.color;
+
+		ctx.beginPath();
+		ctx.arc(p.x, p.y, p.size, pi2, false);
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = p.color;
+		ctx.stroke();	
+			
+		tx = p.size * Math.sin(p.targetDir) -0;
+		ty = p.size * Math.cos(p.targetDir) -0;
+		ctx.fillStyle = 'red';
+		ctx.fillRect(p.x + tx, p.y + ty, 1, 1);
+
+		tx = p.size * Math.sin(p.dir)-2;
+		ty = p.size * Math.cos(p.dir)-2;
+		ctx.beginPath();
+		ctx.moveTo(p.x, p.y);
+		ctx.lineTo(p.x + tx, p.y + ty);
+		ctx.strokeStyle = '#444';
+		ctx.stroke();
+	}
+		
+} // SpaceObj
+
+
+
+class Ship extends SpaceObj {
+
+	constructor (x, y, size, color, dir, friendType, lifespan = 10e7, health = 50) {
+		super(x, y, size, color, dir);
+		
+		this.friendType = friendType;
+		this.acc = .1;
+		this.speed = 1;
+		this.health = health;
+		this.damage = 5;
+		this.lifespan = lifespan;
+		this.tailFormY = rand(-1.0 * size / Math.sqrt(2), 0);
+	
+		this.update();
+	}
+	
+	hitBy (obj) {
+		this.health -= obj.damage;
+		if (this.friendType == F_NEUTRAL && obj.creator) {
+			if (obj.creator.friendType == F_FRIEND && rand() < 0.2) {
+				this.friendType = F_ENEMY;
+				this.color = 'red';
+			} else if (obj.creator.friendType == F_ENEMY) {
+				this.friendType = F_FRIEND;
+				this.color = 'lime';
+			}
+		}
+		this.hitRenderCnt = 10;
+	}
+	
+	render() {
+	
+		let p, tx, ty;
+		
+		p = this;
+
+		if (p.hitRenderCnt > 0) {
+			ctx.beginPath();
+			ctx.arc(p.x, p.y, p.size, pi2, false);
+			ctx.lineWidth = rand(0, 2);
+			ctx.strokeStyle = 'rgba(' + (255 - 3 * this.health) + ',10,' + 3 * this.health + ',' + rand(0.1, 0.4) + ')';
+			ctx.stroke();	
+			p.hitRenderCnt--;
+		}	
+
+		let s = p.size / Math.sqrt(2);		
+		
+		ctx.save();
+		ctx.translate(p.x, p.y);
+		ctx.rotate(pi2 - p.dir);
+
+		
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(-s, -s);
+		ctx.lineTo(0, s);
+		ctx.lineTo(+s, -s);
+		ctx.lineTo(0, this.tailFormY);
+		ctx.lineTo(-s, -s);
+		ctx.strokeStyle = p.color;
+		ctx.stroke();
+		ctx.restore();
+
+	}
+} // Ship
+
+
+
+class Particle extends SpaceObj {
+
+	constructor (x, y, size, color, dir, lifespan = 30) {
+		super(x, y, size, color, dir);
+		
+		
+		this.acc = 0.3;
+		this.topSpeed = 70 / this.size; 
+		this.speed = 0;
+		this.lifespan = lifespan;
+		this.overflow = false;
+		this.update();
+	}	
+	
+	render() {
+		
+		let p = this;
+		ctx.fillStyle = p.color;
+		ctx.fillRect(p.x, p.y, p.size, p.size);
+	}
+	
+} // Particle
+
+
+class Bullet extends Particle {
+
+	constructor (x, y, size, color, dir, creator) {
+		super(x, y, size, color, dir);
+		
+		this.lifespan = 50;
+		this.creator = creator;
+		this.speed = creator.speed;
+		this.overflow = false;
+		this.update();
+	}
+} // Bullet
+
+
+
+class Answer extends SpaceObj {
+
+	constructor (x, y, size, color, dir, answerIdx) {
+		super(x, y, size, color, dir);
+		
+		this.answerIdx = answerIdx;
+		this.correctAnswer = false;
+		
+		this.acc = 0.3;
+		this.speed = 0;
+		this.health = 20;
+		this.topSpeed = 10 / this.size;
+		this.update();
+	}
+	
+	render() {
+	
+		let p, tx, ty;
+		
+		p = this;
+		ctx.fillStyle = p.color;
+
+		ctx.beginPath();
+		ctx.arc(p.x, p.y, p.size, pi2, false);		
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = p.color;
+
+		ctx.stroke();	
+		ctx.fillText(this.answerIdx, p.x - 5, p.y + 9);
+	}
+	
+} // Answer
+
+
+
+class Player extends SpaceObj {
+
+	constructor (x, y, size, color) {
+		super(x, y, size, color, 0);
+						
+		this.acc = 0;
+		this.speed = 0;
+		this.damage = 10;
+		this.friendType = F_FRIEND;
+		this.update();		
+	}
+	
+	render() {
+	
+		let p = this, tx, ty;
+		
+		if (this.dead())
+			return;
+		
+		if (p.hitRenderCnt > 0) {
+			ctx.beginPath();
+			ctx.arc(p.x, p.y, p.size, pi2, false);
+			ctx.lineWidth = rand(0, 2);
+			ctx.strokeStyle = 'rgba(' + (255 - 3 * this.health) + ',10,' + 3 * this.health + ',' + rand(0.1, 0.5) + ')';
+			ctx.stroke();	
+			p.hitRenderCnt--;
+		}
+
+		let s = p.size / Math.sqrt(2);
+		
+		ctx.save();
+		ctx.translate(p.x, p.y);
+		ctx.rotate(pi);
+		ctx.beginPath();
+		ctx.moveTo(-s, -s);
+		ctx.lineTo(0, s);
+		ctx.lineTo(+s, -s);
+		ctx.lineTo(0, -s/2);
+		ctx.lineTo(-s, -s);
+		ctx.strokeStyle = '#fff';
+		ctx.stroke();	
+		ctx.restore();
+		
+		s = 0.2 * p.size / Math.sqrt(2);
+		
+		ctx.save();
+		ctx.translate(p.x, p.y - 2);
+		ctx.rotate(pi2 - p.dir);
+		ctx.beginPath();
+		ctx.moveTo(-s, -s);
+		ctx.lineTo(0, s);
+		ctx.lineTo(0, 4*s);
+		ctx.lineTo(0, s);
+		ctx.lineTo(+s, -s);
+		//ctx.lineTo(0, -s/2);
+		ctx.lineTo(-s, -s);
+		ctx.strokeStyle = '#fff';
+		ctx.stroke();	
+		ctx.restore();
+		
+	}
+} // Player
+
+
+
+class Game {
+
+	constructor() {
+		//this.canvas = canvas;
+		//this.ctx = canvas.getContext('2d');
+		//this.width = canvas.width; 
+		//this.height = canvas.height; 
+		
+		this.ships = [];
+		this.answers = [];
+		this.bullets = [];
+		this.particles = [];
+		this.stars = [];
+		this.stars2 = [];
+		
+		this.fCnt = 0;
+		this.points = 100;
+		
+		this.mouseDown = false;
+		this.mouseX = 0;
+		this.mouseY = 0;
+		this.qIdx = 0;
+		this.gameEnd = false;
+		this.tacticalJumps = 13;
+		
+		this.init();
+		this.initEvents();		
+	}
+	
+	init() {
+		
+		const w = canvas.width;
+		const h = canvas.height;
+		
+		ctx.font = '22px Arial';
+		
+		this.player = new Player(w / 2, h - 90, 20, '#fff');
+	
+		for (let i = 0; i < 3000; i++) {
+			this.stars.push( {x: rand(0, w), y: rand(0, h), size: .05 + rand() * rand(), color: 'rgba(255,255,255,1.0)' } ); 
+		}
+		
+		for (let i = 0; i < 900; i++) {
+			let size =  rand() * rand() + .1;
+			this.stars2.push( {x: rand(0, w), y: rand(0, h), size: size, color: 'rgba(180,190,255,1.0)', vy: rand(0, 0.25 * size), vx: rand(0, 0.02) } ); 
+		}
+		
+		//for (let i = 0; i < 2; i++) {
+		//	this.ships.push(new Ship(100, 100, 20, '#ffcc00', rand(0, pi2), F_NEUTRAL));
+		//}
+		
+		window.setTimeout(() => this.loadNextQuestion(), 1000);
+					
+	}
+	
+	initEvents() {
+	
+		let self = this;
+		
+		// TODO use addEventlistener()
+		
+		canvas.onpointerdown = function (event) {
+			self.mouseDown = true;	
+		}
+		canvas.onpointerup = function (event) {
+			self.mouseDown = false;
+		}
+		canvas.onpointermove = function (event) {
+			const rect = canvas.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+			//console.log('move', x, y);
+			
+			self.mouseX = x;
+			self.mouseY = y;
+			
+			let p = self.player;
+			let dir = p.getDir({x:x, y:y});
+			//console.log(p.dir, dir, dir - p.dir);
+			p.targetDir = dir;
+			
+			//if (y > rect.height - 60) {p.speed = 0.7;
+			//} else {p.speed = 0;}
+			
+			p.update();
+		}
+		document.onkeydown = function (event) {
+			//console.log(event.key);
+			switch (event.key) {
+				case ' ':
+					if (self.tacticalJumps > 0) {
+						self.player.x = self.mouseX;
+						self.player.y = self.mouseY;
+						self.tacticalJumps--;
+					}
+					
+					//self.player.acc = 1;
+					//self.player.speed = 1;
+					break;
+			}
+		}
+	}
+	
+	findEnemy(ref) {
+		let minDist = 10e5;
+		let candidate = null;
+		
+		for (let ship of this.ships) {
+			if (ship.friendType == F_ENEMY && ship.distance(ref) < minDist) {
+				candidate = ship;
+			}	
+		}
+		return candidate;
+	}
+			
+	update() {
+	
+		let pl = this.player;
+		
+		pl.update();
+		
+		if (!pl.dead() && this.mouseDown && this.fCnt % 6 == 0) {
+			let dir = pl.getDir( {x: this.mouseX, y: this.mouseY} );
+			let bullet = new Bullet(pl.x, pl.y, rand(1, 3), '#ccc', dir, pl);
+			bullet.damage = pl.damage;
+			this.bullets.push(bullet);
+			zzfx(...[,,382,.04,.08,.07,,1.38,-4.9,,,,,,,,,.98,.02,.05]); // Shoot 218
+		}	
+
+		for (let j = this.ships.length - 1; j >= 0; j--) {
+			let p = this.ships[j];
+			p.update();
+			if (rand() < 0.5)
+				this.particles.push(new Particle(p.x, p.y, rand(0.5, 1.5), 'rgba(255,200,150,0.2)', p.targetDir + pi + rand(-.2, .2)));
+				
+			if (p.dead()) {
+				if (p.friendType == F_ENEMY)
+					this.points += 10;
+				this.ships.splice(j, 1);
+				if (p.lifespan > 0)
+					zzfx(...[1.04,,919,,.23,.88,1,2.73,.5,,,,,.4,20,.5,,.95,.01,.01]); // Explosion 119
+			} 		
+			else  {
+				if (this.fCnt % 60 == 0 && rand() < 0.3 && p.friendType == F_ENEMY) {
+					let dist = p.distance(this.player);
+					if (true) { // dist < 600
+						p.targetDir = p.getDir( {x: this.player.x + rand(0, 5), y: this.player.y + rand(0, 5)} );	
+					
+						if (dist < 350)
+							window.setTimeout(() => {
+								let bullet = new Bullet(p.x, p.y, rand(1, 3), '#faa', p.targetDir, p);
+								bullet.damage = p.damage;
+								this.bullets.push(bullet);
+								zzfx(...[2.02,,391,.03,.01,0,1,.4,-2.4,,,,,,2.3,,.14,.8,.04]); // Shoot 549*
+							}, 400);
+					}
+					
+				}	
+				if (this.fCnt % 9 == 0 && rand() < 0.5 && p.friendType == F_FRIEND) {
+					let enemy = this.findEnemy(p);
+					if (enemy == null) 
+						continue;
+					let dist = p.distance(enemy);	
+					if (dist < 300) {
+						p.targetDir = p.getDir( {x: enemy.x + rand(0, 2), y: enemy.y + rand(0, 2)} );	
+					
+						if (dist < 200)
+							window.setTimeout(() => {
+								let bullet = new Bullet(p.x, p.y, rand(1, 3), '#faa', p.targetDir, p);
+								bullet.damage = p.damage;
+								this.bullets.push(bullet);
+								zzfx(...[2.02,,391,.03,.01,0,1,.4,-2.4,,,,,,2.3,,.14,.8,.04]); // Shoot 549*
+							}, 9);
+					}
+					
+				}
+			}
+		} // for
+		
+		
+		for (let j = this.particles.length - 1; j >= 0; j--) {
+			let p = this.particles[j];
+			p.update();
+			if (p.dead()) {
+				this.particles.splice(j, 1);
+			} 		
+		}
+		
+		for (let j = this.answers.length - 1; j >= 0; j--) {
+			let answer = this.answers[j];
+			answer.update();
+			if (answer.dead()) { // answer.lifespan == 0 ||		
+				if (answer.correctAnswer) {
+					this.points += 100;
+					this.answers = [];
+					document.getElementById('qContainer').style.opacity = 0;
+					window.setTimeout(() => this.loadNextQuestion(), 900);
+					
+					if (rand() < 0.33)
+						this.ships.push(new Ship(answer.x, answer.y, 12, 'lime', rand(0, pi2), F_FRIEND, 30 * 60));
+					else if (rand() < 0.5)
+						this.ships.push(new Ship(answer.x, answer.y, 12, 'yellow', rand(0, pi2), F_NEUTRAL, 60 * 60));
+					else
+						this.player.health += Math.round(rand(5,20));
+						
+					zzfx(...[1.24,,72,.04,.4,.28,1,1.08,,-0.1,155,.06,.03,,,,.16,.95,.08]); // Powerup 612
+					//zzfx(...[,,1387,,,.24,1,1.72,,,768,.02,,,,,,.76,.08,.04]); // Pickup 158
+					break;
+				} else {	
+					let health = 50 + 4 * this.qIdx;
+					this.points -= 50;
+					
+					let enemyCnt = (this.qIdx > 10 && rand() < 0.5) ? this.qIdx > 20 ? 3 : 2 : 1;
+					for (let en = 0; en < enemyCnt; en++)
+						this.ships.push(new Ship(answer.x, answer.y, 12, 'red', rand(0, pi2), F_ENEMY, 10e7, health));
+					
+					this.answers.splice(j, 1);
+					//zzfx(...[1.37,,965,,.35,.67,4,1.2,1,.8,,,.14,.2,,.5,,.51,.01]); // Explosion 138
+					zzfx(...[1.01,,461,,,.39,4,2.66,,8.2,,,,.9,,.3,,.65,.08]); // Hit 349
+				}			
+			} 		
+		}
+		
+		for (let j = this.bullets.length - 1; j >= 0; j--) {
+			let bullet = this.bullets[j];
+			bullet.update();
+			if (bullet.lifespan == 0) {
+				this.bullets.splice(j, 1);
+			} else {
+				// bullet hit tests
+				if (bullet.hits(pl)) {
+						bullet.lifespan = 0;
+						pl.hitBy(bullet);
+						this.points -= 1;
+						
+						for (let i = 0; i < 6; i++) {
+							let part = new Particle(pl.x, pl.y, rand(0.5, 1), pl.color, i * pi / 3 + rand());
+							this.particles.push(part);
+						}				
+									
+					}
+					
+				for (let obj of this.ships) {
+					if (bullet.hits(obj)) {
+						bullet.lifespan = 0;
+						
+						for (let i = 0; i < 6; i++) {
+							let part = new Particle(obj.x, obj.y, rand(0.5, 1), obj.color, i * pi / 3 + rand());
+							this.particles.push(part);
+						}
+						obj.hitBy(bullet);			
+					}
+				}
+				
+				for (let answer of this.answers) {
+					if (bullet.hits(answer)) {
+						bullet.lifespan = 0;
+						
+						for (let i = 0; i < 12; i++) {
+							let part = new Particle(answer.x, answer.y, rand(0.5, 2), answer.color, i * pi / 6 + rand());
+							this.particles.push(part);
+						}
+						answer.hitBy(bullet);		
+					}
+				}
+			}
+					
+		} // for.. bullets
+		
+		for (let i = 0; i < 1 && !pl.dead(); i++) {
+			let part = new Particle(this.player.x, this.player.y + this.player.size/2, rand(.7, 3), 'rgba(255,240,150,0.3)', rand(-.2,.2));
+			this.particles.push(part);
+		}
+	}
+	
+	render() {
+	
+		const w = canvas.width;
+		const h = canvas.height;
+		
+		if (this.gameEnd)
+			return;	
+		if (this.player.dead()) {
+			document.getElementById('gameEnd').style.display = 'block';
+			zzfx(...[2.07,,39,.02,.26,.38,2,2.83,,,,,.12,.7,,.2,.01,.74,.08,.27]); // Explosion 361
+			this.gameEnd = true;
+			return;
+		}
+		if (this.win) {
+			document.getElementById('gameEndText').innerHTML = 'WOW - you answered all ' + Q.length + ' questions!';
+			document.getElementById('gameEnd').style.display = 'block';	
+			zzfx(...[2.1,,46,.04,.16,.66,1,.37,-3.6,1.5,96,.07,.02,,25,.1,.19,.67,.03,.17]); // Powerup 363		
+			this.gameEnd = true;
+			return;
+		}
+		
+		ctx.fillStyle = 'rgba(0,0,20,0.3)';
+		ctx.fillRect(0, 0, w, h); // clearRect() w/o simple motion blur effect
+		
+			
+		if (this.fCnt % 3 == 0)
+			for (let s of this.stars) {
+				ctx.fillStyle = s.color;
+				if (s.size > 0.8 || rand() < 0.9)
+					ctx.fillRect(s.x, s.y, s.size, s.size);
+			}
+			
+		for (let s of this.stars2) {
+			ctx.fillStyle = s.color;
+			s.y += s.vy;
+			s.x += s.vx;
+			s.y = s.y % h;
+			s.x = s.x % w;
+			ctx.fillRect(s.x, s.y, s.size, s.size);
+		}
+		
+		ctx.fillStyle = 'rgba(180,190,255,0.2)';
+		ctx.fillText('Space Jumps  ' + Math.round(this.tacticalJumps),  canvas.width / 2 - 80, canvas.height - 30);	
+		ctx.fillText('Health  ' + Math.round(this.player.health),  30, canvas.height - 30);	
+		ctx.fillText('Points  ' + Math.round(this.points),  canvas.width - 150, canvas.height - 30);		
+		this.player.render();
+		
+		for (let j in this.ships) {
+			this.ships[j].render();
+		}
+		for (let part of this.particles) {
+			part.render();
+		}
+		for (let bullet of this.bullets) {
+			bullet.render();
+		}
+		for (let answer of this.answers) {
+			answer.render();
+		}
+		
+		this.fCnt++;
+	}
+	
+	loadNextQuestion() {
+		document.getElementById('qContainer').style.opacity = 0.9;
+		
+		if (this.qIdx > Q.length - 1) {
+			this.win = true;
+			return;
+		}
+		let arr = Q[this.qIdx++];
+		let p = shuffleArray( [1,2,3,4] );
+		let correctAnswerIdx = p[0];
+		
+		document.getElementById('q').innerHTML = '' + this.qIdx + ' &nbsp; ' +  arr[2] + '?';
+		document.getElementById('a' + p[0]).innerHTML = p[0] + ') &nbsp; ' + arr[3];
+		document.getElementById('a' + p[1]).innerHTML = p[1] + ') &nbsp; ' + arr[4];
+		document.getElementById('a' + p[2]).innerHTML = p[2] + ') &nbsp; ' + arr[5];
+		document.getElementById('a' + p[3]).innerHTML = p[3] + ') &nbsp; ' + arr[6];		
+		
+		window.setTimeout(() => {
+			for (let i = 1; i < 5; i++) {
+				let answer = new Answer( i* 150, 160, 35 - rand(0, 9), 'rgba(230,230,255,0.5)', rand(-.5, .5), i);
+				if (i == correctAnswerIdx)
+					answer.correctAnswer = true;
+				this.answers.push(answer);
+			}
+		
+		}, 3300);
+		
+	}
+	
+	loop() {
+	
+		this.update();
+		this.render();
+		window.requestAnimationFrame( () => this.loop() ); // this.loop.bind(this)
+		//window.setTimeout(loop, 1000/60);
+	}	
+} // Game
+
+
+
+const pi = Math.PI;
+const pi2 = 2 * pi;
+
+function rand(min = 0, max = 1) {
+	return Math.random() * (max - min) + min;
+};
+
+function shuffleArray(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+
+
+// Level, Type, Question, Answer
+const Q = [
+[1,1,'What is the answer to life, universe and everything','42', 'evolution', 'love', '24'],
+[1,1,'Which planet is closest to the sun','Mercury','Venus','Earth','Mars'],
+[1,1,'What is the speed of light in km/s (vacuum)','299 792', '29 792', '3 000', '283 792'],
+[1,1,'What is the brightest star in the night sky','Sirius','Betelgeuse','Vega','Antares'],
+[1,1,'Who is the best pilot in Star Wars','Anakin','Luke','Han Solo', 'Jabba'],
+[1,1,'What is the nearest large galaxy to ours','Andromeda Galaxy','Virgo Cluster Galaxy','Fire Ring Galaxy','Horsehead Nebula'],
+[1,1,'What is the average distance to the moon in km','384 400', '38 400', '467 000', '1 254 700'],
+[1,1,'Which planet has visible rings','Saturn','Jupiter','Venus','Mars'],
+[1,1,'How big is the earth gravity in m/s² ','9.8', '98', '4.9', '9.2'],
+[1,1,'Where was Zaphod Beeblebrox born','Betelgeuse V','Sirius III','Aldebaran VI', 'Rigel II'],
+[1,1,'How is the density of the Mars atmosphere compared to earths','~1 %', '~10 %', '~33 %', '< 0.01 %'],
+[1,1,'What is the closest star to our solar system','Proxima Centauri','Sirius','Barnard\'s Star','Procyon'],
+[1,1,'How about a question with(out) space answers',' ',' ',' ',' '],
+
+[1,1,'How many earth days does Mars take to rotate around the sun','687','187','365','1376'],
+[1,1,'What is the diameter of our Milky Way Galaxy','200 000 ly','2 000 ly','950 000 ly','40 000 ly'],
+[1,1,'How big is the gravity of the moon compared to the earth','1/6', '1/4', '1/3', '1/2'],
+[1,1,'Will Elon reach Mars','Maybe','Yes - on impact','No','Yes'],
+[1,1,'How much space/volume in m³ is in a cube with a edge length of 4 m','64','16','60','12'],
+[1,1,'What will our sun be in approx. 5 billion years ','red giant','black hole','neutron star','moon'],
+[1,1,'How long does the moon take to rotate around the earth','27 days','7 weeks','4 months','13 days'],
+[1,1,'What are the essential elements of life', 'H, O, C, N, S, P','water, air, iron', 'H, O, C, N, S, Cl', 'U, O, B, N, P, Cl'],
+[1,1,'What is the age of the universe (in billtion years)','13.8', '4.5', '27.2', '137'],
+[1,1,'What is the diameter of the earth in km', '12742','6350','17981','175689'],
+[1,1,'How long is a day on Mars','24 h 39 min','29 h','23 h 30 min','48 h 12 min'],
+[1,1,'What is the smallest possible space/length','Planck length','Heisenberg space','Einstein length','Newton space'],
+[1,1,'How will the universe end','I don\'t know','big bang','big rip','thermal equilibrium'],
+//[1,1,'How ','','','',''],
+];
+
+
+const F_ENEMY = -1;
+const F_NEUTRAL = 0;
+const F_FRIEND = 1;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const game = new Game(); 
+game.loop();
+      
+    </script>    
+    
+  </body>
+</html>

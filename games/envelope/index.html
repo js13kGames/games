@@ -1,0 +1,956 @@
+﻿<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<title>envelope</title>
+<div class=wrapper><canvas id=a></canvas></div>
+<script>
+
+// ENVELOPE
+// ========
+
+// Globals
+// -------
+
+state = 0;      // Current screen (0: title / 1: menu / 101-112: puzzles 1-12)
+oldstate = 0;   // Previous screen
+loaded = 0;     // Onload() was already executed
+scroll = 0;     // global X scrolling
+interval = 0;   // interval handle
+X = Y = 0;      // pointer coordinates
+closest = [];   // closest grabbable point
+points = [];    // draggable points
+solutions = []; // solutions
+win = 0;        // win flag
+mobile = navigator.userAgent.match(/iPhone|iPad|Android/);
+
+// Puzzles
+// -------
+
+levels = [
+    
+  // No level 0
+  0,
+
+  // 1
+  [
+    [[[326,198],[217,260],[214,425]],[[382,86],[382,257],[385,428]],[[556,86],[553,257],[441,318]]]
+  ],
+
+  // 2
+  [
+    [[[248,81],[167,159],[178,274]],[[379,251],[379,195],[382,436]],[[516,83],[595,162],[589,274]]]
+  ],
+     
+  // 3
+  [
+    [[[385,44],[281,145],[136,265]],[[480,142],[382,265],[346,388]],[[626,265],[418,386],[382,464]]]
+  ],
+
+  // 4
+  [
+    [[[307,195],[183,100],[251,257]],[[480,114],[304,257],[195,402]],[[623,254],[480,394],[307,316]]]
+  ],
+     
+  // 5
+  [
+    [[[125,142],[211,134],[259,374]],[[211,55],[385,302],[385,458]],[[388,246],[642,153],[550,391]]]
+  ],
+     
+  // 6 (2 different solutions)
+  [
+    [[[189,358],[192,249],[186,456]],[[388,204],[388,249],[388,296]],[[586,53],[586,251],[586,145]]],  
+    [[[192,249],[189,358],[186,456]],[[388,249],[388,204],[388,296]],[[586,251],[586,53],[586,145]]]
+  ],
+
+  // 7
+  [
+    [[[225,75],[228,428],[228,377]],[[377,75],[578,433],[379,377]],[[536,75],[533,229],[536,380]]]
+  ],
+     
+  // 8
+  [
+    [[[293,282],[178,137],[178,422]],[[491,374],[458,103],[340,302]],[[564,363],[623,321],[614,181]]]
+  ],
+     
+  // 9
+  [
+    [[[385,47],[262,181],[220,321]],[[508,179],[385,310],[259,453]],[[550,313],[511,453],[382,240]]]
+  ],
+     
+  // 10
+  [
+    [[[256,64],[284,201],[228,414]],[[424,262],[382,128],[377,470]],[[404,44],[474,156],[547,416]]]
+  ],
+
+  // 11
+  [
+    [[[133,226],[239,64],[178,430]],[[217,193],[388,187],[385,271]],[[640,265],[550,187],[603,425]]]
+  ],
+
+  // 12
+  [
+    [[[483,332],[172,254],[488,176]],[[393,36],[390,257],[393,475]],[[301,330],[612,254],[298,179]]] 
+  ],
+];
+
+
+// Functions
+// ---------
+
+// Rotate a 3x3 matrix
+var rotate3 = function(matrix){
+  var newMatrix = [[],[],[]];
+
+  newMatrix[0][0] = matrix[2][0];
+  newMatrix[0][1] = matrix[1][0];
+  newMatrix[0][2] = matrix[0][0];
+
+  newMatrix[1][0] = matrix[2][1];
+  newMatrix[1][1] = matrix[1][1];
+  newMatrix[1][2] = matrix[0][1];
+
+  newMatrix[2][0] = matrix[2][2];
+  newMatrix[2][1] = matrix[1][2];
+  newMatrix[2][2] = matrix[0][2];
+
+  return newMatrix;
+}
+
+// Transpose a 3x3 matrix
+var transpose3 = function(matrix){
+  var newMatrix = [[],[],[]];
+
+  newMatrix[0][0] = matrix[0][0];
+  newMatrix[0][1] = matrix[1][0];
+  newMatrix[0][2] = matrix[2][0];
+
+  newMatrix[1][0] = matrix[0][1];
+  newMatrix[1][1] = matrix[1][1];
+  newMatrix[1][2] = matrix[2][1];
+
+  newMatrix[2][0] = matrix[0][2];
+  newMatrix[2][1] = matrix[1][2];
+  newMatrix[2][2] = matrix[2][2];
+
+  return newMatrix;
+}
+
+
+// On load / resize
+onload = onresize = function(){
+
+  // Resize canvas
+  w = a.width = innerWidth;
+  h = a.height = innerHeight;
+  
+  // Recompute vh and vh
+  vmin = Math.min(w, h) / 100;
+  vh = h / 100;
+  
+  // Get new context2d
+  if(!loaded) c = a.getContext("2d");
+  
+  // (re)init puzzle on resize
+  if(state > 100){
+    initpuzzle(state - 100);
+  }
+  
+  
+  // On resize, just redraw the current screen
+  if(loaded){
+    draw(state, 0, 0);
+  }
+  
+  // On load:
+  else {
+    // Generate a check texture
+    
+      check = new Image();
+      check.src = "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><g stroke="#2ca02c" stroke-width="2.3" fill="transparent"><circle cx="10" cy="10" r="8.5"/><path d="M5.2,10 8.5,13.4 14.8,7.2"/></g></svg>');
+  
+    // Generate 2 wood textures
+    
+      // Light
+      w1 = new Image();
+      w1.src = "data:image/svg+xml;base64," + btoa(makewood("#96642c", "#8c5829"));
+      
+      // Dark
+      w2 = new Image();
+      w2.src = "data:image/svg+xml;base64," + btoa(makewood("#5B2E0B", "#6c3809"));
+    
+    // Canvas CSS background (even darker)
+    a.style.background = "url('data:image/svg+xml;base64," + btoa(makewood("#281404", "#301704")) + "') repeat center top";
+    a.style.backgroundSize = "100vh"; 
+
+    // When the images are ready, draw the title screen
+    w2.onload = function(){
+      draw(state, 0, 0);
+    }
+  }
+  
+  // Remember that load() has executed
+  loaded = 1;
+}
+
+
+// Draw a screen four times (3 times with the dark texture and once with the light texture.
+// A little offset is added to each layer to simulate depth
+draw = function(screen, xo, yo, win){
+
+  // Return value (next screen to show)
+  ret = 0;
+
+  // Draw title screen (0)
+  if(screen == 0){
+  
+    c.font = "bold " + (20 * vmin) + "px arial";
+    c.textAlign = 'center';
+    c.translate(w / 2 + xo, h / 2 + yo);
+      
+      for(I = 0; I < 4; I++){
+        
+        if(mobile){
+          if(I != 1 && I != 2){
+            pattern = I == 3 ? "#96642c" : "#5B2E0B";
+            c.fillStyle = pattern;
+          }
+        }
+        
+        else {
+          if(I != 1 && I != 2){
+            pattern = c.createPattern(I == 3 ? w1 : w2, "");
+            c.fillStyle = pattern;
+          }
+        }
+                
+        c.beginPath();
+        c.fillText("envelope", .5 * I * vh / 3, -1 * I * vh / 3);
+        c.beginPath();
+        c.moveTo(-20 + .5 * I * vh / 3, 50 - 1 * I * vh / 3);
+        c.lineTo(20 + .5 * I * vh / 3, 75 - 1 * I * vh / 3);
+        c.lineTo(-20 + .5 * I * vh / 3, 100 - 1 * I * vh / 3);
+        c.fill();
+      }
+
+    c.translate(-w / 2 - xo, -h / 2 - yo);
+
+  }
+  
+  // Draw menu screen (1)
+  else if(screen == 1){
+  
+    c.shadowBlur = 0;
+    
+    c.translate(w/2 + xo, h / 2 - h / 4 + yo);
+    
+    for(I = 0; I < 4; I++){
+        
+      if(mobile){
+        if(I != 1 && I != 2){
+          pattern = I == 3 ? "#96642c" : "#5B2E0B";
+          c.fillStyle = pattern;
+        }
+      }
+      
+      else {
+        if(I != 1 && I != 2){
+          pattern = c.createPattern(I == 3 ? w1 : w2, "");
+          c.fillStyle = pattern;
+        }
+      }
+      
+      // Text
+      c.font = "bold " + vmin * 20 + "px arial";
+      c.textAlign = 'center';
+      c.fillText("level", .5 * I * vmin / 3, -1 * I * vmin / 3);
+      
+      // Squares
+      c.font = "bold " + 8 * vmin + "px arial";
+      for(i = 0; i < 4; i++){
+        for(j = 0; j < 3; j++){
+        
+          // Squares
+          c.fillRect(i * vmin * 20 - 35 * vmin + .5 * I * vmin / 3, j * vmin * 20 + 12 * vmin - 1 * I * vmin / 3, 10 * vmin, 10 * vmin);
+          c.beginPath();
+        }
+      }
+      
+      for(i = 0; i < 4; i++){
+        for(j = 0; j < 3; j++){
+        
+          // Clickable squares
+          c.beginPath();
+          c.rect(i * vmin * 20 - 35 * vmin + .5 * I * vmin / 3, j * vmin * 20 + 12 * vmin - 1 * I * vmin / 3, 10 * vmin, 10 * vmin);
+        
+          c.closePath();
+          
+          if(c.isPointInPath(X,Y)){
+            ret = j * 4 + i + 1;
+            
+            //console.log(ret);
+          }
+          
+          // Numbers
+          c.beginPath();
+          c.fillStyle = "#56340c";
+          c.fillText(j*4+i+1, i * vmin * 20 - 29.8 * vmin, j * vmin * 20 + 19 * vmin);
+
+          // Checks
+          if(localStorage["envelope" + (j*4+i+1)]){
+            c.drawImage(check, i * vmin * 20 - 28 * vmin, j * vmin * 20 + 8 * vmin, 8 * vmin, 8 * vmin);
+          }
+        }
+      }
+    }
+
+    c.translate(-w/2 - xo, -h/2 + h/4 - yo);
+  }
+  
+  // Draw puzzle screen (101-112)
+  else if(screen > 100){
+  
+    c.shadowBlur = 0;
+    
+    if(mobile){
+      pattern = "#96642c";
+      c.fillStyle = pattern;
+    }
+    else {
+      pattern = c.createPattern(w1, "");
+      c.fillStyle = pattern;
+    }
+    
+    
+    if(Math.abs(xo) < 1 && !interval){
+      
+      // X
+      c.beginPath();
+      c.font = "bold " + 45 + "px arial";
+      c.fillText("⨯", w - 50, 40);
+
+      // Restart
+      c.beginPath();
+      c.font = "bold " + 40 + "px arial";
+      c.fillText("↻", 30, 40);
+
+    }
+
+    // Instructions
+    if(state == 101 && !win){
+      c.textAlign = "center";
+      c.font = 4*vh + "px Arial";
+      c.fillText("drag the points of the grid", xo + w/2, h/2 + 2*vh);
+      c.fillText("on top of the shape", xo + w/2, h/2 + 6 * vh);
+    }
+    
+    // Instructions
+    if(state == 112 && !win){
+      c.textAlign = "center";
+      c.font = 3*vh + "px Arial";
+      c.fillText("Thanks for playing this demo!", xo + w/2, h/2 + 3*vh);
+      c.fillText("Full game coming soon on app stores!", xo + w/2, h/2 + 7 * vh);
+      c.fillText("Xem & OZ", xo + w/2 + w/3, h - 3 * vh);
+    }
+    
+    c.beginPath();
+    
+    size = 3;
+    level = levels[screen - 100][0];
+    currentcolor = 0;
+    
+    // Shadow
+    //console.log("shadow");
+    for(i = 0; i < size; i++){
+      for(j = 0; j < size; j++){
+        if(level[i][j+1] && level[i+1]){
+          if(mobile){
+            pattern = "#96642c";
+            c.fillStyle = pattern;
+          }
+          else {
+            pattern = c.createPattern(w1, "");
+            c.fillStyle = pattern;
+          }
+          
+          c.strokeStyle = "#5e3c01";
+          c.shadowColor = 'black';
+          c.shadowBlur = 10;
+          c.beginPath();
+          c.moveTo(xo + solutions[0][i][j][0], yo + solutions[0][i][j][1]);
+          c.lineTo(xo + solutions[0][i+1][j][0], yo + solutions[0][i+1][j][1]);
+          c.lineTo(xo + solutions[0][i+1][j+1][0], yo + solutions[0][i+1][j+1][1]);
+          c.lineTo(xo + solutions[0][i][j+1][0], yo + solutions[0][i][j+1][1]);
+          c.lineTo(xo + solutions[0][i][j][0], yo + solutions[0][i][j][1]);
+          c.fill();
+        }
+      }
+    }
+    
+    // Fill
+    c.translate(xo, yo);
+    for(k = 0; k < (interval ? 1 : 3); k++){
+      for(i = 0; i < size; i++){
+        for(j = 0; j < size; j++){
+          if(level[i][j+1] && level[i+1]){
+            if(mobile){
+              pattern = "#96642c";
+              c.fillStyle = pattern;
+            }
+            else {
+              pattern = c.createPattern(w1, "");
+              c.fillStyle = pattern;
+            }
+            c.strokeStyle = "#5e3c01";
+            c.shadowBlur = 0;
+            c.beginPath();
+            c.moveTo(solutions[0][i][j][0], solutions[0][i][j][1]);
+            c.lineTo(solutions[0][i+1][j][0], solutions[0][i+1][j][1]);
+            c.lineTo(solutions[0][i+1][j+1][0], solutions[0][i+1][j+1][1]);
+            c.lineTo(solutions[0][i][j+1][0], solutions[0][i][j+1][1]);
+            c.lineTo(solutions[0][i][j][0], solutions[0][i][j][1]);
+            c.fill();
+          }
+        }
+      }
+    }
+    c.translate(-xo, -yo);
+    
+    
+    // Stroke
+    if(!win){
+    
+      for(i = 0; i < size; i++){
+        for(j = 0; j < size; j++){
+          if(level[i][j+1] && level[i+1]){
+            c.strokeStyle = "#d93";
+            c.lineWidth = 1;
+            c.shadowBlur = 0;
+            c.beginPath();
+            c.moveTo(xo + solutions[0][i][j][0], yo + solutions[0][i][j][1]);
+            c.lineTo(xo + solutions[0][i+1][j][0], yo + solutions[0][i+1][j][1]);
+            c.lineTo(xo + solutions[0][i+1][j+1][0], yo + solutions[0][i+1][j+1][1]);
+            c.lineTo(xo + solutions[0][i][j+1][0], yo + solutions[0][i][j+1][1]);
+            c.lineTo(xo + solutions[0][i][j][0], yo + solutions[0][i][j][1]);
+            c.stroke();
+          }
+        }
+      }
+      
+      // Dots
+      
+      for(i = 0; i < size; i++){
+        for(j = 0; j < size; j++){
+          c.fillStyle = "#d93";
+          c.beginPath();
+          c.arc(xo + solutions[0][i][j][0], yo + solutions[0][i][j][1], 3, 0, 7);
+          c.fill()
+        }
+      }
+      
+      // Grid
+      for(i = 0; i < size; i++){
+        for(j = 0; j < size; j++){
+          
+          c.strokeStyle = "#fff";
+          c.shadowColor = 'rgba(255,255,255,.8)';
+          c.shadowBlur = 10;
+          c.lineWidth = 1;
+          c.beginPath();
+          if(i < size - 1){
+            c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+            c.lineTo(xo + points[i+1][j][0], yo + points[i+1][j][1]);
+          }
+          if(j < size - 1){
+            c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+            c.lineTo(xo + points[i][j+1][0], yo + points[i][j+1][1]);
+          }
+          c.stroke();
+          
+          c.fillStyle = (closest && closest.length && i == closest_i && j == closest_j) ? "#0bf" : "#fff";
+          c.beginPath();
+          c.arc(xo + points[i][j][0], yo + points[i][j][1], 3, 0, 7)
+          c.fill();
+          
+          // Highlight
+          if(closest && closest.length && closest_i == i && closest_j == j){
+            
+            c.strokeStyle = "#0bf";
+            c.beginPath();
+            
+            if(i < size - 1){
+              c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+              c.lineTo(xo + points[i+1][j][0], yo + points[i+1][j][1]);
+            }
+            if(j < size - 1){
+              c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+              c.lineTo(xo + points[i][j+1][0], yo + points[i][j+1][1]);
+            }
+            if(i > 0){
+              c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+              c.lineTo(xo + points[i-1][j][0], yo + points[i-1][j][1]);
+            }
+            if(j > 0){
+              c.moveTo(xo + points[i][j][0], yo + points[i][j][1]);
+              c.lineTo(xo + points[i][j-1][0], yo + points[i][j-1][1]);
+            }
+            c.stroke();
+            
+          }
+        }
+      }
+      
+      
+    }
+    
+    if(win){
+      
+      // Draw eyes/mouth on puzzle 3 when solved (ray)
+      if(state == 103){
+        smile(380, 160, xo, yo);
+        circle(360, 125, xo, yo);
+        circle(400, 125, xo, yo);
+      }
+      
+      // Eye, mouth on puzzle 4 (fish)
+      if(state == 104){
+        circle(505, 214, xo, yo);
+        smile(550, 280, xo, yo);
+      }
+      
+      // Eye on puzzle 5 (goose)
+      if(state == 105){
+        circle(190, 105, xo, yo);
+      }
+      
+      // Eye on puzzle 8 (rhino)
+      if(state == 108){
+        circle(480, 214, xo, yo);
+      }
+      
+      // Eye, mouth on puzzle 10 (rabbit)
+      if(state == 110){
+        smile(380, 220, xo, yo);
+        circle(360, 185, xo, yo);
+        circle(400, 185, xo, yo);
+      }
+      
+      // Eye on puzzle 11 (horse)
+      if(state == 111){
+        circle(220, 140, xo, yo);
+      }
+      
+      c.drawImage(check, xo + w/2 - vh * 7, h/2, vh * 14, vh * 14);
+      
+      setTimeout(function(){
+        onmouseup({pageX: w, pageY: 0});
+      }, 2000);
+    }
+
+  }
+  
+  return ret;
+}
+
+
+// Shapes
+circle = function(x, y, xo, yo){
+  c.beginPath();
+  c.arc(xo + w/2 - 40 * vh + x * vh/10, y * vh/10, 1 * vh, 0, 7);
+  c.fillStyle = "#56340c";
+  c.fill();
+}
+
+smile = function(x, y, xo, yo){
+  c.beginPath();
+  c.arc(xo + w/2 - 40 * vh + x * vh/10, y * vh/10, 3 * vh, 1, 2.14);
+  c.lineWidth = .8 * vh;
+  c.strokeStyle = "#56340c"
+  c.stroke();
+}
+
+// Init puzzle number n
+initpuzzle = function(n){
+
+  // Init all the possible solutions according to the canvas size
+  solutions = [];
+  
+  // Loop on hardcoded solutions (1 or 2)
+  for(i in levels[n]){
+  
+    solutions[i*8] = [];
+    
+    // Loop on lines
+    for(j = 0; j < 3; j++){
+    
+      solutions[i*8][j] = [];
+    
+      // Loop on columns
+      for(k = 0; k < 3; k++){
+          
+        solutions[i * 8][j][k] =
+        [
+          w/2 - 40 * vh + levels[n][i][j][k][0] * vh/10,
+          levels[n][i][j][k][1] * vh/10
+        ];
+      }
+    }
+    
+    // Perform the rotations and transposes
+    solutions[i*8+1] = rotate3(solutions[i*8]);
+    solutions[i*8+2] = rotate3(solutions[i*8+1]);
+    solutions[i*8+3] = rotate3(solutions[i*8+2]);
+    solutions[i*8+4] = transpose3(solutions[i*8]);
+    solutions[i*8+5] = rotate3(solutions[i*8+4]);
+    solutions[i*8+6] = rotate3(solutions[i*8+5]);
+    solutions[i*8+7] = rotate3(solutions[i*8+6]);
+  }
+  
+  // Init the bottom grid (draggable points)
+  points = [];
+  
+  for(i = 0; i < 3; i++){
+    points[i] = [];
+    for(j = 0; j < 3; j++){
+      points[i][j] = [
+        w/2 - 15 * vh + i * 12 * vh + j * (i - 1.1) * vh,
+        h/2 + h/8 + 11 * j * vh + j * (1.1) * vh
+      ];
+    }
+  }
+  
+  // Mark the puzzle as unsolved
+  win = 0;
+}
+
+
+// Handle click events
+onclick = function(e){
+  e.preventDefault();
+}
+
+transition = function(){
+
+  // Mobile: just show the new screen
+  if(mobile){
+      a.width = a.width;
+      draw(state, 0, 0);
+  }
+  
+  else {
+  
+  
+
+    // Desktop: transition
+    loops = 30;
+    interval = setInterval(function(){
+    
+      
+      // Scroll with a speed proportional to a sine wave
+      scroll += w/30 * Math.sin(loops / 30 * 3.14) * 1.57;
+      
+      // Reset canvas
+      a.width = a.width;
+      
+      //console.log(oldstate, -scroll, state, w-scroll);
+      // Draw old screen moving left
+      draw(oldstate, -scroll, 0, win);
+      
+      // Draw new screen arriving from the right
+      draw(state, w - scroll, 0);
+      
+      // Scroll background image
+      a.style.backgroundPosition = "-" + scroll + "px";
+      
+      // Repeat until the 60 loops are passed
+      loops--;
+      if(loops == 0){
+        clearInterval(interval);
+        interval = 0;
+        loops = 30;
+        scroll = 0;
+        draw(state, 0, 0);
+        onresize();
+      }
+    }, 33);
+  }
+  
+}
+
+mousedown = 0;
+onmousedown = ontouchstart = function(e){
+  mousedown = 1;
+  xy(e);
+  
+  // Grab closest point if it's less than 10px away
+  closest = [];
+  closest_i = -1;
+  closest_j = -1;
+  mindist = 20;
+  
+  
+  for(i = 0; i < 3; i++){
+    for(j = 0; j < 3; j++){
+      if(points[i]){
+        dist = Math.hypot(points[i][j][0] - X, points[i][j][1] - Y);
+        if(dist < mindist){
+          mindist = dist;
+          //closest = [points[i][j][0], points[i][j][1]];
+          closest = points[i][j];
+          closest_i = i;
+          closest_j = j;
+        }
+      }
+    }
+  }
+  
+  e.preventDefault();
+}
+
+onmousemove = ontouchmove = function(e){
+  if(mousedown && closest.length){
+    xy(e);
+    points[closest_i][closest_j] = [X,Y];
+    a.width = a.width;
+    draw(state, 0, 0);
+  }
+  e.preventDefault();
+}
+
+onmouseup = ontouchend = function(e){
+
+  xy(e);
+  
+  if(!interval){
+  
+    oldstate = state;
+  
+    // On title screen (0)
+    // New state: menu (1)
+    if(state == 0){
+    
+      state = 1;
+      
+    }
+    
+    // On menu screen (1)
+    // New screen: a puzzle (101-112)
+    else if(state == 1){
+      tmp = draw(state, 0, 0);
+      //console.log(tmp);
+      if(tmp){
+        state = tmp + 100;
+        initpuzzle(tmp);
+      }
+      
+    }
+    
+    // On puzzle screen
+    else if(state > 100) {
+    
+      // Quit
+      if(X > w - 70 && Y < 70){
+        state = 1;
+      }
+      
+      // Reset
+      else if(X < 70 && Y < 70){
+        a.width = a.width;
+        initpuzzle(state - 100);
+        draw(state, 0, 0);
+      }
+      
+      else {
+      
+        // Snap
+        mindist = 30;
+        for(i = 0; i < 3; i++){
+          for(j = 0; j < 3; j++){
+            if(solutions[0]){
+              dist = Math.hypot(solutions[0][i][j][0] - X, solutions[0][i][j][1] - Y);
+              if(dist < mindist && closest_i >= 0){
+                mindist = dist;
+                points[closest_i][closest_j] = solutions[0][i][j];
+                
+              }
+            }
+          }
+        }
+        
+        mousedown = 0;
+        closest = [];
+        closest_i = -1;
+        closest_j = -1
+        a.width = a.width;
+        draw(state,0,0);
+        
+        // Check solution
+        win = 0;
+        for(i in solutions){
+          win = 1;
+          for(j = 0; j < 3; j++){
+            for(k = 0; k < 3; k++){
+              if(points[j][k][0] == solutions[i][j][k][0] && points[j][k][1] == solutions[i][j][k][1]){
+                // ok
+              }
+              else {
+                win = 0;
+              }
+            }
+          }
+          if(win){
+            break;
+          }
+        }
+        
+        //win = 1;
+        
+        if(win){
+            
+          a.width = a.width;
+          draw(state, 0, 0, win);
+          A = new Audio();
+          A.src = "win.mp3";
+          A.play();
+          localStorage["envelope" + (state - 100)] = 1;
+        }
+      }
+    }
+    
+    if(state != oldstate){
+      //console.log(oldstate, state);
+      transition();
+    }
+  }
+  
+  try {
+    e.preventDefault();
+  }
+  catch(e){
+  
+  }
+}
+
+ondrag = onscroll = function(e){
+  e.preventDefault();
+}
+
+
+// Get pointer coordinates on canvas
+xy = function(e){
+  // Mobile
+  if(e.changedTouches){
+    var r = a.getBoundingClientRect();
+    X = e.changedTouches[0].clientX;
+    Y = e.changedTouches[0].clientY;
+  }
+  
+  // Desktop
+  else{
+    X = e.pageX;
+    Y = e.pageY;
+  }
+}
+
+// Generate a wood svg texture based on 2 colors
+function makewood(color1, color2){
+  return `<svg xmlns="http://www.w3.org/2000/svg" height="500" width="500"><path d="m0 256v-256h256 256v256 256h-256-256v-256z" fill="${color1}"/><path fill="${color2}" d="m6.0 501.0c1.0-123.0 12.0-247.0 3.0-370.0-1.0-43.0-3.0-86.0-3.0-130.0 11.0 34.0 4.0 72.0 8.0 108.0.0 95.0 8.0 190.0-.0 285.0-2.0 36.0-3.0 73.0-3.0 110.0-2.0 8.0-5.0 1.0-3.0-2.0zm35.0-25.0c-3.0-125.0-9.0-251.0.0-377.0.0-33.0-1.0-66.0 1.0-99.0.0 115.0 3.0 218.0-2.0 328.0 6.0 65.0.0 101.0 8.0 155.0 1.0 22.0-12.0 19.0-7.0-.0l.0-3.0zm10.0 32.0c-4.0-177.0-3.0-333.0-.0-496.0 14.0-3.0 1.0 33.0 5.0 44.0-12.0 156.0 5.0 302.0 1.0 447.0-.0 2.0-3.0 5.0-6.0 4.0zm12.0-6.0c4.0-39.0 2.0-79.0-2.0-118.0-6.0-89.0-6.0-179.0-1.0-268.0 1.0-34.0-.0-69.0 5.0-102.0 5.0 18.0-.0 41.0-.0 62.0-1.0 24.0-2.0 49.0-1.0 74.0 5.0-47.0 1.0-94.0 9.0-141.0-1.0 67.0-8.0 134.0-8.0 201.0-1.0 73.0 4.0 147.0 12.0 220.0 1.0 21.0.0 60.0-2.0 71.0-1.0-35.0 3.0-70.0-3.0-105.0-13.0-364.0-12.0-165.0.0 62.0-.0 10.0 2.0 45.0-7.0 43.0zm-5.0-243.0c-3.0 1.0 3.0 2.0 0 0zm33.0 251.0c4.0-77.0 2.0-155.0 6.0-233.0-22.0-60.0-14.0-125.0-10.0-187.0 8.0-22.0-8.0-74.0 12.0-79.0 4.0 40.0-7.0 81.0 7.0 120.0 11.0 25.0 13.0 53.0 12.0 81.0-4.0 56.0 3.0 127.0 11.0 190.0 3.0 28.0 2.0 56.0 5.0 84.0 1.0 13.0-11.0 25.0-9.0 4.0-1.0-29.0 2.0-59.0-3.0-88.0-20.0-2.0-10.0 36.0-16.0 51.0-3.0 18.0-.0 44.0-12.0 58.0l-2.0-.0-1.0-1.0zm12.0-6.0c6.0-17.0.0-66.0 16.0-66.0 3.0 18.0 4.0 53.0-.0 62.0-1.0-11.0 8.0-49.0-7.0-43.0-2.0 14.0.0 32.0-8.0 47.0zm32.0 2.0c6.0-76.0-4.0-152.0-12.0-228.0-3.0-43.0-3.0-86.0-.0-129.0-1.0-16.0-33.0-41.0-3.0-41.0 9.0-23.0-1.0-48.0 1.0-72.0 7.0-38.0-8.0 33.0 9.0 23.0.0-11.0 6.0-55.0 3.0-22.0-11.0 108.0-17.0 218.0 2.0 326.0 3.0 39.0 3.0 78.0 6.0 117.0-7.0 7.0 1.0 22.0-6.0 28.0zm5.0 1.0c7.0-25.0.0-52.0 10.0-76.0 3.0-13.0-8.0-54.0-1.0-54.0 6.0 42.0 4.0 86.0-4.0 128.0-.0 1.0-2.0 1.0-3.0 2.0zm10.0 2.0c7.0-26.0 4.0-53.0 11.0-79.0-4.0-88.0-24.0-176.0-23.0-259.0 3.0-29.0-8.0-60.0 4.0-88.0 2.0-22.0-4.0-50.0 5.0-68.0 15.0-25.0 3.0 23.0 3.0 32.0-8.0 70.0-1.0 117.0-3.0 213.0 17.0 65.0 21.0 133.0 18.0 196.0-2.0 12.0-4.0 57.0-16.0 53.0zm38.0-6.0c5.0-82.0 8.0-165.0-1.0-248.0-2.0 21.0-18.0 19.0-16.0-1.0-8.0-44.0-17.0-91.0-4.0-136.0 6.0-29.0 16.0-58.0 18.0-89.0-4.0 8.0-14.0 46.0-8.0 18.0-3.0-11.0 15.0-52.0 14.0-21.0-2.0 9.0-9.0 45.0-1.0 39.0 2.0-19.0-.0-69.0 32.0-55.0 3.0 35.0 4.0 71.0 13.0 106.0-.0 24.0 2.0 57.0-12.0 76.0-8.0-17.0 1.0-45.0-13.0-58.0-18.0 32.0-4.0 49.0-7.0 106.0-14.0 95.0 24.0 177.0 6.0 266.0-3.0-19.0-1.0 10.0-6.0-8.0-3.0-27.0 4.0-55.0-4.0-83.0-1.0 29.0 7.0 61.0-3.0 90.0-5.0 7.0-4.0 6.0-4.0-.0zm2.0 2.0c-3.0 1.0 3.0 2.0 0 0zm7.0-183.0c.0-40.0-4.0-92.0-7.0-138.0-6.0 8.0-7.0 49.0-16.0 20.0-13.0-32.0 1.0-66.0 11.0-97.0 4.0-12.0-7.0-23.0-5.0-5.0-8.0 33.0-16.0 68.0-10.0 102.0-6.0 21.0 20.0 33.0 21.0 11.0 6.0 21.0 2.0 45.0 6.0 67.0 1.0 25.0 1.0 51.0 1.0 76.0 1.0-13.0.0-26.0 1.0-39.0zm-19.0-90.0c-2.0-7.0 3.0 4.0 0 0zm33.0 271.0c-7.0-11.0 13.0-37.0 10.0-11.0 1.0 7.0-5.0 32.0-10.0 11.0zm13.0 8.0c3.0-36.0-7.0-71.0-14.0-106.0-6.0-74.0-10.0-149.0.0-223.0 6.0 5.0 5.0 49.0 14.0 29.0-1.0-19.0 22.0-22.0 14.0.0 5.0 87.0 3.0 174.0 7.0 262.0-6.0-87.0-2.0-175.0-10.0-262.0-14.0-6.0-9.0 44.0-22.0 17.0-12.0 38.0-6.0 80.0-6.0 120.0 3.0 53.0 20.0 105.0 17.0 159.0zm25.0-26.0c-4.0-65.0-5.0-202.0-5.0-303.0 7.0-59.0 10.0-119.0 5.0-179.0 12.0 8.0 2.0 56.0 5.0 21.0-1.0-17.0 3.0-18.0 2.0-.0-1.0 61.0 2.0 123.0-3.0 184.0-2.0 26.0 3.0 52.0-1.0 79.0-1.0 73.0 5.0 147.0 4.0 220.0-11.0 12.0-5.0-16.0-7.0-21.0zm6.0-8c-1.0-14.0.0-33.0-3.0-45.0 1.0 15.0-1.0 30.0 3.0 45.0zm13.0 33c-4.0-78.0-1.0-158.0-.0-254.0 5.0-69.0 11.0-139.0 2.0-208.0-2.0-11.0 1.0-58.0 3.0-26.0 2.0 39.0 4.0 78.0 4.0 118.0.0 24.0-.0 49.0-.0 74.0 12.0-26.0 3.0-57.0 6.0-86.0-2.0-34.0-3.0-69.0-7.0-104.0 9.0-28.0 11.0 17.0 11.0 27.0 9.0 167.0-13.0 310.0-4.0 461.0-22.0-95.0.0-202.0-1.0-292.0-13.0 34.0-3.0 66.0-11.0 122.0-1.0 40.0-.0 80.0 3.0 120.0-11.0 17.0 13.0 33.0-5.0 49.0zm41.0.0c-1.0-42.0-12.0-83.0-9.0-126.0-2.0-122.0 9.0-244.0 9.0-366.0 9.0-13.0 1.0 30.0 2.0 38.0-2.0 105.0-12.0 233.0-7.0 351.0-3.0 29.0 14.0 48.0 10.0 76.0-.0 8.0 7.0 22.0-5.0 25.0zm10.0-2.0c5.0-44.0-4.0-88.0-12.0-131.0-5.0-58.0-1.0-116.0.0-175.0 6.0 32.0-.0 66.0 2.0 99.0-.0 38.0 6.0 77.0 13.0 115.0 2.0 30.0 2.0 62.0-1.0 92.0l-1.0.0zm7.0 3.0c2.0-62.0 1.0-126.0-11.0-188.0-5.0-90.0-3.0-182.0 7.0-272.0-.0-11.0-2.0-49.0 14.0-37.0-1.0 44.0-10.0 87.0-15.0 131.0-4.0 150.0-2.0 145.0 9.0 191.0 2.0 36.0 5.0 72.0 5.0 108.0-1.0 22.0 7.0 53.0-9.0 66.0l-.0.0-.0.0zm15.0-68.0c1.0-122.0-16.0-245.0.0-367.0.0-16.0-1.0-60.0 3.0-59.0-4.0 111.0-10.0 222.0-2.0 334.0 1.0 53.0 3.0 107.0 2.0 161.0-11.0-21.0-.0-46.0-4.0-69.0zm37.0 65.0c-.0-36.0 2.0-73.0 6.0-109.0 29.0 11.0 3.0 49.0 9.0 72.0-.0 10.0 4.0 45.0-15.0 37.0zm22.0 0c2.0-12.0 5.0-55.0 5.0-21.0-.0 7.0-1.0 14.0-5.0 21.0zm31.0-3c-1.0-128.0 20.0-257.0 4.0-385.0-6.0-38.0-5.0-77.0-3.0-116.0 10.0 46.0 1.0 96.0 9.0 110.0 8.0 103 2.0 206.0 1.0 309.0-5.0 27.0-2.0 63.0-9.0 85.0zm7.0-5c4.0-33.0 14.0-66.0 8.0-100.0-1.0-81.0.0-162.0.0-243.0 1.0 110.0 1.0 221.0 2.0 332.0.0 7.0-13.0 33.0-10.0 11.0zm8.0-125.0c-3.0 1.0 3.0 2.0 0 0zm16.0 115.0c5.0-7.0-5.0-25.0-3.0-6.0 4.0-67.0 11.0-136.0-.0-203.0-3.0-59.0 2.0-118.0 1.0-177.0 2.0-31.0-4.0-66.0 4.0-96.0 24.0-17.0 47.0 13.0 33.0 35.0 5.0 142.0 3.0 284.0 2.0 427.0 4.0 20.0-6.0 47.0-28.0 44.0-8.0-3.0-11.0-13.0-9.0-22.0zm24.0-258.0c2.0-63.0.0-127.0-4.0-191.0-12.0 24.0-2.0 54.0-7.0 80.0.0 39.0 4.0 78.0 9.0 118.0.0-2.0 1.0-4.0 1.0-7.0zm-4.0-9.0c-1.0-5.0 2.0 1.0 0 0zm17.0-96.0c-3.0 1.0 3.0 2.0 0 0zm0-4c-3.0 1.0 3.0 2.0 0 0zm-189.0 385.0c-1.0-5.0 2.0 1.0 0 0zm-106.0-16.0c-5.0-10.0 5.0-.0 0 0zm155.0-15.0c-13.0 2.0 5.0-20.0-9.0-12.0-2.0-98.0-7.0-196.0-6.0-294.0 1.0-25.0 4.0-51.0 3.0-76.0 15.0-19.0 10.0 23.0 13.0 34.0 1.0 25.0 5.0 50.0 11.0 74.0 14.0 57.0 19.0-58.0 22.0-77.0 4.0-19.0-1.0-48.0 13.0-62.0 8.0 21.0 6.0 46.0 11.0 68.0 9.0 76.0 12.0 154.0-2.0 230.0-14.0-28.0-14.0-63.0-23.0-94.0 6.0 20.0-10.0-17.0-10.0 7.0-5.0 40.0-10.0 81.0-16.0 121.0-3.0 27.0-4.0 54.0-6.0 81.0l-1.0-.0zm-5.0-86.0c-3.0 1.0 3.0 2.0 0 0zm12.0-136.0c-4.0-32.0-7.0-64.0-13.0-96.0-10.0 32.0-4.0 67.0-4.0 101.0 1.0 28.0.0 58.0 4.0 86.0 20.0 13.0 14.0-83.0 13.0-91.0zm50.0 50.0c10.0-66.0 3.0-134.0-8.0-200.0-20.0 27.0-8.0 63.0-14.0 95.0 1.0 35.0 6.0 72.0 22.0 104.0zm-276.0 172.0c-1.0-7.0 3.0 2.0 0 0zm192.0-13.0c1.0-13.0 1.0 6.0 0 0zm88.0-23.0c-2.0-14.0 4.0-18.0 2.0-.0.0 12.0-3.0 21.0-2.0.0zm-20.0 16.0c-4.0-12.0 2.0-39.0 1.0-10.0.0 3.0-.0 7.0-1.0 10.0zm-294.0-7.0c-1.0-6.0 3.0 2.0 0 0zm161.0-5.0c-.0-7.0 1.0 4.0 0 0zm.0-7.0c.0-8.0.0 8.0 0 0zm-145.0-1.0c-1.0-5.0 2.0 1.0 0 0zm145.0-6.0c.0-6.0.0 6.0 0 0zm-272.0-34.0c9.0-119.0-1.0-102.0 1.0-3.0-.0 8.0-2.0 21.0-1.0 3.0zm225.0 7.0c.0-18.0-12.0-67.0.0-69.0 5.0 22.0 10.0 44.0-.0 69.0zm-187.0-17.0c-2.0-24.0 3.0-10.0.0 5.0zm4.0-23.0c-6.0-4.0 2.0-6.0 0 0zm94.0-15.0c-7.0-51.0-7.0-103.0-9.0-155.0-.0-54.0-4.0-66.0 9.0-172.0 6.0 12.0-7.0 51.0-5.0 73.0-2.0 54.0-1.0 109.0-.0 163.0 13.0 26.0-19.0 73.0 5.0 90.0zm-101-66.0c-27.0 158.0-13.0 79.0 0 0zm148.0-14.0c-7.0-5.0 2.0-7.0 0 0zm92.0-30.0c-1.0-5.0 2.0 1.0 0 0zm1-15c-1.0-5.0 2.0 1.0 0 0zm-47-5c-1.0-5.0 2.0 1.0 0 0zm200.0-14.0c3.0-3.0-.0 6.0 0 0zm-123.0-32.0c1.0-51.0 3.0-103.0 10.0-154.0 8.0 27.0-7.0 55.0-5.0 83.0-1.0 28.0-1.0 57.0-5.0 86.0-.0-5.0.0-10.0.0-15.0zm197.0-8.0c-1.0-5.0 2.0 1.0 0 0zm-56.0-1.0c-1.0-38.0-9.0-59.0-7.0-142.0 13.0 3.0 2.0 39.0 6.0 55.0.0 29.0 4.0 58.0.0 87.0zm-2.0-93.0c-3.0 1.0 3.0 2.0 0 0zm58.0 86.0c.0-8.0.0 8.0 0 0zm-296.0-9.0c-3.0-13.0 3.0 4.0 0 0zm29.0-1.0c-5.0-40.0-10.0-80.0-15.0-121.0 11.0 19.0 5.0 46.0 9.0 68.0-1.0 13.0 13.0 28.0 13.0 6.0 3.0-19.0-3.0-59.0.0-66.0 1.0 37.0 4.0 75.0-5.0 112.0 2.0-9.0-1.0.0-3.0 1.0zm96.0-.0c.0-21.0 3.0-67.0 6.0-72.0-.0 24.0-3.0 48.0-6.0 72.0zm-180.0-5.0c.0-12.0 10.0-40.0 5.0-11.0-.0 4.0-2.0 8.0-5.0 11.0zm349.0-14.0c1.0-8.0 1.0 9.0 0 0zm-264.0-10.0c-2.0-4.0 5.0 1.0 0 0zm265.0-10.0c.0-9.0.0 6.0 0 0zm-400.0-6.0c-6.0-41.0 3.0-106.0 7.0-32.0-1.0 10.0-1.0 22.0-7.0 32.0zm278.0-13.0c.0-18.0-14.0-66.0 8.0-64.0 6.0 21.0-7.0 42.0-8.0 64.0zm33.0-.0c-1.0-5.0 2.0 1.0 0 0zm-193.0-5.0c2.0-4.0.0 7.0 0 0zm-111.0-13.0c-1.0-5.0 2.0 1.0 0 0zm211-26c-1.0-5.0 2.0 1.0 0 0z"/></svg>`
+}
+
+music = function(){
+
+    with(new AudioContext)
+    with(G=createGain())
+    for(i in D=[13,,9,,,,16,,11,,3,,,,,,13,,9,,,13,16,,11,,3,,,,,,13,,9,,,,16,,11,,3,,,,,,13,,9,,,13,16,,11,,3,,,,,])
+    with(createOscillator())
+    if(D[i])
+    connect(G),
+    G.connect(destination),
+    start(i*.23),
+    frequency.setValueAtTime(880*1.06**(13-D[i]),i*.23),
+    gain.setValueAtTime(.01,i*.23),
+    gain.setTargetAtTime(.0001,i*.23+(i%16==2?.3:i%16==10?.4:.2),(i%16==2?.3:i%16==10?.3:.05)),
+    stop(i*.23+(i%16==2?.7:i%16==10?.7:.23))
+
+    with(new AudioContext)
+    with(G=createGain())
+    for(i in D=[,,,,,,,,,,6,,,,,15,,,,,,,,,,,6,,,,,,16,,,,,,,,,,6,,,,,,18,,,,,,,,,,6])
+    with(createOscillator())
+    if(D[i])
+    connect(G),
+    G.connect(destination),
+    start(i*.23),
+    frequency.setValueAtTime(880*1.06**(13-D[i]),i*.23),
+    gain.setValueAtTime(.01,i*.23),
+    gain.setTargetAtTime(.0001,i*.23+(i%16==2?.3:i%16==10?.4:.23),(i%16==2?.3:i%16==10?.3:.005)),
+    stop(i*.23+(i%16==2?9:i%16==10?.9:.24))
+    
+    with(new AudioContext)
+    with(G=createGain())
+    for(i in D=[,,20,,,20,,,20,,,20,,,20,,,20,,,20,,,20,13,,,13,,,18,,,18,,,18,,,18,,,18,,,18,,,9,,,9,,,9,,,9,,,9,,,9])
+    with(createOscillator())
+    if(D[i])
+    connect(G),
+    G.connect(destination),
+    start(i*.23),
+    frequency.setValueAtTime(440*1.06**(13-D[i]),i*.23),
+    gain.setValueAtTime([,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.002,,,.0015,.005,,,.0045,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025][i],i*.23),
+    gain.setTargetAtTime(.0001,i*.23+.21,.005),
+    stop(i*.23+.22)
+
+    with(new AudioContext)
+    with(G=createGain())
+    for(i in D=[,,16,,,16,,,16,,,16,,,16,,,16,,,16,,,16])
+    with(createOscillator())
+    if(D[i])
+    connect(G),
+    G.connect(destination),
+    start(i*.23),
+    frequency.setValueAtTime(440*1.06**(13-D[i]),i*.23),
+    gain.setValueAtTime([,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.002,,,.0015,.005,,,.0045,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025][i],i*.23),
+    gain.setTargetAtTime(.0001,i*.23+.21,.005),
+    stop(i*.23+.22)
+
+    with(new AudioContext)
+    with(G=createGain())
+    for(i in D=[,,13,,,13,,,13,,,13,,,13,,,13,,,13,,,13])
+    with(createOscillator())
+    if(D[i])
+    connect(G),
+    G.connect(destination),
+    start(i*.23),
+    frequency.setValueAtTime(440*1.06**(13-D[i]),i*.23),
+    gain.setValueAtTime([,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.002,,,.0015,.005,,,.0045,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025,,,.005,,,.0045,,,.004,,,.0035,,,.003,,,.0025][i],i*.23),
+    gain.setTargetAtTime(.0001,i*.23+.21,.005),
+    stop(i*.23+.22)
+}
+
+music();
+setInterval(music, 14990);
+
+
+</script>
+
+<style>
+/* Make the canvas fullscreen */
+.wrapper { cursor: pointer; position: fixed; top: 0; left: 0; }
+
+/* No highlight on mobile */
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+</style>

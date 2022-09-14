@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Players not found</title>
+        <meta charset="UTF-8">
+        <meta name="monetization" content="$coil.xrptipbot.com/GrQPLOe0TOeGmrngpEL3tA">
+    </head>
+    <style>
+        * {
+            position: relative;
+            text-align : center;
+        }
+        html,body {
+            width:100%;
+            height:100%;
+            margin:0;
+        }
+        .h {
+            display:none;
+        }
+        canvas {
+            background-color: rgb(216, 216, 216);
+            max-width:100%;
+            position: absolute;
+            top: 50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            cursor:none;
+        }
+        #m {
+            padding-top: 30px;
+            z-index:1;
+        }
+
+        #e {
+            color: darkred;
+        }
+
+        #inf {
+            width: 60%;
+            position: absolute;
+            left:50%;
+            transform: translate(-50%,-100%);
+            background-color: #fff;
+            border: solid 1px grey;
+            z-index:2;
+            margin:0;
+            opacity:0;
+            animation-name: in;
+            animation-duration: 6s;
+            top:0;
+            font-size: 20px;
+        }
+
+        @keyframes in {
+            from {
+                top: 0; 
+                opacity:0;
+            }
+
+            20%, 80% { 
+                top: 25%; 
+                opacity:1;
+            }
+
+            to {
+                top: 0; 
+                opacity:0; 
+            }
+        }
+
+        #score {
+            display: grid;
+            grid-template-columns: minmax(min-content, 100px) repeat(3, 50px);
+            padding: 50px;
+            z-index: 1;
+            background-color: white;
+            position: fixed;
+            position: absolute;
+            top: 50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            max-height: 100%;
+        }
+
+        #score div {
+            height:1.3em;
+        }
+
+        #score:empty {
+            display:none;
+        }
+        #chat {
+            z-index: 1;
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            padding-bottom:2em;
+            width:160px;
+        }
+        #chat input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width:100%;
+        }
+        #chat * {
+            text-align: left;
+        }
+        #chat div {
+            animation-name: fade;
+            animation-duration: 5s;
+            opacity:0;
+        }
+        @keyframes fade {
+            from {
+                opacity:1;
+            }
+
+            70% { 
+                opacity:1;
+            }
+
+            to {
+                opacity:0; 
+            }
+        }
+    </style>
+    <body>
+    <img src="sprites.gif" class="h" id="i">
+    <div id="m">
+        <label for="n">Your name:</label>
+        <input type="text" id="n">
+        <button type="button" id="c">Change color</button> 
+        <button type="button" id="h">Change hat</button>
+        <p id="e"></p>
+        <button type="button" id="s">Start</button>
+    </div>
+    <p id="inf">Choose your name and your color!</p>
+    <div id="score"></div>
+    <div id="chat"><input type="text" id="chatI"/></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/shared.js"></script>
+    <script src="/client.js"></script>
+
+    </body>
+</html>

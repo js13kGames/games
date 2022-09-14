@@ -1,0 +1,66 @@
+<!Doctype html>
+<html>
+
+<head><link rel="stylesheet" href="https://gfs.sctuts.com/test/game-style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://gfs.sctuts.com/test/near-wallet-selector.css">
+  <title>Ghost Smash</title>
+</head>
+
+<body>
+  <div id="gameInfo">
+    <p id="score"></p>
+    <p id="scoreEffect"></p>
+    <p id="time"></p>
+  </div>
+
+  <div id="modal">
+    <div id="modalWrap">
+      <h2 id="playerScore"> </h2>
+      <h2>Ghost Smash</h2>
+      <h3>High Score</h3>
+      <ul id="highScore">
+      </ul>
+
+      <div id="gameIntro">
+        <p>
+          <b>How to play: You mission is purge ghosts!</b> <br>
+          Normal ghost: +1 point <br>
+          Green ghost: +1 point & +2 seconds <br>
+          Red ghost: -2 point & -2 seconds! 
+        </p>
+        <button id="btn-start">Play!</button>
+      </div>
+
+      <!-- near wallet   -->
+      <div id="near-wrap">
+        <main id="signed-out-flow" style="display: none">
+          <p style="text-align: center; margin-top: 2.5em">
+            <button id="sign-in-button" style="padding: 10px">Sign in with NEAR to save your score!</button>
+          </p>
+        </main>
+
+        <div id="signed-in-flow" style="display: none">
+          <p style="text-align: center; margin-top: 2.5em">
+            <button style="float: right" id="sign-out-button">
+              Sign out <span data-behavior="account-id"></span>
+            </button>
+          </p>
+        </div>
+      </div>
+      <!-- end near wallet  -->
+
+
+    </div>
+  </div>
+
+
+  <div id="gameState">
+  </div>
+
+  <script src="https://gfs.sctuts.com/test/all.js" defer=""></script>
+
+</body>
+
+</html>

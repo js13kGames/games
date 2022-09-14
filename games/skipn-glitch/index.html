@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skip'n Glitch by FoumartGames <13kb</title>
+	
+	<meta name="description" content="Skip'n Glitch is a strategic competitive puzzle game of numbers made for js13k games competition" />
+	<meta name="keywords" content="javascript, library, lightweight, tween, transition, js, html5, transform, style, rotate, scale, position element, dom, competitive, strategic, number, diggit" />
+	
+	<meta name="author" content="Noncho Savov" />
+	<meta name="copyright" content="Copyright © 2016 by Noncho Savov. All Rights Reserved." />
+	<meta name="application-name" content="Skip'n Glitch" />
+	
+	<meta property="og:title" content="Skip'n Glitch by FoumartGames" />
+	<meta property="og:type" content="article" />
+	<meta property="og:image" content="http://www.foumartgames.com/games/SkipGlitch/logo.png" />
+	<meta property="og:url" content="http://www.foumartgames.com/games/SkipGlitch/" />
+	<meta property="og:description" content="Skip'n Glitch is a game of numbers made for js13k games competition" />
+	
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Skip'n Glitch by FoumartGames" />
+	<meta name="twitter:description" content="Skip'n Glitch is a game of numbers made for js13k games competition" />
+	<meta name="twitter:image" content="http://www.foumartgames.com/games/SkipGlitch/logo.png" />
+	
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			overflow:auto;
+			background-color:#000;
+			overflow:hidden;
+		}
+		div, button {
+			position:absolute;
+			box-sizing:border-box;
+		}
+		.central{
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			width:100%;
+			height:100%;
+		}
+		
+		#frame{
+			width:100%;
+			max-width:640px;
+			min-width:600px;
+			height:100%;
+			max-height:960px;
+			min-height:800px;
+		}
+		#container{
+			text-align:center;
+			background-color:#161616;
+			border:solid 10px;
+			border-color:#161616 #1a1a1a #161616 #1a1a1a;
+			left:0; right:0; top:0; bottom:0;
+			opacity:0;
+		}
+		.bgr{
+			background-image: url("data:image/gif;base64,R0lGODlhAgACAIABAERERP///yH5BAEAAAEALAAAAAACAAIAAAIDDBAFADs=");
+			background-size:100px 100px;
+			background-position:0 0;
+			image-rendering: pixelated;
+			image-rendering: -moz-crisp-edges;
+		}
+		#bgr0{
+			background-color:#000;
+			opacity:0;
+		}
+		#bgr1{
+			opacity:0;
+		}
+		#bgr2{
+			opacity:0;
+		}
+		#bgr3{
+			opacity:0;
+		}
+		.plate{
+			opacity:0;
+			visibility:hidden;
+		}
+		#platebgr{
+			background-color:#131313;
+			opacity:0.5;
+		}
+		#area{
+			opacity:0;
+			visibility:hidden;
+		}
+		#hilight{
+			border-radius:10px;
+			border:dotted 3px;
+		}
+		
+		.diggit{
+			position:absolute;
+			background-color:transparent;
+			pointer-events:none;
+		}
+		.diggit-holder{
+			background-color:transparent;
+		}
+		.diggit-frame{
+			background-color:#484848;
+			border:solid 10px;
+			border-color:#666 #333 #222 #555;
+			max-width:128px;
+			min-width:32px;
+			max-height:128px;
+			min-height:32px;
+			width:100%;
+			height:100%;
+		}
+		
+		.diggit-button{
+			cursor: pointer;
+			visibility:hidden;
+			width:100%;
+			height:100%;
+			transform:scale(0.95);
+			opacity:0;
+		}
+		.diggit-button:hover{
+			transform:scale(1);
+			border-radius:8px;
+		}
+		.greenbtn{
+			border-radius:6px;
+			background-color:#090;
+			border:solid 10px;
+			border-color:#2c2 #070 #060 #2b2;
+		}
+		.greenbtn:hover {
+			background-color:#0b0;
+			border-color:#0f0 #080 #070 #0d0;
+		}
+		
+		.bluebtn{
+			border-radius:6px;
+			background-color:#17d;
+			border:solid 10px;
+			border-color:#29f #16a #059 #18d;
+		}
+		.bluebtn:hover {
+			background-color:#28f;
+			border-color:#3af #2070d0 #06a #29f;
+		}
+		
+		.redbtn{
+			border-radius:6px;
+			background-color:#c33;
+			border:solid 10px;
+			border-color:#e66 #b32b2b #822 #d05050;
+		}
+		.redbtn:hover {
+			background-color: #e44;
+			border-color:#f88 #d33838 #a33 #f86060;
+		}
+		
+		
+		.mess{
+			height:70%;
+			min-height:200px;
+			max-height:800px;
+			width:100%;
+			min-width:460px;
+			max-width:620px;
+			background-color:#1b1b1b;
+			visibility:hidden;
+			opacity:0;
+			
+			border:solid 10px;
+			border-color:#666 #363636 #282828 #444;
+		}
+		
+		#topscore{
+			top:0.5%;
+			border-bottom-left-radius: 28px;
+			border-bottom-right-radius: 28px;
+			opacity:0;
+		}
+		#bottomscore{
+			bottom:0.5%;
+			border-top-left-radius: 28px;
+			border-top-right-radius: 28px;
+			opacity:0;
+		}
+		.uiscore{
+			left:1%;
+			width:98%;
+			height:14%;
+			cursor:pointer;
+			pointer-events:none;
+			visibility:hidden;
+		}
+		.redscore{
+			background-color:#711;
+			border:solid 10px;
+			border-color:#600 #911 #a11 #800;
+		}
+		.redscore:hover{
+			background-color:#822;
+			border-color:#711 #a11 #b22 #911;
+		}
+		.greenscore{
+			background-color:#070;
+			border:solid 10px;
+			border-color:#0a0 #005f00 #004800 #080;
+		}
+		.greenscore:hover{
+			background-color:#080;
+			border-color:#0b0 #070 #005800 #090;
+		}
+		
+		
+		
+		#inputtxt{
+			bottom:25px;
+			width:100%;
+			visibility:hidden;
+		}
+		input[type=text] {
+			padding: 1vh 25px;
+			border: 2px solid #484;
+			border-radius: 4px;
+			font-family:"Lucida Console", Monaco, monospace;
+			font-size:24px;
+		}
+		:focus { outline:none;}
+		
+		button {
+			color: white;
+			cursor: pointer;
+		}
+		.menubtn{
+			right:-0.5%;
+			border-radius:0;
+			border-top-left-radius:28px;
+			border-bottom-left-radius:28px;
+		}
+		.boardbtn{
+			left:-0.5%;
+			border-radius:0;
+			border-top-right-radius:28px;
+			border-bottom-right-radius:28px;
+		}
+		.closebtn{
+			border-radius:0;
+			border-bottom-left-radius:28px;
+		
+			top:0.5%;
+			right:0.75%;
+			cursor:pointer;
+		}
+		
+		.bluetitle{
+			background-color:#05b;
+			border:solid 10px;
+			border-color:#07e #048 #036 #06c;
+		}
+		.bluetitle:hover {
+			background-color: #06d;
+			border-color:#08f #059 #047 #08d;
+		}
+		
+		.redtitle{
+			background-color:#922;
+			border:solid 10px;
+			border-color:#c44 #933 #711 #a44;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="frame" class="central">
+		<div id="container">
+			<div id="bgr0" class="central bgr"></div>
+			<div id="bgr1" class="central bgr"></div>
+			<div id="bgr2" class="central bgr"></div>
+			<div id="bgr3" class="central bgr"></div>
+			<div id="plate" class="central plate"><div id="platebgr" class="central"></div><div id="hilight"></div></div>
+			<div id="area" class="central"></div>
+			<div id="mess" class="central mess">
+				<div id="messtxt" class="central"></div>
+				<button class="greenscore" onClick="messSelect(gameState)" style="bottom:6px; right:6px;"><div id="messbtn" style="position:relative;"></div></button>
+			</div>
+			
+			<div id="title" class="central">
+				<div id="logo" style="top:12%;left:50%;margin-left:-225px;"></div>
+				
+				<button class="greenscore" onClick="animeChange()" style="right:225px;border-radius:28px;"><div id="animebtn" style="position:relative; right:12px;"></div></button>
+				<button class="greenscore menubtn" onClick="messSelect(1)"><div id="practicebtn" style="position:relative; left:28px;"></div></button>
+				<button class="bluetitle menubtn" onClick="messSelect(2)"><div id="versusbtn" style="position:relative; left:28px;"></div></button>
+				<button class="greenscore boardbtn" onClick="boardChange()"><div id="boardbtn" style="position:relative; right:6px;"></div></button>
+				
+				<button class="redbtn menubtn" onClick="messSelect(3)"><div id="multibtn" style="position:relative; left:28px;"></div></button>
+				
+				<div id="copy" style="bottom:42px;left:15px;"></div>
+			</div>
+			
+		</div>
+		
+		<div id="topscore" class="uiscore redscore">
+			<div id="toptxt" class="central" style="position:relative;top:-25px;opacity:0;"></div>
+		</div>
+		
+		<div id="bottomscore" class="uiscore greenscore">
+			<div id="bottomtxt" class="central" style="position:relative;opacity:0;"></div>
+		</div>
+		
+		<button id="closediv" class="redbtn closebtn" onClick="closeGame()"><div id="closebtn" style="position:relative; right:2px;"></div></button>
+		
+	</div>
+	
+	<script type="text/javascript">
+		"use strict";
+		
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-41782328-8', 'auto');
+			ga('send', 'pageview');
+		
+		var container = document.getElementById("container");
+		
+		var topscore = document.getElementById("topscore"),
+			bottomscore = document.getElementById("bottomscore"),
+			topTxt = document.getElementById("toptxt"),
+			bottomTxt = document.getElementById("bottomtxt");
+		
+		var containerWidth,
+			containerHeight,
+			areaWidth,
+			areaHeight,
+			textSize = 3,
+			textLeading = 22,
+		
+			topHeight, bottomHeight,
+			width, height, x, y, i, j, w, h,
+			buttons,
+			player = "green",
+			opponent = "red",
+			cpu = 0;
+		
+		var gameState,
+			turn = -1,
+			turns = 0,
+			multiplierTop = 1,
+			multiplierBottom = 1,
+			size = 6,
+			anim = 0,
+			flipBoardSymbol,
+			rotateBoardSymbol,
+			blueFirstSymbol,
+			flipopt = false,
+			rotateopt = false,
+			blueopt = false,
+			buttonWidth,
+			buttonHeight;
+		
+		var colors = {
+			green:"#4b4",
+			red:"#a33",
+			blue:"#38e",
+			
+			greenHi:"#003800",
+			redHi:"#522",
+			blueHi:"#024",
+			
+			greenBorder:"#6f6 #40d040 #2a2 #58dd58",
+			redBorder:"#f99 #ee7070 #c44 #e66",
+			blueBorder:"#5bf #49e #38d #3ad",
+			
+			greyBorder:"#666 #333 #222 #555",
+			darkBorder:"#404040 #282828 #202020 #333"
+		}
+		var bgrdata = [[25,50,75,0],[-65,50,75,-25],[-30,40,-30,40]];
+		var bgrtype = -1,
+			bgrpos = 0,
+			bgrodd,
+			bgrinterval,
+			prevstamp,
+			prevprevstamp;
+		
+		var scores = {green:0, blue:0, red:0};
+		
+		
+		window.addEventListener("load", init, false);
+		window.addEventListener("resize", onResize, false);
+		
+		function init() {
+			mainMenu();
+			onResize();
+		}
+		
+		function onResize(evt){
+			containerWidth = container.offsetWidth;
+			containerHeight = container.offsetHeight;
+			
+			areaWidth = TweenFX.getStyle(area, "width");
+			areaHeight = TweenFX.getStyle(area, "height");
+			
+			if(window.innerHeight < 800) {
+				TweenFX.to(frame, 0, {scale:(1+(window.innerHeight-800)/800)});
+			} else if(TweenFX.getTransform(frame).scaleX != 1){
+				TweenFX.to(frame, 0, {scale:1});
+			}
+			if(turn && !flipopt){
+				hilight.style.width = (areaWidth+6)+"px";
+				hilight.style.height = (areaHeight/height+6)+"px";
+				hilight.style.top = (_y*(areaHeight/height)-3)+"px";
+				hilight.style.left = "-3px";
+			} else {
+				hilight.style.height = (areaHeight+6)+"px";
+				hilight.style.width = (areaWidth/width+6)+"px";
+				hilight.style.left = (_x*(areaWidth/width)-3)+"px";
+				hilight.style.top = "-3px";
+			}
+			buttonWidth = areaWidth/width;
+			buttonHeight = areaWidth/height;
+			if(!evt){
+				area.style.height = plate.style.height = (buttonHeight*height)+"px";
+			} else {
+				TweenFX.to(area, 0, {height:buttonHeight*height});
+				TweenFX.to(plate, 0, {height:buttonHeight*height});
+			}
+			
+			for(var _y = 0; _y < height; _y ++){
+				for(var _x = 0; _x < width; _x ++){
+					TweenFX.to(buttons[_y][_x].holder, (evt)?2:0, {width:buttonWidth, height:buttonHeight, x:buttonWidth*_x, y:buttonHeight*_y});
+					TweenFX.to(buttons[_y][_x].diggit, 0, {width:buttonWidth*0.8, height:buttonHeight*0.8});
+					TweenFX.to(buttons[_y][_x].canvas, 0, {height:buttonHeight*0.8});
+				}
+			}
+			killAll(copy);
+			TypeFX.drawText(copy, "Copyright @ 2016 by FoumartGames. Developed by Noncho Savov.", 2, 0, "#888");
+		}
+		
+		function updateMenu(){
+			killAll(practicebtn);
+			killAll(versusbtn);
+			killAll(multibtn);
+			killAll(boardbtn);
+			killAll(closebtn);
+			killAll(animebtn);
+			closediv.style.visibility = "hidden";
+			TypeFX.drawText(practicebtn, "Tutorial    ", 4);
+			TypeFX.drawText(versusbtn, "Two players - same device    ", 4);
+			TypeFX.drawText(multibtn, "Play versus Computer    ", 4);
+			TypeFX.drawText(boardbtn, ((size<10)?"   "+size+"  ":"  "+size+" "), 4);
+			TypeFX.drawText(animebtn, ((anim>=10)?"  "+anim:"   "+anim+" "), 4);
+			TypeFX.drawText(closebtn, "  X ", 4);
+			practicebtn.parentNode.style.bottom = animebtn.parentNode.style.bottom = "34%";
+			versusbtn.parentNode.style.bottom = "23%";
+			multibtn.parentNode.style.bottom = boardbtn.parentNode.style.bottom = "12%";
+			practicebtn.parentNode.style.padding = versusbtn.parentNode.style.padding = multibtn.parentNode.style.padding = boardbtn.parentNode.style.padding = animebtn.parentNode.style.padding = "12px 0px 10px 0px";
+			closebtn.parentNode.style.padding = "6px 0px 5px 0px";
+		}
+		
+		function closeGame(){
+			messSelect(0);
+		}
+		
+		function animeChange(){
+			anim += 5;
+			if(anim>20) anim = 0;
+			updateMenu();
+		}
+		
+		function boardChange(){
+			size +=2;
+			if(size>10) size = 6;
+			updateMenu();
+		}
+		
+		function bgrmove(_force){
+			if((!TweenFX.tweenedElements.length&& anim) || _force ){
+				window.requestAnimationFrame(bgrmoveframe);
+			}
+		}
+		
+		function bgrmoveframe(stamp){
+			if(stamp - prevstamp > 1000 && prevstamp-prevprevstamp > 1000) {
+				clearInterval(bgrinterval);
+				prevprevstamp = 0;
+				prevstamp = 0;
+			} else {
+				prevprevstamp = prevstamp;
+				prevstamp = stamp;
+			}
+			bgrpos++;
+			bgr0.style.backgroundPosition = (bgrpos+bgrdata[bgrtype][0])+"px "+(15+bgrpos)+"px";
+			bgr1.style.backgroundPosition = (-bgrpos+bgrdata[bgrtype][1])+"px "+(-bgrpos)+"px";
+			bgr2.style.backgroundPosition = (-bgrpos+bgrdata[bgrtype][2])+"px "+(35+bgrpos)+"px";
+			bgr3.style.backgroundPosition = (bgrpos+bgrdata[bgrtype][3])+"px "+(25-bgrpos)+"px";
+			if(bgrpos>100) {
+				bgrpos = 1;
+			}
+		}
+		
+		function mainMenu(){
+			TweenFX.to(topscore, anim, {height:40, alpha:1});
+			var bottomOffset = TweenFX.getStyle(bottomscore, "height");
+			TweenFX.to(bottomscore, anim, {height:40, alpha:1});
+			
+			var titleArr = [
+				[[3,3,,9,2,,,2]],
+				[[9,4,1,,3,,3],[9,4,1,4.5,,3,,3],[10,4,,9,,,3,3],[4,2.5,1,3,,1,1,,1,,1],[4,2.5,6,7.5,1,,,1,1,,1]],
+				[[4,16,,-4,,3],[4,6,5,6,,3],[4,6,5,,,3,3,,,,1],[3,7,3,3,3,,,3,,1,,1]],
+				[[4,12,,,3,,3],[4,4,,13,3,3,3,3]],
+				[[4,17,,,,,3],[6,4,3,8,1,,3,1,,,,1],[6,4,3,,,3,,1,,,,1],[4,6,5,3,1,,,1,1,,1]],
+				[[3,4,-2,-3,,2,,2], [5,6,,8,,3,,2], [3,2,,11,,,,1,1,,1], [2,2.5,2,11.5,2,,,2,1,1]]
+			];
+			drawTitle(titleArr, 0, 20, 10, "bluetitle");
+			
+			titleArr = [
+				[[9,4,,4,3,3],[9,4,,11,,,2,3],[4,5,,7,,1,1,,1,,1],[5,4,4,1,3,,3,1,,,1],[4,5,5,7,1,,,1,1,,1], [12,4,,15,3,3],[12,4,,20,,,3,3],[3.5,3,,18,,1,1,,1,,1],[3.5,3,8.5,18,1,,,1,1,,1], [4,2,3,14,3,1,3,,1,,1,1]],
+				[[4,14,-3,1,,3,,3]],
+				[[4,10,,5,3,,3],[4,4,,,3,3,3,3]],
+				[[4,15,,,3,3,1,4],[3,4,3,5,1,,3,,,,,1],[3,4,3,11,1,,2.5,,,,,1]],
+				[[8,4,,5,3,3],[8,4,,11,,,3,3],[4,4,,8,,1,1,,1,,1]],
+				[[4,15,,,,3],[6,4,3,4,1,3,,1,,,,1],[4,8,5,7,1,,2,,1]]
+			];
+			drawTitle(titleArr, 0, 150, 10, "redbtn");
+			
+			updateMenu();
+			
+			if(bgrtype==-1){
+				topHeight = TweenFX.getStyle(topscore, "height");
+				bottomHeight = TweenFX.getStyle(bottomscore, "height");
+				
+				bgrmove(true);
+				
+				TweenFX.to(container, anim, {alpha:1}, function(){
+					TweenFX.to(bgr0, anim/2, {alpha:0.05}, TweenFX.to, bgr1, 4, {alpha:0.1}, TweenFX.to, bgr3, 3, {alpha:0.15}, TweenFX.to, bgr2, 2, {alpha:0.2}, function(){
+						TweenFX.to(bgr0, anim*.6, {alpha:0.2});																																				
+						TweenFX.to(bgr1, anim*5, {alpha:0.4});
+						TweenFX.to(bgr2, anim*3, {alpha:0.35});
+						TweenFX.to(bgr3, anim*4, {alpha:0.35});
+					});
+				});
+			}
+			if(!prevstamp && !prevprevstamp){
+				bgrtype = (anim) ? parseInt(Math.random()*3) : 1;
+				bgrinterval = setInterval(bgrmove, 80);
+			}
+		}
+		
+		function drawTitle(titleArr, baseLeft, baseTop, scale, className){
+			var piece;
+			var segment;
+			var pieceWidth;
+			for(var i = 0; i < titleArr.length; i++){
+				pieceWidth = 0;
+				for(var j = 0; j < titleArr[i].length; j++){
+					segment = titleArr[i][j];
+					if(pieceWidth < (segment[0]||0)+(segment[2]||0)) pieceWidth = (segment[0]||0)+(segment[2]||0);
+					piece = document.createElement("div");
+					document.getElementById("logo").appendChild(piece).className = className;
+					piece.style.width = ((segment[0]*scale)||0)+"px";
+					piece.style.height = ((segment[1]*scale)||0)+"px";
+					piece.style.left = (baseLeft+((segment[2]*scale)||0))+"px";
+					piece.style.top = (baseTop+((segment[3]*scale)||0))+"px";
+					piece.style.borderRadius = ((segment[4]*scale)||0)+"px "+((segment[5]*scale)||0)+"px "+((segment[6]*scale)||0)+"px "+((segment[7]*scale)||0)+"px";
+					if(segment[8]) piece.style.borderTop = "none";
+					if(segment[9]) piece.style.borderRight = "none";
+					if(segment[10]) piece.style.borderBottom = "none";
+					if(segment[11]) piece.style.borderLeft = "none";
+				}
+				baseLeft += (pieceWidth*scale) + scale;
+			}
+		}
+		
+		function startGame(id){
+			
+			TweenFX.to(title, anim*2, {alpha:0});
+			gameState += 3;
+			
+			if(id > 1){
+				TweenFX.to(topTxt, anim*2, {alpha:1});
+				TweenFX.to(bottomTxt, anim*2, {alpha:1});
+			}
+			messSelect(gameState);
+		}
+		
+		function beginGame(){
+			gameState += 3;
+			if(gameState==7) {
+				message("Skip'n Glitch is a competitive\rpuzzle game with simple rules   \rand strategic gameplay.", " Next ", true, textSize+1, 8);
+				TweenFX.to(bottomscore, anim*2, {height:64}, function(){
+					TypeFX.drawText(bottomTxt, "\rYour goal is to outscore your opponent.", textSize, -textLeading);
+					TweenFX.to(bottomTxt, anim*2, {alpha:1});
+				});
+			} else if(gameState==8) {
+				message("            | Flip Board [*]\rOptions | Rotate Tiles [*]       \r            | Blue First [*]", "Play", true);
+				flipopt = true;
+				rotateopt = true;
+				flipBoardSymbol = messtxt.childNodes[26];
+				rotateBoardSymbol = messtxt.childNodes[52];
+				blueFirstSymbol = messtxt.childNodes[87];
+				flipBoardSymbol.style.cursor = rotateBoardSymbol.style.cursor = blueFirstSymbol.style.cursor = "pointer";
+				flipBoardSymbol.addEventListener("click", flipBoard);
+				rotateBoardSymbol.addEventListener("click", rotateBoard);
+				blueFirstSymbol.addEventListener("click", blueFirst);
+				blueFirst();
+			} else if(gameState==9) {
+				messSelect(gameState);
+			}
+		}
+		
+		function flipBoard(){
+			if(TweenFX.getStyle(flipBoardSymbol, "opacity") < 1) {
+				flipopt = true;
+				flipBoardSymbol.style.opacity = 1;
+			} else {
+				flipopt = false;
+				flipBoardSymbol.style.opacity = 0.2;
+			}
+		}
+		function rotateBoard(){
+			if(TweenFX.getStyle(rotateBoardSymbol, "opacity") < 1) {
+				rotateopt = true;
+				rotateBoardSymbol.style.opacity = 1;
+			} else {
+				rotateopt = false;
+				rotateBoardSymbol.style.opacity = 0.2;
+			}
+		}
+		function blueFirst(){
+			if(TweenFX.getStyle(blueFirstSymbol, "opacity") < 1) {
+				blueopt = true;
+				blueFirstSymbol.style.opacity = 1;
+				turn = 0;
+			} else {
+				blueopt = false;
+				blueFirstSymbol.style.opacity = 0.2;
+				turn = 1;
+			}
+		}
+		function message(_text, _label, _limit, _size, _leading){
+			killAll(messbtn);
+			TypeFX.drawText(messtxt, _text, _size || textSize+1, _leading || 5);
+			if(_label){
+				TypeFX.drawText(messbtn, _label, textSize+1);
+				messbtn.style.width = (TweenFX.getStyle(messbtn, "width")+2)+"px";
+				messbtn.style.left = "4px";
+			} else hide(messbtn.parentNode);
+			if(_limit) mess.style.height = (TweenFX.getStyle(messtxt, "height")+50)+"px";
+			TweenFX.to(mess, anim*3, {alpha:0.95});
+		}
+		
+		
+		function createGrid(_width, _height){
+			width = _width; height = _height;
+			var diggit;
+
+            var tutorialDigits = [
+                [6,5,9,8,0,2],
+                [1,9,5,2,4,3],
+                [4,5,6,7,9,7],
+                [0,4,8,7,7,9],
+                [2,2,1,5,2,4],
+                [6,4,8,9,3,1]
+            ];
+			buttons = [];
+			for(var _y = 0; _y < height; _y ++){
+				buttons.push([]);
+				for(var _x = 0; _x < width; _x ++){
+					diggit = new Diggit(area, _x, _y, 100, 100, (gameState!=4) ? Math.round(Math.random()*9) : tutorialDigits[_y][_x]);
+					buttons[_y].push(diggit);
+					TweenFX.to(diggit.div, 0, {scale:0.9});
+				}
+			}
+			area.style.transform = plate.style.transform = "scale(0.2)";
+			TweenFX.to(area, anim*3, {scale:1, alpha:1});
+			TweenFX.to(plate, anim*3, {scale:1, alpha:1}, beginGame);
+			
+			onResize(); onResize();
+		}
+		
+		function Diggit(_container, _x, _y, _width, _height, _z) {
+			var _diggit, _holder;
+			
+			this.x = _x;
+			this.y = _y;
+			this.width = _width;
+			this.height = _height;
+			this.z = _z;
+			this.state = 0;
+			
+			this.holder = _holder = document.createElement("div");
+			_container.appendChild(_holder).className = "diggit-holder";
+			_holder.style.width = _width+"px";
+			_holder.style.height = _height+"px";
+			
+			this.div = document.createElement("div");
+			_holder.appendChild(this.div).className = "diggit-frame";
+			
+			this.playerButton = document.createElement("div");
+			_holder.appendChild(this.playerButton).className = "diggit-button "+player+"btn";
+			this.playerButton.addEventListener("click", buttonClick);
+			
+			this.opponentButton = document.createElement("div");
+			_holder.appendChild(this.opponentButton).className = "diggit-button "+opponent+"btn";
+			this.opponentButton.addEventListener("click", buttonClick);
+			
+			this.diggit = _diggit = document.createElement("div");
+			_holder.appendChild(_diggit).className = "diggit";
+			
+			_diggit.style.left = 0;
+			_diggit.style.top = 0;
+			_diggit.style.right = 0;
+			_diggit.style.bottom = 0;
+			_diggit.style.margin = "auto";
+			this.canvas = TypeFX.drawDiggit(_diggit, _z+48, 10);
+			this.canvas.style.transform = "scale(0.8)";
+			this.canvas.style.marginTop = "2px";
+			this.canvas.style.userSelect = "none";
+			this.canvas.style.webkitUserSelect = "none";
+			this.canvas.style.mozUserSelect = "none";
+		}
+		
+		function buttonClick(evt){
+			for(var _y = 0; _y < height; _y ++){
+				for(var _x = 0; _x < width; _x ++){
+					if(buttons[_y][_x].playerButton == evt.target) buttonClicked(buttons[_y][_x], player);
+					if(buttons[_y][_x].opponentButton == evt.target) buttonClicked(buttons[_y][_x], opponent);
+				}
+			}
+		}
+		
+		function buttonClicked(target, _color){
+			if(cpu==3){
+                if(target.z!=9&&target.z!=5&&(target.z!=4||(turns!=20&&turns!=22))){
+                   //wrong sound
+                    return;
+                }
+                cpu = 1;
+				updateUI(player);
+				updateUI(opponent);
+				killAll(messtxt);
+				TweenFX.to(mess, anim*2, {alpha:0});
+                
+			}
+            if(cpu!=2) turns ++;
+           
+			var lastbutton = 0, _x, _y, _left = [], _target;
+			if(turn){
+				if(cpu!=2) turn = 0;
+				for(_x = 0; _x < width; _x ++){
+					buttonDarken(buttons[target.y][_x]);
+					buttonDisable(buttons[target.y][_x].playerButton);
+				}
+			} else {
+				if(cpu!=2) turn = -1;
+				for(_y = 0; _y < height; _y ++){
+					buttonDarken(buttons[_y][target.x]);
+					buttonDisable(buttons[_y][target.x].opponentButton);
+				}
+			}
+            if(cpu==2) return;
+			buttonMark(target);
+			
+			if(turn){
+				for(_y = 0; _y < height; _y ++){
+					if(buttons[_y][target.x].state == 1) lastbutton ++; else _left.push(buttons[_y][target.x]);
+				}
+				if(lastbutton==height-1){
+					multiplierBottom ++;
+				} else multiplierBottom = 1;
+			} else {
+				for(_x = 0; _x < width; _x ++){
+					if(buttons[target.y][_x].state == 1) lastbutton ++; else _left.push(buttons[target.y][_x]);
+				}
+				if(lastbutton==width-1){
+					multiplierTop ++;
+				} else multiplierTop = 1;
+			}
+			if(lastbutton==height-2){
+				_target = (_left[0] == target) ? _left[1] : _left[0];
+				closeTile(_target, _color);
+			}
+			target.state = 1;
+			scores[_color] += target.z * (((_color==player)?multiplierBottom:multiplierTop)||1);
+			updateUI(player);
+			updateUI(opponent);
+			
+			if(!turn) hilightVertical(target.x); else hilightHorizontal(target.y);
+		}
+		
+		function closeTile(_target, _color){
+			if(_target.playerButton.style.pointerEvents!="none") return;
+			scores[(_color==player)?opponent:player] += _target.z * (((_color==player)?multiplierBottom:multiplierTop)||1);
+			TweenFX.to(_target.opponentButton, 15, {scale:1});
+			TweenFX.to(_target.playerButton, 15, {scale:1});
+			TweenFX.to(_target.diggit.firstChild, 15, {scale:1.1, alpha:0.25}, function(){
+				TweenFX.to(_target.diggit.firstChild, 35, {scale:0.8, alpha:1});
+				buttonDarken(_target);
+				buttonDisable(_target.playerButton);
+				buttonDisable(_target.opponentButton);
+				buttonMark(_target);
+				updateUI(player);
+				updateUI(opponent);
+            });
+			_target.state = 1;
+			var glitchinterval = setTimeout(function(){
+				recursiveGlitch(_target);
+			}, 100);
+		}
+		
+		function recursiveGlitch(_target){
+			var _left = [];
+			var _leftAlone = [];
+			for(var _y = 0; _y < height; _y ++){
+				if(!buttons[_y][_target.x].state) _left.push(buttons[_y][_target.x]);
+			}
+			if(_left.length==1) _leftAlone.push(_left.pop());
+			for(var _x = 0; _x < width; _x ++){
+				if(!buttons[_target.y][_x].state) _left.push(buttons[_target.y][_x]);
+			}
+			if(_left.length==1) _leftAlone.push(_left.pop());
+			
+			for(_x = 0; _x < _leftAlone.length; _x ++){
+				closeTile(_leftAlone.pop());
+			}
+			checkEnd();
+		}
+		
+		function buttonDisable(_target){
+			_target.style.pointerEvents = "none";
+			TweenFX.to(_target, 10, {alpha:0});
+		}
+		function buttonDarken(_target){
+			_target.div.style.borderColor = ((_target.state)?colors.darkBorder:colors.greyBorder);
+			_target.div.style.transform = "scale(0.9)";
+		}
+		function buttonMark(_target){
+			_target.diggit.firstChild.getContext("2d").clearRect(0, 0, 100, 100);
+			TypeFX.drawGlyph(_target.diggit.firstChild, 42, 10, "#cc8888");
+			_target.holder.style.opacity = "0.4";
+		}
+		
+		function updateUI(_color){
+			var _txt = (_color == player) ? bottomTxt : topTxt;
+			killAll(_txt);
+			TypeFX.drawText(_txt, "\r    Score: "+(scores[_color]<10?"0":"")+scores[_color]+((_color == player) ? ((multiplierBottom>1)?"  *"+multiplierBottom:"    ") : ((multiplierTop>1)?"  *"+multiplierTop:"    ")), textSize+2, -textLeading+2);
+		}
+		
+		function checkEnd(){
+			var num = 0, _x, _y;
+			for(_y = 0; _y < height; _y ++){
+				for(var _x = 0; _x < width; _x ++){
+					if(buttons[_y][_x].state) num++;
+				}
+			}
+			if(num == height*width) {
+				endGame(opponent);
+				return true;
+			}
+			return false;
+		}
+		
+		function hilightHorizontal(_y, _color){
+			if(checkEnd()) return;
+			if(!_color) _color = player;
+			bottomscore.style.pointerEvents = "auto"; bottomscore.style.opacity = "1";
+			topscore.style.pointerEvents = "none"; topscore.style.opacity = "0.9";
+			
+			hilight.style.background = colors[player+"Hi"];
+			hilight.style.borderColor = colors[player];
+			hilight.style.width = (areaWidth+6)+"px";
+			hilight.style.height = (areaHeight/height+6)+"px";
+			hilight.style.top = (_y*(areaHeight/height)-3)+"px";
+			hilight.style.left = "-3px";
+			
+			if(gameState==11){
+                if(cpu==1) {
+                    cpu = 3;
+                    messSelect(12);
+                    cpu = 2;
+                    setTimeout(function(){buttonClicked(buttons[_y][0], _color);}, 100);
+                }
+            } else if(gameState==12){
+				cpu = 3;
+                messSelect(gameState);
+            } else if(gameState==13||gameState==14){
+                cpu = 3;
+                messSelect(gameState);
+                cpu = 2;
+                setTimeout(function(){buttonClicked(buttons[_y][0], _color);}, 100);
+            } else if(gameState==15){
+               if(cpu==1) {
+                    cpu = -1;
+                    messSelect(16);
+                }
+            } else if(gameState==16){
+                if(cpu==1) cpu = -1;
+            } else if(gameState==17){
+                messSelect(17);
+            }
+			
+			var nums = [];
+			var num = 0;
+			for(var _x = 0; _x < width; _x ++){
+				hilightButton(_x, _y, buttons[_y][_x].playerButton, player);
+				nums.push((buttons[_y][_x].state)?0:buttons[_y][_x].z);
+				if(!buttons[_y][_x].state) num++;
+			}
+			nums = getAllIndexes(nums, nums[nums.indexOf(Math.max.apply(this, nums))]);
+			for(_x = 0; _x < nums.length; _x++){
+				if(cpu>=2) hilightFrame(buttons[_y][nums[_x]].playerButton, player);
+			}
+			if(rotateopt && turns) rotateDigits();
+			if(flipopt && turns) flipDigits();
+			
+			if(num>2) {
+				multiplierTop = 1;
+				updateUI(opponent);
+			}
+            if(cpu>=0) {
+				TweenFX.to(topscore, (gameState==16)?1:10, {height:110-((cpu>=2&&gameState==10)?20:0)});
+            	TweenFX.to(bottomscore, (gameState==16)?1:10, {height:bottomHeight});
+			}
+            if(cpu>=0&&cpu<2&&gameState!=11&&gameState!=12&&gameState!=13&&gameState!=14) TweenFX.to(topTxt, (gameState==16)?1:10, {scale:0.75, y:-5});
+            TweenFX.to(bottomTxt, (gameState==16)?1:10, {scale:1, y:0}, doTurn, nums[0], _y, _color);
+		}
+		function hilightVertical(_x, _color){
+			if(checkEnd()) return;
+			if(!_color) _color = opponent;
+			bottomscore.style.pointerEvents = "none"; bottomscore.style.opacity = "0.9";
+			topscore.style.pointerEvents = "auto"; topscore.style.opacity = "1";
+			
+			hilight.style.backgroundColor = colors[opponent+"Hi"];
+			hilight.style.borderColor = colors[opponent];
+			hilight.style.height = (areaHeight+6)+"px";
+			hilight.style.width = (areaWidth/width+6)+"px";
+			hilight.style.left = (_x*(areaWidth/width)-3)+"px";
+			hilight.style.top = "-3px";
+			
+			var nums = [];
+			var num = 0;
+			for(var _y = 0; _y < height; _y ++){
+				hilightButton(_x, _y, buttons[_y][_x].opponentButton, opponent);
+				nums.push((buttons[_y][_x].state)?-1:buttons[_y][_x].z);
+				if(!buttons[_y][_x].state) num++;
+			}
+			nums = getAllIndexes(nums, nums[nums.indexOf(Math.max.apply(this, nums))]);
+			
+			if(rotateopt) rotateDigits();
+			if(flipopt) flipDigits();
+			
+			if(num>2) {
+				multiplierBottom = 1;
+				updateUI(player);
+			}
+			TweenFX.to(topscore, (gameState==16)?1:10, {height:topHeight});
+			TweenFX.to(bottomscore, (gameState==16)?1:10, {height:110})
+			TweenFX.to(topTxt, (gameState==16)?1:10, {scale:1, y:0}, doTurn, _x, nums[0], _color);
+			if(cpu>=0&&cpu<2&&gameState!=11&&gameState!=12&&gameState!=13&&gameState!=14) TweenFX.to(bottomTxt, (gameState==16)?1:10, {scale:0.75, y:-5});
+		}
+		function rotateDigits(){
+			for(var _y = 0; _y < height; _y++){
+				for(var _x = 0; _x < width; _x++){
+					if(!buttons[_y][_x].state) TweenFX.to(buttons[_y][_x].diggit, anim, {rotate:(flipopt)?((turn)?0:-90):((turn)?0:180)});
+				}
+			}
+		}
+		function flipDigits(){
+			if(!rotateopt){
+				for(var _y = 0; _y < height; _y++){
+					for(var _x = 0; _x < width; _x++){
+						if(!buttons[_y][_x].state) TweenFX.to(buttons[_y][_x].diggit, anim, {rotate:((turn)?0:90)});
+					}
+				}
+			}
+			TweenFX.to(area, anim, {rotate:(turn)?0:-90});
+			TweenFX.to(plate, anim, {rotate:(turn)?0:-90});
+		}
+		
+		function doTurn(_x, _y, _color){
+            if(gameState>10){
+				if(turns == 16) {
+					cpu = 3;
+					gameState += 1;
+					messSelect(gameState);
+					return;
+				} else if(turns == 18) {
+					cpu = 3;
+				} else if(turns == 20 && gameState==21) {
+					cpu = 3;
+					gameState += 1;
+					messSelect(gameState);
+					cpu = 2;
+					setTimeout(function(){buttonClicked(buttons[_y][0], _color);cpu = 3;}, 100);
+					return;
+				} else if(turns == 22) {
+					cpu = 3;
+					gameState += 1;
+					messSelect(gameState);
+					return;
+				}
+			}
+			if((cpu && _color==opponent) || ((gameState == 15 || gameState == 16) && _color==player)) makeTurn(_x, _y, _color);
+		}
+        function makeTurn(_x, _y, _color){
+            var _b = buttons[_y][_x];
+            var _btn = ((_color==player)?"player":"opponent")+"Button";
+            TweenFX.to(_b.diggit.firstChild,(gameState==16)?1:15,{scale:1.1, alpha:0.25});
+            TweenFX.to(_b[_btn], (gameState==16)?2:15, {scale:1}, function(){
+                hilightFrame(_b[_btn], (_color==player) ? player : opponent);
+                _b[_btn].style.backgroundColor = {red:"#ff3838", green:"#38ff38", blue:"#3838ff"}[_color];
+                _b.diggit.firstChild.getContext("2d").clearRect(0, 0, 100, 100);
+                TypeFX.drawGlyph(_b.diggit.firstChild, 42, 10, {red:"#a33", green:"#3a3", blue:"#33a"}[_color]);
+                TweenFX.to(_b.diggit.firstChild,(gameState==16)?3:35,{scale:0.8, alpha:1});
+                TweenFX.to(_b[_btn], (gameState==16)?2:35, {scale:0.95, alpha:0.9}, buttonClicked, _b, _color);
+            });
+        }
+		
+		function endGame(_color){
+			TweenFX.to(hilight, anim*2, {alpha:0});
+			multiplierTop = 1;
+			updateUI(opponent);
+			multiplierBottom = 1;
+			updateUI(player);
+			if(gameState>9){
+				message("Often the Glitch causes a chain\rreaction, which combined with\rSkips can earn bonus!", " Menu ", true, textSize+1, 6);
+			} else {
+				if(scores[player] > scores[opponent]){
+					gameState = 0;
+					message(player+" player won.", " Menu ", true, textSize+1, 6);
+				} else if(scores[player] < scores[opponent]){
+					gameState = 0;
+					message(opponent+" player won.", " Menu ", true, textSize+1, 6);
+				} else {
+					message("End game."+_color, " Menu ", true, textSize+1, 6);
+				}
+			}
+		}
+
+
+		function hilightButton(_x, _y, _btn, _color){
+			if(!buttons[_y][_x].state){
+				_btn.style.pointerEvents = ((cpu>=1&&_color==opponent) || (cpu==-1 && turns!=16) || (_color==opponent && opponent=="red")) ? "none" : "auto";
+				TweenFX.to(_btn, 10, {alpha:1});
+			} else {
+				buttons[_y][_x].div.style.borderColor = colors[_color+"Border"];
+				buttons[_y][_x].div.style.backgroundColor = "#555";
+			}
+		}
+		function hilightFrame(_button, _color){
+			_button.style.borderColor = colors[_color+"Border"];
+		}
+		
+		function getAllIndexes(arr, val) {
+			var indexes = [], i = -1;
+			while ((i = arr.indexOf(val, i+1)) != -1){
+				indexes.push(i);
+			}
+			return indexes;
+		}
+		
+		
+		
+		
+		function messSelect(id){
+            gameState = id;
+            killAll(messtxt);
+            TweenFX.to(mess, anim*2, {alpha:0}, function(){
+                switch(id){
+                    case 1:
+                        cpu = -1;
+                    case 2:
+                        if(id==2){
+                            opponent = "blue";
+                            topscore.className = "uiscore bluetitle";
+                        }
+                    case 3:
+                        startGame(id);
+                        break;
+                    case 4:
+						createGrid(6, 6);
+                        break;
+                    case 5:
+                    case 6:
+                        if(id==6) cpu = 1;
+                        createGrid(size, size);
+                        break;
+                    case 7:
+						closediv.style.visibility="visible";
+						closediv.style.top = "-1.45%";
+						closediv.style.right = "-2.4%";
+						TweenFX.to(closediv, anim, {scale:0.5});
+						
+						message("Players take turns in choosing\rfrom provided rows or columns\rof highlighted tiles. `", " Next ", true, textSize+1, 8);
+                        hilightHorizontal(5, player);
+						setTimeout(function(){cpu=2;buttonClicked(buttons[5][0], player);}, 100);
+						killAll(bottomTxt);
+						TweenFX.to(bottomscore,anim*2, {height:96}, function(){
+							TypeFX.drawText(bottomTxt, "\rNumbers on tiles represents score weight,\r\r\r\robviously 9 (nine) is better than 0 (zero).", textSize, -textLeading);
+							killAll(topTxt);
+						});
+						gameState += 3;
+                        break;
+                    case 8:
+                    case 9:
+                        closediv.style.visibility="visible";
+						closediv.style.top = "0.5%";
+						closediv.style.right = "0.75%";
+						TweenFX.to(closediv, anim, {scale:1});
+						updateUI(player);
+                        updateUI(opponent);
+                        TweenFX.to(mess, anim*2, {alpha:0});
+                        var _firstChoice = Math.round(Math.random()*(height-1));
+                        if(turn) hilightHorizontal(_firstChoice); else hilightVertical(_firstChoice);
+                        break;
+                    case 10:
+						message("You select from the row of tiles\rhighlighted in Green, while your\ropponent chooses from\rcolumns marked in Red.", " Hide ", true, textSize+1, 6);
+						cpu = -1;
+						hilightHorizontal(5, player);
+						TweenFX.to(hilight, anim*2, {alpha:1});
+						killAll(topTxt);
+						topTxt.style.opacity = "0";
+						TypeFX.drawText(topTxt, "\r\rOpponent's score will be displayed here.", textSize, -textLeading/2.75);
+						TweenFX.to(topTxt, anim*2, {alpha:1, scale:1});
+						killAll(bottomTxt);
+						TypeFX.drawText(bottomTxt, "\rThe column in which your opponent will fall\r\r\r\rdepends on your selection. Choose wisely !", textSize, -textLeading);
+						TweenFX.to(bottomscore, anim*2, {height:96});
+						TweenFX.to(topscore, anim, {height:86});
+						gameState += 1;
+						break;
+                    case 11:
+						cpu = 2;
+						buttonClicked(buttons[5][0], player);
+						cpu = 3;
+						hilightHorizontal(5, player);
+						killAll(topTxt);
+						TypeFX.drawText(topTxt, "\r\r\r\rThe CPU offers a fair and challenging AI.\r\r\rIt's more fun when playing in multiplayer.", textSize, -textLeading+2);
+						killAll(bottomTxt);
+						updateUI(player);
+						TweenFX.to(bottomtxt, anim*2, {scale:0.8});
+						TweenFX.to(bottomscore, anim*2, {height:110});
+						gameState += 1;
+						break;
+					case 12:
+						gameState += 1;
+						break;
+					case 13:
+						gameState += 1;
+						TweenFX.to(hilight, anim, {alpha:0});
+						messSelect(gameState);
+						break;
+                    case 14:
+                        killAll(topTxt);
+                        killAll(bottomTxt);
+                        TypeFX.drawText(topTxt, "\rAs you see the game mechanic is simple, but\r\r\rthere are special tricks that affect score.", textSize, -textLeading+4);
+                        message("Now we will advance ahead into \ra developed state of game play\rto demonstrate some\rSkips and Glitches :)", "Autoplay", true, textSize+1, 2);
+                        TypeFX.drawText(bottomTxt, "\rThe special tricks allows you to earn more\r\r\r\rthan the maximum 9 points from a single tile.\r\r\r\rGlitches are useful at the opponent's turns.", textSize, -textLeading);
+                        gameState += 1;
+                        break;
+                    case 15:
+                        cpu = 1;
+                        updateUI(player);
+                        updateUI(opponent);
+                        TweenFX.to(mess, anim*2, {alpha:0});
+                        TweenFX.to(hilight, anim*2, {alpha:1});
+                        hilightHorizontal(parseInt(TweenFX.getStyle(hilight, 'top')/100));
+						break;
+					case 16:
+						break;
+                    case 17:
+                        killAll(topTxt);
+						updateUI(opponent);
+                        killAll(bottomTxt);
+                        message("The first special trick is to not\rleave a choice for your\ropponent, Skipping him!", " Hide ", true, textSize+1, 2);
+						TypeFX.drawText(bottomTxt, "\rSkip multiple times in a row to multiply each\r\r\r\rconsecutive selected tile's score *2,*3,*4!", textSize, -textLeading);
+                        cpu = 2;
+                    	setTimeout(function(){buttonClicked(buttons[1][1], player); cpu = 3;}, 100);
+						gameState += 1;
+                        break;
+                    case 18:
+                        cpu = 2;
+                        buttonClicked(buttons[1][0], player);
+                        cpu = 3;
+                        hilightHorizontal(1, player);
+						killAll(bottomTxt);
+						updateUI(player);
+                    case 19:
+						gameState += 1;
+                        break;
+                    case 20:
+						gameState += 1;
+						break;
+					case 21:
+						cpu = 3;
+                        gameState += 1;
+						break;
+					case 22:
+						message("Notice how consecutive Skipping\rgreatly increases your score to\rget dozen points at once!", "Hide", true, textSize+1, 10);
+                        gameState += 1;
+                        break;
+					case 23:
+						cpu = 2;
+                        buttonClicked(buttons[1][0], player);
+                        cpu = 3;
+                        hilightHorizontal(1, player);
+                        break;
+					case 24:
+						cpu = 2;
+                       	setTimeout(function(){buttonClicked(buttons[5][0], player);cpu = 3;}, 100);
+						
+						killAll(bottomTxt);
+                        message("Selecting between the only two\rtiles left in your row or column\rproduces the Glitch!", " Hide ", true, textSize+1, 10);
+						TypeFX.drawText(bottomTxt, "\rThe Glitch move was inevitable because tiles\r\r\r\rwere often stucking the game whenever left\r\r\r\ralone both in their rows and columns.", textSize, -textLeading);
+                        gameState += 1;
+                        break;
+					case 25:
+						cpu = 2;
+                        buttonClicked(buttons[5][0], player);
+                        cpu = 3;
+                        hilightHorizontal(5, player);
+						break;
+					case 26:
+						gameState += 1;
+						break;
+                    default:
+						scores = {green:0, blue:0, red:0};
+						cpu = 0;
+						gameState = 0;
+						turn = -1;
+						turns = 0;
+						multiplierTop = 1;
+						multiplierBottom = 1;
+						killAll(area);
+						killAll(topTxt);
+						killAll(bottomTxt);
+						TweenFX.to(plate, anim, {alpha:0});
+						TweenFX.to(title, anim*2, {alpha:1});
+						mainMenu();
+                        break;
+                }
+            });
+        }
+		
+		
+		
+		function createListFunction(callback) {
+			return function() {
+				for (var i = 0; i < arguments.length; i++) {
+					if (arguments[i]) {
+						callback(arguments[i], i);
+					}
+				}
+			}
+		}
+		var kill = createListFunction(function(result, i) {
+			if (result.parentNode) {
+				result.parentNode.removeChild(result);
+			}
+		})
+		var hide = createListFunction(function(result, i) {
+			result.style.visibility = 'hidden';
+		});
+		var show = createListFunction(function(result, i) {
+			result.style.visibility = 'visible';
+		});
+		
+		var killAll = function(child) {
+			while(child.firstChild){
+				kill(child.firstChild);
+			}
+		}
+		
+		
+		var TypeFX=(function(){ var _1=[[[,,,5],[,6]],[[,,,2],[2,,,2]],[[1,,,7],[3,,,7],[,2,5],[,4,5]],[[1,1,4],[,2],[1,3,3],[4,4],[,5,4],[2,,,7]],[[,5,,2],[1,4],[2,3],[3,2],[4,,,2],[,1],[4,5]],[[1],[,1],[,3,,3],[1,2],[2,1],[1,6,2],[4,6],[3,4,,2],[4,3],[2,3]],[[,,,2]],[[,2,,3],[1,1],[1,5],[2],[2,6]],[[2,2,,3],[1,1],[1,5],[],[,6]],[[,2],[,4],[1,3,3],[2,1,,5],[4,2],[4,4]],[[,3,5],[2,1,,5]],[[1,6,,2],[,8]],[[,4,5]],[[,6]],[[,6],[1,4,,2],[2,3],[3,1,,2],[4]],[[1,,3],[,1,,5],[1,6,3],[4,1,,5],[1,4],[2,3],[3,2]],[[1,1],[2,,,6],[1,6,3]],[[,1],[1,,3],[4,1,,2],[3,3],[2,4],[1,5],[,6,5]],[[,1],[1,,3],[4,1,,2],[4,4,,2],[,5],[1,6,3],[2,3,2]],[[,3],[1,2],[2,1],[,4,5],[3,,,7]],[[,,5],[,1],[,2,4],[4,3,,3],[,5],[1,6,3]],[[1,,3],[4,1],[,1,,5],[1,6,3],[1,3,3],[4,4,,2],[2,8]],[[,,5],[4,1,,2],[3,3,,2],[2,5,,2]],[[1,,3],[,1,,2],[4,1,,2],[,4,,2],[4,4,,2],[1,3,3],[1,6,3]],[[1,,3],[,1,,2],[1,3,3],[4,1,,5],[1,6,3],[,5],[2,8]],[[,2],[,5]],[[1,2],[1,4,,2],[,6]],[[,3],[1,2],[1,4],[2,1],[2,5]],[[,2,5],[,4,5]],[[2,3],[1,2],[1,4],[,1],[,5]],[[,1],[1,,3],[4,1,,2],[3,3],[2,4],[2,6]],[[1,,4],[,1,,5],[5,1,,5],[1,6,4],[3,2],[2,2,,3],[3,4]],[[,1,,6],[4,1,,6],[1,,3],[,3,4]],[[,,4],[,,,7],[,3,4],[,6,4],[4,1,,2],[4,4,,2]],[[1,,3],[,1,,5],[1,6,3],[4,5],[4,1]],[[,,,7],[,,4],[,6,4],[4,1,,5]],[[,,5],[,3,4],[,6,5],[,,,7]],[[,,5],[,3,4],[,,,7]],[[1,,3],[,1,,5],[1,6,3],[4,5],[3,4,2],[4,1]],[[,,,7],[4,,,7],[1,3,3]],[[,,3],[,6,3],[1,1,,5]],[[4,,,6],[1,6,3],[,5]],[[,,,7],[1,3],[2,2],[2,4],[3,1],[4],[3,5],[4,6]],[[,,,7],[1,6,4]],[[,,,7],[1,2],[3,2],[2,3],[4,,,7]],[[,,,7],[1,2],[2,3],[3,4],[4,,,7]],[[1,,3],[,1,,5],[1,6,3],[4,1,,5]],[[,,,7],[,,4],[,3,4],[4,1,,2]],[[1,,3],[,1,,5],[1,6,3],[4,1,,5],[4,7]],[[,,,7],[,,4],[,3,4],[4,1,,2],[4,4,,3]],[[1,,4],[,1,,2],[1,3,3],[4,4,,2],[,6,4]],[[,,5],[2,,,7]],[[,,,6],[1,6,3],[4,,,6]],[[,,,3],[4,,,3],[1,3,,2],[3,3,,2],[2,5,,2]],[[,,,7],[1,5],[2,4],[3,5],[4,,,7]],[[,,,2],[4,,,2],[,5,,2],[4,5,,2],[1,2],[3,2],[2,3],[1,4],[3,4]],[[,,,2],[4,,,2],[1,2],[3,2],[2,3,,4]],[[,,5],[,6,5],[,5],[1,4],[2,3],[3,2],[4,1]],[[,,,7],[1,,2],[1,6,2]],[[4,6],[3,4,,2],[2,3],[1,1,,2],[]],[[2,,,7],[,,2],[,6,2]],[[,2],[1,1],[2,,,7],[3,1],[4,2]],[[,7,5]],[[,5],[1,6],[2,1,,7],[3,6],[4,5]],[[1,2,2],[,3,,3],[1,6,2],[3,2,,5]],[[,,,7],[,2,3],[,6,3],[3,3,,3]],[[,3,,3],[1,2,2],[1,6,2],[3,3],[3,5]],[[3,,,7],[1,2,2],[1,6,2],[,3,,3]],[[1,2,2],[,3,,3],[1,6,2],[3,3],[,4,4]],[[1,1,,6],[,3,3],[2]],[[1,2,2],[,3,,3],[1,6,2],[3,2,,6],[1,8,2]],[[,,,7],[,2,3],[3,3,,4]],[[1,2,,5],[1],[,2]],[[1,2,,5],[1],[,2],[,7]],[[,,,7],[1,4],[2,3],[2,5],[3,2],[3,6]],[[,,,6],[1,6]],[[,2,,5],[2,3,,4],[4,3,,4],[,2,4]],[[,2,,5],[3,3,,4],[,2,3]],[[1,2,2],[,3,,3],[1,6,2],[3,3,,3]],[[,2,3],[,2,,7],[,6,3],[3,3,,3]],[[1,2,2],[3,2,,7],[1,6,2],[,3,,3]],[[,2,,5],[1,3],[2,2,2]],[[1,2,3],[1,4,2],[,6,3],[,3],[3,5]],[[1,,,6],[,2,3],[2,6]],[[,2,,4],[1,6,2],[3,2,,4]],[[,2,,5],[3,2,,3],[1,6],[2,5]],[[,2,,4],[2,2,,4],[4,2,,4],[1,6],[3,6]],[[,2,,2],[1,4,2],[3,2,,2],[,5,,2],[3,5,,2]],[[,2,,4],[1,6,2],[3,2,,6],[1,8,2]],[[,2,4],[3,3],[1,4,2],[,5],[,6,4]],[[1,1,,2],[1,4,,2],[2],[2,6],[,3]],[[1,,,9]],[[1,1,,2],[1,4,,2],[],[,6],[2,3]]],_2=[],i,j,k,h,w; for(i=0;i<33;i++){ _1.unshift([]); } for(i=0;i<_1.length;i++){ if(i==33||i==39||i==46||i==58){ _2.push(1); }else{ if([32,44,59,105,106,108].indexOf(i)>-1){ _2.push(2); }else{ if([34,40,41,60,62,73,91,93,102,116,123,124,125].indexOf(i)>-1){ _2.push(3); }else{ if(i>96&&i!=109&&i!=119){ _2.push(4); }else{ if(i==64){ _2.push(6); }else{ _2.push(5); } } } } } } function drawDiggit(_8,_9,_a,_b){ if(!parseInt(_9)){ _9=_9.charCodeAt(0); } if(!_b){ _b="white"; } if(!_a){ _a=1; } var _c=document.createElement("canvas"); _c.width=_a*_2[_9]; _c.height=_a*10; drawGlyph(_c,_9,_a,_b); _8.appendChild(_c); return _c; } function drawGlyph(_d,_e,_f,_10){ var _11=_d.getContext("2d"); _11.fillStyle=_10; if(_1[_e]){ for(i=0;i<_1[_e].length;i++){ if(_1[_e][i].length==4){ h=_1[_e][i][3]; w=1; }else{ if(_1[_e][i].length==3){ w=_1[_e][i][2]; h=1; }else{ w=1; h=1; } } _11.beginPath(); _11.rect(_1[_e][i][0]*_f||0,((_1[_e][i][1]||0)+1)*_f,w*_f,h*_f); _11.fill(); } } } function drawText(_12,_13,_14,_15,_16){ var _17; var _18=_13.split("\r"); var _19=[]; for(k=0;k<_18.length;k++){ _19.push(0); for(j=0;j<_18[k].length;j++){ _17=drawDiggit(_12,_18[k].charCodeAt(j),_14,_16); _17.style.position="absolute"; _17.style.left=_19[k]+"px"; _17.style.top=(k)?(k*_14*10+(k*_15||0))+"px":0; _19[k]+=_17.width+_14; } } _12.style.width=Math.max.apply(this,_19)+"px"; _12.style.height=(_18.length*_14*10+(_18.length*_15||0))+"px"; } return {symbols:_1,drawDiggit:drawDiggit,drawGlyph:drawGlyph,drawText:drawText}; })();
+		
+		
+		var TweenFX=(function(){ var _1,_2=/[+-]?\d+(\.\d+)?/g,_3=["alpha","opacity","left","top","right","bottom","width","height","x","y"],_4=["rotate","scale","scaleX","scaleY"],_5=[],_6=[]; function tweenTo(_7,_8,_9,_a,_b){ var i,_d=0,_e,_f,_10=[],_11; for(_e in _9){ if(_3.indexOf(_e)>-1){ if(_e=="x"){ _f=_3[2]; }else{ if(_e=="y"){ _f=_3[3]; }else{ if(_e==_3[0]){ _f=_3[1]; }else{ _f=_e; } } } if(_f==_3[1]&&_9[_e]>0){ if(_7.style.visibility=="hidden"){ _7.style.opacity="0"; } _7.style.visibility="visible"; } _10.push({property:_f,start:getStyle(_7,_f),end:_9[_e]}); }else{ if(_4.indexOf(_e)>-1){ if(!_11){ _11=getTransform(_7); } } } } if(_11){ for(i=0;i<_4.length;i++){ _e=_4[i]; _f=_9.hasOwnProperty(_e); if(_e==_4[1]){ if(_f){ _10.push({property:_4[2],start:_11[_4[2]],end:_9[_e]}); _10.push({property:_4[3],start:_11[_4[3]],end:_9[_e]}); i+=2; } }else{ _10.push({property:_e,start:_11[_e],end:(_f)?_9[_e]:_11[_e]}); } } } stopTween(_7); if(_10.length){ _6.push(requestAnimationFrame(tween)); _5.push(_7); } function tween(){ if(!_1){ _d+=1; _11=""; for(i=0;i<_10.length;i++){ if(_10[i].start==_10[i].end){ _f=_10[i].end; }else{ if(_10[i].start>_10[i].end){ _e=_10[i].end+(_10[i].start-_10[i].end)/_8*(_8-_d); }else{ _e=_10[i].start-(_10[i].start-_10[i].end)/_8*_d; } _f=((_d>=_8)?_10[i].end:_e); } _f+=((_3.indexOf(_10[i].property)>1)?"px":((!_4.indexOf(_10[i].property))?"deg":"")); if(_3.indexOf(_10[i].property)>-1){ _7.style[_10[i].property]=_f; }else{ _11+=_10[i].property+"("+_f+") "; } } if(_11.length){ _7.style.transform=_11; } if(_d>=_8){ if(_7.style.opacity=="0"){ _7.style.visibility="hidden"; } stopTween(_7); if(_a){ _a.apply(this,_b); } return; } } i=_5.indexOf(_7); if(i>-1){ _6[i]=requestAnimationFrame(tween); } } function getTween(_el){ if(!_el){ return _5.length; } return _5.indexOf(_el); } function stopTween(_el,_id){ if(_el){ _id=getTween(_el); } if(_id>-1){ cancelAnimationFrame(_6.splice(_id,1)); _5.splice(_id,1); } return _id; } function removeAllTweens(){ for(var _id=_5.length-1;_id>0;_id--){ stopTween(null,_id); } } } function getStyle(_16,_17){ return 1*((window.getComputedStyle(_16,null).getPropertyValue(_17).match(_2)||[0]).map(function(v){ return 1*v; })); } function getTransform(_19,_1a){ var _1b=window.getComputedStyle(_19,null).getPropertyValue("transform").replace("matrix(","").replace("matrix3d(","").replace(")","").split(", "); if(_1b.length==16){ _1b=[_1b[0],_1b[1],_1b[4],_1b[5]]; }else{ if(_1b.length<6){ _1b=[1,0,0,1]; } } if(_1a){ return getTransformObject(_1b)[_1a]; } return getTransformObject(_1b); } function getTransformObject(a){ return {scaleX:Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)),scaleY:Math.sqrt(Math.pow(a[2],2)+Math.pow(a[3],2)),rotate:(180/Math.PI)*Math.atan2(a[3],a[2])-90}; } return {to:function(_1d,_1e,_1f,_20){ tweenTo(_1d,_1e,_1f,_20,Array.apply(null,arguments).slice(4)); },pause:function(_p){ if(arguments.length){ if(_p||_p===false){ _1=_p; } }else{ _1=!_1; } return _1; },stop:function(_22){ if(stopTween(_22)==-1){ removeAllTweens(); } },tweenedElements:_5,getStyle:getStyle,getTransform:getTransform}; })();
+		
+		
+	</script>
+	
+</div>
+
+</body>
+
+</html>

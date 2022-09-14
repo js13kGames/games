@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Glitch 'n Destroy!</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body{
+            background : black;
+        }
+
+        #myCanvas {
+            /*background: #eee;*/
+            z-index: 2;
+            position: relative;
+            display: block;
+            margin: auto;
+        }
+
+        #externalCanvas {
+            /*background: darkred;*/
+            display: block;
+            margin: auto;
+            z-index: 2;
+            position: relative;
+        }
+
+        p {
+            display: block;
+            font-family: Arial;
+            text-align: center;
+            margin-top: 5%;
+            position: relative;
+            color: white;
+        }
+
+        #solutionCanvas {
+            z-index: 1;
+            font-size: 72px;
+            color: white;
+            position: absolute;
+            top: 100px;
+            right: 25%;
+        }
+
+    </style>
+</head>
+
+<body>
+<canvas id="externalCanvas" width="800" height="100"></canvas>
+<canvas id="myCanvas" width="800" height="480"></canvas>
+<canvas id="solutionCanvas" width="800" height="480"></canvas>
+<p>Glitch 'n Destroy created by Alessio De Angelis with a lot of fun for <a href src ="http://2016.js13kgames.com/">JS13K</a> </p>
+</body>
+<script src="glitch_n_destroy.min.js"></script>
+<script src="jsfxr-min.js"></script>
+</html>

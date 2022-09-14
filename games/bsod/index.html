@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>BSoD</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<h1>:(</h1>
+<div id="title">
+  <p>Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</p>
+  <p id="start"><input type="button" value="start"/></p>
+</div>
+<div id="frame" class="hide">
+  <div id="space">
+  <div id="container">
+    <ul id="field" class="box">
+      <li class="top"></li>
+      <li class="bottom"></li>
+      <li class="east wall"></li>
+      <li class="west wall"></li>
+      <li class="south wall"></li>
+      <li class="north wall"></li>
+    </ul>
+    <ul class="box obj origin">
+      <li class="top"></li>
+      <li class="bottom"></li>
+      <li class="east wall"></li>
+      <li class="west wall"></li>
+      <li class="south wall"></li>
+      <li class="north wall"></li>
+    </ul>
+    <div class="enemy"><div>):</div></div>
+  </div>
+  </div>
+</div>
+
+<p id="chkdsk" class="hide">CHKDSK is verifying files (stage <span>1</span> of 3)...<br/>
+<span class="percent">0</span> percent complete.</p>
+
+<div id="judge" class="hide">
+  <div class="pl">
+    <div class="wall"></div>
+    <div class="name">BAD<br/>SECTOR</div>
+  </div>
+  <div id="map">
+    <div class="pl">^</div>
+    <div class="em"></div>
+    <div class="item origin"></div>
+    <div class="obj origin"></div>
+  </div>
+  <div class="em">
+    <div class="wall"></div>
+    <div class="name">RECOVERED<br/>SECTOR</div>
+  </div>
+  <div class="result">
+    <p class="msg"><a></a></p>
+    <div class="pl">
+      <div class="rate"></div>
+      <div class="point"></div>
+    </div>
+    <div class="em">
+      <div class="rate"></div>
+      <div class="point"></div>
+    </div>
+  </div>
+</div>
+  
+<div id="ctrl" class="hide">
+  <div id="rotateY">
+    <input type="button" class="minus" value="←"/>
+    <input type="button" class="plus" value="→"/>
+  </div>
+  <div id="forward">
+    <input type="button" class="plus" value="↑"/>
+  </div>
+  <div id="translateY">
+    <input type="button" class="jmp" value="JUMP"/>
+  </div>
+</div>
+
+<div id="debug" class ="hide">
+  <div id="score">
+    score: <span></span>
+  </div>
+  <div id="found">
+    found: <span></span>
+  </div>
+  <div id="enemy">
+    enemy: <span></span>
+  </div>
+  <div id="pl">
+    moveX: <span class="moveX"></span>
+    moveZ: <span class="moveZ"></span>
+  </div>
+  <div id="deg">
+    rotateY: <span></span>
+  </div>
+  <div id="transform">
+    transform: <span></span>
+  </div>
+  <div id="reinit">
+    reinit: <span></span>
+  </div>
+  <div id="movableCoords">
+    movableCoords: <span></span>
+  </div>
+  <div id="item">
+    item: <span></span>
+  </div>
+  <div id="walls">
+    walls: <span></span>
+  </div>
+  <div id="floors">
+    floors: <span></span>
+  </div>
+</div>
+<!-- partial -->
+  <script  src="./main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-title" content="Big Champ">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        <title>Big Champ</title>
+
+        <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            border: 0;
+            overflow: hidden; /*  Disable scrollbars */
+            display: block;  /* No floating content on sides */
+        }
+        </style>
+    </head>
+    <body>
+        <center>
+            <div id="game">
+                <canvas id="canvas" width="800" height="450" style="width:800px; height:450px"></canvas>
+            </div>
+        </center>
+        <script src="ZzFX.js"></script>
+        <script src="ZzFXm.min.js"></script>
+        <script src="game.min.js"></script>
+    </body>
+</html>

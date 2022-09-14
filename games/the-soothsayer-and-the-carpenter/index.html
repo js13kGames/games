@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: #c8cdcc;
+    }
+    .wrapper {
+        max-width: 256px;
+        height: 256px;
+    }
+    #wrapper canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        width: 100%;
+        max-width: 512px;
+    }
+    #background {
+        background-color: black;
+        z-index: -2;
+    }
+    #light-layer {
+        background-color: rgba(0, 0, 0, 0);
+        z-index: -1;
+    }
+    #text-layer {
+        width: 512px;
+        background-color: rgba(0, 0, 0, 0);
+        z-index: 1;
+    }
+
+    </style>
+<body>
+    <div id="wrapper">
+        <canvas id="background"></canvas>
+        <canvas id="kontra"></canvas>
+        <canvas id="light-layer"></canvas>
+        <canvas width=512 height=512 id="text-layer"></canvas>
+    </div>
+    <script src="bundle.js"></script>
+</body>
+</html>

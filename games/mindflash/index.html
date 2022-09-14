@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Let's play a game</title>
+<link rel="icon" href="favicon.png" type="image">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+html, body{
+	margin: 0;
+	padding: 0;
+	background-color: honeydew;
+}
+
+#container{
+	margin: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#title{
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+	padding: 0 10px 5px 10px;
+	text-align: center;
+	font-size: 4em;
+	color: #FFFACD;
+	font-family: 'Pangolin';
+}
+
+#board{
+	margin: 0;
+	top: 0;
+	display: flex;
+	position: relative;
+	min-height: 100px;
+	width: 100%;
+	min-width: 1536px;
+	background-color: seagreen;
+}
+
+#board_content{
+	display: flex;
+	margin: 30px 0 30px 0;
+	width: 100%;
+	min-width: 1450px;
+}
+
+#score{
+	position: absolute;
+	display: inline-block;
+	left: 0;
+	width: 200px;
+	padding: 10px;
+	margin-left: 30px;
+	font-size: 2em;
+	font-family: 'Fjalla One';
+	color: #FFFACD;
+	text-align: center;
+	vertical-align: center;
+}
+
+#turns{
+	position: absolute;
+	display: inline-block;
+	right: 0;
+	width: 200px;
+	padding: 10px;
+	margin-right: 30px;
+	font-size: 2em;
+	font-family: 'Fjalla One';
+	color: #FFFACD;
+	text-align: center;
+	vertical-align: center;
+}
+
+#middle{
+	display: flex;
+	position: relative;
+	min-width: 1450px;
+}
+
+#grid{
+	display: inline-block;
+	position: relative;
+	margin: 0 490px 0 490px;
+	padding: 10px;
+	min-width: 536px;
+}
+
+.rows{
+	margin: 0;	
+	padding: 2px 0 2px 2px;
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	min-width: 520px;
+}
+
+#columns{
+	margin: 0 auto;
+	padding: 0;
+	border: solid 2px #444444;
+	padding: 0;
+	display: inline-block;
+	height: 122px;
+	width: 122px;
+	
+	box-shadow: 3px 3px 5px #8A0017, 0px 0px 30px #8A0017;
+}
+
+#hide1, #unhide1, #unhide2, #unhide3, #unhide4, #unhide5, #unhide6, #unhide7, #unhide8, #unhide9, #unhide10, #unhide11, #unhide12, #unhide13, #unhide14, #unhide15, #unhide16{
+	font-size: 4em;
+	color: #8A0017;
+	position: relative;
+	display: flex;
+	height: 122px;
+	width: 122px;
+	cursor: pointer;
+}
+
+#instructions{
+	position: absolute;
+	display: inline-block;
+	margin-right: 50px; 
+	top: 150px;
+	right: 0;
+	padding: 10px;
+	width: 200px;
+	font-size: 25px;
+	font-family: 'Open Sans';
+	border-radius: 5px;
+	color: seagreen;
+	box-shadow: 3px 3px 5px rgb(0, 0, 0, 0.5), 3px 3px 30px rgb(0, 0, 0, 0.5);
+}
+
+#new_game{
+	position: absolute;
+	top: 100px;
+	display: inline-block;
+	float: left;
+	padding: 10px;
+	margin-left: 50px;
+	height: 100px;
+	width: 100px;
+	text-align: center;
+	border-radius: 10px;
+	transition: background-color 1s;
+	transition: box-shadow 1s;
+}
+
+#new_game:hover{
+	background-color: honeydew;
+	cursor: pointer;
+	border-radius: 10px;
+	box-shadow: 3px 3px 5px rgb(0, 0, 0, 0.5), 0px 0px 30px rgb(0, 0, 0, 0.5);
+}
+
+#new_game_button{
+	text-decoration: none;
+	color: seagreen;
+	font-size: 35px;
+	font-family: Inconsolata;
+	font-weight: bold;
+}
+
+#new_game1{
+	position: absolute;
+	margin: 50px 50px;
+	text-align: center;
+}
+
+
+
+.new{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.element {
+  height: 260px;
+  width: 260px;
+  margin: 220px auto 0 auto;
+  background-color: red;
+  animation-name: stretch;
+  animation-duration: 1.5s; 
+  animation-timing-function: ease-out; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+
+@keyframes stretch {
+  0% {
+    transform: scale(.3);
+    background-color: red;
+    border-radius: 100%;
+  }
+  50% {
+    background-color: orange;
+  }
+  100% {
+    transform: scale(1.5);
+    background-color: yellow;
+  }
+}
+
+@keyframes rubberBand {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  65% {
+    transform: scale3d(.95, 1.05, 1);
+  }
+
+  75% {
+    transform: scale3d(1.05, .95, 1);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes fadeOut{
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse{
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@media only screen and (max-width: 500px) {
+	#board{
+	position: fixed;
+	margin: 0;
+	display: block flex;
+	min-height: 100px;
+	width: 100%;
+	min-width: 100vw;
+	z-index: 5;
+	}
+	
+	#board_content{
+		margin: 30px 0 30px 0;
+		display: block flex;
+		width: 100%;
+		min-width: 100vw;
+	}
+	
+	#score{
+		width: 20vw;
+		margin-top: 7vh;
+		margin-left: 0px;
+		font-size: 5vw;
+	}
+	
+	#turns{
+		width: 20vw;
+		margin-top: 7vh;
+		margin-right: 0px;
+		font-size: 5vw;
+	}
+	
+	#title{
+		font-size: 15vw;
+	}
+	
+	#middle{
+		min-width: 100vw;
+	}
+	
+	#new_game{
+		top: 800px;
+		margin: 10px;
+		width: 80vw;
+		height: 100px;
+	}
+	
+	#new_game_button{
+		font-size: 10vw;
+	}
+	#instructions{
+		top: 200px;
+		margin: 10px;
+		width: 80vw;
+		font-size: 5vw;
+	}
+	
+	.rows{
+		width: 100%;
+		min-width: 320px;
+		align-content: center;
+		align-items: center;
+	}
+	
+	#columns, #unhide1, #unhide2, #unhide3, #unhide4, #unhide5, #unhide6, #unhide7, #unhide8, #unhide9, #unhide10, #unhide11,
+	#unhide12, #unhide13, #unhide14, #unhide15, #unhide16{
+		width: 20vw;
+		height: 20vw;
+		font-size: 40px;
+	}
+	
+	#grid{
+		box-sizing: border-box;
+		top: 400px;
+		margin: 6vw;
+		width: 100%;
+		padding: 0;
+		min-width: 320px;
+		align-self: center;
+		align-content: center;
+		align-items: center;
+		justify-content: center;
+	}
+	
+        .element{
+ 		position: relative;
+		margin: 0;
+		top: 10px;
+		
+	}
+}
+</style>
+<script src="function.js"></script>
+
+
+
+</head>
+<body>
+	<div id="container">
+		<div id="board">
+			<div id="board_content">
+				<div id="score">
+				Score: 0
+				</div>
+				<div id="title">
+				Mindflash
+				</div>
+				<div id="turns">
+				Turns: 0
+				</div>
+			</div>
+		</div>
+		<div id="middle">
+			<div id="new_game">
+				<a href="index.html" id="new_game_button">START <br>NEW <br>GAME</a>
+			</div>
+			<div id="grid">
+
+				<div class="rows">
+					<div id="columns">
+					<input type="button" id="unhide1" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide2" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide3" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide4" value=" " />
+					</div>
+				</div>
+				<div class="rows">
+					<div id="columns">
+					<input type="button" id="unhide5" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide6" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide7" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide8" value=" " />
+					</div>
+				</div>
+				<div class="rows">
+					<div id="columns">
+					<input type="button" id="unhide9" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide10" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide11" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide12" value=" " />
+					</div>
+				</div>
+				<div class="rows">
+					<div id="columns">
+					<input type="button" id="unhide13" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide14" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide15" value=" " />
+					</div>
+					<div id="columns">
+					<input type="button" id="unhide16" value=" " />
+					</div>
+				</div>
+			</div>
+			<div id="instructions">
+			Flashbacks in your mind are the key to steady this unruly grid of wobbly tiles.
+			You have to match the pair of tiles with the same hidden alphabets. Get going!
+			</div>
+		</div>
+<script type="text/javascript">
+	
+
+	var letters=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+	var game_letters = new Array();
+
+	function randomize(array){
+		while (array.length < 8){
+			rand = Math.floor(Math.random()*letters.length);
+			if(array.indexOf(letters[rand]) > -1) continue;
+			array[array.length] = letters[rand];
+		}
+	}
+
+	function shuffle(array){
+		var current = array.length, temp, random;
+		while(0 !== current){
+			random = Math.ceil(Math.random()*current);
+			current--;
+			temp = array[current];
+			array[current] = array[random];
+			array[random] = temp;
+			}
+	}
+
+	randomize(game_letters);
+	game_letters = game_letters.concat(game_letters);
+	shuffle(game_letters);
+
+	var m;
+	var counter = 0;
+	var score = 0;
+	var active=0;
+
+
+	function complete(){
+	if(document.getElementById('unhide1').disabled === true && document.getElementById('unhide2').disabled === true && document.getElementById('unhide3').disabled === true && document.getElementById('unhide4').disabled === true && document.getElementById('unhide5').disabled === true && document.getElementById('unhide6').disabled === true && document.getElementById('unhide7').disabled === true && document.getElementById('unhide8').disabled === true && document.getElementById('unhide9').disabled === true && document.getElementById('unhide10').disabled === true && document.getElementById('unhide11').disabled === true && document.getElementById('unhide12').disabled === true && document.getElementById('unhide13').disabled === true && document.getElementById('unhide14').disabled === true && document.getElementById('unhide15').disabled === true && document.getElementById('unhide16').disabled === true)
+	{
+		alert("You Won");
+	}
+	}
+
+
+
+
+	function check(i){
+
+	document.getElementById('unhide'+i).style.animation = "pulse 0.5s 2 0s";
+	document.getElementById('unhide'+i).style.animationIterationCount = "infinite";
+	setTimeout(function(){}, 500);
+
+	if(active==0){
+
+		document.getElementById('unhide'+i).value = game_letters[i-1];
+		active = 1;
+	}
+
+	else if (m==i) {
+		document.getElementById('unhide'+i).value=" ";
+		counter++;
+		active = 0;
+	}
+
+	else if(m!=i && game_letters[m-1] === game_letters[i-1]){
+
+		document.getElementById('unhide'+i).value= game_letters[i-1];
+		setTimeout(function(){document.getElementById('unhide'+m).disabled = true;}, 25);
+		setTimeout(function(){document.getElementById('unhide'+i).disabled = true;}, 25);
+		document.getElementById('unhide'+m).style.animationIterationCount = "0";
+		document.getElementById('unhide'+i).style.animationIterationCount = "0";
+		document.getElementById('unhide'+m).style.animation = "rubberBand 1s";
+		document.getElementById('unhide'+i).style.animation = "rubberBand 1s";
+		setTimeout(function(){complete();}, 50);
+		counter++;
+		score+=10;
+		active = 0;
+
+	}
+
+	else
+	{
+		document.getElementById('unhide'+i).value= game_letters[i-1];
+		setTimeout(function(){document.getElementById('unhide'+m).value =" ";}, 25);
+		setTimeout(function(){document.getElementById('unhide'+i).value =" ";}, 25);
+
+		active = 0;
+		counter++;
+		score-=5;
+	}
+
+
+	setTimeout(function(){ m = i;}, 50);
+	console.log(counter);
+	document.getElementById("turns").innerHTML = "Turns: "+counter;
+	document.getElementById("score").innerHTML = "Score: "+score;
+
+	}
+
+
+	document.getElementById('unhide1').onclick=function(){
+		check(1);
+	}
+
+	document.getElementById('unhide2').onclick=function(){
+		check(2);
+	}
+
+	document.getElementById('unhide3').onclick=function(){
+		check(3);
+	}
+
+	document.getElementById('unhide4').onclick=function(){
+		check(4);
+	}
+
+	document.getElementById('unhide5').onclick=function(){
+		check(5);
+	}
+
+	document.getElementById('unhide6').onclick=function(){
+		check(6);
+	}
+
+	document.getElementById('unhide7').onclick=function(){
+		check(7);
+	}
+
+	document.getElementById('unhide8').onclick=function(){
+		check(8);
+	}
+
+	document.getElementById('unhide9').onclick=function(){
+		check(9);
+	}
+
+	document.getElementById('unhide10').onclick=function(){
+		check(10);
+	}
+
+	document.getElementById('unhide11').onclick=function(){
+		check(11);
+	}
+
+	document.getElementById('unhide12').onclick=function(){
+		check(12);
+	}
+
+	document.getElementById('unhide13').onclick=function(){
+		check(13);
+	}
+
+	document.getElementById('unhide14').onclick=function(){
+		check(14);
+	}
+
+	document.getElementById('unhide15').onclick=function(){
+		check(15);
+	}
+
+	document.getElementById('unhide16').onclick=function(){
+		check(16);
+	}
+
+
+</script>
+</body>
+</html>

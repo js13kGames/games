@@ -1,0 +1,335 @@
+<canvas id="c" width="500" height="350">
+</canvas>
+<p id="deb"> !</p>
+<script>
+var ball = {x:250, y:20, s:5, z:3, t:3};
+var canvas = document.getElementById('c');
+var limit = {a:0, b:0, c:500, d:350};
+var context = canvas.getContext('2d');
+
+var bar1 = {x:10, y:10, w:10, h:100,d:0,m:50};
+var bar2 = {x:480, y:10, w:10, h:100,d:0,m:50};
+var bar3 = {x:10, y:10, w:100, h:10,d:0,m:50};
+var bar4 = {x:10, y:320, w:100, h:10,d:0,m:50};
+
+var score1 = 0;
+var score2 = 0;
+var alphabet = ["q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m"];
+var keyCodes = [81,87,69,82,84,89,85,73,79,80,65,83,68,70,71,72,74,75,76,90,88,67,86,66,78,77];
+var controls = [1,11,7,17];
+var glitch = false;
+var timer = 0;
+var timer2 = 0;
+var status = "init";
+var y = 0;
+var d = 1;
+
+var earth = localStorage.getItem("earth");
+if (earth == undefined) earth = 0;
+
+setInterval(function (){
+	draw(0);
+	
+	if (status == "init"){
+	controls = [1,11,7,17];
+	score1 = 0;
+	} else
+	
+	if (status == "game"){
+		timer2++;
+		if (timer2> 2000) {
+			glitch = true;
+			if (timer2 % 2) draw(2);
+			if (timer2 > 2090) {
+				timer2 = 0;
+				controls[0] = Math.floor(Math.random() * 25) + 1;
+				controls[1] = Math.floor(Math.random() * 25) + 1;
+				controls[2] = Math.floor(Math.random() * 25) + 1;
+				controls[3] = Math.floor(Math.random() * 25) + 1;
+			} 
+		}
+		
+		move(bar1,2);
+		move(bar2,2);
+		move(bar3,0);
+		move(bar4,0);
+		
+		ball.x+=ball.z;
+		ball.y+=ball.t;
+
+		col(bar1);
+		col(bar2);
+		col(bar3);
+		col(bar4);
+		
+		if (ball.x < limit.a || ball.x > limit.c || ball.y - ball.s < limit.b || ball.y + ball.s > limit.d) {
+			status ="tryagain";
+			ball.x=250;
+			ball.y=175;
+			var r = Math.random() < 0.5 ? -1 : 1;
+			ball.t=1*r + Math.random()*1*r;
+			ball.z=1*r + Math.random()*1*r;
+		}
+	} else
+	
+	if (status == "tryagain"){
+
+	} 
+
+},1000 / 60);
+
+var glow = false;
+
+function draw(g){
+	var color = "";
+
+	if (status == "init") {
+	
+		timer++;
+		context.fillStyle = "#CcCcCc";
+		context.fillRect(0,0,limit.c,limit.d);
+		
+		if (timer >40){
+			drawAlert();
+			if (timer >80) timer = 0;
+		} 
+		
+		for (var i = -20; i< 560; i=i+40) {
+			drawCintilla(i,350,i+10,320,"#101010");
+			drawCintilla(i,30,i+10,0,"#101010");
+		}
+		for (var i = 20; i< 560; i=i+80) {
+			drawCintilla(i,350,i+10,320,"#cc9900");
+			drawCintilla(i,30,i+10,0,"#cc9900");
+		}
+		context.fillStyle = "#222222";
+		context.font = "30px Consolas";
+		context.fillText("Press SPACE to begin",80,310);
+		
+		context.fillStyle = "#111111";
+		context.font = "30px Consolas";
+		context.fillText("Earth-"+earth,190,230,115);
+		
+		drawCircle(250,125,80,0,2,"#101010");
+		drawCircle(250,125,75,0,2,"#cc9900");
+		
+		for (i = 70; i > 20; i--) {
+			drawCircle(250,125,i,1.05,1.35,"#101010",0);
+			drawCircle(250,125,i,1.65,1.95,"#101010",0);
+			drawCircle(250,125,i,0.35,0.65,"#101010",0);
+		}
+		drawCircle(250,125,15,0,2,"#101010");
+		
+		
+		context.font = "20px Arial";
+		context.fillText("Look carefully to the indicated key on each bar",40,270);
+		context.fillText("to move it, watch out the side efects of the radiation",20,290);
+	} else
+	
+	if (status == "game"){
+		timer++;
+		
+
+		
+		if (g<1) {
+			context.fillStyle = "#CcCcCc";
+			context.fillRect(0,0,limit.c,limit.d);
+			color = "#101010";
+		} else color = "#D0D0D0";
+		
+		if (timer >40){
+			drawAlert();
+			if (timer >80) timer = 0;
+		} 
+		
+		drawCircle(ball.x,ball.y,ball.s+g,0,2,"#33FF33");
+
+		context.fillStyle = color;
+		context.fillRect(bar1.x + g,bar1.y + g,bar1.w,bar1.h);
+		context.fillRect(bar2.x + g,bar2.y + g,bar2.w,bar2.h);
+		context.fillRect(bar3.x + g,bar3.y + g,bar3.w,bar3.h);
+		context.fillRect(bar4.x + g,bar4.y + g,bar4.w,bar4.h);
+		context.font = "30px Arial";
+		context.fillText(score1,90 + g,50 + g);
+		
+		for (var i = bar1.y+20; i<bar1.y + 40; i=i+5) {
+			//drawCintilla(i, bar1.x +10, bar1.x, i+6,"#FFEE11");
+			drawCintilla2(bar1.x, i,bar1.x + 10, i+6,"#FFEE11");
+		}
+		for (var i = bar2.y+20; i<bar2.y + 40; i=i+5) {
+			drawCintilla2(bar2.x, i,bar2.x + 10, i+6,"#FFEE11");
+		}		
+		for (var i = bar3.x+20; i<bar3.x + 40; i=i+5) {
+			drawCintilla(i, bar3.y +10 ,i+6, bar3.y,"#FFEE11");
+		}
+		for (var i = bar4.x+20; i<bar4.x + 40; i=i+5) {
+			drawCintilla(i, bar4.y +10 ,i+6, bar4.y,"#FFEE11");
+		}
+		
+		context.fillStyle = color;
+		context.font = "10px Arial";
+		
+		context.fillText(alphabet[controls[0]],bar1.x+2,bar1.y+bar1.h/2);
+		context.fillText(alphabet[controls[1]],bar2.x+2,bar2.y+bar2.h/2);
+		context.fillText(alphabet[controls[2]],bar3.x+bar3.w/2,bar3.y+10);
+		context.fillText(alphabet[controls[3]],bar4.x+bar4.w/2,bar4.y+10);
+	} else
+	
+	if (status == "tryagain"){
+		timer+=d;
+		context.fillStyle = "#101010";
+		context.fillRect(0,0,limit.c,limit.d);
+		for (i = 0; i < 100; i++){
+			var r1 = Math.random()*500;
+			var r2 = Math.random()*350;
+			var s = Math.random()*2;
+			drawCircle(r1,r2,s,0,2,"#FFFFFF");
+		}
+		var px = 235;
+		var py = 100+timer/5;
+		
+		context.fillStyle = "#DDDDDD";
+		context.fillRect(px+5,py,30,20);
+		context.fillStyle = "#BBBBBB";
+		context.fillRect(px,py+2,5,16);
+		
+		drawTriangle(px+35,py,px+45,py+10,px+35,py+20,"#FF2222");
+		drawCircle(px+28,py+7,6,0,2,"#AAAAFF");
+		
+		drawTriangle(px,py+2+(timer/10),px-10,py+4+(timer/10),px,py+8+(timer/10),"#FF2222");
+		drawTriangle(px,py+10-(timer/10),px-10,py+12-(timer/10),px,py+16-(timer/10),"#FFFF22");
+		drawTriangle(px,py+5,px-13+(timer/15),py+9,px,py+13,"#FFCC22");
+
+		if (timer>79) d=-1;
+		if (timer<1)  d= 1;
+		
+		context.fillStyle = "#FFFFFF";
+		context.font = "20px Consolas";
+		context.fillText("You escaped from the nuclear explosion on",10,260);
+		context.fillText("time, but you can escape from your fate.",10,280);
+		context.fillText("Soon you'll arrive to another dimension.",10,320);
+		context.font = "16px Consolas";
+		context.fillText("Press space",200,340);
+		
+		context.font = "20px Arial";
+		
+		context.fillText("Score: "+score1,400,20);
+	}
+}
+
+function drawAlert(){
+	var gradient=context.createLinearGradient(-100,0,400,0);
+	gradient.addColorStop("0","red");
+	gradient.addColorStop("1","transparent");
+	context.fillStyle = gradient;
+	context.fillRect(-500,0,1000,limit.d);
+	gradient=context.createLinearGradient(600,0,100,0);
+	gradient.addColorStop("0","red");
+	gradient.addColorStop("1","transparent");
+	context.fillStyle = gradient;
+	context.fillRect(0,0,500,limit.d);
+}
+
+function drawCircle(x,y,s,a,b,color,f){
+	context.beginPath();
+	context.arc(x,y,s,a*Math.PI,b*Math.PI);
+	if (f!=0){
+		context.fillStyle = color;
+		context.fill();
+	} else{
+		context.strokeStyle = color;
+		context.stroke();
+	}
+}
+
+function drawCintilla(x,y,xf,yf,color){
+	for (var i = 0; i< 40; i++){
+		context.beginPath();
+		context.strokeStyle = color;
+		context.moveTo(x+i, y);
+		context.lineTo(xf+i, yf);
+		context.stroke();
+	}
+}
+function drawCintilla2(x,y,xf,yf,color){
+	for (var i = 0; i< 40; i++){
+		context.beginPath();
+		context.strokeStyle = color;
+		context.moveTo(x, y+ i);
+		context.lineTo(xf, yf+i);
+		context.stroke();
+	}
+}
+		
+document.body.onkeydown = function (e){
+	var k = e.keyCode;
+	e.preventDefault();
+	if (status == "init"){
+		if (k==32) status = "game"; //a.
+	} else
+	
+	if (status == "game"){
+		if (k==keyCodes[controls[0]]) bar1.m = calc(ball.x,ball.y,ball.z,ball.t,490,350);
+		if (k==keyCodes[controls[1]]) bar2.m = calc(ball.x,ball.y,ball.z,ball.t,490,350);
+		if (k==keyCodes[controls[2]]) bar3.m = calc(ball.y,ball.x,ball.t,ball.z,340,500);
+		if (k==keyCodes[controls[3]]) bar4.m = calc(ball.y,ball.x,ball.t,ball.z,340,500);
+	}else
+	
+	if (status == "tryagain"){
+		if (k==32) {
+			earth++;
+			localStorage.setItem("earth",earth);
+			status = "init";
+		}//a.
+	}
+};
+
+
+function move(bar, dir){
+	bar1.y+=bar1.d*5;
+	bar2.y+=bar2.d*5;
+	bar3.x+=bar3.d*5;
+	bar4.x+=bar4.d*5;
+	
+	if (dir>1){
+		if (bar.y + (3*bar.h/8) < bar.m && bar.m < bar.y + (5*bar.h/8)) {
+			bar.d = 0;
+		} else if (bar.m < bar.y + (3*bar.h/8)) bar.d = -1; else bar.d = 1;
+	} else {
+		if (bar.x + (3*bar.w/8) < bar.m && bar.m < bar.x + (5*bar.w/8)) {
+			bar.d = 0;
+		} else if (bar.m < bar.x + (3*bar.w/8)) bar.d = -1; else bar.d = 1;	
+	}
+}
+
+function calc (posx,posy,dx,dy,ancho,l){
+	var m = (dy)/dx;
+	
+	if (dx<0) {
+		y = posy - m*posx; 
+	} else {
+		y = (ancho - posx)*m + posy;
+	}
+	if (y > l-50 ) y = l-50;
+	if (y < 50) y = 50;
+	return y;
+}
+
+function drawTriangle (x1,y1,x2,y2,x3,y3, color){
+	context.beginPath();
+	context.moveTo(x1,y1);
+	context.lineTo(x2,y2);
+	context.lineTo(x3,y3);
+	context.lineTo(x1,y1);
+	context.fillStyle = color;
+	context.fill();
+}
+function col(v){
+	if (ball.x > v.x && ball.x < v.x + v.w && ball.y > v.y && ball.y < v.y + v.h) 
+	{ 
+		if (ball.y + ball.s> v.y + v.h || ball.y - ball.s < v.y) {ball.z = ball.z + v.d*4; ball.t = ball.t*(-1); v.d = 0;}
+		if (ball.x + ball.s> v.x + v.w || ball.x - ball.s < v.x) {ball.z = ball.z*(-1); ball.t = ball.t + v.d*4; v.d = 0;}
+		score1++;
+	}
+}
+</script>

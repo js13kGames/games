@@ -1,0 +1,116 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#game {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2px;
+}
+
+.row {
+  margin-top: 2px;
+  display: flex;
+}
+
+.left,
+.right {
+  width: 25%;
+}
+
+.middle {
+  width: 50%;
+  border: 1px solid black;
+}
+
+.tools {
+  display: block;
+  margin-top: 5px;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.hidden {
+  display: none;
+}
+
+#creatorModeInfo {
+  border: 1px solid black;
+  display: none;
+  padding: 0 10px;
+  color: #000;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+p {
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 17px;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+}
+
+h3 {
+  font-size: 14px;
+  text-align: center;
+}
+
+nav {
+  background-color: #fff;
+}
+
+nav ul {
+  border: 1px solid black;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+
+nav ul li {
+  display: inline-block;
+  background-color: #fff;
+}
+
+nav a {
+  display: block;
+  padding: 0 10px;
+  color: #000;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: #fff;
+  background-color: #000;
+}
+
+nav ul ul {
+  display: none;
+  position: absolute;
+  top: 20px;
+}
+
+nav ul li:hover > ul {
+  display: inherit;
+}
+
+nav ul ul li {
+  width: 170px;
+  float: none;
+  display: list-item;
+  position: relative;
+}

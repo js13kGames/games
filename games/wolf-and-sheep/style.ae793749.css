@@ -1,0 +1,1 @@
+div#message{position:fixed;display:flex;height:60px;justify-content:center;align-items:center;background:#fdfdfd;z-index:99;box-shadow:0 3px 5px rgba(90,90,90,.1);transition:transform .3s ease;transform:translateY(-100px);width:90vw;margin:0 5vw}#message.show{transform:translateY(0)}#message img{width:40px;height:40px;margin-right:20px}

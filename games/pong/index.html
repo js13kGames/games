@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Pong</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1" />
+    <link rel="stylesheet" href="pong.css" type="text/css" media="all" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="cookies.js"></script>
+  </head>
+  <body onload="openNameDialog()">
+    <h1>Pong</h1>
+    <p id="player1">Player1 <b>0</b><br><small>Last record: 0</small></p>
+    <p id="player2"><b>0</b> Player2<br><small>Last record: 0</small></p>
+    <div id="messageBox"></div>
+    <div id="gameArea"></div>
+    <div id="pad1"></div>
+    <div id="pad2"></div>
+    <div id="ball"></div>
+    <div id="dialog" style="display:none">
+      <h2 id="dialogTitle">Dialog Title</h2>
+      <b id="dialogBtClose" onclick="this.parentNode.style.display='none'">&times;</b>
+      <div id="dialogContent">Dialog content.</div>
+      <b id="dialogBtFunc">Button</b>
+    </div>
+    <script src="pong-cli.js"></script>
+  </body>
+</html>

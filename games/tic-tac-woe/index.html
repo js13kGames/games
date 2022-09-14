@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tic Tac Woe</title>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: "Lucida Console", "Courier New", monospace;
+		}
+
+		html,
+		body {
+			overflow: hidden;
+		}
+
+		#info {
+			position: absolute;
+			bottom: 10%;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			flex-direction: column;
+			row-gap: 16px;
+			background: rgba(11, 11, 11, 0.001);
+			z-index: 1;
+		}
+
+		#info2 {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: none;
+			align-items: center;
+			justify-content: flex-end;
+			flex-direction: column;
+			row-gap: 16px;
+			background: rgba(11, 11, 11, 0.001);
+			z-index: 1;
+		}
+
+	
+
+		h5 {
+			color: #111118;
+		}
+
+
+		.button {
+			border: none;
+			padding: 12px 32px;
+			text-align: center;
+			font-size: 16px;
+			transition-duration: 0.4s;
+			cursor: pointer;
+		}
+
+		.button2 {
+			background-color: white;
+			color: black;
+			border: 2px solid #111118;
+		}
+
+
+		.button2:hover {
+			background-color: #111118;
+			color: white;
+		}
+
+		.webgl {
+			position: fixed;
+			top: 0;
+			left: 0;
+			outline: none;
+		}
+
+
+		#left,
+		#right {
+			position: fixed;
+			display: none;
+			width: 5%;
+			height: 100%;
+			top: 0;
+			background-color: #6b6b6b;
+			z-index: 2;
+			cursor: pointer;
+		}
+
+		#left {
+			left: 0;
+		}
+
+		#right {
+			right: 0;
+		}
+
+		#left:hover,
+		#right:hover {
+			background-color: #848484;
+		}
+	</style>
+
+</head>
+
+
+<body>
+
+	<div id="info">
+
+		<button class="button button2">start</button>
+
+	</div>
+
+	<div id="info2">
+
+		<h5 class="landtext"> game by Shauna Lynch</a>
+		</h5>
+
+		<h5 class="landtext"><a href='https://www.lynchbyte.com/12_tictacwoe/license_tic_tac_woe'>license MIT and CC
+				BY-SA 4.0 </a>
+
+		</h5>
+
+		<br>
+
+	</div>
+
+	<div id="left"></div>
+
+	<div id="right"></div>
+
+	<canvas class="webgl"></canvas>
+
+	<script type="module" src="./js/script.js"></script>
+
+</body>
+
+</html>
+
+

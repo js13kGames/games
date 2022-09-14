@@ -1,0 +1,5 @@
+body {background: rgb(13, 13, 13);}
+#game_over{background-color: rgb(79, 79, 79);border: none;color: white;padding: 16px 32px;text-align: center;font-size: 16px;margin: 4px 2px;transition: 0.3s;display: inline-block;text-decoration: none;cursor: pointer;border-radius: 22px;z-index:2;position:absolute;left:350px;top:300px;visibility: hidden;}
+#btn_again {background-color: #f4511e;border: none;color: white;padding: 16px 32px;text-align: center;font-size: 16px;margin: 4px 2px;opacity: 0.6;transition: 0.3s;display: inline-block;text-decoration: none;cursor: pointer;border-radius: 15px;z-index:3; position:absolute;left:466px;top:430px;visibility: hidden;}
+#btn_again:hover {opacity: 1}
+canvas {border: 1px solid white;}

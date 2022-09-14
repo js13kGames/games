@@ -1,0 +1,20 @@
+body{
+    background-color:#151515;
+    color:white;
+    font-family: 'Lato', sans-serif;
+    letter-spacing:4px;
+}
+h1{
+    font-weight:normal;
+}
+#container{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}

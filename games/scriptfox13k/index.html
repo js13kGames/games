@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ScriptFox13k</title>
+    <style>
+      body {
+        background-color: rgb(34, 34, 34);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        height: 98vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+      #container {
+        position: relative;
+        width: 640px;
+        height: 480px;
+      }
+      #container canvas,
+      #overlay {
+        position: absolute;
+      }
+      #overlay {
+        width: 640px;
+        height: 480px;
+        background-color: black;
+        display: flex;
+      }
+      #instructions {
+        margin: auto;
+      }
+      #playerHealth {
+        position: relative;
+        top: 480px;
+        background-color: greenyellow;
+        width: 100%;
+        height: 10px;
+        border-radius: 3px;
+      }
+      #playerScore {
+        position: relative;
+        top: 500px;
+        color: white;
+        width: 100%;
+        height: 10px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <canvas id="canvas"></canvas>
+      <div id="overlay">
+        <span id="instructions">
+          <h1 style="color: gold">ScriptFox13k</h1>
+          <p>WASD Move</p>
+          <p>QE Rotate</p>
+          <p>Spacebar Fire</p>
+          <p style="color: greenyellow">Press P to Begin/Pause</p>
+        </span>
+      </div>
+      <div id="playerHealth"></div>
+      <div id="playerScore">Score: 0</div>
+    </div>
+    <script src="./bundle.js"></script>
+  </body>
+</html>

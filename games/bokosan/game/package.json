@@ -1,0 +1,7 @@
+{
+  "name": "bokosan",
+  "description": "Bokosan",
+  "author": "Gabor Heja (gheja), Zsolt Heja",
+  "homepage": "http://www.bokosan.net/",
+  "main": "server.js"
+}

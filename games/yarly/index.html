@@ -1,0 +1,429 @@
+<meta name="viewport" content="width=800" />
+<title>YARLY!</title>
+<div class="game">
+<div class="bowl"></div>
+<p class="roll">ROLL</p>
+<table class="card">
+<tr><td>Aces<td>
+<tr><td>Twos<td>
+<tr><td>Threes<td>
+<tr><td>Fours<td>
+<tr><td>Fives<td>
+<tr><td>Sixes<td>
+<tr><td>BONUS<td>
+<tr><td>3 of a kind<td>
+<tr><td>4 of a kind<td>
+<tr><td>Full House<td>
+<tr><td>Small Straight<td>
+<tr><td>Large Straight<td>
+<tr><td>Chance<td>
+<tr><td>YARLY!<td>
+<tr><td>TOTAL<td>
+</table>
+</div>
+<div id="inst">
+  <h1>How to play YARLY!</h1>
+  <ol><li>Roll the dice.
+  <li>Pick the dice you want to score with.
+  <li>When you&#39;ve picked 5 dice, pick a score. If you can&#39;t score, pick a row to put 0 in.
+  <li>Score as much as you can!
+</div>
+<style>
+body {
+font-family:sans-serif;
+background-size: 90px 90px;
+background-color: #111;
+background-image: -webkit-linear-gradient(45deg, #222 25%, transparent 25%, transparent), -webkit-linear-gradient(-45deg, #222 25%, transparent 25%, transparent), -webkit-linear-gradient(45deg, transparent 75%, #222 75%), -webkit-linear-gradient(-45deg, transparent 75%, #222 75%);
+}
+.big {
+-webkit-transform: scale(1.06);
+}
+#inst {
+  width: 800px;
+  margin:auto;
+  padding: 0 10px;
+  box-sizing:border-box;
+  color:#eeb;
+}
+p{margin:0;}
+::selection { background: transparent; }
+.card {
+right:10px;
+top:10px;
+position:absolute;
+width:235px;
+color:#353331;
+}
+td {
+padding:1px 4px;
+margin:1px;
+background: #CCBFA9;
+min-width:80px;
+-webkit-transition: all .2s ease-in-out;
+}
+.open {
+background:#84CC77;
+cursor:pointer;
+}
+.done {
+background:#EBDBC1;
+}
+.game {
+font-weight:bold;
+position:relative;
+width: 800px;
+height: 526px;
+margin: auto;
+background:#FFEAC7;
+overflow:hidden;
+box-shadow:inset 0 0 160px rgba(12,33,2,0.3), 0 0 20px;
+border-radius: 5px;
+}
+.bowl {
+top: 20px;
+margin:0 85px;
+position:relative;
+width:460px;
+height:460px;
+border-radius: 250px;
+background:#C20000;
+background-image:-webkit-radial-gradient(center center, farthest-side circle, #D10000 0%, #A80000 91%, #CB0000 95%, #A80000 100%); 
+box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.4);
+-webkit-transform-origin:50%;
+}
+.roll {
+position:absolute;
+right: 30px;
+bottom:10px;
+cursor:pointer;
+color:#684F16;
+padding:24px 0px;
+text-shadow: 0px 0px 7px #FFBF00;
+font-size:26px;
+width:100px;
+height:110px;
+box-sizing:border-box;
+text-align:center;
+box-shadow:inset 0px 2px 10px rgba(255, 255, 255, 0.4), inset -1px -6px 19px, 2px 5px 20px rgba(0, 0, 0, 0.4);
+-webkit-transform:perspective(100px) rotate3D(-22,0,0,20deg);
+border-radius:8px;
+background-image: -webkit-linear-gradient(left, #634F20 0%, #FFBF00 40%, #5C491F 100%);
+z-index:2;
+}
+.tra {
+-webkit-transition: all 0.3s ease-in-out;
+}
+.roll:hover {
+-webkit-transform:perspective(100px) rotate3D(-23,0,-2,20deg);
+}
+.rolla, .rolla:hover {
+-webkit-transform:perspective(100px) rotate3D(-151,0,-380,50deg);
+}
+@-webkit-keyframes rollb {
+0%{bottom:10px;}
+100%{bottom:30px;}
+}
+.rollb, .rollb:hover {
+-webkit-animation: rollb 0.2s ease 6 alternate;
+}
+.die {
+top:380px;
+left:600px;
+position:absolute;
+margin:10px;
+padding:0;
+width:45px;
+height:45px;
+background:#F2ECE6;
+box-shadow: 1px 1px 15px rgba(0,0,0,0.4), inset 0px 0px 6px rgba(171, 154, 115, 0.4);
+border-radius: 6px;
+-webkit-transform-origin:50%;
+-webkit-transition-property: all;
+-webkit-transition-duration: 0.5s;
+-webkit-transition-timing-function:ease-in-out;
+z-index:1;
+}
+.die:hover {
+-webkit-transition: all .2s ease-in-out;
+}
+.click{
+cursor:pointer;
+}
+.die ul {
+margin:0;
+padding:0;
+list-style-type:none;
+position:relative;
+padding:30px;;
+margin:19px;
+-webkit-margin-before:0;
+}
+.die li {
+display:block;
+position:absolute;
+background: #333;
+display:block;
+width:8px;
+height:8px;
+border-radius:5px;
+background-image: -webkit-radial-gradient(50% 50%, circle closest-side, #AAA, #222 45%,#333 100%);
+box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
+}
+.n2 li, .n3 li {
+left:-12px;
+}
+.n6 li, .n5 li, .n4 li {
+left:10px;
+}
+.n2 li:nth-child(2), .n3 li:nth-child(2) {
+left: 10px;
+top: 30px;
+}
+.n6 li:nth-child(2n+1), .n5 li:nth-child(2n+1), .n4 li:nth-child(2n+1) {
+left:-12px;
+}
+.n6 li:nth-child(3), .n6 li:nth-child(4) {
+top: 19px;
+}
+.n6 li:nth-child(5), .n6 li:nth-child(6) {
+top: 7px;
+}
+.n2 li, .n3 li, .n5 li:nth-child(3), .n4 li:nth-child(3), .n5 li:nth-child(4), .n4 li:nth-child(4) {
+top: 8px;
+}
+.n1 li, .n3 li:nth-child(3), .n5 li:nth-child(5) {
+left:-1px;
+top:19px;
+}
+.die li {
+opacity:0;
+}
+.n1 li:nth-child(-n+1) {
+opacity:1;
+}
+.n2 li:nth-child(-n+2) {
+opacity:1;
+}
+.n3 li:nth-child(-n+3) {
+opacity:1;
+}
+.n4 li:nth-child(-n+4) {
+opacity:1;
+}
+.n5 li:nth-child(-n+5) {
+opacity:1;
+}
+.n6 li:nth-child(-n+6) {
+opacity:1;
+}
+</style>
+
+<script>
+function cd(){
+  return document.createElement("div");
+}
+function $(t){
+  var l = document.getElementsByClassName(t);
+  var a=[];
+  for (var i=0;i<l.length;i++){
+    a.push(l[i]);
+  }
+  return a;
+}
+function r(a){
+return Math.floor(Math.random()*a);
+}
+function o(e){
+e.style.webkitTransform = "rotate("+r(180)+"deg)";
+}
+function die(n){
+    var x=cd();
+    x.classList.add('die');
+    x.classList.add('n'+n);
+    x.n=n;
+    x.innerHTML = "<ul><li><li><li><li><li><li>";
+    return x;
+}
+var k=[];
+var b=$('bowl')[0];
+var rc = $('roll')[0];
+for (var i=0;i<5;i++){
+    var a=die(r(6)+1);
+    a.addEventListener('click',function(){pick(this)},true);
+    b.appendChild(a);
+}
+var d=$('die');
+var trs = document.getElementsByTagName('tr');
+var fin =trs[14].children[1]
+var rlng=0;
+var rlc=0;
+function roll(){
+  if(k.length===5 || rlng==1 || rlc>2) return;
+  if(fin.innerText!=""){
+    for(var i=0;i<15;i++){
+      trs[i].children[0].className="";
+      trs[i].children[1].innerText="";
+    }
+  }
+  rlng=1;
+  var q=0;
+  if (rlc>0) {
+    rc.classList.add('rolla');
+    q=400;
+  }
+  rc.classList.add('tra');
+  rlc++;
+  for (var i=0;i<d.length;i++){
+    d[i].style.left=600+"px";
+    d[i].style.top=380+"px";
+    d[i].classList.remove('click');
+  }
+  setTimeout(function(){
+    rc.classList.remove('rolla');
+  setTimeout(function(){
+    rc.classList.add('rollb');
+    setTimeout(function(){
+      rc.classList.remove('rollb');
+      rc.classList.add('rolla');
+      for (var i=0;i<d.length;i++){
+        var n=r(6)+1;
+        d[i].style.left=r(250)+70+"px";
+        d[i].style.top=(i*65)+r(6)+77+"px";
+        d[i].className = "click die n"+n;
+        d[i].n=n;
+        o(d[i]);
+      }
+        rc.innerText="ROLL\n"+rlc+"/3";
+      setTimeout(function(){
+        rc.classList.remove('rolla');
+        rlng=0;
+      },400);
+      },400);
+    },q*2);
+  },q);
+  }
+var st=0,sb=0,sc=0,sx=0;
+function score(n){
+  if(k.length<5) return;
+  if(!trs[n-1].children[0].classList.contains('open')) return;
+  var s=0;
+  rlc=0;
+  rc.innerText="ROLL";
+  if(n<7){
+    for(var i=0;i<k.length;i++){
+      if(n===k[i].n) s+=n;
+    }
+    st+=s;
+  }
+  if((n<10&&n>6)||n==13||n==9){
+    for(var i=0;i<k.length;i++){
+     s+=k[i].n;
+    }
+  }
+  if(n===10)s=25;
+  if(n===11)s=30;
+  if(n===12)s=40;
+  if(n===14)s=50;
+  if(sx==1)s=0;
+  trs[n-1].children[1].innerText = s;
+  trs[n-1].children[0].className= "done";
+  sc++;
+  sb+=s;
+  if(st>62){
+    trs[6].children[1].innerText = 35;
+    sb+=35;
+  }
+  for (var i=0;i<trs.length;i++){
+    trs[i].children[0].classList.remove('open');
+  }
+  if(sc===13) {
+    fin.innerText = sb;
+    fin.classList.add('big');
+    setTimeout(function(){
+      fin.classList.remove('big');
+    },400);
+    }
+  rc.classList.add('rolla');
+  for(var i=0;i<5;i++){
+    d.push(k[i]);
+  }
+  setTimeout(function(){
+    for (var i=0;i<5;i++){
+      d[i].style.left=600+"px";
+      d[i].style.top=380+"px";
+      d[i].classList.remove('click');
+      k.splice(0,1);
+    }
+    setTimeout(function(){
+      rc.classList.remove('rolla');
+
+    },400);
+  },400);
+}
+function trx(){
+for(var i=0;i<trs.length;i++){
+trs[n].children[1].innerText="";
+trs[n].children[0].className="";
+}
+}
+function open(n){
+  var tc = trs[n].children[0];
+  if(!tc.classList.contains('done')&&!tc.classList.contains('open')){
+    trs[n].addEventListener('click',function(){score(n+1)});
+    tc.classList.add('open');
+    tc.classList.add('big');
+    setTimeout(function(){
+      tc.classList.remove('big');
+    },400);
+  }
+}
+function pick(t){
+  if(d.indexOf(t) == -1 || k.length>4 
+  || !t.classList.contains('click')) return;
+  k.push(t);
+  d.splice(d.indexOf(t),1);
+  t.style.left = "-75px";
+  t.style.top = k.length*64+"px";
+  t.style.webkitTransform = "rotate(0deg)";
+  t.classList.remove('click');
+  var l=[1,1,1,1,1,1];
+  k.sort(function(a,b){return a.n-b.n});
+  for(var i=0;i<k.length;i++){
+    var n=k[i].n-1;
+    var tr=trs[n];
+    if(tr.children[1].innerText=="") open(n);
+    l[n]+=1; 
+  }
+  var h=0,p=0,p2=0,p3=0;
+  for(var i=0;i<6;i++){
+    if(l[i]>h) h=l[i];
+    if(l[i]==6) open(13);
+    if(l[i]>4) open(8);
+    if(l[i]>3) open(7);
+    if(l[i] < 2 || l[i] > 3) p=0;
+    if(l[i]===2 || l[i]===3) p++;
+    if(l[i]===3) p2++;
+    if(l[i]===4) p3++;
+    if(p===4) open(10);
+    if(p===5) open(11);
+  }
+  open(12);
+  if(k.length===5&&h===4&&p2===1&&p2===1) open(9);
+  sx=0;
+  if(k.length==5){
+    var c = 0; 
+    for(var i=0;i<14;i++){
+      if(i==6) continue;
+      if(trs[i].children[0].classList.contains('open')) c++;
+    }
+    if(c==0){
+      sx=1;
+      for(var i=0;i<14;i++){
+        if(i==6) continue;
+        open(i);
+      }
+    }
+  }
+}
+rc.addEventListener('click',roll,true);
+</script>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Simulacrum</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+ 	</head>
+	<body>
+        <div class="wrapper" align="center">
+            <h1 id="title" align="center">Simulacrum</span></h1>
+            <div id="instructions">
+            <h2>Your Mission</h2>
+            Your best friend [bffname] the snail has disappeared from your garden patch! You searched far and wide, but it is nowhere to be found.</p>
+            <p>Unable to get over the loss of your friend, you decide to take matters into your own hands by <strong>breeding a snail with the same traits as [bffname]!</strong></p>
+            <p>You have until the end of summer, 15 days, to produce your best effort.</p>
+            <p>It should be simple, right?! There aren't that many genes.</p>
+            <p>Click on a snail to select it. Pay attention to the bolded <strong>dominant</strong> alleles in each snail's gene chart to try to breed for your desired traits. Remember: the dominant allele determines the trait!</p>
+            <p>
+                <button type="button" onclick="main()">Restart</button>
+                <button type="button" onclick="SnailUtil.shuffleSnails()">Shuffle Snail Roster</button>
+                <button type="button" onclick="incrementDay()">Sleep</button>
+            </p>
+            </div>
+            <canvas id="gameCanvas" width="900", height="600" align="center"></canvas>
+            <div id="breedingPreview"></div>
+            <div id="results"><button id="resultBtn" type="button" onclick="main(true)">Keep living...</button></div>
+            <div id="snailDetails">
+                <h2 id="selectedSnailName">[snailname]</h2>
+                <br /><a href="javascript:void(0)" onclick="InputHandler.renameSelectedSnail();">Rename</a>
+                <div id="selectedSnailDetails" align="left"></div>
+                <div id="selectedSnailGenes" align="left"></div>
+                <div id="breedSnailSection"><h3>Breed Snail</h3>
+                    <form id ="breedSnailForm" onsubmit="return SnailUtil.tryBreedSnails(this);">
+                        <select id="breedSnailSelect" name="mates">
+                            <option value="None">None</option>
+                        </select>
+                        <input type="submit">
+                        <button type="button" onclick="SnailUtil.previewBreeding()">Preview</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+	</body>
+</html>

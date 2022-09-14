@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #dc3d3d;
+        }
+        
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        canvas#canvasGuy,
+        canvas#canvasGlitch {
+            image-rendering: pixelated;
+        }
+        
+        span#points {
+            display: block;
+            font-family: sans-serif;
+            color: rgba(0, 0, 0, 0.4);
+            font-size: 15rem;
+            letter-spacing: -3rem;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            line-height: 10rem;
+        }
+        
+        span#healthspan {
+            font-family: sans-serif;
+            color: rgba(0, 0, 0, 0.4);
+            letter-spacing: -0.25rem;
+            font-weight: bold;
+            position: absolute;
+            font-size: 2rem;
+            top: 20px;
+            left: 50%;
+        }
+        
+        div#instructions {
+            position: absolute;
+            bottom: 10%;
+            padding: 20px;
+            font-family: sans-serif;
+            opacity: 0.6;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div> <span id="points" style="z-index:0;display:none">0</span> </div>
+    <div id="instructions">Your face has been sliced off in a horrific memory leak... retrieve it using the power of glitches!</div> <canvas id="canvasGuy" style="z-index:3"></canvas> <canvas id="canvasGlitch" style="z-index:2"></canvas> <canvas id="canvasPointer" style="z-index:1"></canvas> <canvas id="canvasBackground" style="z-index:-1"></canvas>
+    <script src="jsfxr.js"></script>
+    <script src="player-small.js"></script>
+    <script src="music.js"></script>
+    <script src="game.min.js"></script>	
+</body>
+
+</html>

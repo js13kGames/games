@@ -1,0 +1,740 @@
+<html><head><style>*{margin:0;padding:0;}html,body,canvas{display:block;width:100%;height:100%;overflow:hidden;position:relative;}canvas{background: #000;object-fit:contain;}article{color:#eee;position:fixed;top:0;left:0;right:0}</style>
+</head><body><canvas id="cv" width="320" height="200"></canvas><article><b>Feb13th: Death's Day Off (incomplete)<br><b>(Arrows)</b> - Move <b>(s)</b> - Scythe <b>(d)</b> - add a dude <b>(w)</b> - add multiple dudes <b>(r)</b> - clear dudes <b>(Esc)</b> - reset <b>(p)</b> - toggle loss state</article>
+<script>
+// Starting over from my first few hours of doing this weeks ago, I thought I'd
+// switch to having sprites from a sheet, and rectangle math, but now I'm doing
+// it in circles again anyway, and skimping on the graphics (which is probably
+// gonna cost me) not because of size, but because I procrastinated like crazy.
+// In typing this, I still am. Wow.
+// Since I'm missing that and music/sound, I guess I'd better make sure the
+// basics are down, well.
+// Dang, Five. You're micro-optimizing for no reason.  That's not good.
+// additional weapon thoughts
+// [] - cigarettes - grab them and blow smoke clouds for a period of time to kill dudes
+//       %chance to throw to dude who would briefly wander and smoke cloud before dying
+// [] - scythe frenzy - time duration weapon, twice the scythes twice the speed, running until spent
+// [] - air strike - I mean, it's an air strike, isn't it?
+DBG_OFF=0
+DBG_SEEK=1
+DBG_NINRANGE=2
+DBG_DUDEFOV=4
+DBG_FACING=8
+DBG_NEXT=16
+DEBUG=DBG_OFF
+
+// settings
+// sizes
+SZ_BOD = 8
+SZ_WEAPON_INSET = .1*SZ_BOD
+SZ_GAP = 4
+// times (seconds)
+T_LOVEHEART = 0.2
+T_WANDER_DIR = 0.400
+T_GHOST_WANDER = 0.8
+T_GHOST_LIVES = 2.7
+T_INITAL_WAVEDURATION=13
+T_WAVEDURATION=T_INITAL_WAVEDURATION
+// counts
+N_INITIAL_DUDEWAVE=13
+N_DUDEWAVE=N_INITIAL_DUDEWAVE
+N_EVILDRAIN=13
+// speeds
+SP_DUDE = 20
+SP_GHOST = .5*SP_DUDE
+SP_DEATH = 30
+SP_SCYTHE = 8
+SP_RPS = 0.5
+// colors
+C_DUDE='#b83'
+C_DEATH='#000'
+C_LOVE='red'
+C_MOUTH='#d8c'
+C_EYES='#6c9'
+C_STAVE='#540'
+C_BLADE='#bbb'
+C_SCREEN='#020'//'#6c9'// '#ffe'
+C_GHOST='rgba(255,255,239,%)'
+C_BONE='#eec'
+
+// constants
+SYM_HEART = String.fromCharCode(parseInt('02764', 16)); // '❤' '02665';
+context = cv.getContext('2d')
+const { height:H, width:W } = cv
+context.font
+B = { l: SZ_BOD+SZ_GAP, t: SZ_BOD+SZ_GAP, r: W-SZ_BOD-SZ_GAP, b: H-SZ_BOD-SZ_GAP }
+BM = { l:0-2*SZ_BOD, t:0-2*SZ_BOD, r:W+2*SZ_BOD, b:H+2*SZ_BOD}
+
+// alias
+M=Math
+PI=M.PI
+PI2=2*PI
+FPI=PI/4
+EPI=FPI/2
+abs = M.abs.bind(M)
+cos = M.cos.bind(M)
+sin = M.sin.bind(M)
+sqrt = M.sqrt.bind(M)
+pw2 = (n) => n*n
+fe = (w,f) => w.forEach(f)
+DEG=(rad)=>rad*180/PI;
+RAD=(deg)=>deg*PI/180;
+
+// geometry
+// facing is an angle -pi -> pi (0 = 0)
+nbetween = (x1,y1,x2,y2) => { // give the angle 
+   return M.atan2(y2-y1,x2-x1)
+}
+nbetween2 = (a,b) => nbetween(a.x,a.y,b.x,b.y)
+posnbetween = (a,b) => {
+   let n = nbetween2(a,b)
+   if (n < 0)  n = PI2 + n
+   return n
+}
+nnear0 = (n,hrng) => (n >= PI2-hrng)||(n<hrng)
+fitn = (n) => n < 0 ? PI2 + n : n%PI2
+ninrange = (n, ctr, rng) => {
+   let an = fitn(n)
+   let hr = rng/2
+   let lb = ctr - hr
+   let ub = ctr + hr
+   if (DEBUG & DBG_NINRANGE) {
+      console.dir({
+         ninrange: `${n} in ${ctr} +/- ${rng}`,
+         result: `${lb} <= ${an} <= ${ub} ??  ${lb <= an && an <= ub}`,
+         deg: {
+            ninrange: `${DEG(n)} in ${DEG(ctr)} +/- ${DEG(rng)}`,
+            result: `${DEG(lb)} <= ${DEG(an)} <= ${DEG(ub)} ??  ${lb <= an && an <= ub}`,
+         }
+      })
+   }
+   return lb <= an && an <= ub
+}
+toposneg = (n) => (n  <= PI) ? n : (0 - (PI - (n-PI)))
+distbetween = (x1,y1,x2,y2) => M.round(sqrt(pw2(x2-x1) + pw2(y2-y1)) * 100)/100
+pointincircle = (x1,y1,x2,y2,r) => {
+   return (distbetween(x1,y1,x2,y2) <= r)
+}
+circlecollision = (a,b) => pointincircle(a.x,a.y,b.x,b.y,a.r+b.r)
+
+// general draw
+drawheart = (x,y) => {
+   let dc = context;
+   let {fillStyle:oldfs} = dc
+   dc.fillStyle = C_LOVE
+   let txt=SYM_HEART
+   let mtx=dc.measureText(txt)
+   dc.beginPath()
+   x-=(mtx.width/2)
+   y+=(mtx.actualBoundingBoxAscent/2)
+   dc.moveTo(x,y)
+   dc.fillText(txt,x,y)
+   dc.fillStyle = oldfs
+}
+drawhud = () => {
+   // death's evil %, maybe kill count, survived duration
+   let dc=context
+   let ofont=dc.font
+   dc.font='8px Arial'
+   let msg=(death&&death.evil>0)?`EVIL%:${(M.floor(death?death.evil:0)*100)/100}`:'Press Escape to Restart'
+   //let mtx=dc.measureText(msg)
+   dc.fillStyle=C_BLADE
+   //dc.fillText(msg,2,H-(2+mtx.actualBoundingBoxAscent))
+   dc.fillText(msg,2,H-2)
+   dc.font=ofont
+}
+
+// game functions
+killat=(x,y)=>{
+   fe(dudes,(d, idx, arr)=>{
+      if (d.type==='dude' && pointincircle(x,y,d.x,d.y,d.r)) {
+         arr.splice(idx,1,...[new Ghost(d)])
+      }
+   })
+}
+cull=[]
+markForRemoval=(dude)=>{cull.push(dude)}
+cullDudes=()=>{
+   while(cull.length){
+      let idx= dudes.indexOf(cull.pop())
+      if (idx >= 0) dudes.splice(idx,1)
+   }
+}
+
+// classes
+// [] optimization idea = make a sprite images at start, use & rotate them at the time
+//    save cycles on drawing them by using drawImage
+class Located {
+   constructor(x,y) { this.x=x; this.y=y; }
+}
+
+class Circle extends Located {
+   constructor(x,y,r) {
+      super(x,y)
+      this.r=r
+   }
+   draw(dc,ss) {
+      dc.beginPath()
+      if (ss) dc.strokeStyle = ss
+      dc.arc(this.x,this.y,this.r,0,PI2)
+      dc.stroke()
+   }
+}
+
+class Dude extends Circle {
+   constructor(x,y,facing=0,sp=SP_DUDE,ss=C_DUDE) {
+      super(x,y,SZ_BOD)
+      this.evil=0 // lazy!
+      this.ss = ss
+      this.sp = M.abs(sp)
+      this.facing=facing
+      this.type='dude'
+      this.wander_duration=T_WANDER_DIR/2+M.random()*T_WANDER_DIR
+   }
+   get loving() {
+      return circlecollision(this,death)&&(ninrange(posnbetween(this,death),this.facing,FPI))
+   }
+   attack(){}
+   love(dt,m){ this.loving && death && this !== death && death.love(dt,m) }
+   fitBoundary(b){
+      this.x = M.max(this.x, b.l)
+      this.x = M.min(this.x, b.r)
+      this.y = M.max(this.y, b.t)
+      this.y = M.min(this.y, b.b)
+   }
+   move(l) {
+      this.x+=l*cos(this.facing)
+      this.y+=l*sin(this.facing)
+   }
+   seek(dt,m) {
+      if (this === death) return
+      if (DEBUG & DBG_SEEK) {
+         console.clear()
+      }
+      let d = death
+      let { facing:f, x, y, r, sp } = this
+      sp *= dt
+      let ngrota = PI2*SP_RPS*dt
+      f = fitn(f)
+      let ntod = posnbetween(this,death)
+      let dinrng = ninrange(ntod, f, FPI/2)
+      if (DEBUG & DBG_SEEK) {
+         console.dir({
+            d,
+            f,
+            ntod,
+            dinrng,
+            deg: {
+               f: DEG(f),
+               ntod: DEG(ntod),
+            },
+         })
+      }
+      if (dinrng) {
+         if (!circlecollision(this,death)) {
+            let l = distbetween(x,y,d.x,d.y)
+            l = l >= d.r+r+sp ? sp : l-(d.r+r)
+            this.move(l)
+         } else { this.love(dt,m) }
+      } else {
+         let hstep = sp/2
+         // take a half step
+         this.move(hstep)
+         // determine which direction to go
+         // this stuff works when sufficiently far from 0 (multiples of 2pi)
+         let edlts = [
+            (abs(f-PI2-ntod)),
+            (abs(f-ntod)),
+            (abs(f+PI2-ntod))
+         ]
+         fe(edlts,(edlt)=>{
+            if (edlt < ngrota) { ngrota = edlt }
+         })
+         let bounds = [(0-ngrota-PI2), (0-ngrota), (0-ngrota), (ngrota - PI2), 0, ngrota, (ngrota + PI2)]
+         let dlt = PI2*10
+         let i=-1
+         fe(bounds, (boun, idx) => {
+            let cdlt = abs((f+boun) - ntod)
+            if (cdlt < dlt) {
+               dlt = cdlt
+               i=idx
+            }
+         })
+         f=this.facing=fitn(f+bounds[i])
+      }
+      // arms sit in front of facing, little ways out
+      // so we'll try to go toward death only if we're not touching
+      // and facing death if we're not +/- facing death, we're gonna 
+      // go half-speed and as far in the direction we can rotate as 
+      // possible
+      // 1 determine angle from dude to death
+      // 2 if within field of view, move (full if necessary) toward him
+      // in the direction & angle of death, face him
+      // 3 if not in field of view, move half speed in current direction
+      //    and turn as much as possible
+   }
+   wander(dt,duration) {
+
+      this.lastWander = this.lastWander || 0;
+      if (this.lastWander<dt) {
+         this.lastWander = duration||this.wander_duration
+         this.facing = M.random()*PI2
+      }
+      this.lastWander-=dt
+      this.move(this.sp*dt)
+      this.fitBoundary(BM)
+   }
+   dbgfov(dc){
+      if (DEBUG & DBG_DUDEFOV) {
+         const FOV=20*r;
+         dc.strokeStyle='#0f0'
+         dc.beginPath()
+         dc.moveTo(x,y)
+         dc.lineTo(x+(FOV*cos(f-EPI)), y+(FOV*sin(f-EPI)))
+         dc.lineTo(x+(FOV*cos(f+EPI)), y+(FOV*sin(f+EPI)))
+         dc.lineTo(x,y)
+         dc.stroke()
+      }
+   }
+   dbgfacing(dc){
+      if (DEBUG & DBG_FACING) {
+         dc.beginPath()
+         dc.moveTo(x,y)
+         dc.lineTo(x+r*cos(f), y+r*sin(f))
+         dc.stroke()
+      }
+   }
+   draw(dt) { // will we use a time delta, here? maybe not
+      let { r, type, facing: f, x, y} = this
+      let dc=context
+      this.dbgfov(dc)
+      super.draw(dc,this.ss)
+      this.dbgfacing(dc)
+      switch(type) {
+         case 'dude':
+         case 'angel':
+            let smwid = 3*PI/4
+            dc.beginPath()
+            dc.strokeStyle=C_MOUTH
+            dc.arc(x,y,.6*r,f-smwid/2,f+smwid/2)
+            dc.stroke()
+            dc.fillStyle=C_EYES
+            dc.beginPath()
+            fe([(f-FPI),(f+FPI)],(ng)=>{
+               dc.arc(x-(r/2)*cos(ng),y-(r/2)*sin(ng),1.33,0,PI2)
+            })
+            dc.fill()
+         default:break;
+      }
+      // draw a face -- todo
+      // draw hugging arms -- todo
+      this.drawloving(dt)
+   }
+   drawloving(dt) {
+      if (this.loving) {
+         this.howmuchlove = (this.howmuchlove || 0)
+         this.howmuchlove -= dt;
+         if (this.howmuchlove <= 0) {
+            let lastlove = this.loveangle || ((this.facing - EPI) + M.random()*FPI)
+            this.loveangle = (PI/2) + lastlove + M.random()*PI;
+            this.howmuchlove = T_LOVEHEART
+         }
+         this.drawheart(this.loveangle)
+      }
+   }
+   drawheart(n) {
+      let { r, x, y } = this
+      r+=0.05
+     drawheart(x+(r*cos(n)), y+(r*sin(n)))
+   }
+   update(dt) { // in something with a little more time (ie: had I not procrastinated horribly) I'd handle time sync issues in seek, but not this time
+      death && death.type==='death' ? this.seek(dt) : this.wander(dt);
+   }
+}
+
+class Death extends Dude {
+   constructor() {
+      let {width:ww, height:hh } = cv
+      super(ww/2, hh/2, 2*FPI, SP_DEATH, C_DEATH)// 'rgba(255,255,255,0.4)')
+      this.type='death'
+      this.evil=100
+      this.weaps=[new Scythe(this)]
+   }
+   get loving() { return !1 }
+   get direction() {
+      const kst = keystate;
+      return `${kst.ArrowUp?'t':''}${kst.ArrowDown?'b':''}${kst.ArrowLeft?'l':''}${kst.ArrowRight?'r':''}`
+   }
+   love(dt, m){
+      this.evil-=(N_EVILDRAIN*dt)
+      if (this.evil <= 0) {
+         dbgdie(dt,m)
+      }
+   }
+   attack(){ this.weaps[0].use() }
+   draw(dt,m){
+      let dc=context
+      let {x,y,r,facing:f}=this
+      super.draw(dt)
+      dc.fillStyle=C_LOVE
+      dc.beginPath()
+      let r1=r/2
+      let n1=f+FPI+1.5*EPI
+      let n2=f-FPI-1.5*EPI
+      let sc=1.025
+      dc.arc(x-(r1)*cos(n1),y-(r1)*sin(n1),1.33,0,PI2)
+      dc.arc(x-(r1)*cos(n2),y-(r1)*sin(n2),1.33,0,PI2)
+      dc.fill()
+      dc.beginPath()
+      dc.moveTo(x+(r1+2)*cos(n1+FPI),y+(r1+2)*sin(n1+FPI))
+      dc.lineTo(x+(r1-3)*cos(n1+sc*FPI),y+(r1-3)*sin(n1+sc*FPI))
+      dc.stroke()
+      dc.beginPath()
+      dc.moveTo(x+(r1+2)*cos(n2-FPI),y+(r1+2)*sin(n2-FPI))
+      dc.lineTo(x+(r1-3)*cos(n2-sc*FPI),y+(r1-3)*sin(n2-sc*FPI))
+      dc.stroke()
+      sc=EPI;
+      let oo1,oo2,oo3
+      oo1=2
+      oo2=2
+      oo3=1.6
+      let ngs= [[f-2*sc, r-oo3],[f-sc, r-oo2], [f,r-oo1], [f+sc, r-oo2],[f+2*sc, r-oo3]]
+      fe(ngs,([ng,r1])=>{
+         dc.beginPath()
+            dc.moveTo(x+r*cos(ng),y+r*sin(ng))
+            dc.lineTo(x+r1*cos(ng),y+r1*sin(ng))
+         dc.stroke()
+      })
+
+      this.weaps[0].draw(dt)
+   }
+   update(dt,m){
+      // let frac = SP_RPS * dt
+      // this.facing += PI2 * frac
+      // this.facing %= PI2
+      this.weaps[0].update(dt,m)
+      // movement
+      let ds,dn
+      ds={r:0,br:1,b:2,bl:3,l:4,tl:5,t:6,tr:7,tbl:4,tbr:0,tlr:6,blr:2}
+      dn=ds[this.direction]
+      if (typeof dn==='number') {
+         dn*=FPI
+         this.facing=dn
+         let sp = dt*this.sp
+         this.x+=sp*cos(dn)
+         this.y+=sp*sin(dn)
+         // range correct
+         this.fitBoundary(B)
+      }
+   }
+}
+
+class Ghost extends Dude {
+   constructor(dude) {
+      super(dude.x,dude.y,0,SP_GHOST,C_GHOST.replace('%','.8'))
+      this.type='ghost'
+      this.timeLeft = .8*T_GHOST_LIVES
+   }
+   get loving(){return !1}
+   update(dt) {
+      this.facing=this.lastfacing||this.facing
+      this.wander(dt,T_GHOST_WANDER)
+      this.lastfacing=this.facing
+      this.facing=0
+      let perc = M.floor(this.timeLeft/T_GHOST_LIVES*1000)/1000
+      if (perc <= 0) perc = 0
+      this.ss = C_GHOST.replace('%',`${perc}`)
+      this.timeLeft-=dt
+      if (this.timeLeft<=0) {
+         markForRemoval(this)
+      }
+   }
+   draw(dt) {
+      super.draw(dt)
+      let drawx=(s,x,y)=>{
+         let dc=context;
+         dc.beginPath()
+         dc.moveTo(x-s/2,y-s/2)
+         dc.lineTo(x+s/2,y+s/2)
+         dc.stroke()
+         dc.moveTo(x+s/2,y-s/2)
+         dc.lineTo(x-s/2,y+s/2)
+         dc.stroke()
+      }
+      let dc=context
+      let { x,y,r } = this
+      dc.beginPath()
+      dc.moveTo(x-.8*r,y+1)
+      dc.lineTo(x+.8*r,y+1)
+      dc.stroke()
+      drawx(3,x-r/2,y-r/2)
+      drawx(3,x+r/2,y-r/2)
+   }
+}
+
+class Angel extends Dude {
+   constructor() {
+      super(death.x,death.y,0,SP_DEATH,C_BONE)
+      this.type='angel'
+   }
+   update(dt) {
+      this.facing=this.lastfacing||this.facing
+      this.wander(dt)
+      this.lastfacing=this.facing
+      this.facing=PI/2
+      // fit boundary
+      this.fitBoundary(B)
+   }
+   get loving() { return true; }
+   draw(dt) {
+      // draw wings first
+      let dc = context
+      dc.strokeStyle=C_GHOST.replace('%','1')
+      let {x,y,r} = this
+      //wings
+      dc.beginPath()
+      dc.arc(x+r*1.35,y+r*.35,.5*r,20*PI/16,PI2)
+      dc.lineTo(x+.8*r,y-.2*r)
+      dc.stroke()
+      dc.beginPath()
+      dc.arc(x-r*1.35,y+r*.35,.5*r,28*PI/16,PI,true)
+      dc.lineTo(x-.8*r,y-.2*r)
+      dc.stroke()
+      super.draw(dt)
+      dc.strokeStyle='#ff0'
+      dc.beginPath()
+      dc.ellipse(x,y-r-1,r*0.8,r*.13,0,0,PI2)
+      dc.stroke()
+      this.drawloving(dt)
+   }
+}
+
+class Weapon {
+   constructor(owner){
+      this.owner=owner
+      this._r=0
+   }
+   get x() { let {x,facing:f,r} = this.owner; return x+(r-SZ_WEAPON_INSET)*cos(fitn(f)+FPI+EPI) }
+   get y() { let {y,facing:f,r} = this.owner; return y+(r-SZ_WEAPON_INSET)*sin(fitn(f)+FPI+EPI) }
+   get r() { return this._r+this.owner.facing }
+   draw(dt){}
+   update(dt){}
+}
+
+class Scythe extends Weapon {
+   constructor(owner){
+      super(owner)
+      this.moving=!1
+      this._maxr=this._r=4*FPI//(5/4)*PI
+      this._minr=this._maxr-4.7*FPI
+      this.sp = SP_SCYTHE
+      this.returning=!1
+   }
+   get l() { return 1.7*this.owner.r }
+   get ex() { let {x,r,l}=this; return x+(l)*cos(r) }
+   get ey() { let {y,r,l}=this; return y+(l)*sin(r) }
+   get tipx() { let {x,r,l}=this; return x+(l)*cos(r-FPI) }
+   get midx() { let {x,r,l}=this; return x+(l)*cos(r-EPI) }
+   get midy() { let {y,r,l}=this; return y+(l)*sin(r-EPI) }
+   get tipy() { let {y,r,l}=this; return y+(l)*sin(r-FPI) }
+   draw(dt){
+      let {l,x,y,ex,ey,r}=this
+      let dc=context
+      dc.strokeStyle=C_STAVE
+      dc.beginPath()
+      dc.moveTo(x-(l/4)*cos(r),y-(l/4)*sin(r))
+      //dc.moveTo(x,y)
+      dc.lineTo(ex,ey)
+      dc.stroke()
+      dc.strokeStyle=C_BLADE
+      //dc.moveTo(x,y)
+      dc.beginPath()
+      dc.arc(x,y,l,r+(.2*EPI),r-FPI,!0)
+      dc.stroke()
+    }
+    use(){
+      if(!this.moving){
+         this.moving=!0
+         this.returning=!1
+      }
+    }
+    update(dt){
+      killat(this.tipx,this.tipy)
+      if (!this.moving) return
+      killat(this.midx,this.midy)
+      killat(this.ex,this.ey)
+      if (this.returning) {
+         this._r+=(this.sp*dt)
+         if (this._r >= this._maxr) {
+            this._r=this._maxr
+            this.moving=false
+         }
+      } else {
+         this._r-=(this.sp*dt)
+         if (this._r <= this._minr) {
+            this.returning=true
+         }
+      }
+    }
+}
+
+class Box extends Located {
+   constructor(x,y,w,h,ss) {
+      super(x,y)
+      this._h=h
+      this._w=w
+      this._rot=0
+      this.ss=ss
+   }
+   get l() { return this.x-this._w/2 }
+   get r() { return this.x+this._w/2 }
+   get t() { return this.x-this._w/2 }
+   get b() { return this.x+this._w/2 }
+   draw(dt){}
+   update(dt){}
+}
+
+class Cigarettes extends Box {
+   constructor(x,y){
+      super(x,y,5,10)
+   }
+   draw(dt){
+      let dc = context
+      dc.fillStyle=this.ss
+      super.draw(dt)
+      let txt = 'CI\nGS'
+      let mt = dc.measureText(txt)
+      dc.fillText(txt,this.l,this.t)
+   }
+}
+
+// ui / drawing stuff
+clearScreen = () => context.clearRect(0,0,W,H)
+fillScreen = (fs) => {
+   let x=context;
+   x.fillStyle=fs||x.fillStyle;
+   x.fillRect(0,0,W,H);
+}
+
+// game items
+dudes = []
+death = null
+addDude = () => {
+   dudes.push(new Dude(
+      M.random()*(B.r-B.l)+B.l,
+      M.random()*(B.b-B.t)+B.t,
+      M.random()*PI2
+   ));
+}
+addWave = (n=N_DUDEWAVE) => {
+   let i = 0;
+   while(i++<n) {
+      addDude()
+   }
+   N_DUDEWAVE=M.ceil(N_DUDEWAVE*1.13)
+   T_WAVEDURATION/=1.13
+}
+
+// game loop stuff
+noop = () => {}
+let spawntimer=(void 0)
+timedspawn=()=>{
+   if(death&&death.evil>0){
+      addWave()
+      spawntimer=setTimeout(timedspawn,T_WAVEDURATION*1000)
+   }
+}
+initialspawn=()=>{
+   spawntimer=setTimeout(timedspawn,1313)
+}
+gldraw = (t,m) => {
+   fillScreen(C_SCREEN)
+   fe(dudes,(n)=>{n.draw(t,m)})
+   death&&death.draw(t,m)
+   drawhud(t,m)
+}
+glupdate = (t,m) => {
+   death&&death.update(t,m)
+   fe(dudes,(n)=>{n.update(t,m)})
+   cullDudes()
+}
+gltick = (t,m) => {
+   gldraw(t,m),glupdate(t,m)
+}
+keystate={}
+glprev=null
+glstarted=null
+glrAF=null
+glcontinue=!1
+gloop = (m) => {
+   if(glstarted===null) { glstarted=glprev=m }
+   let dt=(m-glprev) / 1000;
+   glprev=m;
+   dt ? gltick(dt,m) : gldraw(dt,m)
+   glcontinue ? glrAF() : noop()
+}
+glresetdudes = () => {
+   dudes = []
+}
+glresetdeath = () => {
+   death = new Death()
+}
+glreset = () => {
+   clearTimeout(spawntimer)
+   T_WAVEDURATION=T_INITAL_WAVEDURATION
+   N_DUDEWAVE=N_INITIAL_DUDEWAVE
+   keystate={}
+   glcontinue=!1;
+   glprev=glstarted=glrAF=null
+   glrAF=window.requestAnimationFrame.bind(window,gloop)
+   glresetdudes()
+   glresetdeath()
+   initialspawn()
+}
+glstart = () => {
+   if (!glcontinue) {
+      glcontinue = !0
+      gloop(0)
+   }
+}
+resetAll = (dt=0) => {
+   glreset()
+   setTimeout(glstart,dt||0)
+}
+resetAll()
+death=(void 0)
+dbgdie=()=>{
+   switch (death.type) {
+      case 'death':
+         death = new Angel()
+         break
+      default:
+         let {x,y} = death
+         death = new Death()
+         death.x=x
+         death.y=y
+         break
+   }
+}
+keh=(e)=>{
+   if (e.repeat) return;
+   let {key, type} = e
+   let isDn=type==='keydown'
+   keystate[key]=isDn // set keystate
+   if (type === 'keyup') {
+      switch(key){
+         case 'w':addWave();break
+         case 'd':addDude();break
+         case 'r':glresetdudes();break
+         case 'p':dbgdie();break
+         case 'Escape':resetAll(250);break
+         default:break
+      }
+   } else {
+      // only on keydown stuff
+      switch(key){
+         case 's':death.attack()
+      }
+   }
+}
+fe(['keyup','keydown'], (e)=>document.body.addEventListener(e,keh))
+</script></body></html>

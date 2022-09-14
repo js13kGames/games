@@ -1,0 +1,32 @@
+body {
+	color: white;
+	background-color: #111;
+	margin: 0;
+}
+
+#images {
+	display: none;
+}
+
+canvas {
+	position: absolute;
+	border-radius: 2vmin;
+	box-shadow: 1vmin 1vmin 4vmin rgba(0, 0, 0, 0.4);
+	animation: 1s ease-out 1 fadeIn;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	body {
+		color: black;
+		background: white;
+	}
+}

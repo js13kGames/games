@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    H2,button{color:#fff;font-size:16px}#ccb,#splash{text-align:center}#dialogd:empty,#pauseScreen{display:none}#menu,#pauseScreen{width:393px;margin:calc(25vh + 200px) 0 0 calc(50vw - 200px)}#cc,#levelsD,#menu,#pauseScreen{margin:calc(25vh + 200px) 0 0 calc(50vw - 200px)}body{background:#111315;overflow:hidden;user-select:none}H2{font-weight:400}CANVAS.noMouse{cursor:none}*{margin:0;padding:0;font-family:monospace}#cc,#ccb,#info,#levelsD,#pauseScreen,#screen,#splash{position:absolute}button{display:block;background:0 0;border:none}button:hover{color:#e2ff0c}#cc{color:#F3C;font-size:20px;font-weight:700}#info{right:0}#levelsD{height:300px}#splash{opacity:0;transition:opacity .5s;width:200px;background:#123;color:#def;border-radius:10px;margin:calc(50vh - 100px) 0 0 calc(50vw - 200px);padding:100px;pointer-events:none}#splash.splayed{opacity:1}#splash span,H2 span{display:block;font-size:26px}#dialogd,#ui{font-size:18px;position:absolute}#ccb{top:0;width:100vw}.boss{color:#8b0000}#menu,.time{color:#fff}#ui{top:50%;color:#f0f8ff;left:20px}#dialogd{padding:10px;background:rgba(0,0,0,.5);color:coral;bottom:100px;width:100%}#homeImg{position:absolute;width:257px;height:34px;background-color:#111;background-image:url(sprite.png);background-position:0 -97px;margin:25vh 0 0 calc(50vw - 200px)}#menu{position:absolute}
+</style>
+<canvas id="screen"></canvas>
+<div id=ui></div>
+<div id=ccb></div>
+<div id="info"></div>
+<div id="dialogd"></div>
+<div id="homeD">
+    <div id="homeImg"></div> 
+    <div id="menu">
+        <button onclick="initLevel('level0')">Begin story</button>
+        <button onclick="levels()">Levels</button>
+    </div>
+    
+    <div id="levelsD" style="display: none">
+        <h2> - Levels - </h2>
+        <button onclick="initLevel('level0')">00 - Prolog</button>
+        <button onclick="initLevel('level1')">01 - the deep</button>
+        <button onclick="initLevel('level2')">02 - Hurry</button>
+        <button onclick="initLevel('level3')">03 - Lost</button>
+        <button onclick="initLevel('level4')">04 - Escape</button>
+        <button onclick="initLevel('level5')">05 - Monster</button>
+        <br>
+
+        <button onclick="home()">Back</button>
+    </div>
+    
+    
+</div>
+<div id="pauseScreen">
+        <h2> - Pause - <br><span>Press SPACE to resume</span></h2>
+        <button onclick="home()">Home</button>
+    </div>
+<div id=cc></div> 
+<div id=splash></div> 
+
+
+
+<script src="./level0.js"></script>
+<script src="./level1.js"></script>
+<script src="./level2.js"></script>
+<script src="./level3.js"></script>
+<script src="./level4.js"></script>
+<script src="./level5.js"></script>
+
+
+<script>
+    function v2d(a,b){this.x=a,this.y=b,this.tmp=1}v2d.prototype.setPoint=function(a,b){this.x=a,this.y=b},v2d.prototype.clone=function(){return new v2d(this.x,this.y)},v2d.prototype.invert=function(){return this.x=-this.x,this.y=-this.y,this},v2d.prototype.maxLength=function(a){return this.tmp=this.norm(),this.tmp>a&&this.scale(a/this.tmp),this},v2d.prototype.setVector=function(a){return this.x=a.x,this.y=a.y,this},v2d.prototype.cmp=function(a){return this.norm()>a.norm()},v2d.prototype.X=function(a){return this.x*=a.x,this.y*=a.y,this},v2d.prototype.normalize=function(){return this.tmp=this.x,this.x/=Math.hypot(this.x,this.y),this.y/=Math.hypot(this.tmp,this.y),this},v2d.prototype.addP=function(a,b){return this.x+=a,this.y+=b,this},v2d.prototype.add=function(a){return this.x+=a.x,this.y+=a.y,this},v2d.prototype.sub=function(a){return this.x-=a.x,this.y-=a.y,this},v2d.prototype.scale=function(a){return this.x*=a,this.y*=a,this},v2d.prototype.toString=function(){return`${this.x.toFixed(2)}|${this.y.toFixed(2)}`},v2d.prototype.stance=function(a){return Math.sqrt((this.y-a.y)*(this.y-a.y)+(this.x-a.x)*(this.x-a.x))},v2d.prototype.norm=function(){return Math.hypot(this.x,this.y)};
+var sub=new v2d(0,0),speed=new v2d(3,2),SPEED=20,accInput=new v2d(0,0),c=new v2d(100,100);SUB_LENGTH=128;SUB_HEIHGT=64;LEVEL_WIDTH=0;SCREEN_HEIGHT=SCREEN_WIDTH=20;isShutdown=!1;chaarge=arming=harpoon=0;isDead=!1;fade=0;var bubbles=[],i,j,k,level={},accMod=new v2d(0,0);screenCenter=null;canStart=!1;boss={active:!1,p:new v2d(200,200),seq:0,hp:10};artefact={active:!1};timer={active:!1};var acc=new v2d(0,0);
+function step(a){isDead&&fade++;MOUSECTRL?(accInput=acc.setVector(m).sub(screenCenter),100>accInput.norm()?(speed.scale(.9),1>speed.norm()&&speed.setPoint(0,0)):(acc.setVector(accInput).normalize(),speed.add(acc.normalize().scale(.3)))):(x=y=0,up&&(y=-1),down&&(y=1),left&&(x=-1),right&&(x=1),acc.setPoint(x,y),speed.add(acc.scale(.3)));c.x=sub.x;c.y=sub.y;liveHostile();isShutdown&&speed.setPoint(0,1.1);liveProjectile();weaponCicle();speed.maxLength(SPEED/20);testTrigger();liveBubble(0<speed.x);render();
+COLLIDE&&collide();drawWeapon();drawUI()}window.onmousedown=function(){arming=!0};window.onmouseup=function(){arming=!1;100<chaarge&&fire()};function weaponCicle(){arming&&harpoon&&(chaarge+=delta)}arrows=[];freeArrow=arrow=null;var arpoonO=new v2d(0,0),arpoonDelta=new v2d(56,64),visor=new v2d(0,0);
+function fire(){if(!(300>chaarge)){freeArrow=!1;visor.setVector(m);visor.sub(screenCenter);for(i=0;i<arrows.length;i++)arrows[i].isAlive||(arrows[i].setVector(sub).add(arpoonDelta),arrows[i].dir=visor.clone(),arrows[i].isAlive=!0,arrows[i].chaarge=chaarge,freeArrow=!0);!1===freeArrow&&(arrow=new v2d(0,0),arrow.setVector(sub).add(arpoonDelta),arrow.isAlive=!0,arrow.dir=visor.clone(),arrows.chaarge=chaarge,arrows.push(arrow))}chaarge=0}
+function liveProjectile(){for(i=0;i<arrows.length;i++)!0===arrows[i].isAlive&&(arrows[i].add(arrows[i].dir.normalize().scale(8)),arrows[i].x>boss.p.x&&arrows[i].y>boss.p.y&&arrows[i].x<boss.p.x+160&&arrows[i].y<boss.p.y+100&&(boss.hp--,1>boss.hp&&(boss.d=boss.p.clone()),arrows[i].isAlive=!1))}
+function liveHostile(){boss.active&&(0<boss.hp?boss.p.add(sub.clone().addP(64,32).sub(boss.p.clone().addP(80,50)).normalize().scale(1.8)):boss.p.add(new v2d(0,1)),110>sub.clone().addP(64,32).stance(boss.p.clone().addP(80,50))&&(isDead=!0))}var ballPos=new v2d;
+function drawHostile(){boss.active&&(drawSprite(boss.p,5),boss.d?ballPos.setVector(boss.d):ballPos.setVector(boss.p),grd=ctx.createRadialGradient(ballPos.x-c.x+screen.width/2,ballPos.y-c.y+screen.height/2,0,ballPos.x-c.x+screen.width/2,ballPos.y-c.y+screen.height/2,30),grd.addColorStop(0,"rgba(255, 171, 26, 1)"),grd.addColorStop(.4,"rgba(255, 171, 26, 0.77)"),grd.addColorStop(.43,"rgba(255, 171, 26, 0.13)"),grd.addColorStop(1,"rgba(255, 171, 26, 0)"),ctx.beginPath(),ctx.arc(ballPos.x-c.x+screen.width/
+2,ballPos.y-c.y+screen.height/2,30,0,2*Math.PI),ctx.fillStyle=grd,ctx.fill())}
+function drawWeapon(){for(i=0;i<arrows.length;i++)arrows[i].isAlive&&(ctx.beginPath(),ctx.arc(arrows[i].x-c.x+screen.width/2,arrows[i].y-c.y+screen.height/2,3,0,2*Math.PI),ctx.fillStyle="#4ac495",ctx.fill());if(arming&&harpoon){arpoonO.setVector(sub).add(arpoonDelta);ctx.beginPath();ctx.moveTo(arpoonO.x-c.x+screen.width/2,arpoonO.y-c.y+screen.height/2);var a=new v2d(m.x,m.y);a.sub(new v2d(2,32));a.sub(screenCenter);a.normalize();for(i=1;i<Math.min(chaarge/200,4);i++)a.normalize().scale(100*i),drawAbSprite(a.clone().add(new v2d(screen.width/
+2+60,screen.height/2+60)),2);drawAbSprite(m,3)}else drawAbSprite(m,4)}bstr="";
+function drawUI(){ctx.beginPath();ctx.strokeStyle="#fff";ctx.closePath();ctx.stroke();isShutdown&&(ctx.fillStyle="rgba(0, 0, 0, 0.8)",ctx.fillRect(0,0,screen.width,screen.height));isDead&&(ctx.fillStyle="rgba(0, 0, 0, "+fade/50,ctx.fillRect(0,0,screen.width,screen.height),ctx.fillStyle="#fff",ctx.textAlign="center",ctx.font="30px Arial",ctx.fillText("You swim in the deep forever",screen.width/2,screen.height/2,500));cClass=cData="";if(boss.active&level.p.k){cData+="Boss HP : ";for(i=0;10>i;i++)cData+=
+boss.hp>i?" \u25ae":" \u25af";cClass="boss"}else if(timer.active){cData="Time remaining : ";timer.remaining-=delta;for(i=0;10>i;i++)cData+=timer.remaining/timer.initial*10>i?" \u25ae":" \u25af";cClass="time"}grd=ctx.createRadialGradient(screen.width/2,screen.height/2,0,screen.width/2,screen.height/2,screen.width/2);grd.addColorStop(0,"rgba("+level.r+", "+level.g+", "+level.b+", 0.000)");grd.addColorStop(.718,"rgba("+level.r+", "+level.g+", "+level.b+", 0.000)");grd.addColorStop(1,"rgba("+level.r+
+", "+level.g+", "+level.b+", 1.000)");ctx.fillStyle=grd;ctx.fillRect(0,0,screen.width,screen.height);ui.innerHTML="Power : "+SPEED+"<br>Pressure : "+sub.y.toFixed(1)+"<br>"+(harpoon?"Module : harpoon":"Module : available")+"<br>";ccb.innerHTML='<div class="contextBar '+cClass+'">'+cData+"</div>"}function render(){drawBack();drawLevel();drawPlayer();drawHostile();drawBubble()}
+function drawBack(){var a=ctx.createLinearGradient(0,0,0,screen.height);a.addColorStop(0,"#1b212c");a.addColorStop(1,"#0a0e15");ctx.fillStyle=a;ctx.fillRect(0,0,1E4,1E5)}function drawPlayer(){DEBUG&&(ctx.rect(sub.x-c.x+screen.width/2,sub.y-c.y+screen.height/2,SUB_LENGTH,SUB_HEIHGT),ctx.strokeStyle="#edff00",ctx.stroke());harpoon?drawSprite(sub,6,0<speed.x):drawSprite(sub,0,0<speed.x)}
+function drawBubble(){ctx.strokeStyle="#ffffff";for(var a=0;a<bubbles.length;a++)0<bubbles[a].size&&(ctx.beginPath(),ctx.arc(bubbles[a].pos.x-c.x+screen.width/2,bubbles[a].pos.y-c.y+screen.height/2,bubbles[a].size/10,0,2*Math.PI),ctx.closePath(),ctx.stroke())}
+function liveBubble(a){for(var d=0;d<bubbles.length;d++){var b=bubbles[d];0>b.size?(b.save?b.pos.setVector(b.save):b.pos=sub.clone().add(new v2d(5*Math.random()+(a?0:SUB_LENGTH),5*Math.random()+20)),b.size=70):(b.save?b.pos.add(b.dir):bubbles[d].pos.add(new v2d(Math.cos(time+b.pos.y),-1.5)),b.size--)}}function gamo(){for(i=0;40>i;i++)bubbles.push({pos:new v2d(sub.x-SUB_LENGTH+Math.random()*SUB_LENGTH*2,sub.y-SUB_HEIHGT+Math.random()*SUB_HEIHGT*2),size:10*i%70});isDead=!0}
+sprt=[0,0,64,32,192,64,32,32,128,0,3,3,131,0,7,7,139,0,6,9,160,5,82,53,0,0,64,40,224,64,18,30];function drawSprite(a,d,b){ctx.imageSmoothingEnabled=!1;DEBUG&&(ctx.beginPath(),ctx.rect(a.x-c.x+screen.width/2,a.y-c.y+screen.height/2,2*sprt[4*d+2],2*sprt[4*d+3]),ctx.strokeStyle="#ff0",ctx.stroke());ctx.drawImage(sprite,sprt[4*d]+(b?sprt[4*d+2]:0),sprt[4*d+1],sprt[4*d+2],sprt[4*d+3],a.x-c.x+screen.width/2,a.y-c.y+screen.height/2,2*sprt[4*d+2],2*sprt[4*d+3])}
+function drawAbSprite(a,d){ctx.drawImage(sprite,sprt[4*d],sprt[4*d+1],sprt[4*d+2],sprt[4*d+3],a.x,a.y,2*sprt[4*d+2],2*sprt[4*d+3])}var tile=0,tp=new v2d(0,0),isC=!0,futureSub=new v2d(0,0),nextColumn=new v2d(0,0),nextLine=new v2d(0,0),corners={ne:new v2d(0,0),nw:new v2d(0,0),se:new v2d(0,0),sw:new v2d(0,0)},closePos=new v2d(0,0),futureDelta=new v2d(0,0),moveOk=new v2d(0,0);
+function collide(){isC=!1;sub.add(accMod);if(!(0>=speed.norm()||isDead)){corners.ne.setPoint(sub.x+SUB_LENGTH,sub.y);corners.nw.setPoint(sub.x,sub.y);corners.se.setPoint(sub.x+SUB_LENGTH,sub.y+SUB_HEIHGT);corners.sw.setPoint(sub.x,sub.y+SUB_HEIHGT);for(i=0;4>i;i++){var a=corners[Object.keys(corners)[i]];moveOk.setPoint(0,0);for(j=0;j<speed.norm()+1;j++){closePos.setVector(speed).normalize().scale(j);j>speed.norm()&&closePos.setVector(speed);futureDelta=closePos.clone();closePos.add(a);var d=level.tiles[Math.floor(closePos.x/
+64)+Math.floor(closePos.y/64)*LEVEL_WIDTH];if(81==d){gamo();return}ctx.strokeStyle=0!==d?"#CD3378":"#00FF00";DEBUG&&(ctx.beginPath(),ctx.rect(64*Math.floor(closePos.x/64)-c.x+screen.width/2,64*Math.floor(closePos.y/64)-c.y+screen.height/2,64,64),ctx.stroke());if(0!==d){isC=!0;break}}ctx.strokeStyle="#771111";isC||(ctx.strokeStyle="#007700");DEBUG&&(ctx.beginPath(),ctx.moveTo(a.x-c.x+screen.width/2,a.y-c.y+screen.height/2),ctx.lineTo(a.x+1E3*speed.x,a.y+1E3*speed.y),ctx.stroke());if(isC)break;moveOk.setVector(futureDelta)}sub.add(moveOk)}}
+var trigger;
+function testTrigger(){accMod.setPoint(0,0);timer.active&&0>timer.remaining&&(isDead=!0);boss.d&&50>boss.d.stance(sub)&&(splash.className="splayed",splash.innerHTML="<h2>- The end -</h2>You get the warden key, it shows you a way home, maybe another aventure",cancelAnimationFrame(frameHandler),ctx.filter="blur(50px)");for(i=0;i<level.triggers.length;i++)trigger=level.triggers[i],sub.x>2*trigger.x&&sub.x<2*trigger.x+2*trigger.w&&sub.y>2*trigger.y&&sub.y<2*trigger.y+2*trigger.h&&("shutdown"===trigger.t&&
+(isShutdown=!0),"boot"===trigger.t&&(isShutdown=!1),"dialog"===trigger.t&&(dialogd.innerHTML=trigger.p.ct),"powup"===trigger.t&&1===trigger.p.i&&(harpoon=1,trigger.p.a=0,dialogd.innerHTML="Harpoon aquiererd",ccd("click to fire, keep button down to charge")),"end"===trigger.t&&initLevel(trigger.p.next),"stream"===trigger.t&&accMod.setPoint(2*trigger.p.x,2*trigger.p.y))}function ccd(a){cc.innerHTML=a;setTimeout(function(){cc.innerHTML=""},4E3)}
+function initLevel(a,d){screenCenter=(new v2d(screen.width/2,screen.height/2)).add(new v2d(SUB_LENGTH/2,SUB_HEIHGT/2));homeD.style.display="none";levelsD.style.display="none";cancelAnimationFrame(frameHandler);ctx.filter="blur(50px)";level=window[a];level.triggers=level.tr;level.r||(level.r="11",level.g="13",level.b="15");level.tiles=[];for(i=0;i<level.w*level.h;i++)level.tiles[i]=0;for(i=0;i<level.ti.length/3;i++){var b=level.ti.charCodeAt(3*i)-20,e=level.ti.charCodeAt(3*i+1)-20,f=level.ti.charCodeAt(3*
+i+2)-20;level.tiles[b+e*level.w]=f}LEVEL_WIDTH=level.w;LEVEL_HEIGHT=level.h;splash.className="splayed";splash.innerHTML=level.p.splash+"<span>press F to start</span>";bubbles=[];for(i=0;10>i;i++)bubbles.push({pos:new v2d(0,0),size:10*i%70});for(j=0;j<level.triggers.length;j++){b=level.triggers[j];if("stream"===b.t)for(k=0;30>k;k++)e=new v2d(2*b.x+2*Math.random()*b.w,2*b.y+2*Math.random()*b.h),bubbles.push({pos:e,save:e.clone(),size:10*k%70,dir:new v2d(b.p.x,b.p.y)});"start"===b.t&&sub.setPoint(2*
+b.x,2*b.y);"boss"===b.t&&(boss.active=!0,boss.p=new v2d(2*b.x,2*b.y));"artefact"===b.t&&(artefact.active=!0,artefact.p=new v2d(2*b.x,2*b.y),artefact.fx=artefact.p.clone().addP(18,-30))}timer={active:!1};level.p.time&&(timer={initial:1E3*level.p.time,remaining:1E3*level.p.time,active:!0});canStart=!0}
+function drawPowUp(){artefact.active&&(grd=ctx.createRadialGradient(artefact.fx.x-c.x+screen.width/2,artefact.fx.y-c.y+screen.height/2,0,artefact.fx.x-c.x+screen.width/2,artefact.fx.y-c.y+screen.height/2,50),grd.addColorStop(0,"rgba(137, 255, 243, 1)"),grd.addColorStop(.4,"rgba(137, 255, 243, 0.77)"),grd.addColorStop(.43,"rgba(137, 255, 243, 0.13)"),grd.addColorStop(1,"rgba(137, 255, 243, 0)"),ctx.beginPath(),ctx.arc(artefact.fx.x-c.x+screen.width/2,artefact.fx.y-c.y+screen.height/2,50,0,2*Math.PI),
+ctx.fillStyle=grd,ctx.fill());for(i=0;i<level.triggers.length;i++)powup=level.triggers[i],"powup"===powup.t&&1==powup.p.i&&powup.p.a&&drawSprite((new v2d).setVector(powup).scale(2),1)}tilesT=[];tilesT[35]=[64,64];tilesT[36]=[96,64];tilesT[37]=[128,64];tilesT[33]=[0,64];tilesT[34]=[32,64];
+function drawLevel(){drawPowUp();for(i=0;i<LEVEL_HEIGHT||i<SCREEN_HEIGHT;i++)for(j=0;j<LEVEL_WIDTH||j<SCREEN_WIDTH;j++)tile=level.tiles[i*LEVEL_WIDTH+j],tilesT[tile]&&ctx.drawImage(sprite,tilesT[tile][0],tilesT[tile][1],32,32,64*j-c.x+screen.width/2,64*i-c.y+screen.height/2,64,64)};
+screen=document.getElementById("screen");screen.width=window.innerWidth;screen.height=window.innerHeight;var frameHandler=null;GAME_STATE_PAUSE=0;GAME_STATE_RUN=1;GAME_STATE_LEVEL=2;DEBUG=!1;COLLIDE=!0;MOUSECTRL=!1;ctx=screen.getContext("2d");var m=new v2d(1,1),time=performance.now(),delta=0,ips=0;
+function loop(){delta=performance.now()-time;ips=1E3/delta;info.innerHTML=50<ips?ips.toFixed(3):'<span style="color:red">'+ips.toFixed(3)+"</span>";ctx.filter="none";frameHandler=requestAnimationFrame(loop);step(delta);time=performance.now()}gameState=GAME_STATE_LEVEL;up=left=right=down=0;window.onkeydown=function(a){if(87===a.keyCode||90===a.keyCode)up=1;if(65===a.keyCode||81===a.keyCode)left=1;83===a.keyCode&&(down=1);68===a.keyCode&&(right=1)};
+window.onkeyup=function(a){if(87===a.keyCode||90===a.keyCode)up=0;if(65===a.keyCode||81===a.keyCode)left=0;83===a.keyCode&&(down=0);68===a.keyCode&&(right=0)};
+window.onkeypress=function(a){touche=a.keyCode||a.charCode;32===touche?gameState===GAME_STATE_RUN?(screen.className="",cancelAnimationFrame(frameHandler),gameState=GAME_STATE_PAUSE,pauseScreen.style.display="block",levelsD.style.display="none",menu.style.display="none",screen.width+=0):(screen.className="noMouse",loop(),gameState=GAME_STATE_RUN,pauseScreen.style.display="none"):canStart&&102===touche&&(screen.className="noMouse",gameState=GAME_STATE_RUN,splash.className="",setTimeout(loop,500))};
+window.onwheel=function(a){SPEED-=a.deltaY/10;100<SPEED&&(SPEED=100);0>SPEED&&(SPEED=0)};window.onmousemove=function(a){m.x=a.pageX;m.y=a.pageY};function home(){homeD.style.display="block";menu.style.display="block";levelsD.style.display="none";pauseScreen.style.display="none"}function levels(){menu.style.display="none";pauseScreen.style.display="none";levelsD.style.display="block"};
+</script>
+
+
+<img src="./sprite.png" style="display: none" id="sprite">

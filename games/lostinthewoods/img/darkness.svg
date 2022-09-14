@@ -1,0 +1,15 @@
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="100" viewBox="0 0 100 100" width="100" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<defs id="defs8">
+<radialGradient id="radialGradient4146" gradientUnits="userSpaceOnUse" cy="51.31" cx="49.3" gradientTransform="matrix(0 -.9755 1 -.000002593 -1.724 95.5)" r="33.63">
+<stop id="stop4142" stop-color="#d78f00" stop-opacity=".4706" offset="0"/>
+<stop id="stop4144" offset="1"/>
+</radialGradient>
+</defs>
+<circle id="path4138" cx="50" cy="47" r="33.63" fill="url(#radialGradient4146)"/>
+<g id="layer1" transform="translate(0 -955.3)">
+<g id="g4363" transform="translate(-130.4 -112.9)">
+<path id="rect4493" transform="translate(130.4 1065)" d="m0 0v100h100v-100h-100zm50 18.06a31.95 31.95 0 0 1 31.94 31.94 31.95 31.95 0 0 1 -31.94 31.94 31.95 31.95 0 0 1 -31.94 -31.94 31.95 31.95 0 0 1 31.94 -31.94z"/>
+</g>
+</g>
+<path id="rect4265" d="m0 90.19h100v10h-100z"/>
+</svg>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BACK 2 SOURCE</title>
+<meta charset ="utf-8">
+<meta name = "viewport" content = "width = device-width,height = device-height, initial-scale =1">
+<meta name="monetization" content="$coil.xrptipbot.com/pCQRk4QaS3SUDLIPT6Iiyg">
+<link rel = "stylesheet" type="text/css" href="index.css"/>
+<script src="index.js"></script>
+</head>
+<body>
+
+<div class="game_play">
+
+<div id="system"></div>
+<div class="loader1" style="top:10px;left:10px;"></div>
+
+<div class="btn_handler">
+<div class="handler_btn" onclick="on_click_ball_motion();">TRIGGER</div>
+<div class="handler_btn" id="angleShow" style="left:250px">0</div>
+</div>
+
+
+<div class="start_menu" id="menu">
+<div class="me">Created By Shubham7997</div>
+<div class="menu_title">Back to Source</div>
+<div class="menu_btn" onclick="start_game();">Start Here ->></div>
+</br>
+<div class="menu_btn" style="top : 50%;" onclick="rules_show();">Rules Here (?)</div>
+
+</div>
+
+<div class="rules_panel" id="rulespanel">
+<div class="rules">
+<span class="cross" onclick="rules_hide();">X</span>
+Rules (?)</Br></br>
+<div class="rules_content">
+>> There is a Data unit represented by BALL that you suppose to guide to send to its source represented by orange coloured NODE ring.
+</br></br>
+>> The whole game consist of many NODE rings and connected LINES.
+</br></br>
+>> The BALL toggles its rotation as Clock/Anti-clock wise which it switch after every NODE.
+</br>
+</br>
+>> You will click on TRIGGER to go in that direction like TOP/DOWN/LEFT/RIGHT when the BALL is in that direction of the NODE and if in that direction the conecting LINE is available then ball go that way.
+</br>
+</br>
+>> If the Data BALL completes 360 rotation or completes a LOOP in a single particular NODE, then game is OVER for you.
+</br>
+</br>
+>> There is a huge load of LEVELS to PLAY.
+</div>
+</div>
+</div>
+
+<div class="game_panel" id="main_panel_lost">
+<div>GAME OVER</div>
+<div class="rules_content">
+</br></br>
+-- You complete 360 rotation / Loop the Node.
+</br></br>
+</div>
+<div class="menu_btn" onclick="try_again();">TRY AGAIN <--<</div>
+<div class="menu_btn" style="top : 50%;" onclick="rules_show();">Rules Here (?)</div>
+</div>
+
+<div class="game_panel" style="text-shadow:2px 4px 0px dodgerblue;" id="main_panel_win">
+<div>Well Done !</div>
+<div class="menu_btn win" onclick="next_lvl();">Next LEVEL >-></div>
+<div class="menu_btn" style="top : 50%;" onclick="rules_show();">Rules Here (?)</div>
+</div>
+
+</div>
+</body>
+</html>

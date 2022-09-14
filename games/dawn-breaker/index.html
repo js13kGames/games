@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dawn Breaker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Times New Roman', Times, serif
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .splash {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      opacity: 0;
+    }
+    .splash > span {
+      line-height: 48px;
+    }
+    #new-game, #game-over {
+      background: #000;
+      color: #FFF;
+    }
+    #game-beaten {
+      background: #FFF;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="new-game" class="splash">
+    <span>&nbsp;</span>
+    <span><strong>"HE who wanders in the DARK</strong></span>
+    <span><strong>shall DAWN the world with his arsenal of LIGHT..."</strong></span>
+    <span>&nbsp;</span>
+    <span style="text-align: right; padding-right: 20%;"><strong>--PROPHECY</strong></span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>Press [Z] to START</span>
+  </div>
+  <div id="game-over" class="splash">
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span><strong>Hope the next one survives longer...</strong></span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>Press [Z] to RESTART</span>
+  </div>
+  <div id="game-beaten" class="splash">
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span><strong>The DAWN breaks and YOU SURVIVED !</strong></span>
+    <span><strong>The PROPHECY came TRUE...</strong></span>
+    <span><strong>and what will happen TONIGHT ?</strong></span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>Press [Z] to RESTART</span>
+  </div>
+<script type="text/javascript" src="index.js"></script></body>
+</html>

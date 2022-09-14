@@ -1,0 +1,50 @@
+body {
+	background: black;
+}
+#box {
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+		background: floralwhite;
+}
+#screen {
+		background: floralwhite;
+		visibility: hidden;
+}
+/* unused style
+.square {
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+    margin: 40px auto;
+    transition: width 0.5s ease-in-out, height 0.5s ease-in-out, background-color 0.5s ease;
+}
+.square {
+    width: 100px;
+    height: 100px;
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: 3;
+    animation-delay: 0.5s;
+}
+@keyframes loading {
+0% {
+	background-color: white;
+}
+50% {
+	background-color: black;
+	transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+}
+100% {
+	background-color: white;
+	transform: rotate(720deg);
+	-webkit-transform: rotate(720deg);
+}
+}
+*/

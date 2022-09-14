@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theCircleMasters</title>
+<style>
+html,body{height:100%;margin:0;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center;}
+canvas{width:100vw;height:calc(100vw*9/16);background:#222;image-rendering:pixelated;image-rendering:crisp-edges;}
+@media all and (min-aspect-ratio:16/9){canvas{width:calc(100vh*16/9);height:100vh;}}
+@media screen and (min-width: 700px) and (orientation: landscape) {html,body{overflow:visible;}}
+</style>
+</head>
+<body>
+<canvas></canvas>
+<script src="/socket.io/socket.io.js"></script>
+<script src="index.js" type="module"></script>
+</body>
+</html>

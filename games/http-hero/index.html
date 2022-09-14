@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta name = "viewport"  content="width=device-width , initial-scale=1.0"/>
+	<style>
+		canvas {
+			border : 1px solid #d3d3d3;
+		}
+	</style>	
+	</head>
+	<body onload = "initializeGame()">
+	<script>
+		var ui;
+		var hero;
+		var img = new Image();
+		img.src = "hero_sprite.gif";
+		var ground = new Array();
+		var enemy = new Array();
+		var collect;
+		var server;
+		var device;
+		var dialog;
+		var last_g_pos = 0;
+		var sw = .95* window.innerWidth;
+		var sh = .95* window.innerHeight;
+		var ry = .9 * sh;
+		var g_count = 10;
+		var frame = 0;
+		var game_spd = .005 * sw;
+		var e_spd = game_spd;
+		var g_dir = 1;
+		var task_code;
+		var jmpc = 0;
+		var rhpc = 0;
+		var ipc = 0;
+		var emc = 0;
+		var sect = 0;
+		var lvl = 1;
+		var lvl_gr_gap = 25;
+		var lvl_gr_cs = 5;
+		var clr = 0;
+		var bgclrlvl = ["dodgerblue","steelblue",
+						"burlywood","coral",
+						"cadetblue","grey",
+						"salmon","crimson",
+						"darkturquoise","darkseagreen",
+						"mediumorchid","firebrick",
+						"mediumseagreen","purple",
+						"peru","teal"];
+		
+		window.AudioContext =  window.AudioContext|| window.webkitAudioContext; 
+						
+		function sounds(code){
+			switch(code){
+				case 0: //jump
+					with(new AudioContext())[13].map((v,i)=>{with(createOscillator())v&&start(e=[1][i]*.2,connect(destination),frequency.setValueAtTime(440*1.06**(12-v),0)),stop(e+.2)})
+					break;
+				case 1: //-hp
+					with(new AudioContext())[14,15].map((v,i)=>{with(createOscillator())v&&start(e=[1,1][i]*.2,connect(destination),frequency.setValueAtTime(440*1.06**(12-v),0)),stop(e+.2)})
+					break;
+				case 2: //game over
+					with(new AudioContext())[7,8,9,10,11,12].map((v,i)=>{with(createOscillator())v&&start(e=[1,2,3,4,5,6][i]*.2,connect(destination),frequency.setValueAtTime(440*1.06**(12-v),0)),stop(e+.2)})
+					break;
+				case 3: // wins
+					with(new AudioContext())[10,10,11,11,12,12,13].map((v,i)=>{with(createOscillator())v&&start(e=[3,7,2,6,1,5,4][i]*.2,connect(destination),frequency.setValueAtTime(440*1.06**(12-v),0)),stop(e+.2)})
+					break;
+			}
+		}	
+		
+		//function to setup the canvas and all the objects.
+		function initializeGame(){
+			if(screen.width < screen.height){
+				document.body.setAttribute("style","transform:rotate(90deg);");
+				sw = .95*window.innerHeight;
+				sh = .95*window.innerWidth;
+			}
+			ui = new GameUI(.01* sh, .01 * sh , .05 * sh , .05 * sh);
+			hero = new hero_(.1 * sh,.1* sh,0,0);
+			hero.crashed = true;
+			for(i = 0; i < 20; i++){
+				ground[i] = new ground_(.2 * sh,.1 * sh,0,0 ,i);
+			}
+			for(i = 0; i < 3; i++){
+				enemy[i] = new enemy_(.07 * sh,.07 * sh,.95*sw,.1 * sh , false, i%3);
+			}
+			collect = new collect_(.07 * sh,.07 * sh,.9 * sw,ry - .03 * sh , 0);
+			server = new collect_(.2 * sh,.3 * sh,.8 * sw, ry , 1);
+			device = new collect_(.2 * sh,.2 * sh, .1*sw, ry, 2);
+			dialog = new dialog_box(0,0,sw ,sh);
+			dialog.init = 3;
+			//sounds(3);
+			myGameArea.start();
+		}
+		
+		//main canvas object.
+		var myGameArea = {
+		canvas : 
+			document.createElement("canvas"),
+			start : function(){
+				this.canvas.width = sw;
+				this.canvas.height = sh;
+				this.context = this.canvas.getContext("2d");
+				this.context.imageSmoothingEnabled = false;
+				document.body.insertBefore(this.canvas , document.body.childNodes[0]);
+				this.interval = setInterval(updateGameArea, 20);
+				window.addEventListener('keydown',function(e) {
+					myGameArea.key = 1;
+				})
+				window.addEventListener('keyup',function(e) {
+					myGameArea.key = -1;
+				})
+				window.addEventListener('mousedown',function(e) {
+					myGameArea.key = 1;
+					
+				})
+				window.addEventListener('mouseup',function(e) {
+					myGameArea.key = -1;
+				})
+				window.addEventListener('touchstart',function(e) {
+					myGameArea.key = 1;
+					
+				})
+				window.addEventListener('touchend',function(e) {
+					myGameArea.key = -1;
+				})
+			},
+			clear : function(){
+				this.context.clearRect(0 , 0 ,this.canvas.width , this.canvas.height);
+			}
+		}
+		
+		function font_generator(str , x, y ,wd, ht , color){
+			ctx = myGameArea.context;
+			for(i = 0; i < str.length; i++){
+				g = str.charCodeAt(i);
+				if(g > 47 && g < 58){ // 0 to 9
+					g -= 48;
+					h = parseInt((g / 5)) * 6;
+					g = parseInt((g % 5));
+					ctx.drawImage(img,6 * g, 102 + h, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g > 64 && g < 91){  //A to Z
+					g -= 65;
+					h = parseInt((g / 5)) * 6;
+					g = parseInt((g % 5)) * 6;
+					ctx.drawImage(img,96 + g, 64 + h, 6,5.5, x + i* wd , y , wd , ht);	
+				}
+				else if(g == 90){  //Z
+					ctx.drawImage(img,0, 96, 6,5.5, x + i* wd , y , wd , ht);	
+				}
+				else if(g == 43){  //+
+					ctx.drawImage(img,6, 96, 6,5.5, x + i* wd , y , wd , ht);	
+				}
+				else if(g == 45){  //-
+					ctx.drawImage(img,12, 96, 6,5.5, x + i* wd, y , wd , ht);
+				}
+				else if(g == 58){  //:
+					ctx.drawImage(img,18, 96, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g == 33){  //!
+					ctx.drawImage(img,24, 96, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g == 47){  //"/"
+					ctx.drawImage(img,0, 114, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g == 46){  //"."
+					ctx.drawImage(img,6, 114, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g == 37){  //"%"
+					ctx.drawImage(img,12, 114, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else if(g == 42){  //"tick*"
+					ctx.drawImage(img,18, 114, 6,5.5, x + i* wd , y , wd , ht);
+				}
+				else{  //space
+				}
+			}
+			ctx.globalCompositeOperation = "source-atop";
+			ctx.fillStyle = color;
+			ctx.fillRect(x ,y,wd * str.length, ht);
+			ctx.globalCompositeOperation = "source-over";
+		}
+		
+		function GameUI(x ,y , fxi , fyi){
+			this.x = x;
+			this.y = y;
+			this.counter = 0;
+			this.cur_co_f = 2;
+			this.update = function(){
+				ctx = myGameArea.context;
+				var c = "lightgreen";
+				if(hero.hp <= 30){
+					c = "tomato";
+				}
+				else if(hero.hp <= 50){
+					c = "yellow";
+				}
+				var a = "";
+				if(g_dir == 1){
+					a = "A";
+				}else{
+					a = "B";
+				}
+				font_generator("HP:"+parseInt(hero.hp).toString() + "%", x , y , fxi,fyi , c);
+				if(lvl == 8){
+					lvl = "MAX";
+				}
+				var str = "LVL:"+ lvl + "." + a;
+				font_generator(str, sw - str.length * fxi, y , fxi,fyi , "white");
+				fx = fxi/1.5;
+				fy = fyi/1.5;
+				switch(task_code){
+					case 0:
+						if(hero.jmp == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:JUMP " + hero.jmp + " TIMES", x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 1:
+						if(hero.ip == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:COLLECT " + hero.ip + " IP", x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 2:
+						if(hero.enmy == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:SMASH " + hero.enmy + " BUGS", x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 3:
+						if((hero.rhp <= hero.hp && hero.sec <= 0)|| hero.task_done){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:KEEP HP ABOVE " + hero.rhp + " FOR " + parseInt(hero.sec) + " SECONDS" , x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 4: 
+						if(hero.jmp == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:JUMP " + hero.jmp + " TIMES IN " + parseInt(hero.sec) + " SECONDS" , x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 5:
+						if(hero.ip == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x , y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:COLLECT " + hero.ip + " IP IN " + parseInt(hero.sec) + " SECONDS" , x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+					case 6:
+						if(hero.enmy == 0){
+							hero.task_done = true;
+							font_generator("TASK DONE *", x, y + 2*fy , fx,fy , "lightgreen");
+						}else{						
+							font_generator("TASK:SMASH " + hero.enmy + " BUGS IN " + parseInt(hero.sec) + " SECONDS" , x, y + 2*fy , fx,fy , "cyan");
+						}
+						break;
+				}
+			}
+		}
+		
+		function collect_(width, height, x , y , c_code ){
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+			this.counter = 0;
+			this.cur_co_f = 2;
+			this.init = false;
+			this.collected = false;
+			this.gc = false;
+			this.c_code = c_code;
+			this.update = function(){
+				this.x -= game_spd * g_dir;
+				ctx = myGameArea.context;
+				switch(this.c_code){
+					case 0:
+					ctx.drawImage(img, this.cur_co_f * 32, 96, 31, 32, this.x , this.y , this.width , this.height);
+					this.counter++;
+					if(this.counter% 10 == 0){
+						this.cur_co_f++;
+						this.counter = 0;
+					}
+					if(this.cur_co_f == 4){
+						this.cur_co_f = 2;
+					}	
+					break;
+					case 1:
+						font_generator("SERVER", this.x - .01 * sh,this.y - .05 * sh , .03 * sh,.03 * sh , "lavender"); 
+						ctx.drawImage(img,32, 64, 32, 32, this.x , this.y , this.width , this.height);
+						break;
+					case 2:
+						font_generator("DEVICE", this.x - .01 * sh,this.y - .05 * sh , .03 * sh,.03 * sh, "lavender"); 
+						ctx.drawImage(img,64, 64, 32, 32, this.x , this.y , this.width , this.height);
+						break;
+				}
+			}
+			this.respawn = function(){
+				if(g_dir == 1){
+					this.x = .95 * sw;
+				}
+				else{
+					this.x = .05 * sw;
+				}
+				this.collected = false;
+				this.gc = false;
+				this.init = false;
+			}
+			this.h_clct = function(otherobj){
+				var myLeft = this.x;
+				var myRight = this.x + this.width;
+				var myTop = this.y;
+				var myBottom = this.y + this.height;
+				var otherLeft = otherobj.x;
+				var otherRight = otherobj.x + otherobj.width;
+				var otherTop = otherobj.y;
+				var otherBottom = otherobj.y + otherobj.height;
+				this.collected = true;
+				if(otherBottom < myTop || otherTop > myBottom || otherRight < myLeft || otherLeft > myRight){
+					this.collected = false;
+				}
+				return this.collected;
+			}
+		}
+		
+		function enemy_(width , height , x ,y , init , dir){
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+			this.cur_en_f = 0;
+			this.counter = 0;
+			this.gravity = 5;
+			this.gravitySpeed = 0;
+			this.grounded = false;
+			this.imDone = false;
+			this.smashed = false;
+			this.init = init;
+			this.checked = false;
+			switch(dir){
+				case 0:
+					this.dir = 1;
+					break;
+				case 1:
+					this.dir = 1.5;
+					break;
+				case 2:
+					this.dir = 1/3;
+					break;
+			}
+			this.update = function(){
+				if(this.grounded){
+					this.x -= e_spd * this.dir * g_dir;
+				}
+				ctx = myGameArea.context;
+				ctx.drawImage(img, this.cur_en_f * 32, 32, 31, 32, this.x , this.y , this.width , this.height);
+				this.counter++;
+				if(this.counter% 20 == 0){
+					this.cur_en_f++;
+					this.counter = 0;
+				}
+				if(this.cur_en_f == 4){
+					this.cur_en_f = 0;
+				}
+			}
+			this.respawn = function(){
+				if(g_dir == 1){
+					this.x = .95 * sw;
+				}
+				else{
+					this.x = .05 * sw;
+				}
+				this.y = .05 * sh;
+				this.smashed = false;
+				this.imDone = false;
+				this.init = false;
+				this.checked = false;
+			}
+			this.h_crash = function(otherobj){
+				var myLeft = this.x;
+				var myRight = this.x + this.width;
+				var myTop = this.y;
+				var myBottom = this.y + this.height;
+				var otherLeft = otherobj.x;
+				var otherRight = otherobj.x + otherobj.width;
+				var otherTop = otherobj.y;
+				var otherBottom = otherobj.y + otherobj.height;
+				otherobj.crashed = false;
+				this.smashed = false;
+				if( myLeft <= otherRight && myRight >= otherLeft && myTop <= otherBottom - 5 && myBottom >=  otherTop && ! this.checked){
+						hero.hp -= 10;
+						sounds(1);
+						hero.h_counter = 50;
+						this.checked = true;
+				}else if(otherBottom - 5 <= myTop && otherBottom > myTop - 5 && otherRight >= myLeft && otherLeft <= myRight && !this.checked){
+					this.smashed = true;
+					if(otherobj.enmy > 0){
+						otherobj.enmy--;
+					}
+					this.imDone = true;
+					otherobj.e_counter = 50;
+					this.checked = true;
+				}
+				return otherobj.crashed || this.smashed;
+			}
+			this.newPos = function(){
+				if(!this.grounded && !this.smashed){
+					this.y += this.gravity;
+				}
+			}
+		}
+		
+		function ground_(width, height, x, y , end){
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+			this.n = end;
+			this.update = function(){
+				if(((this.x < -this.width && g_dir == 1) ||(this.x > sw + this.width && g_dir == -1 )) && !server.gc && !device.gc){
+					var h = Math.floor(Math.random() * 100);
+					if(h % lvl_gr_gap == 0){
+						last_g_pos += .3 * sh * g_dir;
+					}
+					if(g_count <= 0){
+						var g = Math.floor(Math.random() * 100);
+						ry += Math.pow(-1,g) * .1 * sh;
+						if(ry > .9 * sh){
+							ry -= .2 * sh;
+						}
+						else if(ry < .35 * sh){
+							ry += .2 * sh;
+						}
+						g_count = lvl_gr_cs + Math.floor(Math.random() * lvl_gr_cs);
+					}
+					g_count--;
+					this.x = last_g_pos;
+					last_g_pos += this.width * g_dir;
+					this.y = ry;
+				}
+				if(server.gc && !server.init){
+					server.x = last_g_pos - .2 * sh;
+					server.y = ry - server.height;
+					server.init = true;
+				}
+				else if(device.gc && !device.init){
+					device.x = last_g_pos + .2 * sh;
+					device.y = ry - device.height;
+					device.init = true;
+				}
+				this.x -= game_spd * g_dir;
+				ctx = myGameArea.context;
+				ctx.drawImage(img,0, 64, 31 , 32, this.x , this.y , this.width, this.height);	
+			}
+			this.crash = function(otherobj){
+				var myLeft = this.x;
+				var myRight = this.x + this.width;
+				var myTop = this.y;
+				var myBottom = this.y + this.height;
+				var otherLeft = otherobj.x;
+				var otherRight = otherobj.x + otherobj.width;
+				var otherTop = otherobj.y;
+				var otherBottom = otherobj.y + otherobj.height;
+				otherobj.grounded = false;
+				if(otherBottom - 5 <= myTop && otherBottom > myTop - 5 && otherRight >= myLeft && otherLeft <= myRight){
+					otherobj.grounded = true;
+				}
+				return  otherobj.grounded;
+			}
+		}
+		
+		function hero_ (width , height, x , y){
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+			this.gravity = 	.02 * sh;
+			this.gravitySpeed = 0;
+			this.grounded = false;
+			this.dbljump = 0;
+			this.jump_ = false;
+			this.jump_speed = 0;
+			this.counter = 0;
+			this.cur_hero_f = 0;
+			this.crashed = false;
+			this.sec = 0;
+			this.ip = 0;
+			this.jmp = 0;
+			this.enmy = 0;
+			this.rhp = 0;
+			this.hp = 100;
+			this.e_counter = 0;
+			this.h_counter = 0;
+			this.c_counter = 0;
+			this.end_found = false;
+			this.task_done = false;
+			this.idle = function(u , v, uw , vh){
+				ctx = myGameArea.context;
+				ctx.drawImage(img, this.cur_hero_f *32, 0, 31 , 32, u , v , uw, vh);
+				this.counter++;
+				if(this.counter% 10 == 0){
+					this.cur_hero_f++;
+					this.counter = 0;
+				}
+				if(this.cur_hero_f == 4){
+					this.cur_hero_f = 0;
+				}
+			}
+			this.reset = function(){
+				this.e_counter = 0;
+				this.h_counter = 0;
+				this.c_counter = 0;
+				this.crashed = false;
+				this.end_found = false;
+				this.ip = 0;
+				this.task_done = false;
+				this.rhp = 0;
+				this.sec = 0;
+				this.jmp = 0;
+				this.hp = 100;
+			}
+			this.update = function(){
+				ctx = myGameArea.context;
+				if(this.e_counter > 0){
+					font_generator("SMASHED",this.x,this.y-.07 * sh,.03 * sh,.03 * sh,"yellow");
+					this.e_counter--;
+				}
+				if(this.h_counter > 0){
+					font_generator("-10HP",this.x,this.y-.04 * sh,.03 * sh,.03 * sh,"tomato");
+					this.h_counter--;
+				}
+				if(this.c_counter > 0){
+					font_generator("+1IP",this.x,this.y-.1 *sh,.03 * sh,.03 * sh,"cyan");
+					this.c_counter--;
+				}
+				if(this.end_found){
+					hero.x += .006 * sw * g_dir;
+				}
+				if(g_dir == 1){
+					ctx.drawImage(img, this.cur_hero_f * 32, 0, 31 , 32, this.x , this.y , this.width, this.height);
+				}
+				else{
+					ctx.drawImage(img, this.cur_hero_f * 32, 128, 31 , 32, this.x , this.y , this.width, this.height);
+				}
+				if(this.grounded){
+					this.counter++;
+					if(this.counter% 10 == 0){
+						this.cur_hero_f++;
+						this.counter = 0;
+					}
+					if(this.cur_hero_f == 4){
+						this.cur_hero_f = 0;
+					}
+				}
+			}
+			this.newPos = function(){
+				if(!this.grounded && !this.jump_ && !this.crashed){
+					this.y += this.gravity;
+				}
+				else if(this.jump_){
+					this.jump_speed += -10;
+					this.y -= .02 * sh;
+					if(this.jump_speed == -130){
+						this.jump_ = false;
+						this.jump_speed = 0;
+					}
+				}
+			}
+		}
+		
+		function dialog_box(x, y , width , height){
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+			this.blink = 0;
+			this.init = -1;
+			this.out_stat = "";
+			this.tm = false;
+			this.update = function(){
+				ctx = myGameArea.context;
+				ctx.drawImage(img,32, 96, 32 , 32, this.x , this.y , this.width , this.height);
+				switch(this.init){
+					case 1://Half done
+						font_generator("DEVICE - TO - SERVER *",this.x + this.width*.05 , this.y + this.height*.06 , .02 * sw,.04 * sh,"white");
+						ctx.drawImage(img,32, 96, 32 , 32, this.x + this.width*.3, this.y + this.height*.2, .3* sw, .3*sh);
+						font_generator("HTTP://",this.x + this.width*.36 , this.y + this.height*.3 , .02 * sw,.02 * sh,"lightgreen");
+						font_generator("WEBPAGE.HTML",this.x + this.width*.34 , this.y + this.height*.35 , .02 * sw,.02 * sh,"lightgreen");
+						font_generator("PAGE FOUND IN SERVER",this.x + this.width*.17, this.y + this.height*.6 , .03 * sw,.03 * sh,"tomato");
+						font_generator("NOW TO DELIVER IT TO DEVICE",this.x + this.width*.1 , this.y + this.height*.7 , .03 * sw,.03 * sh ,"cyan");
+						if(this.blink < 20){
+							font_generator("TAP ANYWHERE TO CONTINUE",this.x + this.width*.15 , this.y + this.height*.8 , .03 * sw,.03 * sh,"yellow");
+						}
+						if(this.blink >= 40){
+							this.blink = 0;
+						}
+						this.blink++;
+						break;
+					case 2: //Complete done
+						font_generator("SERVER - TO - DEVICE *",this.x + this.width*.05 , this.y + this.height*.06 , .02 * sw,.04 * sh,"white");
+						font_generator("PAGE DELIVERED TO DEVICE",this.x + this.width*.15 , this.y + this.height*.3 , .03 * sw,.03 * sh,"cyan");
+						font_generator("200 : HTTP SUCCESSFULL!",this.x + this.width*.15 , this.y + this.height*.5 , .03 * sw,.03 * sh,"lightgreen");
+						if(this.blink < 20){
+							var s = "";
+							if(lvl < 8){
+								s = "CONTINUE TO NEXT LVL:"+(lvl + 1);
+							}
+							else{
+								s = "YOU COMPLETED MAX LVL!";
+							}
+							font_generator(s,this.x + this.width*.15 , this.y + this.height*.7 , .03 * sw,.03 * sh,"yellow");
+						}
+						else if(this.blink >= 40){
+							this.blink = 0;
+						}
+						this.blink++;
+						break;
+					case 3: //menu
+						font_generator("CREATED BY://",this.x + this.width*.05 , this.y + this.height*.06 , .02 * sw,.04 * sh,"tomato");
+						font_generator("SHUBHAM7997",this.x + this.width*.32 , this.y + this.height*.06 , .02 * sw,.04 * sh,"lightgreen");
+						font_generator("HTTP",this.x + this.width*.1 , this.y + this.height*.2 , .15 * sw,.15 * sh,"cyan");
+						font_generator("HERO",this.x + this.width*.1 , this.y + this.height*.4 , .15 * sw,.15 * sh,"cyan");
+						hero.idle(this.x + this.width * .75 , this.y + this.height * .4 ,  .15 * sw,.15 * sh);
+						if(this.blink < 20){
+							font_generator("TAP ANYWHERE TO CONTINUE",this.x + this.width*.15 , this.y + this.height*.7 , .03 * sw,.03 * sh,"yellow");
+						}
+						if(this.blink >= 40){
+							this.blink = 0;
+						}
+						this.blink++;
+						break;
+					default: //game over
+						if(g_dir == 1){
+							font_generator("DEVICE - TO - X",this.x + this.width*.05 , this.y + this.height*.06 , .02 * sw,.04 * sh,"white");
+						}else{
+							font_generator("SERVER - TO - X",this.x + this.width*.05 , this.y + this.height*.06 , .02 * sw,.04 * sh,"white");
+						}
+						
+						font_generator("ERROR",this.x + this.width*.25 , this.y + this.height*.2 , .07 * sw,.07 * sh,"white");
+						if(this.tm){
+							font_generator("408",this.x + this.width*.28 , this.y + this.height*.35 , .1 * sw,.1 * sh,"white");
+							font_generator("REQUEST TIMEOUT!",this.x + this.width*.22 , this.y + this.height*.5 , .03 * sw,.03 * sh,"white");
+						}
+						else{
+							font_generator("404",this.x + this.width*.28 , this.y + this.height*.35 , .1 * sw,.1 * sh,"white");
+							font_generator("PAGE NOT FOUND!",this.x + this.width*.22 , this.y + this.height*.5 , .03 * sw,.03 * sh,"white");
+						}
+						font_generator(this.out_stat,this.x + this.width * .20 , this.y + this.height*.6, .03 * sw,.03 * sh ,  "lightgreen");
+						if(this.blink < 20){
+							font_generator("TRY AGAIN",this.x + this.width*.30 , this.y + this.height*.7 , .03 * sw,.03 * sh,"yellow");
+						}
+						if(this.blink >= 40){
+							this.blink = 0;
+						}
+						this.blink++;
+						break;
+				}
+			}
+		}
+		
+		function task_setup(){
+			task_code = Math.floor(Math.random() * 500) % 7;
+			switch(task_code){
+				case 0:  //jump required times time free.
+					jmpc = 20 + Math.floor(Math.random() * 10);
+					break;
+				case 1: // collect ip time free.
+					ipc = 10 + Math.floor(Math.random() * 10);
+					break;
+				case 2:	// smash enemy time free.
+					emc = 10 + Math.floor(Math.random() * 10);
+					break;
+				case 3:	// Save HP amount for required time. 
+					rhpc = 50 + Math.floor(Math.random() * 20);
+					sect = 20 + Math.floor(Math.random() * 20);
+					break;
+				case 4: // JUMP required times within time limit.
+					jmpc =  15 + Math.floor(Math.random() * 10);
+					sect = 20 + Math.floor(Math.random() * 15);
+					break;
+				case 5: // COLLECT reqd ip in time limit.
+					ipc = 5 + Math.floor(Math.random() * 10);
+					sect = 40 + Math.floor(Math.random() * 20);
+					break;
+				case 6: // smash reqd enemy in time limit.
+					emc = 5 + Math.floor(Math.random() * 10);
+					sect = 20 + Math.floor(Math.random() * 20);
+					break;
+			}
+		}
+		
+		function rev_game_setup(){
+			myGameArea.canvas.style.background = bgclrlvl[clr];
+			myGameArea.key = -1;
+			g_count = 10;
+			last_g_pos = sw - .2 * sh;
+			hero.y = .72 * sh - hero.height;
+			hero.x = sw - .3 * sh - hero.width;
+			hero.reset();
+			game_spd = .007 * sw;
+			e_spd = game_spd;
+			g_dir = -1;
+			dialog.init = -1;
+			ry = .9*sh;
+			collect.respawn();
+			server.respawn();
+			device.respawn();
+			server.init = true;
+			server.x = last_g_pos;
+			server.y = ry - server.height;
+			for(i = 0 ; i < ground.length; i++){
+				if(g_count <= 0){
+					var g = Math.floor(Math.random() * 100);
+					ry += Math.pow(-1,g) * .1 * sh;
+					if(ry > .9 * sh){
+						ry -= .2 * sh;
+					}
+					else if(ry < .35 * sh){
+						ry += .2 * sh;
+					}
+					g_count = 5 + Math.floor(Math.random() * 5);
+				}
+				ground[i].x = last_g_pos;
+				ground[i].y = ry;
+				last_g_pos += .2 * sh*g_dir;
+				g_count--;
+			}
+			for(i = 0; i < enemy.length;i++){
+				enemy[i].respawn();
+			}
+			hero.rhp = rhpc;
+			hero.sec = sect;
+			hero.ip = ipc;
+			hero.enmy = emc;
+			hero.jmp = jmpc;
+		}
+		
+		function norm_game_setup(){
+			myGameArea.canvas.style.background = bgclrlvl[clr];
+			myGameArea.key = -1;
+			hero.reset();
+			g_count = 10;
+			last_g_pos = 0;
+			hero.x = .3 * sh;
+			hero.y = .72 * sh - hero.height;
+			game_spd = .007 * sw;
+			e_spd = game_spd;
+			g_dir = 1;
+			dialog.init = -1;
+			ry = .9* sh;
+			collect.respawn();
+			server.respawn();
+			device.respawn();
+			device.init = true;
+			device.x = last_g_pos;
+			device.y = ry - device.height;
+			for(i = 0; i < 20; i++){
+				if(g_count <= 0){
+					var g = Math.floor(Math.random() * 100);
+					ry += Math.pow(-1,g) * .1* sh;
+					if(ry > .9 * sh){
+						ry -= .2 * sh;
+					}
+					else if(ry < .35 * sh){
+						ry += .2 * sh;
+					}
+					g_count = 5 + Math.floor(Math.random() * 5);
+				}
+				ground[i].x = last_g_pos;
+				ground[i].y = ry;
+				last_g_pos += .2 * sh;
+				g_count--;
+				
+			}
+			for(i = 0; i < enemy.length;i++){
+				enemy[i].respawn();
+			}
+			hero.rhp = rhpc;
+			hero.sec = sect;
+			hero.ip = ipc;
+			hero.enmy = emc;
+			hero.jmp = jmpc;
+		}
+		
+		//Game Loop
+		function updateGameArea(){
+			if(!hero.crashed){
+			if(hero.hp <=0){
+				hero.crashed = true;
+				sounds(2);
+				dialog.out_stat = "HTTP HERO FAINTED!";
+			}
+			if(hero.y > sh){
+				hero.crashed = true;
+				sounds(2);
+				dialog.out_stat = "HTTP HERO FALLS DOWN!";
+			}
+			else if(hero.x > sw){
+				hero.crashed= true;
+				sounds(2);	
+				dialog.out_stat = "HTTP HERO IS LOST IN WEB!";
+			}
+			if(server.gc && server.x + server.width + 10 <= sw){
+				game_spd = 0;
+				e_spd = 0.003 * sw;
+				hero.end_found = true;
+			}
+			if(device.gc && device.x > .1 * sw){
+				game_spd = 0;
+				e_spd = .003 * sw;
+				hero.end_found = true;
+			}
+			if(hero.task_done && !server.gc && g_dir == 1){
+				server.gc = true;
+			}else if(hero.task_done && !device.gc && g_dir == -1){
+				device.gc = true;
+			}
+			frame++;
+			if(frame > 100){
+				frame = 0;
+			}
+			if(!hero.end_found){
+				var e = Math.floor(Math.random() * 100);
+				if(e % 20 == 0 && frame%10 == 0){
+					for(i = 0; i < enemy.length;i++){
+						if(!enemy[i].init ){
+							enemy[i].init = true;
+							break;
+						}
+					}
+				}
+				if(e%10==0 && frame %10 == 0 && !collect.init){
+					collect.y = ry - .25 * sh;
+					collect.init = true;
+				}
+			}
+			if(server.init && server.h_clct(hero)){
+				dialog.init = 1;
+				sounds(3);
+				hero.crashed = true;
+			}
+			if(device.init && device.h_clct(hero)){
+				dialog.init = 2;
+				sounds(3);
+				hero.crashed = true;
+			}
+			if(collect.init && collect.h_clct(hero)){
+				if(hero.ip > 0){
+					hero.ip--;
+				}
+				hero.c_counter = 50;
+				collect.respawn();
+			}else if(collect.x < 0 || collect.x > sw){
+				collect.respawn();
+			}
+			if(!hero.crashed){
+				for(i = 0; i < ground.length; i++){
+					bottom = ground[i].y + ground[i].height;
+					if(ground[i].x <= hero.x + hero.width && ground[i].x+ground[i].width > hero.x + hero.width && hero.y <= bottom && hero.y + hero.height - 5 >= ground[i].y){
+						hero.crashed = true;
+						sounds(2);
+						dialog.out_stat = "HTTP HERO CRASHED!";
+						return;
+					}
+					else if(ground[i].x + ground[i].width >= hero.x &&  ground[i].x < hero.x && hero.y <= bottom && hero.y + hero.height - 5 >= ground[i].y){
+						hero.crashed = true;
+						sounds(2);
+						dialog.out_stat = "HTTP HERO CRASHED!";
+						return;
+					}
+				}
+			}
+			if(!hero.crashed){
+				for(i = 0; i < enemy.length; i++){
+					if(enemy[i].init && enemy[i].h_crash(hero)){
+						break;
+					}
+				}
+			}
+			for(i = 0; i < ground.length; i++){
+				if(ground[i].crash(hero)){
+					break;
+				}
+			}
+			
+			for(i = 0; i < enemy.length; i++){
+				for(j = 0; j < ground.length; j++){
+					if(enemy[i].init && ground[j].crash(enemy[i])){
+						break;
+					}
+				}
+			}
+			for(i = 0; i < enemy.length; i++){
+				if(enemy[i].imDone || enemy[i].x < 0 || enemy[i].y > sh || enemy[i].x > sw){
+					enemy[i].respawn();
+				}
+			}
+
+			myGameArea.clear();	
+			if(task_code > 2 && hero.sec > 0){
+				hero.sec -= 0.02;
+			}
+			if(task_code > 3 && hero.sec <= 0 && !hero.task_done){
+				hero.crashed = true;
+				dialog.tm = true;
+				sounds(2);
+				dialog.out_stat = "HTTP TASK FAILED!";
+			}
+			if(hero.rhp > hero.hp && !hero.task_done && task_code == 3){
+				hero.crashed = true;
+				sounds(2);
+				dialog.out_stat = "HTTP TASK FAILED!";
+			}
+			last_g_pos -= game_spd * g_dir;
+			for(i = 0; i < ground.length; i++){
+				ground[i].update();
+			}	
+			for(i = 0; i < enemy.length; i++){
+				if(enemy[i].init){
+					enemy[i].newPos();
+					enemy[i].update();
+				}
+			}
+			if(collect.init){
+				collect.update();
+			}
+			if(server.init){
+				server.update();
+			}
+			if(device.init){
+				device.update();
+			}
+			if(myGameArea.key == 1 && hero.grounded){
+				hero.jump_ = true;
+				if(hero.jmp > 0){
+					hero.jmp--;
+				}
+				hero.gravitySpeed = 0;
+				sounds(0);
+			}
+			hero.newPos();
+			hero.update();
+			ui.update();
+			myGameArea.key = -1;
+			}
+			else if(dialog.init == 1){
+				myGameArea.canvas.style.background = bgclrlvl[1];
+				myGameArea.clear();	
+				dialog.update();
+				if(myGameArea.key == 1){
+					clr++;
+					task_setup();
+					rev_game_setup();
+				}	
+			}
+			else if(dialog.init == 2){
+				myGameArea.canvas.style.background = "lightseagreen";
+				myGameArea.clear();	
+				dialog.update();
+				if(myGameArea.key == 1){
+					dialog.init = 3;
+					dialog.tm = false;
+					if(lvl < 8){
+						clr++;
+						task_setup();	
+						norm_game_setup();
+						lvl++;
+						if(lvl % 2 == 0 && lvl_gr_gap > 5){
+							lvl_gr_gap -= 5;
+						}
+						else if(lvl_gr_cs > 2){
+							lvl_gr_cs--;
+						}
+					}
+					else{
+						clr = 0;
+						lvl = 1;
+						lvl_gr_gap = 25;
+						lvl_gr_cs = 5;
+						sounds(3);
+					}
+					myGameArea.key = -1;
+				}
+			}
+			else if(dialog.init == 3){
+				myGameArea.canvas.style.background = bgclrlvl[0];
+				myGameArea.clear();	
+				dialog.update();
+				if(myGameArea.key == 1){
+					task_setup();
+					norm_game_setup();
+				}
+			}
+			else{
+				myGameArea.canvas.style.background = "tomato";
+				myGameArea.clear();	
+				dialog.update();
+				if(myGameArea.key == 1){
+					dialog.init = 3;
+					if(g_dir == 1){
+						norm_game_setup();
+					}else{
+						rev_game_setup();
+					}
+					dialog.tm = false;
+				}
+			}
+		}
+	</script>
+	</body>
+</html>

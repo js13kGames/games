@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>Parity Ship</title>
+
+        <link href="styles/style.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div id="game-container" class="game-container">
+            <div id="canvas-container" class="canvas-container"></div>
+
+            <div id="main-menu" class="menu">
+                <h1 class="main-name">Parity Ship</h1>
+
+                <nav class="button-bar">
+                    <button id="play-button" class="main-button">Play</button>
+                    <button id="about-button" class="main-button">About</button>
+                </nav>
+            </div>
+
+            <div id="about-menu" class="menu">
+                <h1 class="name">Parity Ship</h1>
+
+                <p class="about-info">
+                    Strong interference is blocking communications in this area, and the ships in your fleet are headed in the wrong direction! Your ship is the only one fitted with the old school equipment capable of transmitting cleanly through this kind of interference. Guide your ship with the mouse to avoid colliding with the fleet. Click to transmit a data packet. Inform as many ships to turn around as you can.
+
+                    <!--
+                        Strong interference is blocking communications in this area, and the ships in your fleet are headed in the wrong direction! Your ship is the only one fitted with the old school equipment capable of transmitting cleanly through this kind of interference. Guide your ship with the mouse to avoid colliding with others and corrupt transmissions. Click to transmit a data packet. Inform as many ships to turn around as you can.
+                    -->
+                </p>
+
+                <p class="about-info">
+                    Developed for <a href="http://2015.js13kgames.com/" target="_blank">js13kGames 2015</a>.
+                </p>
+
+                <p class="about-info">Planet Blur (may decrease framerate):<input type="checkbox" id="planet-blur"></p>
+
+                <ul class="info-list">
+                    <li>Author: <a href="https://github.com/Costava" target="_blank">Costava</a></li>
+                    <li>Version: 1.0.0</li>
+                    <li><a href="https://github.com/Costava/Parity-Ship" target="_blank">View source on Github</a></li>
+                </ul>
+
+                <button id="back-button">Back</button>
+            </div>
+
+            <div id="pause-menu" class="menu">
+                <h1 class="name">Parity Ship</h1>
+
+                <nav class="button-bar">
+                    <button id="resume-button">Resume</button>
+                    <button id="quit-button">Quit</button>
+                </nav>
+            </div>
+
+            <div id="end-menu" class="menu">
+                <h1 class="name">Parity Ship</h1>
+
+                <ul class="score-list">
+                    <li id="score-container">
+                        Ships Informed:&nbsp;<span id="score">0</span>
+                    </li>
+
+                    <li id="high-score-container">
+                        <span id="new"></span>High Score:&nbsp;<span id="high-score">0</span>
+                    </li>
+                </ul>
+
+                <nav class="button-bar">
+                    <button id="again-button">Play Again</button>
+                    <button id="return-button">Return to Main Menu</button>
+                </nav>
+            </div>
+        </div>
+
+        <script src="scripts/main.js"></script>
+    </body>
+</html>

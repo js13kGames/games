@@ -1,0 +1,17 @@
+{
+  "short_name": "Saptcha",
+  "name": "Saptcha",
+  "icons": [
+    {
+      "src": "images/image.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "./",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": ".",
+  "orientation": "portrait",
+  "theme_color": "#4A90E2"
+}

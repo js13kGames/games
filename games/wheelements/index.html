@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS13KGames</title>
+	<script src="minify-game.js"></script>
+
+	<style type="text/css">
+		body{margin:0;padding:0;overflow:hidden;}
+		canvas{background:#333}
+	</style>
+</head>
+<body onload="new Game();">
+	<script type="text/javascript">
+		var doc = document;
+
+		// Create Canvas
+		var canvas = doc.createElement('canvas');
+		// Configure it
+		canvas.id = "scene";
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight - 1;
+
+		// Add it to page
+		doc.getElementsByTagName("body")[0].appendChild(canvas);
+
+		// Get context for canvas
+		var ctx = this.canvas.getContext('2d');
+
+		if(isWebkit() === true) {
+			doc.fullScreen = doc.webkitIsFullScreen;
+			canvas.requestFullScreen = canvas.webkitRequestFullScreen;
+		} else if(isMoz() === true) {
+			doc.fullScreen = doc.mozfullScreen;
+			canvas.requestFullScreen = canvas.mozRequestFullScreen;
+		}
+
+		function setFullScreen(){
+			if(doc.fullScreen === false) {
+				canvas.requestFullScreen();
+			}
+		}
+
+		canvas.addEventListener("click",setFullScreen);
+	</script>
+	<canvas id="scene"></canvas>
+</body>
+</html>

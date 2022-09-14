@@ -1,0 +1,69 @@
+html,body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    
+}
+#viewer {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #201B15;
+    position: relative;
+}
+
+canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+button {
+    border: 0px;
+    padding: 1em;
+    min-height: 2em;
+    min-width: 3em;
+    background-color: #704E20;
+    color: rgb(245, 251, 239);
+    font-size: 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 1;
+}
+
+button.skipbutton {
+    padding: 0.5em;
+    min-height: 1em;
+    min-width: 2em;
+    border: 2px solid #704E20;
+    background-color: transparent;
+    color: #704E20;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+button.mutebutton {
+    border: none;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: normal;
+}
+button.mutebutton:after {
+    content: "🔊";
+}
+
+button.mutebutton:hover {
+    background-color: transparent;
+}
+
+button.mutebutton:hover:after {
+    content: "🔇"
+}
+
+button:hover {
+    cursor: pointer;
+    color: rgb(245, 251, 239);
+    background-color:#A3802A;
+}

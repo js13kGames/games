@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>Wandermaze</title>
+		<script type="text/javascript" src="./main.js"></script>
+	</head>
+	<body onload="main();">
+		<canvas id="myCanvas" width="512" height="512" style="border:4px solid #008080;"></canvas>
+		<p>Status: <span id="status"></span> | Score: <span id="score"></span> | Protection: <span id="protection"></span> | Moves: <span id="moves"></span> | PPM: <span id="ppm"></span></p>
+		<p>Instructions: You are <span style="color:#00FF00">GREEN</span>. Collect <span style="color:#CCCC00">GOLD</span>. Avoid <span style="color:#FF0000">RED</span>. <span style="color:#808080">GRAY</span> is impassible. <span style="color:#0000FF">BLUE</span> protects. Arrow keys to move.</p>
+		<p><button onclick="gameController.init();">Restart</button></p>
+		<p>
+			<span style="color:#CCCCFF">LIGHT BLUE</span> represents air, which represents freedom of motion. 
+			<span style="color:#808080">GRAY</span> represents earth, which represents immobility. 
+			<span style="color:#FF0000">RED</span> represents fire, which represents danger. 
+			<span style="color:#0000FF">BLUE</span> represents water, which represents hope.
+		</p>
+		<p>Works in Chrome and IE11.</p>
+	</body>
+</html>

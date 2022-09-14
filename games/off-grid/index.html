@@ -1,0 +1,211 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">  
+		<meta content='maximum-scale=1.0, user-scalable=0' name='viewport' />-
+		<title>off-grid</title>
+	</head>
+	<body>
+
+		<div class="hit-bar"><span class="hit-points"></span></div>
+		<div class="game">
+			<div class="randomizer"></div>
+
+			<div class="actor"><div class="rotator">|.|</div></div>
+		</div>
+		<div class="console"></div>
+		<div class="beacon-count">beacons &#x2193</div>
+		<div class="console2">
+			
+			<div id="b93" style='opacity: .1; color: red;background-color: red'>aa</div>
+			<div id="b94" style='opacity: .1; color: orange;background-color: orange'>aa</div>
+			<div id="b95" style='opacity: .1; color: yellow;background-color: yellow'>aa</div>
+			<div id="b96" style='opacity: .1; color: green;background-color: green'>aa</div>
+			<div id="b97" style='opacity: .1; color: blue;background-color: blue'>aa</div>
+			<div id="b98" style='opacity: .1; color: indigo;background-color: indigo'>aa</div>
+			<div id="b99" style='opacity: .1; color: violet;background-color: violet'>aa</div>
+				
+		</div>
+		<div class="console1"></div>
+		<div class="console3"></div>
+	</body>
+</html>
+<style>
+
+	@keyframes boom{
+		0% { transform: scale(1); }
+		10% { transform: scale(2); }
+		20% { transform: scale(3); }
+		30% { transform: scale(4); }
+		40% { transform: scale(5); }
+		50% { transform: scale(6); }
+		60% { transform: scale(7); }
+		70% { transform: scale(8); }
+		80% { transform: scale(9); }
+		90% { transform: scale(10); }
+	}
+	@keyframes blink {
+		0% { opacity: .5; }
+		10% { opacity: .15; }
+		20% { opacity: .25; }
+		30% { opacity: .35; }
+		40% { opacity: .45; }
+		50% { opacity: .55; }
+		60% { opacity: .65; }
+		70% { opacity: .75; }
+		80% { opacity: .85; }
+		90% { opacity: .95; }
+	}
+
+	@keyframes beacon {
+		0% { background-color: red; }
+		15% { background-color:orange; }
+		30% { background-color: yellow; }
+		45% { background-color: green; }
+		60% { background-color: blue; }
+		75% { background-color: indigo; }
+		90% { background-color: violet; }
+	}
+
+	@font-face {
+		font-family: "Hexagon";
+		src: url("Hexagon.ttf");
+	}
+
+	body {
+		overflow: hidden;
+		text-align: center;
+		justify-content: center;
+		background-color: #04050D;
+		  -webkit-user-select: none;  /* Chrome all / Safari all */
+		  -moz-user-select: none;     /* Firefox all */
+		  -ms-user-select: none;      /* IE 10+ */
+		  user-select: none;          /* Likely future */   
+	}
+	
+	.console {
+		position: fixed;
+		top: 15px;
+		right: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .2);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 15pt;
+		color: grey;
+	}
+
+	.beacon-count {
+		position: fixed;
+		top: 15px;
+		left: 15px;
+		padding: 10px;
+		background: rgba(255, 255, 255, .5);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 15pt;
+
+	}
+	.console2 {
+		position: fixed;
+		top: 80px;
+		left: 80px;
+		padding: 10px;
+		width: 35px;
+		background: rgba(255, 255, 255, .5);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 20pt;
+	}
+
+	
+	.console3 {
+		position: fixed;
+  		/* margin: 0 auto; */
+		padding: 20px;
+		background: rgba(255, 255, 255, .2);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 15pt;
+		color: white;
+		background-color: black;
+		/* display: none; */
+	}
+	
+	.console1 {
+		position: fixed;
+		bottom: 15px;
+		right: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .2);
+		z-index: 99;
+		visibility: hidden;
+		font-family: "Consolas";
+		font-size: 15pt;
+		color: grey;
+	}
+	
+	.hit-bar {
+		position: fixed;
+		top: 80px;
+		left: 15px;
+		width: 45px;
+		height: 300px;
+		z-index: 99;
+		font-family: "Consolas";
+		font-size: 20pt;
+		opacity: .5;
+	}
+
+	.hit-points {
+		position: absolute;
+		bottom: 0;
+		left:7px;
+	}
+
+	.random-element {
+		position: absolute;
+		color: #C9A957;
+		font-family: "lucida console";
+		font-size: 20pt;
+		height: 10px;
+		width: 10px;
+		opacity: .5;
+		border: solid 1px;
+	}
+
+	
+	.actor {
+		position: absolute;
+		left: 1%;
+		top: 96%;
+		width: 20px;
+		height: 20px;
+		font-size: 10pt;
+		color:rgba(150, 300, 550, 1);
+		font-family: "lucida console";
+	}
+	
+	.game {
+		position: absolute;
+		background-color: #060712;
+
+		left: 13%;
+		top: 13%;
+		width: 1500px;
+		height:750px;
+		transform: scale(3);
+		animation: color-change 15s infinite;
+	}
+	
+	
+	
+</style>
+
+<script>
+function tableCreate(){var t=document.querySelector(".game"),e=document.createElement("table");e.style.width="100%",e.style.height="100%",e.style.border="grey solid 1px",e.style.opacity=".1";for(var n=document.createElement("tbody"),o=0;o<10;o++){for(var r=document.createElement("tr"),a=0;a<20;a++){var l=document.createElement("td");l.appendChild(document.createTextNode("")),l.style.border="grey solid 1px",r.appendChild(l)}n.appendChild(r)}e.appendChild(n),t.appendChild(e)}var angle=0,x_velocity=0,y_velocity=0,x_translation=0,y_translation=0,map={},freeze_controls=!1,current_el=0,speedCoefficient=1,caught=0,hit_points=99,positionUponMeetingX=0,positionUponMeetingY=0,time=0;function go(){0==freeze_controls&&(time+=.01);for(var t=0;t<100;t++)39!=t&&68!=t||1==map[t]&&(angle-=2*speedCoefficient),37!=t&&65!=t||1==map[t]&&(angle+=2*speedCoefficient),38!=t&&87!=t||(1==map[t]?(x_translation-=x_velocity,y_translation-=y_velocity,hit_points-=.025*speedCoefficient,document.querySelector(".hit-bar").style.animation="blink 2s infinite"):document.querySelector(".hit-bar").style.animation="");x_velocity=speedCoefficient*Math.cos((90-angle)/(180/Math.PI)),y_velocity=speedCoefficient*Math.cos(angle/(180/Math.PI)),document.querySelector(".actor .rotator").style.transform="rotate3d(0,0,1,"+-1*angle+"deg)",document.querySelector(".actor").style.transform="translate3d("+x_translation+"px, "+y_translation+"px, 0px)",document.querySelector(".game").style.transformOrigin=1.3*(x_translation-50)+"px "+1.3*(y_translation+700)+"px",document.querySelector(".hit-points").innerHTML="<span style='font-size:10pt;'>fuel<br/></span>"+Math.round(hit_points),Math.round(hit_points)<30?document.querySelector(".hit-points").style.color="grey":document.querySelector(".hit-points").style.color="black",document.querySelector(".hit-bar").style.height=3*hit_points,document.querySelector(".hit-bar").style.background="rgba(100,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(150, 300, 550, 1)",document.querySelector(".hit-bar").style.opacity=".5",document.querySelector(".actor").style.opacity="1",""==document.querySelector(".console").innerHTML?document.querySelector(".console").style.display="none":document.querySelector(".console").style.display="",hit_points<99&&(hit_points+=.02),hit_points<=0&&(freeze_controls=!0,map[39]=!0,window.setTimeout(function(){var t="";0!=parseInt(time).toString().slice(-1)[0]&&5!=parseInt(time).toString().slice(-1)[0]||(t="wasted"),1!=parseInt(time).toString().slice(-1)[0]&&6!=parseInt(time).toString().slice(-1)[0]||(t="dammit"),2!=parseInt(time).toString().slice(-1)[0]&&7!=parseInt(time).toString().slice(-1)[0]||(t="aw snap"),3!=parseInt(time).toString().slice(-1)[0]&&8!=parseInt(time).toString().slice(-1)[0]||(t="you dead"),4!=parseInt(time).toString().slice(-1)[0]&&9!=parseInt(time).toString().slice(-1)[0]||(t="r.i.p."),document.querySelector(".console3").style.display="",document.querySelector(".console3").innerHTML="<span style='background-color:black; padding: 5px;'>"+t+"<br/><br/>you ran out of fuel <br/><br/>"+parseInt(time)+" seconds</span>"},2e3),window.setTimeout(function(){location.reload()},5e3))}function mapKeyDown(t){0==freeze_controls&&(map[t.keyCode]=!0)}function mapKeyUp(t){map[t.keyCode]=!1}function shuffle(t){for(var e,n,o=t.length;o>0;)n=Math.floor(Math.random()*o),e=t[--o],t[o]=t[n],t[n]=e;return t}window.addEventListener("keyup",mapKeyUp,!1),window.addEventListener("keydown",mapKeyDown,!1),window.addEventListener("keydown",function(t){[32,37,38,39,40].indexOf(t.keyCode)>-1&&t.preventDefault()},!1),window.addEventListener("touchmove",function(t){t.preventDefault()},!1);var posX=[],valX=0,combinations=[];for(ctr=0;valX<=7500;ctr++)posX[ctr]=valX,valX+=75;var aw=0;for(ctra=1;ctra<=9;ctra++)for(ctrb=2;ctrb<=19;ctrb++)combinations[aw]=[posX[ctra],posX[ctrb]],aw++;shuffle(combinations);var rando=[];function random_debris(t){this.neutral=!1,this.ctr=t,this.top=combinations[t][0],this.left=combinations[t][1],this.width=15,this.height=15,this.x_translate=0,this.y_translate=0,this.content=".",this.id="el"+t,this.class="random-debris",this.rotateBy=0,92==this.ctr&&(this.content="",this.color="#04050D"),93==this.ctr&&(this.content="",this.color="red"),94==this.ctr&&(this.content="",this.color="orange"),95==this.ctr&&(this.content="",this.color="yellow"),96==this.ctr&&(this.content="",this.color="green"),97==this.ctr&&(this.content="",this.color="blue"),98==this.ctr&&(this.content="",this.color="indigo"),99==this.ctr&&(this.content="",this.color="violet"),91==this.ctr&&(this.opacity="1",this.content="",this.color="black",this.width=20,this.height=20),this.ctr>92&&this.ctr<100&&(this.width=10,this.height=10);var e=document.createElement("span");e.setAttribute("class","random-element"),e.setAttribute("id",this.id),e.setAttribute("style","width: "+this.width+"px; height: "+this.height+"px; position: absolute; top: "+this.top+"px; left: "+this.left+"px; color: "+this.color+"; background-color: "+this.color+";");var n=document.createTextNode(this.content);e.appendChild(n);var o=document.querySelector(".randomizer");document.querySelector(".game").insertBefore(e,o)}for(var ctr=60;ctr<=99;ctr++)rando[ctr]=new random_debris(ctr);function actorToElementCollision(t){for(var e=60;e<=91;e++){var n=document.querySelector(".actor").getBoundingClientRect().top,o=document.querySelector(".actor").getBoundingClientRect().bottom,r=document.querySelector(".actor").getBoundingClientRect().left,a=document.querySelector(".actor").getBoundingClientRect().right,l=document.querySelector("#el"+e),i=l.getBoundingClientRect().top,c=l.getBoundingClientRect().bottom,s=l.getBoundingClientRect().left,d=l.getBoundingClientRect().right;91==e&&1==rando[93].neutral&&1==rando[94].neutral&&1==rando[95].neutral&&1==rando[96].neutral&&1==rando[97].neutral&&1==rando[98].neutral&&1==rando[99].neutral?(r<d&&a>d&&(n>i&&o<c||n>i&&n<c||o<c&&o>i)||n<c&&o>c&&(r>s&&a<d||r>s&&r<d||r<s&&a>s)||o>i&&o<c&&(r>s&&a<d||r>s&&r<d||r<s&&a>s)||a>s&&a<d&&(n>i&&o<c||n>i&&n<c||o<c&&o>i))&&(document.querySelector(".console").style.display="none",document.querySelector(".game").style.animation="beacon 3s",document.querySelector("table").style.display="none",window.setTimeout(function(){document.querySelector(".console3").style.display="",document.querySelector(".console3").innerHTML="Nice! You went off the grid in: "+parseInt(time)+" seconds"},3500),map[37]=!0,x_velocity=0,y_velocity=0,freeze_controls=!0,window.setTimeout(function(){location.reload()},1e4)):(r<d&&a>d&&(n>i&&o<c||n>i&&n<c||o<c&&o>i)&&(x_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),n<c&&o>c&&(r>s&&a<d||r>s&&r<d||r<s&&a>s)&&(y_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),o>i&&o<c&&(r>s&&a<d||r>s&&r<d||r<s&&a>s)&&(y_translation+=-2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),a>s&&a<d&&(n>i&&o<c||n>i&&n<c||o<c&&o>i)&&(x_translation+=-2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"))}}function actorToBoundaryCollision(){var t=document.querySelector(".actor").getBoundingClientRect().top,e=document.querySelector(".actor").getBoundingClientRect().bottom,n=document.querySelector(".actor").getBoundingClientRect().left,o=document.querySelector(".actor").getBoundingClientRect().right,r=document.querySelector(".game").getBoundingClientRect().left,a=document.querySelector(".game").getBoundingClientRect().right,l=document.querySelector(".game").getBoundingClientRect().top,i=document.querySelector(".game").getBoundingClientRect().bottom;r>=n&&(x_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),Math.abs(n-r)<=15&&Math.abs(e-i)<=15&&(x_translation+=2,y_translation+=-2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),a<=o&&(x_translation+=-2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),Math.abs(o-a)<=15&&Math.abs(e-i)<=15&&(x_translation-=2,y_translation-=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),l>=t&&(y_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),Math.abs(o-a)<=15&&Math.abs(t-l)<=15&&(x_translation+=2,y_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),Math.abs(n-r)<=15&&Math.abs(t-l)<=15&&(x_translation+=2,y_translation+=2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)"),i<=e&&(y_translation+=-2,hit_points-=.05,document.querySelector(".hit-bar").style.backgroundColor="rgba(300,"+parseInt(3*hit_points)+", 00, 1)",document.querySelector(".actor").style.color="rgba(300,"+parseInt(3*hit_points)+", 00, 1)")}function attract_debris(t,e){for(var n=60;n<=91;n++){var o=document.querySelector("#el"+n),r=o.getBoundingClientRect().top,a=o.getBoundingClientRect().left,l=document.querySelector(".actor"),i=l.getBoundingClientRect().top,c=l.getBoundingClientRect().left;91!=n&&0==freeze_controls&&(c-a<e&&c-a>0&&i-r<e&&i-r>0?(o.style.animation="blink 1s infinite",rando[n].x_translate+=t,rando[n].y_translate+=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):a-c<e&&a-c>0&&r-i<e&&r-i>0?(o.style.animation="blink 1s infinite",rando[n].x_translate-=t,rando[n].y_translate-=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):c-a<e&&c-a>0&&r-i<e&&r-i>0?(o.style.animation="blink 1s infinite",rando[n].x_translate+=t,rando[n].y_translate-=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):a-c<e&&a-c>0&&i-r<e&&i-r>0?(o.style.animation="blink 1s infinite",rando[n].x_translate-=t,rando[n].y_translate+=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):(o.style.animation="",0!=rando[n].x_translate&&(rando[n].x_translate>0&&(rando[n].x_translate-=t),rando[n].x_translate<0&&(rando[n].x_translate+=t)),0!=rando[n].y_translate&&(rando[n].y_translate>0&&(rando[n].y_translate-=t),rando[n].y_translate<0&&(rando[n].y_translate+=t)))),Math.abs(a-c)<=50&&Math.abs(r-i)<=50&&hit_points>0&&(hit_points-=.01),o.style.transform="translate3d("+rando[n].x_translate+"px, "+rando[n].y_translate+"px, 0px) rotate3d(0,0,1,"+rando[n].rotateBy+"deg)",1==rando[93].neutral&&1==rando[94].neutral&&1==rando[95].neutral&&1==rando[96].neutral&&1==rando[97].neutral&&1==rando[98].neutral&&1==rando[99].neutral&&(e*=1.1,91==n&&(o.style.backgroundColor="white",c-a<.15*e&&c-a>0&&i-r<.15*e&&i-r>0||a-c<.15*e&&a-c>0&&r-i<.15*e&&r-i>0||c-a<.15*e&&c-a>0&&r-i<.15*e&&r-i>0||a-c<.15*e&&a-c>0&&i-r<.15*e&&i-r>0?(document.querySelector(".console").innerHTML="Grid<br/>Gate<br/>nearby",o.style.animation="beacon .66s infinite",document.querySelector(".console").style.animation="blink .5s infinite"):(document.querySelector(".console").style.animation="blink 2s infinite",document.querySelector(".console").innerHTML="Grid<br/>Gate<br/>open",o.style.animation="")))}}function repel_debris(t,e){for(var n=93;n<=99;n++){var o=document.querySelector(".actor").getBoundingClientRect().top,r=(document.querySelector(".actor").getBoundingClientRect().bottom,document.querySelector(".actor").getBoundingClientRect().left),a=(document.querySelector(".actor").getBoundingClientRect().right,document.querySelector("#el"+n)),l=a.getBoundingClientRect().top,i=a.getBoundingClientRect().left,c=a.getBoundingClientRect().right,s=a.getBoundingClientRect().bottom,d=document.querySelector(".game").getBoundingClientRect().left,u=document.querySelector(".game").getBoundingClientRect().right,y=document.querySelector(".game").getBoundingClientRect().top,m=document.querySelector(".game").getBoundingClientRect().bottom;d>=i&&(rando[n].x_translate+=1),Math.abs(i-d)<=15&&Math.abs(s-m)<=15&&(rando[n].x_translate+=1,rando[n].y_translate+=-1),u<=c&&(rando[n].x_translate+=-1),Math.abs(c-u)<=15&&Math.abs(s-m)<=15&&(rando[n].x_translate+=1,rando[n].y_translate+=1),y>=l&&(rando[n].y_translate+=1),Math.abs(c-u)<=15&&Math.abs(l-y)<=15&&(rando[n].x_translate+=1,rando[n].y_translate+=1),Math.abs(i-d)<=15&&Math.abs(l-y)<=15&&(rando[n].x_translate+=1,rando[n].y_translate+=1),m<=s&&(rando[n].y_translate+=-1),0==rando[n].neutral&&(r-i<e&&r-i>0&&o-l<e&&o-l>0?(rando[n].x_translate-=t,rando[n].y_translate-=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):i-r<e&&i-r>0&&l-o<e&&l-o>0?(rando[n].x_translate+=t,rando[n].y_translate+=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):r-i<e&&r-i>0&&l-o<e&&l-o>0?(rando[n].x_translate-=t,rando[n].y_translate+=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):i-r<e&&i-r>0&&o-l<e&&o-l>0?(rando[n].x_translate+=t,rando[n].y_translate-=t,elementVelocityX=rando[n].x_translate/rando[n].y_translate,elementVelocityY=1,rando[n].rotateBy=Math.atan(elementVelocityX/elementVelocityY)*(180/Math.PI)):0!=caught&&(0!=rando[caught].x_translate&&(rando[caught].x_translate>0&&(rando[caught].x_translate-=t),rando[caught].x_translate<0&&(rando[caught].x_translate+=t)),0!=rando[caught].y_translate&&(rando[caught].y_translate>0&&(rando[caught].y_translate-=t),rando[caught].y_translate<0&&(rando[caught].y_translate+=t)),document.querySelector("#el"+caught).style.transform="translate3d("+rando[caught].x_translate+"px, "+rando[caught].y_translate+"px, 0px)"),a.style.transform="translate3d("+rando[n].x_translate+"px, "+rando[n].y_translate+"px, 0px) rotate3d(0,0,1,"+-1*rando[n].rotateBy+"deg)"),0==rando[n].neutral&&(a.style.animation=r-i<5*e&&r-i>0&&o-l<4*e&&o-l>0||i-r<5*e&&i-r>0&&l-o<4*e&&l-o>0||r-i<5*e&&r-i>0&&l-o<4*e&&l-o>0||i-r<5*e&&i-r>0&&o-l<4*e&&o-l>0?"blink .33s infinite":""),Math.abs(i-r)<=40&&Math.abs(l-o)<=40&&0==rando[n].neutral&&(hit_points=99,document.querySelector(".console").innerHTML="<span style='color:"+rando[n].color+"'>"+rando[n].color+"</span> beacon captured <br />",window.setTimeout(function(){document.querySelector(".console").innerHTML=""},5e3),positionUponMeetingX=x_translation-rando[n].x_translate,positionUponMeetingY=y_translation-rando[n].y_translate,caught=n,rando[n].neutral=!0,a.style.animation="",speedCoefficient+=.1,document.querySelector("#el"+n).style.opacity="1",document.querySelector("#b"+n).style.opacity=1),n==caught&&(document.querySelector(".console2").style.animation="blink 1s",a.style.animation="",document.querySelector("#el"+n).style.backgroundColor="black",document.querySelector("#el"+n).style.color="black")}}function game(){tableCreate(),window.setInterval(function(){go(),actorToBoundaryCollision(),actorToElementCollision(document.querySelector(".actor")),attract_debris(.25,250),repel_debris(.6,135)},10)}window.addEventListener("load",function(){document.querySelector(".console3").style.display="none",document.querySelector(".console3").style.left="15%",document.querySelector(".console3").style.bottom="20%",window.setTimeout(function(){document.querySelector(".console3").innerHTML="You have been transported to the Grid.",document.querySelector(".console3").style.display=""},1e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML="The only way to get off the Grid is to capture the following:"},5e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML+="</br></br><span style='animation: blink 1s infinite'><span style='color: red;background-color: red'>aa</span> <span style='color: orange;background-color: orange'>aa</span> <span style='color: yellow;background-color: yellow'>aa</span> <span style='color: green;background-color: green'>aa</span> <span style='color: blue;background-color: blue'>aa</span> <span style='color: indigo;background-color: indigo'>aa</span> <span style='color: violet;background-color: violet'>aa</span></span>"},7e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML="Those are the <strong>beacons</strong> that should allow you to locate the"},12e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML+="<br/><br/><span style='animation: beacon 1s infinite; color = white'><span style='visibility:hidden'>Grid<br/>Gate</span></span><br/><br/>Grid Gate"},14e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML+=", a.k.a. the way out."},17e3),window.setTimeout(function(){document.querySelector(".console3").innerHTML="Use the arrow keys/WASD [or <em style='animation: blink .5s infinite'>both</em>] to navigate the Grid"},2e4),window.setTimeout(function(){document.querySelector(".console3").innerHTML="",document.querySelector(".console3").style.display="none"},27e3),game()},!1);
+</script>

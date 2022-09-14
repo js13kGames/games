@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <style>
+            body{
+                background-color: black;
+                margin: 0;
+                overflow-x: hidden;
+                overflow-y: hidden;
+            }
+            particle {
+                position: fixed;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                pointer-events: none;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+        
+        .but {
+	font-weight:bold;
+	text-decoration:none;
+	font-family:Arial;
+	box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
+	o-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
+	-moz-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
+	-webkit-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 3px 2px;
+	background:#000000;
+	background:-o-linear-gradient(90deg, #000000, #000000);
+	background:-moz-linear-gradient( center top, #000000 5%, #000000 100% );
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #000000) );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000');
+	background:-webkit-linear-gradient(#000000, #000000);
+	background:-ms-linear-gradient(#000000, #000000);
+	background:linear-gradient(#000000, #000000);
+	text-indent:0px;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	text-align:center;
+	vertical-align:middle;
+	display:inline-block;
+	color:#ffffff;
+	text-shadow:#030405 2px 2px 0px;
+	border-color:#0d1f24;
+	border-width:2px;
+	border-style:solid;
+}
+
+.but:active {
+	box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	o-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	-moz-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	-webkit-box-shadow:inset #ffffff 0px 5px 8px -1px,#d6d6d6 1px 0 2px;
+	position:relative;
+}
+
+.but:hover {
+	background:#000000;
+	background:-o-linear-gradient(90deg, #000000, #000000);
+	background:-moz-linear-gradient( center top, #000000 5%, #000000 100% );
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #000000) );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000');
+	background:-webkit-linear-gradient(#000000, #000000);
+	background:-ms-linear-gradient(#000000, #000000);
+	background:linear-gradient(#000000, #000000);
+}
+        </style>
+    </head>
+    <body>
+        <table style="position: absolute;">
+        <tr>
+            <td>
+                <div><canvas id="main" style="margin: 0; 
+                cursor: url('cursor.cur'), pointer;"></canvas></div>
+            </td>
+            <td>
+                <div>
+                    <canvas id="mini" style="margin: 0;"></canvas>
+                    <canvas id="textContainer" style="margin: 0;"></canvas>
+                </div>
+            </td>
+        </tr>
+        </table>
+        <div id="root"></div>
+        <div id="title" style='overflow-wrap: break-word; position: absolute; z-index: 5;'><span></span></div>
+        <div id="description" style='overflow-wrap: break-word; position: absolute; z-index: 5;'><span></span></div>
+        <div id="rewardBack" style='width: 0px; height: 0px; position: absolute; z-index: 7; background: rgb(129,130,133);
+background: radial-gradient(circle, rgba(129,130,133,0.77) 1%, rgba(0,0,0,0.84) 100%);'>
+        </div>
+        <script src="https://js13kgames.com/src/near-api-js.js" type="text/javascript"></script>
+        <script>
+        const mainCanvas=document.getElementById("main"),miniCanvas=document.getElementById("mini"),textContainer=document.getElementById("textContainer"),title=document.getElementById("title"),description=document.getElementById("description"),rewardBack=document.getElementById("rewardBack"),c=mainCanvas.getContext("2d"),miniCntx=miniCanvas.getContext("2d"),MAIN_CANVAS_WIDTH=.7,MINI_CANVAS_HEIGHT=.4;let contract,account,wallet,near,nearApi;(async()=>{await a();let t=()=>{wallet.requestSignIn("js13game-vadimsab.testnet")},e=()=>{wallet.signOut(),window.location.reload()};async function n(t){console.log(t,account,contract);let e=await contract.nft_reassign_ownership({token_id:t,new_token_owner_id:account.accountId});-1!==e.indexOf("Success")?console.log(t+`owned by ${account.accountId}`):console.log("error"),console.log("Transfer Result",e)}async function i(t){let e=await contract.get_token({token_id:t});return e}async function a(){nearAPI=window.nearApi;let{keyStores:t,connect:e,WalletConnection:n}=nearAPI,i=new t.BrowserLocalStorageKeyStore;near=await e({networkId:"testnet",keyStore:i,nodeUrl:"https://rpc.testnet.near.org",walletUrl:"https://wallet.testnet.near.org",helperUrl:"https://helper.testnet.near.org",explorerUrl:"https://explorer.testnet.near.org"}),wallet=new n(near)}function l(){mainCanvas.width=.7*innerWidth,mainCanvas.height=innerHeight,c.save(),c.fillStyle="#F0D698",c.fillRect(0,0,1e9,1e9),c.restore(),miniCanvas.width=.30000000000000004*innerWidth,miniCanvas.height=.4*innerHeight,miniCntx.save(),miniCntx.fillStyle="#413D51",miniCntx.fillRect(0,0,1e9,1e9),miniCntx.restore(),textContainer.width=miniCanvas.width,textContainer.height=innerHeight-miniCanvas.height}l();{let o=!1,s=!1,r=!0,$=!0,d=!0,h=0,p=1;async function m(t){h++;let e=j(5,13);for(let a=0;a<e;a++)g(t.clientX,t.clientY,a==e-1);if(!$){await C();return}if($=!1,h>=p){h=0,p=j(5,13);let l=j(0,4),o;if(4==l&&wallet.isSignedIn()){console.log("res == 4");let s=`${100*j(1500,4900)}`;console.log(s);let r=await i(s);console.log("res",r),r&&"js13game-vadimsab.testnet"==r.owner_id&&(new Image,console.log(await n(s)),(o=await fetch(r.metadata.media).then(t=>t.blob()).catch(t=>console.log(t)))&&o?.size!=221&&await U(o,`Pharaoh Sculpture P_${s/100}`))}else l>=2&&(new Image,o=await (await fetch(`https://bafybeiakx5f4pioiexvk5xwcubw52x3cnaf4cs5yyztre5bhafu3oc5b5e.ipfs.nftstorage.link/egyptfiles/1 (${[j(0,28)]}).jpg`)).blob());await C(new Image,o)}else await C();$=!0}function g(t,e,n){let i=document.createElement("particle");document.body.appendChild(i);var a="rgba(60, 60, 60, 255)";i.style.boxShadow=`0 0 50px ${100*Math.random()/5}px ${a}`,i.style.background=a,i.style.borderRadius="50%",width=height=1e-10,i.style.width=`${width}px`,i.style.height=`${height}px`;let l=i.animate([{transform:`translate(-50%, -50%) translate(${t}px, ${e}px) rotate(0deg)`,opacity:1},{transform:`translate(-50%, -50%) translate(${t+(Math.random()-.5)*300}px, ${e+(Math.random()-.5)*300}px) rotate(${520*Math.random()}deg)`,opacity:0}],{duration:777,easing:"cubic-bezier(0, .9, .57, 1)",delay:200*Math.random()});n?l.onfinish=t=>{r=!0,f(t)}:l.onfinish=f}function f(t){t.srcElement.effect.target.remove()}(()=>{let t=0;setInterval(()=>{$?t=0:t++,t>=35&&($=!0)},100)})(),document.body.animate&&(mainCanvas.addEventListener("mouseover",()=>{o=!0}),mainCanvas.addEventListener("mouseout",()=>{o=!1}),mainCanvas.addEventListener("mousedown",()=>{s=!0}),mainCanvas.addEventListener("mouseup",()=>{s=!1}),mainCanvas.addEventListener("mousemove",t=>{o&&s&&r&&$&&d&&m(t),d=!1,setTimeout(()=>d=!0,3e3)}))}let x=function(){let t=[1,2.5],e=["rgb(255, 211, 95)","rgb(252, 217, 117)","rgb(239, 169, 94)","rgb(255, 185, 97)"],n=[.01,.02,.03,.05],i=mainCanvas.width/22,a=.95*i,l=(l,o)=>{let s=t[j(0,t.length-1)],r=e[j(0,e.length-1)],$=n[j(0,n.length-1)];return c.save(),c.fillStyle="black",c.fillRect(l,o,i*s,a),c.fillStyle=r,c.fillRect(l+$,o+$,i*s-2*$,a-2*$),c.restore(),s},o=[0,0];for(;o[0]<mainCanvas.width||o[1]<mainCanvas.height;){o[0]>mainCanvas.width&&(o[0]=0,o[1]+=a);let s=l(o[0],o[1]);o[0]+=i*s}};x();let w=miniCanvas.width>miniCanvas.height?.8*miniCanvas.height:.8*miniCanvas.width,y=w,u=(miniCanvas.width-w)/2,_=(miniCanvas.height-y)/2,C=async(t,e)=>{if(miniCntx.save(),miniCntx.fillStyle="#413D51",miniCntx.fillRect(0,0,1e9,1e9),miniCntx.restore(),miniCntx.save(),miniCntx.fillStyle="#413D59",miniCntx.fillRect(u,_,w,w),miniCntx.restore(),t instanceof Image&&e){miniCntx.save(),miniCntx.fillStyle="#413D51",miniCntx.fillRect(0,0,1e9,1e9),miniCntx.restore(),t.src=URL.createObjectURL(e);let n=!0;t.onload=function(){n=!1},await new Promise(t=>{!function e(){(n||t())&&setTimeout(e,20)}()});let i=t.width,a=t.height,l=0,o=0;i>a?(t.width=w+"px",t.height=w/i*a+"px",o=(y-t.height)/4,miniCntx.drawImage(t,u+(l||0),_+o?o:0)):(console.log(t.width,t.height,miniCanvas.height/4),l=-(2*u),miniCntx.drawImage(t,miniCanvas.height/8,miniCanvas.height/8,miniCanvas.height/4*3,miniCanvas.height/4*3)),t.remove(),URL.revokeObjectURL(t.src)}else miniCntx.save(),miniCntx.fillStyle="white",miniCntx.font=`${w/14}px serif`,miniCntx.fillText("EMPTY"+[".","..","..."][j(0,2)],2*u-w/14/1.2,_+y/2,w/2.7),miniCntx.restore()};C();let v=(t,e,n,i,a)=>{let l=document.createElement("button");return root.append(l),l.style.cssText="cursor: pointer;",l.style.left=t+"px",l.style.top=e+"px",l.style.width=n,l.style.height=i,l.style.position="absolute",l.style.fontSize=i/2+"px",l.style.zIndex=5,l.style.lineHeight=`${innerHeight/35}px`,l.setAttribute("class","but"),a&&(l.innerHTML=a),l},b=(t,e,n)=>{let i=document.createElement("div"),a=document.createElement("span");return root.append(i),i.append(a),a.style.cssText=`
+                    font-family: "Lucida Console", Monaco, monospace;
+                    letter-spacing: 0px;
+                    word-spacing: -2px;
+                    color: #000000;
+                    text-decoration: none;
+                    font-style: normal;
+                    font-variant: normal;
+                    text-transform: uppercase;`,a.innerHTML=e,a.id=n,a.style.fontSize=parseInt(t.style.height)/2+"px",a.style.color="white",i.style.left=parseInt(t.style.left)-1.05*parseInt(t.style.width)+"px",i.style.top=parseInt(t.style.top)-parseInt(t.style.height)/2+"px",i.style.position="absolute",i.style.zIndex=5,!0},I=textContainer.width,E=textContainer.height;{let S,k,L,T=0;if(T=(L=I/6)/3.5,S=innerWidth-L-.01*innerHeight,k=innerHeight-T-.01*innerHeight,wallet.isSignedIn()){let B=wallet.getAccountId();console.log("IS SIGNED IN!",B),account=await near.account(wallet._authData.accountId);let R=await account.state();console.log("STATE",R),contract=new nearAPI.Contract(account,"js13game-vadimsab.testnet",{viewMethods:["get_token"],changeMethods:["nft_reassign_ownership"],sender:account});let M;(M=v(S,k,L,T,"SIGN OUT")).onclick=e,b(M,B,"nameWallet")}else v(S,k,L,T,"SIGN IN").onclick=t}{let z,A,H,N=0;N=(H=I/6)/3.5,v(z=innerWidth-I+.01*innerHeight,A=innerHeight-N-.01*innerHeight,1.3*H,N,"OTHER WALL").onclick=x}let D=(t,e,n="rgb(250, 210, 1)")=>{title.width=.5*I,description.width=.85*I,title.children[0].style.cssText=description.children[0].style.cssText=`
+                    font-family: "Lucida Console", Monaco, monospace;
+                    letter-spacing: 0px;
+                    word-spacing: -2px;
+                    text-decoration: none;
+                    font-style: normal;
+                    font-variant: normal;
+                    text-transform: uppercase;
+                    color: ${n};`,title.children[0].fontSize=E/5+"px",description.children[0].fontSize=E/3+"px",title.children[0].innerHTML=t,description.children[0].innerHTML=e,title.height=E/14,description.height=E/2,getComputedStyle(title),getComputedStyle(description),title.style.left=innerWidth-I+(I-title.width)/2+"px",description.style.left=innerWidth-I+(I-description.width)/2+"px",title.style.top=innerHeight-E+.03*innerHeight+"px",description.style.top=parseInt(title.style.top)+title.height+.01*innerHeight+"px"};D("Wipe the walls in search of treasures!","Explore the walls of the Egyptian borders, find out the afterlife cult of this people and also find and collect sculptures of deceased pharaohs. Each such sculpture is unique, finding it first you will become the only owner of it!");let U=async(t,e)=>{let n=document.createElement("img");document.body.append(n),n.src=URL.createObjectURL(t);let i=!0;n.onload=function(){i=!1},await new Promise(t=>{!function e(){(i||t())&&setTimeout(e,20)}()}),n.style.position="absolute",n.style.zIndex=100,n.height=n.width=.5*innerHeight,n.style.left=innerWidth/2-n.width/2+"px",n.style.top=.2*innerHeight,n.id="imgRew";let a=document.createElement("div");document.body.append(a),a.id="textEl",a.style.cssText=`
+                    font-family: "Lucida Console", Monaco, monospace;
+                    letter-spacing: 0px;
+                    word-spacing: -2px;
+                    color: #000000;
+                    text-decoration: none;
+                    font-style: normal;
+                    font-variant: normal;
+                    text-transform: uppercase;
+                    align: center;`,a.style.position="absolute",a.style.color="white",a.style.zIndex=100,a.style.top=.65*innerHeight+"px",a.innerHTML=`<center>Congratulations! You have found one of the Pharaoh sculptures(${e})! Now it is only yours! 
+                <br><br>
+                Click to continue..</center>`,a.style.fontSize=.02*innerHeight+"px",a.style.left=innerWidth/2-parseInt(getComputedStyle(a).width)/2+"px",rewardBack.style.width=innerWidth+"px",rewardBack.style.height=innerHeight+"px"};function j(t,e){return Math.floor(Math.random()*(e-t+1)+t)}rewardBack.onclick=()=>{document.getElementById("imgRew")?.remove(),document.getElementById("textEl")?.remove(),rewardBack.style.width="0px",rewardBack.style.height="0px"}})();
+        </script>
+    </body>
+</html>

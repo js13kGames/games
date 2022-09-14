@@ -1,0 +1,9 @@
+@-webkit-viewport{width:device-width}
+@-moz-viewport{width:device-width}
+@-ms-viewport{width:device-width}
+@-o-viewport{width:device-width}
+@viewport{width:device-width}
+* {-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+html, body {margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-family: Arial, Helvetica, sans-serif;text-align:center;}
+canvas {position:absolute;top:50%;left:50%;margin-top:-240px;margin-left:-160px;cursor:pointer;border:2px solid #333; }
+span {display:block;position:absolute;top:0;left:0;background:green;color:white;border:0;padding:10px;text-transform:uppercase;font-weight:bold;cursor:pointer;}

@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>2AP</title>
+    <script type="text/javascript" src="bundle.js"></script>
+
+    <style>
+      .centered {
+        width: 1200px;
+        height: 720px;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-evenly;
+      }
+
+      button,
+      span,
+      footer,
+      #tooltip,
+      body {
+        font-size: 18px;
+        padding: 0px;
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 200;
+        text-align: center;
+        text-shadow: 2px 2px 2px 2px #888;
+      }
+
+      .center {
+        width: calc(100% - 10px);
+      }
+
+      .row,
+      .center {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+      }
+
+      .field {
+        background: white;
+        box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.7);
+        border: solid 0.5px gray;
+        display: none;
+      }
+
+      h1 {
+        font-weight: 500;
+        margin: 5px;
+      }
+
+      .nop {
+        pointer-events: none;
+      }
+
+      button {
+        pointer-events: all;
+        background: #fff;
+        border: solid 1px #888;
+        height: 40px;
+        cursor: pointer;
+        width: 200px;
+        min-width: 200px;
+        margin: 3px;
+        box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.7);
+      }
+
+      button:hover {
+        background: #ccc;
+      }
+
+      *:focus {
+        outline: 0;
+      }
+
+      button:active {
+        background: #fff;
+        box-shadow: none;
+        margin-top: 5px;
+      }
+
+      .pressed {
+        background: #fff;
+        box-shadow: none;
+        margin-top: 5px;
+      }
+
+      button:disabled {
+        background: none;
+        cursor: not-allowed;
+        opacity: 0.5;
+        border: solid 1px #333;
+      }
+
+      .footer {
+        top: 800;
+      }
+
+      .bottom {
+        width: 1200px;
+        justify-content: space-between;
+      }
+
+      #tooltip {
+        position: fixed;
+        font-weight: 600;
+        color: #a00;
+        z-index: 10;
+        /*background: #fff;
+        box-shadow: 1px 1px 2px 0px #888;*/
+      }
+
+      #info {
+        flex-grow: 1;
+        font-size: 14px;
+      }
+
+      .small {
+        min-width: 50px;
+        width: 50px;
+      }
+
+      .spacer {
+        min-width: 10px;
+        width: 10px;
+      }
+
+      .absolute {
+        position: absolute;
+      }
+
+      #help {
+        text-align: left;
+        padding: 20px;
+        width: 1160px;
+        height: 680px;
+      }
+
+      #editor {
+      }
+
+      textarea{
+        font-size: 12pt;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+      <div id="help" class="centered field">
+        <h3>This is a prototype of a browser XCOM-like game.</h3>
+
+        <p>
+          Currently it only has three unit types, no complex moves like
+          overwatch, and only one map, but it will grow. It's already fully
+          playable and closely matches XCOM conventions. Left click on your
+          <span style="color:blue">(blue)</span> units to select, click on empty
+          space to move or on enemy to fire. Right click to deselect. Each unit
+          has two action points (hence the game's name), shown as "horns". And
+          some Hit Points, shown as the "beard". Units, naturally, die when out
+          of HP, but can replenish HPs with "*" pickups. When next to cover
+          (black or dashed squares), unit is protected by it on respective side
+          and can "peek" out of it to shoot or, sadly, be shot at, just like in
+          XCOM. Black squares are high cover, granting 40% defence and blocking
+          vision. Dashed squares are low cover, giving only 20$ defence and no
+          LOS obsruction.
+        </p>
+
+        <p>
+          When you hover the mouse over the square, you can see what is visible
+          from it, and which enemies are flanked from (i.e. have no cover,
+          marked <span style="background:#8f8">green</span>), or
+          <span style="background:#f88">flanking</span> this square, or
+          <span style="background:#ff8;">both</span>.
+        </p>
+
+        <p>
+          You can play against AI, it's a default mode. AI is quite competent,
+          seeking cover and trying to flank you when possible. Also you can
+          switch to 2 player mode, or even AI vs AI. Difference, basically, is
+          that when you press "End turn", AI will make moves, depending on mode,
+          for none, one or both sides if they have APs remained.
+        </p>
+
+        <p>
+          Even more, you can play on your own map! Just switch to Edit mode, and
+          edit text field. # is high cover, + is low cover, G, A, S are blue
+          units and g, a, s are red units. Note that map borders should always
+          be high cover. Don't forget to press "Apply" when you done.
+        </p>
+      </div>
+    </div>
+
+    <div class="center">
+      <div id="editor" class="centered field">
+          <pre>
+        <textarea cols="60" rows="35" id="edit-area"></textarea>
+        </pre>
+      </div>
+    </div>
+
+    <div class="center">
+      <canvas class="centered field" id="main"></canvas>
+    </div>
+
+    <div class="center">
+      <div id="tooltip"></div>
+      <div class="bottom row">
+        <button class="small" id="pai">vs AI</button>
+        <button class="small" id="pp">2P</button>
+        <button class="small" id="aiai">2AI</button>
+        &nbsp;
+        <button class="small" id="playb">Play</button>
+        <button class="small" id="helpb">Help</button>
+        <button class="small" id="editb">Edit</button>
+
+        <div id="info"></div>
+        <button id="endb">End Turn</button>
+      </div>
+    </div>
+  </body>
+</html>

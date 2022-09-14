@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="left">
+            <div class="stats">
+                <h1>data_center</h1>
+                <p>balance: £<span id="balance"></span></p>
+                <p class="grey">&ensp;&ensp; + £<span id="cash-per-hour">0.00</span>/hour</p>
+                <p class="grey">&ensp;&ensp; - £<span id="loss-per-hour">0.00</span>/hour</p>
+                <p>traffic: <span id="traffic"></span>/day</p>
+                <p class="grey">&ensp;&ensp; can support <span id="traffic-cap"></span>/day</p>
+                <p>up-time: <span id="uptime"></span> days</p>
+                <br>
+                <p>traffic over time</p>
+                <canvas id="graph"></canvas>
+            </div>
+            
+            <div class="shop" id="shop"></div>
+        </div>
+        <div class="rack" id="rack"></div>
+        <div class="right" id="help">
+            <h1 id="help-title"></h1>
+            <p id="help-body"></p>
+            <button onclick="hideHelp()">ok</button>
+        </div>
+        <div id="cables"></div>
+        <div id="alert-curtain"></div>
+        <div id="alert"></div>
+    </body>
+    <script src="main.js"></script>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Genesis</title>
+		<style type="text/css">
+			body, html {
+				background-color: black;
+				font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+			}
+			h2 {
+				font-size: 50px;
+			}	
+			#gameOver {
+				display: none;
+				position: absolute;
+				top: 100px;
+				left: 50px;
+				width: 200px;
+				font-size: 28px;
+				background-color: #783A00;
+			}
+			#gameOver p {
+				font-size: 18px;
+				padding: 1px;
+				margin: 1px;
+				color: #FFBE07;
+			}
+			#main {
+				display: block;
+				text-align: center
+			}
+			#gameContent {
+				display: none
+			}
+			.content {
+				position: relative;
+				margin: 0 auto;
+				width: 320px;
+				color: #DDDDDD;
+				text-align: center;
+			}
+			.border {
+				border: 4px solid;
+			    border-radius: 6px;
+			    padding: 12px
+			}
+			.shadow {
+				box-shadow: 0 6px 20px black;
+			}
+			#start {
+				position: relative;
+				top: 20px;
+				font-size: 18px;
+				background-color: #783A00;
+				color: #FFBE07;
+				width: 160px;
+				margin: 0 auto;
+			}
+
+			#startup {
+				background-color: black
+			}
+
+			#game {
+				
+			}
+			#assets {
+				height: 0;
+				width: 0;
+			}
+			.ui {
+				font-size: 32px;
+				color: white;
+				position: absolute;
+			}
+			#level {
+				top: 6px;
+				left: 10px;
+			}
+			#score {
+				top: 6px;
+				right: 10px;
+			}
+			#bar {
+				height: 50px
+			}
+			#thanks {
+				margin-top: 80px
+			}
+		</style>
+	</head>
+	<body>	
+		<div id="assets">
+			<img id="sprite" src="sprite.png" style="visibility:hidden" />
+			<audio><source src="hurt.wav" /></audio>
+		</div>
+
+		<div id="main" class="content">
+			<h2>GENESIS</h2>
+			<img src="triangle.png" width="40" height="32" />
+			<h3>Controls:</h3>
+			<p>
+				Arrow keys
+			</p>
+			<div id="start" class="border">[space to start]</div>
+
+			<p id="thanks">A game by @floriaen<br/>-<br/>Thanks to @saturnyn</p>
+		</div>
+
+		<div id="gameContent" class="content">
+			<div id="bar">
+				<div id="level" class="ui">Level 1</div>
+				<div id="score" class="ui">0</div>
+			</div>
+			<div id="gameOver" class="border shadow">
+				Game Over
+				<p>[space to restart]</p>
+			</div>
+			<canvas id="game" width="320" height="560"></canvas>
+		</div>
+	</body>
+	<!--<script type="text/javascript" src="stats.min.js"></script>-->
+	<script type="text/javascript" src="selfish.js"></script>
+	<script type="text/javascript" src="jsfxr.js"></script>
+	<script type="text/javascript" src="genesis.min.js"></script>
+<html>

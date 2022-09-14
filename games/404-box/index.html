@@ -1,0 +1,86 @@
+<html> 
+    <head>
+        <title>404 Box</title>
+        <link rel="stylesheet" href="index.css">
+
+    </head>
+    <body>
+        <script>
+            const loadScript = () => {
+                let resource = document.createElement('script'); 
+                resource.async = "true";
+                resource.src = "game.js";
+                let script = document.getElementsByTagName('script')[0];
+                script.parentNode.insertBefore(resource, script);
+            }
+            window.onload = loadScript;
+        </script>
+        <span id="cursorText" class="text__follow">4</span>
+        <div class="container__wrapper-tutorial">
+            <div class="container__tutorial">
+                <h4>Tutorial</h4>
+                <p>1. Drag the number on purple box to the darkest green box</p>
+                <p>2. If 404 is found, the box's color will change to orange</p>
+                <p>3. To remove the number on darkest green box, just click that number</p>
+                <p>4. To complete the level, you have to find all 404 and use all number on purple box</p>
+            </div>
+        </div>
+        <div id="mainContainer" class="container__main">
+            <h1 class="h__game-title">404 Box</h1>
+            <div class="container__box">
+                <div id="inventory0" class="box inventory">
+                    <span>0</span>
+                    <span class="inventory__amount">2x</span>
+                </div>
+                <div id="inventory4" class="box inventory">
+                    <span>4</span>
+                    <span class="inventory__amount">2x</span>
+                </div>
+            </div>
+            <span id="totalFoundtext" class="text__total-found">404 Found : 0/0</span>
+            <div class="container__all-grid">
+                <div class="container__grid-row">
+                    <div id="gridA1" class="box grid"></div>
+                    <div id="gridA2" class="box grid"></div>
+                    <div id="gridA3" class="box grid"></div>
+                    <div id="gridA4" class="box grid"></div>
+                    <div id="gridA5" class="box grid"></div>
+                </div>
+                <div class="container__grid-row">
+                    <div id="gridB1" class="box grid"></div>
+                    <div id="gridB2" class="box grid"></div>
+                    <div id="gridB3" class="box grid"></div>
+                    <div id="gridB4" class="box grid"></div>
+                    <div id="gridB5" class="box grid"></div>
+                </div>
+                <div class="container__grid-row">
+                    <div id="gridC1" class="box grid"></div>
+                    <div id="gridC2" class="box grid"></div>
+                    <div id="gridC3" class="box grid"></div>
+                    <div id="gridC4" class="box grid"></div>
+                    <div id="gridC5" class="box grid"></div>
+                </div>
+                <div class="container__grid-row">
+                    <div id="gridD1" class="box grid"></div>
+                    <div id="gridD2" class="box grid"></div>
+                    <div id="gridD3" class="box grid"></div>
+                    <div id="gridD4" class="box grid"></div>
+                    <div id="gridD5" class="box grid"></div>
+                </div>
+                <div class="container__grid-row">
+                    <div id="gridE1" class="box grid"></div>
+                    <div id="gridE2" class="box grid"></div>
+                    <div id="gridE3" class="box grid"></div>
+                    <div id="gridE4" class="box grid"></div>
+                    <div id="gridE5" class="box grid"></div>
+                </div>
+            </div>            
+        </div>
+        <h2 id="nextLevelText" class="h__next-level">All 404 have been found!! Click next to next level!!</h2>
+        <div class="container__level-select">
+            <span id="prevBtn" class="btn__nav">prev</span>
+            <span id="levelText" class="text__level">Level 1</span>
+            <span id="nextBtn" class="btn__nav">next</span>
+        </div>
+    </body>
+</html>

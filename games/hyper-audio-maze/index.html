@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Hyper Audio Maze v1</title>
+        <link rel="icon" href="icon.png">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- Canvas container -->
+        <div id="game"></div>
+
+        <!-- Menubar container -->
+        <div id="menu">
+            <div>Press <div class="keyboard button">Enter</div> or <div class="gamepad button">A</div> to add a <b>player</b></div>
+            <div>Press <div class="keyboard button">Enter</div> or <div class="gamepad button">A</div> to add a <b>player</b></div>
+            <div>Press <div class="keyboard button">Enter</div> or <div class="gamepad button">A</div> to add a <b>player</b></div>
+            <div>Press <div class="keyboard button">Enter</div> or <div class="gamepad button">A</div> to add a <b>player</b></div>
+            <div id="chrono">
+                <span id="versus"></span>
+                <span id="message"></span>
+                <span id="coop"></span>
+                <span id="seconds"></span>
+                <span id="milliseconds"></span>
+            </div>
+        </div>
+
+        <script src="hyper.js"></script> <!-- Hyper App framework from https://github.com/hyperapp/hyperapp -->
+        <script src="audio.js"></script> <!-- AudioSynth library from http://keithwhor.github.io/audiosynth/ -->
+        <script src="app.js"></script> <!-- Main application script build with Webpack from TypeScript sources -->
+    </body>
+</html>

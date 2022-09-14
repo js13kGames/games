@@ -1,0 +1,117 @@
+<html>
+   <head>
+      <title>BotWar</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+
+
+     <div class="instructions" id="instructions" style="display: none">
+       <h3 class="center">Instructions</h3>
+       <ul>
+         <li>rand(min, max) - provides a random number</li>
+         <li>scan(direction) - returns 1 if it sees a robot in the given direction</li>
+         <li>getX(), getY(), getDir() - returns the bot's current positioning.</li>
+         <li>sin(input), cos(input) - Returns the sin or cosine of input.</li>
+       </ul>
+       <ul>
+         <li>print "hello world" - Prints out the statement. </li>
+         <li>move <direction> <speed> - points the robot in direction and provides force to move it.  Robots have friction and will eventually slow down.</li>
+         <li>shoot <direction> - shoots its turrent in provided direction. </li>
+         <li>goto <label> - goes to label.
+       </ul>
+
+       <ul>
+         <li>Labels are any string followed by a colon.  EX - Top: is a valid label.</li>
+         <li>Variables are assigned using the =.  EX - myVar = 10<li>
+        <li>if statements support parentheses.  Use OR or AND to combine multiple conditionals.  Supports <, >, =, !=, !<, !></li>
+       </ul>
+
+       <button onClick="closeInstructions()">Close</button>
+     </div>
+
+      <div id="notInRoom" style="">
+        <div class="create">
+          <h3 class="center">Create an Arena</h3>
+          <input id="roomName"/>
+          <button onclick="createRoom()">Create and Join</button>
+        </div>
+
+         <div class="availableRooms">
+            <h3 class="center">Available Arenas</h3>
+            <div class="tableDiv">
+            <table id="rooms">
+              <tr><th>Name</th><th>Number of Users</th><th></th></tr>
+              <tr><td colspan="3"> Data Unavailable.</td></tr>
+            </table>
+          </div>
+         </div>
+      </div>
+      <div id="inRoom" style="display:none">
+      <div class="left">
+        <div class="arena">
+         <canvas id="main" width=600 height=300>
+         </canvas>
+       </div>
+         <div class="robotSettings">
+            <div style="width:98%"><h3 class="rightAlign">Robot Settings</h3></div>
+            <label>Name:</label> <input id="name" value="Default"/>
+            <label>Commands Per Cycle:</label> <input id="cpus" value="3"/>
+            <label>Cycle Delay:</label> <input id="freq" value="10"/>
+            <button onclick="addRobot()">Add Robot</button>
+         </div>
+         <div class="roomFunctions">
+            <div style="width:98%"><h3 class="rightAlign">Room</h3></div>
+            <button onclick="run()">Run</button>
+            <button onclick="stopProgram()">Stop</button>
+            <button onclick="leaveRoom()">Leave</button>
+            <button onclick="clearRoom()">Clear</button>
+
+            <br/>
+            <button onclick="openInstructions()">Instructions</button>
+         </div>
+      </div>
+      <div class="right">
+      <div class="programEditor">
+         <h3 class="center">Program Editor</h3>
+         <textarea id="ide">
+dir = 0
+top:
+	if (scan(dir) > 0)
+		shoot dir
+	else
+		dir = dir + 30
+		move dir 5
+	endif
+
+	if (dir > 360)
+		dir = 0
+	endif
+goto top
+         </textarea>
+      </div>
+      <div class="messages">
+         <h3 class="center">Messages</h3>
+         <div id="output"></div>
+         <div>
+         </div>
+      </div>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="/shared.js"></script>
+      <script src="/client.js"></script>
+      <script>
+        var textareas = document.getElementsByTagName('textarea');
+        var count = textareas.length;
+        for(var i=0;i<count;i++){
+            textareas[i].onkeydown = function(e){
+                if(e.keyCode==9 || e.which==9){
+                    e.preventDefault();
+                    var s = this.selectionStart;
+                    this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+                    this.selectionEnd = s+1;
+                }
+            }
+        }
+    </script>
+   </body>
+</html>

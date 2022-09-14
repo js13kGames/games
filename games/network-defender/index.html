@@ -1,0 +1,116 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Internet Fighter</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Monospace';
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #ui {
+      z-index: 10;
+    }
+
+    #shop {
+      display: none;
+      position: absolute;
+      left: 10%;
+      top: 10%;
+      border-radius: 5%;
+      width: 80%;
+      height: 80%;
+      flex-wrap: wrap;
+      padding: 2%;
+      background: #5B0503;
+      border: 5px solid #ffffcc;
+      box-shadow: inset 0 0 10px black;
+    }
+
+    .btn-shop {
+      text-align: center;
+      font-size: 14px;
+      width: 100px;
+      height: 100px;
+      border-radius: 5px;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .btn-shop:hover {
+      background: #5B4513;
+      cursor: pointer;
+    }
+
+    .cost {
+      color: gold;
+
+    }
+
+    .level {
+      color: #090;
+    }
+
+    .btn {
+      position: absolute;
+      border-radius: 5px;
+      border: none;
+      padding: 8px;
+    }
+
+    #close-shop {
+      font-size: 40px;
+      position: absolute;
+      top: 4%;
+      right: 4%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="game"></canvas>
+  <div id="ui"></div>
+  <div id="shop">
+    <div class="btn-shop" onclick="addTurret()">
+      Antyvirus
+      <div class="cost"> Cost: 100 </div>
+      <div class="level"> Level: 1 </div>
+    </div>
+    <div class="btn-shop" onclick="increateFireRate()">
+      Processor
+      <div class="cost"> Cost: 60 </div>
+      <div class="level"> Level: 1 </div>
+    </div>
+    <div class="btn-shop" onclick="upgradeWall()">
+      Firewall
+      <div class="cost"> Cost: 150 </div>
+      <div class="level"> Level: 1 </div>
+    </div>
+    <div class="btn-shop" onclick="upgradeWallDmg()">
+      Firewall Damage
+      <div class="cost"> Cost: 500 </div>
+      <div class="level"> Level: 0 </div>
+    </div>
+    <div class="btn-shop" onclick="upgradeTurrets()">
+      Guard program
+      <div class="cost"> Cost: 1000 </div>
+      <div class="level"> Level: 0 </div>
+    </div>
+    <div id="close-shop">x</div>
+  </div>
+<script type="text/javascript" src="bundle.js"></script></body>
+
+</html>

@@ -1,0 +1,114 @@
+#disable_scroll {
+    overflow: hidden;
+}
+
+#title {
+    font-size: 18px;
+    font-family: monospace;
+}
+
+#background {
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    z-index: -99;
+}
+
+#backtrack {    
+    position: absolute;
+    font-family: monospace;
+    left: 8px;
+    top: 32px;
+    visibility: hidden;
+}
+
+#gold {
+    position: absolute;
+    font-size: 10px;
+    top: -16px;
+    left: 500px;
+}
+
+#drawGold {
+    position: relative;
+    top: 25px;
+}
+
+#goldAmount {
+    position: relative;
+    color: gold;
+    font-size: 15px;
+    top: -19px;
+    left: 33px;
+}
+
+#drawHero {
+    position: absolute;
+    left: 420px;
+    top: 400px;
+}
+
+#creepBox {
+    position: absolute;
+    left: 300px;
+    top: 0px;
+}
+
+#drawcreep {
+    position: relative;
+    visibility: visible;
+}
+
+#creepHpBar {
+    position: absolute;
+    left: -3px;
+    top: 25px;
+    width: 30px;
+    height: 4px;
+    border-color: white;
+    border-width: 1px;
+    background-color: green;
+    z-index: 3;
+}
+
+#hit {
+    color: orangered;
+    position: absolute;
+    font-size: 10px;
+    font-family: monospace;
+    left: -3px;
+    top: 16px;
+    visibility: hidden;
+}
+
+#creepHp {
+    top: 18px;
+    position: relative;
+    visibility: hidden;
+}
+
+#wall {
+    position: absolute;
+    left: 0px;
+    top: 560px;
+}
+
+#base {
+    position: absolute;
+    left: 430px;
+    top: 550px;
+}
+
+#baseStatus {
+    position: absolute;
+    font-family: monospace;
+    left: 8px;
+    top: 18px;
+}
+
+#health {
+    position: absolute;
+    font-family: monospace;
+    left: 100px;
+    top: 18px;
+}

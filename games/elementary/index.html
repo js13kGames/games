@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>Elementary</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div id="menu" class="show">
+    <ul>
+        <li data-item="2">Two elements</li>
+        <li data-item="3">Three elements</li>
+        <li data-item="4">Four elements</li>
+        <li data-item="scores">Highscores</li>
+        <li data-item="sound">Sound <span id="mute"></span></li>
+    </ul>
+</div>
+
+<div id="scores">
+    <h2>Score</h2>
+    <table>
+        <tr><th>Elements:</th><td></td></tr>
+        <tr><th>Time Bonus:</th><td></td></tr>
+        <tr><th>Clear Bonus:</th><td></td></tr>
+        <tr><th>Total Score:</th><td></td></tr>
+    </table>
+    <h2>Highscores</h2>
+    <table>
+        <tr><th>2 Elements:</th><td></td></tr>
+        <tr><th>3 Elements:</th><td></td></tr>
+        <tr><th>4 Elements:</th><td></td></tr>
+    </table>
+</div>
+
+<div id="container">
+    <h2>Elementary<span id="score">0</span></h2>
+    <div id="board"></div>
+    <div id="timer"><div></div></div>
+</div>
+
+<canvas id="sprite" width="128" height="128"></canvas>
+<audio id="sound" src="sound.mp3"></audio>
+<script src="game.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

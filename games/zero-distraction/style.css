@@ -1,0 +1,204 @@
+html,
+body,
+.phase{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: black;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  letter-spacing: 0;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.phase {
+  width: calc(100% - 112px);
+  height: calc(100% - 112px);
+  display: flex;
+  justify-content: center;
+  transition-duration: .4s;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(.65, .05, .35, 1);
+  flex-direction: column;
+  padding: 56px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.phase-2 {
+  transition-delay: 0.4s;
+}
+
+.phase-3 {
+  align-items: center;
+}
+
+.phase-1 {
+  z-index: 3;
+}
+
+table {
+  display: flex;
+}
+
+h1 {
+  font-weight: 400;
+}
+
+
+canvas {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+td {
+  border: 1px solid white;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+}
+
+p {
+  max-width: 640px;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+button {
+  -webkit-appearance: none;
+  display: inline-block;
+  border: 1px solid white;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    padding: 8px 20px;
+    margin-top: 24px;
+    width: 126px;
+    background: black;
+}
+
+button:hover,
+button:focus {
+  color: black;
+  background: white;
+}
+
+input {
+  font-size: 16px;
+  font-weight: 300;
+  color: white;
+  border: none;
+  padding: 12px 8px;
+  width: 100%;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  margin: 0 0 12px;
+  background-color: transparent;
+  max-width: 200px;
+}
+
+.rainbow-overlay {
+  background: black;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  z-index: 5;
+  transition-duration: .4s;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(.65,.05,.35,1);
+  flex-direction: column;
+  transform: scaleY(1);
+  -webkit-transform-origin-y: 0;
+}
+.rainbow {
+  background: linear-gradient(to bottom, #FF5252, #FF4081, #E040FB, #7C4DFF, #536DFE, #448AFF, #40C4FF, #18FFFF, #64FFDA, #69F0AE, #B2FF59, #EEFF41, #FFFF00, #FFD740, #FFAB40, #FF6E40); /* Standard syntax (must be last) */
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  z-index: 4;
+}
+
+.controls {
+  position: fixed;
+    z-index: 5;
+    bottom: 24px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: .4s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(.65, .05, .35, 1);
+}
+
+.controls td:hover, .controls td.active {
+  background: white;
+  color: black;
+  cursor: pointer;
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.container {
+  max-width: 600px;
+    background: #000000b0;
+    padding: 0 24px;
+}
+
+a {
+  font-weight: bold;
+  color: white;
+}
+
+.controls tbody {
+  max-width: calc(100% - 24px);
+    margin-left: 12px;
+}
+
+@media (max-width: 400px){
+  .phase {
+    padding: 24px;
+    width: calc(100% - 48px);
+    height: calc(100% - 48px);
+  }
+  h1 {
+    font-size: 32px;
+  }
+}
+
+::placeholder {
+color: white;
+}
+
+:-ms-input-placeholder {
+  color: white;
+}
+
+::-ms-input-placeholder {
+  color: white;
+}
+
+input {
+  outline: none;
+}

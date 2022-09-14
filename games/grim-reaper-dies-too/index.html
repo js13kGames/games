@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grim reaper dies too</title>
+    <style>
+      :root {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 400;
+
+        color: rgba(255, 255, 255, 0.87);
+        background-color: #242424;
+      }
+
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #ui {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      #ui > div {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 3em 5em;
+        text-align: center;
+        border: 1px solid white;
+        text-transform: uppercase;
+        display: none;
+      }
+
+      #ui > div button {
+        background: #0f0;
+        border: 1px solid white;
+        padding: 0.5em 1.5em;
+        color: black;
+        text-transform: uppercase;
+      }
+
+      #uded > div:first-child {
+        margin: 0 0 1.5em 0;
+        font-size: 2em;
+      }
+
+      #uded .buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #uded .buttons * + * {
+        margin-top: 2em;
+      }
+
+      #mainmenu {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #mainmenu > * + * {
+        margin-top: 2em;
+      }
+
+      #howtoplay-btn {
+        display: none;
+      }
+
+      #ui > #howtoplay {
+        text-transform: none;
+        font-size: 1em;
+        text-align: left;
+        max-width: 80vw;
+      }
+
+      .score {
+        font-size: 2em;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index.2e591f38.js"></script>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div id="ui">
+      <div id="uded">
+        <div>You died</div>
+        <p>You scored: <span class="score"></span></p>
+        <p>Highscore: <span class="highscore"></span></p>
+        <div class="buttons">
+          <button id="restart-btn">Restart</button>
+          <button id="back-to-menu">Back to menu</button>
+        </div>
+      </div>
+      <div id="mainmenu" style="display: flex">
+        <button class="start">Start</button>
+        <button id="howtoplay-btn">How to play</button>
+      </div>
+      <div id="howtoplay">
+        <p>You are a grim reaper.</p>
+        <p>
+          You were sent to the world of mortals to take care of ending the lives
+          of the ones for which time has come.
+        </p>
+        <p>
+          But... There's something off with this world. People who haven't been
+          killed on time seem to be transforming into bloodthirsty demons. Don't
+          you ever try to get close to them in this state!
+        </p>
+        <p>You'll need some tips on how to survive, so listen:</p>
+        <ul>
+          <li>
+            Try to kill as much people as possible, by just colliding with them.
+          </li>
+          <li>
+            You can only kill them when their time has come. You'll know it, by
+            looking at their life progress bars above them. When the yellow line
+            reaches a red section of the bar, it's time to harvest.
+          </li>
+          <li>Avoid people transformed into demons. They can kill you.</li>
+          <li>The only keys you need are W A S D</li>
+        </ul>
+        <p>You can come back to this tips from main menu</p>
+        <button class="start">Start</button>
+      </div>
+    </div>
+    <audio src="hit.wav" id="hit-audio"></audio>
+    <audio src="hurt.wav" id="hurt-audio"></audio>
+    <audio src="powerup.wav" id="powerup-audio"></audio>
+  </body>
+</html>

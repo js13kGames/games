@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
+    <title>Far From Ground Control</title>
+    <script src="zgl.js"></script>
+    <script src="terrain.js"></script>
+    <script src="meteor.js"></script>
+    <script src="explosion.js"></script>
+</head>
+
+
+<body>
+    <div class="flex-container game">
+        <div id="position-container">
+            <div id="game-over-dialog">
+                <h1>GAME OVER</h1>
+                <h3>Score</h3>
+                <h2>0</h2>
+                <button id="replay">Replay</button>
+                <button id="exit">Exit</button>
+            </div>
+            <div id="grid-container">
+                <div id="ztitle">
+                    <p class="FFGC">FAR FROM GROUND CONTROL</p>
+                </div>
+                <div id="zcircle">
+                    <div id="circle">
+                        <canvas class="menu"></canvas>
+                    </div>
+                </div>
+                <div id="zhighscore">
+                    <p class="label">HIGHSCORE</p>
+                    <p class="score">0</p>
+                    <button id="start">START</button>
+                </div>
+            </div>
+            <canvas id="c3d" class="game"></canvas>
+            <canvas id="c2d" class="game"></canvas>
+            <div id="jsb"></div>
+            <div id="jst"></div>
+            <div id="healthbar">
+                <div id="healthfill"></div>
+            </div>
+            <div id="scorebar">★ 0</div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Rubik";
+        background-color: black;
+        color: #CCC;
+        touch-action: none;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    #grid-container {
+        display: grid;
+        grid-template-columns: 20% 20% 20% 20%;
+        grid-template-rows: 30vh 30vh 30vh;
+        background: linear-gradient(120deg, #110, #161311 49%, #040200 51%, black);
+        width: 100vw;
+        min-width: 30vh;
+        max-width: 60vh;
+        height: 100vh;
+        justify-content: center;
+        position: relative;
+        border: 1px solid #1A1A1A ;
+        overflow: hidden;
+    }
+
+    #game-over-dialog {
+        width: 80%;
+        padding: 5%;
+        position: absolute;
+        top: 20%;
+        left: 5%;
+        z-index: 2;
+        background-color: #0008;
+        border-radius: 5%;
+        text-align: center;
+        display: none;
+        border: 2px #FFF3 solid;
+    }
+
+    #ztitle {
+        font-size: 4.5vh;
+        grid-row: 1/2;
+        grid-column: 1/4;
+    }
+
+    #zcircle {
+        grid-row: 2/3;
+        grid-column: 1/5;
+    }
+
+    #zhighscore {
+        grid-row: 3/4;
+        grid-column: 2/5;
+        text-align: center;
+    }
+
+    #circle {
+        border: none;
+        width: 30vh;
+        height: 30vh;
+        border-radius: 50%;
+        background-color: #FFF0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #zhighscore .label {
+        margin-top: 4vh;
+        margin-bottom: 0;
+        font-size: 2vh;
+    }
+
+    #zhighscore .score {
+        font-size: 4vh;
+        margin-bottom: 2vh;
+        margin-top: 0;
+    }
+
+    canvas.menu {
+        width: 100%;
+        height: 100%;
+    }
+
+
+    button {
+        background-color: transparent;
+        font-family: "Rubik";
+        color: #DDD;
+        font-size: 5vh;
+        border: .5vh #A02C2C solid;
+        width: 100%;
+        padding: 2vh;
+        margin: 1vh;
+    }
+
+    #position-container {
+        width: 100vw;
+        min-width: 30vh;
+        max-width: 60vh;
+        height: 100vh;
+        position: relative;
+    }
+
+    canvas.game {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+    }
+
+    #jsb {
+        width: 15vh;
+        height: 15vh;
+        border-radius: 50%;
+        background-color: #0003;
+        position: fixed;
+        opacity: 0;
+        transition: opacity 300ms;
+        display: none;
+    }
+
+    #jst {
+        width: 10vh;
+        height: 10vh;
+        border-radius: 50%;
+        background-color: #0005;
+        position: fixed;
+        opacity: 0;
+        transition: opacity 600ms;
+        display: none;
+    }
+
+    #healthbar {
+        width: 90%;
+        height: 4vh;
+        border-radius: 0.5vh;
+        background-color: #0005;
+        border: 0.1vh solid #0005;
+        position: absolute;
+        top: 3vh;
+        left: 5%;
+        overflow: hidden;
+        display: none;
+    }
+
+    #healthfill {
+        width: 100%;
+        height: 100%;
+        background-color: #5CBF60FF;
+        transition-duration: 200ms;
+        display: none;
+    }
+
+    #scorebar {
+        width: 90%;
+        height: 5vh;
+        border-radius: 0.5vh;
+        color: #000A;
+        font-family: monospace;
+        font-size: 3vh;
+        font-weight: bold;
+        position: absolute;
+        top: 8vh;
+        left: 5%;
+        text-align: center;
+        overflow: hidden;
+        display: none;
+    }
+
+</style>
+
+<script>
+let v = {x:0, y:0}
+let control = {isJoystickEnable: false, kbUp: false, kbDown: false, kbLeft: false, kbRight:false}
+let game = {isOver: true, time: performance.now(), countdown: 15}
+let health = 100
+let score = 0
+
+const explosion = new Explosion()
+let playbacks = []
+
+const scorebar = document.querySelector("#scorebar")
+const healthfill = document.querySelector("#healthfill")
+
+if (isNaN(parseInt(localStorage.ffgs_hs))) localStorage.ffgs_hs = 0
+else document.querySelector("#zhighscore .score").innerText = Math.floor(localStorage.ffgs_hs)
+
+const canvas = document.querySelector("canvas.menu")
+
+if (canvas.width  !== canvas.clientWidth * devicePixelRatio ||
+    canvas.height !== canvas.clientHeight * devicePixelRatio) {
+    canvas.width = canvas.clientWidth * devicePixelRatio
+    canvas.height = canvas.clientHeight * devicePixelRatio    
+}
+
+const wgl_menu = new WebGL(canvas)
+const planet = new Obj3d('planet', b64Buffer(Meteor.vb64, Meteor.ib64), wgl_menu)
+planet.color = [1,-.1,-.1]
+planet.scale = 1.8
+
+wgl_menu.objects.push(planet)
+const renderloop_menu = () => {
+    if (game.isOver) requestAnimationFrame(renderloop_menu)
+    if (canvas.width  !== canvas.clientWidth * devicePixelRatio ||
+        canvas.height !== canvas.clientHeight * devicePixelRatio) {
+        canvas.width = canvas.clientWidth * devicePixelRatio
+        canvas.height = canvas.clientHeight * devicePixelRatio
+        wgl_menu.gl.viewport(0, 0, wgl_menu.gl.drawingBufferWidth, wgl_menu.gl.drawingBufferHeight)
+    }
+    planet.setRotation(planet.rot.x, planet.rot.y + 0.01, planet.rot.z)
+    wgl_menu.render()
+}
+renderloop_menu()
+
+const c2d = document.querySelector("#c2d")
+c2d.width = document.body.clientWidth
+c2d.height = document.body.clientHeight
+const c2dctx = c2d.getContext("2d")
+c2dctx.scale(devicePixelRatio, devicePixelRatio)
+
+const c3d = document.querySelector("#c3d")
+c3d.width = document.body.clientWidth
+c3d.height = document.body.clientHeight
+
+const poscon = document.querySelector("#position-container")
+
+if (c3d.width  !== poscon.clientWidth * devicePixelRatio ||
+    c3d.height !== poscon.clientHeight * devicePixelRatio) {
+    c3d.width = poscon.clientWidth * devicePixelRatio
+    c3d.height = poscon.clientHeight * devicePixelRatio
+    c2d.width = poscon.clientWidth * devicePixelRatio
+    c2d.height = poscon.clientHeight * devicePixelRatio
+}
+
+const wgl = new WebGL(c3d)
+const projectionMatrix = [2.1445, 0, 0, 0, 0, 1.9752, 0.3894, 0.3894, 0, 0.8351, -0.9211, -0.9210, 0, -4.1755, 4.4057, 4.6053]
+wgl.gl.uniformMatrix4fv(wgl.U_PROJECTION, false, projectionMatrix)
+
+let trn1, trn2 // terrain
+const terrainWorker = new Worker('worker.js');
+
+const scvb64 = "3Wxw22x112x50Gx9pGyAmWyDjGyFf2yGcGyeYmyGVGyFSGyDPWyANGx9BWx5AWx1AGxwAWxsBWxo12xo22xscP9wq1R1qlR4qFR6pFR8m1SKh1R/gFSAeFSBcVR8aVSBYlSAW1R/VVR+QlSIN1R6NVR4NFR1NVRzN1RxqFRxqlRz"
+const scib64 = "ABUBARUCAhUDAxUEBBUFBRUGBhUHBxUICBUJCRUKChULCxUMDBUNDRUODhUPDxUQEBURERUSExUUFBUABhsFDCMiBxwGARYADSQjCB0HDiUkAhcBCB8eDyYlAxgCCSAfESYQBBkDEyopCiEgEicRBRoEFBYqCyIhBhwbDA0jBx0cARcWDQ4kCB4dDg8lAhgXCAkfDxAmAxkYCQogEScmBBoZExQqCgshEignBRsaFAAWCwwi"
+
+const sc = new Obj3d('spacecraft', b64Buffer(scvb64, scib64), wgl)
+sc.pos[1] = 2
+sc.color = [0.7,-0.1,-0.1]
+
+const renderloop = (timestamp) => {
+    if (game.isOver) game.countdown--
+    if (game.countdown > 0) requestAnimationFrame(renderloop)
+    const dt = Math.min(timestamp - game.time, 100)
+    const dd = dt * (0.06)
+    game.time = timestamp
+    if (c3d.width  !== poscon.clientWidth * devicePixelRatio ||
+        c3d.height !== poscon.clientHeight * devicePixelRatio) {
+        c3d.width = poscon.clientWidth * devicePixelRatio
+        c3d.height = poscon.clientHeight * devicePixelRatio
+        c2d.width = poscon.clientWidth * devicePixelRatio
+        c2d.height = poscon.clientHeight * devicePixelRatio
+        wgl.gl.viewport(0, 0, wgl.gl.drawingBufferWidth, wgl.gl.drawingBufferHeight)
+    }
+
+    trn1.pos[1] -= 0.03 * dd
+    trn2.pos[1] -= 0.03 * dd
+    if (trn1.pos[1] < -10) {
+        trn1.pos[1] = trn2.pos[1] + 12.8
+        terrainWorker.postMessage(1)
+    }
+    if (trn2.pos[1] < -10) {
+        trn2.pos[1] = trn1.pos[1] + 12.8
+        terrainWorker.postMessage(2)
+    }
+
+    if(!control.isJoystickEnable) {
+        if (control.kbUp) v.y += (1 - v.y) * 0.1 * dd
+        else if (control.kbDown) v.y += (-1 - v.y) * 0.1 * dd
+        else {
+            v.y += (0 - v.y) * 0.1 * dd
+            v.y = (v.y < 0.05 && v.y > -0.05 ) ? 0 : v.y
+        }
+    }
+
+    if(!control.isJoystickEnable) {
+        if (control.kbRight) v.x += (1 - v.x) * 0.1 * dd
+        else if (control.kbLeft) v.x += (-1 - v.x) * 0.1 * dd
+        else {
+            v.x += (0 - v.x) * 0.1 * dd
+            v.x = (v.x < 0.05 && v.x > -0.05 ) ? 0 : v.x
+        }
+    }
+
+    v.x = clamp(v.x, -1, 1)
+    v.y = clamp(v.y, -1, 1)
+
+    sc.setRotation(-0.2 * Math.sin(Math.min(v.y,0)),Math.sin(v.x),0)
+    sc.pos[0] += 0.06 * v.x * dd
+    sc.pos[1] += 0.06 * v.y * dd
+    sc.pos[0] = clamp(sc.pos[0], -2.2 - 0.1 * sc.pos[1], 2.2 + 0.1 * sc.pos[1])
+    sc.pos[1] = clamp(sc.pos[1], 0, 10)
+    
+    if (!game.isOver) { 
+        score += 0.2 * dd
+        scorebar.innerText = `★ ${Math.floor(score)}`
+        health += 0.015 * dd
+        health = clamp(health, 0, 100)
+    }
+
+    healthfill.style.width = `${health}%`
+
+    const gcm = [] 
+    for (let i=0; i<wgl.objects.length; i++) {
+        const meteor = wgl.objects[i]
+        if (!meteor.name.startsWith("meteor")) continue
+        if (Math.hypot(...meteor.pos) > 20) {
+            gcm.push(meteor.name)
+        }
+    }
+
+    for (let object1 of wgl.objects.slice(2)) {
+        for (let object2 of wgl.objects.slice(2)) {
+            if (object1 === object2) continue 
+            if (Math.hypot(object1.pos[0] - object2.pos[0], object1.pos[1] - object2.pos[1]) < (object1.cr + object2.cr)){
+                if (object1.name.startsWith("meteor")) gcm.push(object1.name)
+                if (object2.name.startsWith("meteor")) gcm.push(object2.name)
+                if (object1.name.startsWith("spacecraft")) {
+                        health -= 20
+                        navigator.vibrate(150)
+                    }
+                if (health < 0) {
+                    localStorage.ffgs_hs = Math.floor(Math.max(parseInt(localStorage.ffgs_hs), score))
+                    document.querySelector("#zhighscore .score").innerText = Math.floor(localStorage.ffgs_hs)
+                    game.isOver = true
+                    c3d.style.filter = "blur(4px)"
+                    document.querySelector("#game-over-dialog").style.display = "block";
+                    document.querySelector("#game-over-dialog h2").innerText =  Math.floor(score)
+                    scorebar.innerText = `★ ${Math.floor(score)}`
+                    jsb.style.display = "none"
+                    jst.style.display = "none"
+                }
+                const ex = 0.5*(object1.pos[0] + object2.pos[0])
+                const ey = 0.5*(object1.pos[1] + object2.pos[1])
+                const screen = project([ex, ey])
+                if ( (screen.x < (c2d.width + 20)) &&
+                        (screen.x > ( - 20)) &&
+                        (screen.y < (c2d.height + 20)) &&
+                        (screen.y > (- 20))
+                    ) {
+                    playbacks.push(new Playback(screen.x, screen.y, explosion.frames))
+                    }
+            }
+        }
+    }
+
+    wgl.objects = wgl.objects.filter((object) => gcm.indexOf(object.name) < 0)
+    
+    if (Math.floor(score/0.2)%5 === 0) {
+        for (let i=0;i<Math.floor(score/500)+4;i++) {
+            const m = new Meteor(wgl)
+            wgl.objects.push(m)
+        }
+    }
+
+    c2dctx.clearRect(0, 0, c2d.width, c2d.height);
+    for (playback of playbacks) playback.draw(c2dctx)
+    playbacks = playbacks.filter(playback => playback.time < playback.lifetime)
+    wgl.render()
+}
+
+const clamp = (val, min, max) => Math.min(Math.max(val, min), max)
+
+const project = (pos) => {
+    const aspect = c2d.width / c2d.height;
+    const scx = ( 2.1445 * pos[0] )
+    const scy = ( 1.9752 * aspect*pos[1] - 4.1755 )
+    const scw = ( 0.3894 * aspect*pos[1] + 4.6053 )
+    return {x: 0.5 * c2d.width * (scx/scw + 1), y: c2d.height * (1 - 0.5 * (scy/scw + 1))}
+}
+
+terrainWorker.onmessage = function(e) {
+    if (e.data.text === "init") {
+        const elev = e.data.elev
+
+        const tgrid1 = grid(elev, 0)
+        trn1 = new Obj3d('terrain1', tgrid1, wgl)
+        trn1.pos[1] = 5
+        trn1.scale = 0.2
+        trn1.color = [0.8, 0.8, 0.8]
+
+        const tgrid2 = grid(elev, 2)
+        trn2 = new Obj3d('terrain1', tgrid2, wgl)
+        trn2.pos[1] = 5 + 12.8
+        trn2.scale = 0.2
+        trn2.color = [0.8, 0.8, 0.8]
+
+        wgl.objects.push(trn1)
+        wgl.objects.push(trn2)
+        wgl.objects.push(sc)
+
+        healthfill.style.display = "block"
+
+    } else if (e.data.text === "update1") {
+        const elev = e.data.elev
+        const tgrid1 = grid(elev, 2)
+        trn1.setVertexBuffer(tgrid1)
+    } else if (e.data.text === "update2") {
+        const elev = e.data.elev
+        const tgrid2 = grid(elev, 2)
+        trn2.setVertexBuffer(tgrid2)
+    }
+}
+
+
+document.querySelector("#start").addEventListener("click", (event) => {
+    document.querySelector("#grid-container").style.display = "none"
+    c3d.style.display = "block"
+    c2d.style.display = "block"
+    jsb.style.display = "block"
+    jst.style.display = "block"
+    scorebar.style.display = "block"
+    healthbar.style.display = "block"
+    game.isOver = false
+    game.time = performance.now()
+    renderloop(game.time)
+})
+
+document.body.addEventListener("pointerdown", (event) => {
+    control.isJoystickEnable = true
+    jsb.style.opacity =  1
+    jsb.style.top = (event.y - 0.5 * jsb.clientHeight) + "px"
+    jsb.style.left = (event.x - 0.5 * jsb.clientWidth) + "px"
+    jst.style.opacity = 1
+    jst.style.top = (event.y - 0.5 * jst.clientHeight) + "px"
+    jst.style.left = (event.x - 0.5 * jst.clientWidth) + "px"
+    event.stopPropagation();
+    event.preventDefault();
+})
+
+document.body.addEventListener("pointermove", (event) => {
+    if (!control.isJoystickEnable) return
+    const jsbr = 0.5 * jsb.clientWidth
+    const jstr = 0.5 * jst.clientWidth
+    const jsbx = parseInt(jsb.style.left) + jsbr
+    const jsby = parseInt(jsb.style.top) + jsbr
+    const pr = Math.hypot(jsbx - event.x, jsby - event.y)
+    if (pr < jsbr) {
+        jst.style.top = (event.y - jstr) + "px"
+        jst.style.left = (event.x - jstr) + "px"
+        v.x = pr * (event.x - jsbx) / (jsbr **2)
+        v.y = -pr * (event.y - jsby) / (jsbr **2)
+    } else {
+        jst.style.top = jsby - jstr + jsbr * (event.y - jsby) / pr + "px"
+        jst.style.left = jsbx - jstr + jsbr * (event.x - jsbx) / pr + "px"
+        v.x = jsbr * (event.x - jsbx) / (jsbr * pr)
+        v.y = -jsbr * (event.y - jsby) / (jsbr * pr)
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+})
+
+document.body.addEventListener("pointerup", (event) => {
+    control.isJoystickEnable = false
+    v.x = 0
+    v.y = 0
+    jsb.style.opacity = 0
+    jst.style.opacity = 0
+
+    event.stopPropagation();
+    event.preventDefault();
+})
+
+document.body.addEventListener("pointerleave", (event) => {
+    control.isJoystickEnable = false
+    v.x = 0
+    v.y = 0
+    jsb.style.opacity = 0
+    jst.style.opacity = 0
+
+    event.stopPropagation();
+    event.preventDefault();
+})
+
+document.addEventListener("click", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+})
+
+document.addEventListener("keydown", (event) => {
+    if (event.keyCode == '38') { // up
+        //v.y = 0.8
+        control.kbUp = true
+    }
+    else if (event.keyCode == '40') { // down
+        //v.y = -0.8
+        control.kbDown = true
+    }
+    else if (event.keyCode == '37') { // left
+        //v.x = -0.8
+        control.kbLeft = true
+    }
+    else if (event.keyCode == '39') { // right
+        //v.x = 0.8
+        control.kbRight = true
+    }
+})
+
+document.addEventListener("keyup", (event) => {
+    if (event.keyCode == '38') { // up
+        //v.y = 0
+        control.kbUp = false
+    }
+    else if (event.keyCode == '40') { // down
+        //v.y = 0
+        control.kbDown = false
+    }
+    else if (event.keyCode == '37') { // left
+        //v.x = 0
+        control.kbLeft = false
+    }
+    else if (event.keyCode == '39') { // right
+        //v.x = 0
+        control.kbRight = false
+    }
+})
+
+document.querySelector("#exit").addEventListener("click", (event) => {
+    document.querySelector("#grid-container").style.display = "grid"
+    renderloop_menu()
+    document.querySelector("#game-over-dialog").style.display = "none"
+    c3d.style.display = "none"
+    c2d.style.display = "none"
+    scorebar.style.display = "none"
+    healthbar.style.display = "none"
+    game.countdown = 15
+    health = 100
+    score = 0
+    sc.pos[0] = 0
+    sc.pos[1] = 2
+    v.x = 0
+    v.y = 0
+    trn1.pos[1] = trn1.pos[1] > trn2.pos[1] ? trn1.pos[1] = 5 : trn1.pos[1] = -100
+    trn2.pos[1] = trn2.pos[1] > trn1.pos[1] ? trn2.pos[1] = 5 : trn2.pos[1] = -100
+    c3d.style.filter = ""
+})
+
+document.querySelector("#replay").addEventListener("click", (event) => {
+    document.querySelector("#game-over-dialog").style.display = "none"
+    game.isOver = false
+    game.countdown = 15
+    health = 100
+    score = 0
+    sc.pos[0] = 0
+    sc.pos[1] = 2
+    v.x = 0
+    v.y = 0
+    trn1.pos[1] = trn1.pos[1] > trn2.pos[1] ? trn1.pos[1] = 5 : trn1.pos[1] = -100
+    trn2.pos[1] = trn2.pos[1] > trn1.pos[1] ? trn2.pos[1] = 5 : trn2.pos[1] = -100
+    c3d.style.filter = ""
+    jsb.style.display = "block"
+    jst.style.display = "block"
+    game.time = performance.now()
+    renderloop(game.time)
+})
+
+</script>
+    

@@ -1,0 +1,57 @@
+body {
+    background-color: black;
+    margin-top: 50px;
+    text-align: center;
+    color: white;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+h1 {
+    color: #5f5f7b;
+    font-size: 4em;
+    margin: 0;
+}
+a {
+    color: white;
+}
+p {
+    margin-bottom: 20px;
+    color: gray;
+}
+
+#content {
+    display: block;
+}
+#content > div {
+    position: relative;
+    width: 800px;
+    margin: auto;
+}
+
+canvas {
+    background-color: black;
+    border: 1px solid #5f5f7b;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    width: 800px;
+    height: 320px;
+    cursor: hand;
+}
+
+#bubble {
+    color: white;
+    top: 320px;
+    left: 70px;
+    display: block;
+    position: absolute;
+    text-align: left;
+    font-family: monospace;
+    text-transform: uppercase;
+}
+
+#tryagain {
+  position: relative;
+  top: -200px;
+  display: none;
+}

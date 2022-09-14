@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Star Hopper: Glitch - A Galactic Journey Game in 13kb</title>
+	<link rel="stylesheet" href="styles/hop.css" />
+</head>
+<body>
+
+<div id="body">
+	<canvas id="s"></canvas>
+	<div id="intro" class="dialog">
+		<p>
+			You are a test pilot testing a new ship equipped with an experimental FTL "Star-Hopper" drive.
+			Due to an unforeseen engineering error, you've accidentally made a GLITCH JUMP, and have
+			ended up in an entirely new galaxy, very far from your home.
+		</p>
+		<p>
+			Picking up some ancient satellite signals, you've been able to locate an inhabited planet
+			to set a course to. Perhaps the intelligent race can help you find a way home, and if not,
+			this may have to be your new home.
+		</p>
+		<p>
+			There will be many systems to explore on your trek to this new world. On each planet you
+			will be able to mine for fuel to power your jump drive. Once you have 100 fuel, you can jump to 
+			the next system. Avoid running into suns if you want to stay alive.
+		</p>
+		<div class="col col1">
+			Do:
+			<ul>
+				<li>Fly around (arrows or WASD)</li>
+				<li>Land on planets and mine (M or spacebar)</li>
+				<li>Jump to a new system on your journey (J)</li>
+				<li>Other things: N to toggle engines, R to repair, O to toggle sensors, P to pause, + or - to zoom, ESC to see this again</li>
+			</ul>
+		</div>
+		<div class="col">
+			Don't:
+			<ul>
+				<li>Run into the sun</li>
+				<li>Let your hull drop to 0%</li>
+			</ul>
+		</div>
+		<p class="cont">
+			Good luck!
+		</p>
+        <p>
+            <a href="#" id="enter">Hit [Enter] to Begin</a>
+        </p>		
+	</div>
+	<div id="hud" class="hud">
+		<div id="hud-system-name"></div>
+		<div id="hud-stats">
+			Jump Fuel: <span id="jump-fuel-amount">_</span>/100
+			<br />Hull: <span id="hull-amount">_</span>%
+		</div>
+		<ul id="hud-inv">
+			<li>
+				<b>+</b>
+			</li>
+			<li>
+				<b>-</b>
+			</li>
+			<li>
+				E<b>n</b>gine
+			</li>
+			<li>
+				<b>M</b>ine
+			</li>
+			<li>
+				<b>J</b>ump
+			</li>
+			<li>
+				<b>R</b>epair
+			</li>
+			<li>
+				Sens<b>o</b>r
+			</li>
+		</ul>		
+		<ul id="hud-messages"></ul>
+	</div>
+	<div id="splash">
+		<div class="sh">Star Hopper:</div>
+		<div class="glitch">Gl<i>i</i>t<i>c</i>h J<i>u</i>mp</div>
+		<div class="subtitle">A Galactic Adventure in 13kb</div>
+		<div class="version">v1.0 for js13kgames.com</div>
+	</div>
+	<div id="victory" class="dialog">
+		<h1>VICTORY</h1>
+		<p>You've discovered Terra and landed safely on this new planet. Hopefully the inhabitants are peaceful!</p>
+	</div>
+	<div id="gameover" class="dialog">
+		<h1>GAME OVER</h1>
+		<p>Your ship has been destroyed!</p>
+		<p>Play again by reloading the page (hit F5 in most browsers).</p>
+	</div>
+
+</div>
+
+<script src="scripts/rand.js"></script>
+<script src="scripts/Coords.js"></script>
+<!--
+<script src="scripts/Obj.js"></script>
+<script src="scripts/Galaxy.js"></script>
+<script src="scripts/starhopper.js"></script>
+-->
+<script src="scripts/Obj-Galaxy-starhopper.min.js"></script>
+</body>
+</html>

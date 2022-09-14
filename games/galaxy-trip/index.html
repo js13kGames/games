@@ -1,0 +1,1542 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>Galaxy Trip</title>
+</head>
+<body>
+<script>
+/**
+ * Galaxy Trip
+ *
+ * Copyright (c) 2012 Ivailo Hristov, Hristo Vladev
+ *
+ * MIT License
+ */
+
+//
+// TODO: V2
+//
+// messages => shield, good job
+// anti-gravity
+// bonuses
+// sounds
+// full screen mode
+// save records
+//
+// Big boss that follows you( and shoots you ),
+//  you run and get to the weapon, the you destroy
+//  it and win( 10 levels for each boss )
+//
+
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+//
+window.requestAnimationFrame = (function(){
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+            };
+})();
+
+//////////////////////////////////////////////////
+// GAME SETTINGS
+//////////////////////////////////////////////////
+
+/*
+ *  Visible area( and canvas ) width.
+ */
+WIDTH = window.innerWidth;
+
+/*
+ *  Visible area( and canvas ) height.
+ */
+HEIGHT = window.innerHeight;
+
+/*
+ *  Visible area( and canvas ) diagonal length.
+ */
+DIAGONAL = Math.sqrt( WIDTH*WIDTH + HEIGHT*HEIGHT );
+
+/*
+ * Degree in radians
+ */
+DEGREE = Math.PI/180;
+
+/*
+ *  Check if it is android browser
+ */
+IS_ANDROID = /Android/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+
+/*
+ *  Max number of bodies that can exist
+ * at the same time in the world. Calculate
+ * this form game dimensions.
+ */
+BODIES_LENGTH = DIAGONAL/20;
+
+/*
+ *  Gravity area size relative to circle radius
+ */
+GRAVITY_AREA_TO_RADIUS = 2 / 1;
+
+/*
+ *  Shield area size relative to circle radius
+ */
+SHIELD_AREA_TO_RADIUS = 5 / 3;
+
+/*
+ *  Minimum radius of enemy circles
+ */
+MIN_BODY_RADIUS = 5;
+
+/*
+ *  Maximum radius of enemy circles
+ */
+MAX_BODY_RADIUS = 80;
+
+/*
+ *  Player start radius
+ */
+PLAYER_START_RADIUS = 15;
+
+/*
+ *  Player maximum radius
+ */
+PLAYER_MAX_RADIUS = 25;
+
+/*
+ *  How much times current velocity will be reduced
+ * when impulse is applied.
+ */
+VELOCITY_REDUCE_ON_IMPULSE = 3;
+
+/*
+ *  Bigger number => lower gravity.
+ *
+ */
+GRAVITY_FACTOR = 300000;
+
+/*
+ *  How much times current radius will be reduced
+ * when impulse is applied. Reduce is calculated as a
+ * part of applied power.
+ */
+RADIUS_REDUCE_TO_POWER = 12;
+
+/*
+ *  When bigger circle "eats" smaller one, 1/RADIUS_ABSORB
+ * part of the smaller circle`s radius will be absorbed by
+ * bigger circle.
+ */
+RADIUS_ABSORB = 10;
+
+/*
+ *  Distance between mouse position and circle radius
+ * relative to power of the impulse that will be applied.
+ *
+ */
+MAX_POWER = 15;
+
+/*
+ *  Whether do draw gravity area or not. This is
+ * a debug option.
+ *
+ */
+DRAW_GRAVITY_AREA = true;
+
+/*
+ *  How long shield that player gains
+ * when he reach max_radius will least.
+ *
+ */
+MAX_RADIUS_SHIELD_DURATION = 5000;
+
+/*
+ *  Velocity that will move area constantly and will
+ * kill you if you are too slow.
+ *
+ */
+STATIC_VELOCITY_X = 1;
+STATIC_VELOCITY_Y = 1;
+
+/*
+ *  If power applied is bigger than this value,
+ * ACCELERATION effect will be shown;
+ */
+MIN_POWER_FOR_ACCELERATION = 0.35;
+
+//////////////////////////////////////////////////
+// GAME DATA
+//////////////////////////////////////////////////
+
+var
+
+// Game wrapper element
+//
+    wrapper = document.createElement('div'),
+
+// Create game canvas and context
+//
+    canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d'),
+
+// Layers list
+//
+    layers = {
+        game: canvas,
+        message: document.createElement('canvas'),
+        start: document.createElement('canvas'),
+        end: document.createElement('canvas')
+    },
+
+// Save message context
+//
+    messageCtx = layers.message.getContext('2d'),
+
+// List of all game objects/circles( + player )
+//
+    bodies = [],
+
+// Player body
+//
+    player = null,
+
+// How much user is far away from top left corner
+//
+    scrollX = 0,
+    scrollY = 0,
+
+// Player result which will be calculated live
+//
+    result = 0,
+
+// Current time
+//
+    now = +(new Date),
+
+// Generate canvases with different type of enemies
+//
+    enemies = [
+        // Blue body and yellow core.
+        getEnemyCanvas({
+            gradientDark: '#26addd',
+            gradientLight: '#2bc0e6',
+            gradientLighter: '#6bd3ed',
+            core: '#fff000'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Green body and orange core.
+        getEnemyCanvas({
+            gradientDark: '#429900',
+            gradientLight: '#92CD00',
+            gradientLighter: '#b3dc4d',
+            core: '#ffd800'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Red body and yellow core.
+        getEnemyCanvas({
+            gradientDark: '#ff0000',
+            gradientLight: '#ff5a19',
+            gradientLighter: '#ff8b5e',
+            core: '#ffe719'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Yellow body and blue core.
+        getEnemyCanvas({
+            gradientDark: '#ffcc00',
+            gradientLight: '#fffc00',
+            gradientLighter: '#fffd4d',
+            core: '#26addd'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Yellow body and red core.
+        getEnemyCanvas({
+            gradientDark: '#ffa200',
+            gradientLight: '#ffde00',
+            gradientLighter: '#ffe84d',
+            core: '#ff0000'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Violet body and white core.
+        getEnemyCanvas({
+            gradientDark: '#ba00ff',
+            gradientLight: '#ff00f0',
+            gradientLighter: '#ff4df4',
+            core: '#fff'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1)),
+
+        // Dark body and bright core.
+        getEnemyCanvas({
+            gradientDark: '#333',
+            gradientLight: '#666',
+            gradientLighter: '#999',
+            core: '#fff'
+        }, Math.floor((Math.random()*10)+1), Math.floor((Math.random()*10)+1))
+    ],
+
+// UI elements
+//
+    ui = {
+        share: {
+            text: 'Share',
+            width: round(WIDTH/6),
+            height: round(WIDTH/8),
+            offsetRight: round(WIDTH/100),
+            offsetBottom: 10,
+            action: function(){
+                window.open('http://www.facebook.com/sharer/sharer.php?u=' + window.location );
+            },
+            isClicked: function( offsetX, offsetY ){
+                return isInRect( WIDTH - this.width - this.offsetRight, HEIGHT - this.height - this.offsetBottom, this.width, this.height, offsetX, offsetY )
+            },
+            draw: function(){
+                this.width = round(WIDTH/6);
+                this.height = round(WIDTH/8);
+                this.offsetRight = this.text === 'Tweet' ? round(WIDTH/100) * 23 : round(WIDTH/100);
+
+                var u = this,
+                    cc = layers.end.getContext('2d'),
+                    x = WIDTH - u.width - u.offsetRight,
+                    y = HEIGHT - u.height - u.offsetBottom;
+
+                cc.clearRect( x - 10, y - 10, this.width + 20, this.height + 20 );
+
+                cc.fillStyle = 'rgba(0,0,0,0.1)';
+                cc.strokeStyle = 'rgba(0,0,0,0.5)';
+
+                cc.fillRect( x, y, this.width, this.height );
+                cc.strokeRect( x - 2, y - 2, this.width + 4, this.height + 4 );
+
+                cc.fillStyle = '#fff';
+                cc.strokeStyle = '#666';
+                cc.lineWidth = 0.5;
+
+                cc.shadowOffsetX = 0;
+                cc.shadowOffsetY = 0;
+                cc.shadowBlur = 10;
+                cc.shadowColor = 'rgba(0,0,0,0.3)';
+
+                cc.fillRect( x + 2, y + 2, this.width - 4, this.height - 4 );
+                cc.strokeRect( x + 2, y + 2, this.width - 4, this.height - 4 );
+
+                cc.shadowOffsetX = 1;
+                cc.shadowOffsetY = 1;
+                cc.shadowBlur = 0;
+
+                cc.font = 'bold ' + round(WIDTH/30) + 'px Verdana';
+                cc.textBaseline = "middle";
+                cc.textAlign = "center";
+
+                cc.fillStyle = '#333';
+                cc.fillText( u.text, x + this.width/2, y + this.height/2, this.width );
+            }
+        },
+        tweet: {
+            text: 'Tweet',
+            width: round(WIDTH/6),
+            height: round(WIDTH/8),
+            offsetRight: round(WIDTH/100) * 23,
+            offsetBottom: 10,
+            action: function(){
+                window.open('https://twitter.com/intent/tweet?source=webclient&text=I made score ' + result + ' on Galaxy Trip('+window.location.href+')!');
+            },
+            isClicked: function(){
+                return ui.share.isClicked.apply( this, arguments );
+            },
+            draw: function(){
+                return ui.share.draw.apply( this, arguments );
+            }
+        },
+        shield: {
+            width: round(WIDTH/6),
+            height: round(WIDTH/8),
+            offsetRight: -round(WIDTH/100),
+            offsetBottom: 10,
+
+            action: function(){
+                if( player.shield ){
+                    player.stopShield();
+                    this.fill = 'yellow';
+                } else {
+                    player.startShield();
+                    this.fill = 'orange';
+                }
+
+                this.draw();
+            },
+
+            draw: function(){
+
+                this.width = round(WIDTH/6);
+                this.height = round(WIDTH/8);
+                this.offsetRight = -round(WIDTH/100);
+
+                var cc = messageCtx,
+                    x = -this.offsetRight,
+                    y =  HEIGHT - this.height - this.offsetBottom;
+
+                cc.clearRect( x - 10, y - 10, this.width + 20, this.height + 20 );
+
+                cc.fillStyle = 'rgba(0,0,0,0.1)';
+                cc.strokeStyle = 'rgba(0,0,0,0.5)';
+
+                cc.fillRect( x, y, this.width, this.height );
+                cc.strokeRect( x - 2, y - 2, this.width + 4, this.height + 4 );
+
+                cc.fillStyle = '#fff';
+                cc.strokeStyle = '#666';
+                cc.lineWidth = 0.5;
+
+                cc.shadowOffsetX = 0;
+                cc.shadowOffsetY = 0;
+                cc.shadowBlur = 10;
+                cc.shadowColor = 'rgba(0,0,0,0.3)';
+
+                cc.fillRect( x + 2, y + 2, this.width - 4, this.height - 4 );
+                cc.strokeRect( x + 2, y + 2, this.width - 4, this.height - 4 );
+
+                cc.shadowOffsetX = 1;
+                cc.shadowOffsetY = 1;
+                cc.shadowBlur = 0;
+
+                cc.font = 'bold ' + round(WIDTH/30) + 'px Verdana';
+                cc.textBaseline = "middle";
+                cc.textAlign = "center";
+
+                if( player.shield ){
+                    cc.fillStyle = '#429900';
+                    cc.fillText( "Shield", x + this.width/2, y + this.height/2, this.width );
+                } else {
+                    cc.fillStyle = '#333';
+                    cc.fillText( "Shield", x + this.width/2, y + this.height/2, this.width );
+                }
+            },
+
+            isClicked: function( offsetX, offsetY ){
+                return isInRect( -this.offsetRight, HEIGHT - this.height - this.offsetBottom, this.width, this.height, offsetX, offsetY );
+            }
+        }
+    },
+
+// Used in explosions, tiles ...
+//
+    particles = [],
+
+// Loop and tmp vars
+//
+    i, j, ent, cx, cy, nsx, nsy, cc, part;
+
+//////////////////////////////////////////////////
+// GAME ENTITY CLASS
+//////////////////////////////////////////////////
+
+var Circle = function(){
+    // Used for element position calculations
+    //
+    var rr = Math.random();
+
+    // Generate radius
+    //
+    this.radius = MIN_BODY_RADIUS + getRandomInt(MAX_BODY_RADIUS - MIN_BODY_RADIUS);
+    this.gravityRadius = this.radius*GRAVITY_AREA_TO_RADIUS;
+    this.shieldRadius = this.radius*SHIELD_AREA_TO_RADIUS;
+
+    // Generate position
+    //
+    this.x = this.startX = this.cx = scrollX + this.radius*2 + getRandomInt(WIDTH - this.radius*2);
+    this.y = this.startY = this.cy = scrollY + this.radius*2 + getRandomInt(HEIGHT - this.radius*2);
+
+    if( rr <= 0.33 ){
+        this.x += WIDTH;
+    } else if( rr <= 0.66 ){
+        this.y += HEIGHT;
+    } else {
+        this.x += WIDTH;
+        this.y += HEIGHT;
+    }
+
+    // Body visibility status
+    //
+    this.visible = false;
+
+    // Generate velocity
+    //
+    this.velocityX = Math.random() * 0.05 * (Math.random() > 0.5 ? 1 : - 1);
+    this.velocityY = Math.random() * 0.05 * (Math.random() > 0.5 ? 1 : - 1);
+
+    // Styles
+    //
+    this.model = getModel();
+
+    // Shield properties
+    //
+    this.shield = 0;
+    this.shieldEnd = 0;
+    this.shieldDuration = 0;
+    this.shieldTimer = null;
+};
+
+Circle.prototype = {
+    setRadius: function( r ){
+        // Negative radius will throw exception
+        //
+        if( r < 0 ) r = 0;
+
+        // Set new radius
+        //
+        this.radius = r;
+        this.gravityRadius = r*GRAVITY_AREA_TO_RADIUS;
+        this.shieldRadius = r*SHIELD_AREA_TO_RADIUS;
+    },
+
+    draw: function(){
+        // Locals
+        //
+        var g, cx, cy, cc;
+
+        // Calculate draw positions
+        //
+        cx = this.cx;
+        cy = this.cy;
+
+        // Calculate img size
+        //
+        cc = round(this.radius*2);
+
+        // Draw shield( if there is any )
+        //
+        if( this.shield ){
+            ctx.save();
+
+            ctx.fillStyle = 'rgba(0, 160, 255, ' + ((1 - Math.pow( 1 - (this.shieldEnd - now)/this.shieldDuration, 6))/5).toFixed(2) + ')';
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = '#33CCCC';
+
+            ctx.beginPath();
+            ctx.arc( cx, cy, this.shieldRadius, 0, Math.PI * 2, true );
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc( cx, cy, this.shieldRadius + 1.5, 0, Math.PI * 2, true );
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Draw circle
+        //
+        ctx.drawImage( this.model, cx - this.radius, cy - this.radius, cc, cc );
+
+        // Draw gravity area( if requested )
+        //
+        if( DRAW_GRAVITY_AREA ){
+            ctx.save();
+
+            g = ctx.createRadialGradient(cx, cy, 0, cx, cy, this.gravityRadius);
+            g.addColorStop( 0, 'rgba(0, 0, 0, 0.0)' );
+            g.addColorStop( 1, 'rgba(0, 0, 0, 0.03)' );
+            ctx.fillStyle = g;
+
+            ctx.beginPath();
+            ctx.arc( cx, cy, this.gravityRadius, 0, Math.PI * 2, true );
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+    },
+
+    step: function(){
+        // Calculate draw positions
+        //
+        this.cx = (this.x - scrollX);
+        this.cy = (this.y - scrollY);
+
+        this.visible = !(this.cx < -this.radius || this.cx > (WIDTH + this.radius) || this.cy < -this.radius || this.cy > (HEIGHT + this.radius));
+
+        // Update positions of only visible bodies
+        //
+        if( this.visible ){
+            this.x += this.velocityX;
+            this.y += this.velocityY;
+        }
+    },
+
+    addShield: function( time ){
+        var t = this;
+
+        // Multiple shields are not allowed for now
+        //
+        if( this.shield ) return;
+
+        // Set properties
+        //
+        this.shield = 1;
+        this.shieldEnd = now + time;
+        this.shieldDuration = time;
+
+        // Set clear timeout
+        //
+        this.shieldTimer = setTimeout(function(){
+            t.shield = t.shieldEnd = t.shieldDuration = 0;
+            t.shieldTimer = null;
+        }, time );
+    },
+
+    startShield: function(){
+        var t = this, reduce;
+
+        this.shieldTimer = setInterval(reduce = function(){
+            t.setRadius( t.radius - t.radius/40 - 0.1 );
+            t.shield = 1;
+            t.shieldEnd = now + 10000;
+            t.shieldDuration = 10000;
+        }, 250 );
+
+        reduce();
+    },
+    stopShield: function(){
+        if( this.shield ){
+            clearInterval(this.shieldTimer);
+
+            this.shield = this.shieldEnd = this.shieldDuration = 0;
+            this.shieldTimer = null;
+        }
+    },
+
+    impulse: function( angle, power ){
+        this.velocityX /= VELOCITY_REDUCE_ON_IMPULSE;
+        this.velocityY /= VELOCITY_REDUCE_ON_IMPULSE;
+
+        this.velocityX += Math.cos( DEGREE * angle ) * power;
+        this.velocityY -= Math.sin( DEGREE * angle ) * power;
+
+        this.setRadius( this.radius - power/RADIUS_REDUCE_TO_POWER );
+
+        if( power/MAX_POWER > MIN_POWER_FOR_ACCELERATION ){
+            this.addAcceleration( (power/MAX_POWER) );
+        }
+    },
+
+    applyGravity: function(){
+        for( var ent, i=-1, j=bodies.length, dx, dy, rD, rS; ++i<j; ){
+            // NOTE: do not apply gravity to invisible bodies
+            //
+            if( (ent = bodies[i]) === this || !ent.visible ) continue;
+
+            if( circlesCollision( ent.x, ent.y, ent.radius, this.x, this.y, this.gravityRadius) ){
+                if( ent.radius < this.radius ){
+                    dx = (this.x - ent.x);
+                    dy = (this.y - ent.y);
+
+                    rD = (this.radius - ent.radius);
+                    rS = (this.radius + ent.radius);
+
+                    ent.velocityX += (dx*rD/GRAVITY_FACTOR);
+                    ent.velocityY += (dy*rD/GRAVITY_FACTOR);
+                }
+            }
+        }
+    },
+
+    applyReduce: function(){
+        for( var ent, i=-1, j=bodies.length, cRadius = this.shield ? this.shieldRadius : this.radius, dx, dy, dist, radius; ++i<j; ){
+            if( (ent = bodies[i]) === this ) continue;
+
+            if( circlesCollision( ent.x, ent.y, ent.shield ? ent.shieldRadius : ent.radius, this.x, this.y, cRadius ) ){
+                if( ent.radius <= this.radius ){
+                    //  If one of the bodies have shield, destroy
+                    // one without. If both are protected do nothing.
+                    //
+                    if( ent.shield ){
+                        if( !this.shield ){
+                            addExplosion( this.cx, this.cy, this.radius/4, getExplosionParticle() );
+                            this.setRadius(0);
+                        }
+
+                        return;
+                    } else if( this.shield ){
+                        addExplosion( ent.cx, ent.cy, ent.radius/4, getExplosionParticle() );
+                        ent.setRadius(0);
+                        continue;
+                    }
+
+                    radius = ent.radius;
+                    dist = Math.sqrt( (dx = this.x - ent.x)*dx + (dy = this.y - ent.y)*dy );
+
+                    // Reduce small body
+                    //
+                    ent.setRadius( dist - this.radius );
+
+                    //  Do not allow bodies with radius smaller
+                    // than minimum set in configuration
+                    //
+                    if( ent.radius < MIN_BODY_RADIUS ) ent.setRadius(0);
+
+                    // Increase bigger body
+                    //
+                    this.setRadius( this.radius + (radius - ent.radius)/RADIUS_ABSORB );
+                }
+            }
+        }
+    },
+
+    addAcceleration: function( k, stop ){
+        var
+            size            = this.radius*3*k,
+            maxAngle        = 2*Math.PI,
+            img             = getExplosionParticle(),
+            dist            = size*2,
+            frames          = 60,
+            interval        = 50,
+            postExplosions  = 4,
+
+            t = this,
+            i = -1, j = -1,
+            angle, sin, cos, part;
+
+        for( ;++i<=size; ){
+            angle = maxAngle*(i/size);
+            sin = Math.sin(angle);
+            cos = Math.cos(angle);
+
+            part = {
+                pos: 0,
+                img: img,
+                x: [],
+                y: []
+            };
+
+            for( j=-1; ++j<frames; ){
+                part.x.push( scrollX + this.cx + cos*dist*(j/frames) );
+                part.y.push( scrollY + this.cy + sin*dist*(j/frames) );
+            }
+
+            particles.push( part );
+        }
+
+        if( !stop ){
+            for( i=0; ++i<=postExplosions; ){
+                setTimeout((function(i){
+                    return function(){
+                        t.addAcceleration( k/i, true );
+                    };
+                })(i), interval*i );
+            }
+        }
+    }
+};
+
+//////////////////////////////////////////////////
+// START THE GAME
+//////////////////////////////////////////////////
+main();
+//////////////////////////////////////////////////
+
+function main(){
+    // Initializations
+    //
+    DOMInit();
+    playerInit();
+    bodiesInit();
+
+    // Show layers
+    //
+    show( layers.start );
+    show( layers.message );
+    show( layers.game );
+}
+
+//////////////////////////////////////////////////
+// INITIALIZATION FUNCTIONS
+//////////////////////////////////////////////////
+
+function DOMInit(){
+    // Locals
+    //
+    var layer, cc;
+
+    // Fix wrapper styles
+    //
+    wrapper.style.width = WIDTH + 'px';
+    wrapper.style.height = HEIGHT + 'px';
+
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.position = 'fixed';
+    wrapper.style.top = '0px';
+    wrapper.style.left = '0px';
+
+    wrapper.style.background = "transparent url(data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABLAAD/4QNtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjAtYzA2MCA2MS4xMzQ3NzcsIDIwMTAvMDIvMTItMTc6MzI6MDAgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6QUQ2M0ExRTVBQUYyRTAxMUEyMTRGN0M5NUJDOTU3RDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MTc0QjFCNzcxMzZCMTFFMUFGNEQ4MjRDQTQxRDAwNTUiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MTc0QjFCNzYxMzZCMTFFMUFGNEQ4MjRDQTQxRDAwNTUiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QThFNzgzOTVGNDMwMTFFMDlDNTQ5OTM4Q0NGNDgxQUIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QThFNzgzOTZGNDMwMTFFMDlDNTQ5OTM4Q0NGNDgxQUIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94Onht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) repeat top left";
+
+    wrapper.style.webkitBackfaceVisibility = "hidden";
+    wrapper.style.webkitPerspective = "1000";
+
+    // Prevent user select
+    //
+    wrapper.unselectable = 'no';
+    wrapper.onselectstart="return false;";
+    wrapper.style.webkitUserSelect = "none";
+    wrapper.style.mozUserSelect = "none";
+
+    // Set layers properties and styles
+    //
+    for( layer in layers ){
+        if( layers.hasOwnProperty(layer) ){
+            cc = layers[layer];
+
+            cc.width = WIDTH;
+            cc.height = HEIGHT;
+
+            cc.style.position = "absolute";
+            cc.style.top = "0px";
+            cc.style.left = "0px";
+            cc.style.display = "none";
+
+            cc.style.width = "100%";
+            cc.style.height = "100%";
+
+            cc.style.webkitBackfaceVisibility = "hidden";
+            cc.style.webkitPerspective = "1000";
+
+            cc.unselectable = 'no';
+            cc.onselectstart="return false;";
+
+            wrapper.appendChild(cc);
+        }
+    }
+
+    // Init layers
+    //
+    initStartLayer();
+    initEndLayer();
+
+    // Remove scroll
+    //
+    document.documentElement.style.overflow = 'hidden';
+
+    // Fix layout each time when visible area dimensions are changed
+    //
+    window.addEventListener( 'orientationchange', fixLayout, false );
+    window.addEventListener( 'resize', fixLayout, false );
+
+    // Prevent page scroll.
+    //
+    document.body.addEventListener('touchmove', function(e){
+        e.preventDefault();
+    }, false);
+
+    // Add game to DOM
+    //
+    document.documentElement.appendChild(wrapper);
+}
+
+function initStartLayer(){
+    var layer = layers.start,
+        cc = layer.getContext('2d');
+
+    // NOTE: this layer will be shown only once,
+    //  all drawing should be here
+    //
+    drawStartLayer();
+
+    layer.addEventListener('click', function(e){
+        hide( layer );
+
+        startGame();
+    }, false);
+}
+function initEndLayer(){
+    var layer = layers.end,
+        ctx = layer.getContext('2d');
+
+    layer.addEventListener('click', function(e){
+        var offsetX = e.pageX - wrapper.offsetLeft,
+            offsetY = e.pageY - wrapper.offsetTop;
+
+        if( ui.share.isClicked(offsetX, offsetY) ){
+            ui.share.action();
+
+            return false
+        }
+
+        if( ui.tweet.isClicked(offsetX, offsetY) ){
+            ui.tweet.action();
+
+            return false
+        }
+
+        hide( layer );
+        restartGame();
+
+        return false;
+    }, false);
+}
+
+function playerInit(){
+    // Locals
+    //
+    var dx, dy, dist, sin, angle;
+
+    // Create player
+    //
+    player = new Circle();
+
+    // Set player to be in the middle of the stage
+    //
+    player.setRadius( PLAYER_START_RADIUS );
+    player.x = player.startX = WIDTH/2;
+    player.y = player.startY = HEIGHT/2;
+
+    // Load player model
+    //
+    player.model = getPlayerCanvas();
+
+    // Player controls
+    //
+    layers.message.addEventListener('click', function(e){
+        // NOTE: do not use e.offsetX and e.offsetY they are
+        //  so buggy on mobile.
+        //
+        var offsetX = e.pageX - wrapper.offsetLeft,
+            offsetY = e.pageY - wrapper.offsetTop;
+
+        if( ui.shield.isClicked( offsetX, offsetY ) ){
+            ui.shield.action();
+            return false;
+        }
+
+        dx = offsetX + scrollX - player.x;
+        dy = offsetY + scrollY - player.y;
+
+        //  Calculate distance between mouse position and
+        // player`s circle center.
+        //
+        dist = Math.sqrt( dx*dx + dy*dy );
+
+        // Impulse angle
+        //
+        sin = Math.abs(dy)/dist;
+        angle = Math.asin(sin) * 180 / Math.PI;
+
+        // if( dx > 0 && dy < 0 ){ } else
+        //
+        if( dx < 0 && dy < 0 ){ // top left
+            angle = 180 - angle;
+        } else if( dx < 0 && dy > 0 ){
+            angle = 270 - angle;
+        } else if( dx > 0 && dy > 0 ){
+            angle = 360 - angle;
+        }
+
+        // Apply impulse on player
+        player.impulse( angle, dist/DIAGONAL*MAX_POWER );
+
+        // Prevent select
+        //
+        e.preventDefault();
+    });
+}
+function bodiesInit(){
+    // Add some circles
+    //
+    for( i=-1; ++i<BODIES_LENGTH; ) bodies.push(addBody());
+
+    bodies.push(player);
+}
+
+function drawStartLayer(){
+    var layer = layers.start,
+        cc = layer.getContext('2d');
+
+    cc.clearRect( 0, 0, WIDTH, HEIGHT );
+
+    cc.fillStyle = 'rgba(0,0,0,0.1)';
+    cc.strokeStyle = 'rgba(0,0,0,0.5)';
+
+    cc.fillRect( WIDTH/2 - 250, HEIGHT/2 - 150, 500, 300 );
+    cc.strokeRect( WIDTH/2 - 252, HEIGHT/2 - 152, 504, 304 );
+
+    cc.fillStyle = '#fff';
+    cc.strokeStyle = '#666';
+    cc.lineWidth = 0.5;
+
+    cc.shadowOffsetX = 0;
+    cc.shadowOffsetY = 0;
+    cc.shadowBlur = 10;
+    cc.shadowColor = 'rgba(0,0,0,0.3)';
+
+    cc.fillRect( WIDTH/2 - 240, HEIGHT/2 - 140, 480, 280 );
+    cc.strokeRect( WIDTH/2 - 240, HEIGHT/2 - 140, 480, 280 );
+
+
+    cc.shadowOffsetX = 1;
+    cc.shadowOffsetY = 1;
+    cc.shadowBlur = 0;
+
+    cc.font = 'bold 33px Verdana';
+    cc.textBaseline = "middle";
+    cc.textAlign = "center";
+
+    cc.fillStyle = '#EE3C7E';
+    cc.fillText( "Galaxy Trip", WIDTH/2, HEIGHT/2 - 80, WIDTH/2 );
+    cc.fillStyle = '#333';
+    cc.fillText( "Click to start game", WIDTH/2, HEIGHT/2 + 60, WIDTH/2 );
+
+    cc.drawImage(getPlayerCanvas(), WIDTH/2 - 30, HEIGHT/2 - 40)
+}
+
+//////////////////////////////////////////////////
+// GAME FUNCTIONS
+//////////////////////////////////////////////////
+
+function startGame(){
+    gameLoop();
+
+    // Update stats once per second
+    //
+    setInterval( function(){
+        requestAnimationFrame( updateStats, layers.message );
+
+        // Viewport fixes
+        //
+        window.scrollTo(0, IS_ANDROID ? 1 : 0);
+        document.documentElement.style.minHeight = '5000px';
+    }, 1000 );
+
+    // Draw shield button and stats
+    //
+    ui.shield.draw();
+    updateStats();
+}
+function endGame(){
+    // Show game restart layer
+    //
+    cc = layers.end.getContext('2d');
+
+    cc.clearRect( 0, 0, WIDTH, HEIGHT );
+
+    cc.fillStyle = 'rgba(0,0,0,0.1)';
+    cc.strokeStyle = 'rgba(0,0,0,0.5)';
+
+    cc.fillRect( WIDTH/2 - 250, HEIGHT/2 - 150, 500, 300 );
+    cc.strokeRect( WIDTH/2 - 252, HEIGHT/2 - 152, 504, 304 );
+
+    cc.fillStyle = '#fff';
+    cc.strokeStyle = '#666';
+    cc.lineWidth = 0.5;
+
+    cc.shadowOffsetX = 0;
+    cc.shadowOffsetY = 0;
+    cc.shadowBlur = 10;
+    cc.shadowColor = 'rgba(0,0,0,0.3)';
+
+    cc.fillRect( WIDTH/2 - 240, HEIGHT/2 - 140, 480, 280 );
+    cc.strokeRect( WIDTH/2 - 240, HEIGHT/2 - 140, 480, 280 );
+
+    cc.shadowOffsetX = 1;
+    cc.shadowOffsetY = 1;
+    cc.shadowBlur = 0;
+
+    cc.font = 'bold 32px Verdana';
+    cc.textBaseline = "middle";
+    cc.textAlign = "center";
+
+    cc.fillStyle = '#EE3C7E';
+    cc.fillText( "Your final result: " + result, WIDTH/2, HEIGHT/2 - 90, WIDTH/2 );
+    cc.fillStyle = '#333';
+    cc.fillText( "Click to start a new game", WIDTH/2, HEIGHT/2 + 60, WIDTH/2 );
+
+    cc.drawImage( player.model, WIDTH/2 - 30, HEIGHT/2 - 40)
+
+    // Draw buttons
+    //
+    ui.share.draw();
+    ui.tweet.draw();
+
+    show(layers.end);
+}
+function restartGame(){
+    // Reset game
+    //
+    player.x = player.startX;
+    player.y = player.startY;
+    player.velocityX = player.velocityY = 0;
+
+    player.stopShield();
+    player.setRadius(PLAYER_START_RADIUS);
+
+    scrollX = scrollY = 0;
+
+    bodies = [];
+    bodiesInit();
+}
+
+//////////////////////////////////////////////////
+// GAME LOOP
+//////////////////////////////////////////////////
+
+function gameLoop(){
+    // Request new frame
+    //
+    requestAnimationFrame( gameLoop, canvas );
+
+    // Save current time
+    now = +(new Date);
+
+    // Clear whole canvas
+    //
+    ctx.clearRect( 0, 0, WIDTH, HEIGHT );
+
+    // Apply reduce and gravity before actual draw.
+    //
+    for( i=-1; ent=bodies[++i]; ){
+        // Update body
+        //
+        ent.step();
+
+        // Only visible bodies can interact
+        //
+        if( ent.visible ){
+            ent.applyGravity();
+            ent.applyReduce();
+        }
+    }
+
+    //  If player reach max_radius, he gains shield
+    // for MAX_RADIUS_SHIELD_DURATION seconds.
+    //
+    if( player.radius > PLAYER_MAX_RADIUS ){
+        player.setRadius( PLAYER_MAX_RADIUS );
+        player.addShield( MAX_RADIUS_SHIELD_DURATION );
+    }
+
+    // Draw and update body position
+    //
+    for( i=-1; ent=bodies[++i]; ){
+        if( ent.visible ){
+            ent.draw();
+        }
+
+        // Garbage collector
+        //
+        if( ent.radius <= 0 || (ent.x + ent.radius*2) < scrollX || (ent.y + ent.radius*2) < scrollY ){
+            // Create new body when other is dead
+            //
+            bodies[i] = addBody();
+
+            if( ent === player ){
+                endGame();
+            }
+        }
+    }
+
+    // Calculate scroll
+    //
+    if( (nsx = player.x - WIDTH/2) > scrollX ) scrollX = nsx;
+    if( (nsy = player.y - HEIGHT/2) > scrollY ) scrollY = nsy;
+
+    // Add static velocity
+    //
+    scrollX += STATIC_VELOCITY_X;
+    scrollY += STATIC_VELOCITY_Y;
+
+    // Draw all particles
+    //
+    for( i=-1; part = particles[++i]; ){
+        ctx.drawImage( part.img, part.x[part.pos] - scrollX, part.y[part.pos] - scrollY );
+        part.pos++;
+
+        if( part.x[part.pos] === undefined )
+            particles.splice( i--, 1 );
+    }
+}
+
+//////////////////////////////////////////////////
+// OTHER FUNCTIONS
+//////////////////////////////////////////////////
+
+function addBody(){
+    // Do not allow circles collision( or interaction )
+    //
+    for( var ent, i=-1, j=bodies.length, current = new Circle(); ++i<j; ){
+        if( circlesCollision( (ent = bodies[i]).x, ent.y, ent.gravityRadius, current.x, current.y, current.gravityRadius ) ){
+            return addBody();
+        }
+    }
+
+    return current;
+}
+
+function addExplosion( x, y, size, img, stop, sx, sy ){
+    var maxAngle        = 2*Math.PI,
+        dist            = size*2,
+        frames          = 60,
+        interval        = 100,
+        postExplosions  = 3,
+
+        i=-1, j=-1,
+        angle, sin, cos, part;
+
+    if( !sx ) sx = scrollX;
+    if( !sy ) sy = scrollY;
+
+    for( ;++i<=size; ){
+        angle = maxAngle*(i/size);
+        sin = Math.sin(angle);
+        cos = Math.cos(angle);
+
+        part = {
+            pos: 0,
+            img: img,
+            x: [],
+            y: []
+        };
+
+        for( j=-1; ++j<frames; ){
+            part.x.push( sx + x + cos*dist*(j/frames) );
+            part.y.push( sy + y + sin*dist*(j/frames) );
+        }
+
+        particles.push( part );
+    }
+
+    if( !stop ){
+        for( i=0; ++i<=postExplosions; ){
+            setTimeout((function(i){
+                return function(){
+                    addExplosion( x, y, size*i, img, true, sx, sy );
+                };
+            })(i), interval*i );
+        }
+    }
+}
+
+function updateStats(){
+    result = (Math.sqrt(scrollX*scrollX + scrollY*scrollY)/300).toFixed(0);
+
+    messageCtx.clearRect( 0, 0, WIDTH, 100 );
+
+    messageCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    messageCtx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    messageCtx.fillRect( 0, 0, WIDTH, 40 );
+    messageCtx.strokeRect( 0, 0, WIDTH, 40 );
+
+    messageCtx.fillStyle = 'white';
+    messageCtx.font = 'bold 12px Verdana';
+    messageCtx.textBaseline = "middle";
+    messageCtx.textAlign = "center";
+
+    messageCtx.fillText( 'Result: ' + result, 80, 20, 60 );
+    messageCtx.fillText( 'Energy: ' + (player.radius*30).toFixed(0), 160, 20, 60 );
+    messageCtx.fillText( 'Velocity: ' + ((Math.abs(player.velocityX) + Math.abs(player.velocityY))*60).toFixed(0) + 'px/s', 250, 20, 80 );
+}
+
+//  Scales games when visible area dimensions
+// are changed.
+//
+function fixLayout(){
+    WIDTH = window.innerWidth;
+    HEIGHT = window.innerHeight;
+    DIAGONAL = Math.sqrt( WIDTH*WIDTH + HEIGHT*HEIGHT );
+    BODIES_LENGTH = DIAGONAL/20;
+
+    wrapper.style.width = WIDTH + 'px';
+    wrapper.style.height = HEIGHT + 'px';
+
+    for( var layer in layers ){
+        if( layers.hasOwnProperty(layer) ){
+            cc = layers[layer];
+
+            cc.width = WIDTH;
+            cc.height = HEIGHT;
+        }
+    }
+
+    ui.shield.draw();
+    updateStats();
+
+    if( isShown(layers.end) ){
+        endGame();
+    } else if( isShown(layers.start) ){
+        drawStartLayer();
+    }
+}
+
+function getModel(){
+    return enemies[ Math.floor(Math.random()*enemies.length) ] || getModel();
+}
+
+//////////////////////////////////////////////////
+// DRAW FUNCTIONS
+//////////////////////////////////////////////////
+
+function getPlayerCanvas(){
+    var cvs                 = document.createElement('canvas'),
+        ctx                 = cvs.getContext('2d'),
+        side                = 59,
+        angle               = 0,
+        borderCircleRad     = 5,
+        mainCircleRad       = 15,
+
+        gradient            = (function(){
+            var g = ctx.createRadialGradient(0, 0, 0, 0, 0, mainCircleRad);
+
+            g.addColorStop( 0, '#33CCCC' );
+            g.addColorStop( 1, '#FFFFFF' );
+
+            return g;
+        })(),
+
+        ovals               = 5,
+        i                   = 0;
+
+    // Set dimensions
+    //
+    cvs.width = cvs.height = side;
+
+    // Change canvas origin
+    //
+    ctx.translate( side/2, side/2 );
+    ctx.scale(1.5, 1.5);
+
+    // Draw curly border
+    //
+    ctx.save();
+    ctx.strokeStyle = '#EE3C7E';
+
+    for( angle = 0; angle <= Math.PI * 2; angle += 0.527 ) {
+        ctx.beginPath();
+        ctx.arc( Math.cos(angle) * (mainCircleRad - 1), Math.sin(angle) * (mainCircleRad - 1), borderCircleRad, 0, Math.PI * 2, true);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Draw main circle
+    //
+    ctx.save();
+    ctx.fillStyle = gradient;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'white';
+
+    ctx.beginPath();
+    ctx.arc(0, 0, mainCircleRad, 0, Math.PI * 2, true);
+    ctx.fill();
+    ctx.restore();
+
+    // Draw curves in the center
+    //
+    ctx.save();
+    ctx.strokeStyle = '#666';
+
+    for( angle = Math.PI*2/ovals; i < ovals; i++ ) {
+        ctx.beginPath();
+        ctx.moveTo(-6, -5);
+        ctx.bezierCurveTo(-4, -16, 4, -16, 6, -5);
+
+        ctx.moveTo(-1, -5);
+        ctx.bezierCurveTo(-4, 5, 4, 5, 1, -5);
+
+        ctx.stroke();
+        ctx.rotate(angle);
+    }
+
+    ctx.restore();
+
+    return cvs;
+}
+
+function getEnemyCanvas( colors, coef1, coef2 ){
+    var cvs                 = document.createElement('canvas'),
+        ctx                 = cvs.getContext('2d'),
+        side                = 250,
+        radius              = side/2,
+        innerCircleRad      = 60,
+        angle               = 0,
+
+        gradient            = (function(){
+            var g = ctx.createRadialGradient(0, 0, 50, 0, 0, radius);
+
+            g.addColorStop( 0.7, colors.gradientLight );
+            g.addColorStop( 1, colors.gradientDark );
+
+            return g;
+        })(),
+
+        ovals               = 6,
+        i                   = 0;
+
+    // Set dimensions
+    //
+    cvs.width = cvs.height = side;
+
+    // Change canvas origin
+    //
+    ctx.translate( side/2, side/2 );
+
+    // Draw circle
+    //
+    ctx.save();
+
+    ctx.fillStyle = gradient;
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = '#333';
+
+    ctx.beginPath();
+    ctx.arc( 0, 0, radius - 2, 0, Math.PI * 2, true );
+    ctx.closePath();
+
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Draw inner circles
+    //
+    ctx.save();
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#666';
+
+    for( angle = 0; angle <= Math.PI * 2; angle += 0.8 ) {
+        ctx.beginPath();
+        ctx.arc( Math.cos(angle) * (radius - 80), Math.sin(angle) * (radius - 80), innerCircleRad, 0, Math.PI * 2, true);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // Draw core circle
+    //
+    ctx.save();
+
+    ctx.fillStyle = colors.gradientLight;
+    ctx.beginPath();
+    ctx.arc( 0, 0, 90, 0, Math.PI * 2, true );
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+
+    ctx.beginPath();
+    ctx.arc( 0, 0, 79, 0, Math.PI * 2, true );
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc( 0, 0, 80, 0, Math.PI * 2, true );
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Draw core
+    //
+    ctx.save();
+
+    ctx.scale(1.7, 1.7);
+
+    ctx.lineWidth = 1.5;
+    ctx.fillStyle = colors.gradientLighter;
+    ctx.strokeStyle = colors.core;
+
+    for( angle = 0; angle <= Math.PI * 2; angle += 0.527 ) {
+        ctx.beginPath();
+        ctx.arc( Math.cos(angle) * (20 - 1), Math.sin(angle) * (20 - 1), 10, 0, Math.PI * 2, true);
+        ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc( 0, 0, 25, 0, Math.PI * 2, true );
+    ctx.fill();
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#666';
+
+    for( angle = Math.PI*2/ovals; i < ovals; i++ ) {
+        ctx.beginPath();
+        ctx.moveTo(-coef1, -5);
+        ctx.bezierCurveTo(-4, -16, 4, -16, coef1, -5);
+
+        ctx.moveTo(-coef2, -5);
+        ctx.bezierCurveTo(-4, 5, 4, 5, coef2, -5);
+
+        ctx.stroke();
+        ctx.rotate(angle);
+    }
+
+    ctx.restore();
+
+    return cvs;
+}
+
+function getExplosionParticle(){
+    var cvs                 = document.createElement('canvas'),
+        ctx                 = cvs.getContext('2d'),
+        side                = 1,
+        radius              = side/2;
+
+    // Set dimensions
+    //
+    cvs.width = cvs.height = side;
+
+    // Draw circle
+    //
+    ctx.save();
+
+    ctx.fillStyle = getRandomColor();
+    ctx.strokeStyle = getRandomColor();
+
+    ctx.beginPath();
+    ctx.arc( radius, radius, radius, 0, Math.PI * 2, true );
+    ctx.closePath();
+
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    return cvs;
+}
+
+
+//////////////////////////////////////////////////
+// HELPERS
+//////////////////////////////////////////////////
+
+function circlesCollision( x0, y0, r0, x1, y1, r1 ){
+    return Math.sqrt(Math.pow(y1 - y0, 2) + Math.pow(x1 - x0, 2)) <= (r0 + r1);
+}
+function isInRect( sX, sY, w, h, x, y ){
+    return (x >= sX && x <= (sX + w)) && (y >= sY && y <= (sY + h));
+}
+function isInCircle(oX, oY, r, x, y){
+    return (Math.pow( oX - x, 2 ) + Math.pow( oY - y, 2)) <= Math.pow( r, 2 );
+}
+function getRandomColor() {
+    return "#" + ((1 << 24) * Math.random() | 0).toString(16);
+}
+function getRandomInt( until ){
+    return (0.5 + Math.random() * until) << 0;
+}
+function round( n ){
+    return (0.5 + n) << 0;
+}
+function show( elm ){
+    elm.style.display = 'block';
+}
+function hide( elm ){
+    elm.style.display = 'none';
+}
+function isShown( elm ){
+    return elm.style.display != 'none';
+}
+</script>
+</body>
+</html>

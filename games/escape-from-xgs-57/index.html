@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Escape from XGS-57</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+
+      canvas{
+        display: block;
+      }
+    </style>
+
+
+</head>
+<body style="background-color:black;">
+
+<div id="container" style="position: relative; left: 10%; top: 5px; margin:0 auto;">
+    <canvas id=canvas width=1000 height=580
+        style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+        <canvas id=ocean width=1000 height=580
+            style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+            <canvas id=canvas2 width=1000 height=580
+                style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+        <canvas id=layer1 width=1000 height=580
+            style="position: absolute; left: 0; top: 0; z-index: 3;"></canvas>
+    <canvas id="layer2" width="1000" height="140"
+        style="position: absolute; left: 0; top: 0; z-index: 4;"></canvas>
+    <canvas id="layer3" width="1000" height="140"
+        style="position: absolute; left: 0; top: 0; z-index: 5;"></canvas>
+        <canvas id="overlay" width="1000" height="580"
+            style="position: absolute; left: 0; top: 0; z-index: 6;"></canvas>
+</div>
+
+
+<script> window.ECS = {
+           Components: {},
+
+           systems: {},
+           entities: [],
+           game: {}
+    }; </script>
+
+<script type="text/javascript" src="entity.js"></script>
+
+<script type="text/javascript" src="components.js"></script>
+
+<script type="text/javascript" src="system.js"></script>
+
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="interface.js"></script>
+<script type="text/javascript" src="ocean.js"></script>
+<script type="text/javascript" src="game.js"></script>
+
+<script> window.onload = init; </script>
+
+
+</body>

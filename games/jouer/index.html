@@ -1,0 +1,142 @@
+<html>
+<head>
+	<title>Jouer</title>
+	<script src="https://js13kgames.com/webxr-src/aframe.js"></script>
+	<meta name="monetization" content="$coil.xrptipbot.com/c64cd7aa-7a03-44e5-ae53-029c72c84e2f">
+</head>
+<script type="text/javascript">
+	Score=0
+	level=0
+	AFRAME.registerComponent('x-button-listener', {
+			  init: function () {
+			    this.el.addEventListener('xbuttondown', function (evt) {
+					x = (document.getElementById("cam").getAttribute("position").x)
+				  	y = (document.getElementById("cam").getAttribute("position").y)
+				  	z = (document.getElementById("cam").getAttribute("position").z)
+				
+			    	//BACK
+			    	
+		  	document.getElementById('cam').setAttribute('position',x+' '+y+' '+(z+0.05));
+			    });
+
+			    this.el.addEventListener('ybuttondown', function (evt) {
+					x = (document.getElementById("cam").getAttribute("position").x)
+				  	y = (document.getElementById("cam").getAttribute("position").y)
+				  	z = (document.getElementById("cam").getAttribute("position").z)
+				
+			    	//BACK
+			    	
+		  	document.getElementById('cam').setAttribute('position',x+' '+y+' '+(z-0.05));
+			    });
+
+			    this.el.addEventListener('bbuttondown', function (evt) {
+					x = (document.getElementById("cam").getAttribute("position").x)
+				  	y = (document.getElementById("cam").getAttribute("position").y)
+				  	z = (document.getElementById("cam").getAttribute("position").z)
+				
+			    	//BACK
+			    	
+		  	document.getElementById('cam').setAttribute('position',(x+0.02)+' '+(y)+' '+z);
+		  
+			    });
+			    this.el.addEventListener('gripdown', function (evt) {
+					shoot();
+			    });
+			    	this.el.addEventListener('abuttondown', function (evt) {
+					x = (document.getElementById("cam").getAttribute("position").x)
+				  	y = (document.getElementById("cam").getAttribute("position").y)
+				  	z = (document.getElementById("cam").getAttribute("position").z)
+				
+			    	
+			    	
+		  	document.getElementById('cam').setAttribute('position',(x-0.02)+' '+(y)+' '+z);
+
+			    });
+			  }
+			});
+	AFRAME.registerComponent('anim-complete', {
+		init: function () {
+			    var el = this.el;
+			    el.addEventListener('animationcomplete', function(evt){
+			    	el.setAttribute('visible','false')
+			    });
+			}
+		});
+	AFRAME.registerComponent('rotation-reader', {
+		  tick: function () {
+		  		console.log(this.el.object3D.rotation.x)
+				if((this.el.object3D.rotation.x)==0){
+					if((this.el.object3D.rotation.y)==0){
+						if((this.el.object3D.rotation.z)==0){
+							document.setAttribute('rotation',"-60 0 0")
+						}	
+				}	
+				}
+			}
+		});
+	AFRAME.registerComponent('collider-check', {
+    		
+			  dependencies: ['raycaster'],
+
+			  init: function () {
+				var eli=this.el			
+			    eli.addEventListener('raycaster-intersection', function (evt) {	
+					eli.setAttribute('visible','false');
+				if(monkey==0){
+					level+=2
+					monkey=level
+					for (var i = 0; i < monkey; i++) {
+							spawnMonkey();
+					}
+				}
+				else{
+					monkey-=1
+			  }
+			  Score+=10
+			  document.getElementById('score').setAttribute('value','Score: '+Score+'')
+			});
+    	}
+	});
+</script>
+<body onclick="clickBody();">
+<a-scene background="color: #77b5fe" id='sc' light="defaultLightsEnabled: false">
+	<a-entity light="type: ambient; intensity: 0.9;"></a-entity>
+  <a-entity light="type: directional;
+                   castShadow: true;
+                   intensity: 0.4;"
+            position="-5 3 1.5"></a-entity>
+           <!-- 20 40 20 -->
+	<a-entity camera wasd-controls look-controls position="20 30 20" id='cam' rotation="-60 0 0">
+	<a-cursor></a-cursor>
+	<a-text id='score' value="Score: 0" position="0.5 0.7 -1" scale="0.7 0.7 0.7"></a-text>	
+	<a-text id='time' value="Time Left: 0" position="-1.3 0.7 -1" scale="0.7 0.7 0.7"></a-text>	
+	</a-entity>
+	
+<!--	<a-entity rotation="0 0 0" position="0 5 20">
+	<a-box anim-complete animation="property:position; to: 0 0 -13; dur: 2000; easing: easeOutQuad;" material="color: red" visible=true  
+	 ></a-box>
+	</a-entity>
+-->
+	
+	 <a-box color="#6d4a3b" depth="200" height="4" width="400" position="0 -3 0" roughness=1></a-box>
+<!-- MONKEY UPDATED -->
+<!--  
+-->
+
+
+	<!-- MONKEY BEGINS -->
+	<!---	 <a-entity animation="property:position; to: 0 3 0; dur: 1500; easing: easeInQuad">
+			 <a-box color="orange" collider-check raycaster="objects: .shot" depth="1" height="2" width="1" position="3 1 -3">
+			 	<a-box color="pink" depth="0.75" height="2" width="0.80" position="0 1 0" ></a-box>
+			 </a-box>
+		</a-entity>
+	-->
+	<!-- MONKEY ENDS -->
+	<!--<a-cylinder color="#8B4513" height="3" radius="1" position="0 -3 0"></a-cylinder>-->
+	<!--<a-tetrahedron color="rgb(144,238,144)" radius="5" position="0 0 0"  rotation="225 0 45" width="256"></a-tetrahedron>
+	-->
+	<!--<a-entity light="type: ambient"></a-entity> -->
+</a-scene>
+<script type="text/javascript" src="script.js"></script>
+</body>
+</html>

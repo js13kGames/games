@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WhozFast 13kGame</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;"> 
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0; 
+            }
+
+            input[type=button] {
+                float: left;
+                position: fixed;
+                left: 1%;
+                width:98%;
+                height:47%;
+                border: 5px solid yellow;
+                font-size: 60px;
+                padding: 1% 1% 1% 1%;
+                color: white;
+            }
+
+            #player1 {
+                background-color: red;
+                top: 1%;
+            }
+            #player2 {
+                background-color: chocolate;
+                top: 51%;
+            }
+            #timer {
+                float: left;
+                position: fixed;
+                top: 45%;
+                left: 40%;
+                width: 20%;
+                height: 10%;
+                border: 1px solid pink;
+                color: black;
+                background-color: white;
+                text-align: center;
+                vertical-align: text-bottom;
+                font-size: 60px;
+                padding-top: 7px;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="button" id="player1" value="PLAYER 1">
+        <input type="button" id="player2" value="PLAYER 2">
+        <span id="timer">00:00</span>
+        <script>
+            let score1, score2, timerTime;
+            let player1 = prompt("First players name?", "Hodor");
+            let player2 = prompt("Second players name?", "Hodor Hodor");
+            let time = prompt("How long you want to play the game (in seconds, min 5)?", "10");
+            alert('Player who taps screen more number of times in given time wins the game!');
+
+            document.querySelector('#player1').addEventListener('click', function(){
+                document.querySelector('#player1').value = player1 + ' : ' + ++score1;
+            });
+
+            document.querySelector('#player2').addEventListener('click', function(){
+                document.querySelector('#player2').value = player2 + ' : ' + ++score2;
+            });
+
+            function init() {
+                score1 = 0;
+                score2 = 0;
+                time = parseInt(time);
+                if (isNaN(time) || time<5) {
+                    time = 5;
+                }
+                timerTime = time;
+                if(!player1){
+                    player1 = "Hoder";
+                }
+                if(!player2){
+                    player2 = "Hoder Hoder";
+                }
+                
+                document.querySelector('#player1').value = player1 + ' : ' + score1;
+                document.querySelector('#player2').value = player2 + ' : ' + score2;
+
+                let timer = setInterval(function(){
+                    if(timerTime<=0.1){
+                        clearInterval(timer);
+                        document.querySelector('#timer').innerHTML = "STOP";
+                        document.querySelector('#player1').disabled = true;
+                        document.querySelector('#player2').disabled = true;
+                        setTimeout(function(){
+                            alert( (score1>score2 ? player1 : (score1<score2 ? player2 : 'You both')) + ' won the game with score '+ 
+                                    (score1>score2 ? (score1 + '-' + score2) : (score2 + '-' + score1)) +' ! Congratualtion :-)');
+                            let reenter = confirm('Lets play again. Do you want to enter player names and time again?');
+                            if(reenter){
+                                player1 = prompt("First players name?", "Hodor");
+                                player2 = prompt("Second players name?", "Hodor Hodor");
+                                time = prompt("How long you want to play the game (in seconds, min 10)?", "10");
+                            }
+                            document.querySelector('#player1').disabled = false;
+                            document.querySelector('#player2').disabled = false;
+                            init();
+                        }, 2000);
+                    }
+                    else {
+                        timerTime -= .1;
+                        document.querySelector('#timer').innerHTML = timerTime.toFixed(2);
+                    }
+                }, 100);
+            }
+            init();
+        </script>
+    </body>
+</html>

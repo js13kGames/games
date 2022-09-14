@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>go OFFLINE</title>
+<style>
+body {
+  font-family: Consolas, "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", Monaco, "Courier New", Courier, monospace;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+a {
+  color: dodgerblue;
+}
+
+/* TITLE / LOGO */
+h1 {
+  font-size: 50px;
+}
+
+.offline .title {
+  color: yellowgreen;
+}
+
+.i {
+  position: relative;
+}
+
+/*
+  CSS wifi icon based on
+  https://codepen.io/GilSanchez/pen/rusAy
+*/
+.wifi {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  margin-left: -25px;
+
+	padding: 5px;
+}
+
+.wifi, .wifi:before {
+	display: block;
+	border: 15px double transparent;
+	border-top-color: currentColor;
+	border-radius: 50%;
+}
+
+.wifi::before {
+	content: '';
+	width: 0; height: 0;
+  border: 5px solid transparent;
+	border-top-color: currentColor;
+}
+
+.offline .wifi {
+  border-color: transparent;
+}
+
+/* SCORE AND HI SCORE */
+.score {
+  opacity: 0;
+}
+
+.offline .score {
+  opacity: 1;
+}
+
+.share {
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.hiscore .share {
+  opacity: 1;
+}
+
+/* ACHIEVEMENTS */
+h3 {
+  margin-top: 2rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.achievement {
+  transition: opacity 500ms;
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.achievement::before {
+  content: '★ ';
+  transition: opacity 500ms;
+  opacity: 0;
+}
+
+.unlocked.achievement {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.unlocked.achievement::before {
+  opacity: 1;
+}
+
+.new.achievement::after {
+  content: ' - NEW!';
+  color: yellowgreen;
+}
+
+.achievement + .secret {
+  display: none;
+}
+
+/* HINTS */
+.hint {
+  position: fixed;
+  bottom: 0;
+  right: 10px;
+  left: 10px;
+}
+
+.clippy {
+  position: absolute;
+  bottom: 0;
+  right: -10px;
+  transform: translate(20px,20px);
+  transition: 300ms;
+  cursor: pointer;
+}
+
+.clippy path {
+  pointer-events: none;
+}
+
+.offline .clippy {
+  transform: translate(60px,60px) rotate(-30deg);
+}
+
+.spoken .clippy,
+.clippy:hover {
+  transform: translate(0px,0px) rotate(30deg);
+}
+
+/* speach bubble based on https://leaverou.github.io/bubbly/ */
+.bubble {
+	position: absolute;
+  bottom: 60px;
+  right: 0;
+
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 100px;
+  padding: 1em;
+
+  background: #FFF;
+  border: 1px solid black;
+	border-radius: 5px;
+
+  opacity: 0;
+  transition: 300ms opacity;
+}
+
+.spoken .bubble {
+  opacity: 1;
+}
+
+.bubble:before {
+	bottom: -20px;
+	right: 40px;
+	border: 20px solid transparent;
+	border-top-color: #000;
+}
+
+.bubble:after {
+	bottom: -18px;
+	right: 41px;
+	border: 18px solid transparent;
+	border-top-color: #FFF;
+}
+
+.bubble:before,
+.bubble:after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-bottom: 0;
+	border-right: 0;
+}
+
+.bubble span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
+<body>
+<h1>
+  go <span class="title">OFFL<span class="i">I<i class="wifi"></i></span>NE</span>
+</h1>
+<p>
+  HI SCORE: <span id="js-hiscore">0</span>
+  <span class="share">- <a href="https://twitter.com/" target="_blank" id="js-share">SHARE</a> YOUR NEW HI SCORE!</span>
+</p>
+<p class="score">&nbsp;&nbsp;&nbsp;SCORE: <span id="js-score">0</span></p>
+
+<h3 id="js-achievements">ACHIEVEMENTS <span id="js-achievements-count"></span></h3>
+<h3 id="js-locked-achievements" class="hidden">LOCKED ACHIEVEMENTS</h3>
+<p class="achievement" id="js-achievement-go-offline">go offline</p>
+<p class="achievement" id="js-achievement-first">offline first</p>
+<p class="achievement" id="js-achievement-13-seconds">13 seconds to Mars</p>
+<p class="achievement" id="js-achievement-leet">leet</p>
+<p class="achievement" id="js-achievement-lucky">get lucky</p>
+<p class="achievement" id="js-achievement-online">stayin' online</p>
+<p class="achievement" id="js-achievement-hi">hi</p>
+<p class="achievement" id="js-achievement-sharing">sharing is caring</p>
+<p class="achievement" id="js-achievement-distracted">distracted</p>
+<p class="achievement" id="js-achievement-cheater">cheater</p>
+<p class="achievement" id="js-achievement-click">click me</p>
+<p class="achievement" id="js-achievement-13-13-13">13:13:13</p>
+<p class="secret achievement" id="js-achievement-start-over">start over</p>
+
+<div class="hint">
+  <!-- icon by Freepik (http://www.freepik.com) from flaticon.com, licensed by CC 3.0 BY -->
+  <svg class="clippy" xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+    <path d="M46.1 27l-26-26a1.7 1.7 0 0 0-2.3 2.3l26 26a10 10 0 0 1-14 14L5.2 19a6.7 6.7 0 0 1 9.5-9.5l21.1 21a3.4 3.4 0 0 1-4.7 4.8L12.7 16.7a1.7 1.7 0 0 0-2.4 2.4l18.5 18.5a6.7 6.7 0 0 0 9.5-9.5L17.2 7A10 10 0 0 0 2.9 21.2l24.5 24.5A13.3 13.3 0 0 0 46 26.9z"/>
+  </svg>
+  <div class="bubble"></div>
+</div>
+
+<script>
+/**
+ * https://github.com/mneubrand/jsfxr
+ *
+ * Copyright 2010 Thomas Vian
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author Thomas Vian
+ */
+function SfxrParams(){this.setSettings=function(r){for(var a=0;a<24;a++)this[String.fromCharCode(97+a)]=r[a]||0;this.c<.01&&(this.c=.01);var t=this.b+this.c+this.e;if(t<.18){var e=.18/t;this.b*=e,this.c*=e,this.e*=e}}}function SfxrSynth(){var r,a,t,e,s,n,i,h,f,c,o,v;this._params=new SfxrParams,this.reset=function(){var r=this._params;e=100/(r.f*r.f+.001),s=100/(r.g*r.g+.001),n=1-r.h*r.h*r.h*.01,i=-r.i*r.i*r.i*1e-6,r.a||(o=.5-r.n/2,v=5e-5*-r.o),h=1+r.l*r.l*(r.l>0?-.9:10),f=0,c=1==r.m?0:(1-r.m)*(1-r.m)*2e4+32},this.totalReset=function(){this.reset();var e=this._params;return r=e.b*e.b*1e5,a=e.c*e.c*1e5,t=e.e*e.e*1e5+12,3*((r+a+t)/3|0)},this.synthWave=function(u,b){var w=this._params,m=1!=w.s||w.v,y=w.v*w.v*.1,g=1+3e-4*w.w,k=w.s*w.s*w.s*.1,S=1+1e-4*w.t,l=1!=w.s,p=w.x*w.x,d=w.g,x=w.q||w.r,A=w.r*w.r*w.r*.2,q=w.q*w.q*(w.q<0?-1020:1020),M=w.p?32+((1-w.p)*(1-w.p)*2e4|0):0,_=w.d,U=w.j/2,j=w.k*w.k*.01,C=w.a,P=r,R=1/r,W=1/a,z=1/t,B=5/(1+w.u*w.u*20)*(.01+k);B>.8&&(B=.8),B=1-B;for(var D,E,F,G,H,I,J=!1,K=0,L=0,N=0,O=0,Q=0,T=0,V=0,X=0,Y=0,Z=0,$=new Array(1024),rr=new Array(32),ar=$.length;ar--;)$[ar]=0;for(ar=rr.length;ar--;)rr[ar]=2*Math.random()-1;for(ar=0;ar<b;ar++){if(J)return ar;if(M&&++Y>=M&&(Y=0,this.reset()),c&&++f>=c&&(c=0,e*=h),(e*=n+=i)>s&&(e=s,d>0&&(J=!0)),E=e,U>0&&(Z+=j,E*=1+Math.sin(Z)*U),(E|=0)<8&&(E=8),C||((o+=v)<0?o=0:o>.5&&(o=.5)),++L>P)switch(L=0,++K){case 1:P=a;break;case 2:P=t}switch(K){case 0:N=L*R;break;case 1:N=1+2*(1-L*W)*_;break;case 2:N=1-L*z;break;case 3:N=0,J=!0}x&&((F=0|(q+=A))<0?F=-F:F>1023&&(F=1023)),m&&g&&((y*=g)<1e-5?y=1e-5:y>.1&&(y=.1)),I=0;for(var tr=8;tr--;){if(++V>=E&&(V%=E,3==C))for(var er=rr.length;er--;)rr[er]=2*Math.random()-1;switch(C){case 0:H=V/E<o?.5:-.5;break;case 1:H=1-V/E*2;break;case 2:H=.225*(((H=1.27323954*(G=6.28318531*((G=V/E)>.5?G-1:G))+.405284735*G*G*(G<0?1:-1))<0?-1:1)*H*H-H)+H;break;case 3:H=rr[Math.abs(32*V/E|0)]}m&&(D=T,(k*=S)<0?k=0:k>.1&&(k=.1),l?(Q+=(H-T)*k,Q*=B):(T=H,Q=0),O+=(T+=Q)-D,H=O*=1-y),x&&($[X%1024]=H,H+=$[(X-F+1024)%1024],X++),I+=H}I*=.125*N*p,u[ar]=I>=1?32767:I<=-1?-32768:32767*I|0}return b}}var synth=new SfxrSynth;window.jsfxr=function(r){synth._params.setSettings(r);var a=synth.totalReset(),t=new Uint8Array(4*((a+1)/2|0)+44),e=2*synth.synthWave(new Uint16Array(t.buffer,44),a),s=new Uint32Array(t.buffer,0,44);s[0]=1179011410,s[1]=e+36,s[2]=1163280727,s[3]=544501094,s[4]=16,s[5]=65537,s[6]=44100,s[7]=88200,s[8]=1048578,s[9]=1635017060,s[10]=e,e+=44;for(var n=0,i="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",h="data:audio/wav;base64,";n<e;n+=3){var f=t[n]<<16|t[n+1]<<8|t[n+2];h+=i[f>>18]+i[f>>12&63]+i[f>>6&63]+i[63&f]}return h};
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+
+  function game() {
+    // DOM
+    const bodyEl = document.body;
+    const scoreEl = document.querySelector('#js-score');
+    const hiScoreEl = document.querySelector('#js-hiscore');
+    const unlockedEl = document.querySelector('#js-achievements');
+    const lockedEl = document.querySelector('#js-locked-achievements');
+    const hintEl = document.querySelector('.hint');
+
+    // GAME DATA
+    function readGameData() {
+      if (localStorage) {
+        var gameData;
+
+        try {
+          gameData = JSON.parse(localStorage.getItem('GO_OFFLINE_DATA'));
+        } catch(e) {
+          // ignore and return default
+        }
+      }
+
+      return gameData || { hiScore: 0, achievements: {} };
+    }
+
+    function saveGameData(data) {
+      if (localStorage) {
+        try {
+          localStorage.setItem('GO_OFFLINE_DATA', JSON.stringify(data));
+        } catch (e) {
+          // silently ignore
+        }
+      }
+    }
+
+    function getShareUrl(score) {
+      var url = "https://twitter.com/share?url=" +
+        // hardcoding js13kgames entry page URL here, but can be easily:
+        // window.location
+        "https://js13kgames.com/entries/go-offline" +
+        "&text=I've just spent " + score + " seconds offline in Go Offline game by @bartaz, and first thing I'm doing is sharing it online..." +
+        "&hashtags=js13k,AchievementUnlocked";
+
+      return url;
+    }
+
+    // ACHIEVEMENTS
+    // ==============
+
+    // get list of achievements from DOM
+    const achievementKeys = [].slice.call(document.querySelectorAll('.achievement'))
+      .map(function(el) { return el.id.replace('js-achievement-', ''); })
+      .reverse();
+
+    function renderUnlockedAchievement(key, isNew) {
+      const achievementEl = document.querySelector('#js-achievement-' + key);
+
+      achievementEl.classList.add('unlocked', isNew ? 'new' : '-');
+      achievementEl.classList.remove('secret');
+
+      bodyEl.insertBefore(achievementEl, unlockedEl.nextSibling);
+      lockedEl.classList.remove('hidden');
+
+      // when all achievements were unlocked, hide 'locked' heading
+      if (!lockedEl.nextElementSibling.classList.contains('achievement')) {
+        lockedEl.classList.add('hidden');
+      }
+    }
+
+    function renderAchievementsCount() {
+      document.querySelector('#js-achievements-count').innerHTML =
+        "[" +
+          Object.keys(data.achievements).length +
+          "/" +
+          achievementKeys.length +
+        "]";
+
+      // if all achievements are unlocked, render congratulations song
+      if (Object.keys(data.achievements).length === achievementKeys.length) {
+        SONG
+          .slice(0,6)
+          .forEach(function(line, i) {
+            var el = document.createElement(i ? 'p' : 'h3');
+
+            line = i ? line.charAt(0).toLowerCase() + line.slice(1) : line.toUpperCase();
+
+            el.innerHTML = htmlifySongLine(line);
+            bodyEl.insertBefore(el, unlockedEl);
+          });
+      }
+    }
+
+    // helper for unlocking achievements
+    function unlockAchievement(key) {
+      if (!data.achievements[key]) {
+        try {
+          var soundURL = jsfxr([1,,0.0373,,0.2005,0.3599,,0.3733,,,,,,,,0.629,,,1,,,,,0.5]);
+          var player = new Audio();
+          player.src = soundURL;
+          player.play().catch(function () { /* ignore sound promise errors */ });
+        } catch(e) {
+          // ignore sound errors
+        }
+
+        // sound may not play without user intent, so let's try to vibrate instead
+        if ('ontouchstart' in document && 'vibrate' in navigator) {
+          navigator.vibrate(200);
+        }
+
+        data.achievements[key] = true;
+        renderUnlockedAchievement(key, true);
+        renderAchievementsCount();
+        saveGameData(data);
+      }
+    }
+
+    // reset game to (almost) initial state
+    function startOver() {
+      score = 0;
+      scoreEl.innerHTML = score;
+      data = readGameData();
+      saveGameData(data);
+      hiScoreEl.innerHTML = data.hiScore;
+
+      achievementKeys.forEach(function (key) {
+        document.querySelector('#js-achievement-' + key).classList.remove('unlocked', 'new');
+        bodyEl.insertBefore(document.querySelector('#js-achievement-' + key), lockedEl.nextSibling);
+      });
+    }
+
+    // fully reset game data
+    function reset() {
+      data = null;
+      saveGameData(data);
+      window.location.reload();
+    }
+
+    // GAME 'LOOP'
+    // ============
+
+    var scoreTick; // interval for counting the score
+
+    // network off, game on!
+    function goOffline() {
+      score = 0; // OOOPS, very tempting leaked global variable...
+
+      scoreEl.innerHTML = score;
+      bodyEl.classList.remove('hiscore');
+      [].slice.call(document.querySelectorAll('.new')).forEach(function(el) {
+        el.classList.remove('new');
+      });
+      bodyEl.classList.add('offline');
+
+      // offline first...
+      if (offlineFirst) {
+        unlockAchievement('first');
+      }
+
+      // go offline...
+      unlockAchievement('go-offline');
+
+      scoreTick = window.setInterval(function () {
+        if (!document.hidden) {
+          var domScore = +scoreEl.innerHTML;
+
+          // cheater...
+          // but I understand, this leaked global var is too tempting ;)
+          if (score !== domScore) {
+            // this safeguard for score works, but is pretty weak.
+            // can you figure out how to beat it and have any score you want?
+            // no achievement for that, but if you make it, congratulations :)
+
+            unlockAchievement('cheater');
+            score = 0; // no score for cheating, but you have the achievement ;)
+          }
+
+          score++;
+          scoreEl.innerHTML = score;
+
+          // 13 seconds to Mars...
+          if (score === 13) {
+            unlockAchievement('13-seconds');
+          }
+
+          // LEET...
+          if (score === 1337) {
+            unlockAchievement('leet');
+          }
+
+          // 13:13:13...
+          var date = new Date();
+          if (date.getHours() === 13 && date.getMinutes() === 13 && date.getSeconds() === 13) {
+            unlockAchievement('13-13-13');
+          }
+        }
+      }, 1000);
+    }
+
+    var lucky = 13;
+
+    // game over :(
+    function goOnline() {
+      // get lucky...
+      if (!~~(Math.random() * lucky)) {
+        unlockAchievement('lucky');
+      } else if (lucky > 2) {
+        // making sure probablility gets highier with each try, up to 50%
+        lucky--;
+      }
+
+      bodyEl.classList.remove('offline');
+
+      // dealing with hi score
+      if (score > data.hiScore) {
+        // hi...
+        if (data.hiScore > 0) {
+          unlockAchievement('hi');
+        }
+
+        data.hiScore = score;
+        // show new hi score (and sharing link)
+        hiScoreEl.innerHTML = score;
+        document.querySelector('#js-share').href = getShareUrl(score);
+        bodyEl.classList.add('hiscore');
+
+        saveGameData(data);
+      }
+      window.clearInterval(scoreTick);
+    }
+
+    // HINTS
+    // =======
+
+    // sorry, as much as I like the idea of having the source open and readable
+    // some things are meant to remain secret
+    // wanna get some hints? find them in the game
+    // or just decode them yourself, you have the source anyway
+    const HINTS = {
+      "go-offline":["iuuq;00xxx/mnhugz/dpn0@t>e'r>ipx,up,ejtbcmf,ofuxpsl,dpoofdujpo","Uvso!pgg!zpvs!xjgj-!vtf!bjsqmbof!npef-!voqmvh!uif!ofuxpsl!dbcmf-!uispx!zpvs!spvufs!pvu!pg!uif!xjoepx///","Ju(t!bmm!bcpvu!uif!ofuxpsl!boe!cfjoh!OPU!dpoofdufe!up!ju/","Kvtu!ep!xibu!uif!ujumf!tbzt;!hp!PGGMJOF/"],
+      "first":["Gjstu!hp!pggmjof!)zpv!lopx!ipx!up!ep!uijt!bmsfbez-!sjhiu@*-!uifo!sfmpbe!uif!hbnf;!pggmjof!gjstu/","Mpbe!uif!hbnf!xijmf!cfjoh!pggmjof/","Mfu!uif!tfswjdf!xpslfs!ep!jut!xpsl/"],
+      "13-seconds":["Kvtu!tubz!pggmjof!gps!b!nfsf!24!tfdpoet/","Usz!tdpsjoh!24!qpjout/"],
+      "leet":["Tdpsf!2448!qpjout/!Uibu(t!b!mpu-!cvu!nbzcf!zpv!dbo!difbu!ju@","Zpv!offe!up!tubz!pggmjof!gps!rvjuf!b!xijmf!up!hfu!up!uif!mffu!2448!dmvc/","Ep!zpv!lopx!uif!mffu!tqfbl@"],
+      "lucky":["Uvso!uif!ofuxpsl!pgg!boe!po!voujm!zpv!hfu!mvdlz/","Qmbz!uif!hbnf!tfwfsbm!ujnft!boe!nbzcf!zpv(mm!hfu!mvdlz/","Ibwf!zpv!usjfe!uvsojoh!ju!pgg!boe!po!bhbjo@"],
+      "online":["Tubz!pomjof!gps!vojoufssvqufe!53!tfdpoet/","Usz!epjoh!uif!pqqptjuf!pg!xibu!uif!hbnf!jt!bcpvu/","Tpnfujnft!uif!cftu!xbz!up!xjo!jt!opu!up!qmbz/"],
+      "hi":["Cfbu!zpvs!pxo!ij!tdpsf/","Xibu(t!uif!qpjou!pg!ij!tdpsf!jg!zpv!epo(u!cfbu!ju@","Ij\""],
+      "sharing":["Cfbu!zpvs!ij!tdpsf!boe!tibsf!ju!up!uif!xpsme\"","Up!tibsf!zpvs!ij!tdpsf!gjstu!zpv!offe!up!cfbu!ju/","Xibu(t!uif!qpjou!pg!ij!tdpsf!jg!zpv!epo(u!tibsf!ju@"],
+      "distracted":["Xijmf!cfjoh!pggmjof-!txjudi!up!bopuifs!ubc/","Epo(u!zpv!xboob!sfbe!tpnfuijoh!jo!uif!puifs!ubc!xijmf!qmbzjoh!uijt!hbnf@","Tubzjoh!pggmjof!jt!cpsjoh/!Usz!epjoh!tpnfuijoh!fmtf!jo!uif!nfboujnf/"],
+      "cheater":["Usz!up!dibohf!zpvs!atdpsfa!jo!uif!dpotpmf!xifo!uif!hbnf!jt!po/","Bmm!uif!hbnf!ebub!jt!tupsfe!jo!uif!mpdbmTupsbhf-!xiz!opu!ibwjoh!b!qmbz!xjui!ju@","Ju!mpplt!mjlf!uifsf!jt!b!atdpsfa!wbsjbcmf!)vo*joufoujpobmmz!mfblfe!joup!uif!hmpcbm!tdpqf/","Usz!up!difbu!zpvs!tdpsf/"],
+      "click":["Kvtu!dmjdl!uif!uijoh!uibu!tbzt!#dmjdl!nf#/","Dmjdl!ju/","Uijt!pof!bdijfwfnfou!jt!kvtu!btljoh!gps!ju/"],
+      "13-13-13":["J!hvftt!zpv!dbo!bekvtu!zpvs!tztufn!dmpdl!boe!opu!xbju!ujm!24;24;24/","Qmbz!uif!hbnf!)boe!cf!pggmjof*!bu!24;24;24/","Usz!cfjoh!pggmjof!po!b!wfsz!tqfdjgjd!ujnf!pg!uif!ebz/","II;NN;TT"],
+      "start-over":["Qttu///!Uif!tfdsfu!bdijfwfnfou!jt!dbmmfe!(tubsu!pwfs(/","Qttu///!Tfdsfu!xjmm!bqqfbs!xifo!zpv!dpnqmfuf!bmm!uif!puifs!bdijfwfnfout","Qttu///!Xboob!lopx!b!tfdsfu@!Uifsf!jt!pof!tfdsfu!bdijfwfnfou!up!vompdl/"],
+      "start-over-revealed":["mpdbmTupsbhf/sfnpwfJufn)(HP`PGGMJOF`EBUB(*<","Sfnpwf!bmm!zpvs!qsphsftt!gspn!mpdbmTupsbhf/","Zpv!offe!up!hfu!sje!pg!bmm!zpvs!tbwfe!hbnf!ebub/","J!lopx!zpvs!qsphsftt!jt!qsfdjpvt-!cvu!xiz!opu!tubsujoh!gspn!tdsbudi@"]
+    };
+
+    var availableHints = {};
+
+    function decode(hint) {
+      return hint.replace(/./g, function(c) { return String.fromCharCode(c.charCodeAt(0) - 1); });
+    }
+
+    // init available hints counts and decode the hints
+    Object.keys(HINTS).forEach(function(key) {
+      availableHints[key] = HINTS[key].length - 1;
+      HINTS[key] = HINTS[key].map(decode);
+    });
+
+    var hintTimeout;
+    var lastHint;
+    var songVerse = 0;
+
+    var hint = window.hint = function hint() {
+      // just messin' with 'stayin online' achievement, so that getting hints
+      // resets the timer to make it a bit harder to get
+      onlineTime = 0;
+
+      var hint;
+
+      if (Object.keys(data.achievements).length === achievementKeys.length) {
+        hint = '♫ ' + SONG[songVerse++ % SONG.length] + ' ♫';
+      } else if (navigator.onLine) {
+        // if 'go offline' is not unlocked yet hint only about that
+        // or find a random locked achievement that still has hints available
+        var list = (!data.achievements['go-offline'] ? ['go-offline'] : achievementKeys)
+          .filter(function(key) { return !data.achievements[key]; })
+          .filter(function(key) { return availableHints[key] >= 0; });
+
+        // intentional off by 1 error to allow random 'hints' from time to time
+        var key = list[~~(Math.random() * (list.length + 1))];
+
+        if (key) {
+          // when secret is revealed, give better hints about it
+          if (list.length === 1 && key === 'start-over') {
+            key = 'start-over-revealed';
+          }
+          hint = HINTS[key][availableHints[key]--];
+        }
+
+        if (!hint) {
+          var random = [
+            'Yes?',
+            'Anything else?',
+            'No lollygaggin.',
+            'Grumble, grumble...',
+            "Oh, it's you again.",
+            'Is this even a game?',
+            'view-source:' + window.location,
+            "It looks like I'm out of ideas...", // I really am... so I guess that's the last of random things Clippy will say
+            "Don't you have better things to do?",
+            'Just ask @bartaz, he made this thing.',
+            'It looks like you are trying to get a hint.',
+            'Paperclip walks into a bar.\n- Hard day at the office? - bartender asks.\n- Yeah, sheet got loose.',
+            'off-line: not connected to or served by a system and especially a computer or telecommunications system'
+          ];
+
+          if (data.hiScore === 0) {
+            random.push("It looks like your hi score is still 0. You need to start playing.");
+          }
+
+          if (data.hiScore < 42) {
+            random.push("It looks like your hi score is just " + data.hiScore + ". You can do better than that.");
+          }
+
+          if (data.hiScore >= 1337) {
+            random.push("17 l00x L1kE J00 R 4 1337.");
+          }
+
+          if (bodyEl.classList.contains('hiscore')) {
+            random.push("It looks like you have a hi score to share.");
+          }
+
+          if (data.achievements['start-over']) {
+            random.push("It looks like you started all over again. That's a dedication!");
+          }
+
+          if (data.achievements['click']) {
+            random.push("It looks like you clicked it at last. What an achievement!");
+          }
+
+          if (data.achievements['lucky']) {
+            random.push("It looks like you are the lucky one.");
+          }
+
+          if (data.achievements['cheater']) {
+            random.push("It looks like you know how to use the dev tools.");
+          }
+
+          hint = random[~~(Math.random() * random.length)];
+
+          if (lastHint === hint) {
+            hint = "It looks like I'm repeating myself.";
+          }
+
+          lastHint = hint;
+        }
+      } else {
+        // don't talk while playing
+        hint = "Shhh... Just play the game...";
+      }
+
+      console.log("📎 " + hint);
+
+      // wrap URL hints in links
+      if (hint.indexOf('http') === 0 || hint.indexOf('view-source:') === 0) {
+        hint = '<a href="' + hint + '" target="_blank">' + hint + '</a>';
+      }
+
+      if (hint.indexOf('@bartaz') !== -1) {
+        hint = hint.replace('@bartaz', '<a href="https://twitter.com/bartaz" target="_blank">@bartaz</a>');
+      }
+
+      hint = hint.replace(/\n/g, '<br/>');
+
+      if (Object.keys(data.achievements).length === achievementKeys.length) {
+        hint = htmlifySongLine(hint);
+      }
+
+      document.querySelector('.bubble').innerHTML = '<span>' + hint + '</span>';
+      hintEl.classList.add('spoken');
+
+      clearTimeout(hintTimeout);
+      hintTimeout = setTimeout(function(){
+        hintEl.classList.remove('spoken');
+      }, navigator.onLine ? 10000 : 1000);
+    };
+
+    // "Now you're a Hero" by Reachground (reachground.se)
+    // from the game "You Have to Burn the Rope"
+    const SONG = [
+      "Congratulations!",
+      "You managed to beat the whole damn ga-ame…",
+      "We're happy you made it,",
+      "but how are you gonna spend the rest of this da-ay?",
+      "Maybe watch a video,",
+      "maybe press refresh and start again…",
+      "Now you're a hero!",
+      "You managed to beat the whole damn ga-ame…",
+      "We're happy you made it,",
+      "but how are you gonna spend the rest of this da-ay?",
+      "Maybe watch a video,",
+      "maybe press refresh and start again…",
+      "Yes it's over now.",
+      "We didn't want to make a longer game.",
+      "This is it,",
+      "I swear it's true…",
+      "ooh ohh"
+    ];
+
+    // helper for adding HTML to song lines in 'post-production',
+    // so we can display it nicely in command line as well
+    function htmlifySongLine(line) {
+      if (line.indexOf('video') !== -1) {
+        line = line.replace('video', '<a href="https://youtu.be/VmuiwOGi5gA?t=52s" target="_blank">video</a>');
+      }
+
+      if (line.indexOf('refresh') !== -1) {
+        line = line.replace('refresh', '<a href="#reset">refresh</a>');
+      }
+
+      return line;
+    }
+
+    // AND HERE IS WHERE THE GAME ACTUALLY STARTS, FINALLY!
+    // =====================================================
+
+    var data = readGameData();
+    saveGameData(data);
+
+    hiScoreEl.innerHTML = data.hiScore;
+
+    // show unlocked achievements
+    achievementKeys
+      .filter(function(key) { return data.achievements[key]; })
+      .map(function(key, i, keys) {
+        // special case for start over to make sure it's marked as new after reload
+        var isNew = (key === 'start-over' && keys.length === 1);
+        return renderUnlockedAchievement(key, isNew);
+      });
+
+    renderAchievementsCount();
+
+    // INIT ACHIEVEMENTS LISTENERS
+    // sharing is caring...
+    document.querySelector('#js-share').addEventListener('click', function() {
+      unlockAchievement('sharing');
+    });
+
+    // distraced...
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden && !navigator.onLine) {
+        unlockAchievement('distracted');
+      }
+    });
+
+    // stayin' online...
+    var onlineTime = 0;
+    setInterval(function () {
+      if (!document.hidden && navigator.onLine) {
+        onlineTime++;
+        if (onlineTime > 42) {
+          unlockAchievement('online');
+        }
+      } else {
+        onlineTime = 0;
+      }
+    }, 1000);
+
+    // click me...
+    document.querySelector('#js-achievement-click').addEventListener('click', function(){
+      unlockAchievement('click');
+    });
+
+    // localStorage checker for 'cheater' and 'start over'
+    setInterval(function() {
+      var storedData = localStorage.getItem('GO_OFFLINE_DATA');
+
+      if (storedData === null) {
+        // if game data in local storage was removed
+        // start over...
+        startOver();
+        unlockAchievement('start-over');
+      } else {
+        // otherwise if it was modified
+        // cheater...
+        if (JSON.stringify(data) !== storedData) {
+          saveGameData(data);
+          unlockAchievement('cheater');
+        }
+      }
+    }, 500);
+
+    // if game loads in offline mode start it automatically
+    var offlineFirst = false;
+    if (!navigator.onLine) {
+      offlineFirst = true;
+      goOffline();
+    }
+
+    window.addEventListener('offline', goOffline);
+    window.addEventListener('online', goOnline);
+
+    // INIT HINTS
+    console.log("📎 It looks like you are trying to figure out how this game works.\n📎 If you need any help, type: hint()");
+
+    document.addEventListener('click', function(event) {
+      if (event.target.getAttribute('href') === '#reset') {
+        reset();
+        event.preventDefault();
+      }
+
+      if (event.target.classList.contains('clippy')) {
+        hint();
+        event.stopPropagation();
+      } else {
+        clearTimeout(hintTimeout);
+        hintEl.classList.remove('spoken');
+      }
+    });
+  }
+
+  // no point in setting up the game if browser doesn't support offline/online events
+  if ('onLine' in navigator) {
+    game();
+  }
+</script>
+</body>
+</html>

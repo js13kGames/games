@@ -1,0 +1,108 @@
+<html>
+<head>
+	<title>&#254;ixel&#352;hips</title>
+	<script type="text/javascript" src="pixelships.min.js"></script>
+	<style>
+	body {
+		background-color:black;
+		margin:0;
+		color: white;
+		font-family: monospace;
+	}
+	#countdown {
+		width: 40px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+	}
+	#desktop-intro {
+		width: 520px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -250px;
+		margin-left: -260px;
+		background: black;
+	}
+	#player-1,
+	#player-2 {
+		width: 50%;
+		float: left;
+	}
+	#player-1 {
+		color: rgb(255,0,204);
+	}
+	#player-2 {
+		color: rgb(204,255,0);
+	}
+	#begin-text {
+		margin: 0 auto;
+		text-align: center;
+		clear: both;
+	}
+	h1,
+	#begin-text {
+		background: white;
+		color: black;
+		display: inline-block;
+	}
+	#begin-text {
+		width: 300px;
+		margin: 0 auto;
+		display: block;
+	}
+	</style>
+</head>
+<body>
+<div id="countdown">ready?</div>
+<div id="desktop-intro">
+	<h1>&#254;ixel&#352;hips</h1>
+	<p>
+		Shoot layers of pixels off of your opponents to annihilate them from existence!
+		<br><br>
+		You can have up to 4 opponents in your game with up to 2 being human.
+		<br><br>
+		Your controls are...
+		<br>
+	</p>
+	<pre id="player-1">
+	Player 1
+	         _____
+	       /|     |
+	      | |  ^  |	
+	      | |_____|
+	  _____/______/ _____
+	/|     ||     ||     |
+	||  &#60;  ||  v  ||  >  |
+	||_____||_____||_____|
+	|/_____//_____//_____/
+	  _________________
+	/|                 |
+	||      space      | &larr; FIRE
+	||_________________|
+	/__________________/ 
+
+	</pre>
+	<pre id="player-2">
+	Player 2
+	         _____
+	       /|     |
+	      | |  W  |	
+	      | |_____|
+	  _____/______/ _____
+	/|     ||     ||     |
+	||  A  ||  S  ||  D  |
+	||_____||_____||_____|
+	|/_____//_____//_____/
+	    _____
+	  /|     |
+	  ||  Z  | &larr; FIRE
+	  ||_____|
+	  /______/ 
+
+	</pre>
+	<br>
+	<p id="begin-text">PRESS SPACE TO BEGIN!</p>
+</div>
+</body>
+</html>

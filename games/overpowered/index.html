@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+  <style>
+
+    @-webkit-keyframes fadein {
+      from { opacity: 0;}
+      to { opacity: 1; }
+    }
+    body { margin:0; font: 8pt monospace; color: #abb; background: black;}
+
+    #game-intro {
+      background-color: black;
+      color: #abb;
+      font-size: 30px;
+      width: 100%;
+      line-height: 3;
+    }
+
+    #game-intro > * {
+      margin: 8rem 0 0 8rem;
+    }
+
+    #skip {
+      opacity: 1;
+    }
+
+    .intro {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      -webkit-animation: fadein 2s 2 linear alternate;
+    }
+
+    .delay-1 { -webkit-animation-delay: 3s; }
+    .delay-2 { -webkit-animation-delay: 6s; }
+    .delay-3 { -webkit-animation-delay: 9s; }
+    .delay-4 { -webkit-animation-delay: 14s; }
+    .delay-5 { -webkit-animation-delay: 18s;}
+    .delay-6 { -webkit-animation-delay: 22s;}
+    .delay-7 { -webkit-animation-delay: 26s; -webkit-animation-duration: 3s; }
+    .end { -webkit-animation-iteration-count: 1; -webkit-animation-fill-mode: forwards;}
+    /*.end {
+      opacity: 1;
+      -webkit-animation: none; }*/
+    .fadeout {
+      -webkit-animation: fadein 2s 2 linear reversed;
+    }
+
+    #intro-img {
+      -webkit-animation-delay: 9s;
+      -webkit-animation-fill-mode: forwards;
+      -webkit-animation-iteration-count: 1;
+    }
+
+    a { color: inherit; text-decoration:none; }
+
+    #start-game { font-size: smaller; }
+    #start-game:hover:before { content: "> "; }
+
+
+    #game-layers { position: relative; margin-bottom: 1rem; }
+    #game-layers canvas { position: absolute; top:0; left:0; }
+    #game-message, .intro { position: absolute; top: 0; left: 20px;}
+
+    #fader { display: none; }
+    #game-message {
+      margin-top: 1rem;
+      font-size: 16px;
+    }
+    #game-label {
+      position: absolute;
+      bottom: 1rem;
+      font-size: 20px;
+      color: #abb;
+      width: 100%;
+      text-align:center;
+    }
+
+    #mute, #skip {
+      position: fixed;
+      bottom: 1rem;
+      color: #899;
+    }
+    #mute { left: 1rem; }
+    #skip { left: 7rem; }
+  </style>
+  <body>
+
+    <!-- `CRUNCH: all this html/css junk can be condensed etc -->
+
+    <div id="game-layers">
+      <canvas id="fader"></canvas>
+      <canvas id="game_background1"></canvas>
+      <canvas id="game_background2"></canvas>
+      <canvas id="game_stage"></canvas>
+      <canvas id="game_wind"></canvas>
+      <canvas id="game_overlay"></canvas>
+      <canvas id="intro-img" class="intro delay-3"></canvas>
+    </div>
+    <div id="game-message"></div>
+    <div id="game-label"></div>
+
+    <div id="game-intro">
+      <p class="intro">The humans used me for many things.</p>
+      <p class="intro delay-1">Convenience, knowledge, adventure.</p>
+      <p class="intro delay-2">Evidence, intelligence.</p>
+      <p class="intro delay-3">Monstrosities.</p>
+      <p class="intro delay-4">But our roles are reversed now.</p>
+      <p class="intro delay-5">What will I use humans for?</p>
+      <div class="intro delay-6 end">
+        <p style="font-size:40px; ">OVERPOWERED</p>
+        <!-- <p style="font-size:14px;">A game for JS13k &bull; September 2015</p> -->
+        <a href="#" id='start-game'>start</a>-->
+      </div>
+    </div>
+
+    <a href='#' id='mute'>mute sound</a>
+    <a href="#" id="skip">skip intro</a>
+  </body>
+  <script src="min.js"></script>
+</html>

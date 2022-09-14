@@ -1,0 +1,10 @@
+body {
+	background-color: #f5f5f5;
+	transition: all 5s;
+}
+canvas {
+	margin: auto;
+	display: block;
+	background-color: #f5f5f5;
+	border-radius: 10px;
+}

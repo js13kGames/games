@@ -1,0 +1,61 @@
+.nevidebla {
+    display: none;
+}
+
+#ludo {
+    max-width: 380px;
+}
+
+#poentaro {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: sans-serif;
+    color: #AAA;
+}
+#helpi { margin-top: 100px; }
+#superteksto {
+    position: absolute;
+    z-index: 20;
+}
+#superteksto-jes {
+    position: relative;
+    font-weight: bold;
+    font-size: 144px;
+    top: -14px;
+    left: 8px;
+    color: #0A0;
+    text-shadow: 2px 2px #070;
+}
+#superteksto-ne {
+    position: relative;
+    font-weight: bold;
+    font-size: 144px;
+    top: -8px;
+    left: 16px;
+    color: #A00;
+    text-shadow: 2px 2px #700;
+}
+.elektoj span {
+    display: inline-block;
+    margin: 2px 4px 2px 2px;
+    padding: 3px;
+    border-radius: 3px;
+    border: 1px solid #777;
+    cursor: pointer;
+}
+.elektoj span:hover {
+    background-color: #DDD;
+}
+.elektoj span.alklakita {
+    background-color: #606060;
+    color: #FFF;
+}
+#bildo {
+    font-size: 64px;
+    padding: 40px;
+}
+#finita {
+    font-size: 48px;
+}
+
+audio { display: none; }

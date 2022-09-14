@@ -1,0 +1,116 @@
+@font-face {
+  font-family: '8bit font';
+  src: url('font.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, 
+body,
+canvas {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  font-family: '8bit font', impact, sans-serif;
+  word-spacing: 0.25em !important;
+  background-image: radial-gradient(#444, #000);
+  overflow: hidden;
+  color: white;
+}
+
+h2,
+h3,
+.instructionsAndButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+h2,
+h3,
+.instructions,
+button {
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+h2, 
+h3 {
+  font-size: 4rem;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+h1,
+h3,
+p {
+  margin-bottom: 1rem;
+}
+
+button {
+  margin: 0 auto;
+  text-transform: uppercase;
+  padding: 1rem;
+  font-size: 2.5rem;
+  background-color: deepskyblue;
+  border: solid 2px white;
+  border-radius: 5px;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+}
+
+.statusBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.statusBar[hidden] {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  border: solid 1px white;
+  padding: 0.5rem;
+  opacity: 0.8;
+  border-radius: 3px;;
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
+img {
+  width: 1rem;
+  margin-right: 0.5rem;
+}
+
+.space {
+  display: inline-block;
+  width: 0.3em;
+}

@@ -1,0 +1,1 @@
+ctx=canvas.getContext("2d"),canvas_rect={},(onresize=function(){innerWidth<16*innerHeight/9?canvas.className="portrait":canvas.className="landscape",canvas_rect=canvas.getBoundingClientRect()})();

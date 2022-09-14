@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>I must call my grandmother</title>
+    
+    <style>
+        html {
+            background: #000;
+            text-align: center;
+        }
+        canvas {
+            background: #000;
+            image-rendering: -moz-crisp-edges;         /* Firefox */
+            image-rendering: -webkit-crisp-edges;      /* Webkit */
+            -ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
+            image-rendering: pixelated;                /* Chrome */
+        }
+        #nm {
+            display: none;
+            margin: -150px auto;
+            width: 256px;
+            height: 144px;
+            transform: scale(1)
+        }
+        #ni {
+            margin:25px auto;
+        }
+        #btn {
+            margin: 0 0 70px;
+        }
+        img {
+            display: none;
+        }
+        @media only screen and (min-width : 1023px) {
+            canvas {
+                margin-top: 90px;
+                transform: scale(3)
+            }
+            #nm {
+                transform: scale(3)
+            }
+        }
+    </style>
+</head>
+<body>
+    <p id="btn">
+        <a href="/stat" target="_blank">High scores</a>
+    </p>
+    <div>
+        <canvas width=256 height=144></canvas>
+        <div id="nm" width=256 height=144>
+            <input type="text" id="ni" placeholder="Your name..."><button id="nb">GO!</button>
+        </div>
+    </div>
+
+<svg onload="with(window.snd = new AudioContext)with(createScriptProcessor(k=8192,t=0,1))connect(destination),onaudioprocess=x=>{for(i=0;i<k;t+=2e-5)x.outputBuffer.getChannelData(0)[i++]='data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgA'.charCodeAt(i%7)*t%.1*(1-t/(9+Math.tan(i%7))%1)}" id="snd"></svg>
+    
+ <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKBAMAAAByAqLJAAAAD1BMVEUAAAD///87XYRaj8hnpOXmvNwrAAAAAXRSTlMAQObYZgAAADxJREFUCNcdi4ENACAIwxbiA+gDqFwAF/D/Uw6XJc2WFIwcQzcDbnBd8BVFnK1KSBETsj8w+Bl6Tko3qT69eQVajbGSjQAAAABJRU5ErkJggg==" id="s">
+  
+   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAhCAMAAACP+FljAAAA/1BMVEVtKwAAETtRIAAQFUgMGz8ACij9/+QRIlUDHkoAAAAOJk4ADjITNGgSN2ISGE8PFEcADzoKMWARIFMOGEIADS8ABhcaVIAQUHsAPWAEFDwAETwcV38ZU3wVUnwJP2wUGlQNF0UACSb4+uQEW4wEWYoMQnACNlkHIEoDGEMGFj0HTXkIKFIOF0sHIEQAGToADDYAGzQAFjL9/ujz9uPm7eDb5te3zcmApK5jiZ9IepQAR24CQmsENF4KLlsHKFYQI1IEJkQAHTsMEjkADzTp7+DC0sqOq7NylaQLYqEZTnwFO2UHM1gEMFMEMFIPKlIPHEoPFkUEIj0AHT0ADCwACB3E3zV5AAABmElEQVQ4y43Rh3aCMBSA4dDYxAKRIAgFhVL3Ht17773e/1maeGlqa237Hz3mmo+gBzT3R0i8fmsM5ieCQQVg4QtYli3KFDCM10KhMBwO+6M+enFdY5wrMgAU3sS+1j8+Ho0MxDk3Tl331NA0rqVA+4wjvlitVisfswKqdBgMBtVKpbIzE/xxQhiGswEPs1A4AboToJlVNX88QWwc2La9fyDFNAhRVuzGUVSzbSE4AN4KMplMoHHebCDGmL9ZLvsRY7reANAKAnFxELRajQayaxdEtu7H8d4egIxK1xErbmxsb5cJKRfZg/4V1Ou7uyhaJ2l+iaXgt6ZvUToTF6+tlUokghOmf8PqVntlhZDVItNTkDiJI0ru7273UexdknFFrxbfAHCeer1ep9NxnMdDZJre1jkhm75fo/QQgGVZGGP5xl1ETbPd9jzv2qSUYgBYZVlohwoio99B0q3XBciL7/Mi+YFTcHKSHB09A0M4T6G8vKc6QSUHqqYZ4MqE9f9PWMrlxB/I5ZbEQgJYYUusACxMBIPqH0/zHfRcK9fSW0IPAAAAAElFTkSuQmCC" id="m">
+   
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAAgAQMAAADg7OJmAAAABlBMVEUAAAD///+l2Z/dAAAAAXRSTlMAQObYZgAAACtJREFUKM9jIAz4/6OAD5gC9qgCf0YFCAkQDlOGP2jRgCnwgaDAAUwBEgEApfBSVsdZSG0AAAAASUVORK5CYII=" id="b">
+    
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAAAUAgMAAAAfCVzlAAAACVBMVEUAAABXAABXAFMJeen0AAABC0lEQVQoz6zQMQrEIBCF4R8rmVOErSSnFMucYthqeKdcowSUtDvFa/xwHsMck3MqTrU7KpLJhTnLmKIjnfre4UiXQtViQ2QKqZRPTYUD5yJ7tbyi5EE5WkdN1hzXZS/EUZmoptSgv7+Rue9IRu5hvqFnndpAY12P2IsPxPMTHY32a3EFNo8jBONgI/jv/MoYoxSGgRCIjhD/U1jvs97AgHP/q9SuTRcahDc4PIYMEsI0eiNs5UaCTHIKabwaaZ0bCBwRU6YMvBo68H1GN47wJTmrcm+clWdaPatuCSXJv1TXcy2ZluQD16q21Eu4lqQH5B55SAXe0pRbmvqR0FLXMKYkQCqjkbpS49e8AZGIfqdOjLbMAAAAAElFTkSuQmCC" id="t">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAARVBMVEUAAAA/f1FPoWZcu3fyxKxELiC3ai8wIBfyroubWic5hM4xcrJaOyVPNScdRWwmWYsAAAArWDjam3tijc4bQGRUPzA9Jxjjg8FaAAAAAXRSTlMAQObYZgAAAdNJREFUSMeVlYtuq0AMRLFhu7APSNLe/v+nXuO0jL2WkLoSVY+Zs5GisTL9nI9tk78XnWcLfDPYhNfAd4FtXZdfkP+UX68QAK/LcjHxm4mHADAJWqELQ0AAnIgoGSELZwhDYJrnNMtDl0BZODMNgciXoYJyCCiyFxKJwNnkeRBImCH0lGeGEALishxSfhsnXxQC60LKKyKlFIAESqm1JgTefOG/r6+qAgJ1mhAI3I7jj4I83ng8HvpEhtSaxZu6Y7L5PBB1R2CTifmWPrTuk5nEuq+4gFjbzZOZyMAJT1LG61FYvDANgtYdQjonTOCUn0RshLO+EJIKM8ra+5mfzYUqmIBuDDilJ+VR4AzuXQQm8Ch0eT0KfCck0tdmkIkIKCwDCKi7rd/h+LMIm77XwShlP0yifZYqfNt3KzQRph2MtkMo38fkz75b0rI7/gZgIUL/bZ1D32P/7/dDTuh/3A+l84L3+9cr9D/uBzN+DohD/+N+0GnoAHn0P+6HGkkHyHdilA37YZiGhUmu/93sR7xBDd//jv0YBhByZgi6Dk5I2Q+S/sZZVh1HmMk3q5RqWevu2A2aYPUX1DJwdUKt9fBVbs3zPn6mX48m5fccNmB3CAj8HxLFFTqYMpG/AAAAAElFTkSuQmCC" alt="" id="h">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAAQCAMAAAB9TOwNAAAAPFBMVEUAAABWcjxsmETG0bukr5yYoZBafzgbQWooTG9MbC81RySmZZ1EXC/Op8kUL0yetIG9irZvh1c2SyOrv46aoiU7AAAAAXRSTlMAQObYZgAAAN5JREFUKM+lzN2ywiAMBOAFwq8tHj3v/66GhgjChRdmpu032U3x6wRz+zsnCVnnwEgXWmtuj0VgnQ+F2dJxwjSTBr+nMCEsGtzTjWYT81tqrrdrQ010EbA8IXiChmuPpGdGUW/4mGMK3kND+ug5MbjopTiINs75dgwJae6pm7xrRRpsAjki//4LzT31EM0Skt/T7TgSxUiXogqM6CVlLKlQlFJdhcSjqGlPNa5HsbI8Su2CjUdS1br0YBM/6Dchd6CLv0e5cA/5+Zx7suRG391zFqjA31JUevtO/3PmPV5+/Ap9BfTPPAAAAABJRU5ErkJggg==" id="z">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAAAKCAMAAAB8Kas2AAAAOVBMVEUAAABWcjxsmETG0btafzikr5yYoZAbQWooTG+mZZ3Op8k1SCMUL0xEXC+9irZvh1dMbC+etIGrv47qMigNAAAAAXRSTlMAQObYZgAAAMZJREFUKM+dkdEOgyAMRSm0FAUn2/9/7AoqZSSSzD55DveWGEwZhOW1mmuUVQivI475ibAWln3CRnjdfxGm+XGhCJiwimd5A4gTVvE0LwKmLOL/PHTfrgwpUxXd/1pEr+cav+tT34dxwbVRn5SI0PvhPrrtu8Poi3hd0Auj45zXC8wRp5t+M6Yb7xwTcdriiczEvMVkzwA5YctbOK/jiim1emlIXfK6wNZ0MyEkWTkQtvMQAmYxFQq9McfYjmtji6hxSXxyNl/WiAe2FJYfsgAAAABJRU5ErkJggg==" id="z2">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAMAAAAsVwj+AAAANlBMVEVNOTVeRkGoAABrUEtPT09hYWF3W1Zzc3OAgIBXQDyPAADLy8tCQkJaWlqTk5NkSkZsbGw1NTWnflGvAAAAbklEQVQokZ2O4QqAIAwGXdPUaNb7P23OtX74BUEH7uTAYVgmwo+wTWBoSmkPGPJZsqJTrxiSIbfTS4giEnXIuGKIyq5njIiBKHSI3BiYbboxUB3vyI2hdvq26sbATGyYMei+da3kxvDNYf9nN4QLLH8Jl++NSJoAAAAASUVORK5CYII=" id="f">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEW6urq+vr7CwsLGxsbVZI+1AAAAQ0lEQVQI12MIZWAMYfgvGvyHYZVo0AoGMAgMFXVlWLRKqxXC/V9//y/DqqxZK4HsEAYG15D/okBilSiq4i6GoFWirgBTvxUi5Yfc7wAAAABJRU5ErkJggg==" id="w">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAPCAMAAADu1H4BAAAAElBMVEUAAAAnGhNEKx9WNiXhrkm7kj5uuzQkAAAABnRSTlMA//////96eeD+AAAAMklEQVQImYWKuREAMAzCwMT7rxz81IkKTgcAhKmgTEsYbvuZ8jQJLpDqI0HzEWIkHnIBKB0AlREMHeQAAAAASUVORK5CYII=" id="o1">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAANBAMAAABWYCMqAAAAG1BMVEUAAAADVIQCc7UBOlsAiNUDX5bLikl9VSxjQiGsdegHAAAAAXRSTlMAQObYZgAAAFhJREFUCNdty7ENgDAMRNFLRxkbGMAXZQDiCZBYgCzBBtSMjiyUjlf95iPJJ0PZ6Cw0SPHizZsg2Waus2YkKoXGDCxH2IHUrbNqjXclecY7wAdcD8J0/9ULux4Pz+M1Cg0AAAAASUVORK5CYII=" id="o2">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAOBAMAAADpk+DfAAAAD1BMVEUAAAAcHBwuLi49PT0fHx9SE7QQAAAAAXRSTlMAQObYZgAAAC1JREFUCNdjYGBhYHBgAAIHIAMIWBzAFJMCmDI2BhLMSkBgwGAkCATKxFNQfQAb9wb6UhSCcwAAAABJRU5ErkJggg==" id="o3">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAOBAMAAADH1sFNAAAAKlBMVEUAAAAuLi49PT3///8AAABFRUWXl5cfHx+6urrl5eWnp6eTkpFcXFxRT0yrFRJ0AAAAAXRSTlMAQObYZgAAAHhJREFUCNdjYGBnYCiAkUCCHU4CBQsQJAOjAIJkUFKCk0yCQKAAIRkUTS57mAgpOrfYNgsxKEabmgYLKZoaB28FckyinF1AMktBMq6phseEFHOEw0JAMibCqUKKYYbNzkBOsGcKyIC2GaZAjluKCZCT7OxqJoRiDwB1Phph1jMs1wAAAABJRU5ErkJggg==" id="o4">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEUwMjAnKChKTUs6OzpFR0ewa7zOAAAANElEQVQI12OAACYlJSUFKFvE2cVIkUHEyFnFkEFYxchZkUHIWcXIESziyCBsbGxsyCAIAgCaZAYuWY0XygAAAABJRU5ErkJggg==" id="o5">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJAgMAAACDNt4wAAAADFBMVEUAAABLS0tmZmaJiYkdhquIAAAAAXRSTlMAQObYZgAAABVJREFUCNdj+P+HIS2FIXIKOikaAACC3QhQdXCYIQAAAABJRU5ErkJggg==" id="o6">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAJBAMAAADEGsFGAAAAHlBMVEUAAABELSA0IxhWOSkoGxJONSYdDAoKCgoAAAA6Jxsoh8wCAAAAAXRSTlMAQObYZgAAAC9JREFUCNdjEIQDIYaOjg4nJRCYqcKgKCiowAAEbAUiDMrBwTA2yeJA04BsEBABAMV5C7jTCr4HAAAAAElFTkSuQmCC" id="o7">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAIBAMAAAAGrbKZAAAAElBMVEUAAAAoGxI0IxhELSAdDAoKCgpKhl5oAAAAAXRSTlMAQObYZgAAACFJREFUCNdjUDKCAgZBGGBwZVRgYGBgCTAkmsUAZIGAIQBF4wc1clFJqAAAAABJRU5ErkJggg==" id="o8">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAIBAMAAAAVevJtAAAAHlBMVEUAAAA0IxhQNiVELSAsHhUOCgo1JBgfDAodDAo/LiHYRJoPAAAAAXRSTlMAQObYZgAAADlJREFUCNdjMHZxNgZhExeXycYMQkppSkogrKakNJEhUEhRUBCIQUCRIZzRgAECOAJI4TEAeTCgCABgyQunkKlh7gAAAABJRU5ErkJggg==" id="o9">
+
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAMBAMAAABCcoqQAAAAElBMVEUtHhVQNiVELiCAXxvAlg2cdxWUJ6PEAAAAIElEQVQI12NQAgIFBkZBQUEGBkZhZyAJBmjirjBxXOoBmTwDzx7dOU8AAAAASUVORK5CYII=" id="o10">
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    for(_='=.\\]=#32@<0?^e.`*`~01=0+=*(switch(case set102=`){.length;fxrreturn for(,s[#2*Math.random()-1;Array(=new ynth),arams	r.=1,&&(var function;break;this. SP	(Settings=(rt;t<24;t++)this[String.fromCharCode(97+t)#r[t]||0;c<.c\\);e=b+c+e;if(e<.18a\\18/e;b*=a,c*=a,e*=a}}} SS(O,Q,T,V,X,Y,Z,$,rr,tr,er,ar;_p	SP	,re=(r=_p	;V00/(f*f+.0X00/(g*g+.0Y-h*h*h*.,Z=-i*i*i*1e-6,a||(er\\5-n/2,ar=5e-5*-o$+l*l0<l?-.9:10rrtr==m?0:(1-m)1-m)*2e4+@},totalRe=(re();r=_p	;O=b*b*1e5,Q=c*c*1e5,T=e*e*1e5+12,3(O+Q+T)/3|0)},sWave=(r,te=_p	,a!s||`v,sv~v*.1,n+3e-4~w,is~s~s*.1,h+1e-4~t,f!s,cx~x,og,vq||`r,ur~r~r*.2,bq~q`q^-0:0mp?@+((1-`p)1-`p)*2e4|0):0,yd,wj/2,xk~k*.,pa,g=O,k/O,l/Q,S/T,d=5/(1+`u~u*20).+i);.8<dd\\8d-d;j,q,A,M,_,U,C=!1,PRWzBDEFGHI4J@K=IK--;)I[K];K=JK--;)J[KK;K<t;K++if(C)K;if(m&&++G>=mGre()tr&&++rr>=trtrV*=$X<(V*=YZ)V=X,0<oC=!0)q=V,0<wHx,q*+Math.sin(H)*w(q|)<8q=8p||((erar)^er:.5<erer\\5)++R>g)R++P1:g=Q2:g=T}P0:W=R*k1:W+21-R*l)*y2:W-R*S3:C=!(W)}v(A|(bu))^A=-A:3<AA023)a&&n(s*=n)<1e-5?se-5:.1<ss\\1)U;L=8;L--;if(q<=++EE%=q,3==p))N=JN--;)J[Np0:_=E/q<er?.5:-.51:_-E/q*22:_\\225((_.27@3954M=6.28318531.5<(M=E/q)?M-1:M))+.405284735*M*MM^1:-1))^-1:1)*_*_-_)+_3:_=J[Math.abs(@*E/q|0)]}aj=D,(i*=h)^i:.1<ii\\1f?(B(_-D)*i,B*=d):(D=_,Bz(DB)-j,_=z*-svI[F%4#_,_I[(F-A+4)%4],F++U_}U*\\125*W*c,r[K]<=U?@767:U<=-1?-@768:@767*U|0}t}}sSS,js=(rs._p	.Settings(r);t=s.totalRe(eUint84(t+1)/2|0)+44a=2*s.sWave(new Uint16`buffer,44tsUint@`buffer,0,44);s[0]17914101#a+362]16@807273#54450944]65#655376#441007#882008]0485789]635706010#a,a44;ni="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz23456789+/",h="data:audio/wav;base64,";n<a;n3f=e[n]<<16|e[n+1]<<8|e[n+2];hi[f>>18]+i[f>>12&63]+i[f>>6&63]+i[63&f]}h};""==typeof require?modul`exports=js:js=js;';G=/[-~`^@#\\]/.exec(_);)with(_.split(G))_=join(shift());eval(_);
+for(_=`(t#){@#@DupdateGarginJoopQcazth~||O),NhisVtV.UU_ZonYkYtra.XXvectort.render(@for(:r.znPlayType(audionew functiY}}();!class t{cYstructor#,i@)}bind#,e@[].cYzt#).map(Dn[t]=e},positiY=tvelocity.replace(cYtextimage,UaddEventListener("et 	UacceleratiYwid~.prototypeheightframespriteSheetnimatiYreturn /** KYtra.js v4.0.1 (Custom Build Y 2018-08-23) | MIT* Build: https://straker.gi~ub.io/kYtra/download?files=gameLQ+keyboard+sprite+assets+*/kYtra={initDvar nV.znvas=documengetElementById#)OtOdocumenquerySelector("znvas");U=n.getCYtext("2d",_nQ:FunctiY,_tick:FunctiY};XgameLQ=(e@l	t,n,a,r,o=(e=eO{}).fpsO60,i=0,p=1e3/o,c=1/o,s=!1===e.clearCanvas?X_nQ:X.clearRect(0,0,Xznvas.,Xznvas.; dif(n=requestAFrame(dNa=performance.now(Nr=a-t,t=a,!(r>1e3)@X_tick(Ni+=r;i>=p;)m.G(cNi-=p;s(Nm.(}l	m={G:e.G,:e.,isStopped:!0,startt=performance.now()isStopped=!1,requestAFrame(d,stopUisStopped=!0,zncelAFrame(n};m};!l	n={},t={},e={13:"enter",27:"esc",32:"space",37:"left",38:"up",39:"right",40:"down"};l	n=0;n<26;n++)e[65+n]=(10+n).toString(36);i=0;i<10;i++)e[48+i]=""+i;keydown",(i@l	c=e[i.which];t[c]=!0,n[c]&&n[c](iNkeyup",(n@t[e[n.which]]=!1}Nblur",(n@t={}}NXkeys={unpressed:n=>!!t[n]ZxO0_y=iO0}add#,i@Ux+=(xO0)*(iO1)y+=(yO0)*(iO1clamp#,i,h,s@Zc=!0_a_b=i_d=h_e=s}g	xZx}g	yZy}s	xDZxV._c?Ma~.min(Ma~.max(Za,t)_d):t}s	yDZyV._c?Ma~.min(Ma~.max(Zb,t)_e):t}}=((i,h)=>t(i,h)N;class i{init#,i,h,s@i in tO{}=(x,y)=(dx,dyN=(ddx,ddy)V.=0=X,t)tV[i][i];if(h.)U=h=h.=h.;else if(h.as@i in h)Uas[i]=h[i].clYe(Ns=sOh[i];Zz=s=s.=s.}tV}g	xU.x}g	yU.y}g	dxU.x}g	dyU.y}g	ddx.x}g	ddy.y}s	xDU.x}s	yDU.y}s	dxDU.x}s	dyDU.y}s	ddxD.x}s	ddyD.y}isAliveUttl>0}collidesWi~DUx<x+&&Ux+U>x&&Uy<y+&&Uy+U>y}GDUadvance#Udraw(playADZzV.as[t]_z.lQOZz.reset(advanceDU.add(,t).add(U,t)ttl--_z&&Zz.G#drawU?U.drawImage(Uxy):Zz?Zz.#V):(U.fillStyleV.color.fillRect(Uxy)}Xsprite=#=>(i).init#)NXsprite=i}();!l	n,e=/(jpeg|jpg|gif|png)$/,t=/(wav|mp3|ogg|aac)$/,a=/^no$/,o=/^\\//,i=/\\/$/,r=Audio,c={wav:"",mp3"/mpeg;")a,""Nogg'/ogg; codecs="vorbis"')a,""Naac"/aac;")a,""; u(n,e@return[ni,""Nn?eo,""):e].filter(n=>n).join("/" l(n@n.split(".").pop( f(n@l	e=n"."+l(nN"");2==e.split("/").leng~?eo,""):e} s(e,t@Promise((a,o@l	i=Image;t=u(n.Pa~,eNi.Yload=n.s[f(e)]=n.s[t]V,a#V,i.Yerror=o#,i.src} d(e,t,a@Promise((o,i@if(e=[].cYzt(e).reduce((n,e@c[l(e)]?e:n},a)@l	a=Audio;t=u(n.Pa~,eNa.znplay",n.[f(e)]=n.[t]V,o#VNa.Yerror=i#,a.src,a.load(else i(e p(e,t@t=u(n.dataPa~,eNfetch#).~en((n@if(!n.ok)~row n;n.clYe().jsY().ztch(n.text().~en((a@n.data[f(e)]=n.data[t]=a,a}n=Xassets={s:{},:{},data:{},Pa~:"",Pa~:"",dataPa~:"",loadl	n,a,o,i,r,c=[];i=0;o=arguments[i];i++)r=(a=l(n=[].cYzt(o)[0])).match(e)?s(o):a.match#)?d(o):p(oNc.push(r);Promise.all(ctO{}.s.sRate.RatelQ=void 0==.lQOlQ,i..=i.=i.mJ=i.mJO0_f=0_a=0}clYeXa#VresetZf=0_a=0}GDif(UlQOZf!V.s.leng~-1)tO1/60_a+;Za*URate>=1;)Zf=++Zf%Us.leng~_a-=1/URate}DtO{};l	iV.s[Zf]/U._f|0,eV.s[Zf]%U._f|0;(OX).drawImage(U.,e*U+(2*e+1)*UmJ,i*U+(2*i+1)*UmJ,x,y}Xa=(i@t(i,Xa;class i{cYstructorDtO{}as={}.={:Wid~,:Height,mJ:MJ}_f../Wid~|0createAs(ascreateAsDl	i,e,h,s;s in t)e=(i[s]).s,h=[],[].cYzt(e).map(Dh=h.cYzt(Zp#),tV)as[s]=Xa({:tV,s:h,Rate:i.Rate,lQ:i.lQ}_p#,i@if(+t==)t;l	e=[],h.split(".."Ns=i=+h[0],a=+h[1];if(s<a);i<=a;i++)e.push(i);else ;i>=a;i--)e.push(i);e}}X=Di#,X=i}();`;G=/[-X-ZUVNO~zQJGD@#]/.exec(_);)with(_.split(G))_=join(shift());eval(_);
+    </script>
+    <script>
+var Game=function(){this.url=window.URL||window.webkitURL;this.init()};Game.prototype.init=function(){kontra.init();"s m b t z z2 f w h o1 o2 o3 o4 o5 o6 o7 o8 o9 o10".split(" ").forEach(function(h){kontra.assets.images[h]=document.getElementById(h)});this.main()};
+Game.prototype.main=function(){function h(a,b){b.src=a;b.play()}function Y(){var a=0,b=0,c=0,d=0;.04>e()&&(a=4*e(),b=4*e(),c=40*e(),d=12*e());a=k.createRadialGradient(148+(a|0),90+b,15+a-b,150+c,70+d,100+c-d);a.addColorStop(0,"#ffffff11");a.addColorStop(1,"#00000099");k.fillStyle=a;k.fillRect(0,0,256,144)}function v(a,b,c,d){k.font="10px monospace";k.fillStyle="#000000";k.fillText(c,a,b);k.fillStyle=d||"#ffffff";k.fillText(c,a-1,b-1)}function n(a){var b=a/60|0;a-=60*b;return(10>b?"0"+b:b)+":"+(10>
+a?"0"+a:a)}function J(){d=d.sort(function(a,b){return a.s>b.s?1:a.s<b.s?-1:0})}function Z(){B=aa*(1-C)+2*e();r=0;var a=e()*S.length|0;e()<.25+.1*C&&(a=0);var b=S[a];a={x:256,y:t+(b.posy||2),offset:b.off||0,dx:b.dx||-1};b.spr?a.image=kontra.assets.images[b.spr]:(b=kontra.spriteSheet({image:kontra.assets.images[b.anim],frameWidth:b.fw,frameHeight:b.fh,animations:{idle:{frames:b.frms,frameRate:b.fr}}}),a.animations=b.animations);D.push(kontra.sprite(a))}function ba(){if(r>B){r=0;var a=ca.shift();a?(B=
+a.p,T.text=a.t):K.s||(h(da,w),K.s=!0,ea.style.display="block")}}function fa(){if(x>E)if(x=0,E=U+e()*(5+5*C),0==y.length){var a=F.shift();a&&(y=a.s)}else y=""}function ha(){J();0<p&&f>p&&(z("CONGRATS! YOU JUST BEAT YOUR BEST SCORE!",!0),h(L,M));var a=d.find(function(a){return a.s<f});a&&(z("You just BEAT "+a.n+"'s highscore of "+n(a.s),!0),h(L,M));(a=d.find(function(a){return a.s>f}))&&z("NEXT highscore: "+a.n+" -> "+n(a.s),!1)}function ia(){F.forEach(function(a,b){a.p||F.splice(b,1)})}function ja(){h(ka,
+w);q=!0;ia();N={};f>p&&(p=f);var a=d.findIndex(function(a){return a.s>f}),b=-1;0>a&&(a=d.length);d[a-1]&&(b={n:O,s:f},d.push(b),u.emit("beat",b),a++,b=a-2);J();if(0<=b){a=[];for(var c=b;c<b+3;c++)d[c]&&a.push(d.length-c+"."+d[c].n+" "+n(d[c].s));G=a;y="";x=E=0}f=0}function z(a,b){N[a]||(F.push({s:a,p:b}),N[a]=!0)}function V(a){var b=kontra.canvas.getBoundingClientRect(),d=a.clientY-b.top;99>Math.abs(a.clientX-b.left)&&99>Math.abs(d)&&window.open("http://twitter.com/intent/tweet?url=http://www.js13kgames.com/entries/i-must-call-my-grandmother&text=I survived the offline apocalypse for "+
+n(p)+". Dare you!&hashtags=mustCallMyGrandmaTheGame&via=impactophaser","_blank");A||c.isJumping||q||(h(la,w),c.isJumping=!0,c.isOver=!1,c.isColliding&&!q&&(c.verticalJump=!0),c.ddy=-2)}var u=io({upgrade:!1,transports:["websocket"]}),ea=document.getElementById("nm"),ma=document.getElementById("ni");document.getElementById("nb");(function(){u.on("new",function(a){z("New online player has joined: "+a,!0)});u.on("beat",function(a){z("NEW "+a.n+"'s HIGHSCORE! -> "+n(a.s),!0);h(L,M)});u.on("scores",function(a){d=
+a;J()})})();for(var P=Math,e=P.random,la=jsfxr([0,,.3433,,.168,.3024,,.1901,,,,,,.185,,,,,1,,,,,.5]),ka=jsfxr([1,.1477,.616,.4993,.3202,.5067,,-.0011,-.1641,,.0282,-.1922,.6789,.9542,.5482,.2699,-7E-4,-.386,.9599,-.5059,.4179,.0777,.0307,.25]),W=jsfxr([2,,.0881,,.1905,.3526,,-.5607,,,,,,,,,,,1,,,,,.4]),da=jsfxr([3,.55,.53,,.56,.0628,,1,1,1,,,,-.0465,-.0438,.22,,,.82,-.0999,.52,.0314,-.0015,.58]),L=jsfxr([3,.5671,.5744,.2934,.4225,.6162,.0364,.3683,.1388,.0135,.17,-.5264,.4169,.0375,-.0094,.62,.48,
+-.9964,.9285,.2633,,.2613,-.0046,.5]),w=new Audio,M=new Audio,O,k=kontra.context,H=[],D=[],t=102,r=0,B=2*e(),q=!0,f=0,p=0,Q=0,C=0,aa=1,A=!0,x=0,U=2,E=U+5*e(),y="",G=[],ca=[{t:"Phone signal's gone!",p:2},{t:"",p:2},{t:"It's kind of an...",p:2},{t:"offline apocalypse!",p:2},{t:"",p:2},{t:"Any phone cabinet?",p:2},{t:"...because...",p:2},{t:"",p:2}],d=[],F=[{s:"Controls: press SPACE or Tap screen to jump"},{s:"Can you enter top 10 highscores?  Share it!"}],N={},S=[{anim:"z",off:14,fw:10,fh:16,frms:"0..5",
+fr:6,dx:-1.2,posy:-1},{anim:"z2",off:13,fw:16,fh:10,frms:"0..5",fr:3,dx:-.9,posy:7},{spr:"o1",off:8},{spr:"o2",off:7},{spr:"o3",off:10},{anim:"o4",off:10,fw:12,fh:14,frms:[0,1],fr:8},{spr:"o5",off:12,posy:6},{spr:"o6",off:12,posy:8},{spr:"o7",off:13,posy:7},{spr:"o8",off:13,posy:8},{spr:"o9",off:13,posy:8},{spr:"o10",off:13,posy:4}],l=0;24>l;l++)for(var m=1;8>m;m++){var I=kontra.sprite({x:16*l,y:16*m,dx:-.8,image:kontra.assets.images.w});H.push(I)}for(l=0;17>l;l++)m=kontra.sprite({x:16*l,y:116,dx:-1,
+image:kontra.assets.images.f}),H.push(m);var X=kontra.sprite({x:300,y:40,dx:-.8,image:kontra.assets.images.m,update:function(){this.advance();-50>this.x&&(this.x=300+300*P.random()|0)}});l=kontra.spriteSheet({image:kontra.assets.images.h,frameWidth:16,frameHeight:16,animations:{run:{frames:"2..8",frameRate:12},idle:{frames:[0,1],frameRate:6}}});var T=kontra.sprite({x:115,y:65,image:kontra.assets.images.b,text:"",hideB:!1,render:function(){0!=this.text.length&&(this.hideB||this.draw(),v(this.x+10,
+this.y+16,this.text,this.hideB?"#fff":"#caca00"))}}),K=kontra.sprite({x:50,y:65,s:!1,image:kontra.assets.images.t,render:function(){this.s&&this.draw()}}),na=kontra.sprite({x:3,y:21,image:kontra.assets.images.s}),c=kontra.sprite({x:0,y:t,dt:0,blink:!1,animations:l.animations,update:function(a){this.dt+=a;.15<this.dt&&(this.dt=0,this.blink=!this.blink);this.advance();this.isJumping&&(this.ddy=.09,this.verticalJump||(this.dx=.3));160<this.x&&(this.dx=0,this.x|=0);if(this.y>t||this.isOver)this.isJumping=
+!1,this.dx=this.dy=this.ddy=0,this.isOver||(this.y=t,h(W,w));this.isColliding&&(this.dx=this.isColliding.dx);this.isOver&&(this.dx=this.isOver.dx);0>this.dx?this.playAnimation("idle"):this.playAnimation("run")},render:function(){q?(e(),this.blink&&(k.save(),k.globalCompositeOperation="soft-light"),this.draw(),this.blink&&k.restore()):this.draw()}});l=kontra.spriteSheet({image:kontra.assets.images.z,frameWidth:10,frameHeight:16,animations:{i0:{frames:"0..5",frameRate:6},i1:{frames:"0..5",frameRate:9}}});
+var R=[];for(m=0;7>m;m++)I=kontra.sprite({x:235+3*m+(6*e()-3),y:t,animations:l.animations,render:function(){var a=this.context;a.save();a.translate(261,0);a.scale(-1,1);this.draw();a.restore()}}),I.playAnimation(.5>e()?"i0":"i1"),R.push(I);addEventListener("click",V);nb.onclick=function(){nm.style.display="none";O=ma.value.slice(0,8)||"Player";u.emit("login",O);u.emit("scores");A=!1;f=0;window.snd.close()};kontra.keys.bind("space",V);kontra.gameLoop({update:function(a){q?(c.dx=1,c.y=t,108<c.x&&(c.x=
+108,c.dx=0,q=!1,c.verticalJump=!1)):A?(r+=a,ba()):(Q+=a,r+=a,x+=a,r>B&&Z(),x>E&&(ha(),fa(),G=[]),1<=Q&&(f+=1,C=1-1/P.exp(f/150),Q=0));X.update();H.map(function(a){a.update();-16>=a.x&&(a.x=256)});c.isColliding=!1;D.map(function(a,d){a.update();c.collidesWith(a)&&(c.y<a.y-a.offset&&!c.isOver&&!c.verticalJump&&0<c.dy?(h(W,w),c.isOver=a,c.dy=0,c.ddy=0,c.y=a.y-a.offset-1):c.y>a.y-a.offset&&(c.isColliding=a));-16>=a.x&&D.splice(d,1)});c.update(a);-16>=c.x&&(q||ja());R.map(function(a){a.update()})},render:function(){A?
+(T.render(),K.render()):(H.map(function(a){a.render()}),D.map(function(a){a.render()}),X.render(),0<p&&na.render(),v(180,30,n(f)),v(20,30,"BEST - "+n(p),"#ffff00"),v(10,45,y,"#00FF00"),G.forEach(function(a,b){v(10,75-10*b,G[b],1==b?"#5533ff":"#fff")}));c.render();A||(R.map(function(a){a.render()}),Y())}}).start()};var g=new Game;
+    </script>
+    
+    
+</body>
+</html>

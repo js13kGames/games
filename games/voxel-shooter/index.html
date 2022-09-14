@@ -1,0 +1,79 @@
+<html>
+<head>
+<title>Voxel Flyer</title>
+<script id="shader-fs" type="x-shader/x-fragment">
+  precision mediump float;
+  
+  varying vec4 vColor;
+
+  void main(void) { 
+    gl_FragColor = vColor;
+  }
+</script>
+<script id="shader-vs" type="x-shader/x-vertex">
+  attribute vec3 aVertexPosition;
+  attribute vec4 aVertexColor;  
+  attribute vec3 aVertexNormal;
+  attribute vec3 aWorldPosition;
+  attribute vec3 aVelocity;
+  attribute float aStartTime;
+
+  uniform mat4 uPMatrix; // Projection
+  uniform mat4 uCMatrix; // Camera
+  uniform mat4 uRMatrix; // Camera roll rotation
+
+  uniform float uTime; // Current time
+
+  uniform bool uUseLighting;
+  uniform bool uUseFog;  
+
+  uniform vec3 uAmbientColor;
+
+  uniform vec3 uLightingDirection;
+  uniform vec3 uDirectionalColor;
+
+  varying vec4 vColor;
+
+  void main(void) {
+    vec3 position = aVelocity * (uTime - aStartTime);
+
+    // Compute model matrix here.
+    mat4 modelMatrix = mat4(vec4(1,0,0,0),
+                            vec4(0,1,0,0),                            
+                            vec4(0,0,1,0),
+                            vec4(aWorldPosition + position, 1));
+    gl_Position = uPMatrix * uRMatrix * uCMatrix * modelMatrix
+        * vec4(aVertexPosition, 1.0);
+    vec4 transformedNormal = modelMatrix * vec4(aVertexNormal, 0.0);
+    float vLightWeighting = 
+      max(dot(transformedNormal.xyz, uLightingDirection), 0.0);
+
+    if (uUseLighting) {
+      vColor = vec4(
+        (aVertexColor.xyz * (uAmbientColor
+                             + uDirectionalColor * vLightWeighting),
+         aVertexColor.a));
+    } else {
+      vColor = aVertexColor;
+    }
+
+    if (uUseFog) {
+      float dist = length(gl_Position.xyz) / 1000.0;
+      float density = 0.5;
+      float fogFactor = exp2(-density * density * dist * dist);
+      vColor = vColor + vec4(1.0, 1.0, 1.0, 0.0) * (1.0 - fogFactor);
+    } 
+    clamp(vColor, vec4(0, 0, 0, 0), vec4(1.0, 1.0, 1.0, 1.0));
+  }
+</script>
+<script type="text/javascript" src="glMatrix.js"></script>
+<script type="text/javascript" src="game.js"></script>
+</head>
+<body onload="webGLStart();" style="margin:0px">
+  <canvas id="canvas" style="border:none;margin:0px;position:absolute;top:0px;left:0px;"></canvas>
+  <canvas id="minimap" style="position:absolute;left:5px;top:5px;margin:0px;"></canvas>
+  <div id="fps" style="position:absolute;color:red;left:0px;top:0px"></div>
+  <div id="crashed" style="position:absolute;color:red;left:35%;top:35%;font-size:600%"></div>
+  <div id="score" style="position:absolute;color:black;left:75%;top:0%;font-size:300%">Score: 0</div>
+</body>
+</html>

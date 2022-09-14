@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Your Hero Game!</title>
+    <style type="text/css">
+        body {
+            background-color:#111;
+        }
+        canvas {
+            margin: auto;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            box-sizing: border-box;
+            border: 2px #666 solid;
+            border-radius: 5px;
+        }
+        p  {
+            text-align:center;
+        }
+        a {
+            color: green;
+        }
+    </style>
+    <script src='all.js' type="text/javascript"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            HeroGame.start();
+        };
+    </script>
+</head>
+<body>
+    <canvas id="game"></canvas>
+</body>
+</html>

@@ -1,0 +1,61 @@
+body {
+    background-color: black;
+    margin: 0;
+}
+.b, p {
+    background-color: black;
+    border: 1px solid black;
+    font-family: monospace;
+    color: blue;
+}
+p {
+    font-size: 2em;
+}
+.b {
+    position: relative;
+    font-size: 3em;
+    outline: 0;
+}
+
+.b:hover {
+    border: 1px solid cyan;
+    box-shadow: 0em 0em 0.2em cyan;
+}
+
+#THETITLE {
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    font-size: 5em;
+    font-weight: 100;
+    animation-name: shadoww;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+.ded {
+    animation-name: blurit;
+    animation-duration: 5s;
+    filter: blur(10px)
+}
+
+@keyframes shadoww {
+    0% {
+        text-shadow: 0em 0em 0.5em white;
+    }
+    50% {
+        text-shadow: 0em 0em 1em white;
+    }
+    100% {
+        text-shadow: 0em 0em 0.5em white;
+    }
+}
+
+@keyframes blurit {
+    0% {
+        filter: blur(0px)
+    }
+    100% {
+        filter: blur(10px)
+    }
+}

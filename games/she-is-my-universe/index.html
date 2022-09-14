@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+var dist=0,sucking=!1,blockblood=!1,bitingher=!1;AFRAME.registerComponent("toggle-jump",{schema:{"default":""},init:function(){this.el.addEventListener("click",function(){var a=new Event("action");document.dispatchEvent(a)})}});AFRAME.registerComponent("toggle-switch",{schema:{"default":""},init:function(){this.el.addEventListener("click",function(){var a=new Event("switch");document.dispatchEvent(a)})}});
+AFRAME.registerComponent("toggle-start-switch",{schema:{"default":""},init:function(){this.el.addEventListener("click",function(){var a=new Event("startswitch");document.dispatchEvent(a)})}});
+AFRAME.registerComponent("crawling-cursor",{dependencies:["raycaster"],schema:{target:{type:"selector"}},multiple:!1,init:function(){var a=this.el,d=this.data;if(null===d.target){var c=document.querySelector("a-cursor");if(null===c){console.warn("Please put a-cursor in a document");return}d.target=c}a.addEventListener("raycaster-intersection",function(b){a:{b=b.detail.intersections;bitingher=blockblood=!1;for(var a=0,c=b.length;a<c;a++)if(d.target!==b[a].object.el&&!b[a].object.el.classList.contains("ignore-ray")&&
+b[a].object.el.object3D.visible){b[a].object.el.classList.contains("f")&&(blockblood=!0);!blockblood&&b[a].object.el.classList.contains("h")&&(bitingher=!0);b=b[a];break a}b=null}b&&(a=b.object.matrixWorld,a.setPosition(new THREE.Vector3(0,0,0)),a=b.face.normal.clone().applyMatrix4(a).normalize(),c=(new THREE.Vector3).addVectors(b.point,a),d.target.object3D.lookAt(c),b=(new THREE.Vector3).addVectors(b.point,a.multiplyScalar(.05)),d.target.setAttribute("position",b))})}});
+AFRAME.registerComponent("constant-spawner",{schema:{on:{type:"string"},off:{type:"string"}},init:function(){this.interval=null;this.drops=[];this.colours=["8A0707","a20808","720606","d30b0b"]},update:function(){var a=this.el,d=this.spawn.bind(this);this.on!==this.data.on&&(a.addEventListener(this.data.on,function(){this.interval=setInterval(d,300)}),a.addEventListener(this.data.off,function(){clearInterval(this.interval)}),this.on=this.data.on)},tick:function(){for(var a=(new Date).getTime(),d=0;d<
+this.drops.length;d++){var c=this.drops[d];c.v&&(5E3<=a-c.ts?(c.e.object3D.visible=!1,c.v=!1):c.r<c.rmax&&(c.r+=.01,c.e.setAttribute("radius",c.r)))}var b=this.el;this.drops=this.drops.filter(function(a){a.v||b.sceneEl.removeChild(a.e);return a.v})},spawn:function(){if(sucking&&!blockblood){var a=this.el,d=a.object3D.matrixWorld,c=new THREE.Vector3;c.setFromMatrixPosition(d);d=document.createElement("a-sphere");d.setAttribute("position",c);d.setAttribute("radius",.1);d.setAttribute("material",{color:"#"+
+this.colours[Math.floor(4*Math.random())],flatShading:!0,shader:"flat"});d.className="ignore-ray";a.sceneEl.appendChild(d);this.drops.push({e:d,r:.1,ts:(new Date).getTime(),v:!0,rmax:.5*Math.random()+.3});bitingher&&document.dispatchEvent(new Event("endgame"))}}});
+AFRAME.registerComponent("canvas-text",{schema:{text:{type:"string","default":""},width:{type:"number","default":256},height:{type:"number","default":64}},init:function(){this.update()},update:function(a){a||this.createCanvas(this.data.width,this.data.height);a=512;this.ctx.font=a+"px sans-serif";this.ctx.fillStyle="white";for(this.ctx.textBaseline="hanging";;){var d=this.ctx.measureText(this.data.text);if(d.width<this.data.width)break;a-=2;this.ctx.font=a+"px sans-serif"}a=this.data.width-d.width;
+this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);this.ctx.fillText(this.data.text,a/2,10);this.el.setAttribute("src",this.canvas.toDataURL());this.el.setAttribute("width",this.canvas.width/100);this.el.setAttribute("height",this.canvas.height/100)},createCanvas:function(a,d){var c=document.createElement("canvas");c.width=a;c.height=d;this.canvas=c;this.ctx=c.getContext("2d")}});
+window.addEventListener("load",function(){var a=!1,d=!1,c=document.querySelector("#my-cursor"),b=c.object3D;b.visible=!1;for(var r=0,t=0,k=!1,u=!1,f=document.querySelector("a-scene"),m=document.querySelector("a-camera").object3D,n=["Q29uZ3JhdHMsIHlvdSBoYXZlIGZvdW5k","dGhlIE5TRlcgc3dpdGNoIQ==","R2lhbnQgKC4pKC4pIGZvciB5b3Uu"],h=0;3>h;h++){var p=document.createElement("a-image");p.setAttribute("canvas-text",{text:atob(n[h]),width:8192,height:512});p.setAttribute("position",{x:-1335.559,y:62.632-10*h,
+z:-1087.454});p.className="ignore-ray";f.appendChild(p)}var g=document.createElement("a-circle");g.setAttribute("position",{x:-1335.286,y:18.399,z:-1087.274});g.setAttribute("radius",5);g.setAttribute("material",{flatShading:!0,shader:"flat",color:"#F00"});g.className="switch";g.setAttribute("toggle-switch","");f.appendChild(g);var l=document.createElement("a-image");l.setAttribute("canvas-text",{text:"OFF",width:512,height:256});l.setAttribute("position",{x:-1334.945,y:18.45,z:-1086.616});l.className=
+"ignore-ray";f.appendChild(l);document.querySelector("#hint").setAttribute("canvas-text",{text:atob("SGV5LCB0aGVyZSdzIGEgTlNGVyBzd2l0Y2ggaGlkZGVuIHNvbWV3aGVyZQ=="),width:8192,height:512});var v=[];"right-eye left-eye lip lip-2 screen cear3 cear1 breast-left breast-right mlip mlip-2 mright-eye mleft-eye".split(" ").forEach(function(a){var e=document.querySelector("#"+a);e&&(e=e.object3D,e.visible=!1,e.myname=a,e.ignore=!1,a=new THREE.Vector3,e.mypos=a.setFromMatrixPosition(e.matrixWorld),v.push(e))});
+var x=function(a,e){return Math.sqrt(Math.pow(e.x-a.x,2)+Math.pow(e.y-a.y,2)+Math.pow(e.z-a.z,2))},A=function(a,e){v.forEach(function(b){b.ignore?b.visible=!0:x(b.mypos,a.position)<e?b.visible=!0:b.visible=!1})},y=function(){if(u){A(m,600);dist=x(m.position,b.position);15>dist&&(c.setAttribute("color","#F00"),c.setAttribute("radius",1),sucking=b.visible=!0);15<=dist&&50>dist&&(c.setAttribute("color","#FFA500"),c.setAttribute("radius",1+(dist-15)/4),b.visible=!0,a=sucking=!1);50<=dist&&(c.setAttribute("color",
+"#FF0"),c.setAttribute("radius",10),sucking=!1,b.visible=!0);if(!sucking&&a&&!d){if(b){b.visible=!0;var q=m.position.x,e=m.position.y,f=m.position.z,g=b.position.x,h=b.position.y,k=b.position.z,l=w(q,g),n=w(e,h),p=w(f,k);t=(new THREE.CatmullRomCurve3([new THREE.Vector3(q,e,f),new THREE.Vector3(l,n+50+dist/2.5,p),new THREE.Vector3(g,h+5.6,k)])).getPoints(40);r=0;d=!0}a=!1}d&&(b.visible=!1,q=t[r],m.position.set(q.x,q.y,q.z),r++,r>=t.length-1&&(d=!1,r=0))}requestAnimationFrame(y)},w=function(a,e){return 0<
+a+e||0>a+e?(a+e)/2:0},B=function(){var a=["breast-left","breast-right"];["clothes"].forEach(function(a){if(a=document.querySelector("#"+a))a.object3D.visible=!k});["n"].forEach(function(a){if(a=document.querySelector("#"+a))a.object3D.visible=k});[{n:"lower",u:"dd9f74",s:"d8905f"},{n:"hips-right",u:"dd9f74",s:"d8905f"},{n:"hips-left",u:"dd9f74",s:"d8905f"}].forEach(function(a){var b=document.querySelector("#"+a.n);b&&(k?b.setAttribute("color","#"+a.u):b.setAttribute("color","#"+a.s))});v.forEach(function(b){b.ignore=
+!1;a.includes(b.myname)&&(b.ignore=k)})};y();document.addEventListener("action",function(b){a||d||sucking||(a=!0)});document.addEventListener("switch",function(a){(k=!k)?(g.setAttribute("color","#0F0"),l.setAttribute("canvas-text",{text:"on",width:512,height:256})):(g.setAttribute("color","#F00"),l.setAttribute("canvas-text",{text:"OFF",width:512,height:256}));B()});var z=document.querySelector("#start");document.addEventListener("startswitch",function(a){u=!0;z.setAttribute("position",{x:200,y:-900,
+z:200});b.visible=!0});var C=document.querySelector("#se");document.addEventListener("endgame",function(a){u=!1;z.setAttribute("position",{x:200,y:-26,z:200});b.visible=!1;m.position.set(200,-26,200);a=document.getElementsByClassName("st");for(var c=0;c<a.length;c++)a[c].object3D.visible=!1;C.object3D.visible=!0});f=[{pos:{x:-2017.3,y:1322.2,z:1234.5},rot:{x:0,y:110,z:0},pillow:!1},{pos:{x:1349.275,y:-655.962,z:-42.649},rot:{x:0,y:14,z:0},pillow:!0},{pos:{x:2462.87,y:-674.156,z:-2150.927},rot:{x:0,
+y:-45,z:0},pillow:!1}];n=Math.floor(Math.random()*f.length);h=document.querySelector("#cat");h.setAttribute("position",f[n].pos);h.setAttribute("rotation",f[n].rot);f[n].pillow||(document.querySelector("#catpillow").object3D.visible=!1)});
+    </script>
+</head>
+<body>
+    <a-scene>
+        <a-assets>
+            <a-mixin id="skin" material="flatShading:true;shader:flat;color:#d8905f"></a-mixin>
+            <a-mixin id="darkskin" material="flatShading:true;shader:flat;color:#c28155"></a-mixin>
+            <a-mixin id="lightskin" material="flatShading:true;shader:flat;color:#dd9f74"></a-mixin>
+            <a-mixin id="gold" material="flatShading:true;color:#ecda13;metalness:1"></a-mixin>
+            <a-mixin id="freckle" material="flatShading:true;shader:flat;color:#491F29"></a-mixin>
+            <a-mixin id="hairs" material="flatShading:true;shader:flat;color:#652a07"></a-mixin>
+            <a-mixin id="haird" material="flatShading:true;shader:flat;color:#652a07;side:double"></a-mixin>
+            <a-mixin id="gclothes" material="flatShading:true;shader:flat;color:#061d05;side:double"></a-mixin>
+            <a-mixin id="white" material="flatShading:true;shader:flat;color:#FFF"></a-mixin>
+            <a-mixin id="whited" material="flatShading:true;shader:flat;color:#FFF;side:double"></a-mixin>
+            <a-mixin id="plaingray" material="flatShading:true;shader:flat;color:#CCC"></a-mixin>
+        </a-assets>
+        <a-sky color="#E5C298" class="ignore-ray"></a-sky>
+        <a-camera raycaster="" crawling-cursor="target:#my-cursor" position="200 -26 200">
+            <a-cursor color="#4CC3D9" fuse="true" fuse-timeout="200" raycaster="objects:.jump, .switch" min-distance="15" max-distance="200" id="thecursor"></a-cursor>
+        </a-camera>
+        <a-circle id="my-cursor" toggle-jump="" class="jump" position="0 0 0" material="flatShading:true;shader:flat;color:#FF0" radius="10" constant-spawner="on: mousedown; off: mouseup;" visible="false"></a-circle>
+
+        <a-entity id='woman' position="-117.380 34.965 -1177.486" rotation="0 -5.329 0">
+            <!-- head -->
+            <a-entity id='head' position="27.480 753.021 -477.771" rotation="0 -4.125 0">
+                <a-sphere mixin="skin" position="-0.150 -90.952 100.563" geometry="radius:120" scale="1 0.7 1" rotation="55 0 0"></a-sphere>
+                <a-sphere mixin="skin" position="0 0 0" geometry="radius:150" rotation="45 0 0"></a-sphere>
+                <!-- freckles -->
+                <a-circle position="70.880 -91.189 174.689" radius="2" mixin="freckle" rotation="-20 30 30"></a-circle>
+                <!-- ears -->
+                <a-cylinder position="138.875 -45.039 17.182" rotation="90 60 0" mixin="skin" geometry="height:5;radius:40"></a-cylinder>
+                <a-cylinder position="-145.269 -45.039 11.183" rotation="90 -60 0" mixin="skin" geometry="height:5;radius:40"></a-cylinder>
+                <a-cylinder position="121.714 -82.634 40.114" rotation="90 60 0" mixin="skin" geometry="height:5;radius:15"></a-cylinder>
+                <a-cylinder position="-130.538 -82.634 40.114" rotation="90 -60 0" mixin="skin" geometry="height:5;radius:15"></a-cylinder>
+                <!-- earrings -->
+                <a-sphere mixin="gold" position="122.878 -88.389 40.502" geometry="radius:5" class="f"></a-sphere>
+                <a-sphere mixin="gold" position="-131.557 -88.389 40.502" geometry="radius:5" class="f"></a-sphere>
+                <!-- nose -->
+                <a-cylinder position="-0.238 -28.136 152.797" rotation="-30 0 0" mixin="darkskin" geometry="height:80;radius:20;openEnded:true" scale="0.5 1 1"></a-cylinder>
+                <a-sphere mixin="darkskin" position="16.076 -64.540 176.287" geometry="radius:10" rotation="45 0 0"></a-sphere>
+                <a-sphere mixin="darkskin" position="-17.395 -65.478 176.097" geometry="radius:10" rotation="45 0 0"></a-sphere>
+                <a-sphere mixin="darkskin" position="-0.243 -63.982 186.159" geometry="radius:20" rotation="-20 0 0" scale="1 0.8 0.5"></a-sphere>
+                <!-- eyebrows -->
+                <a-torus position="55.194 -13.022 138.544" rotation="0 25 45" mixin="hairs" geometry="arc:90;radius:38;radiusTubular:1"></a-torus>
+                <a-torus position="-55.515 -13.022 138.544" rotation="0 -25 45" mixin="hairs" geometry="arc:90;radius:38;radiusTubular:1"></a-torus>
+
+                <!-- face LOD group -->
+                <a-entity id='face' position="1.123 -129.738 173.798">
+                    <!-- mouth -->
+                    <a-sphere material="flatShading:true;shader:flat;color:#ea1c1c" position="0 0 0" geometry="radius:50" scale="1 1 0.2" id="lip" rotation="25 0 0"></a-sphere>
+                    <a-sphere material="flatShading:true;shader:flat;color:#e35c5c" position="0 38.111 7.844" geometry="radius:30" scale="1 1 0.2" id="lip-2" rotation="35 180 0"></a-sphere>
+                    
+                    <!-- todo - make these eyes into components -->
+                    <!-- left eye -->
+                    <a-entity id="left-eye" position="43.745 108.073 -37.017">
+                        <a-sphere material="flatShading:true;shader:flat;color:#FFFFFF" position="0 0 0" geometry="radius:25" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#c28155" position="10.009 6.164 1.269" geometry="radius:20;phiLength:90" scale="1.2 1.2 0.5" rotation="-20 10 -95"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#0fbfe9" position="1.339 0.324 5.675" geometry="radius:10" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="0.952 0.911 6.942" geometry="radius:3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="6.247 -5.196 -2.275" geometry="radius:25" scale="1 1 0.2" rotation="0 10 0"></a-sphere>    
+                    </a-entity>
+
+                    <!-- right eye -->
+                    <a-entity id="right-eye" position="-47.134 108.073 -37.017">
+                        <a-sphere material="flatShading:true;shader:flat;color:#FFFFFF" position="0 0 0" geometry="radius:25" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#c28155" position="-10.072 5.011 1.269" geometry="radius:20;phiLength:90" scale="1.2 1.2 0.5" rotation="-20 -10 -85"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#0fbfe9" position="-9.652 0.324 5.675" geometry="radius:10" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="-11.442 -0.644 6.942" geometry="radius:3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="-6.070 -3.424 -0.185" geometry="radius:25" scale="1 1 0.2" rotation="0 -10 0"></a-sphere>
+                    </a-entity>
+                </a-entity>
+
+                <!-- hair -->
+                <a-entity id="hair" position="-0.243 23.480 0">
+                    <a-sphere mixin="haird" position="0 27.948 0" geometry="radius:160;phiLength:180" rotation="-110 0 0"></a-sphere>
+                    <a-circle mixin="haird" geometry="radius:160" position="-4.558 -3.607 8.489" rotation="70 0 0"></a-circle>
+                    <a-cylinder position="0.201 -84.721 -6.005" rotation="0 90 0" mixin="haird" geometry="height:300;radius:150;openEnded:true;thetaLength:180"></a-cylinder>
+                    <a-cylinder position="0.201 7.899 6.993" rotation="-20 0 0" mixin="haird" geometry="height:50;radius:160;thetaStart:270;thetaLength:180;openEnded:true"></a-cylinder>
+                    
+                    <a-cylinder position="4.474 -108.201 33.375" rotation="0 90 0" mixin="haird" geometry="height:290;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                    <a-cylinder position="-293.369 -108.201 62.838" rotation="0 90 0" mixin="haird" geometry="height:290;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="0.124 -92.462 12.116" rotation="0 -70 0" mixin="haird" geometry="height:290;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="-299.398 -108.201 33.375" rotation="0 90 0" mixin="haird" geometry="height:290;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="4.474 -8.205 15.715" rotation="0 90 0" mixin="haird" geometry="height:50;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                    <a-cylinder position="-301.476 -8.205 15.715" rotation="0 90 0" mixin="haird" geometry="height:50;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="3.927 -95.915 14.147" rotation="0 70 0" mixin="haird" geometry="height:280;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                    <a-cylinder position="0.320 -88.213 14.948" rotation="0 60 0" mixin="haird" geometry="height:260;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                    <a-cylinder position="-6.041 0.591 9.968" rotation="0 50 0" mixin="haird" geometry="height:100;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                    <a-cylinder position="-26.770 -12.274 33.388" rotation="0 50 0" mixin="haird" geometry="height:100;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="-10.428 -25.204 -8.495" rotation="0 -50 0" mixin="haird" geometry="height:100;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="5.200 0.363 12.497" rotation="0 -50 0" mixin="haird" geometry="height:100;radius:150;openEnded:true;thetaLength:10"></a-cylinder>
+                    <a-cylinder position="3.927 -42.793 -3.064" rotation="0 70 0" mixin="haird" geometry="height:150;radius:150;thetaLength:10;openEnded:true"></a-cylinder>
+                </a-entity>
+            </a-entity>
+            
+            <!-- body -->
+            <a-entity id='body' position="0 0 0" rotation="0 0 0">
+                <a-sphere mixin="skin" position="0 0 0" radius="300"  scale="1 0.5 1" rotation="30 0 0" id="lower"></a-sphere>
+                <a-sphere mixin="skin" position="-5.905 286.051 -253.300" radius="300" scale="0.8 0.7 1" rotation="45 0 0" id="upper"></a-sphere>
+                <!-- hips -->
+                <a-sphere mixin="skin" position="-192.334 -58.313 193.355" geometry="radius:170" scale="1 1 1.2" id="hips-right"></a-sphere>
+                <a-sphere mixin="skin" position="163.169 -58.313 158.618" geometry="radius:170" id="hips-left"></a-sphere>
+                <!-- shoulders, neck, collarbone -->
+                <a-cylinder position="136.418 485.989 -393.737" rotation="-60 90 0" mixin="skin" geometry="height:200;radius:40"></a-cylinder>
+                <a-cylinder position="-115.829 485.989 -393.737" rotation="60 90 0" mixin="skin" geometry="height:200;radius:40"></a-cylinder>
+                <a-cylinder position="15.778 551.405 -420.130" rotation="-204 0 0" material="color:#d8905f;flatShading:true;shader:flat" geometry="height:300;radius:70"></a-cylinder>
+                <a-sphere mixin="skin" position="196.515 411.164 -356.250" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-208.050 411.164 -356.250" geometry="radius:100"></a-sphere>
+                <!-- breasts -->
+                <a-sphere mixin="lightskin" position="80.022 351.350 -163.251" geometry="radius:150" scale="0.9 0.7 0.9" rotation="45 0 0" id="breast-left"></a-sphere>
+                <a-sphere mixin="lightskin" position="-121.484 351.350 -163.251" geometry="radius:150" scale="0.9 0.7 0.9" rotation="45 0 0" id="breast-right"></a-sphere>
+
+                <!-- nipples -->
+                <a-entity id="n" position="-198.583 345.125 -63.675" visible="false">
+                    <a-sphere material="color:#a56c47;flatShading:true;shader:flat" position="0 0 0" geometry="radius:10"></a-sphere>
+                    <a-sphere material="flatShading:true;shader:flat;color:#c28155" position="0.809 0.625 -6.333" geometry="radius:20" scale="1 1 0.5" rotation="-25 -25 -25"></a-sphere>
+                    <a-sphere material="color:#a56c47;flatShading:true;shader:flat" position="359.494 17.057 -5.317" geometry="radius:10"></a-sphere>
+                    <a-sphere material="color:#c28155;flatShading:true;shader:flat" position="356.130 11.301 -12.403" geometry="radius:20" scale="1 1 0.5" rotation="0 20 -15"></a-sphere>
+                </a-entity>
+
+                <!-- clothes -->
+                <a-entity id="clothes" position="-19.402 397.256 -73.472">
+                    <!-- bra -->
+                    <a-box mixin="gclothes" position="0 0 0" rotation="-35 0 0" geometry="height:50;depth:10;width:70" class="f"></a-box>
+                    <a-sphere mixin="gclothes" position="99.424 -45.906 -103.999" geometry="radius:153;phiLength:180" scale="1 0.8 1" rotation="45 15 0" class="f"></a-sphere>
+                    <a-sphere mixin="gclothes" position="-102.082 -45.906 -103.999" geometry="radius:153;phiLength:180" scale="1 0.8 1" rotation="45 -15 0" class="f"></a-sphere>
+                    <a-cylinder position="161.004 -133.372 -216.201" rotation="-35 0 0" mixin="gclothes" geometry="height:20;radius:100;thetaLength:180" scale="1 1 1.2" class="f"></a-cylinder>
+                    <a-cylinder position="-142.991 -133.372 -216.201" rotation="-35 0 0" mixin="gclothes" geometry="height:20;thetaStart:180;thetaLength:180;radius:100" scale="1 1 1.2" class="f"></a-cylinder>
+                    <!-- pants -->
+                    <a-sphere mixin="gclothes" position="19.264 -406.407 88.707" geometry="radius:310;segmentsWidth:72;phiLength:185" scale="1 0.5 1" rotation="30 0 0" class="f"></a-sphere>
+                </a-entity>
+            </a-entity>
+
+
+            <!-- left arm -->
+            <a-entity id='left-arm' position="273.296 411.164 -314.727">
+                <a-sphere mixin="skin" position="0 0 0" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-48.451 -228.807 375.753" geometry="radius:40"></a-sphere>
+                <a-cone mixin="skin" position="-25.685 -121.616 200.121" rotation="-60 -5 0.02" geometry="radiusTop:90;radiusBottom:40;height:400"></a-cone>
+                <a-cone mixin="skin" position="-93.564 -261.156 553.539" rotation="-80 -5 -10" geometry="radiusTop:40;radiusBottom:30;height:400"></a-cone>
+                
+                <!-- bracelet -->
+                <a-torus mixin="gold" position="-126.308 -280.546 667.401" rotation="-5 5 0" geometry="arc:360;radius:38;radiusTubular:1" class="f"></a-torus>
+
+                <!-- left hand -->
+                <a-sphere mixin="skin" position="-162.949 -306.232 757.183" geometry="radius:100" scale="0.3 0.5 1" rotation="20 -35 0"></a-sphere>
+            </a-entity>
+
+            <!-- right arm -->
+            <a-entity id='right-arm' position="-276.748 411.164 -342.150">
+                <a-sphere mixin="skin" position="0 0 0" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-44.578 54.902 408.484" geometry="radius:40"></a-sphere>
+                <a-cone mixin="skin" position="-32.855 24.263 227.544" rotation="-100 -5 0.02" geometry="radiusTop:90;height:400;radiusBottom:40"></a-cone>
+                <a-cone mixin="skin" position="4.903 146.852 569.819" rotation="-120 30 -10" geometry="radiusTop:40;radiusBottom:30;height:400"></a-cone>
+
+                <!-- right hand -->
+                <a-sphere mixin="skin" position="125.159 259.976 753.888" geometry="radius:100" scale="0.3 0.5 1" rotation="-15 80 0"></a-sphere>
+                <!-- phone -->
+                <a-box mixin="plaingray" position="149.506 287.724 721.417" rotation="5 5 0" geometry="width:110;height:200;depth:20" class="f"></a-box>
+                <a-box mixin="white" position="149.506 287.724 711.647" rotation="5 5 0" geometry="width:90;height:170;depth:5" id="screen" class="f"></a-box>
+            </a-entity>
+
+            <!-- left leg -->
+            <a-entity id='leftleg' position="192.330 -42.290 538.001">
+                <a-cone mixin="skin" position="0 -51.333 639.485" rotation="-80 -5 0.02" radius-top="100" radius-bottom="40" height="600"></a-cone>
+                <a-cone mixin="skin" position="0 0 0" rotation="-93 5 0" radius-top="160" radius-bottom="100" height="640"></a-cone>
+                <a-sphere mixin="skin" position="30 9.325 339.485" radius="110"></a-sphere>
+                
+                <!-- left foot -->
+                <a-entity id='leftfoot' position="-20.000 -82.675 939.485" rotation="-0.286 -1.089 -12.605">
+                    <a-sphere mixin="skin" position="0 0 0" radius="45" ></a-sphere>
+                    <a-sphere mixin="skin" position="-21.593 151.144 40.000" radius="14" scale="0.7 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="35.452 115.194 28.237" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="-24.170 122.997 39.437" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="-4.289 149.231 39.000" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="9.517 148.220 38.000" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="22.352 146.581 37.000" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-sphere mixin="skin" position="33.993 140.739 36.000" radius="10" scale="0.5 1 1" rotation="0 0.4 0"></a-sphere>
+                    <a-sphere mixin="skin" position="-20.000 140.304 40.000" radius="14" scale="0.5 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="-5.000 137.896 39.000" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="8.771 137.223 38.000" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="6.776 122.884 38.000" radius="35" scale="1 0.5 0.5" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="22.047 136.954 37.000" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-sphere mixin="skin" position="33.218 135.671 31.063" radius="10" scale="0.5 1 1" rotation="0 0.4 0"></a-sphere>
+                    <a-box mixin="skin" position="5.000 80.000 14.764" rotation="40 5 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="5.000 61.375 29.758" rotation="15 5 0" width="70" height="100" depth="20" ></a-box>
+                    <a-box mixin="skin" position="2.782 39.881 -22.727" rotation="45 5 0" width="70" height="90" depth="20"></a-box>
+                </a-entity>
+            </a-entity>
+
+            <!-- right leg -->
+            <a-entity id='rightleg' position="-229.794 55.706 538.001">
+                <a-cone mixin="skin" position="-51.376 -50.060 634.706" rotation="-60 -5 0.02" radius-top="100" radius-bottom="40" height="600"></a-cone>
+                <a-cone mixin="skin" position="0 0 0" rotation="-110 -5 0" radius-top="160" radius-bottom="100" height="640"></a-cone>
+                <a-sphere mixin="skin" position="-25.792 119.586 339.485" radius="110"></a-sphere>
+
+                <!-- right foot -->
+                <a-entity id='rightfoot' position="-71.411 -180.671 922.744" rotation="-2.291 -0.859 23.491">
+                    <a-sphere mixin="skin" position="0 0 0" radius="45" ></a-sphere>
+                    <a-sphere mixin="skin" position="37.306 151.144 56.741" radius="14" scale="0.7 1 1" ></a-sphere>
+                    <a-sphere mixin="skin" position="-16.346 115.194 44.978" radius="14" scale="0.5 1.5 0.5" ></a-sphere>
+                    <a-sphere mixin="skin" position="40.963 122.997 53.203" radius="14" scale="0.5 1.5 0.5" ></a-sphere>
+                    <a-sphere mixin="skin" position="21.106 139.371 55.741" radius="13" scale="0.5 1 1" rotation="0 0.1 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="21.174 149.231 55.741" radius="13" scale="0.5 1 1" rotation="0 0.1 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="8.330 139.381 54.741" radius="12" scale="0.5 1 1" rotation="0 0.2 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="8.432 148.220 54.741" radius="12" scale="0.5 1 1" rotation="0 0.2 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="-4.255 146.581 53.741" radius="11" scale="0.5 1 1" rotation="0 0.3 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="-16.326 140.739 52.741" radius="10" scale="0.5 1 1" rotation="0 0.4 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="36.204 140.304 56.741" radius="14" scale="0.5 1 1" ></a-sphere>
+                    <a-sphere mixin="skin" position="10.929 122.884 53.232" radius="35" scale="1 0.5 0.5" rotation="0 0.2 0" ></a-sphere>
+                    <a-sphere mixin="skin" position="-4.225 136.954 53.741" radius="11" scale="0.5 1 1" rotation="0 0.3 0" ></a-sphere>
+                    <a-box mixin="skin" position="7.191 80.000 32.135" rotation="40 5 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="6.368 61.375 46.499" rotation="15 5 0" width="70" height="100" depth="20" ></a-box>
+                    <a-box mixin="skin" position="5.849 39.881 -5.986" rotation="45 5 0" ></a-box>
+                </a-entity>
+            </a-entity>
+
+        </a-entity>
+        
+        <!-- book on the bed -->
+        <a-box material="flatShading:true;shader:flat;color:#5139e9" position="-833.347 -137.554 -720.545" rotation="90 -25 0" width="70" height="100" depth="20" geometry="depth:30;width:200;height:300" id="book" class="f"></a-box>
+
+        <!-- cup -->
+        <a-entity id='cup' position="-1328.212 71.085 -1085.156" rotation="0 0 0">
+            <a-cone material="side:double;transparent:true;color:#CCC" position="0 0 0" geometry="height:150;openEnded:true;radiusBottom:50;radiusTop:70" id="cup" class="f"></a-cone>
+            <a-circle material="flatShading:true;shader:flat;side:double;color:#f0a30c" geometry="radius:62" position="0.042 22.861 0.179" rotation="90 0 0" id="juice" class="f"></a-circle>
+        </a-entity>
+
+        <!-- kitty cat -->
+        <a-entity id='cat' position="1349.275 -655.962 -42.649" rotation="0 0 0">
+            <!-- head -->
+            <a-sphere material="color:#000000;flatShading:true;shader:flat" position="0 42.237 161.236" radius="300" geometry="radius:80" scale="1 0.7 1" rotation="15 0 0" id="cathead" class='h'></a-sphere>
+            <a-torus color="#43A367" arc="270" radius="100" radius-tubular="20" position="-30.306 45.5 220.676" rotation="0 -25 45" material="color:#FFF;flatShading:true;shader:flat" geometry="radius:20;arc:90;radiusTubular:1" id="cateye" class='h'></a-torus>
+            <a-torus color="#43A367" arc="270" radius="100" radius-tubular="20" position="19.287 45.5 225.079" rotation="0 25 45" material="flatShading:true;shader:flat;color:#FFF" geometry="arc:90;radius:20;radiusTubular:1" id="cateye" class='h'></a-torus>
+            <a-cone mixin="skin" position="-5.938 36.616 238.847" rotation="0 0 180" radius-top="160" radius-bottom="100" height="640" id="catnose" scale="1 1 0.2" geometry="radiusBottom:10;height:10;radiusTop:2" class='h'></a-cone>
+            <a-sphere material="color:#f18585;flatShading:true;shader:flat" position="-3.641 22.780 231.456" radius="300" geometry="radius:15" scale="1 1 0.2" rotation="-20 0 0" id="blep" class='h'></a-sphere>
+
+            <!-- ears -->
+            <a-cone mixin="skin" position="-54.546 102.473 161.510" rotation="0 20 30" radius-top="160" radius-bottom="100" height="640" id="cear3" scale="1 1 0.2" geometry="height:50;radiusTop:2;radiusBottom:30" class='h'></a-cone>
+            <a-cone material="flatShading:true;shader:flat;color:#000" position="-55.103 102.094 159.708" rotation="0 20 30" radius-top="160" radius-bottom="100" height="640" id="cear4" scale="1 1 0.2" geometry="radiusTop:2;radiusBottom:40;height:70" class='h'></a-cone>
+
+            <a-cone mixin="skin" position="52.732 102.056 163.229" rotation="0 -20 -30" radius-top="160" radius-bottom="100" height="640" id="cear1" scale="1 1 0.2" geometry="radiusTop:2;radiusBottom:30;height:50" class='h'></a-cone>
+            <a-cone material="color:#000;flatShading:true;shader:flat" position="52.732 102.094 161.622" rotation="0 -20 -30" radius-top="160" radius-bottom="100" height="640" id="cear2" scale="1 1 0.2" geometry="radiusBottom:40;height:70;radiusTop:2" class='h'></a-cone>
+
+            <!-- whiskers -->
+            <a-cylinder position="-71.633 46.028 227.345" rotation="0 -5 80" material="flatShading:true;shader:flat;side:double;color:#fff" geometry="height:70;radius:0.5;openEnded:true"></a-cylinder>
+            <a-cylinder position="-71.633 34.330 227.345" rotation="0 -5 90" material="color:#fff;flatShading:true;shader:flat;side:double" geometry="height:80;radius:0.5;openEnded:true"></a-cylinder>
+            <a-cylinder position="-71.633 20.941 227.345" rotation="0 -6 100" material="flatShading:true;shader:flat;side:double;color:#fff" geometry="height:70;radius:0.5;openEnded:true"></a-cylinder>
+
+            <a-cylinder position="68.465 46.028 227.345" rotation="0 5 100" material="flatShading:true;shader:flat;side:double;color:#fff" geometry="height:70;radius:0.5;openEnded:true"></a-cylinder>
+            <a-cylinder position="67.576 34.330 227.345" rotation="0 5 90" material="flatShading:true;shader:flat;side:double;color:#fff" geometry="height:80;radius:0.5;openEnded:true"></a-cylinder>
+            <a-cylinder position="72.125 20.941 227.345" rotation="0 6 80" material="flatShading:true;shader:flat;side:double;color:#fff" geometry="height:70;radius:0.5;openEnded:true"></a-cylinder>
+
+            <!-- body -->
+            <a-sphere material="flatShading:true;shader:flat" position="-31.227 -40.174 133.599" radius="300" geometry="radius:30" scale="1 0.7 1" rotation="15 0 0" id="cfoot2" class='h'></a-sphere>
+            <a-sphere material="flatShading:true;shader:flat" position="44.192 -42.171 133.599" radius="300" geometry="radius:30" scale="1 0.7 1" rotation="15 0 0" id="cfoot1" class='h'></a-sphere>
+            <a-sphere material="color:#EEE;flatShading:true;shader:flat" position="82.827 -38.597 -53.698" radius="300" geometry="radius:30" scale="1 0.7 1" rotation="15 0 0" id="cfoot3" class='h'></a-sphere>
+            <a-sphere material="flatShading:true;shader:flat" position="-77.209 -40.985 -53.698" radius="300" geometry="radius:30" scale="1 0.7 1" rotation="15 0 0" id="cfoot4" class='h'></a-sphere>
+            <a-sphere material="color:#000000;flatShading:true;shader:flat" position="-89.846 -8.591 -95.912" radius="300" geometry="radius:50" scale="1 1 0.5" rotation="0 90 0" id="cthigh1" class='h'></a-sphere>
+            <a-sphere material="color:#000000;flatShading:true;shader:flat" position="77.885 -8.852 -95.912" radius="300" geometry="radius:50" scale="1 1 0.5" rotation="0 90 0" id="cthigh2" class='h'></a-sphere>
+            <a-sphere material="color:#000;flatShading:true;shader:flat" position="0 0 0" radius="300" geometry="radius:100" scale="1 0.7 1.9" id="catbody" class='h'></a-sphere>
+
+            <!-- tail -->
+            <a-torus color="#43A367" arc="270" radius="100" radius-tubular="20" position="-36.598 -29.363 -170.874" rotation="-90 -25 0" material="color:#000;flatShading:true;shader:flat" geometry="arc:180;radius:50" id="ctail1" class='h'></a-torus>
+            <a-torus color="#43A367" arc="270" radius="100" radius-tubular="20" position="-117.891 -29.800 -215.672" rotation="90 -25 0" material="color:#000;flatShading:true;shader:flat" geometry="arc:90;radius:50" id="ctail2" class='h'></a-torus>
+            <a-cone material="color:#000;flatShading:true;shader:flat" position="-140.211 -42.295 -72.589" rotation="-100 180 0" radius-top="160" radius-bottom="100" height="640" id="ctail3" geometry="height:150;radiusBottom:40;radiusTop:20" class='h'></a-cone>
+            <a-cone material="color:#fFF;flatShading:true;shader:flat" position="-162.520 -52.172 21.342" rotation="-90 140 0" radius-top="160" radius-bottom="100" height="640" id="ctail4" geometry="height:70;radiusBottom:20;radiusTop:5" class='h'></a-cone>
+            <a-torus color="#43A367" arc="270" radius="100" radius-tubular="20" position="-100.855 -30.545 -142.740" rotation="90 -45 130" material="side:double;color:#000;flatShading:true;shader:flat" geometry="radius:40;arc:90" id="ctail5" class='h'></a-torus>
+
+            <!-- pillow -->
+            <a-cylinder position="-5.807 -62.605 -13.225" rotation="0 90 0" material="color:#388563;flatShading:true;shader:flat;side:double" geometry="radius:220;height:30" id="catpillow" scale="1 1 0.7" class="f"></a-cylinder>
+        </a-entity>
+        <!-- nightstand -->
+        <a-entity id='nightstand' position="-1671.523 -378.199 -1189.633" rotation="0 0 0">
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="0 0 0" geometry="width:50;height:700;depth:500" class="f"></a-box>
+            <a-box material="color:#724526;flatShading:true;shader:flat" position="226.309 363.483 0.000" geometry="width:550;height:30;depth:550" class="f"></a-box>
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="449.419 0.000 0.000" geometry="width:50;height:700;depth:500" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="225.608 0.000 -225.262" geometry="depth:50;width:500;height:700" class="f"></a-box>
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="225.608 140.622 23.904" geometry="width:400;depth:450;height:50" class="f"></a-box>
+            <a-box material="color:#724526;flatShading:true;shader:flat" position="225.608 -260.552 23.904" geometry="width:400;height:50;depth:450" class="f"></a-box>
+            <!-- drawer -->
+            <a-entity id='drawer' position="225.608 191.469 120.038" rotation="0 0 0">
+                <a-box material="color:#724526;flatShading:true;shader:flat" position="0 0 0" geometry="height:15;width:400;depth:450" class="f"></a-box>
+                <a-box material="color:#724526;flatShading:true;shader:flat" position="0 60.965 234.202" geometry="height:150;depth:25;width:450" class="f"></a-box>
+                <a-box material="color:#ffe680;flatShading:true;shader:flat" position="-186.801 54.711 0" geometry="width:15;height:100;depth:450" class="f"></a-box>
+                <a-box material="color:#ffe680;flatShading:true;shader:flat" position="181.074 54.711 0" geometry="width:15;height:100;depth:450" class="f"></a-box>
+                <a-box material="flatShading:true;shader:flat;color:#ffe680" position="-4.225 54.144 -221.153" geometry="width:400;depth:15;height:100" class="f"></a-box>
+                <!-- knob on the drawer -->
+                <a-sphere material="color:#ccc;flatShading:true;shader:flat" position="-2.376 66.683 255.668" geometry="radius:20" class="f"></a-sphere>
+
+                <!-- clutter in drawer -->
+                <a-box material="flatShading:true;shader:flat;color:#3e3e28" position="99.071 61.649 -19.700" rotation="90 -10 0" geometry="depth:120;height:100;width:100" class="ignore-ray f"></a-box>
+                <a-box material="color:#3d283e;flatShading:true;shader:flat" position="-18.725 41.892 68.581" rotation="90 15 0" geometry="width:60;height:60;depth:90" class="ignore-ray f"></a-box>
+            </a-entity>
+
+            <!-- books -->
+            <a-box material="color:#2b8c1f;flatShading:true;shader:flat" position="218.789 -223.199 45.820" rotation="90 -25 0" geometry="depth:30;height:300;width:200" id="book-2" class="f"></a-box>
+            <a-box material="color:#a19e1e;flatShading:true;shader:flat" position="221.882 -193.580 45.820" rotation="90 -10 0" geometry="depth:30;height:300;width:200" id="book-3" class="f"></a-box>
+        </a-entity>
+        <!-- floor -->
+        <a-box mixin="plaingray" position="249.553 -736.1 -511.861" geometry="depth:4000;height:20;width:5000" id="floor" class="f"></a-box>
+        <!-- light -->
+        <a-entity id="purplelight" position="-1547.197 74.787 -1296.964" rotation="0 0 0">
+            <a-sphere material="flatShading:true;shader:flat;color:#d85f92" position="0 0 0" geometry="radius:100" class="f"></a-sphere>
+            <a-cone mixin="whited" position="-0.773 147.610 -1.709" geometry="height:200;radiusTop:80;radiusBottom:120;openEnded:true" class="f"></a-cone>    
+        </a-entity>
+        <!-- bed -->
+        <a-entity id="bed" position="360.936 -194.498 -511.861" rotation="0 0 0">
+            <a-box material="flatShading:true;shader:flat;color:#CCFFFF" position="0 0 0" geometry="depth:2000;height:100;width:3000" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#EEFFFF" position="-4.135 322.790 -967.061" rotation="45 0 0" geometry="width:2900;height:50;depth:1000" class="f"></a-box>
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="-4.135 322.790 -1066.476" rotation="45 0 0" geometry="height:100;width:3000;depth:1000" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="0.000 -112.708 0.000" geometry="depth:2100;height:150;width:3100" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="-1447.777 -337.361 952.639" geometry="width:200;depth:200;height:400" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="1450.974 -364.908 950.392" geometry="width:200;height:400;depth:200" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="1450.974 -364.908 -949.573" geometry="depth:200;height:400;width:200" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="-1447.777 -337.361 -951.032" geometry="depth:200;height:400;width:200" class="f"></a-box>
+        </a-entity>
+        <!-- clutter under bed -->
+        <a-box material="color:#E9AE6C;flatShading:true;shader:flat" position="-774.307 -644.499 -333.832" rotation="90 -35 0" geometry="depth:300;width:400;height:400" class="f"></a-box>
+        <a-image canvas-text="text:ah;width:8192;height:512" position="-564.998 -702.203 -431.835" class="ignore-ray f" rotation="0 145 0" id="hint"></a-image>
+        <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="-185.056 -644.499 -887.085" rotation="90 -35 0" geometry="depth:300;height:400;width:400" class="f"></a-box>
+        <a-cylinder position="-316.476 -607.555 -522.784" rotation="0 90 0" material="color:#3f3d3d;flatShading:true;shader:flat;side:double" geometry="height:300;radius:150" class="f"></a-cylinder>
+        <a-cylinder position="-590.377 -620.717 -826.775" rotation="0 90 0" material="color:#2a2929;flatShading:true;shader:flat;side:double" geometry="height:230;radius:100" class="f"></a-cylinder>
+        <a-box material="flatShading:true;shader:flat;color:#db9f5b" position="-414.575 -715.539 -323.887" rotation="90 -35 0" geometry="depth:100;height:150;width:100" class="f"></a-box>
+        <a-box material="color:#db9f5b;flatShading:true;shader:flat" position="-522.793 -715.539 -491.36" rotation="90 -35 0" geometry="width:100;height:130;depth:100" class="f"></a-box>
+        <a-entity position="200 -26 200" id="start">
+            <a-box material="color:#000;flatShading:true;shader:flat;side:double" position="0 0 0" rotation="0 0 0" geometry="depth:200;width:200;height:200"></a-box>
+            <a-circle position="0 -40 -94" radius="5" material="flatShading:true;shader:flat;color:#F00" toggle-start-switch class="switch"></a-circle>
+            <a-image class='st' canvas-text="text:She is my Universe;width:8192;height:512" position="0 58 -90"></a-image>
+            <a-image class='st' canvas-text="text:made for #js13k2017 by madmarcel;width:8192;height:512" position="0 50 -90"></a-image>
+            <a-image canvas-text="text:Start;width:2048;height:512" position="0 -39 -90"></a-image>
+            <a-image class='st' canvas-text="text:Hey little flea;width:8192;height:512" position="0 20 -90"></a-image>
+            <a-image class='st' canvas-text="text:You've lost your tasty hairy host;width:8192;height:512" position="0 15 -90"></a-image>
+            <a-image class='st' canvas-text="text:Where could she be?;width:8192;height:512" position="0 10 -90"></a-image>
+            <a-image class='st' canvas-text="text:Big yellow cursor - look to hop;width:8192;height:512" position="0 -1 -90"></a-image>
+            <a-image class='st' canvas-text="text:Small red cursor - suck blood;width:8192;height:512" position="0 -6 -90"></a-image>
+            <a-image class='st' canvas-text="text:Orange cursor - does nothing;width:8192;height:512" position="0 -11 -90"></a-image>
+            <a-image id='se' canvas-text="text:Meow! you found her!;width:8192;height:512" position="0 20 -89" visible="false"></a-image>
+        </a-entity>
+
+        <a-entity id="cupboard" position="-2010.129 -378.199 1436.558" rotation="0 90 0">
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="226.309 1626.684 0" geometry="width:500;depth:500;height:30" class="f"></a-box>
+            <a-box material="color:#855E42;flatShading:true;shader:flat" position="449.419 637.328 0" geometry="height:2000;width:100;depth:500" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="-0.844 637.328 0" geometry="depth:500;height:2000;width:100" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#855E42" position="234.165 624.324 -225.262" geometry="height:2000;width:500;depth:50" class="f"></a-box>
+            <a-box id="s1" material="flatShading:true;shader:flat;color:#724526" position="225.608 -260.552 23.904" geometry="width:400;height:50;depth:450" class="f"></a-box>
+            <a-box id="s2" material="flatShading:true;shader:flat;color:#724526" position="225.608 1146.254 23.904" geometry="depth:450;height:50;width:400" class="f"></a-box>
+            <a-box id="s3" material="flatShading:true;shader:flat;color:#724526" position="225.608 734.17 23.904" geometry="depth:450;height:50;width:400" class="f"></a-box>
+            <a-box id="s4" material="flatShading:true;shader:flat;color:#724526" position="225.608 247.023 23.904" geometry="depth:450;height:50;width:400" class="f"></a-box>
+        </a-entity>
+
+        <a-entity id="cbox" position="2446.067 -553.434 -2185.714" rotation="0 10 0">
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="-293.246 0 82.999" rotation="0 15 0" geometry="depth:500;width:20;height:400" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="-315.834 275.688 79.016" rotation="0 15 15" geometry="height:200;depth:500;width:20" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="50.86 0 238.999" rotation="0 105 0" geometry="depth:600;width:20;height:400" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="-74.646 0 -233.955" rotation="0 105 0" geometry="depth:600;width:20;height:400" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="-41.607 258.899 -156.129" rotation="0 105 50" geometry="height:200;depth:600;width:20" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="69.624 88.382 265.472" rotation="0 105 -15" geometry="depth:600;height:200;width:20" class="f"></a-box>
+            <a-box material="flatShading:true;shader:flat;color:#E9AE6C" position="273.077 -2.397 -80.813" rotation="0 15 0" geometry="depth:500;height:400;width:20" class="f"></a-box>
+        </a-entity>
+
+        <a-entity id="man" position="921.189 34.965 -1046.585" rotation="-5.156620156177409 0 -75.68772473678175">
+            <!-- head -->
+            <a-entity id="head" position="-259.38 723.094 -453.355" rotation="-11.802930579694959 51.56620156177409 -8.823550045014677">
+                <a-sphere mixin="skin" position="-0.15 -90.952 100.563" geometry="radius:120" scale="1 0.7 1" rotation="55 0 0"></a-sphere>
+                <a-sphere mixin="skin" geometry="radius:150" rotation="45 0 0"></a-sphere>
+                <!-- ears -->
+                <a-cylinder position="138.875 -45.039 17.182" rotation="90 60 0" mixin="skin" geometry="height:5;radius:40"></a-cylinder>
+                <a-cylinder position="-145.269 -45.039 11.183" rotation="90 -60 0" mixin="skin" geometry="height:5;radius:40"></a-cylinder>
+                <a-cylinder position="121.714 -82.634 40.114" rotation="90 60 0" mixin="skin" geometry="height:5;radius:15"></a-cylinder>
+                <a-cylinder position="-130.538 -82.634 40.114" rotation="90 -60 0" mixin="skin" geometry="height:5;radius:15"></a-cylinder>
+                <!-- nose -->
+                <a-cylinder position="-0.238 -28.136 152.797" rotation="-30 0 0" mixin="darkskin" geometry="height:80;openEnded:true;radius:20" scale="0.5 1 1"></a-cylinder>
+                <a-sphere mixin="darkskin" position="16.076 -64.54 176.287" geometry="radius:10" rotation="45 0 0"></a-sphere>
+                <a-sphere mixin="darkskin" position="-17.395 -65.478 176.097" geometry="radius:10" rotation="45 0 0"></a-sphere>
+                <a-sphere mixin="darkskin" position="7.102 -61.099 179.071" geometry="radius:25" rotation="-20 0 0" scale="1 0.8 0.5"></a-sphere>
+                <!-- eyebrows -->
+                <a-torus position="55.194 -13.022 138.544" rotation="0 25 45" mixin="hairs" geometry="arc:90;radius:38;radiusTubular:1" material="color:#000"></a-torus>
+                <a-torus position="-55.515 -13.022 138.544" rotation="0 -25 45" mixin="hairs" geometry="arc:90;radius:38;radiusTubular:1" material="color:#000"></a-torus>
+
+                <!-- face LOD group -->
+                <a-entity id="mface" position="1.123 -129.738 173.798">
+                    <!-- mouth -->
+                    <a-sphere material="color:#a56c47;flatShading:true;shader:flat" geometry="radius:50" scale="1 1 0.2" id="mlip" rotation="25 0 0"></a-sphere>
+                    <a-sphere material="color:#a56c47;flatShading:true;shader:flat" position="0 38.111 7.844" geometry="radius:30" scale="1 1 0.2" id="mlip-2" rotation="35 180 0"></a-sphere>
+                    
+                    <!-- left eye -->
+                    <a-entity id="mleft-eye" position="43.745 108.073 -37.017">
+                        <a-sphere material="flatShading:true;shader:flat;color:#FFFFFF" geometry="radius:25" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#c28155" position="9.515 1.895 4.371" geometry="phiLength:100;radius:20" scale="1.2 1.2 0.5" rotation="-19.99622705006573 10.026761414789405 -94.99640243269049"></a-sphere><a-sphere material="flatShading:true;shader:flat;color:#c28155" position="6.046 -2.479 3.621" geometry="radius:20;phiLength:100" scale="1.2 1.2 0.5" rotation="0.2864788975654116 10.427831871380983 85.02693679741417"></a-sphere>
+                        <a-sphere material="color:#18ce27;flatShading:true;shader:flat" position="1.339 0.324 5.675" geometry="radius:10" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="0.948 0.623 6.821" geometry="radius:3"></a-sphere>
+                            
+                    </a-entity>
+
+                    <!-- right eye -->
+                    <a-entity id="mright-eye" position="-47.134 108.073 -37.017">
+                        <a-sphere material="flatShading:true;shader:flat;color:#FFFFFF" geometry="radius:25" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#c28155" position="-13.857 3.095 5.947" geometry="phiLength:100;radius:20" scale="1.2 1.2 0.5" rotation="-20 -10 -85"></a-sphere><a-sphere material="flatShading:true;shader:flat;color:#c28155" position="-11.892 5.072 3.782" geometry="radius:20;phiLength:90" scale="1.2 1.2 0.5" rotation="21.084846860814295 -9.682986737710912 94.13696573999425"></a-sphere>
+                        <a-sphere material="color:#18ce27;flatShading:true;shader:flat" position="-9.652 0.324 5.675" geometry="radius:10" scale="1 1 0.3"></a-sphere>
+                        <a-sphere material="flatShading:true;shader:flat;color:#000000" position="-11.442 -0.644 6.942" geometry="radius:3"></a-sphere>
+                        
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+            
+            <!-- body -->
+            <a-entity id="body" position="-40.22 -26.92 2.917" rotation="1.3750987083139758 29.163551772158904 2.0053522829578814">
+                <a-sphere mixin="skin" radius="300" scale="1 0.5 1" rotation="30 0 0" id="lower" geometry="radius:310"></a-sphere>
+                <a-sphere mixin="skin" position="-5.905 286.051 -253.3" radius="300" scale="0.8 0.7 1" rotation="45 0 0" id="upper"></a-sphere>
+                <!-- hips -->
+                <a-sphere mixin="skin" position="-155.001 -67.838 189.878" geometry="radius:170" scale="1 1 1.2" id="hips-right"></a-sphere>
+                <a-sphere mixin="skin" position="163.169 -58.313 158.618" geometry="radius:170" id="hips-left"></a-sphere>
+                <!-- shoulders, neck, collarbone -->
+                <a-cylinder position="136.418 485.989 -393.737" rotation="-60 90 0" mixin="skin" geometry="height:200;radius:40"></a-cylinder>
+                <a-cylinder position="-115.829 485.989 -393.737" rotation="60 90 0" mixin="skin" geometry="height:200;radius:40"></a-cylinder>
+                <a-cylinder position="15.778 551.405 -420.13" rotation="-204 0 0" material="flatShading:true;shader:flat;color:#d8905f" geometry="height:300;radius:70"></a-cylinder>
+                <a-sphere mixin="skin" position="196.515 411.164 -356.25" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-208.05 411.164 -356.25" geometry="radius:100"></a-sphere>
+
+
+                <!-- clothes -->
+                <a-entity id="mclothes" position="-26.768 368.837 -76.338">
+                    <!-- pants -->
+                    <a-sphere mixin="gclothes" position="-7.409 -382.207 89.583" geometry="radius:310;phiLength:185;segmentsWidth:72" scale="0.9 0.6 0.9" rotation="30 0 0" class="f" material="color:#030938"></a-sphere>
+                </a-entity>
+            </a-entity>
+
+
+            <!-- left arm -->
+            <a-entity id="left-arm" position="14.622 367.742 -350.061" rotation="-21.48591731740587 36.325524211294194 -12.032113697747288">
+                <a-sphere mixin="skin" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-48.451 -228.807 375.753" geometry="radius:40"></a-sphere>
+                <a-cone mixin="skin" position="-25.685 -121.616 200.121" rotation="-60 -5 0.02" geometry="height:400;radiusBottom:40;radiusTop:90"></a-cone>
+                <a-cone mixin="skin" position="-93.564 -261.156 553.539" rotation="-80 -5 -10" geometry="height:400;radiusBottom:30;radiusTop:40"></a-cone>
+
+                <!-- left hand -->
+                <a-sphere mixin="skin" position="-172.714 -315.9 774.683" geometry="radius:100" scale="0.3 0.6 1.2" rotation="20 -35 0"></a-sphere>
+            </a-entity>
+
+            <!-- right arm -->
+            <a-entity id="right-arm" position="-408.74 360.041 -203.171" rotation="10.886198107485642 48.758708365633055 4.927437038125079">
+                <a-sphere mixin="skin" geometry="radius:100"></a-sphere>
+                <a-sphere mixin="skin" position="-44.578 54.902 408.484" geometry="radius:40"></a-sphere>
+                <a-cone mixin="skin" position="-32.855 24.263 227.544" rotation="-100 -5 0.02" geometry="height:400;radiusBottom:40;radiusTop:90"></a-cone>
+                <a-cone mixin="skin" position="4.903 146.852 569.819" rotation="-62.10862499218124 -136.87961725675365 166.78801416258264" geometry="height:400;radiusBottom:30;radiusTop:40"></a-cone>
+
+                <!-- right hand -->
+                <a-sphere mixin="skin" position="169.446 306.427 724.01" geometry="radius:100" scale="0.3 0.5 1.2" rotation="-38.044397596686665 95.68395178684747 -22.288058230589023"></a-sphere>
+            </a-entity>
+
+            <!-- left leg -->
+            <a-entity id="leftleg" position="192.33 -42.29 538.001">
+                <a-cone mixin="skin" position="43.868 -10.504 636.56" rotation="-81.70378158565539 -67.15065358933248 68.64034385667262" radius-top="100" radius-bottom="40" height="600"></a-cone>
+                <a-cone mixin="skin" position="0.593 -0.151 6.779" rotation="-93 5 0" radius-top="160" radius-bottom="100" height="640"></a-cone>
+                <a-sphere mixin="skin" position="30 9.325 339.485" radius="110"></a-sphere>
+                
+                <!-- left foot -->
+                <a-entity id="leftfoot" position="69.96 -39.033 932.592" rotation="-0.2864788975654116 -1.088619810748564 -12.60507149287811" scale="1 1.2 1">
+                    <a-sphere mixin="skin" radius="45"></a-sphere>
+                    <a-sphere mixin="skin" position="-21.593 151.144 40" radius="14" scale="0.7 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="35.452 115.194 28.237" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="-24.17 122.997 39.437" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="-4.289 149.231 39" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="9.517 148.22 38" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="22.352 146.581 37" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-sphere mixin="skin" position="33.993 140.739 36" radius="10" scale="0.5 1 1" rotation="0 0.4 0"></a-sphere>
+                    <a-sphere mixin="skin" position="-20 140.304 40" radius="14" scale="0.5 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="-5 137.896 39" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="8.771 137.223 38" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="6.776 122.884 38" radius="35" scale="1 0.5 0.5" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="22.047 136.954 37" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-sphere mixin="skin" position="33.218 135.671 31.063" radius="10" scale="0.5 1 1" rotation="0 0.4 0"></a-sphere>
+                    <a-box mixin="skin" position="5 80 14.764" rotation="40 5 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="5 61.375 29.758" rotation="15.01149423242757 4.984732817638162 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="2.782 39.881 -22.727" rotation="45 5 0" width="70" height="90" depth="20"></a-box>
+                </a-entity>
+            </a-entity>
+
+            <!-- right leg -->
+            <a-entity id="rightleg" position="-50.991 2.879 521.187" rotation="9.396507840145501 18.907607239317166 -0.9167324722093172">
+                <a-cone mixin="skin" position="-38.542 -52.652 638.306" rotation="-60 -5 0.02" radius-top="100" radius-bottom="40" height="600"></a-cone>
+                <a-cone mixin="skin" position="37.921 -12.587 11.319" rotation="-63.1972448029298 169.71009891774986 -178.70553630130377" radius-top="160" radius-bottom="100" height="640"></a-cone>
+                <a-sphere mixin="skin" position="-15.311 117.469 342.425" radius="110"></a-sphere>
+
+                <!-- right foot -->
+                <a-entity id="rightfoot" position="-58.041 -183.319 926.487" rotation="3.953408786402681 -5.786873730821315 -8.193296470370772" scale="1 1.2 1">
+                    <a-sphere mixin="skin" radius="45"></a-sphere>
+                    <a-sphere mixin="skin" position="37.306 151.144 56.741" radius="14" scale="0.7 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="-16.346 115.194 44.978" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="40.963 122.997 53.203" radius="14" scale="0.5 1.5 0.5"></a-sphere>
+                    <a-sphere mixin="skin" position="21.106 139.371 55.741" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="21.174 149.231 55.741" radius="13" scale="0.5 1 1" rotation="0 0.1 0"></a-sphere>
+                    <a-sphere mixin="skin" position="8.33 139.381 54.741" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="8.432 148.22 54.741" radius="12" scale="0.5 1 1" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="-4.255 146.581 53.741" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-sphere mixin="skin" position="-16.326 140.739 52.741" radius="10" scale="0.5 1 1" rotation="0 0.4 0"></a-sphere>
+                    <a-sphere mixin="skin" position="36.204 140.304 56.741" radius="14" scale="0.5 1 1"></a-sphere>
+                    <a-sphere mixin="skin" position="10.929 122.884 53.232" radius="35" scale="1 0.5 0.5" rotation="0 0.2 0"></a-sphere>
+                    <a-sphere mixin="skin" position="-4.225 136.954 53.741" radius="11" scale="0.5 1 1" rotation="0 0.3 0"></a-sphere>
+                    <a-box mixin="skin" position="7.191 80 32.135" rotation="40 5 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="6.368 61.375 46.499" rotation="15 5 0" width="70" height="100" depth="20"></a-box>
+                    <a-box mixin="skin" position="5.849 39.881 -5.986" rotation="45 5 0"></a-box>
+                </a-entity>
+            </a-entity>
+
+        </a-entity>
+    </a-scene>
+</body>
+</html>

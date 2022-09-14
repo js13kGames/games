@@ -1,0 +1,40 @@
+body {
+  background: white;
+}
+.content {
+  padding: 20px;
+  font-size: 16px;
+}
+canvas {
+  color: blue;
+  display: block;
+  width: 400px;
+  height: 400px;
+  margin: 20px auto 15px;
+  padding: 20px;
+  border: 15px solid orange;
+}
+
+p,a {
+  color: #021234;
+  font-family: arial;
+  font-size: 16px;
+  color: #021234;
+  display: block;
+  width: 425px;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+li {
+  color: #021234;
+  font-family: arial;
+  font-size: 16px;
+  color: #021234;
+  display: block;
+  width: 425px;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+}

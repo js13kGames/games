@@ -1,0 +1,91 @@
+* {
+      margin: 0;
+      padding: 5px;
+}
+
+.hidden {
+      display: none;
+      background-color: #3C543D;
+}
+
+.grid {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+      ". . title . ."
+      ". stats content log ."
+      ". . dialogs . .";
+}
+
+#page {
+      height: 100%;
+      background-color: #3C543D;
+}
+
+.title {
+      grid-area: title;
+      text-align: center;
+      color: #A88B30;
+      align-self: center;
+}
+
+.stats {
+      grid-area: stats;
+      background-color: #F7F8F4;
+      width: 150px;
+      padding: 12px;
+      font-size: 14px;
+      float: left;
+}
+
+.stat-value {
+      float: right;
+}
+
+.update-positive {
+      color: green;
+}
+
+.update-negative {
+      color: red;
+}
+
+.content {
+      grid-area: content;
+      align-self: center;
+      width: 320px;
+      padding: 15px;
+      padding-top: 60px;
+      background-color: #9EAF77;
+}
+
+#trees {
+      width: 95%;
+      image-rendering: pixelated;
+}
+
+#lost {
+      position: relative;
+      bottom: 47px;
+      left: 0;
+}
+
+.dialogs {
+      grid-area: dialogs;
+      align-self: center;
+      background-color: #F7F8F4;
+      float: relative;
+      padding-bottom: 20px;
+      margin-bottom: 300px;
+}
+
+.log {
+      grid-area: log;
+      align-self: center;
+      background-color: #F7F8F4;
+      width: 300px;
+      height: 160px;
+      font-size: 12px;
+      overflow-y: scroll;
+}

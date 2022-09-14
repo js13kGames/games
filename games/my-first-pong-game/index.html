@@ -1,0 +1,23 @@
+<!doctype html>
+<html style="height: 100%; width: 100%; background-color: white; color: black;">
+	<head>
+		<meta charset="utf-8">
+		<title>My first Pong game</title>
+		<script src="m.js"></script>
+		<style>
+			#canvas_id {
+				image-rendering: optimizeSpeed;
+				image-rendering: -moz-crisp-edges;
+				image-rendering: -webkit-optimize-contrast;
+				image-rendering: -o-crisp-edges;
+				image-rendering: pixelated;
+				-ms-interpolation-mode: nearest-neighbor;
+			}
+		</style>
+	</head>
+	<body style="margin: 0; padding: 0; height: 100%; width: 100%;">
+		<div style="margin: auto; padding: 0; height: 360px; width: 640px; position: relative; top: 50%; transform: translateY(-50%);">
+			<canvas id="canvas_id" style="margin: 0; padding: 0; height: 100%; width: 100%;"></canvas>
+		</div>
+	</body>
+</html>

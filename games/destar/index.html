@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+    <meta charset = "utf-8">
+    <meta name = "viewport" content = "width=device-width">
+
+    <title>DeStar</title>
+
+    <style>
+      * { margin:0; padding:0; }
+     html, body { color:white; background-color:#000000; height:100%; position:relative; width:100%; }
+     #game,#end {  position:absolute; visibility:hidden }
+	 canvas {text-align:center}
+	 #start { position:absolute;  }
+	 h1, h3 { text-align:center; }
+	 .h { font-size:64px }
+	 #b,#c { border:2px solid white; border-radius:10px; }
+	 #b:hover,#c:hover { background-color: #009900; }
+    </style>
+
+  </head>
+
+  <body>
+
+  <section id="start">
+    <h1 class="h">DeStar</h1>
+    <h3>The reason we conquered space was to bring back minerals to earth.<h3>
+    <h3>Assist the spacewalker with mining the gold nuggets.</h3>
+	<h3>Only the Austronout can mine, the android can assist but not mine.</h3>
+    <h3>As discovered, it is harder to collect in zero gravity.</h3>
+    <h3 id="b">Start Mining</h3>
+    <center>
+      Use A, W, S and D control the spacewalker.<br>
+	  Use arrows to control the android.<br>
+	  Coding: Per Kürcman<p>
+	  Graphics: Alexander Morawski
+    </center>
+  </section>
+
+  <section id="game">
+    <h1 class="h">DeStar</h1>
+	<canvas width=512 height=320 ></canvas>
+    <h1 id="t"></h1>
+  </section>
+
+  <section id="end">
+    <h1 class="h">DeStar</h1>
+    <div id="over"></div>
+    <h3 id="c">Restart mining</h3>
+  </section>
+
+    <script type = "text/javascript">
+      /* The player is just a simple 2d point with a moveTo function. */
+      const Player = function() {
+      };
+      Player.prototype = {
+        moveTo:function(x, y) {
+          /* Move the player closer to x, y every time moveTo is called. */
+          if (this.x<x) this.x += move_speed; 
+          if (this.x>x) this.x += -move_speed;
+          if (this.y<y) this.y += move_speed;
+          if (this.y>y) this.y += -move_speed;
+       }
+      };
+	  var move_speed =4;
+	  var moves=0;
+	  var accmoves=0;
+
+	  var score=0;
+	  var level;
+	  var nuggets=1;
+
+	  var scaled_size = 32; // The size I want my sprites to be;
+      var sprite_size = 16; // The actual size of sprites / tiles in the tile_sheet image
+      var columns   = 16;   // columns and rows in map below
+      var rows      = 10;
+	  var map = []; // Will be populated from levels in the init function
+
+					//  nuggets, playerA x pos,y pos, playerB x pos, ypos
+	  var leveldata = [ 10, 7, 2, 8, 2, 
+						11, 2, 6, 2, 5,
+						7, 4, 8, 5, 8,
+						9, 2, 5, 1, 4,
+						11, 11, 1, 1, 1,
+						10, 2, 6, 14, 1
+						]
+				
+
+      var levels = [
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 1 //39
+                 3,0,0,3,0,0,0,0,0,0,0,3,0,1,0,3,
+                 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+                 3,0,3,1,3,3,0,0,0,0,3,1,3,3,3,3,
+                 3,0,0,3,0,0,0,0,0,0,0,3,0,0,0,3,
+                 3,0,0,0,0,0,0,1,0,3,0,1,0,0,0,3,
+                 3,3,0,0,1,0,0,0,0,3,0,0,1,0,0,3,
+                 3,0,1,0,3,3,1,0,0,0,1,0,3,3,0,3,
+                 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+	  
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 2 //
+                 3,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,
+                 3,0,3,0,0,0,0,0,0,0,0,0,0,0,1,3,
+                 3,0,0,0,1,0,0,0,3,3,0,0,1,3,3,3,
+                 3,0,0,0,3,0,0,0,0,1,0,0,0,3,3,3,
+                 3,0,0,3,0,0,0,0,1,3,1,0,3,0,0,3,
+                 3,0,0,3,1,0,3,0,3,3,0,0,1,0,0,3,
+                 3,0,0,0,3,0,0,0,0,1,0,1,3,1,0,3,
+                 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,	  
+	  
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 3 //
+                 3,0,3,3,3,3,1,0,1,0,0,0,0,0,0,3,
+                 3,0,0,0,0,3,0,0,0,0,1,0,0,0,0,3,
+                 3,0,0,0,1,0,0,0,0,3,3,3,1,0,3,3,
+                 3,0,0,0,3,3,0,0,0,3,3,3,3,3,3,3,
+                 3,0,0,0,0,0,0,0,0,0,3,3,0,0,0,3,
+                 3,0,3,3,0,0,0,0,0,0,0,0,0,1,0,3,
+                 3,0,0,0,0,0,0,3,0,0,3,3,0,0,0,3,
+                 3,0,0,0,0,0,0,0,1,3,3,3,3,3,3,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,	  
+
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 4 //
+                 3,3,0,1,0,0,0,0,0,0,0,0,3,0,3,3,
+                 3,0,0,0,3,0,0,0,0,0,0,0,1,0,3,3,
+                 3,3,0,0,1,0,0,0,0,0,0,0,1,0,0,3,
+                 3,0,3,0,0,0,0,3,0,1,0,0,0,0,3,3,
+                 3,0,0,0,0,3,0,3,3,3,0,0,0,3,3,3,
+                 3,0,0,0,0,0,0,0,0,3,0,0,0,0,3,3,
+                 3,0,0,3,0,1,0,3,0,1,0,0,3,3,3,3,
+                 3,0,0,0,0,3,0,1,0,3,3,1,3,3,3,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 5 //
+                 3,0,0,0,0,0,0,0,0,0,3,0,0,0,0,3,
+                 3,0,0,0,1,3,3,3,1,0,3,0,0,0,0,3,
+                 3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,3,
+                 3,0,1,0,1,0,1,0,3,0,3,0,0,0,0,3,
+                 3,0,0,0,3,0,0,0,0,0,0,3,0,1,0,3,
+                 3,0,0,1,3,1,0,0,0,0,0,0,0,0,0,3,
+                 3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,3,
+                 3,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //Level 6 //38
+                 3,0,0,0,0,1,0,0,0,0,0,0,0,0,0,3,
+                 3,0,0,3,3,0,3,0,0,0,3,1,0,1,0,3,
+                 3,0,1,0,0,0,0,0,0,0,1,3,0,0,0,3,
+                 3,0,0,0,0,0,0,1,0,0,3,1,0,0,0,3,
+                 3,3,3,3,3,0,3,0,0,0,0,0,0,0,0,3,
+                 3,0,0,0,3,0,3,0,0,0,3,0,1,0,3,3,
+                 3,0,1,0,3,0,0,0,0,0,0,0,0,0,0,3,
+                 3,0,0,0,1,0,3,0,0,0,0,0,0,0,0,3,
+				 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+				 
+				 ];
+	  
+
+      /* The drawing context of the on screen canvas */
+      var context = document.querySelector("canvas").getContext("2d");
+
+	  var startMenu  = document.getElementById("start")
+	  var gameScreen = document.getElementById("game")
+	  var endScreen= document.getElementById("end");
+	  var startButton= document.getElementById("b");
+	  
+	  document.getElementById("b").addEventListener("click", startGame);
+	  document.getElementById("c").addEventListener("click", startGame);
+
+      var playerA = new Player();
+      var playerB = new Player();
+      var pointerA = { x: playerA.x, y:playerA.y };
+      var pointerB = { x: playerB.x, y:playerB.y };
+
+
+	  init(0); //start at level 0
+	  
+      function loop() {// The game loop
+        window.requestAnimationFrame(loop);
+          var width  = document.documentElement.clientWidth;
+	      if (nuggets==score) init(level+1);
+		  if (level==6) finish();
+		  document.getElementById("t").innerHTML="Stage:"+(level+1)+", Stage Moves:"+moves+", Total Moves:"+accmoves
+          context.imageSmoothingEnabled = false;// prevent antialiasing of drawn image
+          playerA.moveTo(pointerA.x, pointerA.y);
+          playerB.moveTo(pointerB.x, pointerB.y);
+
+		  startMenu.style.left = width/2-startMenu.offsetWidth/2+"px"
+		  gameScreen.style.left = width/2-gameScreen.offsetWidth/2+"px"
+		  endScreen.style.left = width/2-endScreen.offsetWidth/2+"px"
+
+		 // Redraw the Tiles on the canvas
+         for (let x = 0; x < columns; x ++) {
+            for (let y = 0; y < rows; y ++) {
+              let value = map[y * columns + x];// Tile value
+              // Draw tile from tile_sheet
+              context.drawImage(tile_sheet, value * sprite_size, 0, sprite_size, sprite_size, x*scaled_size, y*scaled_size, scaled_size, scaled_size);
+            }
+          }
+          /* This bit of code gets the player's position in the world in terms of
+          columns and rows and converts it to an index in the map array */
+          let player_indexA = Math.floor(playerA.y / scaled_size) * columns + Math.floor(playerA.x / scaled_size);
+          let player_indexB = Math.floor(playerB.y / scaled_size) * columns + Math.floor(playerB.x / scaled_size);
+          /* If the player is on a nugget, remove nugget */
+//          if (map[player_indexA] == 1) {
+//		    map[player_indexA] = 0;
+//			score++;
+//			}
+          if (map[player_indexB] == 1) {
+		    map[player_indexB] = 0;
+			score++;
+		  }
+		  
+          /* Draw the players. */
+          context.drawImage(tile_sheet, 32, 0, sprite_size, sprite_size, playerA.x, playerA.y , scaled_size, scaled_size);
+          context.drawImage(tile_sheet, 64, 0, sprite_size, sprite_size, playerB.x, playerB.y , scaled_size, scaled_size);
+
+      }
+	  function keyPush(evt) {
+	    // If player is at the destination we accept keypresses
+	    if (playerA.x==pointerA.x) if (playerA.y==pointerA.y) if (playerB.x==pointerB.x) if (playerB.y==pointerB.y) {
+	      let xA=playerA.x/scaled_size;
+		  let yA=playerA.y/scaled_size;
+	      let xB=playerB.x/scaled_size;
+		  let yB=playerB.y/scaled_size;
+		  // Mark players on map
+		  map[xA+yA*columns]=3
+		  map[xB+yB*columns]=3
+		  moves++;
+		  accmoves++;
+		  let i=0;
+	      switch (evt.keyCode) {
+  		    case 37:
+			  while (map[xA+yA*columns+i-1]%2!=1) i--;
+			  pointerA.x=(xA+i)*scaled_size;
+			  break;
+		    case 38:
+			  while (map[xA+(yA+i-1)*columns]%2!=1) i--;
+			  pointerA.y=(yA+i)*scaled_size;
+			  break;
+		    case 39:
+			  while (map[xA+yA*columns+i+1]%2!=1) i++;
+			  pointerA.x=(xA+i)*scaled_size;
+			  break;
+			 break;
+		    case 40:
+			  while (map[xA+(yA+i+1)*columns]%2!=1) i++;
+			  pointerA.y=(yA+i)*scaled_size;
+			  break;
+			  
+  		    case 65:
+			  while (map[xB+yB*columns+i-1]!=3) i--;
+			  pointerB.x=(xB+i)*scaled_size;
+			  break;
+		    case 87:
+			  while (map[xB+(yB+i-1)*columns]!=3) i--;
+			  pointerB.y=(yB+i)*scaled_size;
+			  break;
+		    case 68:
+			  while (map[xB+yB*columns+i+1]!=3) i++;
+			  pointerB.x=(xB+i)*scaled_size;
+			  break;
+		    case 83:
+			  while (map[xB+(yB+i+1)*columns]!=3) i++;
+			  pointerB.y=(yB+i)*scaled_size;
+			  break;
+		  }
+		 // if nothing moved
+		  if (pointerA.x==(xA+i)*scaled_size && pointerA.y==(yA+i)*scaled_size && pointerB.x==(xB+i)*scaled_size && pointerB.y==(yB+i)*scaled_size) {
+		    moves--;
+			accmoves--;
+		  }
+		  
+		  // remove players from map
+ 		  map[xA+yA*columns]=0
+		  map[xB+yB*columns]=0
+		}
+	  }
+	  function startGame(){
+	    startMenu.style.visibility="hidden";
+		gameScreen.style.visibility="visible";
+		endScreen.style.visibility="hidden";
+		accmoves=0;
+		init(0);
+	  }
+	  function init(j){
+
+		level=j;
+		score = 0;
+		moves=0;
+		nuggets = leveldata[0+ level*5];
+		
+        playerA.x = leveldata[1+ level*5]*scaled_size;
+		playerA.y = leveldata[2+ level*5]*scaled_size;
+        playerB.x = leveldata[3+ level*5]*scaled_size;
+        playerB.y = leveldata[4+ level*5]*scaled_size;
+
+        pointerA.x=playerA.x;
+		pointerA.y=playerA.y;
+        pointerB.x=playerB.x;
+		pointerB.y=playerB.y;
+
+		for (let x = 0; x < columns*rows; x ++) {
+		  map[x]=levels[x+level*rows*columns];
+		}
+	  }
+	  function finish() {
+	    startMenu.style.visibility="hidden";
+		gameScreen.style.visibility="hidden";
+		endScreen.style.visibility="visible";	    
+	    document.getElementById("over").innerHTML="Thank you for bringing all the minerals back to base in "+accmoves +" moves.<br> We do know you can do it more efficient, please do so your next trip."
+
+	  }
+      var tile_sheet = new Image();
+      tile_sheet.addEventListener("load", (event) => { loop(); });
+      tile_sheet.src = "destar.png";
+	  document.addEventListener("keydown",keyPush);
+    </script>
+
+  </body>
+
+</html>

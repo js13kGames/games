@@ -1,0 +1,289 @@
+.blob,
+.blob * {
+    background: gold;
+    width: 30px;
+    height: 25px;
+    pointer-events: none;
+}
+
+/*
+.blob:before, .blob:after, .blob div, .blob:before, .blog:after {
+    transform: skew(50deg, 180deg) !important;
+}*/
+
+.blob:before,
+.blob:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    top: 10%;
+    background: #000;
+    border: 5px solid  #fff;
+}
+
+.blob > div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.blob > div:before {
+    background: #000;
+    border-radius: 100%;
+    width: 4px;
+    height: 4px;
+
+}
+
+.blob.hungry > div:before {
+    animation: mouthY linear 0.4s infinite;
+}
+
+
+.blob.dead > div:before {
+    animation: none;
+}
+
+.blob.left > div:before {
+    top: 70%;
+    left: 40%;
+}
+
+.blob.right > div:before {
+    top: 75%;
+    left: 55%;
+}
+
+.blob.left:before {
+    left: -10%;
+}
+
+.blob.right:before {
+    left: 70%;
+}
+
+.blob.left:after {
+    left: 50%;
+}
+
+.blob.right:after {
+    left: 10%;
+}*/
+
+.blob.hungry {
+    opacity: 0.7;
+}
+
+.blob.very-hungry {
+    opacity: 0.5;
+}
+
+.blob.dead:before,
+.blob.dead:after {
+    top: 70%;
+    background: #fff;
+}
+
+.blob.glitch {
+    left: 0;
+    animation: glitchJump 30s linear infinite;
+}
+
+.blob.glitch:before,
+.blob.glitch:after {
+    background: #fff;
+    border: 5px solid #000;
+}
+
+.blob.glitch:before {
+    top: 60%;
+}
+
+
+@keyframes glitchJump {
+    0% {
+        left: 0;
+    }
+    59.89% {
+        left: 0;
+    }
+    59.9% {
+        left: -25px;
+    }
+    60% {
+        left: 0;
+    }
+    99.89% {
+       left: 0;
+    }
+    99.9% {
+        left: 25px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+.blob.blink:before,
+.blob.blink:after,
+.blob.ma.birthing:before,
+.blob.ma.birthing:after {
+    height: 1px;
+    border: 0;
+    top: 8px;
+    width: 14px;
+    background: #333;
+}
+
+@keyframes mouthY {
+    0% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.1);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+
+/* blob ma */
+.blob.ma > div:after {
+    border-radius: 100%;
+    background: orange;
+    transform: scale(1.6, 1.9);
+    transform-origin: 50% 25%;
+    z-index: 2;
+}
+
+.blob.birthing:not(.dead) > div:after {
+    transform: scale(2.9, 3.5);
+    transform-origin: 50% 25%;
+    transition: transform 7s linear;
+}
+
+@keyframes birth {
+    0% {
+        transform: scale(1.6, 1.9);
+        transform-origin: 50% 25%;
+    }
+
+    100% {
+        transform: scale(2.9, 3.5);
+        transform-origin: 50% 25%;
+    }
+}
+
+
+/* blob eater */
+
+.blob.eater,
+.blob.eater *{
+    background: transparent;
+    z-index: 3;
+}
+
+.blob.eater:after {
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    border-width: 55px 35px;
+    border-bottom-color: red;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    background: none;
+    left: 50%;
+    top: -100%;
+    z-index: 1;
+}
+
+.blob.eater:before {
+    left: 0%;
+    top: -55%;
+}
+
+.blob.right.eater:before {
+    left: 45%;
+}
+
+.blob.eater > div {
+    width: 10px;
+    height: 20px;
+    background: #000;
+    border-radius: 100%;
+    top: 8px;
+    left: 5px;
+
+    z-index: 2;
+}
+
+.blob.eater.hungry > div {
+    animation: mouthX linear 0.4s infinite;
+}
+
+.blob.eater.right > div {
+    left: 18px;
+}
+
+
+.blob.eater > div:before,
+.blob.eater > div:after {
+    background: #fff;
+    border-radius: 50%;
+    width: 4px;
+    height: 4px;
+    top: 5px;
+    left: 0;
+}
+
+.blob.eater > div:after {
+    top: 10px;
+    right: 0;
+    left: auto;
+}
+
+@keyframes mouthX {
+    0% {
+        transform: scaleX(1);
+    }
+    50% {
+        transform: scaleX(0.1);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+/* blob transformer */
+.blob.trans {
+    width: 20px;
+    height: 50px;
+    background: lightblue;
+}
+
+.blob.trans:before,
+.blob.trans:after {
+    transform: scale(0.7, 0.7);
+    transform-origin: -20% 0;
+}
+
+.blob.trans > div {
+    position: absolute;
+    width: 30px;
+    height: 24px;
+    top: calc(100% + 3px);
+    left: -6px;
+    transform: rotate(90deg);
+    background: linear-gradient(135deg, red 25%, rgba(0,0,0,0) 25%), linear-gradient(225deg, red 25%, rgba(0,0,0,0) 25%), linear-gradient(315deg, red 25%, rgba(0,0,0,0) 25%), linear-gradient(45deg, red 25%, rgba(0,0,0,0) 25%);
+    background-position: -4px -4px, -4px -4px, 0 -4px, 0 -4px;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-size: 8px 8px;
+    background-color: transparent;
+}
+
+.blob.trans > div:before,
+.blob.trans > div:after {
+    display: none;
+}

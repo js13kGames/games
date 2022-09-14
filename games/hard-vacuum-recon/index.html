@@ -1,0 +1,787 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=320, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<title>Hard Vacuum: Recon</title>
+<style type="text/css">
+* {
+  cursor: default;
+  margin: 0;
+  padding: 0;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+*::selection {
+  background: transparent;
+  color: transparent;
+}
+html {
+  height: 100%;
+  font-size: 62.5%;
+  font-family: Helvetica, sans-serif;
+  -webkit-text-size-adjust: none;
+}
+body {
+  background: #313431;
+  color: #fff;
+}
+a {
+  color: #fff;
+  text-decoration: none;
+}
+p {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+}
+#wrapper {
+  width: 320px;
+  margin: 0 auto;
+}
+#viewport {
+  position: relative;
+  overflow: hidden;
+}
+#background {
+  position: relative;
+  display: block;
+}
+#terrain {
+  position: absolute;
+  background: url(img/snow.png);
+}
+#copter {
+  display: block;
+  position: absolute;
+  top: 20px;
+  left: 140px;
+}
+.dialog {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  height: 100%;
+  width: 280px;
+  background: #424542;
+  color: #fff;
+  padding: 10px 20px;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  -webkit-transition: top 1.5s ease-in-out;
+     -moz-transition: top 1.5s ease-in-out;
+       -o-transition: top 1.5s ease-in-out;
+          transition: top 1.5s ease-in-out;
+}
+.dialog:before {
+  content: "";
+  position: relative;
+  top: -10px;
+  left: -20px;
+  display: block;
+  height: 3px;
+  width: 320px;
+  background: #424542;
+  border-top:    1px solid #525552;
+  border-bottom: 1px solid #000400;
+  box-shadow: 1px 1px 3px #101410;
+}
+.dialog * {
+  pointer-events: none;
+}
+.dialog p+p {
+  margin-top: 15px;
+}
+.active {
+  top: 50%;
+}
+.dismiss {
+  top: 100%;
+}
+#interface-left {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 13px;
+  top: 0px;
+  left: 0px;
+  background: url(img/interface-left.png);
+}
+#interface-right {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 10px;
+  top: 0px;
+  right: 0px;
+  background: url(img/interface-right.png);
+}
+#interface-top {
+  display: block;
+  position: absolute;
+  height: 9px;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background: url(img/interface-top.png);
+}
+#interface-bottom {
+  display: block;
+  position: absolute;
+  height: 10px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  background: url(img/interface-bottom.png);
+}
+#upper-left {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+}
+#upper-right {
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  pointer-events: none;
+}
+#lower-left {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  pointer-events: none;
+}
+#lower-right {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  pointer-events: none;
+}
+#power-cells {
+  display: block;
+  width: 290px;
+  position: absolute;
+  top: 8px;
+  left: 11px;
+  pointer-events: none;
+}
+#odometer {
+  position: absolute;
+  right: 19px;
+  bottom: 0.5rem;
+  display: block;
+  height: 15px;
+  width: 24px;
+  overflow: hidden;
+  text-align: right;
+  color: #8492a5;
+  font-family: monospace;
+  text-shadow: 1px 1px 0px #000400;
+}
+.credits {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+.snow {
+  background-image: url(img/snow.png);
+}
+.rock,
+.icicle1,
+.icicle2,
+.icicle3 {
+  background: url(img/icicles.png) 0 0 no-repeat;
+  position: absolute;
+  display: block;
+  height: 60px;
+  width: 40px;
+}
+.rock {
+  background-position: -120px 0;
+}
+.icicle1 {
+  background-position: -80px 0;
+}
+.icicle2 {
+  background-position: -40px 0;
+}
+.bar {
+  display: block;
+  height: 3px;
+  background: #424542;
+  border-top:    1px solid #525552;
+  border-bottom: 1px solid #000400;
+  box-shadow: 1px 1px 3px #101410;
+}
+.button {
+  position: absolute;
+  top: -2px;
+  display: inline-block;
+  height: 5px;
+  width: 6px;
+  border-top:    1px solid #636563;
+  border-right:  1px solid #525552;
+  border-bottom: 1px solid #000400;
+  border-left:   1px solid #848684;
+  box-shadow: 1px 1px 3px #101410;
+}
+.lght0 {
+  left: 0%;
+}
+.lght1 {
+  left: 12.5%;
+}
+.lght2 {
+  left: 25%;
+}
+.lght3 {
+  left: 37.5%;
+}
+.lght4 {
+  left: 50%;
+}
+.lght5 {
+  left: 62.5%;
+}
+.lght6 {
+  left: 75%;
+}
+.lght7 {
+  left: 87.5%;
+}
+.lght8 {
+  left: 100%;
+}
+.lvl0 {
+  background: #310000;
+  box-shadow: inset 0 0 0 1px #210000,
+              1px 1px 3px #101410;
+}
+.lvl1 {
+  background: #420000;
+  box-shadow: inset 0 0 0 1px #310000,
+              1px 1px 3px #101410;
+}
+.lvl2 {
+  background: #630000;
+  box-shadow: inset 0 0 0 1px #420000,
+              1px 1px 3px #101410;
+}
+.lvl3 {
+  background: #731000;
+  box-shadow: inset 0 0 0 1px #630000,
+              1px 1px 3px #101410;
+}
+.lvl4 {
+  background: #841000;
+  box-shadow: inset 0 0 0 1px #731000,
+              1px 1px 3px #101410;
+}
+.lvl5 {
+  background: #942000;
+  box-shadow: inset 0 0 0 1px #841000,
+              1px 1px 3px #101410;
+}
+.lvl6 {
+  background: #a52000;
+  box-shadow: inset 0 0 0 1px #942000,
+              1px 1px 3px #101410;
+}
+.lvl7 {
+  background: #d63000;
+  box-shadow: inset 0 0 0 1px #b53000,
+              1px 1px 3px #101410;
+}
+.lvl8 {
+  background: #f75100;
+  box-shadow: inset 0 0 0 1px #d63000,
+              1px 1px 3px #101410;
+}
+</style>
+</head>
+<body>
+<div id="wrapper">
+<div id="viewport">
+<div id="background">
+<div id="terrain" class="terrain"></div>
+</div>
+<img id="copter" src="img/copter.png"/>
+<div id="mission" class="dialog active">
+<p>Look, I don't know what you did to piss Henley off, but she's given you
+recon duty. Scan rocks as you fly over them, and pick up anything
+iteresting.</p>
+<p>Now the NAVI on that copter of yours is a little quirky.  It&hellip;
+Well you'll figure it out.</p>
+<p>Good luck!</p>
+</div>
+<div id="interface-left"></div>
+<div id="interface-right"></div>
+<div id="interface-top"></div>
+<div id="interface-bottom"></div>
+<img id="upper-left" src="img/interface-upper-left.png"/>
+<img id="upper-right" src="img/interface-upper-right.png"/>
+<img id="lower-left" src="img/interface-lower-left.png"/>
+<img id="lower-right" src="img/interface-lower-right.png"/>
+<div id="power-cells" class="bar">
+  <span id="battery0" class="button lght0 lvl8"></span>
+  <span id="battery1" class="button lght1 lvl8"></span>
+  <span id="battery2" class="button lght2 lvl8"></span>
+  <span id="battery3" class="button lght3 lvl8"></span>
+  <span id="battery4" class="button lght4 lvl8"></span>
+  <span id="battery5" class="button lght5 lvl8"></span>
+  <span id="battery6" class="button lght6 lvl8"></span>
+  <span id="battery7" class="button lght7 lvl8"></span>
+  <span id="battery8" class="button lght8 lvl8"></span>
+</div>
+<p id="odometer">0</p>
+</div>
+<div class="credits">
+  <p>Design <abbr title="and">&amp;</abbr> dev by <a href="http://frankmitchell.org/">Frank Mitchell</a> for <a href="http://js13kgames.com/">js13kGames</a></p>
+  <p>&ldquo;<a href="http://lostgarden.com/2005/03/game-post-mortem-hard-vacuum.html">Hard Vacuum</a>&rdquo; art by Daniel Cook (<a href="http://lostgarden.com/">lostgarden.com</a>)</p>
+</div>
+</div>
+<script type="text/javascript">
+(function () {
+  var lastTime = 0;
+  var vendor = ["ms", "mos", "webkit", "o"];
+  var i = 0;
+  while (i < vendor.length && !window.requestAnimationFrame) {
+    window.requestAnimationFrame = window[vendor[i]+"RequestAnimationFrame"];
+    window.cancelAnimationFrame = window[vendor[i]+"CancelAnimationFrame"] || window[vendor[i]+"RequestCancelAnimationFrame"];
+    i += 1;
+  }
+
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function (callback, element) {
+      var currTime = new Date().getTime();
+      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+      var timerId = setTimeout(function () {
+        callback(currTime + timeToCall);
+      }, timeToCall);
+      lastTime = currTime + timeToCall;
+      return timerId;
+    };
+  }
+
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function (id) {
+      clearTimeout(id);
+    };
+  }
+}());
+
+var $ = function (selector) {
+  if (selector.indexOf("#") === 0) {
+    return document.getElementById(selector.slice(1));
+  }
+  if (selector.indexOf(".") === 0) {
+    return document.getElementByClassName(selector.slice(1));
+  }
+  return null;
+};
+
+var setTop = function (element, value) {
+  if (element) {
+    element.setAttribute("data-top", value);
+    if (element.style) {
+      value = (value + 0.5) | 0;
+      element.style.top = value+"px";
+    }
+  }
+};
+
+var getTop = function (element) {
+  var value = 0;
+  if (element && element['getAttribute']) {
+    value = parseFloat(element.getAttribute("data-top"), 10);
+    if (isNaN(value) && element.style) {
+      value = parseFloat(element.style.top, 10);
+    }
+  }
+  return value;
+};
+
+var getLeft = function (element) {
+  var value = 0;
+  if (element) {
+    value = parseFloat(element.getAttribute("data-left"), 10);
+    if (isNaN(value) && element.style) {
+      value = parseFloat(element.style.left, 10);
+    }
+  }
+  return value;
+};
+
+var addTouch = function (element, touchStart, touchEnd) {
+  element.onmousedown = function (event) {
+    if (touchStart) {
+      touchStart(event);
+    }
+    document.onmousemove = function (event) {
+      event.preventDefault();
+    };
+    document.onmouseup = function (event) {
+      if (touchEnd) {
+        touchEnd(event);
+      }
+      document.onmousemove = null;
+      document.onmouseup = null;
+    };
+  };
+  element.ontouchstart = function (event) {
+    element.onmousedown = null;
+    if (touchStart) {
+      touchStart(event);
+    }
+    document.ontouchmove = function (event) {
+      event.preventDefault();
+    };
+    document.ontouchend = function (event) {
+      if (touchEnd) {
+        touchEnd(event);
+      }
+      document.ontouchmove = null;
+      document.ontouchend = null;
+    };
+  };
+};
+
+var Timer = {};
+Timer.tick = function (now) {
+  Timer.delta = (now - (Timer.then || now)) / 1000;
+  Timer.then = now;
+};
+Timer.reset = function () {
+  Timer.then = null;
+};
+
+var canvasHeight = 440;
+var canvasWidth = 320;
+var tileHeight = 20;
+var tileWidth = 20;
+var numCols = canvasWidth / tileWidth;
+var numRows = (canvasHeight / tileHeight) + 1;
+var copterSpeed = 20;
+var maxIcicles = numRows;
+var cachedIcicles = [];
+var fuelCost = 0.675;
+var maxPower = 81;
+var availablePower = maxPower;
+var copterDistance = 0;
+
+var powerUp = function (value) {
+  availablePower += value;
+  availablePower = Math.min(availablePower, maxPower);
+};
+
+
+var powerDown = function (value) {
+  availablePower -= value;
+  availablePower = Math.max(availablePower, 0);
+};
+
+var hasClass = function (element, klass) {
+  return element.classList.contains(klass);
+};
+
+var isIcicle = function (element) {
+  return (
+    hasClass(element, "icicle1") ||
+    hasClass(element, "icicle2") ||
+    hasClass(element, "icicle3") ||
+    hasClass(element, "rock")
+  );
+};
+
+var isDialog = function (element) {
+  return hasClass(element, "dialog");
+};
+
+var isTerrain = function (element) {
+  return hasClass(element, "terrain");
+};
+
+var rockToIcicle = function (element) {
+  if (hasClass(element, "rock")) {
+    element.className = "icicle"+icicleSize(element);
+    return true;
+  }
+  return false;
+};
+
+var icicleToRock = function (element) {
+  element.className = "rock";
+};
+
+var touchedIcicles = [];
+var onBoardTouch = function (event) {
+  var target = event.srcElement || event.target;
+  if (isIcicle(target)) {
+    if (running() && rockToIcicle(target)) {
+      touchedIcicles.push(target);
+      powerDown(1);
+    }
+  }
+  else if (isDialog(target)) {
+    target.className = "dialog dismiss";
+    requestAnimationFrame(render);
+  }
+};
+
+var randomValue = function (array) {
+  return array[Math.floor(Math.random() * array.length)];
+};
+
+var icicleSize = function (element) {
+  if (!element.hasAttribute("data-icicle-size")) {
+    var offset = getTop(element);
+    var zone = Math.ceil(canvasHeight / 3);
+    var types = [1, 1, 1, 1, 2, 2, 3];
+    if (offset <= zone * 2) {
+        types = [1, 1, 2, 2, 2, 2, 3];
+    }
+    if (offset <= zone * 1) {
+        types = [1, 2, 2, 3, 3, 3, 3];
+    }
+    var size = randomValue(types);
+    element.setAttribute("data-icicle-size", size);
+  }
+  return parseInt(element.getAttribute("data-icicle-size"), 10);
+};
+
+var icicleValue = function (element) {
+  return 2 * icicleSize(element);
+};
+
+var updateIcicles = function () {
+  if (touchedIcicles.length < 2) {
+    return;
+  }
+  var reactTime = 600;
+  var first = touchedIcicles[0];
+  var second = touchedIcicles[1];
+  touchedIcicles = [];
+  // If the icicles aren't the same size, flip them both face down.
+  if (first.className != second.className) {
+    setTimeout(function () {
+      icicleToRock(first);
+      icicleToRock(second);
+    }, reactTime);
+    return;
+  }
+  // The icicles are the same size, so remove them.
+  powerUp(icicleValue(first));
+  setTimeout(function () {
+    removeIcicle(first);
+    removeIcicle(second);
+  }, reactTime);
+};
+
+var icicleCenter = function (element) {
+  var x = getLeft(element) + 20;
+  var y = getTop(element) + 20;
+  return { x: x, y: y };
+};
+
+var icicleDistance = function (element, x, y) {
+  var center = icicleCenter(element);
+  var dx = center.x - x;
+  var dy = center.y - y;
+  return Math.sqrt((dx * dx) + (dy * dy));
+};
+
+var hitsAnyIcicle = function (x, y) {
+  var max = Math.sqrt((40 * 40) + (40 * 40));
+  var i = 0;
+  for (i = 0; i < cachedIcicles.length; i += 1) {
+    var dist = icicleDistance(cachedIcicles[i], x, y);
+    if (dist <= max) {
+      return true;
+    }
+  }
+  return false;
+};
+
+var hitsEdge = function (index) {
+  return index < 2 || index >= numCols - 2;
+};
+
+var addIcicle = function (element) {
+  if (cachedIcicles.length >= maxIcicles) {
+    return;
+  }
+  var index = Math.floor(Math.random() * numCols);
+  if (hitsEdge(index)) {
+    return;
+  }
+  var possible = [];
+  for (index = 0; index < numCols; index += 1) {
+    if (!hitsAnyIcicle(index * tileWidth, canvasHeight) && !hitsEdge(index)) {
+      possible.push(index);
+    }
+  }
+  if (possible.length <= 0) {
+    return;
+  }
+  index = randomValue(possible);
+  var icicle = document.createElement("div");
+  icicle.setAttribute("class", "rock");
+  setTop(icicle, canvasHeight);
+  icicle.style.left = (index * tileWidth)+"px";
+  $("#background").appendChild(icicle);
+  cachedIcicles.push(icicle);
+};
+
+var removeIcicle = function (element) {
+  var index = touchedIcicles.indexOf(element);
+  if (index >= 0) {
+    touchedIcicles.splice(index, 1);
+  }
+  index = cachedIcicles.indexOf(element);
+  if (index >= 0) {
+    cachedIcicles.splice(index, 1);
+  }
+  $("#background").removeChild(element);
+};
+
+var updateIcicle = function (element) {
+  if (isIcicle(element)) {
+    removeIcicle(element);
+    return;
+  }
+  if (isTerrain(element)) {
+    addIcicle(element);
+    return;
+  }
+};
+
+var running = function () {
+  return hasClass($("#mission"), "dismiss") && availablePower > 0;
+};
+
+var setup = function () {
+  var y = 0;
+  var viewport = $("#viewport");
+  viewport.style.height = canvasHeight+"px";
+  viewport.style.width = canvasWidth+"px";
+  var background = $("#background");
+  background.style.width = viewport.style.width;
+  background.style.height = viewport.style.height;
+  var terrain = $("#terrain");
+  terrain.style.width = viewport.style.width;
+  terrain.style.height = (numRows * tileHeight)+"px";
+  addTouch(viewport, onBoardTouch, updateIcicles);
+};
+
+var nextMission = function () {
+  var text = "<p>"+randomValue(["Nice flying.","Not bad.","Don't get cocky."])+"</p>";
+  text += "<p>You made it "+Math.floor(copterDistance)+" meters on those fuel cells. ";
+  text += "I can probably dig up some more if you want to go again.</p>";
+  text += "<p>You game?</p>";
+  return text;
+};
+
+var resetMission = function () {
+  var i = 0;
+  var mission = $("#mission");
+  for (i = 0; i < cachedIcicles.length; i += 1) {
+    icicleToRock(cachedIcicles[i]);
+  }
+  mission.innerHTML = nextMission();
+  mission.className = "dialog active";
+  availablePower = maxPower;
+  copterDistance = 0;
+  Timer.reset();
+  updateOdometer();
+};
+
+var moveUp = function (element, delta) {
+  if (!element || !element.style) {
+    return;
+  }
+  var offset = getTop(element) + delta;
+  var warp = false;
+  if (offset < -tileHeight) {
+    if (isIcicle(element)) {
+      offset = canvasHeight + delta;
+    }
+    if (isTerrain(element)) {
+      offset = delta;
+    }
+    warp = true;
+  }
+  setTop(element, offset);
+  return warp;
+};
+
+var lastPowerUpdate = 0;
+var updatePower = function () {
+  var now = Date.now();
+  if (now - lastPowerUpdate < 333) {
+    return;
+  }
+  lastPowerUpdate = now;
+  var i = 0;
+  var power = Math.floor((availablePower / maxPower) * 81);
+  var units = Math.floor(power / 9);
+  power = power - (units * 9);
+  for (i = 0; i < units && i < 9; i += 1) {
+    $("#battery"+i).className = "button lght"+(8 - i)+" lvl8";
+  }
+  if (i < 9) {
+    $("#battery"+i).className = "button lght"+(8 - i)+" lvl"+power;
+  }
+};
+
+var lastFuelUpdate = 0;
+var updateFuel = function () {
+  var now = Date.now();
+  if (now - lastFuelUpdate > 1000) {
+    powerDown(fuelCost);
+    lastFuelUpdate = now;
+  }
+};
+
+var lastOdometerUpdate = 0;
+var updateOdometer = function () {
+  var now = Date.now();
+  if (now - lastOdometerUpdate > 333) {
+    $("#odometer").innerHTML = Math.floor(copterDistance);
+    lastOdometerUpdate = now;
+  };
+};
+
+var render = function (time) {
+  if (!running()) {
+    resetMission();
+    return;
+  }
+  requestAnimationFrame(render);
+  Timer.tick(time);
+  var rows = $("#background").childNodes;
+  var y = 0;
+  var offset = -copterSpeed * Timer.delta;
+  copterDistance += -offset;
+  if (copterDistance >= 10000) {
+    copterDistance = 0;
+  }
+  for (y = 0; y < rows.length; y += 1) {
+    if (moveUp(rows[y], offset)) {
+      updateIcicle(rows[y]);
+    }
+  }
+  updateFuel();
+  updatePower();
+  updateOdometer();
+};
+
+setup();
+</script>
+</body>
+</html>

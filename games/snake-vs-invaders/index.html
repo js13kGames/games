@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <script src="bundle.js"></script>
+    <style>
+      .centered {
+        width: 1200px;
+        height: 760px;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-evenly;
+      }
+
+      td,
+      button,
+      span,
+      body {
+        font-size: 18px;
+        padding: 0px;
+        color: white;
+        font-family: "Courier New";
+        text-align: center;
+        text-shadow: 1px 1px 2px 2px gray;
+      }
+
+      td{
+        width:100px;
+      }
+
+      .container {
+        width: 100%;
+        position: absolute;
+      }
+
+      .row, .container{
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+      }
+
+      .black {
+        background: black;
+        box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.7);
+        border: solid 0.5px gray;
+      }
+
+      h1 {
+        font-weight: 500;
+        margin: 5px;
+      }
+
+      .nop{
+        pointer-events: none;
+      }
+
+      button{
+        pointer-events: all;
+        background: black;
+        border: solid 1px #888;
+        height:40px;
+        cursor:pointer;
+        width:200px;
+        margin:3px;
+      }
+
+      button:hover{
+        background: #333;
+      }
+
+      button:disabled{
+        background: none;
+        cursor: not-allowed;
+        opacity: 0.5;
+        border: solid 1px #333;
+      }
+
+      span{
+        display: inline-block;
+        width: 200px;
+      }
+
+      .wide{
+        width: 300px;
+      }
+
+      .ui{
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(1px);
+        text-shadow: 1px 1px 2px 2px gray;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <canvas class="centered black" id="bg"></canvas>
+    </div>
+    <div class="container">
+      <canvas class="centered" id="main"></canvas>
+    </div>
+    <div class="container nop">
+      <div class="centered ui" >
+        <div id="ui"/>
+      </div>
+    </div>
+  </body>
+</html>

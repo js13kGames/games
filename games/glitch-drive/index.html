@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="Author" content="Darshan Rane">
+    <meta name="description" content="">
+    <meta name="KEYWORDS" content="js13kgames, glitch, js13k">
+    <title>Glitch Drive</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+</head>
+<body onload="onLoad();" onresize="onResize();">
+    <div class="wrapper">
+        <div class="street" id="street">
+            <div class="streetStripe" id="stripes"></div>
+        </div>
+        <div class="cars" id="cars">
+            <div class="car carHero" id="hero">
+                <div class="carFront"></div>
+                <div class="carWindow"></div>
+                <div class="carBack"></div>
+            </div>
+        </div>
+        <div class="entryScreen" id="inst">
+            <br><br><span style="font-size:25px">Glitch Drive</span>
+            <br><br>Driving seems to be easy
+            <br>till you know there are glitches in controls
+            <br>Where at every 10km the controls swaps
+            <br>Left < > Right / Driving gets tough
+            <br><br>Left / Right Arrow Key to Move the Car
+            <br>Up Arrow Key to Accelerate
+            <br><br>No Brakes
+            <br>Release Up Arrow to decrease speed
+            <br>Keep watch on the traffic
+            <br><br>Mind you Speed
+            <br>High Speed gets Glitch faster
+            <br>Medium Speed can delay/avoid Glitch
+            <br><br>
+            <div id="play"><span style="font-size:25px; cursor:pointer;">Drive!!</span></div>
+        </div>
+    </div>
+    <div>
+        <div id="totalKmsTxt"></div>
+        <div id="carsPassedTxt"></div>
+        <div id="glitchTxt">Glitch ON</div>
+    </div>
+</body>
+<script type="text/javascript" charset="utf-8" src="assets/js/script.js"></script>
+</html>

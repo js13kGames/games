@@ -1,0 +1,227 @@
+/* ==================== Global ==================== */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Tahoma;
+}
+
+/* ==================== Generic ==================== */
+
+.hidden {
+  display: none !important;
+}
+
+/* ==================== Game ==================== */
+
+.game {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desktop {
+  width: 960px;
+  height: 720px;
+}
+
+.work-area {
+  height: calc(720px - 32px);
+  background: #018281;
+  z-index: 0;
+}
+
+.task-bar {
+  height: 32px;
+  background: #bfbfc1;
+  color: #000000;
+  display: flex;
+}
+
+.filler {
+  flex: 1;
+}
+
+.btn {
+  flex: 0;
+  flex-shrink: 0;
+
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  cursor: pointer;
+
+  background: #c0c0c0;
+  border: 2px solid #acacac;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.btn:hover {
+  border-color: #000000;
+}
+
+.start-btn {
+  min-width: 80px;
+  font-weight: bold;
+}
+
+.objective-btn {
+  min-width: 100px;
+  font-size: 14px;
+}
+
+.time-remaining-btn {
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.icon {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+}
+.icon:hover {
+  background: rgba(100, 148, 237, 0.527);
+}
+
+.icon.moving {
+  background: rgba(210, 105, 30, 0.233);
+}
+
+.icon-graphic {
+  width: 32px;
+  height: 32px;
+  background: rgb(179, 146, 146);
+  cursor: pointer;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-label {
+  margin-top: 6px;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  cursor: default;
+}
+
+.start-menu {
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  /* height: 300px; */
+  width: 200px;
+  z-index: 101;
+}
+
+.objectives-area {
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  height: 400px;
+  width: 300px;
+  background: whitesmoke;
+  border: 2px solid #acacac;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  z-index: 102;
+}
+
+.objective-header {
+  display: flex;
+  background: #c0c0c0;
+  padding: 6px;
+  align-items: center;
+}
+
+.objective-header-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.objective-header-icon {
+  padding: 0 8px;
+}
+
+.objective-label {
+  margin: 8px;
+}
+
+.welcome-area {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  z-index: 100;
+  margin: auto;
+  background: whitesmoke;
+  border: 2px solid #acacac;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.welcome-header {
+  display: flex;
+  background: #c0c0c0;
+  padding: 6px;
+  align-items: center;
+}
+
+.welcome-header-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.welcome-header-icon {
+  padding: 0 8px;
+}
+
+.version {
+  font-size: 12px;
+  color: #5e5e5e;
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  width: 100%;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.welcome-heading {
+  margin: 20px 20px;
+}
+
+.verdict-area {
+  position: absolute;
+  width: 300px;
+  height: 160px;
+  z-index: 200;
+  margin: auto;
+  background: whitesmoke;
+  border: 2px solid #acacac;
+  border-color: #ffffff #808080 #808080 #ffffff;
+
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.verdict-area.victory {
+  color: green;
+}
+
+
+.verdict-area.defeat {
+  color: red;
+}

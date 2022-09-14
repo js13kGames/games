@@ -1,0 +1,92 @@
+html {
+  background-color: gray;
+  font-family: consolas, monospace, sans-serif;
+}
+
+#modal {
+  text-align: center;
+  width: 100%;
+  z-index: 2;
+  height: 100%;
+  display: true;
+  padding-top: 25px;
+  position: fixed;
+  top: 0%;
+}
+
+#gameState, #gameInfo {
+  width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#scoreEffect {
+  width: 100%;
+  text-align: center;
+  z-index: 9999999;
+  opacity: 0;
+  margin: 0 auto;
+  font-size: 15px;
+  transition: all 1s;
+  position: absolute;
+  transform: scale(1);
+}
+
+.showEffect {
+  transition: all 1s;
+  opacity: 1 !important;
+  transform: scale(2) !important;
+}
+
+#playerScore {
+  display: none;
+}
+
+#gameInfo {
+  height: auto;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  overflow: hidden;
+}
+
+#score, #time, #gameInfo {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#score {
+  float: left;
+  text-align: center;
+}
+
+#time {
+  float: right;
+  text-align: right;
+}
+
+#gameState canvas {
+  cursor: pointer;
+}
+
+#gameState {
+  filter: blur(10px);
+  text-align: center;
+}
+
+#modalWrap {
+  max-width: 60%;
+  background: #fff;
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 36px;
+}
+
+#modalWrap ul {
+  list-style: decimal;
+}
+
+#btn-start {
+  padding: 10px 100px;
+}
+
+/*# sourceMappingURL=index.a197b114.css.map */

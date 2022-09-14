@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>kill -9</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/game.css" />
+</head>
+<body>
+
+<h1>kill -9</h1>
+
+<div id="wait">
+    Waiting for other players to connect...
+    <div id="spinner"></div>
+</div>
+
+<div id="game">
+</div>
+
+<div id="hud" style="display: none">
+    kills: <span id="kills">0</span>
+    score: <span id="score">0</span>
+</div>
+
+<div id="reconnect" style="display: none">
+    <p>Server connection lost</p>
+    <p><a href="/battle.html">Try again</a></p>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/graphics.js"></script>
+<script src="/battle.js"></script>
+
+</body>
+</html>

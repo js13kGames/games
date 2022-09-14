@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>VR Racing</title>
+	<meta charset="UTF-8">
+	<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+	<script>!function(e){function t(n){if(i[n])return i[n].exports;var r=i[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){function i(e){var t=new THREE.Vector3(0,1,0);return a.setFromUnitVectors(n,e),t.applyQuaternion(a),t}if("undefined"==typeof AFRAME)throw new Error("Component attempted to register before AFRAME was available.");var n=new THREE.Vector3(0,0,1),r=THREE.Math.degToRad;AFRAME.registerComponent("curve-point",{schema:{},init:function(){this.el.addEventListener("componentchanged",this.changeHandler.bind(this)),this.el.emit("curve-point-change")},changeHandler:function(e){"position"==e.detail.name&&this.el.emit("curve-point-change")}}),AFRAME.registerComponent("curve",{schema:{type:{type:"string",default:"CatmullRom",oneOf:["CatmullRom","CubicBezier","QuadraticBezier","Line"]},closed:{type:"boolean",default:!1}},init:function(){this.pathPoints=null,this.curve=null,this.el.addEventListener("curve-point-change",this.update.bind(this))},update:function(e){if(this.points=Array.from(this.el.querySelectorAll("a-curve-point, [curve-point]")),this.points.length<=1)console.warn("At least 2 curve-points needed to draw a curve"),this.curve=null;else{var t=this.points.map(function(e){return void 0!==e.x&&void 0!==e.y&&void 0!==e.z?e:e.object3D.getWorldPosition()});if(!AFRAME.utils.deepEqual(t,this.pathPoints)||"CustomEvent"!==e&&!AFRAME.utils.deepEqual(this.data,e)){if(this.curve=null,this.pathPoints=t,this.threeConstructor=THREE.CatmullRomCurve3,!this.threeConstructor)throw new Error("No Three constructor of type (case sensitive): "+this.data.type+"Curve3");this.curve=new this.threeConstructor(this.pathPoints),this.curve.closed=this.data.closed,this.el.emit("curve-updated")}}},remove:function(){this.el.removeEventListener("curve-point-change",this.update.bind(this))},closestPointInLocalSpace:function(e,t,n,r){if(!this.curve)throw Error("Curve not instantiated yet.");t=t||.1/this.curve.getLength(),r=r||.5,n=n||.5,r/=2;var a=n+r,s=n-r,o=this.curve.getPointAt(a),c=this.curve.getPointAt(s),u=o.distanceTo(e),h=c.distanceTo(e),l=u<h;if(r<t){var v=this.curve.getTangentAt(l?a:s);if(r<t)return{result:l?a:s,location:l?o:c,distance:l?u:h,normal:i(v),tangent:v}}return u<h?this.closestPointInLocalSpace(e,t,a,r):this.closestPointInLocalSpace(e,t,s,r)}});var a=new THREE.Quaternion;AFRAME.registerShader("line",{schema:{color:{default:"#ff0000"}},init:function(e){this.material=new THREE.LineBasicMaterial(e)},update:function(e){this.material=new THREE.LineBasicMaterial(e)}}),AFRAME.registerComponent("draw-curve",{schema:{curve:{type:"selector"}},init:function(){this.data.curve.addEventListener("curve-updated",this.update.bind(this))},update:function(){if(this.data.curve&&(this.curve=this.data.curve.components.curve),this.curve&&this.curve.curve){var e=this.el.getOrCreateObject3D("mesh",THREE.Line);lineMaterial=e.material?e.material:new THREE.LineBasicMaterial({color:"#ff0000"});var t=new THREE.Geometry;t.vertices=this.curve.curve.getPoints(10*this.curve.curve.points.length),this.el.setObject3D("mesh",new THREE.Line(t,lineMaterial))}},remove:function(){this.data.curve.removeEventListener("curve-updated",this.update.bind(this)),this.el.getObject3D("mesh").geometry=new THREE.Geometry}}),AFRAME.registerComponent("clone-along-curve",{schema:{curve:{type:"selector"},spacing:{default:1},rotation:{type:"vec3",default:"0 0 0"},scale:{type:"vec3",default:"1 1 1"}},init:function(){this.el.addEventListener("model-loaded",this.update.bind(this)),this.data.curve.addEventListener("curve-updated",this.update.bind(this))},update:function(){if(this.remove(),this.data.curve&&(this.curve=this.data.curve.components.curve),!this.el.getObject3D("clones")&&this.curve&&this.curve.curve){var e=this.el.getObject3D("mesh"),t=this.curve.curve.getLength(),i=0,a=i,s=this.el.getOrCreateObject3D("clones",THREE.Group),o=new THREE.Object3D;for(e.scale.set(this.data.scale.x,this.data.scale.y,this.data.scale.z),e.rotation.set(r(this.data.rotation.x),r(this.data.rotation.y),r(this.data.rotation.z)),e.rotation.order="YXZ",o.add(e);a<=t;){var c=o.clone(!0);c.position.copy(this.curve.curve.getPointAt(a/t)),tangent=this.curve.curve.getTangentAt(a/t).normalize(),c.quaternion.setFromUnitVectors(n,tangent),s.add(c),a+=this.data.spacing}}},remove:function(){this.curve=null,this.el.getObject3D("clones")&&this.el.removeObject3D("clones")}}),AFRAME.registerPrimitive("a-draw-curve",{defaultComponents:{"draw-curve":{}},mappings:{curveref:"draw-curve.curve"}}),AFRAME.registerPrimitive("a-curve-point",{defaultComponents:{"curve-point":{}},mappings:{}}),AFRAME.registerPrimitive("a-curve",{defaultComponents:{curve:{}},mappings:{type:"curve.type"}})}]);</script>
+	<script>!function(t){function e(r){if(i[r])return i[r].exports;var a=i[r]={exports:{},id:r,loaded:!1};return t[r].call(a.exports,a,a.exports,e),a.loaded=!0,a.exports}var i={};return e.m=t,e.c=i,e.p="",e(0)}([function(t,e){if("undefined"==typeof AFRAME)throw new Error("Component attempted to register before AFRAME was available.");AFRAME.registerComponent("alongpath",{schema:{curve:{default:""},triggers:{default:"a-curve-point"},triggerRadius:{type:"number",default:.01},dur:{default:1e3},delay:{default:0},loop:{default:!1},rotate:{default:!1},resetonplay:{default:!0}},init:function(){},update:function(t){this.curve=document.querySelector(this.data.curve),this.triggers=this.curve.querySelectorAll(this.data.triggers),this.curve?this.initialPosition=this.el.object3D.position:console.warn("Curve not found. Can't follow anything..."),this.reset()},reset:function(){this.interval=0,this.el.removeState("endofpath"),this.el.removeState("moveonpath"),this.activeTrigger&&(this.activeTrigger.removeState("alongpath-active-trigger"),this.activeTrigger=null)},tick:function(t,e){var i=this.curve.components.curve?this.curve.components.curve.curve:null;if(i){if(!this.el.is("endofpath")){this.interval=this.interval+e;var r=0;if(r=this.interval-this.data.delay>=this.data.dur?1:this.interval-this.data.delay<0?0:(this.interval-this.data.delay)/this.data.dur,this.data.loop===!1&&r>=1)this.el.setAttribute("position",i.points[i.points.length-1]),this.el.removeState("moveonpath"),this.el.addState("endofpath"),this.el.emit("movingended");else if(this.data.loop===!0&&r>=1)this.el.emit("movingended"),this.interval=this.data.delay;else{this.el.is("moveonpath")||(this.el.addState("moveonpath"),this.el.emit("movingstarted"));var a=i.getPoint(r);this.el.setAttribute("position",a)}if(this.data.rotate===!0){var s=new THREE.Vector3,o=new THREE.Vector3(0,1,0),g=i.getTangentAt(r).normalize();s.crossVectors(o,g).normalize();var n=Math.acos(o.dot(g));this.el.object3D.quaternion.setFromAxisAngle(s,n)}this.triggers&&this.triggers.length>0&&this.updateActiveTrigger()}}else console.error("The entity associated with the curve property has no curve component.")},play:function(){this.data.resetonplay&&this.reset()},remove:function(){this.el.object3D.position.copy(this.initialPosition)},updateActiveTrigger:function(){for(var t=0;t<this.triggers.length;t++)if(this.triggers[t].object3D){if(this.triggers[t].object3D.position.distanceTo(this.el.object3D.position)<=this.data.triggerRadius){this.activeTrigger&&this.activeTrigger!=this.triggers[t]?(this.activeTrigger.removeState("alongpath-active-trigger"),this.activeTrigger.emit("alongpath-trigger-deactivated"),this.activeTrigger=this.triggers[t],this.activeTrigger.addState("alongpath-active-trigger"),this.activeTrigger.emit("alongpath-trigger-activated")):this.activeTrigger||(this.activeTrigger=this.triggers[t],this.activeTrigger.addState("alongpath-active-trigger"),this.activeTrigger.emit("alongpath-trigger-activated"));break}this.activeTrigger&&this.activeTrigger==this.triggers[t]&&(this.activeTrigger.removeState("alongpath-active-trigger"),this.activeTrigger.emit("alongpath-trigger-deactivated"),this.activeTrigger=null)}}})}]);</script>
+</head>
+
+<body>
+	<a-scene>
+		<a-entity position="-10 10 0" rotation="0 90 0">
+			<a-entity id="score_overlay" text="align: center; width: 100;value:0; color:red; height:100"></a-entity>
+		</a-entity>
+		<a-curve id="track2">
+			<a-curve-point position="0 0 0"></a-curve-point>
+			<a-curve-point position="16 0 0"></a-curve-point>
+		</a-curve>
+		<a-entity alongpath="curve:#track2; loop:true;" id="ground" >
+		<a-cylinder material="color:#000000" radius="60" height="0"></a-cylinder>
+		<a-box color="#ffffff" position="0 0 5" depth="0.5" height="0" width="100"></a-box>
+		<a-box color="#ffffff" position="0 0 -5" depth="0.5" height="0" width="100"></a-box>
+		</a-entity>
+		<a-sky color="powderblue" theta-length="90" radius="40"></a-sky>
+		<!--<a-light type="directional" color="#FFF" intensity="0.5" position="0 0 0"></a-light>-->
+		<a-light type="ambient" color="#FFF"></a-light>
+		<a-curve id="track1">
+			<a-curve-point id="curve1"></a-curve-point>
+			<a-curve-point id="curve2"></a-curve-point>
+			<a-curve-point id="curve3"></a-curve-point>
+		</a-curve>
+		<a-curve id="track3">
+			<a-curve-point id="coin1"></a-curve-point>
+			<a-curve-point id="coin2"></a-curve-point>
+			<a-curve-point id="coin3"></a-curve-point>
+		</a-curve>
+		<script >var interval = 5000;
+var starttime = new Date().getTime();
+
+function GetLane() {
+    var i = 0;
+    var c = 0;
+    var lane = Math.floor(Math.random() * 89234879092);
+    lane = lane % 3;
+    if (lane == 0) {
+        c = 10;
+    } else if (lane == 1) {
+        c = 0;
+    } else {
+        c = -10;
+    }
+    var pos = ["-100 0 " + c, "0 0 " + c, "50 0 " + c];
+    return pos;
+};
+
+function callbackCar() {
+    console.log('callback!');
+    var pos = GetLane();
+    var curve1 = document.getElementById('curve1');
+    curve1.setAttribute("position", pos[0]);
+    var curve2 = document.getElementById('curve2');
+    curve2.setAttribute("position", pos[1]);
+    var curve3 = document.getElementById('curve3');
+    curve3.setAttribute("position", pos[2]);
+    console.log(starttime);
+    updatetime = new Date().getTime();
+    console.log(updatetime);
+    interval = 200+5000 * (Math.pow(0.55, ((updatetime - starttime) / 40000)));
+    console.log("interval" + interval);
+    loopdur = document.getElementById("moving-car");
+    loopdur.setAttribute("alongpath", "curve: #track1; loop:true; triggerRadius:8; delay:0; dur:" + interval + ";");
+    setTimeout(callbackCar, interval);
+}
+
+function callbackCoin() {
+    console.log('callback coin!');
+    var pos = GetLane();
+    var curve1 = document.getElementById('coin1');
+    curve1.setAttribute("position", pos[0]);
+    var curve2 = document.getElementById('coin2');
+    curve2.setAttribute("position", pos[1]);
+    var curve3 = document.getElementById('coin3');
+    curve3.setAttribute("position", pos[2]);
+    loopdur = document.getElementById("coin");
+    loopdur.setAttribute("alongpath", "curve: #track3; loop:true; triggerRadius:8; delay:0; dur:5000;");
+    setTimeout(callbackCoin, 5000);
+}
+
+setTimeout(callbackCar, interval);
+setTimeout(callbackCoin, 5000);</script>
+		<a-entity id="coin" visible="true" position="-100 0 0" alongpath="curve: #track3; loop:true; dur:5000; triggerRadius:8; delay:0; rotate:true;">
+			<a-cylinder id="sikka" color="yellow" height=0.1 radius=1.25 position="-3 0 0" ></a-cylinder>
+		</a-entity>
+		<a-entity id="moving-car" alongpath="curve: #track1; loop:true; dur:5000; triggerRadius:8; delay:0;">
+			<a-entity position="-4 3 3" scale="2 2 2">
+				<a-box position="0.15 -0.3 -1.711" rotation="0 90 0" color="#4CC3D9" scale="1 1.8 1.5" material="color:#ff151c" geometry=""></a-box>
+				<a-entity position="-2.986 3.642 -0.058" light=""></a-entity>
+				<a-entity position="0.138 -0.698 -1.711" geometry="width:4" material="color:#249cff"></a-entity>
+				<a-entity position="1.192 -0.683 -1.069" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="-0.992 -0.757 -1.086" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="-1 -0.8 -2.4" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="1.176 -0.748 -2.359" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+			</a-entity>
+		</a-entity>
+		<a-entity id="fixed-car" class="control-this">
+			<a-entity position="-4 3 3" scale="2 2 2">
+				<a-box position="0.15 -0.3 -1.711" rotation="0 90 0" color="#4CC3D9" scale="1 1.8 1.5" material="color:#ff151c" geometry=""></a-box>
+				<a-entity position="-2.986 3.642 -0.058" light=""></a-entity>
+				<a-entity position="0.138 -0.698 -1.711" geometry="width:4" material="color:#249cff"></a-entity>
+				<a-entity position="1.192 -0.683 -1.069" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="-0.992 -0.757 -1.086" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="-1 -0.8 -2.4" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+				<a-entity position="1.176 -0.748 -2.359" scale="0.5 0.5 0.5" geometry="primitive:sphere" material="color:#000000"></a-entity>
+			</a-entity>
+		</a-entity>
+		<a-entity position="10 4 0" rotation="0 90 0">
+			<a-camera></a-camera>
+		</a-entity>
+	</a-scene>
+
+	<script >var car = document.querySelector('.control-this');
+
+function handleOrientation(event) {
+    var alpha = event.beta;
+    var delta = 60;
+    if (alpha > delta) { alpha = delta };
+    if (alpha < -delta) { alpha = -delta }
+
+    const maxwidth =300;
+    alpha*=-1;
+    var new_z = (maxwidth * (alpha/(1000)));
+    var temp_pos = "0 0 " + new_z;
+
+    document.getElementsByClassName('control-this')[0].setAttribute("position", temp_pos);
+
+}
+
+window.addEventListener('deviceorientation', handleOrientation);
+</script>
+	<script>localStorage.setItem('score_vr_race', 0);
+    localStorage.setItem('play_again', 1);
+let collisionCar = false;
+let collisionCoin = false;
+let timerIdCar = 0;
+let timerIdCoin = 0;
+let visibleCoin = true;
+
+function checkCollision(z1, z2) {
+    if (z1 >= z2 - 3 && z1 <= z2 + 3) {
+        return true;
+    }
+
+    return false;
+}
+
+function updateDisplayScore() {
+    var scoredisplay = document.getElementById("score_overlay");
+    scoredisplay.setAttribute("text", "align: center; width: 100;color:red; height:100; value:" + localStorage.getItem('score_vr_race') + ";");
+}
+
+document.getElementById('curve2').addEventListener('alongpath-trigger-activated', function() {
+    collisionCar = false;
+    timerIdCar = setInterval(function() {
+        coord_moving = document.getElementById('moving-car').getAttribute('position');
+        coord_fixed = document.getElementById('fixed-car').getAttribute('position');
+        collisionCar = checkCollision(coord_fixed.z, coord_moving.z)
+        if (collisionCar) {
+            var score = localStorage.getItem('score_vr_race');
+            //localStorage.setItem('score_vr_race', 0);
+            window.location.href="./index.html";
+            starttime = updatetime;
+            clearInterval(timerIdCar);
+        }
+    }, 1);
+});
+
+document.getElementById('curve2').addEventListener('alongpath-trigger-deactivated', function() {
+    clearInterval(timerIdCar);
+    if (collisionCar) {
+        collisionCar = false;
+    } else {
+        localStorage.setItem('score_vr_race', parseInt(localStorage.getItem('score_vr_race')) + 1);
+    }
+    updateDisplayScore();
+    console.log(localStorage.getItem('score_vr_race'));
+});
+
+document.getElementById('coin1').addEventListener('alongpath-trigger-activated', function() {
+    document.getElementById('coin').setAttribute('visible',true);
+});
+
+document.getElementById('coin2').addEventListener('alongpath-trigger-activated', function() {
+
+
+
+    collisionCoin = false;
+    timerIdCoin = setInterval(function() {
+        coord_fixed = document.getElementById('fixed-car').getAttribute('position');
+        coord_coin = document.getElementById('coin').getAttribute('position');
+        collisionCoin = checkCollision(coord_fixed.z, coord_coin.z)
+        if (collisionCoin) {
+            var score = localStorage.getItem('score_vr_race');
+            localStorage.setItem('score_vr_race', parseInt(localStorage.getItem('score_vr_race')) + 5);
+            document.getElementById('coin').setAttribute('visible',false);
+            clearInterval(timerIdCoin);
+        }
+    }, 1);
+});
+
+document.getElementById('coin2').addEventListener('alongpath-trigger-deactivated', function() {
+    clearInterval(timerIdCoin);
+    if (collisionCoin) {
+        collisionCoin = false;
+        updateDisplayScore();
+        return;
+    }
+    console.log(localStorage.getItem('score_vr_race'));
+});
+
+
+</script>
+</body>
+
+</html>

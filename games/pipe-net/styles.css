@@ -1,0 +1,9 @@
+body  {
+  justify-content: center;
+  text-align: center;
+  background:gray;
+}
+
+canvas  {
+  background-image: radial-gradient(circle, #587b7f, #519487, #68aa7a, #9cba61, #e2c24f);
+}

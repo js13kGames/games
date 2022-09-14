@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<title>js13k2016</title>
+<style>
+html, body {
+	margin: 0; padding: 0;
+	overflow: hidden;
+}
+canvas {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+<canvas id="Canvas">Sorry, this browser cannot render this content.</canvas>
+<script id="VertexShader" type="x-shader/x-vertex">
+attribute vec3 vertex;
+attribute vec3 normal;
+uniform mat4 mvp;
+uniform mat4 mm;
+uniform vec3 light;
+varying mediump float intensity;
+varying mediump float z;
+void main() {
+gl_Position = mvp * vec4(vertex, 1.0);
+z = gl_Position.z;
+intensity = max(.0, dot(
+normalize(mat3(
+mm[0][0], mm[0][1], mm[0][2],
+mm[1][0], mm[1][1], mm[1][2],
+mm[2][0], mm[2][1], mm[2][2]) * normal),
+normalize(light)));
+}
+</script>
+<script id="FragmentShader" type="x-shader/x-fragment">
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform float brightness;
+uniform float far;
+uniform vec4 sky;
+uniform vec4 color;
+varying mediump float intensity;
+varying mediump float z;
+void main() {
+float f = z / far;
+gl_FragColor =
+(1.0 - f) * color * (.3 + intensity * .7) * brightness +
+f * sky;
+}
+</script>
+<script>
+var M=Math,D=document,W=window,FA=Float32Array,gl,im=new FA([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),pm,vm=new FA(im),cm=new FA(16),sm=new FA(16),m=new FA(16),far=1E3,sky=[.2,.5,.8,1],light=[.5,.5,1],brightness=1,program,models,objectsLength=0,objects=[],bulletsStart,bulletsLength,debrisStart,debrisLength,jetsStart,jetsLength,player,width,height,now,factor,last,pointersLength,pointersX=[],pointersY=[],keysDown=[],colorWhite=[1,1,1,1],colorRed=[1,0,0,1],colorGreen=[0,1,0,1],colorBlue=[0,0,1,1],colorYellow=
+[1,1,0,1],invertedSky=[.8,.5,.2,1];M.PI2=M.PI2||M.PI/2;M.TAU=M.TAU||2*M.PI;
+function invert(a,b){var c=b[0],d=b[1],e=b[2],f=b[3],g=b[4],h=b[5],l=b[6],k=b[7],n=b[8],r=b[9],w=b[10],v=b[11],x=b[12],y=b[13],z=b[14],B=b[15],t=c*h-d*g,u=c*l-e*g,p=c*k-f*g,q=d*l-e*h,C=d*k-f*h,E=e*k-f*l,F=n*y-r*x,G=n*z-w*x,H=n*B-v*x,I=r*z-w*y,J=r*B-v*y,K=w*B-v*z,A=t*K-u*J+p*I+q*H-C*G+E*F;if(!A)return null;A=1/A;a[0]=(h*K-l*J+k*I)*A;a[1]=(e*J-d*K-f*I)*A;a[2]=(y*E-z*C+B*q)*A;a[3]=(w*C-r*E-v*q)*A;a[4]=(l*H-g*K-k*G)*A;a[5]=(c*K-e*H+f*G)*A;a[6]=(z*p-x*E-B*u)*A;a[7]=(n*E-w*p+v*u)*A;a[8]=(g*J-h*H+k*F)*A;
+a[9]=(d*H-c*J-f*F)*A;a[10]=(x*C-y*p+B*t)*A;a[11]=(r*p-n*C-v*t)*A;a[12]=(h*G-g*I-l*F)*A;a[13]=(c*I-d*G+e*F)*A;a[14]=(y*u-x*q-z*t)*A;a[15]=(n*q-r*u+w*t)*A}
+function multiply(a,b,c){var d=b[0],e=b[1],f=b[2],g=b[3],h=b[4],l=b[5],k=b[6],n=b[7],r=b[8],w=b[9],v=b[10],x=b[11],y=b[12],z=b[13],B=b[14];b=b[15];var t=c[0],u=c[1],p=c[2],q=c[3];a[0]=t*d+u*h+p*r+q*y;a[1]=t*e+u*l+p*w+q*z;a[2]=t*f+u*k+p*v+q*B;a[3]=t*g+u*n+p*x+q*b;t=c[4];u=c[5];p=c[6];q=c[7];a[4]=t*d+u*h+p*r+q*y;a[5]=t*e+u*l+p*w+q*z;a[6]=t*f+u*k+p*v+q*B;a[7]=t*g+u*n+p*x+q*b;t=c[8];u=c[9];p=c[10];q=c[11];a[8]=t*d+u*h+p*r+q*y;a[9]=t*e+u*l+p*w+q*z;a[10]=t*f+u*k+p*v+q*B;a[11]=t*g+u*n+p*x+q*b;t=c[12];u=
+c[13];p=c[14];q=c[15];a[12]=t*d+u*h+p*r+q*y;a[13]=t*e+u*l+p*w+q*z;a[14]=t*f+u*k+p*v+q*B;a[15]=t*g+u*n+p*x+q*b}
+function rotate(a,b,c,d,e,f){var g=M.sqrt(d*d+e*e+f*f),h,l,k,n,r,w,v,x,y,z,B,t,u,p,q,C,E,F,G,H;1E-6>M.abs(g)||(g=1/g,d*=g,e*=g,f*=g,h=M.sin(c),l=M.cos(c),k=1-l,c=b[0],g=b[1],n=b[2],r=b[3],w=b[4],v=b[5],x=b[6],y=b[7],z=b[8],B=b[9],t=b[10],u=b[11],p=d*d*k+l,q=e*d*k+f*h,C=f*d*k-e*h,E=d*e*k-f*h,F=e*e*k+l,G=f*e*k+d*h,H=d*f*k+e*h,d=e*f*k-d*h,f=f*f*k+l,a[0]=c*p+w*q+z*C,a[1]=g*p+v*q+B*C,a[2]=n*p+x*q+t*C,a[3]=r*p+y*q+u*C,a[4]=c*E+w*F+z*G,a[5]=g*E+v*F+B*G,a[6]=n*E+x*F+t*G,a[7]=r*E+y*F+u*G,a[8]=c*H+w*d+z*f,
+a[9]=g*H+v*d+B*f,a[10]=n*H+x*d+t*f,a[11]=r*H+y*d+u*f,b!==a&&(a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]))}function scale(a,b,c,d,e){a[0]=b[0]*c;a[1]=b[1]*c;a[2]=b[2]*c;a[3]=b[3]*c;a[4]=b[4]*d;a[5]=b[5]*d;a[6]=b[6]*d;a[7]=b[7]*d;a[8]=b[8]*e;a[9]=b[9]*e;a[10]=b[10]*e;a[11]=b[11]*e;a[12]=b[12];a[13]=b[13];a[14]=b[14];a[15]=b[15]}
+function translate(a,b,c,d,e){if(b===a)a[12]=b[0]*c+b[4]*d+b[8]*e+b[12],a[13]=b[1]*c+b[5]*d+b[9]*e+b[13],a[14]=b[2]*c+b[6]*d+b[10]*e+b[14],a[15]=b[3]*c+b[7]*d+b[11]*e+b[15];else{var f,g,h,l,k,n,r,w,v,x,y,z;f=b[0];g=b[1];h=b[2];l=b[3];k=b[4];n=b[5];r=b[6];w=b[7];v=b[8];x=b[9];y=b[10];z=b[11];a[0]=f;a[1]=g;a[2]=h;a[3]=l;a[4]=k;a[5]=n;a[6]=r;a[7]=w;a[8]=v;a[9]=x;a[10]=y;a[11]=z;a[12]=f*c+k*d+v*e+b[12];a[13]=g*c+n*d+x*e+b[13];a[14]=h*c+r*d+y*e+b[14];a[15]=l*c+w*d+z*e+b[15]}}
+function drawModel(a,b,c,d){multiply(m,vm,a);multiply(m,pm,m);gl.uniformMatrix4fv(c.mvp,gl.FALSE,m);gl.uniformMatrix4fv(c.mm,gl.FALSE,a);gl.uniform4fv(c.color,d);gl.drawElements(gl.TRIANGLES,b.numberOfVertices,gl.UNSIGNED_SHORT,0)}
+function bindModel(a,b){gl.bindBuffer(gl.ARRAY_BUFFER,b.vertices);gl.vertexAttribPointer(a.vertex,3,gl.FLOAT,gl.FALSE,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,b.normals);gl.vertexAttribPointer(a.normal,3,gl.FLOAT,gl.FALSE,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b.indicies)}
+function destruct(a){if(a.show){a.show=!1;for(var b=6,c=debrisLength+debrisStart;c-- >debrisStart;){var d=objects[c];if(!d.show){var e=a.matrix,f=d.matrix,g=.1+.2*M.random();translate(f,im,e[12],e[13],e[14]);d.rot.x=M.random();d.rot.y=M.random();d.rot.z=M.random();rotate(f,f,M.random()*M.TAU,d.rot.x,d.rot.y,d.rot.z);scale(f,f,g,g,g);d.vel.x=.1*(M.random()-.5);d.vel.y=.1*(M.random()-.8);d.vel.z=-.1*M.random();d.rot.a=.001*M.random();d.show=!0;d.hideAt=now+2E3;if(1>--b)break}}}}
+function sqDist(a,b){var c=a[12]-b[12],d=a[13]-b[13],e=a[14]-b[14];return c*c+d*d+e*e}function flyTo(a,b,c,d,e,f){invert(m,b);b=m[0]*c+m[4]*d+m[8]*e+m[12]*f;var g=m[1]*c+m[5]*d+m[9]*e+m[13]*f;d=m[2]*c+m[6]*d+m[10]*e+m[14]*f;c=M.PI2-M.atan2(g,b);b=M.atan2(M.sqrt(b*b+g*g),-d);rotate(a,a,-.01*c*factor,0,0,1);rotate(a,a,.01*b*factor,1,0,0);return b}
+function fire(a){if(!(a.reloadingUntil>now))for(var b=bulletsLength+bulletsStart;b-- >bulletsStart;){var c=objects[b];if(!c.show){translate(c.matrix,a.matrix,0,0,-3.5);c.vel.x=0;c.vel.y=0;c.vel.z=-1.5;c.show=!0;c.hideAt=now+2E3;a.reloadingUntil=now+100;break}}}
+function plot(a,b,c,d,e,f){var g=a.matrix,h=a.vel,l=a.rot;if(a.attack&&player.show){var k=g[13];if(5>k){destruct(a);return}20>k?flyTo(g,g,0,100,0,1):(c=flyTo(g,g,c,d,e,f),1E4>sqDist(g,b)&&.25>c&&fire(a))}translate(g,g,h.x*factor,h.y*factor,h.z*factor);l&&rotate(g,g,l.a,l.x,l.y,l.z)}
+function draw(){var a=player.matrix,b=a[12],c=a[13],d=a[14],e=a[15],f,g;0<c?(f=sky,g=colorGreen):(f=invertedSky,g=colorRed);gl.clearColor(f[0],f[1],f[2],f[3]);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);var h=program.uniforms,l=program.attribs;gl.uniform3fv(h.light,light);gl.uniform4fv(h.sky,f);gl.uniform1f(h.brightness,brightness);gl.uniform1f(h.far,far);var k;for(f=objectsLength;f--;){var n=objects[f];if(n.show){k!=n.model&&(k=n.model,bindModel(l,k));drawModel(n.matrix,
+k,h,0==f?g:n.color);var r=n.hideAt;0<r&&r<now?n.show=!1:n!==player&&n.vel&&plot(n,a,b,c,d,e)}}}function checkHits(){for(var a=bulletsLength+bulletsStart;a-- >bulletsStart;){var b=objects[a];if(b.show)for(var c=b.matrix,d=c[12],e=c[13],c=c[14],f=jetsLength+jetsStart;f-- >jetsStart;){var g=objects[f];if(g.show){var h=g.matrix,l=h[13],k=h[14];1>M.abs(d-h[12])&&1>M.abs(e-l)&&1>M.abs(c-k)&&(destruct(b),destruct(g))}}}}
+function updatePose(){var a=player.matrix,b=player.pitch-player.pitchValue,c=player.yaw-player.yawValue,d=player.roll-player.rollValue;translate(a,cm,0,0,-4);1E-4<M.abs(d)&&(player.rollValue+=.1*d*factor,rotate(a,a,player.rollValue,0,0,1));1E-4<M.abs(c)&&(player.yawValue+=.1*vd*factor,rotate(a,a,player.yawValue,0,1,0));1E-4<M.abs(b)&&(player.pitchValue+=.1*b*factor,rotate(a,a,player.pitchValue,1,0,0))}
+function turn(a,b,c,d){rotate(m,im,a,b,c,d);multiply(vm,m,vm);0!==b&&(player.pitch=-20*a);0!==c&&(player.yaw=-20*a);0!==d&&(player.roll=-20*a)}
+function input(){if(player.show){var a=.05*factor;keysDown[87]?player.speed=M.min(player.speed+a,.6):keysDown[83]&&(player.speed=M.max(player.speed-a,.2));translate(m,im,0,0,player.speed);multiply(vm,m,vm);a=(.025-.0375*(player.speed-.2))*factor;player.pitch=player.yaw=player.roll=0;0<pointersLength?(-.5>pointersX[0]?turn(-a,0,0,1):.5<pointersX[0]&&turn(a,0,0,1),-.5>pointersY[0]?turn(-a,1,0,0):.5<pointersY[0]&&turn(a/4,1,0,0)):(keysDown[37]?turn(-a,0,0,1):keysDown[39]&&turn(a,0,0,1),keysDown[38]?
+turn(a/4,1,0,0):keysDown[40]&&turn(-a,1,0,0));invert(cm,vm);updatePose();checkHits();a=player.matrix[13];keysDown[32]||1<pointersLength?5<a&&fire(player):5>a&&destruct(player)}}function run(){requestAnimationFrame(run);now=Date.now();factor=(now-last)/16;last=now;input();draw()}
+function setPointer(a,b){if(b)if(a.touches)for(var c=a.touches,d=pointersLength=c.length;d--;){var e=c[d];pointersX[d]=e.pageX;pointersY[d]=e.pageY}else pointersLength=1,pointersX[0]=a.pageX,pointersY[0]=a.pageY;else pointersLength=a.touches?a.touches.length:0;c=2/width;e=2/height;for(d=pointersLength;d--;)pointersX[d]=pointersX[d]*c-1,pointersY[d]=-(pointersY[d]*e-1);a.preventDefault()}function pointerUp(a){setPointer(a,!1)}function pointerMove(a){setPointer(a,pointersLength)}
+function pointerDown(a){setPointer(a,!0)}function setKey(a,b){keysDown[a.keyCode]=b;a.preventDefault()}function keyUp(a){setKey(a,!1)}function keyDown(a){setKey(a,!0)}function resize(){width=gl.canvas.clientWidth;height=gl.canvas.clientHeight;gl.canvas.width=width;gl.canvas.height=height;gl.viewport(0,0,width,height);var a=width/height,b=.1-far,c=1/M.tan(.125*M.PI);pm=new FA([c/a,0,0,0,0,c,0,0,0,0,(far+.1)/b,-1,0,0,.2*far/b,0]);invert(cm,vm)}
+function cacheUniformLocations(a,b){void 0===a.uniforms&&(a.uniforms={});for(var c=0,d=b.length;c<d;++c){var e=b[c];a.uniforms[e]=gl.getUniformLocation(a,e)}}function cacheAttribLocations(a,b){void 0===a.attribs&&(a.attribs={});for(var c=0,d=b.length;c<d;++c){var e=b[c];a.attribs[e]=gl.getAttribLocation(a,e);gl.enableVertexAttribArray(a.attribs[e])}}
+function compileShader(a,b){var c=gl.createShader(b);gl.shaderSource(c,a);gl.compileShader(c);return gl.getShaderParameter(c,gl.COMPILE_STATUS)?c:null}function linkProgram(a,b){var c;if(c=gl.createProgram())gl.attachShader(c,a),gl.attachShader(c,b),gl.linkProgram(c),gl.getProgramParameter(c,gl.LINK_STATUS)||(gl.deleteProgram(c),c=null);return c}
+function buildProgram(a,b){var c,d,e;if(d=compileShader(a,gl.VERTEX_SHADER)){if(e=compileShader(b,gl.FRAGMENT_SHADER))c=linkProgram(d,e),gl.deleteShader(e);gl.deleteShader(d)}return c}function calculateNormals(a,b){for(var c=[],d=0,e=b.length;d<e;){var f=3*b[d++],g=3*b[d++],h=3*b[d++],l=a[f],k=a[f+1],n=a[f+2],r=a[g]-l,w=a[g+1]-k,v=a[g+2]-n,l=a[h]-l,k=a[h+1]-k,x=a[h+2]-n,n=w*x-v*k,v=v*l-r*x,r=r*k-w*l;c[f]=n;c[f+1]=v;c[f+2]=r;c[g]=n;c[g+1]=v;c[g+2]=r;c[h]=n;c[h+1]=v;c[h+2]=r}return c}
+function createModel(a,b){var c={numberOfVertices:b.length};c.vertices=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,c.vertices);gl.bufferData(gl.ARRAY_BUFFER,new FA(a),gl.STATIC_DRAW);c.normals=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,c.normals);gl.bufferData(gl.ARRAY_BUFFER,new FA(calculateNormals(a,b)),gl.STATIC_DRAW);c.indicies=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,c.indicies);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(b),gl.STATIC_DRAW);return c}
+function createTriangle(){return createModel([0,1,0,-1,-1,0,1,-1,0],[0,1,2])}function createPlane(){return createModel([-1,1,0,-1,-1,0,1,1,0,1,-1,0],[0,2,1,2,3,1])}function createBullet(){return createModel([0,.05,0,.05,0,0,0,-.05,0,-.05,0,0,0,0,.7],[0,1,2,2,3,0,0,4,1,1,4,2,2,4,3,3,4,0])}
+function createJet(){for(var a=[.160713,-.079566,.308486,.160713,-.03535,.308486,.141574,-.076788,-.428799,.141574,-.038128,-.428799,.044415,-.064979,-1.002609,.044415,-.054442,-1.002609,.137133,-.071677,.561634,.137133,-.043239,.561634,.734764,-.066573,.27579,.734764,-.048343,.27579,.710531,-.065557,.126651,.710531,-.049359,.126651,.111385,-.068833,.814783,.111385,-.046083,.814783,.437837,-.065587,.793524,.437837,-.049329,.793524,.447748,-.063962,.866828,.447748,-.050954,.866828,.106927,.058309,
+.300239,.094546,.014669,-.585247,.031598,-.024898,-1.004654,.091673,.053199,.546369,.075369,.02249,.821219,.093902,-.173471,.293002,.082845,-.144193,-.525104,.027693,-.115441,-.981081,.016848,.075065,.336714,.08028,-.157591,.554191,.06438,-.134058,.818955,.030287,.072383,.652842,.026017,.056262,.851769,.003935,.431639,.625258,.00784,.428957,.776011,.00593,.412836,.826948,.060856,.023202,-.536708,.068396,.049776,-.193999,.029756,.084168,-.426948,.032827,.085887,-.321909,.039074,-.044549,-.145049,.039074,
+-.037679,-.145049,.028199,-.016973,-.143105,.02488,-.064244,-.143789,.013297,-.006776,-.133881,.044415,-.064979,-1.002609,.044415,-.054442,-1.002609,.031598,-.024898,-1.004654,.027693,-.115441,-.981081,.026041,-.064593,-.249896,.026041,-.058611,-.249896,.018764,-.041837,-.240374,.016547,-.093244,-.237674,0,-.144193,-.525104,0,.085887,-.321909,0,-.115441,-.981081,0,-.006776,-.133881,0,-.041837,-.240374,0,.058309,.300239,0,-.134058,.818955,0,.412836,.826948,0,.049776,-.193999,0,.056262,.851769,0,.084168,
+-.426948,0,-.024898,-1.004654,0,-.173471,.293002,0,.075065,.336714,0,.428957,.776011,0,-.064244,-.143789,0,.014669,-.585247,0,.023202,-.536708,0,-.157591,.554191,0,.431639,.625258,0,-.024898,-1.004654,0,-.093244,-.237674,0,-.115441,-.981081],b=[0,10,8,20,44,45,6,28,27,5,43,44,4,24,25,1,21,7,1,11,3,7,22,13,10,9,8,0,9,1,7,0,1,10,3,11,5,2,4,7,14,6,15,16,14,12,14,16,12,17,13,13,15,7,67,34,19,22,29,30,3,18,1,5,19,3,24,63,51,51,25,24,0,27,23,2,23,24,73,50,46,29,31,32,22,42,40,21,26,29,56,26,18,65,33,32,
+31,65,32,64,31,26,29,33,30,19,35,18,68,36,34,34,37,35,12,41,28,13,40,39,13,38,12,60,42,30,40,54,66,4,46,43,25,73,46,46,47,43,45,48,49,43,48,44,52,36,61,67,20,71,63,27,69,60,33,58,56,35,59,59,37,52,57,41,66,69,28,57,62,49,55,0,2,10,20,5,44,6,12,28,5,4,43,4,2,24,1,18,21,1,9,11,7,21,22,10,11,9,0,8,9,7,6,0,10,2,3,5,3,2,7,15,14,15,17,16,12,6,14,12,16,17,13,17,15,67,68,34,22,21,29,3,19,18,5,20,19,24,23,63,51,53,25,0,6,27,2,0,23,73,72,50,29,26,31,22,30,42,21,18,26,56,64,26,65,58,33,31,70,65,64,70,31,29,
+32,33,19,34,35,68,61,36,34,36,37,12,38,41,13,22,40,13,39,38,60,54,42,41,38,39,39,40,66,42,54,40,66,41,39,4,25,46,25,53,73,46,50,47,45,44,48,43,47,48,52,37,36,67,19,20,63,23,27,60,30,33,56,18,35,59,35,37,57,28,41,69,27,28,62,45,49],c=a.length/3,d=0,e=a.length;d<e;)a.push(-a[d++]),a.push(a[d++]),a.push(a[d++]);d=0;for(e=b.length;d<e;d+=3)b.push(c+b[d+2]),b.push(c+b[d+1]),b.push(c+b[d]);return createModel(a,b)}
+function createGround(){for(var a=[],b=[],c=-50;50>c;++c)for(var d=-50;50>d;++d)a.push(d+.5*(M.random()-.5)),a.push(0+10*(M.random()-.5)),a.push(c+.5*(M.random()-.5));for(var e=[],f=0,c=-50,g=[0,1,100,1,101,100];49>c;++c){for(d=-50;49>d;++d){for(var h=0;6>h;++h){var l=3*(g[h]+f);e.push(a[l]);e.push(a[l+1]);e.push(a[l+2])}++f}++f}f=0;for(a=e.length/3;f<a;++f)b.push(f);return createModel(e,b)}
+function createObjects(){var a=createGround(),b=createJet(),c=createBullet();createPlane();var d=createTriangle();scale(m,im,30,1,30);objects.push({show:!0,model:a,matrix:new FA(m),color:colorGreen});bulletsStart=objects.length;bulletsLength=10;rotate(m,im,M.PI2,1,0,0);scale(m,m,.1,.1,.2);for(a=bulletsLength;a--;)objects.push({show:!1,model:c,matrix:new FA(m),color:colorRed,vel:{}});debrisStart=objects.length;for(a=debrisLength=100;a--;)objects.push({show:!1,model:d,matrix:new FA(im),color:colorWhite,
+vel:{},rot:{}});jetsStart=objects.length;for(a=10;a--;)c=20*M.random()-10,d=10*M.random()-5+100,c=0>c?c-5:c+5,d=0>d?d-5:d+5,translate(m,im,c,d,-10*(a+1)),rotate(m,m,M.random()*M.TAU,M.random(),M.random(),M.random()),objects.push({show:!0,attack:!0,model:b,matrix:new FA(m),color:colorRed,vel:{x:0,y:0,z:-.2-.2*M.random()}});translate(vm,vm,0,-100,0);objects.push(player={show:!0,model:b,matrix:new FA(m),color:colorWhite,speed:.2,pitchValue:0,yawValue:0,rollValue:0});jetsLength=objects.length-jetsStart;
+objectsLength=objects.length}function getContext(){for(var a=D.getElementById("Canvas"),b,c=["webgl","experimental-webgl"],d=c.length,e=0;e<d;++e)if(b=a.getContext(c[e],{alpha:!1}))return b}
+function init(){(gl=getContext())&&(program=buildProgram(D.getElementById("VertexShader").textContent,D.getElementById("FragmentShader").textContent))?(createObjects(),cacheAttribLocations(program,["vertex","normal"]),cacheUniformLocations(program,"mvp mm light color sky brightness far".split(" ")),gl.enable(gl.DEPTH_TEST),gl.clearColor(sky[0],sky[1],sky[2],sky[3]),W.onresize=resize,resize(),D.onkeydown=keyDown,D.onkeyup=keyUp,D.onmousedown=pointerDown,D.onmousemove=pointerMove,D.onmouseup=pointerUp,
+D.onmouseout=pointerUp,"ontouchstart"in D&&(D.ontouchstart=pointerDown,D.ontouchmove=pointerMove,D.ontouchend=pointerUp,D.ontouchleave=pointerUp,D.ontouchcancel=pointerUp),last=Date.now()-16,run()):alert("WebGL not available")}W.onload=init;
+</script>
+</body>
+</html>

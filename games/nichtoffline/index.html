@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>"OfFlInE"</title>
+    <style>
+        #c {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            display: inline;
+            top: 0;
+        }
+        * {
+            font-family: sans-serif;
+        }
+        #hm, #in {
+            color: #2b2b2b;
+            font-size: 1em;
+            line-height: 1.55;
+            margin: 0 auto;
+            max-width: 600px;
+            padding-top: 100px;
+            width: 100%;
+        }
+        h1, .h1 {
+            color: #333;
+            font-size: 1.6em;
+            font-weight: normal;
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+        ul {
+            margin-top: 0;
+        }
+        .link {
+            color: rgb(17, 85, 204);
+        }
+        .error {
+            color: #646464;
+            font-size: .8em;
+        }
+        #in, #gm {
+            padding-top: 0;
+            display: none;
+            width: 100%;
+            text-align:center;
+        }
+        #ct {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        #msg {
+            width: 80%;
+        }
+        #snd {
+            width: 15%;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="rex.png"/>
+</head>
+<body>
+
+<div id="hm">
+    <img src="rex.png" alt="trex"/>
+    <h1>There is no Internet Connection</h1>
+    <span>Try:</span>
+    <ul>
+        <li>Checking the network cables, modem, and router</li>
+        <li>Reconnecting to Wi-Fu</li>
+        <li class="link" onclick="toInput();">Running Windows Network Diagnostics</li>
+    </ul>
+    <span class="error">ERR_INTERNET_DISCONNECTED</span>
+</div>
+
+<div id="in">
+    <p class="error">INTERNET_DOWN?_TIME_TO_MEET_SOME_FRIENDS!</p>
+    <label class="link" for="usr">Username</label>
+    <input id="usr" type="text"/>
+    <input type="color" id="clr" name="color" value="#2b2b2b"/>
+    <button onclick="toGame();">Shut down my Computer!</button>
+</div>
+
+<div id="gm">
+    <span>Enjoy beeing</span><span class="h1">"Offline"</span><img src="rex.png" alt="trex"/><br/>
+    <hr/>
+    <br/>
+    <canvas id="c" width="800" height="450">shity brwser</canvas>
+    <div id="ct">
+        <input id="msg" type="text">
+        <input id="snd" type="submit" onclick="message();" value="=>"/>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let socket = io();
+</script>
+<script src="Dino.js"></script>
+<script src="client.js"></script>
+<script src="render.js"></script>
+<script src="control.js"></script>
+
+</body>
+</html>

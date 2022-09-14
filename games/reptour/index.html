@@ -1,0 +1,93 @@
+<html>
+  <head>
+  	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <title>Retour</title>
+    <meta name="description" content="Retour">
+    <script src="https://js13kgames.com/webxr-src/aframe.js"></script>
+
+    <script type="text/javascript">
+    	AFRAME.registerComponent('x-button-listener', {
+			  init: function () {
+			    var el = this.el;
+			    el.addEventListener('xbuttondown', function (evt) {
+					a = (document.getElementById("actor").getAttribute("position").y)
+
+					if(a==1.25){
+						document.getElementById("actor").setAttribute('position', "0 2.75 -4.9");	
+					}
+					else{
+						document.getElementById("actor").setAttribute('position', "0 "+(a+1)+" -4.9");	
+					}
+					document.getElementById("cam").setAttribute("position",'0 '+(((document.getElementById("actor").getAttribute("position")).y-0.20)/2)+' 2')
+			    });
+			  }
+			});
+    	AFRAME.registerComponent('collider', {
+    		
+			  dependencies: ['raycaster'],
+
+			  init: function () {
+			
+			    this.el.addEventListener('raycaster-intersection', function () {	
+			      		document.getElementById("actor").setAttribute('position', "0 1.25 -4.9");
+			      		document.getElementById("cam").setAttribute("position","0 1.36 2")
+			    });
+			  }
+			});
+    
+    	AFRAME.registerComponent('collider-check', {
+    		
+			  dependencies: ['raycaster'],
+
+			  init: function () {
+			
+			    this.el.addEventListener('raycaster-intersection', function (evt) {	
+					a = (document.getElementById("actor").getAttribute("position").y)
+					target=evt.target.getAttribute('color')
+					if((target)=='#3F51B5'){//UP
+			      		document.getElementById("actor").setAttribute('position', "0 "+(a+1)+" -4.9");
+					}
+			      	else if((target)=='#673AB7'){//DOWN
+			      		
+			      		if(a==2.75){
+							document.getElementById("actor").setAttribute('position', "0 1.25 -4.9");	
+						}
+						else{
+							document.getElementById("actor").setAttribute('position', "0 "+(a-1)+" -4.9");
+						}
+			      	}
+			      	else if((target)=='#F44336'){//SPAWN
+			      		document.getElementById("actor").setAttribute('position', "0 1.25 -4.9");
+			      	}
+			      	document.getElementById("cam").setAttribute("position",'0 '+(((document.getElementById("actor").getAttribute("position")).y-0.20)/2)+' 2')
+
+			    });
+			  }
+			});
+    
+    </script>
+  </head>
+  <body onclick="clickBody();">
+    <a-scene background="color: #C0392B" id='sc'>
+    	<a-entity camera wasd-controls look-controls position="0 1.36 2" id='cam' rotation="-4 114 0"></a-entity>
+    	<a-entity text="font: mozillavr;color:black; value: Use  \nUP arrow for Desktop\n to move the arrow\n For VR Press X-Button \n INSTRUCTIONS \n You are intially at the centre\n you have to move out to win\n THE RED DOTS\n Make You Respawn at the center\n The Purple One\n Makes you move 'BACK'\n The Blue One, Pushes you forward\n AT THE END\n YOU MOVE BACK TO YOUR \nPOSITION;" position="-5 3 -3" scale="6 6 6"></a-entity>
+
+    <a-entity >
+    	 <a-entity oculus-touch-controls x-button-listener geometry="primitive: triangle" collider raycaster="objects: .final"  id='actor' material="color: #34495E;" class='actor'  scale="0.6 0.7 0.6" position="0 1.25 -4.9" vertex-a="0 0.5 0" vertex-b="-0.5 -0.5 0" vertex-c="0.5 -0.5 0"></a-entity>
+    	<a-entity light="type: ambient"></a-entity> 
+    </a-entity>
+    <a-entity geometry="primitive: ring; segments-theta: 90; radius-outer: 2; radius-inner: 1;" position="0 1.25 -5" rotation="0 0 0" animation="property: rotation; to: 0 0 -360; loop: true; dur: 2000; easing: linear;" material="color: #F39C12; ">
+     
+    <a-ring target='UP' collider-check raycaster="objects: .actor" position="1.5 0 0.1" color="#3F51B5" radius-inner="-0.25" radius-outer="0.4"></a-ring>
+    <a-ring target ='DOWN' collider-check raycaster="objects: .actor" position="-1.5 0 0.1" color="#673AB7" radius-inner="-0.25" radius-outer="0.4"></a-ring>
+    <a-ring target='SPAWN' collider-check raycaster="objects: .actor" position="0 1.45 0.1" color="#F44336" radius-inner="-0.25" radius-outer="0.4"></a-ring>
+    <a-ring target='DOWN' collider-check raycaster="objects: .actor" position="0 -1.45 0.1" color="#673AB7" radius-inner="-0.25" radius-outer="0.4"></a-ring>
+    </a-entity>
+    
+	<a-ring class="final" position="0 1.25 -4.9"  color="#5AB963" radius-inner="5.9" radius-outer="9"></a-ring>    
+
+    </a-scene>
+    <script src="script.js"></script>	
+  </body>
+</html>

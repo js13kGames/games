@@ -1,0 +1,330 @@
+<style media="screen" type="text/css">
+    body {
+        text-align: center;
+        margin: 0px;
+        background-color: black;
+    }
+
+    canvas,
+    img {
+        image-rendering: optimizeSpeed;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: optimize-contrast;
+        image-rendering: pixelated;
+        -ms-interpolation-mode: nearest-neighbor;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<body>
+    <canvas id=a>
+        <script>
+            imgs = {};
+            Promise.all(["a", "b", "c", "c2", "h", "k", "m"].map(x => {
+                imgs[x] = new Image()
+                imgs[x].src = x + ".png";
+                return new Promise(function (resolve, reject) {
+                    imgs[x].onload = resolve;
+                })
+            })).then(start);
+
+            x = a.getContext`2d`;
+            colors = ["red", "blue", "green", "yellow", "lime", "aqua", "orange", "fuchsia"]
+            bombs = ["https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "http://christmaschebacca.ytmnd.com/",
+                "https://www.badgerbadgerbadger.com/",
+                "http://fakebsod.com/generic",
+                "http://dn.ht/picklecat/",
+                "http://mischiefmakersmanual.com/tools/annoy/homepage.html"
+            ]
+            m = false
+
+            function start() {
+                if (window.location.hash == "") {
+                    a.width = x.width = window.innerWidth
+                    a.height = x.height = window.innerHeight
+                    localStorage.p = "[]"
+                    localStorage.g = "[]"
+                    p = []
+                    registerServiceWorker(function () {
+                        onclick = () => {
+                            onclick = () => { };
+                            updated();
+                            sendMessage('s');
+                            startSound();
+                        }
+                    });
+                    x.fillStyle = "black";
+                    x.fillRect(0, 0, a.width, a.height)
+                    x.fillStyle = "white"
+                    x.font = "60px Sans-serif"
+                    x.textAlign = "center"
+                    x.fillText("Lost Tab", a.width / 2, 200)
+                    x.font = "30px Sans-serif"
+                    x.fillText("The Evil Autoplaying Video Strikes Again", a.width / 2, 250)
+                    x.font = "40px Sans-serif"
+                    x.fillText("Click to start", a.width / 2, 600)
+                    x.font = "20px Sans-serif"
+                    x.fillText("Please make sure to allow pop-ups", a.width / 2, 650)
+                    document.title = "Lost Tab"
+                    updated = function () {
+                        g = JSON.parse(localStorage.g);
+                        p = JSON.parse(localStorage.p);
+                        x.fillStyle = "black";
+                        x.fillRect(0, 0, a.width, a.height)
+                        x.fillStyle = "white"
+                        x.font = "30px Sans-serif"
+                        x.fillText("Inventory:", 100, 100)
+                        document.title = "Inventory"
+                        p.forEach(function (s, j) {
+                            x.fillStyle = colors[s[1]] || "white";
+                            x.fillRect(20 + j % 4 * 120, 220 + Math.floor(j / 4) * 120, 100, 100)
+                            x.drawImage(imgs[s[0]], 0, 0, 16, 16, 20 + j % 4 * 120, 220 + Math.floor(j / 4) * 120, 100, 100)
+                        })
+                    }
+                } else {
+                    var size = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
+                    a.style.height = a.style.width = size;
+                    function draw(color, img) {
+                        x.fillStyle = "black";
+                        x.fillRect(0, 0, 40, 40)
+                        x.fillStyle = color;
+                        x.fillRect(12, 12, 16, 16)
+                        x.drawImage(img, 12, 12)
+                    }
+                    a.width = x.width = 40
+                    a.height = x.height = 40
+                    updated = function () {
+                        g = JSON.parse(localStorage.g);
+                        p = JSON.parse(localStorage.p);
+                        s = g[parseInt(window.location.hash.substring(1))]
+                        if (m) {
+                            document.title = s.map(x => {
+                                return { "a": "Autoplaying media", "b": "Bomb", "c": "Crate", "h": "Keyhole #" + x.substring(1), "k": "Key #" + x.substring(1), "m": "Map" }[x[0]]
+                            }).reduce((x, y) => y + "->" + x);
+                        } else {
+                            document.title = "???"
+                        }
+                        draw(colors[s[s.length - 1].substring(1)] || "white", imgs[s[s.length - 1][0]])
+                    }
+                    updated()
+                    onclick = e => {
+                        switch (s[s.length - 1][0]) {
+                            case "a":
+                                break;
+                            case "c":
+                                t = 0
+                                it = setInterval(() => {
+                                    draw("white", imgs["c2"])
+                                    x.globalAlpha = t / 8;
+                                    x.fillStyle = "black"
+                                    x.fillRect(0, 0, a.width, a.height)
+                                    x.globalAlpha = 1;
+                                    t++
+                                }, 50);
+                                s.pop();
+                                setTimeout(() => {
+                                    save()
+                                    clearInterval(it);
+                                }, 500)
+                                break;
+                            case "h":
+                                j = p.indexOf("k" + s[s.length - 1].substring(1))
+                                if (j != -1) {
+                                    s.pop();
+                                    p.splice(j, 1)
+                                    save()
+                                }
+                                break;
+                            case "k":
+                                p.push(s.pop());
+                                save();
+                                break;
+                            case "m":
+                                sendMessage('m');
+                                close()
+                                break;
+                        }
+                        onfocus()
+                    }
+                    if (localStorage.sw == "true") {
+                        updater()
+                    } else {
+                        window.addEventListener('storage', storageHandler);
+                    }
+                    window.onfocus = function onfocus() {
+                        if (s[s.length - 1] == "b" && localStorage.l == "l") {
+                            setTimeout(() => {
+                                draw("yellow", imgs["b"])
+                            }, 300);
+                            setTimeout(() => {
+                                draw("red", imgs["b"])
+                            }, 600);
+                            setTimeout(() => {
+                                window.open(bombs[Math.floor(bombs.length * Math.random())], '_blank')
+                                close()
+                            }, 900);
+                        }
+                        if (s[s.length - 1] == "a" && localStorage.l == "l") {
+                            setTimeout(() => {
+                                sendMessage('w');
+                            }, 900);
+                        }
+                    }
+                }
+            }
+            function save() {
+                g[parseInt(window.location.hash.substring(1))] = s
+                localStorage.g = JSON.stringify(g)
+                localStorage.p = JSON.stringify(p)
+                sendMessage('u');
+            }
+
+            function updater() {
+                navigator.serviceWorker.addEventListener('message', x => updateHandler(x.data));
+            }
+
+            function startSound() {
+                audioContext = new AudioContext();
+                //Pink noise from https://noisehack.com/generate-noise-web-audio-api/
+                var bufferSize = 4096;
+                pinkNoise = (function () {
+                    var b0, b1, b2, b3, b4, b5, b6, white;
+                    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+                    var t = 0;
+                    var freq = 100;
+                    var node = audioContext.createScriptProcessor(bufferSize, 1, 1);
+                    node.onaudioprocess = function (e) {
+                        var output = e.outputBuffer.getChannelData(0);
+                        white = Math.random() * 2 - 1;
+                        for (var i = 0; i < bufferSize; i++) {
+                            if (Math.random() > 0.9) {
+                                if (Math.random() > 0.9) {
+                                    freq = Math.ceil(Math.random() * 5) * Math.ceil(Math.random() * 5);
+                                }
+                                white = Math.random() * 2 - 1;
+                            } else {
+                                white = Math.sin((t++) / freq);
+                            }
+                            b0 = 0.99886 * b0 + white * 0.0555179;
+                            b1 = 0.99332 * b1 + white * 0.0750759;
+                            b2 = 0.96900 * b2 + white * 0.1538520;
+                            b3 = 0.86650 * b3 + white * 0.3104856;
+                            b4 = 0.55000 * b4 + white * 0.5329522;
+                            b5 = -0.7616 * b5 - white * 0.0168980;
+                            output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                            output[i] *= 0.11; // (roughly) compensate for gain
+                            b6 = white * 0.115926;
+                        }
+                    }
+                    return node;
+                })();
+
+                pinkNoise.connect(audioContext.destination);
+            }
+
+            function stopSound() {
+                pinkNoise.disconnect();
+            }
+
+
+            function registerServiceWorker(callback, useSW) {
+                if (navigator.serviceWorker && useSW !== false) {
+                    localStorage.sw = "true";
+                    navigator.serviceWorker.register('w.js').then(x => { updater(); callback() }).catch(function (error) {
+                        console.log('Service worker registration failed:', error);
+                        registerServiceWorker(callback, false)
+                    });
+                } else {
+                    localStorage.sw = "false";
+                    window.addEventListener('storage', storageHandler);
+                    callback();
+                }
+            }
+
+            function storageHandler(e) {
+                console.log(e.key, e.newValue)
+                switch (e.key) {
+                    case "serviceWorkerFallback":
+                        updateHandler(JSON.parse(e.newValue));
+                        break;
+                    case "p":
+                    case "g":
+                        updated();
+                        break;
+                }
+            }
+
+            function updateHandler(e) {
+                switch (e.k) {
+                    case "l":
+                        g = e.a;
+                        localStorage.g = JSON.stringify(g);
+                        localStorage.l = ""
+                        e.a.forEach((x, i) => window.open(location + "#" + i, '_blank'), false);
+                        localStorage.l = "l"
+                        break;
+                    case "u":
+                        updated()
+                        break;
+                    case "w":
+                        if (window.location.hash !== "") {
+                            close()
+                        } else {
+                            x.fillStyle = "black";
+                            x.fillRect(0, 0, a.width, a.height)
+                            x.fillStyle = "white"
+                            x.font = "60px Sans-serif"
+                            x.textAlign = "center"
+                            x.fillText("You won!", a.width / 2, 200)
+                            x.font = "30px Sans-serif"
+                            x.fillText("The tab containing the video", a.width / 2, 250)
+                            x.fillText("has been found and destroyed", a.width / 2, 280)
+                            x.fillText("by a thousand garbage collectors.", a.width / 2, 310)
+                            x.fillText("Click to play again", a.width / 2, 600)
+                            document.title = "You won!"
+                            onclick = () => location = location;
+                            stopSound();
+                        }
+                        break;
+                    case "m":
+                        m = true
+                        updated()
+                        break;
+                }
+            }
+
+            function sendMessage(x) {
+                if (localStorage.sw == "true") {
+                    navigator.serviceWorker.controller.postMessage(x);
+                } else {
+                    if (x == "s") {
+                        var t = [["a"], ["m"]];
+                        var n = 0;
+                        do {
+                            do {
+                                t.push(["b"])
+                            } while (Math.random() > 0.3 && t.length < 10)
+                            do {
+                                t[Math.floor(t.length * Math.random())].push("h" + n)
+                                t[Math.floor(t.length * Math.random())].push("k" + (n++))
+                            } while (Math.random() > 0.3 && n < 7)
+                            do {
+                                t[Math.floor(t.length * Math.random())].push("c")
+                            } while (Math.random() > 0.3)
+                        } while (Math.random() > 0.5)
+                        t.sort(x => Math.random() - 0.5)
+                        localStorage.setItem("serviceWorkerFallback", JSON.stringify({ k: "l", a: t }));
+                        updateHandler({ k: "l", a: t });
+                    } else {
+                        localStorage.setItem("serviceWorkerFallback", JSON.stringify({ k: x }));
+                        updateHandler({ k: x });
+                    }
+                }
+            }
+        </script>

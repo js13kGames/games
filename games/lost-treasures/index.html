@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<title>Lost Treasures</title>
+<style>
+html, body {
+margin: 0; padding: 0;
+overflow: hidden;
+}
+canvas {
+position: fixed;
+width: 100%;
+height: 100%;
+}
+#Text {
+position: fixed;
+width: 100%;
+height: 100%;
+margin: 0; padding: 1em;
+font: 200% monospace; color: #fff;
+font-weight: bold;
+text-align: center;
+line-height: 200%;
+}
+#Controls {
+position: fixed;
+width: 100%;
+bottom: 0;
+margin: 0; padding: 1em 0;
+font: 200% sans-serif; color: #fff;
+}
+#Controls td {
+text-align: center;
+}
+.Warning {
+color: #f22;
+}
+#Text a {
+color: #fff;
+}
+</style>
+</head>
+<body>
+<canvas id="Canvas">Sorry, this browser cannot render this content.</canvas>
+<div id="Text"></div>
+<table id="Controls">
+<tr>
+<td>&larr;</td>
+<td>&uarr;</td>
+<td>↧</td>
+<td>&darr;</td>
+<td>&rarr;</td>
+</tr>
+</table>
+<script id="SeaVertexShader" type="x-shader/x-vertex">
+attribute vec3 vertex;
+attribute vec3 normal;
+uniform mat4 mvp;
+uniform mat4 nm;
+uniform vec3 light;
+uniform float time;
+uniform float radius;
+varying mediump float intensity;
+varying mediump float z;
+void main() {
+float vx = mod(radius + vertex.x, radius);
+float vy = mod(radius + vertex.y, radius);
+float t = sin(time + vx + vy) * .3;
+gl_Position = mvp * vec4(vertex.x, vertex.y + t, vertex.z, 1.);
+z = gl_Position.z;
+intensity = max(0., dot(normalize(mat3(nm) * normal), light));
+}
+</script>
+<script id="VertexShader" type="x-shader/x-vertex">
+attribute vec3 vertex;
+attribute vec3 normal;
+uniform mat4 mvp;
+uniform mat4 nm;
+uniform vec3 light;
+varying mediump float intensity;
+varying mediump float z;
+void main() {
+gl_Position = mvp * vec4(vertex, 1.);
+z = gl_Position.z;
+intensity = max(0., dot(normalize(mat3(nm) * normal), light));
+}
+</script>
+<script id="FragmentShader" type="x-shader/x-fragment">
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform float far;
+uniform vec4 sky;
+uniform vec4 color;
+varying mediump float intensity;
+varying mediump float z;
+void main() {
+float f = z / far;
+gl_FragColor = vec4(
+(1. - f) * color.rgb * (.5 + intensity * .5) + f * sky.rgb,
+color.a);
+}
+</script>
+<script>
+var M=Math,D=document,W=window,FA=Float32Array,text,gl,im=new FA([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]),pm,vm=new FA(im),cm=new FA(im),nm=new FA(16),mvp=new FA(im),m=new FA(16),far=75,skyColor=[.43,.73,.96,1],lightDirection=[.5,.5,1],program,seaProgram,seaHalf,sea,floor,player,entitiesLength=0,entities=[],coins,coinsFound=0,width,height,now,factor,last,first,pointersLength,pointersX=[],pointersY=[],keysDown=[];M.PI2=M.PI2||M.PI/2;M.TAU=M.TAU||2*M.PI;
+function invert(a,b){var c=b[0],d=b[1],e=b[2],g=b[3],k=b[4],f=b[5],h=b[6],l=b[7],n=b[8],p=b[9],v=b[10],w=b[11],x=b[12],y=b[13],z=b[14],B=b[15],t=c*f-d*k,u=c*h-e*k,q=c*l-g*k,r=d*h-e*f,C=d*l-g*f,E=e*l-g*h,F=n*y-p*x,G=n*z-v*x,H=n*B-w*x,I=p*z-v*y,J=p*B-w*y,K=v*B-w*z,A=t*K-u*J+q*I+r*H-C*G+E*F;if(!A)return null;A=1/A;a[0]=(f*K-h*J+l*I)*A;a[1]=(e*J-d*K-g*I)*A;a[2]=(y*E-z*C+B*r)*A;a[3]=(v*C-p*E-w*r)*A;a[4]=(h*H-k*K-l*G)*A;a[5]=(c*K-e*H+g*G)*A;a[6]=(z*q-x*E-B*u)*A;a[7]=(n*E-v*q+w*u)*A;a[8]=(k*J-f*H+l*F)*A;
+a[9]=(d*H-c*J-g*F)*A;a[10]=(x*C-y*q+B*t)*A;a[11]=(p*q-n*C-w*t)*A;a[12]=(f*G-k*I-h*F)*A;a[13]=(c*I-d*G+e*F)*A;a[14]=(y*u-x*r-z*t)*A;a[15]=(n*r-p*u+v*t)*A}
+function multiply(a,b,c){var d=b[0],e=b[1],g=b[2],k=b[3],f=b[4],h=b[5],l=b[6],n=b[7],p=b[8],v=b[9],w=b[10],x=b[11],y=b[12],z=b[13],B=b[14];b=b[15];var t=c[0],u=c[1],q=c[2],r=c[3];a[0]=t*d+u*f+q*p+r*y;a[1]=t*e+u*h+q*v+r*z;a[2]=t*g+u*l+q*w+r*B;a[3]=t*k+u*n+q*x+r*b;t=c[4];u=c[5];q=c[6];r=c[7];a[4]=t*d+u*f+q*p+r*y;a[5]=t*e+u*h+q*v+r*z;a[6]=t*g+u*l+q*w+r*B;a[7]=t*k+u*n+q*x+r*b;t=c[8];u=c[9];q=c[10];r=c[11];a[8]=t*d+u*f+q*p+r*y;a[9]=t*e+u*h+q*v+r*z;a[10]=t*g+u*l+q*w+r*B;a[11]=t*k+u*n+q*x+r*b;t=c[12];u=
+c[13];q=c[14];r=c[15];a[12]=t*d+u*f+q*p+r*y;a[13]=t*e+u*h+q*v+r*z;a[14]=t*g+u*l+q*w+r*B;a[15]=t*k+u*n+q*x+r*b}
+function rotate(a,b,c,d,e,g){var k=M.sqrt(d*d+e*e+g*g),f,h,l,n,p,v,w,x,y,z,B,t,u,q,r,C,E,F,G,H;1E-6>M.abs(k)||(k=1/k,d*=k,e*=k,g*=k,f=M.sin(c),h=M.cos(c),l=1-h,c=b[0],k=b[1],n=b[2],p=b[3],v=b[4],w=b[5],x=b[6],y=b[7],z=b[8],B=b[9],t=b[10],u=b[11],q=d*d*l+h,r=e*d*l+g*f,C=g*d*l-e*f,E=d*e*l-g*f,F=e*e*l+h,G=g*e*l+d*f,H=d*g*l+e*f,d=e*g*l-d*f,g=g*g*l+h,a[0]=c*q+v*r+z*C,a[1]=k*q+w*r+B*C,a[2]=n*q+x*r+t*C,a[3]=p*q+y*r+u*C,a[4]=c*E+v*F+z*G,a[5]=k*E+w*F+B*G,a[6]=n*E+x*F+t*G,a[7]=p*E+y*F+u*G,a[8]=c*H+v*d+z*g,
+a[9]=k*H+w*d+B*g,a[10]=n*H+x*d+t*g,a[11]=p*H+y*d+u*g,b!==a&&(a[12]=b[12],a[13]=b[13],a[14]=b[14],a[15]=b[15]))}function scale(a,b,c,d,e){a[0]=b[0]*c;a[1]=b[1]*c;a[2]=b[2]*c;a[3]=b[3]*c;a[4]=b[4]*d;a[5]=b[5]*d;a[6]=b[6]*d;a[7]=b[7]*d;a[8]=b[8]*e;a[9]=b[9]*e;a[10]=b[10]*e;a[11]=b[11]*e;a[12]=b[12];a[13]=b[13];a[14]=b[14];a[15]=b[15]}
+function translate(a,b,c,d,e){if(b===a)a[12]=b[0]*c+b[4]*d+b[8]*e+b[12],a[13]=b[1]*c+b[5]*d+b[9]*e+b[13],a[14]=b[2]*c+b[6]*d+b[10]*e+b[14],a[15]=b[3]*c+b[7]*d+b[11]*e+b[15];else{var g,k,f,h,l,n,p,v,w,x,y,z;g=b[0];k=b[1];f=b[2];h=b[3];l=b[4];n=b[5];p=b[6];v=b[7];w=b[8];x=b[9];y=b[10];z=b[11];a[0]=g;a[1]=k;a[2]=f;a[3]=h;a[4]=l;a[5]=n;a[6]=p;a[7]=v;a[8]=w;a[9]=x;a[10]=y;a[11]=z;a[12]=g*c+l*d+w*e+b[12];a[13]=k*c+n*d+x*e+b[13];a[14]=f*c+p*d+y*e+b[14];a[15]=h*c+v*d+z*e+b[15]}}
+function transpose(a,b){if(a===b){var c=b[1],d=b[2],e=b[3],g=b[6],k=b[7],f=b[11];a[1]=b[4];a[2]=b[8];a[3]=b[12];a[4]=c;a[6]=b[9];a[7]=b[13];a[8]=d;a[9]=g;a[11]=b[14];a[12]=e;a[13]=k;a[14]=f}else a[0]=b[0],a[1]=b[4],a[2]=b[8],a[3]=b[12],a[4]=b[1],a[5]=b[5],a[6]=b[9],a[7]=b[13],a[8]=b[2],a[9]=b[6],a[10]=b[10],a[11]=b[14],a[12]=b[3],a[13]=b[7],a[14]=b[11],a[15]=b[15]}function dist(a,b,c,d){b=a[12]-b;c=a[13]-c;a=a[14]-d;return b*b+c*c+a*a}
+function drawModel(a,b,c,d){multiply(mvp,vm,a);multiply(mvp,pm,mvp);invert(nm,a);transpose(nm,nm);gl.uniformMatrix4fv(c.mvp,gl.FALSE,mvp);gl.uniformMatrix4fv(c.nm,gl.FALSE,nm);gl.uniform4fv(c.color,d);gl.drawElements(gl.TRIANGLES,b.count,gl.UNSIGNED_SHORT,0)}
+function bindModel(a,b){gl.bindBuffer(gl.ARRAY_BUFFER,b.vertices);gl.vertexAttribPointer(a.vertex,3,gl.FLOAT,gl.FALSE,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,b.normals);gl.vertexAttribPointer(a.normal,3,gl.FLOAT,gl.FALSE,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b.indicies)}
+function drawSea(){gl.useProgram(seaProgram);var a=seaProgram.uniforms,b=seaProgram.attribs;gl.uniform3fv(a.light,lightDirection);gl.uniform4fv(a.sky,skyColor);gl.uniform1f(a.far,far);gl.uniform1f(a.time,(now-first)/500);gl.uniform1f(a.radius,seaHalf);var c=sea.model;bindModel(b,c);drawModel(sea.matrix,c,a,sea.color)}
+function drawPlayer(a,b){0==player.depth?rotate(m,player.matrix,player.tilt+M.sin(player.roll+=.1*factor)*(.05-player.v/(10*player.maxSpeed)),.2,.2,1):translate(m,player.matrix,0,player.depth,0);var c=player.model;bindModel(b,c);drawModel(m,c,a,player.color);0!=player.v&&rotate(m,m,.005*now,0,0,1);c=player.prop;bindModel(b,c);drawModel(m,c,a,player.color)}function drawFloor(a,b){var c=floor.model,d=floor.matrix;bindModel(b,c);drawModel(d,c,a,floor.color)}
+function draw(){gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);var a=program.uniforms,b=program.attribs;gl.uniform3fv(a.light,lightDirection);gl.uniform4fv(a.sky,skyColor);gl.uniform1f(a.far,far);drawFloor(a,b);for(var c=player.matrix,d=c[12],e=player.depth,c=c[14],g,k=entitiesLength;k--;){var f=entities[k];if(!f.found){var h=f.matrix;f.isTreasure&&8>dist(h,d,e,c)?(f.found=!0,++coinsFound==coins?text.innerHTML='You found all coins!<br/><a href="javascript:newGame()">Play again?</a>':
+text.innerText="Found a coin! "+(coins-coinsFound)+" left ..."):(g!=f.model&&(g=f.model,bindModel(b,g)),drawModel(h,g,a,f.color),f.update&&f.update())}}drawPlayer(a,b);drawSea()}function updateView(a){invert(vm,a);translate(m,im,0,6,-30);multiply(vm,m,vm)}function getFloorOffset(a,b){var c=floor.model,d=c.size;a=(a+floor.radius)/floor.mag|0;b=(b+floor.radius)/floor.mag|0;return 0>a||a>d||0>b||b>d?-1:(M.abs(b*d+a)|0)%c.heightMap.length}
+function addToFloor(a,b,c){a=getFloorOffset(a,b);floor.model.heightMap[a]+=c}function getFloorHeight(a,b){var c=getFloorOffset(a,b);return 0>c?0:floor.model.heightMap[c]}function alignSea(a,b){var c=sea.matrix,d=sea.mag,e=sea.radius,g=M.round(a/e)*e,e=M.round(b/e)*e;translate(c,im,g,0,e);scale(c,c,d,1,d)}
+function move(a,b){translate(a,a,0,0,b);var c=floor.radius,d=a[12],e=a[14];d<-c||d>c||e<-c||e>c?text.warning||(text.innerHTML='<span class="Warning">You left the dive area!<span>',text.warning=!0):text.warning&&(text.innerText="",text.warning=!1);alignSea(d,e)}function turn(a,b){rotate(a,a,b,0,1,0);player.tilt+=4*b}
+function input(){keysDown[82]&&W.location.reload(!0);var a=player.matrix,b=player.maxSpeed,c=player.maxTurn;0!=player.v&&(move(a,-player.v),player.v*=.94,.01>M.abs(player.v)&&(player.v=0));0!=player.tilt&&(player.tilt*=.75,.01>M.abs(player.tilt)&&(player.tilt=0));var d=!1,e=!1,g=!1,k=!1,f=!1;if(0<pointersLength)for(var h=width/5,l=pointersLength;l--;)switch(pointersX[l]/h|0){case 0:g=!0;break;case 1:d=!0;break;case 2:f=!0;break;case 3:e=!0;break;case 4:k=!0}else d=keysDown[87]||keysDown[38]||keysDown[75],
+e=keysDown[83]||keysDown[40]||keysDown[74],g=keysDown[65]||keysDown[37]||keysDown[72],k=keysDown[68]||keysDown[39]||keysDown[76],f=keysDown[32];g?turn(a,c):k?turn(a,-c):b*=1.5;if(e)player.v=-b/2;else if(d||g||k)player.v=b;f&&getFloorHeight(a[12],a[14])<player.depth-2?player.depth-=.05:(player.depth*=.98,.2>M.abs(player.depth)&&(player.depth=0));updateView(a)}function run(){requestAnimationFrame(run);now=Date.now();factor=(now-last)/16;last=now;input();draw()}
+function setPointer(a,b){if(b)if(a.touches)for(var c=a.touches,d=pointersLength=c.length;d--;){var e=c[d];pointersX[d]=e.pageX;pointersY[d]=e.pageY}else pointersLength=1,pointersX[0]=a.pageX,pointersY[0]=a.pageY;else pointersLength=a.touches?a.touches.length:0;a.preventDefault()}function pointerUp(a){setPointer(a,!1)}function pointerMove(a){setPointer(a,pointersLength)}function pointerDown(a){setPointer(a,!0)}function setKey(a,b){keysDown[a.keyCode]=b;a.preventDefault()}
+function keyUp(a){setKey(a,!1)}function keyDown(a){setKey(a,!0)}function setProjectionMatrix(){var a=width/height,b=.1-far,c=1/M.tan(.125*M.PI);pm=new FA([c/a,0,0,0,0,c,0,0,0,0,(far+.1)/b,-1,0,0,.2*far/b,0])}function resize(){width=gl.canvas.clientWidth;height=gl.canvas.clientHeight;gl.canvas.width=width;gl.canvas.height=height;gl.viewport(0,0,width,height);setProjectionMatrix()}
+function cacheUniformLocations(a,b){void 0===a.uniforms&&(a.uniforms={});for(var c=0,d=b.length;c<d;++c){var e=b[c];a.uniforms[e]=gl.getUniformLocation(a,e)}}function cacheAttribLocations(a,b){void 0===a.attribs&&(a.attribs={});for(var c=0,d=b.length;c<d;++c){var e=b[c];a.attribs[e]=gl.getAttribLocation(a,e);gl.enableVertexAttribArray(a.attribs[e])}}
+function compileShader(a,b){var c=gl.createShader(b);gl.shaderSource(c,a);gl.compileShader(c);return gl.getShaderParameter(c,gl.COMPILE_STATUS)?c:null}function linkProgram(a,b){var c=gl.createProgram();c&&(gl.attachShader(c,a),gl.attachShader(c,b),gl.linkProgram(c),gl.getProgramParameter(c,gl.LINK_STATUS)||(gl.deleteProgram(c),c=null));return c}
+function buildProgram(a,b){var c,d,e;if(d=compileShader(a,gl.VERTEX_SHADER)){if(e=compileShader(b,gl.FRAGMENT_SHADER))c=linkProgram(d,e),gl.deleteShader(e);gl.deleteShader(d)}return c}function calculateNormals(a,b){for(var c=[],d=0,e=b.length;d<e;){var g=3*b[d++],k=3*b[d++],f=3*b[d++],h=a[g],l=a[g+1],n=a[g+2],p=a[k]-h,v=a[k+1]-l,w=a[k+2]-n,h=a[f]-h,l=a[f+1]-l,x=a[f+2]-n,n=v*x-w*l,w=w*h-p*x,p=p*l-v*h;c[g]=n;c[g+1]=w;c[g+2]=p;c[k]=n;c[k+1]=w;c[k+2]=p;c[f]=n;c[f+1]=w;c[f+2]=p}return c}
+function createModel(a,b){var c={count:b.length};c.vertices=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,c.vertices);gl.bufferData(gl.ARRAY_BUFFER,new FA(a),gl.STATIC_DRAW);c.normals=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,c.normals);gl.bufferData(gl.ARRAY_BUFFER,new FA(calculateNormals(a,b)),gl.STATIC_DRAW);c.indicies=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,c.indicies);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(b),gl.STATIC_DRAW);return c}
+function calculateMapIndicies(a){for(var b=[],c=0,d=1;d<a;++d){for(var e=1;e<a;++e)b.push(c),b.push(c+a),b.push(c+1),b.push(c+1),b.push(c+a),b.push(c+a+1),++c;++c}return b}function expandToHorizon(a,b,c){for(var d=0,e=a.length;d<e;++d){if(a[d]==-b)a[d]=-1E3;else if(a[d]==b)a[d]=1E3;else continue;c&&(0==d%3?a[d+1]=-1E3:2==d%3&&(a[d-1]=-1E3))}}
+function createHeightMap(a,b){function c(b,c,e){if(b==f||c==f)e=d(b%f,c%f);k[a*c+b|0]=e}function d(b,c){return k[c%f*a+b%f|0]}function e(a,b,e,f){e=d(a-e,b-e)+d(a+e,b-e)+d(a+e,b+e)+d(a-e,b+e);c(a,b,e/4+f)}function g(b,e,f,g){var h=0,k=0;-1<b-f&&(h+=d(b-f,e),++k);-1<e-f&&(h+=d(b,e-f),++k);b+f<a&&(h+=d(b+f,e),++k);e+f<a&&(h+=d(b,e+f),++k);c(b,e,h/k+g)}var k=new FA(a*a),f=a-1,h=M.random();c(0,0,h);c(f,0,h);c(f,f,h);c(0,f,h);for(h=f;;){var l,n,p=h>>1,v=b*h/f;if(1>p)break;for(n=p;n<f;n+=h)for(l=p;l<f;l+=
+h)e(l,n,p,M.random()*v*2-v);for(n=0;n<=f;n+=p)for(l=(n+p)%h;l<=f;l+=h)g(l,n,p,M.random()*v*2-v);h=p}return k}
+function createSeaModel(a){var b=[],c=M.pow(2,a)+1,d=2*c-1;a=d>>1;for(var e=0,g=1,k=4,f=c-1;e<f;++e,g+=3*d){for(var h=0;h<f;++h)b.push(h-a),b.push(.5*M.random()-.5),b.push(e-a);b.push(h-a);b.push(b[g]);b.push(e-a);for(var h=1,l=c-1;h<c;++h)b.push(l+h-a),b.push(b[k]),b.push(e-a),k+=3;k+=3*c}g=1;for(h=0;h<d;++h,g+=3)b.push(h-a),b.push(b[g]),b.push(e-a);k=3*d+1;f=c-1;for(e=0;e<f;++e)for(h=0;h<d;++h)b.push(h-a),b.push(b[k]),b.push(c+e-a),k+=3;expandToHorizon(b,a);b=createModel(b,calculateMapIndicies(d));
+seaHalf=b.radius=a;return b}function createFloorModel(a,b,c){var d=[];a=M.pow(2,a)+1;var e=a>>1,g=.5;b=createHeightMap(a,b);for(var k=0,f=0;f<a;++f)for(var h=0;h<a;++h){var l=b[k++]*c,g=M.max(g,l);d.push(h-e);d.push(l);d.push(f-e)}expandToHorizon(d,e,!0);c=createModel(d,calculateMapIndicies(a));c.heightMap=b;c.size=a;c.radius=e;c.max=g;return c}
+function mirrorModel(a,b){for(var c=a.length/3,d=0,e=a.length;d<e;)a.push(-a[d++]),a.push(a[d++]),a.push(a[d++]);d=0;for(e=b.length;d<e;d+=3)b.push(c+b[d+2]),b.push(c+b[d+1]),b.push(c+b[d])}
+function createPropModel(){return createModel([0,.536,3.258,-.464,.268,3.258,-.536,0,3.258,-.268,-.464,3.258,0,-.536,3.258,.464,-.268,3.258,.536,0,3.258,.268,.464,3.258,0,0,3.258,0,.536,3.294,-.464,.268,3.294,-.536,0,3.294,-.268,-.464,3.294,0,-.536,3.294,.464,-.268,3.294,.536,0,3.294,.268,.464,3.294,0,0,3.294],[1,8,2,3,8,4,6,5,8,7,8,0,10,11,17,12,13,17,15,17,14,16,9,17,6,8,17,8,17,13,4,13,12,8,17,9,8,17,11,5,6,15,7,16,17,1,10,17,0,9,16,3,12,17,2,11,10,8,5,14])}
+function createBoatModel(){var a=[.2,-.38,-2.459,.2,0,-2.565,.47,-.268,-2.459,.7,-.496,-2.217,.853,-.649,-1.202,.907,-.702,-.005,.853,-.649,1.192,.7,-.496,2.207,.47,-.268,2.885,.582,0,-2.459,.907,0,-2.217,1.123,0,-1.202,1.2,0,-.005,1.123,0,1.192,.907,0,2.207,.582,0,2.885,.47,.268,-2.459,.7,.496,-2.217,.853,.649,-1.202,.907,.702,-.005,.853,.649,1.192,.7,.496,2.207,.47,.268,2.885,.2,0,3.076,.2,.38,-2.459,.2,.702,-2.217,.391,.918,-1.202,.391,.993,.277,.2,.918,1.192,.2,.702,2.207,.2,.38,2.885,.2,-.702,
+-2.217,.2,-.918,-1.202,.2,-.993,-.005,.2,-.918,1.192,.2,-.702,2.207,.2,-.38,2.885,0,-.38,-2.459,0,0,-2.565,0,0,3.076,0,.38,-2.459,0,.702,-2.217,0,.918,-1.202,0,.993,.277,0,.918,1.192,0,.702,2.207,0,.38,2.885,0,-.702,-2.217,0,-.918,-1.202,0,-.993,-.005,0,-.918,1.192,0,-.702,2.207,0,-.38,2.885,.279,1.761,-1.202,.279,1.761,-.005,0,1.761,-1.202,0,1.761,-.005,.122,1.919,-1.039,.122,1.919,-.477,0,1.919,-1.039,0,1.919,-.477],b=[23,36,8,35,6,7,32,5,33,0,3,31,36,7,8,34,5,6,31,4,32,0,1,2,8,14,15,6,12,13,3,
+11,4,2,1,9,23,8,15,7,13,14,4,12,5,2,10,3,12,20,13,11,17,18,9,1,16,23,15,22,13,21,14,12,18,19,10,16,17,14,22,15,23,22,30,20,29,21,19,26,27,17,24,25,21,30,22,20,27,28,18,25,26,16,1,24,23,52,36,32,47,31,33,48,32,24,41,25,34,49,33,25,42,26,34,51,50,1,40,24,43,54,56,36,51,35,23,46,39,28,43,44,0,38,1,28,45,29,31,37,0,29,46,30,56,58,60,27,53,54,42,53,26,57,60,58,55,57,53,53,58,54,35,34,6,32,4,5,0,2,3,36,35,7,34,33,5,31,3,4,8,7,14,6,5,12,3,10,11,7,6,13,4,11,12,2,9,10,12,19,20,11,10,17,13,20,21,12,11,18,10,
+9,16,14,21,22,20,28,29,19,18,26,17,16,24,21,29,30,20,19,27,18,17,25,23,39,52,32,48,47,33,49,48,24,40,41,34,50,49,25,41,42,34,35,51,1,38,40,43,27,54,36,52,51,23,30,46,28,27,43,0,37,38,28,44,45,31,47,37,29,45,46,56,54,58,27,26,53,42,55,53,57,59,60,55,59,57,53,57,58];mirrorModel(a,b);return createModel(a,b)}
+function createCoinModel(){var a=[0,.063,-.637,.588,-.063,-.243,.637,-.063,0,.588,-.063,.243,.45,-.063,.45,.243,-.063,.588,0,-.063,.637,0,-.063,-.637,0,.063,.637,.243,.063,.588,.45,.063,.45,.588,.063,.243,.637,.063,0,.588,.063,-.243,.45,.063,-.45,.243,.063,-.588,.45,-.063,-.45,.243,-.063,-.588],b=[14,17,15,12,1,13,10,3,11,8,5,9,15,7,0,13,16,14,11,2,12,9,4,10,10,14,8,17,4,5,14,16,17,12,2,1,10,4,3,8,6,5,15,17,7,13,1,16,11,3,2,9,5,4,8,9,10,10,11,12,12,13,14,14,15,0,0,8,14,10,12,14,6,7,17,17,16,1,1,2,
+3,3,4,17,5,6,17,17,1,3];mirrorModel(a,b);return createModel(a,b)}function createPyramidModel(){return createModel([0,1,0,-1,-1,-1,1,-1,-1,-1,-1,1,1,-1,1],[0,3,4,0,4,2,0,1,2,0,3,1,1,3,2,2,3,4])}function createPlayer(){player={model:createBoatModel(),prop:createPropModel(),matrix:new FA(im),color:[1,1,1,1],roll:0,v:0,depth:0,tilt:0,maxSpeed:.15,maxTurn:.01}}
+function createEntities(){var a=[[-10,-40,9],[-15,-25,5]],b;for(b in a){var c=a[b][0],d=a[b][1],e=a[b][2],g=.66*e;translate(m,im,c,getFloorHeight(c,d),d);scale(m,m,e,g,e);addToFloor(c,d,g);entities.push({model:createPyramidModel(),matrix:new FA(m),color:[.3,.2,.1,1]})}var a=createCoinModel(),e=[1,.6,.1,1],g=floor.model.size*floor.mag*.35,k=.5*g;for(b=0;b<coins;++b){var c=-k+M.random()*g,d=-k+M.random()*g,f=getFloorHeight(c,d)+2;translate(m,im,c,f,d);rotate(m,m,M.random()*M.TAU,1,1,1);entities.push({model:a,
+matrix:new FA(m),color:e,found:!1,isTreasure:!0,update:function(){rotate(this.matrix,this.matrix,.01,1,1,1)}})}entitiesLength=entities.length}function createSea(){var a=createSeaModel(6);sea={model:a,matrix:new FA(im),color:[.4,.7,.8,.3],radius:1.75*a.radius,mag:1.75};alignSea(0,0)}
+function createFloor(a){for(var b=createFloorModel(5,.6,14),c=b.heightMap,d=-(10+b.max),e=c.length;e--;)c[e]=d+14*c[e];translate(m,im,0,d,0);scale(m,m,a,1,a);floor={model:b,matrix:new FA(m),color:[.3,.2,.1,1],radius:b.radius*a,mag:a,amp:14,base:d}}
+function newGame(){coins=1+(9*M.random()|0);coinsFound=0;text.innerText="Find "+coins+" lost coins!";text.warning=!0;createFloor(11);createEntities();player.matrix=new FA(im);player.roll=0;player.v=0;player.depth=0;player.tilt=0;updateView(player.matrix)}
+function cacheLocations(){var a=["vertex","normal"],b="mvp nm light color sky far".split(" ");cacheAttribLocations(program,a);cacheUniformLocations(program,b);cacheAttribLocations(seaProgram,a);b.push("time");b.push("radius");cacheUniformLocations(seaProgram,b)}function createPrograms(){var a=D.getElementById("FragmentShader").textContent;return(program=buildProgram(D.getElementById("VertexShader").textContent,a))&&(seaProgram=buildProgram(D.getElementById("SeaVertexShader").textContent,a))}
+function getContext(){for(var a=D.getElementById("Canvas"),b,c=["webgl","experimental-webgl"],d=c.length,e=0;e<d;++e)if(b=a.getContext(c[e],{alpha:!1}))return b}
+function init(){(text=D.getElementById("Text"))&&(gl=getContext())&&createPrograms()?(cacheLocations(),createSea(),createPlayer(),newGame(),gl.enable(gl.DEPTH_TEST),gl.enable(gl.BLEND),gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA),gl.clearColor(skyColor[0],skyColor[1],skyColor[2],skyColor[3]),W.onresize=resize,resize(),D.onkeydown=keyDown,D.onkeyup=keyUp,D.onmousedown=pointerDown,D.onmousemove=pointerMove,D.onmouseup=pointerUp,D.onmouseout=pointerUp,"ontouchstart"in D&&(D.ontouchstart=pointerDown,
+D.ontouchmove=pointerMove,D.ontouchend=pointerUp,D.ontouchleave=pointerUp,D.ontouchcancel=pointerUp),first=last=Date.now()-16,run()):alert("WebGL not available")}W.onload=init;
+</script>
+</body>
+</html>

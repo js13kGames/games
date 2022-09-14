@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=1920,initial-scale=1"><style>* {
+      margin: 0;
+      padding: 0;
+      font-family: Comic Sans MS;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    #c {
+      /* position: absolute; */
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .f {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+    }
+
+    #mc {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    #m {
+      font-size: 32px;
+      padding: 32px;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 8px;
+      z-index: 10;
+      pointer-events: all;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .m-t {
+      font-size: 42px;
+      margin-top: 20px;
+      color: rgb(213, 45, 7);
+    }
+
+    .m-i {
+      margin-top: 16px;
+      padding: 8px 16px;
+      border: 1px solid black;
+      border-radius: 4px;
+      background: transparent;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .m-i:hover {
+      background: #ddd;
+    }
+
+    #m-b {
+      z-index: 0;
+      background: rgba(0, 0, 0, 0.4);
+      pointer-events: all;
+    }
+
+    .l-s {
+      border: 1px solid rgb(60, 60, 255);
+      background: rgb(60, 60, 255, 0.7);
+    }
+
+    .l-a {
+      border: 1px solid rgba(60, 255, 66, 0.7);
+      background: rgba(60, 255, 66, 0.7);
+    }
+
+    .c-i {
+      margin-top: 8px;
+      font-size: 24px;
+    }
+
+    .r {
+      font-size: 16px;
+    }</style></head><body><div id="c"><div id="mc" class="f"></div></div><script src="main.js"></script></body></html>

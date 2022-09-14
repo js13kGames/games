@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Elemental War</title>
+<link rel="stylesheet" type="text/css" href="style.min.css">
+</head>
+<body onload="setup();">
+	<h2>Elemental Card War</h2>
+	<div id="wrap">
+		<div id="intro" class="infobox">
+			<b>Elemental Card War</b> is loosely based on the game of "War" from standard playing cards.<br/><br>
+			The deck is akin to a standard playing card deck of 52 cards. There are four suits: Earth, Fire, Water, Air each with cards numbered 1-10,J,Q,K. In addition to their value, each card may have 0-3 circles along the bottom. These are Trump circles.<br/><br>
+			Each turn, both players turn up a card. Trump circles add to the current trump countshown on the right. Higher trump suits beat lower trump suits and higher values beat lower values within the suit. Suits with the same trump value are considered equal.<br/><br>
+			Points are scored based on the trumps table. In this case, the order, not the trump value is important for points.<br/><br>
+			Burnout: When a suit gets more than 7 trump circles, it goes into burnout after that battle is resolved. Burned out suits are considered the lowest of the trump order. Different suits have different trump circle patterns, so will burnout differently.<br/><br>
+			Burned out suits are considered equal to each other and score one point.<br/><br>
+			Game ends when all four suits are burned out or there are no more cards to play.
+		</div>
+		<div id="play">
+			<div id="opponent">
+				<div id="opponent-sidebar"></div>
+			</div>
+			<div id="battle">
+				<div id="opponent-discard"></div>
+				<div id="opponent-play"></div>
+				<div id="player-play"></div>
+				<div id="player-discard"></div>
+				<div id="trumps"></div>
+			</div>
+			<div id="player">
+				<div id="player-sidebar"></div>
+			</div>
+		</div>
+	</div>
+	<script src="script.min.js"></script>
+</body>
+</html>

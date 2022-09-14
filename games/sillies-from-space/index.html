@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="monetization" content="$ilp.uphold.com/wXFRdBhaxWXw">
+    <title>Sillies From Space</title>
+    <link rel=stylesheet href=styles.css>
+
+  </head>
+
+
+  <div id=viewport>
+      <div id=camera>
+        <div id=scene></div>
+      </div>
+      <h1 id="title" class="titlescreen">Sillies From Space</h1>
+      <h1 id="start" class="titlescreen" onclick="startGame()">Click here to play!</h1>
+      <h1 id="instructions"></h1>
+      <div id="controls">
+        <div id="button_holder">
+          <button type="button" id="btnLeft" class="btn" disabled >⬅️</button>
+          <button type="button" id="btnRight" class="btn" disabled>➡️</button>
+          <button type="button" id = "btnEyes" class="btn" disabled>👁️</button>
+          <button type="button" id = "btnMouth" class="btn" disabled>👄</button>
+        </div>
+      </div>
+      <div id="gameoverscreen">
+        <h1 id="gameovertitle" class="ending">Game Over</h1>
+        <h2 id="score" class="ending">Score: </h2>
+        <h2 id="highscore" class="ending"></h2>
+        <h1 id="btnPlayAgain"class="ending" onclick="playAgain()">Play Again</h1>
+        <h1 id="subscribermessage"class="ending"></h1>
+
+      </div>
+  </div>
+
+  <script src="css3d.js"></script>
+  <script src="game.js"></script>
+
+</html>

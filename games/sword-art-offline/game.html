@@ -1,0 +1,162 @@
+<html>
+
+<head>
+  <title>Js13kGame</title>
+  <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+  <script type="text/javascript">
+    let state = 0;
+    AFRAME.registerPrimitive('a-p', {
+      defaultComponents: {
+        p: {}
+      }
+    });
+    AFRAME.registerComponent('p', {
+      init: function() {
+        let el = this.el;
+        el.innerHTML =
+          `<a-octahedron id="o" color="#FF926B" radius="5" scale="0.5 0.5 0.5" position="0 0 -10">
+            <a-animation attribute="rotation" dur="5000" fill="forwards" to="0 360 0" easing="ease-in-out" direction="alternate" repeat="indefinite"></a-animation>
+            <a-animation attribute="position" dur="5000" fill="forwards" to="0 2 -10" easing="ease-in-out" direction="alternate" repeat="indefinite"></a-animation>
+          </a-octahedron>`;
+        el.addEventListener("mouseenter", function() {
+          el.parentNode.removeChild(el);
+          state -= 1;
+          // console.log(state);
+          change1();
+
+        });
+      }
+    });
+
+    AFRAME.registerPrimitive('a-f', {
+      defaultComponents: {
+        f: {}
+      }
+    });
+    AFRAME.registerComponent('f', {
+      init: function() {
+        let el = this.el;
+        el.innerHTML =
+          `  <a-box color="#CCC" depth="0.1" height="4" width="0.2" position="0 1.5 -2" rotation="0 0 45" scale="0.5 0.5 0.5">
+              <a-box color="#CCC" depth="0.1" height="0.141" width="0.141" position="0 2 0" rotation="0 0 45"></a-box>
+              <a-box color="#CCC" depth="0.3" height="0.141" width="1" position="0 -1.4 0"></a-box>
+              <a-animation attribute="rotation" dur="1000" fill="forwards" from="135 0 45" to="0 0 -45" repeat="indefinite" direction="alternate" easing="ease-in-out-back"></a-animation>
+
+            </a-box>
+
+            <a-box color="#CCC" depth="0.1" height="4" width="0.2" position="0 1.5 -2" rotation="0 0 -45" scale="0.5 0.5 0.5">
+              <a-box color="#CCC" depth="0.1" height="0.141" width="0.141" position="0 2 0" rotation="0 0 45"></a-box>
+              <a-box color="#CCC" depth="0.3" height="0.141" width="1" position="0 -1.4 0"></a-box>
+              <a-animation attribute="rotation" dur="1000" fill="forwards" from="135 0 -45" to="0 0 45" repeat="indefinite" direction="alternate" easing="ease-in-out-back"></a-animation>
+
+            </a-box>
+            <a-text value="Congrats" position="-0.55 0 -3" scale="3 3 3"></a-text>
+
+
+            `;
+      }
+    });
+
+
+
+  </script>
+</head>
+
+<body>
+  <a-scene light="defaultLightsEnabled: false">
+    <a-text value="Alive : " id="score"position="-3 0 -3"></a-text>
+
+
+    <a-entity id="c" camera look-controls wasd-controls position="0 1.6 0">
+      <a-cursor></a-cursor>
+
+      <a-entity id="light" light="type:point;color:rgb(19, 41, 198);" position="0 0 -2"></a-entity>
+      <a-box color="#CCC" depth="0.1" height="4" width="0.2" position="0 0 -1" rotation="-45 -45 0" scale="0.4 0.4 0.4">
+        <a-box color="#CCC" depth="0.1" height="0.141" width="0.141" position="0 2 0" rotation="0 0 45"></a-box>
+        <a-box color="#CCC" depth="0.3" height="0.141" width="1" position="0 -1.4 0"></a-box>
+      </a-box>
+    </a-entity>
+
+
+
+    <a-entity id="light1" light="type:point;color:rgb(19, 41, 198);"></a-entity>
+
+    <a-plane color="#CCC" height="40" width="40" position="0 0 -20"></a-plane>
+    <a-plane color="#CCC" height="40" width="40" position="20 0 0" rotation="0 -90 0"></a-plane>
+    <a-plane color="#CCC" height="40" width="40" position="-20 0 0" rotation="0 90 0"></a-plane>
+    <a-plane color="#CCC" height="40" width="40" position="0 0 20" rotation="0 180 0"></a-plane>
+    <a-plane color="#CCC" height="40" width="40" position="0 20 0" rotation="90 0 0"></a-plane>
+    <a-plane color="#CCC" height="40" width="40" position="0 -20 0" rotation="-90 90 90"></a-plane>
+
+    <a-sky color="#29292d"></a-sky>
+  </a-scene>
+  <script type="text/javascript">
+    let light = document.getElementById("light")
+    let light1 = document.getElementById("light")
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    function change() {
+      let val = "rgb(" + getRandomInt(256) + ", " + getRandomInt(256) + ", " + getRandomInt(256) + ")";
+      let val1 = "rgb(" + getRandomInt(256) + ", " + getRandomInt(256) + ", " + getRandomInt(256) + ")";
+      light.setAttribute('light', {
+        color: val
+      });
+      light1.setAttribute('light', {
+        color: val1
+      });
+      document.getElementById("score").setAttribute("value", `Alive : ${state}`);
+      var t = setTimeout(change, 1000);
+    }
+    change();
+    function change1() {
+      document.getElementById("score").setAttribute("value", `Alive : ${state}`);
+      if(state == 0){
+        c.setAttribute("visible", false);
+        let sce = document.querySelector('a-scene');
+        let pp = document.createElement('a-f');
+        sce.appendChild(pp);
+        return ;
+      }
+      var t = setTimeout(change1, 100);
+    }
+    document.addEventListener("keydown", function(event) {
+      // console.log(event.which);
+      if (event.which == 81) {
+        document.getElementById("c").setAttribute("position", {
+          y: document.getElementById("c").getAttribute("position").y - 1
+        });
+      }
+      if (event.which == 69) {
+        document.getElementById("c").setAttribute("position", {
+          y: document.getElementById("c").getAttribute("position").y + 1
+        });
+      }
+    });
+
+    function add() {
+      let sc = document.querySelector('a-scene');
+      // console.log(sc);
+      let p = document.createElement('a-p');
+      var rv1 = Math.random() * (5 - -5) + -5;
+      var rv2 = Math.random() * (10 - -10) + -10;
+      var rv3 = Math.random() * (10 - -10) + -10;
+      p.setAttribute("position", {
+        x: Math.round(rv1),
+        y: Math.round(rv2),
+        z: Math.round(rv3)
+      });
+      sc.appendChild(p);
+      state += 1;
+      // console.log(state);
+    }
+    for (var i = 0; i < 30; i++) {
+      add();
+    }
+
+  </script>
+</body>
+
+</html>

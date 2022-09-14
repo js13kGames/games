@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+    </head>
+    <style type="text/css">
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed,
+        figure, figcaption, footer, header, hgroup,
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font: inherit;
+            font-size: 100%;
+            vertical-align: baseline;
+        }
+
+        html {
+            line-height: 1;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        caption, th, td {
+            text-align: left;
+            font-weight: normal;
+            vertical-align: middle;
+        }
+
+        q, blockquote {
+            quotes: none;
+        }
+        q:before, q:after, blockquote:before, blockquote:after {
+            content: "";
+            content: none;
+        }
+
+        a img {
+            border: none;
+        }
+
+        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+            display: block;
+        }
+
+        body {
+            background-color: white;
+            overflow: hidden;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-transform: translate3d(0, 0, 0);
+            -moz-transform: translate3d(0, 0, 0);
+            -ms-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            width : 100%;
+            height : 100%;
+            position : fixed;
+            top: 0px;
+            left: 0px;
+        }
+
+        canvas {
+            position: absolute;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-transform: translate3d(0, 0, 0);
+            -moz-transform: translate3d(0, 0, 0);
+            -ms-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        #game_background {
+            display: none;
+            z-index: -1;
+            pointer-events: none;
+            cursor: none;
+        }
+
+
+        .splash{
+            background-color: #FFFFFF;
+        }
+
+        .game {
+        }
+    </style>
+    <body>
+        <!--<canvas id='cv'>-->
+            <!--<canvas id='particles'></canvas>-->
+        <!--</canvas>-->
+
+        <div style="position: relative;">
+            <canvas id="cv"
+                    style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+            <canvas id="particles"
+                    style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+        </div>
+
+        <!--<canvas id="temp"-->
+                <!--style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>-->
+
+        <!--<script src="src/mountains.js"></script>-->
+        <!--<script src="src/water.js"></script>-->
+        <script src="game.js"></script>
+        <!--<script src="dist/game.js"></script>-->
+    </body>
+</html>

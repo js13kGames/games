@@ -1,0 +1,63 @@
+<!-- index.html -->
+<!doctype html>
+<html>
+  <head>
+    <title>LOSTindeed</title>
+    <style>
+      * {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width:100%;
+  background-color: #111;
+}
+
+#container {
+  width: 100%;
+  min-height: 600px;
+  text-align: center;
+  background: radial-gradient(#0f0f0f,#374954);
+}
+
+#topBar {
+  color: whitesmoke;
+  font-family: courier;
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  
+}
+
+#topBar h1 {
+  margin: 0;
+  font-size:60px;
+  text-transform: uppercase;
+  text-shadow: 5px 5px 5px black;
+  letter-spacing: 2px;
+}
+
+#topBar span {
+  font-size:20px;
+  text-transform: lowercase;
+}
+
+#C {
+  background: black;
+  //border: 5px solid #2a0000;
+}
+    </style>
+  </head>
+  <body>
+    <div id='container'>
+        <div id='topBar'>
+          <h1>lost<span>indeed</span></h1>
+        </div>
+      <canvas id='C' width='900' height='500'></canvas>
+   </div>
+    <script type="text/javascript" src="classes.js"></script>  
+    <script type="text/javascript" src="functions.js"></script>  
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>

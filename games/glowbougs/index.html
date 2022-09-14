@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Glowbougs: by Mr Speaker</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+	<div>
+		<div id="b"></div>
+		<div>
+			js13k game by <a href="http://www.mrspeaker.net/">Mr Speaker</a>.
+			Space to start, keys to move.
+			Enjoy in <span id="fs">full screen</span>.
+			<div id="na">Sorry: incomplete Web Audio API === no sound.</div>
+		</div>
+	</div>
+
+	<script src="js13k.min.js"></script>
+	<script>
+		game.init();
+
+		// Go fullscreen
+		document
+			.querySelector("#fs")
+			.addEventListener("click", function () {
+
+				var dom = document.querySelector("#board")
+
+				if (dom.requestFullscreen) {
+					dom.requestFullscreen();
+				} else if (dom.mozRequestFullScreen) {
+					dom.mozRequestFullScreen();
+				} else if (dom.webkitRequestFullscreen) {
+					dom.webkitRequestFullscreen();
+				}
+
+			}, false);
+
+	</script>
+</body>
+</html>

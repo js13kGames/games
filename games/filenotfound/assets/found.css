@@ -1,0 +1,122 @@
+body {
+  margin: 0;
+  padding: 10px;
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 600px) {
+  body {
+    padding: 45px;
+  }
+}
+
+.path {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 0;
+  color: #000;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.path::before {
+  content: "Index of"
+}
+
+svg {
+  height: 13px;
+  vertical-align: text-bottom;
+}
+
+.files {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  padding: 0;
+}
+
+.link {
+  color: #000;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.item {
+  list-style: none;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.item .link {
+  padding: 10px 5px;
+  margin: 0 -5px;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+.item .link::before {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  width: 24px;
+  text-align: center;
+  line-height: 12px;
+}
+
+.folder::before {
+  content: url("images/folder.svg");
+}
+
+.file::before {
+  content: url("images/file.svg");
+}
+
+.image::before {
+  content: url("images/image.svg");
+}
+
+.flink::before {
+  content: url("images/link.svg");
+}
+
+.image-preview {
+  max-width: 100%;
+}
+
+.glitch {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.not-found {
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 400px;
+  color: white;
+  font-size: 4rem;
+
+}
+
+.canvas {
+  position: absolute;
+  pointer-events: none;
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>U ARE LOST GAME</title>
+	<style type="text/css">
+	table {
+  width: 560px;
+  background: white;
+  border-style: solid;
+  border-width: 10px;
+  border-color: white;
+}
+td {
+  background: black;
+  color: white;
+  padding: 15px;
+}
+div {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<h3 style="text-align:center"><b id="heading"></b>
+<script type="text/javascript">
+	var duration = 12,start = Date.now();
+	var array = ['U','A','R','E','L','O','S','T']
+	function generate_table() {
+	  var flag=0;
+	  var body = document.getElementsByTagName("body")[0];
+	  var tbl = document.createElement("table");
+	  var tblBody = document.createElement("tbody");
+	  for (var i = 0; i < 10; i++) {
+	    var row = document.createElement("tr");
+	    for (var j = 0; j < 12; j++) {
+	      var cell = document.createElement("td");
+		  cell.addEventListener("click",clicked);
+	      row.appendChild(cell);
+	    }
+	    tblBody.appendChild(row);
+	  }
+	  tbl.appendChild(tblBody);
+	  body.appendChild(tbl);
+	  tbl.setAttribute("border", "2");
+	  tbl.setAttribute("align", "center");
+	}
+	var u,v;
+	var level=1;
+	generate_table()
+	var tablestore = document.getElementsByTagName("table")[0];
+	function createRandomTable(level) {
+		u = Math.floor(Math.random() * (10));
+		v = Math.floor(Math.random() * (12));
+		var ch = array[level-1];
+		console.log(ch)
+		console.log(u)
+		console.log(v)
+		tablestore.rows[u].cells[v].innerText = ch;
+		for(var i=0;i<10;i++){
+			var k=(-1);
+			for(var j=0;j<12;j++){
+				if(i==u && j==v) continue;
+				do{
+					k = Math.floor(Math.random() * (8));
+				}
+				while(k==(level-1));
+				tablestore.rows[i].cells[j].innerText = array[k];
+			}
+		}
+	}
+	createRandomTable(level);
+	function clicked() {
+		console.log(u)
+		console.log(v)
+		if(this.cellIndex==v && this.parentNode.rowIndex==u){
+			level+=1;
+			duration-=1;
+			if(level==9){
+				alert("CONGRATS!!! U ARE LOST")
+				location.reload();
+			}
+ 			var para = document.getElementById("b1");
+    		show = document.getElementById('heading');
+    		show.innerHTML = '';
+    		for(var i=0;i<level-1;i++){
+    			show.innerHTML+='<span style="color:#008000">' + String(array[i]) + '</span>';
+    			if(array[i]=='U' || array[i]=='E') show.innerHTML+='<span style="color:#008000"> </span>';
+    		}
+    		show.innerHTML+='<mark>' + String(array[level-1]) + '</mark>';
+    		for(var i=level;i<8;i++){
+    			show.innerHTML+='<span style="color:red">' + String(array[i]) + '</span>';
+    			if(array[i]=='U' || array[i]=='E') show.innerHTML+='<span style="color:red"> </span>';
+    		}
+ 			para.innerText = "Find the character "+String(array[level-1]);
+			createRandomTable(level);
+			clearInterval(timer);
+			startTimer();
+		}
+		else{
+			console.log(this.cellIndex==v);
+			console.log(this.parentNode.rowIndex==u);
+		}
+	}
+function timer()
+{
+    var diff = duration - (((Date.now() - start) / 1000));
+    // alert(diff)
+    var seconds = (diff);
+    seconds = seconds | 0;
+    display = document.getElementById("time");
+    display.innerText = seconds;
+    if (diff <= 0)
+	{
+		start = Date.now() + 1000;
+		alert("GAME OVER");
+		location.reload();
+
+    }
+};
+function startTimer()	
+{
+    start = Date.now(),
+    setInterval(timer, 1000);
+}
+
+window.onload = function ()
+ {    
+ 	display = document.getElementById("time");
+    display.innerText = '11';
+    show = document.getElementById("heading");
+    show.innerHTML += '<mark>U</mark><span style="color:red"> ARE LOST</span>';
+ 	var para = document.getElementById("b1");
+ 	var str = "Find the character " + String(array[level-1])
+ 	para.innerText = str;
+    startTimer();
+};	
+</script>
+	<div><span id="b1" style='color:#cc0000'></span></div>
+	<br />
+	<div>Game ends in <span id="time" style='color:#cc0000'></span> seconds!</div></h3>
+
+</body>
+</html>

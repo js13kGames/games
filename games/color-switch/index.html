@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Color Switch</title>
+
+<link rel = "stylesheet"
+   type = "text/css"
+   href = "index.css" />
+
+</head>
+<body>
+<h1 style="text-align: center;">Color Switch</h1>
+<div id="levels" style="text-align: center;">
+	<button id="level1" value="1" onclick="window.prepare_level(this)">LEVEL 1</button>
+	<br><br>
+	<button id="level2" value="2" onclick="window.prepare_level(this)">LEVEL 2</button>
+	<br><br>
+	<button id="level3" value="3" onclick="window.prepare_level(this)">LEVEL 3</button>
+	
+</div>
+<div id="Rules" style="text-align: center;">
+	<h3> Rules</h3>
+	<ul>
+		<li>Hit Backspace to change the direction of movement </li>
+		<li>change the direction only when color of ball and ring are same</li>
+	</ul>
+</div> 
+<div id="start" style="text-align: center;">Hit "enter" to start the game</div>
+<div id="countdown"></div>
+<canvas id="myCanvas" width="600" height="600">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<div id="score"></div>
+
+
+<script type="text/javascript" src="color.js"></script>
+<script type="text/javascript" src="main.js"></script>
+
+</body>
+</html>

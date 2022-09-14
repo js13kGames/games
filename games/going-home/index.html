@@ -1,0 +1,288 @@
+<!--Pixel 2XL Resolution 2880(/3:960)x1440(/3:480)*/ // 60m + 50m-->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Going Home</title>
+        <style>
+            body { text-align: center; }
+            .shake { animation: shake 0.5s; }
+            @keyframes shake {
+                0% {transform: translate(1px, 1px);} 10% {transform: translate(-1px, 2px);} 20% {transform: translate(-3px, 0px);} 30% {transform: translate(3px, 2px);} 40% {transform: translate(1px, -1px);} 50% {transform: translate(-1px, 2px);} 60% {transform: translate(-3px, 1px);} 70% {transform: translate(3px, 1px);} 80% {transform: translate(-1px, -1px);} 90% {transform: translate(1px, 2px);} 100% {transform: translate(1px, -2px);}
+            }
+        </style>
+    </head>
+    <body>
+        <div id="ui404">
+            <canvas id="canvas404" width="960" height="480"></canvas>
+        </div>
+    </body>
+    <script>
+        let cvs = document.getElementById("canvas404"), ctx = cvs.getContext("2d"); //CANVAS
+        let count = 0, count_div = 10; //COUNT for Game Play
+
+        function Na() { //*****OBJECT Na(Player)
+            this.status = "idle";
+            this.x = 200, this.defX = this.x, this.y = 215, this.defY = this.y; //X:def(200), Y:def(215)
+            this.movY = 20, this.accY = 1, this.accY_def = this.accY; // for Jump & Dive
+            this.sizXY = 50; //SIZE:def(50)
+            this.life = 3; //LIFE:def(3)
+            this.hit = false, this.immTime = 50, this.immTime_def = this.immTime; // for Hit / immTime is immortal time
+            this.resetAll = () => {//RESET
+                this.x = this.defX, this.y = this.defY, this.life = 3, this.hit = false, this.immTime = this.immTime_def;
+            }
+        }
+        let na = new Na(); //CREATE:na(Player)
+
+        function Hurdle() { //*****OBJECT Hurdle 
+            this.lotation = false; //LOTATION True = Up Hurdle / False = Down Hurdle
+            this.x = 960, this.defX = 960, this.y = 0, this.defY = 0; //X:def(960), Y:def(0)
+            this.sizX = 50, this.sizY = 250; //SIZE:defX(50), defY(250)
+            /*Reset Lotation Up:def(0) Down:def(230)*/
+            this.resetY = () => {//RESET UP & DOWN
+                Math.random() < 0.5 ? this.y = 0 : this.y = 230;
+            }
+        };
+        let hurdle = new Array(); //CREATE:Hurdle
+        function createHurdlez() {
+            for(let i = 0; i < 4; i++) {
+                hurdle[i] = new Hurdle(), hurdle[i].x += (i * 300); //Hurdle Distance def(300)
+                hurdle[i].resetY();
+            }
+        }
+        createHurdlez();
+
+        document.onkeydown = () => { //KEY Press
+            event.keyCode === 32 ? title ? gameStart() : gameOver ? resetAll() : "" //KEY Space(Game Start:42)
+                : event.keyCode === 38 ? na.status === "idle" ? na.status = "jump" : "" //KEY Up(Jump:38)
+                    : event.keyCode === 40 ? na.status === "idle" ? na.status = "dive" : "" : ""; //KEY Down(Dive:40)
+        }
+
+        function resetAll() { //RESET All
+            na.resetAll();
+            createHurdlez();
+            speed_second = 30, count = 0, gameOver = false;
+            id_second = setInterval(playDraw, speed_second);
+        }
+
+        function drawBG() { //DRAW BG
+            let grd = ctx.createLinearGradient(0, 0, 960, 480); //DRAW Base BG
+            grd.addColorStop(0, "#b9deff"), grd.addColorStop(1, "#FFFFE5");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, 960, 480);
+            grd = ctx.createLinearGradient(0, 0, 960, 240); //DRAW Base See
+            grd.addColorStop(0, "#7F7FFF"), grd.addColorStop(1, "#4C4C99");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 240, 960, 240);
+        }
+
+        function Snow() { //*****OBJECT Snow
+            this.sizXY = 10;
+            this.x = 960 - this.sizXY; 
+            this.x_def = this.x;
+            this.y = 0 - this.sizXY;
+            this.y_def = this.y;
+            this.distance = 200;
+            this.resetX = () => { //Random Snow X
+                this.x = Math.floor(Math.random() * this.x_def - this.sizXY);
+            }
+        }
+        let snow = new Array(); //CREATE:Snow
+        for(let i = 0; i < 10; i++) {
+            snow[i] = new Snow();
+            snow[i].y -= (i * Math.floor(Math.random() * 500 + snow[i].distance)); //Snow Distance def(500)
+            snow[i].resetX();
+        }
+
+        function drawSnow() { //DRAW Snow
+            ctx.fillStyle = "white";
+            for(let i = 0; i < snow.length; i++) {
+                ctx.fillRect(snow[i].x, snow[i].y, snow[i].sizXY, snow[i].sizXY);
+                snow[i].y += 5;
+                snow[i].y > 480 ? snow[i].y = (snow[i].y_def - Math.floor(Math.random() * 500 + snow[i].distance)) : ""; // when reach the ground
+            }
+        }
+
+        let titleY = 160, titleY_def = titleY; //DRAW Intro
+        let title = true;
+        let introDraw = () => {
+            drawBG();
+            drawIsland();
+            drawBoat(na.defX, na.defY);
+            drawSnow();
+            ctx.fillStyle = "white";
+            ctx.font = "100px Arial"; //TEXT:Title
+            ctx.fillText("Going Home", 195, titleY);
+            titleY === titleY_def ? titleY = titleY_def - 5 : titleY = titleY_def; //ANIM:TEXT:Title
+            ctx.font = "55px Arial"; //TEXT:Start
+            ctx.fillText("Press <space> to Start", 200, 370);   
+        }
+        let id_first = setInterval(introDraw, 600);
+        function gameStart() {
+            title = false;
+            clearInterval(id_first);
+            id_second = setInterval(playDraw, speed_second);
+        }
+
+        let id_second; //Draw Play
+        let speed_second = 30;
+        let windRandom = false;
+        let gameOver = false;
+        let playDraw = () => {
+            count++; // for Game Count
+            let count_pla = Math.round(count / count_div);       
+            drawBG(); //***BG
+            drawIsland();
+            drawSnow();
+            if(na.hit) { //***Player
+                (na.immTime % 5) == 1 ? ctx.globalAlpha = 0.1 : ctx.globalAlpha = 1;
+                drawBoat(na.x, na.y);
+                na.immTime--;
+                if(na.immTime <= 0) {
+                    na.hit = false;
+                    cvs.classList.remove("shake");
+                }
+                ctx.globalAlpha = 1;
+            } else {
+                drawBoat(na.x, na.y);
+            }
+            for(let i = 0; i < hurdle.length; i++) { //***Hurdle
+                drawHurdle(hurdle[i].x, hurdle[i].y);
+                if(!na.hit && na.x <= hurdle[i].x + hurdle[i].sizX && na.x + na.sizXY >= hurdle[i].x&& ((na.y <= hurdle[i].y + hurdle[i].sizY && hurdle[i].y === 0) || (na.y + na.sizXY >= hurdle[i].y && hurdle[i].y === 230))) { // when Hit
+                    na.life--;
+                    cvs.classList.add("shake");
+                    na.hit = true;
+                    na.immTime = na.immTime_def;
+                }
+                if(hurdle[i].x < -235) {
+                    hurdle[i].x = hurdle[i].defX;
+                    hurdle[i].resetY();
+                } else {
+                    hurdle[i].x -= 5;
+                }
+            }
+            if(na.status === "jump") { //***Jump
+                na.y += -na.movY + na.accY;
+                na.accY += na.accY_def;
+                na.y >= na.defY ? resetToIdle() : "";
+            }
+            if(na.status === "dive") { //***Dive
+                na.y += na.movY - na.accY;
+                na.accY += na.accY_def;
+                na.y <= na.defY ? resetToIdle() : "";
+            }
+            function resetToIdle() { //***RESET Status
+                na.y = na.defY;
+                na.accY = na.accY_def;
+                na.status = "idle";
+            }
+            ctx.font = "30px Arial"; //***TEXT:Manual
+            ctx.fillText("⬆️ Up : ⬇️ Dive", 20, 35);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.3)"; //***UI:Progress
+            ctx.fillRect(30, 445, 700, 5);
+            ctx.fillStyle = "rgba(92, 88, 157, 1.0)";
+            ctx.fillText("🏠", 715, 455);
+            for(let i = 1; i < 4; i++) {
+                ctx.fillText("🎏", 25 + Math.round(700/4) * i, 455);
+            }
+            drawBoat(10 + Math.round((count_pla) * (700/404)), 420);
+            if(count_pla === 404) { //***GAME CLEAR
+                count_pla = 0;
+                na.resetAll();
+                clearInterval(id_second);
+                id_third = setInterval(drawClear, 30);
+            }
+            ctx.fillStyle = "rgba(240, 193, 198, 0.7)"; //***UI:Life
+            ctx.fillRect(750, 420, 200, 50);
+            let temp = "";
+            for(let i = 0; i < na.life; i++) {
+                temp += "🐚"
+            }
+            ctx.fillStyle = "white";
+            ctx.fillText(("Life: " + temp), 760, 455);
+            if(na.life <= 0) { //***GAME OVER
+                clearInterval(id_second);
+                gameOver = true;
+                cvs.classList.remove("shake");
+                ctx.fillStyle = "rgba(50, 72, 118, 0.7)";
+                ctx.fillRect(100, 50, 760, 380);
+                ctx.font = "55px Arial", ctx.fillStyle = "white";
+                ctx.fillText("Press <space> to Retry", 200, 170);
+            }
+            if(80 < (count_pla % (404/4)) && count_pla !== 0 && count_pla < ((404/4)*3)) { //***TEXT:Warning
+                ctx.fillStyle = "red";
+                if(count_pla % 2 === 0) {
+                    ctx.font = "30px Arial";
+                    ctx.fillText("Warning!", 800, 50);
+                } else {
+                    ctx.font = "25px Arial";
+                    ctx.fillText("Wind Change!", 775, 50);
+                } 
+            }
+            if(50 === count_pla % (404/4)) {
+                windRandom = true;
+            }
+            if(count_pla % Math.round(404/4) === 0 && count_pla !== 0 && windRandom) { //***CHANGE Wind
+                windRandom = false;
+                clearInterval(id_second);
+                let tempRandom = speed_second;
+                while(speed_second - 7 < tempRandom && tempRandom < speed_second + 7) {
+                    tempRandom = Math.floor(Math.random() * 25 + 15);
+                }
+                speed_second = tempRandom;
+                id_second = setInterval(playDraw, speed_second);
+            }
+        }
+        let id_third; //*****Draw Game Clear
+        var drawClear = () => {
+            drawBG();
+            drawIsland();
+            drawSnow();
+            drawBoat(na.x, na.y);
+            na.x >= 700 ? (() => {
+                ctx.font = "55px Arial";
+                ctx.fillStyle = "white";
+                ctx.fillText("Thank you for Playing", 200, 370);   
+            })() : na.x += 2;
+        }
+
+        function drawIsland() { //***SHAPE Island
+            ctx.fillStyle = "#35356B";
+            ctx.fillRect(710, 250, 180, 10), ctx.fillRect(700, 240, 200, 10);
+            ctx.fillStyle = "#66A366";
+            ctx.fillRect(700, 230, 190, 10);
+            ctx.fillStyle = "#7FB27F";
+            ctx.fillRect(710, 220, 180, 10), ctx.fillRect(720, 210, 160, 10), ctx.fillRect(730, 200, 80, 10), ctx.fillRect(830, 200, 40, 10), ctx.fillRect(740, 190, 60, 10);
+            ctx.fillStyle = "white";
+            ctx.fillRect(710, 220, 10, 10), ctx.fillRect(880, 220, 10, 10), ctx.fillRect(720, 210, 10, 10), ctx.fillRect(870, 210, 10, 10), ctx.fillRect(730, 200, 10, 10), ctx.fillRect(800, 200, 10, 10), ctx.fillRect(830, 200, 10, 10), ctx.fillRect(860, 200, 10, 10), ctx.fillRect(740, 190, 10, 10), ctx.fillRect(780, 190, 20, 10);
+        }
+
+        function drawBoat(thi_x, thi_y) { //***SHAPE Boat
+            ctx.fillStyle = "#CA9766";
+            ctx.fillRect(thi_x, thi_y + 35, 50, 5), ctx.fillRect(thi_x +  5, thi_y + 40, 40, 5);
+            ctx.fillStyle = "#795A3D";
+            ctx.fillRect(thi_x + 10, thi_y + 45, 30, 5);
+            ctx.fillStyle = "#B20000";
+            ctx.fillRect(thi_x + 15, thi_y, 5, 5);
+            ctx.fillStyle = "white";
+            ctx.fillRect(thi_x + 15, thi_y + 5, 5, 30);
+            ctx.fillStyle = "#E0CD66";
+            ctx.fillRect(thi_x + 20, thi_y, 5, 35), ctx.fillRect(thi_x + 25, thi_y + 5, 5, 25), ctx.fillRect(thi_x + 30, thi_y + 5, 5, 25), ctx.fillRect(thi_x + 35, thi_y + 10, 5, 15), ctx.fillRect(thi_x + 40, thi_y + 10, 5, 5);
+            ctx.fillStyle = "#9C8F47";
+            ctx.fillRect(thi_x + 25, thi_y + 10, 5, 10), ctx.fillRect(thi_x + 25, thi_y + 10, 5, 10);
+        }
+
+        function drawHurdle(thi_x, thi_y) { //***SHAPE Hurdle
+            ctx.fillStyle = "#00E5E5";
+            if(thi_y === 0) {
+                ctx.fillRect(thi_x, thi_y, 50, 240);
+                ctx.fillStyle = "#EFFDFD";
+                ctx.fillRect(thi_x + 5, thi_y + 245, 40, 5), ctx.fillRect(thi_x, thi_y + 240, 50, 5), ctx.fillRect(thi_x, thi_y + 220, 5, 20), ctx.fillRect(thi_x + 45, thi_y + 220, 5, 20);
+            } else {
+                ctx.fillRect(thi_x, thi_y + 10, 50, 240);
+                ctx.fillStyle = "#EFFDFD";
+                ctx.fillRect(thi_x + 5, thi_y, 40, 5), ctx.fillRect(thi_x, thi_y + 5, 50, 5), ctx.fillRect(thi_x, thi_y + 10, 5, 20), ctx.fillRect(thi_x + 45, thi_y + 10, 5, 20);
+            }
+        }
+    </script>
+</html>

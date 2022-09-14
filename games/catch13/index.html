@@ -1,0 +1,137 @@
+<html>
+    
+    <head>
+        <meta name="author" content="Abhineet Yadav" />
+        <meta name="contact" content="abhiit@gmail.com"/>
+
+
+
+        <script type="application/javascript">
+          var mX = 700,
+              mY = 500;
+          var sX = 10,
+              sY = 20;
+          var ctx;
+          var isDown = false;
+          var t1, t2;
+
+          function init() {
+              clock();
+              move();
+              t1 = setInterval(move, 120);
+              t2 = setInterval(clock, 120);
+          }
+
+          function move() {
+              sX = sX + 3;
+              sY = sY + 3;
+          }
+
+          function clock() {
+              ctx = document.getElementById('c').getContext('2d');
+              strt = document.getElementById('c').getContext('2d');
+              stp = document.getElementById('c').getContext('2d');
+
+              ctx.clearRect(0, 0, mX, mY);
+              ctx.strokeStyle = "black";
+              ctx.fillStyle = "white";
+              ctx.lineWidth = 8;
+              ctx.lineCap = "round";
+
+
+              ctx.beginPath();
+              ctx.lineWidth = 2;
+              ctx.strokeStyle = '#325FA2';
+              ctx.arc(sX, sY, 70, Math.PI * 0.5, Math.PI * 2, true);
+              ctx.lineTo(sX + 130, sY);
+              ctx.lineTo(sX + 130, sY + 310);
+              ctx.arc(sX + 230, sY + 260, 50, Math.PI * 0.5, Math.PI * 1.5, true);
+              ctx.arc(sX + 230, sY + 100, 50, Math.PI * 0.5, Math.PI * 1.5, true);
+              ctx.arc(sX + 230, sY + 50, 50, Math.PI, Math.PI * 1.5, false);
+
+              ctx.arc(sX + 280, sY + 90, 90, Math.PI * 1.5, Math.PI * 2.35);
+              ctx.arc(sX + 280, sY + 262, 100, Math.PI * 1.64, Math.PI * 2.5);
+
+              ctx.lineTo(sX + 10, sY + 360);
+              ctx.lineTo(sX + 10, sY + 310);
+
+              ctx.lineTo(sX + 40, sY + 310);
+              ctx.lineTo(sX + 40, sY + 110);
+
+              ctx.lineTo(sX + 0, sY + 110);
+              ctx.fillStyle = "#00FF00";
+
+
+              ctx.closePath();
+              ctx.fill();
+
+              console.log(ctx.toString());
+
+
+
+              ctx.stroke();
+              ctx.restore();
+          }
+
+          function mMove(o) {
+              if (isDown) {
+                  var c = o.getContext('2d');
+
+                  c.beginPath();
+                  c.arc(event.clientX, event.clientY, 2, 0, 2 * Math.PI);
+                  c.stroke();
+                  if (!ctx.isPointInPath(event.clientX, event.clientY)) {
+                      clr();
+
+
+
+                  }
+              }
+          }
+
+          function clr() {
+              ctx.fillStyle = "#FF0000";
+              ctx.fill();
+              alert("GameOver");
+
+              ctx.clearRect(0, 0, mX, mY);
+              clearInterval(t1);
+              clearInterval(t2);
+          }
+
+          function mUp(o) {
+              isDown = false;
+              if (!ctx.isPointInPath(event.clientX, event.clientY)) {
+                  clr();
+
+              }
+          }
+
+          function mDown(o) {
+              isDown = true;
+              if (!ctx.isPointInPath(event.clientX, event.clientY)) {
+                  clr();
+
+              }
+          }
+        </script>
+        <title>
+            Catch 13
+        </title>
+    </head>
+    
+    <body onLoad="init();" align="center">
+        <div align="center">
+            <h2>
+                Catch 13 situation
+            </h2>
+        </div>
+        <canvas style="background-color:#F0F0F0" id="c" width="700" height="500"
+        onmousedown="mDown(this)" onmousemove="mMove(this)" onmouseup="mUp(this)">
+        </canvas>
+        <div align="center">
+            Stay witihin 13!
+        </div>
+    </body>
+
+</html>

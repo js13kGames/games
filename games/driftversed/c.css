@@ -1,0 +1,95 @@
+body {
+  min-width: 900px;
+  background-color: black;
+  text-align: center;
+  color: white;
+  height: 100%;
+  overflow: hidden;
+}
+
+canvas {
+  border: 1px solid white;
+}
+
+table {
+  border: 0;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+#a {
+  display: inline-block;
+  border: 1px solid grey;
+  padding: 50px;
+  margin-top: 10px;
+  width: 850px;
+}
+
+#g {
+  display: inline-block;
+}
+
+#h {
+  margin-top: 2px;
+}
+
+.w {
+  display: inline-block;
+  height: 10px;
+  width: 420px;
+  border: 1px solid white;
+}
+
+.h {
+  background-color: green;
+  height: 10px;
+}
+
+#u {
+  font-size: 20px;
+}
+
+.k {
+  margin: 25px 10px 20px 10px;
+  display: inline-block;
+  font-size: 35px;
+}
+
+.b {
+  border: 1px solid white;
+  padding: 5px;
+  width: 40px;
+}
+
+#i {
+  margin-bottom: 100px;
+}
+
+.t {
+  width: 100%;
+  height: 100%;
+}
+
+.t th {
+  font-size: 30px;
+  padding-bottom: 20px;
+}
+
+.thb, .the {
+  width: 20%;
+  vertical-align: top;
+  text-align: left;
+}
+
+.thm {
+  text-align: center;
+}
+
+.full {
+  width: 100%;
+}
+
+.d {
+  color: grey;
+}

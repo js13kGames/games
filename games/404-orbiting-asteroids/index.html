@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>404 Orbiting Asteroids - A js13k game for 2020</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Simple asteroids-like desktop game in 13 kb for js13k 2020">
+	<meta name="author" content="Luke Nickerson">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style>
+		body {
+			padding: 0;
+			color: rgba(255, 255, 255, 0.75);
+			font-family: Verdana, sans-serif;
+			background:#112;
+			text-align: center;
+			overflow: hidden;
+		}
+		header {
+			position: absolute; top: 10%;
+			width: 100%;
+			z-index: 2;
+			user-select: none;
+			font-size: 8vmin;
+			transition: 5s all ease-in-out;
+		}
+		.go header {
+			top: 1em;
+			font-size: 20px;
+		}
+		main {
+			position: absolute;
+			top: 0; left: 0;
+			width: 100%;
+			height: 100%;
+			margin: 0 auto;
+		}
+		canvas {
+			width: 100vmin;
+			height: 100vmin;
+			margin: 0 auto;
+			background: #000;
+		}
+		#total {
+			opacity: 0;
+			font-size: 0;
+			transition: 5s all ease-in-out;
+		}
+		.go #total {
+			font-size: 20px;
+			opacity: 0.5;
+		}
+		section {
+			position: absolute;
+			bottom: 6%;
+			left: 50%;
+			margin-left: -10em;
+			width: 20em;
+			border: solid 1px #87697F;
+			padding: 2em;
+			opacity: 1;
+			background: rgba(0,0,0,0.65);
+			transform: scale(1);
+			transition: 3s all ease-in-out;
+		}
+		section.closed {
+			opacity: 0;
+			bottom: -20%;
+			transform: scale(0);
+		}
+		ul {
+			text-align: left;
+		}
+		a {
+			color: #87697F;
+		}
+		#win, #sun, #bullet {
+			display: none;
+			color: rgba(153, 255, 77, 1);
+		}
+		#dead {
+			color: rgba(153, 255, 77, 1);
+		}
+		#dead strong {
+			font-size: 150%;
+		}
+		#intro li {
+			list-style: none;
+		}
+		li::before {
+			display: inline-block;
+			content: "🔲";
+			margin-right: 1em;
+		}
+		.unlocked {
+			color: rgba(153, 255, 77, 1);
+			text-decoration: line-through;
+		}
+		.unlocked::before {
+			content: "✅";
+		}
+		footer {
+			margin: 1em 0;
+			color: rgba(255, 255, 255, 0.5);
+			font-size: 80%;
+		}
+		#restart {
+			font-size: inherit;
+			background: rgba(153, 255, 77, 1);
+			border: 0;
+			padding: 0.75em 2em;
+			text-transform: uppercase;
+			cursor: pointer;
+			margin: 1em;
+		}
+	</style>
+</head>
+<body scroll="no">
+	<main id="main">
+		<header>
+			<span id="count">404</span><span id="total">/404</span> Orbiting Asteroids
+			<div id="win">YOU WIN!</div>
+		</header>
+		<canvas id="canvas"></canvas>
+		<section id="intro">
+			🖱 Controlled by mouse:
+			<ul>
+				<li id="ach-start">Click to start</li>
+				<li id="ach-rotate">Move mouse to rotate</li>
+				<li id="ach-shoot">Left-click to Fire</li>
+				<li id="ach-thrust">Right-click for Thrust</li>
+				<li id="ach-zoom">Scroll to zoom</li>
+			</ul>
+			<p>
+				Destroy all asteroids to win.<br />Don't fall into the sun.
+				<br/>Watch out for ricocheting bullets.
+			</p>
+			<footer>
+				Created for
+				<a href="http://js13kgames.com/" target="_blank"
+					title="Open js13kgames.com in new tab or window">js13kgames</a> 2020
+				<br/>Theme "404"
+				<br/>by Luke
+			</footer>
+		</section>
+		<section id="dead" class="closed">
+			<strong>You died.</strong>
+			<p id="sun">The sun is hot! 🌞+🚀=💀</p>
+			<p id="bullet">Ricochet! 🚀+🔫=💀</p>
+			<p>Click below or 🔄 Refresh the page (F5) to start over.</p>
+			<button type="button" id="restart">Restart</button>
+		</section>
+	</main>
+	<script src="game-window.js"></script>
+</body>
+</html>

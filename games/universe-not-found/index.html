@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+	<meta charset=utf-8>
+	<meta httpequiv=Content-Type content="text/html; charset=UTF-8">
+	<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+	<meta name=version content=1.0.3>
+	<title>Universe Not Found | Game Created By: Cameron Manavian</title>
+	<meta name=monetization content=$ilp.uphold.com/diXHjNfyrjxg>
+	<style>
+		:root {
+			--shipColor: rgba(34, 100, 140, 0.9);
+			--probeColor: rgba(0, 255, 0, 0.5);
+			--capColor: coral;
+			--capBgColor: #080708;
+		}
+
+		h1 {
+			font-family: Impact, 'Arial Narrow Bold', sans-serif;
+			color: var(--shipColor);
+			text-align: center;
+		}
+
+		body {
+			background-color: #111;
+			color: #eee;
+		}
+
+		.f {
+			color: var(--shipColor);
+		}
+
+		.p {
+			color: var(--probeColor);
+		}
+
+		mark {
+			background: crimson;
+			color: #000;
+		}
+
+		aside {
+			float: left;
+			width: 50%;
+			margin-bottom: 1em;
+			font-family: Courier, monospace;
+		}
+
+		aside i {
+			font-style: normal;
+		}
+
+		aside:nth-child(1) b {
+			color: var(--capColor);
+		}
+
+		aside:nth-child(1) i {
+			color: #7B68EE;
+		}
+
+		aside:nth-child(1) i:nth-of-type(2) {
+			color: var(--shipColor);
+		}
+
+		aside:nth-child(1) i:nth-of-type(3) {
+			color: var(--probeColor);
+		}
+
+		aside:nth-child(2) {
+			text-align: right;
+		}
+
+		aside:nth-child(2) b {
+			color: #2E8B57;
+		}
+
+		aside:nth-child(2) i:first-child b {
+			color: var(--shipColor);
+		}
+
+		#title,
+		#game,
+		#rules {
+			padding: 1em;
+			margin: 0 auto;
+			width: 1080px;
+			border: 0.5em groove rgba(100, 10, 120, 0.2);
+		}
+
+		#game {
+			background: #101;
+			overflow: auto;
+		}
+
+		#game.title,
+		#title {
+			display: none;
+		}
+
+		#title {
+			background: linear-gradient(-45deg, rgba(100, 10, 120, 0.2), rgba(100, 10, 120, 0.7), rgba(6, 2, 75, 0.7), #101, rgba(6, 2, 75, 0.7), rgba(100, 10, 120, 0.7));
+			background-size: 400% 400%;
+			min-height: 612px;
+			animation: gradient 10s ease infinite;
+			border-color: #101;
+			border-style: solid;
+		}
+
+		@keyframes gradient {
+			0% {
+				background-position: 0% 50%;
+			}
+
+			50% {
+				background-position: 100% 50%;
+			}
+
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+
+		#game.title~#title {
+			display: block;
+		}
+
+		#rules {
+			color: var(--capColor);
+			background: #080708;
+			border-top: 0.5em solid black !important;
+			border-color: #111;
+			width: 900px;
+			margin-top: 5em;
+		}
+
+		#g {
+			clear: both;
+			width: 1080px;
+			height: 612px;
+		}
+
+		#l {
+			min-height: 4em;
+			padding: 0.3em;
+			max-width: calc(1080px - 0.6em);
+			background: var(--capBgColor);
+			color: var(--capColor);
+			font-family: Courier, monospace;
+			border: 0.25em double var(--capColor);
+		}
+
+		h2 {
+			margin: 0;
+			padding: 10em 0 0;
+			text-align: center;
+			font-size: 20px;
+			color: crimson;
+			font-family: Courier, monospace;
+		}
+
+		button {
+			color: var(--capColor);
+			background: var(--capBgColor);
+			border: 3px solid var(--capColor);
+			margin: 0 auto;
+			display: block;
+			font-size: 27px;
+			margin-top: 2em;
+			padding: 0.5em;
+			text-transform: uppercase;
+			transform: all 2s ease-in;
+			cursor: pointer;
+		}
+
+		button:hover {
+			color: var(--capBgColor);
+			background: var(--capColor);
+			border: 3px solid var(--capBgColor);
+		}
+
+		.over p {
+			text-align: center;
+			color: #7B68EE;
+			font-family: Courier, monospace;
+		}
+
+		footer {
+			margin: 1em auto;
+			padding: 0;
+			width: 1080px;
+			color: #333;
+		}
+
+		footer a {
+			color: var(--shipColor);
+		}
+
+		footer a:hover {
+			color: var(--capColor);
+		}
+	</style>
+</head>
+
+<body>
+	<div id=game class=title>
+		<aside id=m></aside>
+		<aside><i id=t></i> <i id=s></i></aside>
+		<main id=g></main>
+		<pre id=l><br>&Tab;&Tab;&Tab;&Tab;&Tab;||------ Captains Log ------||</pre>
+	</div>
+	<div id=title>
+		<h1>Universe Not Found</h1>
+		<div><button>Start Game</button></div>
+		<div id=rules>
+			<p>After a failed deep space mission, a small fleet finds itself adrift in a universe unknown. They must
+				travel through black holes looking for a Goldilocks Universe.</p>
+			<p>No one knows what happens upon entering a black hole.</p>
+			<p>The fleet has rigged their <span class=f>ships</span> to leave <mark>markers</mark> behind to provide a
+				trail of their doomed journey in the event of a failed mission.</p>
+			<p>Thankfully, each <span class=f>ship</span> is also equipped with a C1 level <span class=p>research
+					probe</span> piloted with AI Techs, allowing for deep space exploration without endangering lives.
+			</p>
+			<p>Minimize casualties, and know that <b>not everyone will survive.</b></p>
+		</div>
+	</div>
+	<footer>Created By: <a href=https://cameronmanavian.com>Cameron Manavian</a> | <a href=https://moongatelabs.com>Moon
+			Gate Labs</a></footer>
+	<script type=text/javascript src=app.10de169b7ffd6a33c3ce.js></script>
+</body>
+
+</html>

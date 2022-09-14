@@ -1,0 +1,1 @@
+#c,#game{margin:auto}body{background:#000;margin:0}#c{position:relative}#game{display:block;background:#87cefa;transform-origin:top;backface-visibility:hidden;transform:translateZ(0);image-rendering:pixelated}p{position:absolute;z-index:1;font-size:2rem;font-family:monospace;width:calc(70% - 2rem);margin:1rem}#clones{width:auto;right:0}

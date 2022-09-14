@@ -1,0 +1,80 @@
+* {
+  font-family: 'Courier New', Courier, 'Ubuntu Mono', 'DejaVu Sans Mono', monospace;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #ddd;
+  margin: auto;
+  text-align: center;
+  width: 100%;
+  height: 680px;
+}
+.instructions {
+  text-align: center;
+}
+#terminal-div{ order: 1; }
+#canvas-div { order: 2; }
+
+#terminal-div, #canvas-div {
+  background-color: #fff;
+  text-align: center;
+  width: 600px;
+  height: 640px;
+}
+
+#canvas-div{
+  background-color: #999;
+}
+
+#canvas-div canvas {
+  margin: 0;
+  display: block;
+  width: 600px;
+  height: 640px;
+}
+
+#terminal-div {
+  display: flex;
+  flex-direction: column;
+
+  background-color: black;
+}
+#terminal-window {
+  order: 1;
+  background-color: black;
+  color: white;
+  width: 590px;
+  height: 600px;
+  resize: none;
+  overflow: hidden;
+  border: 5px solid black;
+  padding: 0;
+  margin: 0;
+}
+#terminal-cli {
+  background-color: black;
+  order: 2;
+}
+#terminal-cli span {
+  font-size: 16px;
+  display: inline-block;
+  color: white;
+  width: 50px;
+}
+#terminal-cli input {
+  font-size: 16px;
+  display: inline-block;
+  background-color: black;
+  color: white;
+  position: relative;
+  width: 550px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Falling Blocks</title>
+<style>
+	* { margin: 0; padding: 0; }
+	
+	html,body { 
+		height:100%;
+		font-family:Verdana, Geneva, sans-serif;
+		text-align:center;
+		background-color:#666666;
+	}
+	#entryScreen{
+		position:relative;
+		width:450px;
+		height:600px;
+		background-color:#666666;
+		color:#CCC;
+		font-weight:bold;
+		border:5px #999 solid;
+		margin:0 auto;
+		font-size:40px;
+	}
+	#play, #playAgain{
+		position:absolute;
+		width:200px;
+		height:30px;
+		padding:20px;
+		color:#ffffff;
+		background-color:#000000;
+		font-size:20px;
+		margin:0 auto;
+		top:400px;
+		left:100px;
+	}
+	.playAgain{
+		top:0px;
+	}
+	.intr{
+		font-size:15px;
+	}
+	#hero{
+		position:absolute;
+		width:50px;
+		height:50px;
+		background-color:#000000;
+		bottom:0;
+		left:50px;
+		z-index:999;
+	}
+	#battleField{
+		position:relative;
+		width:450px;
+		height:600px;
+		background-color:#666666;
+		border:5px #999 solid;
+		margin:0 auto;
+	}
+	.enemy{
+		position:absolute;
+		width:50px;
+		height:50px;
+		background-color:#000000;
+	}
+</style>
+<script>
+
+	var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+	var heroDiv;
+	var battleField;
+	var enemyArr = new Array();
+	var enemyTimer;
+	var enemyAttackTimer;
+	var playBtn;
+	var playAgain;
+	var entryScreenDiv;
+	
+	function onLoad()
+	{
+		heroDiv = document.getElementById('hero');
+		heroDiv.style.left = 200+'px';
+		heroDiv.style.backgroundColor = '#000000';
+		battleFieldDiv = document.getElementById('battleField');
+		battleFieldDiv.style.display = 'none';
+		
+		playBtn = document.getElementById('play');
+		playAgain = document.getElementById('playAgain');
+		entryScreenDiv = document.getElementById('entryScreen');
+		
+		playAgain.style.display = 'none';
+		
+		playBtn.addEventListener("click", startGame, false);
+		playAgain.addEventListener("click", startGame, false);
+	}
+
+	function startGame()
+	{
+		playAgain.style.display = 'none';
+		battleFieldDiv.style.display = 'block';
+		entryScreenDiv.style.display = 'none';
+		heroDiv.style.backgroundColor = '#000000';
+		
+		var enemies = document.getElementsByClassName('enemy');
+		for (var i = 0; i < enemies.length; ++i) 
+		{
+			var item = enemies[i]; 
+			battleFieldDiv.removeChild(item);
+		}
+		
+		window.addEventListener("keydown", checkKeyPressed, false);
+		createEnemy();
+		enemyTimer = setInterval(createEnemy, 150);
+		enemyAttackTimer = setInterval(enemyAttacks, 50);
+	}
+
+	function checkKeyPressed(e) {
+		if (e.keyCode == "39" && parseInt(heroDiv.style.left) < 400) {
+			heroDiv.style.left = parseInt(heroDiv.style.left)+50+'px';
+		}
+		if (e.keyCode == "38") {
+		   if(rgb2hex(heroDiv.style.backgroundColor) == '#000000')
+		   		heroDiv.style.backgroundColor = '#ffffff';
+			else
+				heroDiv.style.backgroundColor = '#000000';
+		}
+		if (e.keyCode == "37" && parseInt(heroDiv.style.left) > 0) {
+			heroDiv.style.left = parseInt(heroDiv.style.left)-50+'px';
+		}
+	}
+	
+	function createEnemy()
+	{
+		var enemyDiv = document.createElement("DIV");       
+		battleFieldDiv.appendChild(enemyDiv);
+		enemyDiv.className = 'enemy';
+		enemyDiv.style.top = '0px';
+		enemyDiv.style.left = Math.floor((Math.random() * 9)) * 50 + 'px';
+		if (Math.floor((Math.random() * 2)) == 0)
+			enemyDiv.style.backgroundColor = '#000000';
+		else
+			enemyDiv.style.backgroundColor = '#ffffff';
+			
+		enemyArr.push(enemyDiv);
+	}
+	
+	function enemyAttacks()
+	{
+		var enemies = document.getElementsByClassName('enemy');
+		for (var i = 0; i < enemies.length; ++i) 
+		{
+			var item = enemies[i];  
+			item.style.top = parseInt(item.style.top)+50+'px';
+			
+			if(parseInt(item.style.top) == 550 && parseInt(item.style.left) == parseInt(heroDiv.style.left))
+			{
+				if(rgb2hex(item.style.backgroundColor) != rgb2hex(heroDiv.style.backgroundColor))
+				{
+					heroDiv.style.backgroundColor = '#ff0000';
+					clearInterval(enemyTimer);
+					clearInterval(enemyAttackTimer);
+					window.removeEventListener("keydown", checkKeyPressed, false);
+					playAgain.style.display = 'block';
+				}
+			}
+				
+			if(parseInt(item.style.top) == 600)
+				battleFieldDiv.removeChild(item);
+		}	
+	}
+	
+	function rgb2hex(rgb) {	
+	 rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	 return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	}	
+	function hex(x) {
+	  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+	}
+</script>
+</head>
+<body onLoad="onLoad();">
+	<div id="entryScreen">
+	    <div><br><br>Falling Blocks</div>  
+        <div class="intr">
+        	<br><br><br><br>Intructions
+            <br><br>Dodge the Blocks with Reverse Color, Same Color Blocks Pass Through.
+            <br>
+            <br>Left / Right Arrow Key to Move
+            <br>Up Arrow Key to Toggle Color
+        </div>       
+	    <div id="play">Lets Play</div> 
+    </div>
+    
+    <div id="battleField">
+	    <div id="hero"></div> 
+        <div id="playAgain" style="top:300px; z-index:998;">Play Again</div>       
+    </div>
+</body>
+</html>

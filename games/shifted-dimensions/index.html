@@ -1,0 +1,81 @@
+
+<!doctype html>
+<head>
+	<title>Shifted Dimensions (js13kgames 2017 entry)</title>
+	<!-- submitted by nylki (Tom Brewe) -->
+	<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+	<script src="index.js"></script>
+</head>
+<meta charset="utf-8"/>
+<body>
+	<a-scene game-state pseudo-physics>
+		
+		<a-assets>
+			<a-mixin id="line" geometry="primitive: box; height: 0.1; width: 0.75; depth: 0.1;"></a-mixin>
+			<a-mixin id="sphere" geometry="primitive: sphere; radius: 0.06; segmentsWidth: 4; segmentsHeight: 4"></a-mixin>
+		</a-assets>
+		
+		<a-sky color="rgba(88, 137, 173, 1)"> </a-sky>
+		
+		<a-entity id="camera" camera wasd-controls look-controls>
+			
+			<!-- Noticed that A-Frame loads fonts via a CDN from the network, had to skip using them.. -->
+			<!-- <a-text scale="0.3 0.3 0.3" position="-0.5 0 -2.0" value="Welcome!\nMake sure your sound is on!\n You also need one tracked controller to play.\nHave fun!">
+				<a-animation attribute="opacity"
+				dur="12000"
+				fill="forwards"
+				from="1"
+				to="0"
+				easing="ease-in-cubic"></a-animation></a-text> -->
+				
+			</a-entity>
+			
+			
+	
+		
+		<a-entity id="magicLight" raycaster="far: 10; interval:200; showLine: true; objects:.lostStone" magic-light="hand: right">
+			
+		</a-entity>
+		
+		
+		<a-circle id="floor" labyrinth-material="color:#ccbda4" physics-body="mass:0.0; collidesOthers:true" radius="7.5" rotation="-90 0 0" position="0 0 -0.001"></a-circle>
+		
+		
+		<!-- The first Level is static (see below). After that all levels are procedurally generated. -->
+		<a-entity id="level" level="difficulty:1" position="0 0 0">
+			
+			<a-entity id="stoneContainer">
+				
+				<a-entity mixin="sphere" class="lostStone" physics-body="mass:0.0;" lost-stone-material position="0 1.8 0" rotation="-5 10 17"></a-entity>
+				
+				<a-entity mixin="sphere" class="lostStone" physics-body="mass:0.0;" lost-stone-material position="0.5 1 0" rotation="-20 100 17"></a-entity>
+				
+			</a-entity>
+			
+			
+			<a-entity id="wallContainer">
+				
+				<a-box id="target" geometry="primitive: box; buffer: false; skipCache: true;" class="wall" labyrinth-material="color:#cbb5d1" physics-body="mass:0.0; collidesOthers:true" depth="0.1" height="0.1" width="0.1" position="0 3 0" rotation="0 0 0"></a-box>
+
+				<a-box class="wall" geometry="primitive: box; buffer: false; skipCache: true; mergeTo: #target" labyrinth-material="color:#0026ec" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="1.25" width="0.5" position="-3 2 0" rotation="0 0 0"></a-box>
+				
+				<a-box class="wall" geometry="primitive: box; buffer: false; skipCache: true; mergeTo: #target" labyrinth-material="color:#7292b8" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="1.25" width="0.5" position="0 0 0" rotation="0 0 0"></a-box>
+				
+				<a-box class="wall" labyrinth-material="color:#c6a774" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="1.25" width="0.5" position="-0.3 0.6 -0.3" rotation="0 0 0"></a-box>
+				
+				<a-box class="wall" labyrinth-material="color:#7cbdb1" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="1.25" width="0.5" position="0.3 0.45 0.3" rotation="0 -10 0"></a-box>
+				
+				<a-box class="wall" labyrinth-material="color:#c8e9a0" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="1" width="1.5" position="0.8 0.6 -0.3" rotation="0 30 0"></a-box>
+				
+				<a-box class="wall" labyrinth-material="color:#cce891" physics-body="mass:0.0; collidesOthers:true" depth="0.5" height="3" width="1" position="-0.8 1 0" rotation="0 30 0"></a-box>
+				
+
+				
+				
+			</a-entity>
+			
+			
+		</a-entity>
+		
+	</a-scene>
+</body>

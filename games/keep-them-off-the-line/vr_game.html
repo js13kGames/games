@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="application-name" content="Camp in zombieland">
+    <meta name="description" content="A game for JS13K competition 2018">
+    <meta name="keywords" content="a-frame,js13K,zombie,game,free,competition,offline">
+    <meta name="author" content="Sándor Burian">
+    <link rel="icon" href="css/back.png" type="image/png">
+    <meta property="og:title" content="Camp in zombieland">
+    <meta property="og:image" content="css/back.png">
+
+  </head>
+  <body>
+    <a-scene light="defaultLightsEnabled: false" fog="type: linear; color: #272828; far: 30; near: 0">
+
+      <a-assets>
+        <img id="grass" src="css/back.png">
+        <img id="bole" src="texture/bole.png">
+        <img id="greenery" src="texture/greenery.png">
+        <img id="zombie1" src="texture/zombie1.png">
+      </a-assets>
+
+      <!-- camp -->
+      <a-plane position="0 -8 -4" rotation="-90 0 180" width="1000" height="1000" src="#grass" color="green"></a-plane>
+      
+      <a-entity position ="0 0 1" id="three1">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="5 0 16" id="three2">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="5 0 -16" id="three3">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-20 0 0" id="three4">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-12 0 1" id="three5">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-8 0 -10" id="three6">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="8 0 10" id="three7">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="12 0 1" id="three8">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="14 0 3" id="three9">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-10 0 3" id="three10">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-10 0 9" id="three11">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="-10 0 13" id="three12">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="10 0 9" id="three13">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+      <a-entity position ="10 0 15" id="three14">
+        <a-sphere position="0 1.25 -5" radius="1.25" color="green" src="#greenery"></a-sphere>
+        <a-cylinder src="#bole" height="5" radius="0.2" position="0 0 -5"></a-cylinder>
+      </a-entity>
+
+      <a-entity light="type: ambient; color: #BBB" id="fire"></a-entity>
+      <a-sky color="#3a4d6d"></a-sky>
+      <a-entity light="color: #AFA; intensity: 1.5" position="-4 -1 -1.6" rotation="-30 90 0"></a-entity>
+      
+      <a-circle color="red" radius="5" rotation="-90 0 0" position="0 -4 5"></a-circle>
+      <a-circle color="green" radius="4.5" rotation="-90 0 0" position="0 -3.9 5" ></a-circle>
+      <a-text id="life" value="ALIVE" rotation="-90 0 0" position="-5 -3.8 5" scale="2 0.5 3" width="40"></a-text>
+      <!-- /camp -->
+      
+      <a-entity id="zombies">
+        <a-box id="zombie" material="src: #zombie1" width="0" height="4" depth="0.4" transparent="true" opacity="0.75" position="-5 -1.3 -15" rotation="0 0 0" scale="2 0.5 3" >
+         <a-animation attribute="position" to="0 0 5" fill="forwards" dur="5000"></a-animation>
+        </a-box>
+      </a-entity>
+
+      <a-entity id="gun_on_camera" camera="active: true" look-controls position="0 0 5" data-aframe-default-camera>
+        <!-- gun -->
+        <a-box position="0 -1.5 -3" rotation="0 0 0" color="grey"></a-box>
+        <a-box position="0 -1.5 -2.5" rotation="0 0 0" color="grey" depth="-0.5" height="0.2" width="0.3"></a-box>
+        
+        <a-box position="-0.32 -0.75 -2.15" rotation="0 0 0" color="grey" depth="0.1" height="0.2" width="0.2"></a-box>
+        <a-box position="0.32 -0.75 -2.15" rotation="0 0 0" color="grey" depth="0.1" height="0.2" width="0.2"></a-box>
+        <a-box position="0 -0.75 -3" rotation="0 0 0" color="grey" depth="0.1" height="0.2" width="0.2"></a-box>
+        <!-- /gun -->
+        
+        <a-entity cursor="fuse: true; fuseTimeout: 500"
+            position="0 -0.5 -2.1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat">
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+
+
+    <script src="js/zombie.js"></script> 
+
+  </body>
+</html>

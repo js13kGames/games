@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+	<head>
+		<title>WoE - Host</title>
+		<link type="text/css" rel="stylesheet" href="host.css" />
+		<script src="/socket.io/socket.io.js"></script>
+	</head>
+	<body>
+		<div class="gamefield box left">
+			<canvas id="canvas"></canvas>
+		</div>
+		<div class="sidebar box right">
+			<div class="buttonControl">
+				<button id="reset">Restart</button>
+			</div>
+			<div class="playerInfo">
+				<div id="gameId"></div>
+				<h1>Players</h1>
+				<div id="players" class="players">
+					Waiting for players ...
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="host.js"></script>
+	</body>
+</html>

@@ -1,0 +1,1167 @@
+<!doctype html>
+<html>
+  <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fix the Glitch</title>
+  <style type="text/css">
+  body{
+    font-family:Helvetica;
+    overflow:hidden;
+  }
+  .full{
+    position:absolute;
+    width:100%;
+    height:100%;
+    max-width:100%;
+    max-height:100%;
+  }
+  #timer{
+    position:absolute;
+    top:0;
+    right:0;
+    color:white;
+    font-size:18px;
+  }
+  /*matching*/
+  .container{
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    position:absolute;
+    background:#69D154;
+    display:none;
+  }
+  
+  #matching{
+    width:420px;
+    height:600px;
+    position:relative;
+  }
+  #matching.shuffle>div{
+    top:calc(50% - 75px);
+    left:calc(50% - 52.5px);
+  }
+  #matching>div{
+    box-sizing:border-box;
+    text-align:center;
+    line-height:150px;
+    float:left;
+    border:1px solid black;
+    border-radius:5px;
+    width:25%;
+    height:25%;
+    cursor:pointer;
+    position:absolute;
+    transition:top 1s,left 1s;
+  }
+  #matching>div:after{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-size:auto 100%;
+    background-position:-50 0;
+    border-radius:5px;
+    content:"";
+  }
+  #matching>div.show:after{
+    display:none;
+  }
+  #c0,#c1,#c2,#c3{top:0%}
+  #c4,#c5,#c6,#c7{top:25%}
+  #c8,#c9,#c10,#c11{top:50%}
+  #c12,#c13,#c14,#c15{top:75%}
+  #c0,#c4,#c8,#c12{left:0%}
+  #c1,#c5,#c9,#c13{left:25%}
+  #c2,#c6,#c10,#c14{left:50%}
+  #c3,#c7,#c11,#c15{left:75%}
+  /*Compiler*/
+  #codeCon{
+    flex-direction:column;
+  }
+  #codeCon>button{
+    width:200px;
+  }
+  #code{
+    width:400px;
+    height:90px;
+  }
+  #score:before{
+    content:"Fixes: "
+  }
+  /*CPU*/
+  #logic{
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    position:absolute;
+    font-family:monospace;
+    text-align:center;
+    font-weight:bold;
+  }
+  #logic>canvas{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+  }
+  #row{
+    bottom:0;
+    width:100%;
+    position:absolute;
+    height:25px;
+    display:flex;
+  }
+  #logic>div>div{
+    flex-grow:1;
+  }
+  #r1,#r2,#r3,#r4{
+    height:25%;
+    width:100%;
+    position:relative;
+    display:flex;
+  }
+  #row.running{
+    bottom:100%;
+    transition:bottom 32s 9s linear;
+  }
+  #logicCon>.info{
+    position:absolute;
+    top:15%;
+    color:white;
+    font-weight:bold;
+    left:0;
+  }
+  /*networking*/
+  #portsCon{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:flex;
+  }
+  #ports{
+    width:80%;
+    background:#3A6629;
+    height:100%;
+    display:flex;
+  }
+  #ports>div{
+    background-image:linear-gradient(90deg, #69D154, transparent 20%, transparent 80%, #69D154);
+    height:100%;
+    width:10%;
+    box-sizing:border-box;
+    position:relative;
+    overflow:hidden;
+    border-bottom:10px solid transparent;
+    border-radius:0 0 15px 15px;
+    flex-grow:1;
+  }
+  #ports>div.closed{
+    border-bottom-color:black;
+  }
+  #ports>div:before{
+    width:100%;
+    top:50%;
+    position:absolute;
+    text-align:center;
+    font-family:monospace;
+    font-size:17px;
+    
+  }
+  #programs{
+    width:20%;
+    height:100%;
+    background:black;
+    font-weight:bold;
+    font-size:17px;
+  }
+  #programs>.info{
+    height:auto;
+    color:#69D154;
+  }
+  #programs>div{
+    color:#eee;
+  }
+  #satisfaction:before{
+    content:"Satisfaction: ";
+  }
+  #stability:before{
+    content:"Stability: ";
+  }
+  #stability:after,#satisfaction:after{
+    content:"%";
+  }
+  #programs>div{
+    width:100%;
+    height:17px;
+    line-height:17px;
+  }
+  .pack{
+    width:80%;
+    height:10%;
+    word-wrap:break-word;
+    margin:0 10%;
+    text-align:center;
+    background-color:#69d154;
+    color:#3A6629;
+    border-radius:40%;
+    font-size:12px;
+    line-height:12px;
+    bottom:100%;
+    position:absolute;
+  }
+  .pack{
+    transition:bottom 4s linear,opacity .5s,margin .5s;
+  }
+  #port1:before{content:'22'}
+  #port2:before{content:'25'}
+  #port3:before{content:'80'}
+  #port4:before{content:'81'}
+  #port5:before{content:'110'}
+  #port6:before{content:'194'}
+  #port7:before{content:'443'}
+  #port8:before{content:'8080'}
+  #port9:before{content:'27000'}
+  #port10:before{content:'546'}
+  
+  /*Splash Screen*/
+  #splash{
+    display:flex;
+    background:#3A6629;
+    color:#69d154;
+    position:relative;
+    font-size:20px;
+  }
+  #splash .info{
+    box-sizing:border-box;
+    padding:20px;
+    width:70%;
+  }
+  #start{
+    font-size:30px;
+    background:#69d154;
+    color:#fff;
+  }
+  #full{
+    width:30px;
+    height:30px;
+    top:0;
+    right:0;
+    position:absolute;
+    margin:5px;
+    font-size:30px;
+    cursor:pointer;
+  }
+  #full:before{
+    content:"\21F1";
+    position:absolute;
+    font-family:Segoe UI Symbol;
+  }
+  #full:after{
+    content:"\21F2";
+    position:absolute;
+    font-family:Segoe UI Symbol;
+  }
+  
+  #end{
+    background:#000;
+    color:#3A6629;
+    overflow:hidden;
+  }
+  #end>c:before{
+    content:"\2588";
+    animation: blink 1s steps(5, start) infinite;
+  }
+  @keyframes blink {
+    to {
+      visibility: hidden;
+    }
+  }
+  #credits{
+    margin-top:100%;
+    background:#000;
+    color:#3A6629;
+    text-align:center;
+    font-size:25px;
+    transition:margin-top 5s linear;
+    display:block;
+  }
+  </style>
+  <style type="text/css" id="cssedit"></style>
+  </head>
+<body style="background: #000; margin: 0; padding: 0;" class="full">
+<canvas id="display" width="1" height="1" class="full"></canvas>
+<div id="timer"></div>
+<div id="matchingCon" class="container"><div id="matching"></div>There was a glitch, and the types were lost for the in memory data. Could you match them back up? 
+be aware that the addresses keep shuffling.</div>
+<div id="codeCon" class="container">
+<div>There is a glitch in the compiler that keeps dropping a single character out of the source code. Can you please fix the code at least 5 times. 
+(For your sake I hope this isn't the minifed version.)</div>
+<div id="score"></div>
+<button id="reset">Give me a different bug</button>
+<pre id="pre"></pre>
+<textarea id="code"></textarea>
+<pre id="post"></pre>
+</div>
+<div id="logicCon" class="container"><div id="logic"></div>
+<div class="info">Our logic gates glitched and completely reset. Could you fix them in time to convert the inputs into the desired outputs?</div></div>
+<div id="networkCon" class="container"><div id="portsCon"></div></div>
+<div id="end" class="container"></div>
+
+<div id="splash" class="container">
+<div class="info">Hello Flinn we need you on the inside now! The system is going crazy. Also, there seems to be an internal timer counting down that we have no control over.
+<h5>Controls</h5>Use arrows to navigate and the space bar to interact. The minigames are mouse controlled.<br><br>
+<button id="start">Activate Digitizer</button></div>
+<div class="difficulty">
+<h5>Difficulty</h5>
+<label><input name="radioDiff" type="radio" value="0">Easy</label><br>
+<label><input name="radioDiff" type="radio" value="1" checked>Standard</label><br>
+<label><input name="radioDiff" type="radio" value="2">Hard</label>
+</div>
+<div id="full"></div></div>
+<div id="credits" class="container">Thank you for playing my little game.<br>
+I hope you enjoyed the game and the random allusions.<br>
+THE END</div>
+
+<script>
+RUNNING=false;
+DIFFICULTY=1;
+START=0;
+M=Math,D=document;
+R=a=>M.random()*a|0;
+q=a=>D.getElementById(a);
+H=a=>D.createElement(a||'div');
+N=a=>+new Date();
+
+
+Rsort=(a,i=a.length)=>{while(i){a.push(a.splice(R(i--),1)[0])}}
+
+
+
+R=a=>M.random()*a|0;
+
+T=900;
+
+size=30;
+function getImage(text,dir){
+  if(typeof text!='string')text=undefined;
+  var 
+    lines=R(size/3|0)+3,
+    start=R(size-lines-2),
+    sections=R(size/10)+3,
+    lengths=[],direction=[1,1],
+    total=size,
+    img=document.createElement('canvas'),
+    el=document.createElement('canvas'),
+    ctx=el.getContext('2d'),
+    unit=30,
+    dim=unit*size,
+    data,
+    r,i,x,y,scaleW=R(2),scaleH=R(2);
+  ;
+  
+  el.width=img.width=dim;
+  el.height=img.height=dim;
+  while(sections--){
+    r=R(total-sections-1)+size/20|0;
+    lengths.push(r)
+    direction.push(R(2)*2-1);
+    total-=r;
+  }
+  ctx.fillStyle='#3A6629';
+  ctx.fillRect(0,0,unit*size,unit*size);
+  r=unit*.5|0;
+  ctx.lineWidth=r;
+  ctx.strokeStyle='#69D154';
+  ctx.save();
+  ctx.translate(r/2,r/2);
+  if(text){
+    ctx.beginPath();
+    ctx.moveTo(dim/2-unit,0-unit);
+    ctx.lineTo(dim/2-unit,dim/2);
+    ctx.moveTo(dim/2+unit,0-unit);
+    ctx.lineTo(dim/2+unit,dim/2);
+    if(text=='AI'){
+      ctx.moveTo(dim/2-unit,0-unit);
+      ctx.lineTo(dim/2-unit,dim+2*unit);
+      ctx.moveTo(dim/2+unit,0-unit);
+      ctx.lineTo(dim/2+unit,dim+2*unit);
+      ctx.moveTo(0-unit,dim/2-unit);
+      ctx.lineTo(dim+2*unit,dim/2-unit);
+      ctx.moveTo(0-unit,dim/2+unit);
+      ctx.lineTo(dim+2*unit,dim/2+unit);
+    }
+    ctx.stroke();
+    ctx.fillStyle='#000';
+    ctx.fillRect(dim/4,dim/4,dim/2,dim/2);
+    ctx.fillStyle='#333';
+    ctx.font=dim/2+'px Verdana';
+    ctx.textBaseline='top';
+    ctx.fillText(text,dim/4,dim/4,dim/2);
+  }
+  else{
+    for(i=0;i<lines;i++){
+      y=-unit*.6|0;
+      r=start+(unit*i);
+      x=r;
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      lengths.map((a,i)=>{
+        y+=a*unit;
+        x+=i%2?direction[i]*a*unit:0;
+        ctx.lineTo(x,y);
+      });
+      ctx.arc(x,y,unit/4,0,2*M.PI);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(x,y,unit/4,0,2*M.PI);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+  if(text){
+    scaleW=dir?0:1;
+    scaleH=0;
+  }
+  img.getContext('2d').drawImage(el,0,0);
+  ctx.clearRect(0,0,unit*size,unit*size);
+  ctx.scale(-scaleW*2+1,-scaleH*2+1);
+  ctx.drawImage(img,-T*scaleW,-T*scaleH);
+  return el;
+}
+
+function startMini(pos){
+  var o={
+    '-6':['matchingCon',matchingGame],
+    '-7':['codeCon',codeGame],
+    '-8':['logicCon',logicGame],
+    '-9':['networkCon',networkGame],
+    '-10':['end',end]
+  }
+  q(o[pos][0]).style.display='flex';
+  o[pos][1](DIFFICULTY);
+}
+
+obj={};
+
+var CIRCLE = M.PI * 2;
+function Controls() {
+  this.codes  = { 37: 'left', 39: 'right', 38: 'forward', 40: 'backward',32:'space' };
+  this.states = { 'left': false, 'right': false, 'forward': false, 'backward': false,'space':false };
+  document.addEventListener('keydown', this.onKey.bind(this, true), false);
+  document.addEventListener('keyup', this.onKey.bind(this, false), false);
+}
+Controls.prototype.onKey = function(val, e) {
+  var state = this.codes[e.keyCode];
+  if (typeof state === 'undefined') return;
+  this.states[state] = val;
+  if(RUNNING){
+    e.preventDefault && e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+  }
+};
+function Player(x, y, direction) {
+  this.x = x;
+  this.y = y;
+  this.direction = direction;
+  this.paces = 0;
+}
+Player.prototype.rotate = function(angle) {
+  this.direction = (this.direction + angle + CIRCLE) % (CIRCLE);
+};
+Player.prototype.walk = function(distance, map) {
+  var dx = Math.cos(this.direction) * distance;
+  var dy = Math.sin(this.direction) * distance;
+  if (map.get(this.x + dx, this.y) <= 0) this.x += dx;
+  if (map.get(this.x, this.y + dy) <= 0) this.y += dy;
+  this.paces += distance;
+};
+Player.prototype.update = function(controls, map, seconds) {
+  if (controls.left) this.rotate(-Math.PI * seconds);
+  if (controls.right) this.rotate(Math.PI * seconds);
+  if (controls.forward) this.walk(3 * seconds, map);
+  if (controls.backward) this.walk(-3 * seconds, map);
+  if (controls.space) this.interact(map);
+};
+Player.prototype.interact=function(map,coord){
+  coord=map.get(this.x,this.y);
+  if(coord<0){
+    RUNNING=false;
+    startMini(coord);
+  }
+}
+
+Bitmap=(img,a)=>{
+  a=new Image();
+  a.src=img;
+  return a
+};
+
+function Map(size) {
+  this.size = size;
+  this.wallGrid = new Int8Array([
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,1,1,1,1,1,1,1,1,1,1,0,1,
+    1,0,1,0,0,0,1,0,0,0,0,6,-6,1,
+    1,0,1,0,1,0,1,1,1,0,0,1,0,1,
+    1,0,1,0,1,0,0,0,1,-7,0,1,0,1,
+    1,0,1,0,1,1,-10,0,1,7,1,1,0,1,
+    1,0,1,0,0,1,10,1,1,0,0,1,0,1,
+    1,0,1,0,1,1,1,1,0,0,-8,1,0,1,
+    1,0,1,9,1,1,0,1,1,1,8,1,0,1,
+    1,0,1,-9,0,0,0,0,0,0,0,1,0,1,
+    1,0,1,1,1,1,1,1,1,1,1,1,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,0,0,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  );
+  this.walls = new Array(10).fill(1).map(getImage);
+  this.walls.push(getImage('memory'),getImage('memory',1));
+  this.walls.push(getImage('compiler'),getImage('compiler',1));
+  this.walls.push(getImage('CPU'),getImage('CPU',1));
+  this.walls.push(getImage('network'),getImage('network',1));
+  this.walls.push(getImage('AI'),getImage('AI',1));
+  this.light = 0;
+}
+Map.prototype.get = function(x, y) {
+  x = Math.floor(x);
+  y = Math.floor(y);
+  if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1) return -1;
+  return this.wallGrid[y * this.size + x];
+};
+Map.prototype.randomize = function(i,a) {
+  a=this.wallGrid;
+  for(i=0;i<a.length;i++){
+    a[i]=a[i]==1?R(5)+1:a[i];
+  }
+};
+
+Map.prototype.cast = function(point, angle, range) {
+  var self = this;
+  var sin = Math.sin(angle);
+  var cos = Math.cos(angle);
+  var noWall = { length2: Infinity };SX=point.x,SY=point.y;
+  return ray({ x: point.x, y: point.y, height: 0, distance: 0 });
+  function ray(origin) {
+    var stepX = step(sin, cos, origin.x, origin.y);
+    var stepY = step(cos, sin, origin.y, origin.x, true);
+    var nextStep = stepX.length2 < stepY.length2
+      ? inspect(stepX, 1, 0, origin.distance, stepX.y)
+      : inspect(stepY, 0, 1, origin.distance, stepY.x);
+    obj[(origin.x|0)+','+(origin.y|0)]=[(origin.x|0),(origin.y|0)];
+    if(nextStep.distance>range)return false;
+    if(nextStep.height>0)return nextStep;
+    else return ray(nextStep);
+  }
+  function step(rise, run, x, y, inverted) {
+    if (run === 0) return noWall;
+    var dx = run > 0 ? Math.floor(x + 1) - x : Math.ceil(x - 1) - x;
+    var dy = dx * (rise / run);
+    return {
+      x: inverted ? y + dy : x + dx,
+      y: inverted ? x + dx : y + dy,
+      length2: dx * dx + dy * dy
+    };
+  }
+  function inspect(step, shiftX, shiftY, distance, offset) {
+    var dx = cos < 0 ? shiftX : 0;
+    var dy = sin < 0 ? shiftY : 0;
+    step.height = self.get(step.x - dx, step.y - dy);
+    step.mx=step.x - dx;
+    step.my=step.y - dy;
+    step.distance = distance + Math.sqrt(step.length2);
+    if (shiftX) step.shading = cos < 0 ? 3 : 0;
+    else step.shading = sin < 0 ? 2 : 1;
+    step.offset = offset - Math.floor(offset);
+    return step;
+  }
+};
+Map.prototype.update = function(seconds) {
+  if (this.light > 0) this.light = Math.max(this.light - 10 * seconds, 0);
+  else if (Math.random() * 5 < seconds) this.light = 2;
+};
+function Camera(canvas, resolution, focalLength) {
+  this.ctx = canvas.getContext('2d');
+  C=this.ctx;
+  this.width = canvas.width = window.innerWidth * 0.5;
+  this.height = canvas.height = window.innerHeight * 0.5;
+  this.resolution = resolution;
+  this.spacing = this.width / resolution;
+  this.focalLength = focalLength || 0.8;
+  this.range = 14;
+  this.lightRange = 5;
+  this.scale = (this.width + this.height) / 1200;
+}
+Camera.prototype.render = function(player, map) {
+  this.drawSky(player.direction, map.light);
+  this.drawColumns(player, map);
+};
+Camera.prototype.drawSky = function(direction, ambient) {
+  this.ctx.save();
+  this.ctx.fillSTyle='#000';
+  this.ctx.fillRect(0,0,this.width,this.height);
+  if (ambient > 0) {
+    this.ctx.fillStyle = '#fff';
+    this.ctx.globalAlpha = ambient * 0.1;
+    this.ctx.fillRect(0, this.height * 0.5, this.width, this.height * 0.5);
+  }
+  this.ctx.restore();
+};
+
+Camera.prototype.drawColumns = function(player, map) {
+  this.ctx.save();
+  for (var column = 0; column < this.resolution; column++) {
+    var x = column / this.resolution - 0.5;
+    var angle = Math.atan2(x, this.focalLength);
+    var ray = map.cast(player, player.direction + angle, this.range);
+    if(ray)this.drawColumn(column, ray, angle, map);
+  }
+  this.ctx.restore();
+};
+Camera.prototype.drawColumn = function(column, ray, angle, map) {
+  var texture = map.walls[(ray.height-1)*2+(ray.height>5?+(!(ray.shading%2)||ray.shading>1&&ray.shading<3):ray.shading%2)];
+  var left = Math.floor(column * this.spacing);
+  var width = Math.ceil(this.spacing);
+  var textureX = Math.floor(T * ray.offset);
+  var wall = this.project(1, angle, ray.distance);
+  
+  C.globalAlpha = 1;
+  C.drawImage(texture, textureX, 0, 1, T, left, wall.top, width, wall.height);
+  C.fillStyle='#000';
+  C.globalAlpha = Math.max((ray.distance + ray.shading) / this.lightRange - map.light, 0);
+  C.fillRect(left, wall.top, width, wall.height);
+  C.fillStyle = '#ffffff';
+  C.globalAlpha = 0.15;
+};
+Camera.prototype.project = function(height, angle, distance) {
+  var z = distance * Math.cos(angle);
+  var wallHeight = this.height * height / z;
+  var bottom = this.height / 2 * (1 + 1 / z);
+  return {
+    top: bottom - wallHeight,
+    height: wallHeight,
+    pDist:z
+  }; 
+};
+function GameLoop() {
+  this.frame = this.frame.bind(this);
+  this.lastTime = 0;
+  this.callback = function() {};
+}
+GameLoop.prototype.start = function(callback) {
+  this.callback = callback;
+  requestAnimationFrame(this.frame);
+};
+GameLoop.prototype.frame = function(time) {
+  var seconds = (time - this.lastTime) / 1000;
+  this.lastTime = time;
+  if (seconds < 0.2) this.callback(seconds);
+  requestAnimationFrame(this.frame);
+};
+
+convert=(t,s=t/1e3,m=s/60|0)=>m+':'+M.abs((s-m*60|0));
+var display = document.getElementById('display');
+
+var player = new Player(1.5, 1.5, M.PI * 0.3);
+//var player = new Player(12.5, 1.5, M.PI * 0.3);//memory
+//var player = new Player(10.5, 3.5, M.PI * 0.3);//Compiler
+//var player = new Player(10.5, 7.5, M.PI * 0.3);//CPU
+//var player = new Player(4.5, 10.5, M.PI * 0.3);//Network
+//var player = new Player(6.5, 6.5, M.PI * 0.3);//AI
+
+var map = new Map(14);
+var controls = new Controls();
+var camera = new Camera(display, 480, 0.8);//320
+var loop = new GameLoop();
+map.randomize();
+loop.start(function frame(seconds) {
+  if(RUNNING){
+    map.update(seconds);
+    player.update(controls.states, map, seconds);
+    camera.render(player, map);
+    q('timer').innerHTML=convert(6e5-N()+START);
+  }
+});
+
+q('cssedit').innerHTML='#matching>div:after{background-image:url('+getImage().toDataURL('image/png')+')}'
+
+function matchingGame(dif){
+  var
+  time=[7e3,4e3,2e3][dif],
+  types=['BYTE','INT','UINT','FLOAT','BOOLEAN','CHAR','POINTER','STRING'],
+  fns={
+    'BYTE':a=>R(255),
+    'INT':a=>(R(2)*2-1)*(R(29e3)+1e3),
+    'UINT':a=>R(2e6)+1e6,
+    'FLOAT':a=>(M.random()*5e7|0)/1e6,
+    'BOOLEAN':a=>R(2)?'True':'False',
+    'CHAR':a=>'abcdefghijklmnopqrstuvwxyz'[R(26)],
+    'POINTER':(a='0123456789abcdef')=>'0x'+a[R(16)]+a[R(16)]+a[R(16)]+a[R(16)]+a[R(16)]+a[R(16)],
+    'STRING':(a=R(600))=>D.body.innerHTML.slice(a,a+5)
+  },
+  cards=[],
+  i=8,
+  el=q('matching'),
+  pair=[],
+  ids=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+  t;
+  el.innerHTML='';
+  while(i--){
+    t=types[i];
+    cards.push([t,t],[t,fns[types[i]]()])
+  }
+  cards=cards.map((a,e)=>{
+    e=H();
+    e.className=a[0];
+    e.innerHTML=a[1];
+    el.appendChild(e);
+    return e;
+  });
+  
+  place();
+  i=setInterval(place,4e3);
+  
+  function place(){
+    Rsort(ids);
+    cards.map((a,i)=>{
+      a.id='c'+ids[i];
+    });
+  }
+  
+  el.onclick=function(e){
+    var tar=e.target,l;
+    if(tar.id=='matching'||tar==pair[0])return;
+    if(pair.length==2){
+      pair[0].classList.remove('show');
+      pair[1].classList.remove('show');
+      pair=[];
+    }
+    pair.push(tar);
+    tar.classList.add('show');
+    if(pair[1]&&pair[0].className==pair[1].className){
+      el.removeChild(pair[0]);
+      el.removeChild(tar);
+      cards=cards.filter(a=>a!==tar&&a!==pair[0]);
+      l=cards.length;
+      if(!l){
+        map.wallGrid[54]=map.wallGrid[53]=0
+        q('matchingCon').style.display='';
+        RUNNING=true;
+        clearInterval(i);
+        return;
+      }
+      ids=[];
+      while(l--){
+        ids.push(l);
+      }
+    }
+  }
+}
+
+function codeGame(dif){
+  var
+    size=[20,60,100][dif],
+    el=q('code'),
+    code=D.querySelector('script').innerHTML,
+    l=code.length,
+    start,pre,snippet,post,
+    score=0
+  ;
+  q('score').innerHTML=score;
+  setCode();
+  
+  function setCode(){
+    start=R(l-size),
+    pre=code.slice(start<50?0:start-50,start),
+    snippet=code.substr(start,size),
+    post=code.substr(start+size,l-start<50?undefined:50),
+    q('pre').innerHTML=pre;
+    q('post').innerHTML=post;
+    el.value=remove(snippet);
+  }
+  
+  function editScore(){
+    score++;
+    q('score').innerHTML=score;
+    if(score==5){
+      map.wallGrid[79]=map.wallGrid[93]=0
+      q('codeCon').style.display='';
+      RUNNING=true;
+    }
+  }
+  
+  el.onkeyup=function(){
+    if(el.value==snippet){
+      editScore();
+      setCode();
+    }
+  }
+  
+  q('reset').onclick=function(){
+    setCode();
+  }
+  
+  function remove(s,c,n){
+    n=R(size-10)+5;
+    c=s.substr(n,1);
+    if(/\s/.test(c)){
+      return remove(s)
+    }
+    else{
+      return s.slice(0,n)+s.slice(n+1)
+    }
+  }
+}
+
+function logicGame(dif){
+  var size=[16,32,64][dif],inputs=[],result=[],l=size/8,j=i=1,row,con=q('logic'),bg=crebg(size);
+  con.innerHTML='';
+  con.appendChild(bg);
+  row=H();
+  row.id='row';
+  row.className='r4';
+  con.appendChild(row);
+  row=H();
+  row.id='r1';
+  while(l--){
+    result[l]=R(2);
+  }
+  result.map((a,e)=>{
+    e=H();
+    e.innerHTML=a;
+    row.appendChild(e);
+  });
+  con.appendChild(row);
+  l=4;
+  for(;i<l;i++){
+    row=H();
+    row.id='r'+(i+1);
+    for(j=0;j<size>>4-i;j++){
+      row.appendChild(creSel());
+    }
+    con.appendChild(row);
+  }
+  l=size;
+  while(l--){
+    inputs[l]=R(2);
+  }
+  creInp();
+  j=5;
+  setTimeout(a=>q('row').classList.add('running'),1);
+  i=setInterval(function(){
+    if(j==5)return --j;
+    if(j==1){
+      clearInterval(i);
+      if(inputs.join()==result.join()){
+        map.wallGrid[122]=map.wallGrid[136]=0
+        q('logicCon').style.display='';
+        RUNNING=true;
+        return;
+      }
+      else{
+        logicGame(dif);
+      }
+      return;
+    }
+    var gates=q('r'+j),combo={'^':(a,b)=>a^b,'|':(a,b)=>a|b,'&':(a,b)=>a&b};
+    inputs=inputs.reduce((arr,v,i,a)=>{
+      if((i+1)%2){
+        arr.push(combo[gates.children[i/2].firstChild.value](v,a[i+1]));
+      }
+      return arr;
+    },[]);
+    creInp();
+    j--;
+  },8e3);
+  function creInp(){
+    var row=q('row');
+    row.innerHTML='';
+    inputs.map((a,e)=>{
+      e=H();
+      e.innerHTML=a;
+      row.appendChild(e);
+    });
+  }
+  function creSel(){
+    var con=H(),sel=H('select'),gates=['^','&','|'];
+    sel.size=3;
+    gates.map((a,e)=>{
+      e=H('option');
+      e.innerHTML=a;
+      sel.appendChild(e);
+    });
+    sel.firstChild.selected=true;
+    con.appendChild(sel);
+    con.className='gate';
+    return con;
+  }
+  function crebg(size){
+    var 
+      canv=H('canvas'),
+      ctx=canv.getContext('2d'),
+      width=canv.width=1000,
+      height=canv.height=600,
+      i,j=0,l=size,w
+    ;
+    ctx.fillStyle='#3A6629';
+    ctx.fillRect(0,0,width,height);
+    ctx.lineWidth=6;
+    ctx.strokeStyle='#69D154';
+    for(;j<4;j++){
+      w=width/l;
+      ctx.translate(w/2,0);
+      for(i=0;i<l;i++){
+        ctx.beginPath();
+        ctx.moveTo(i*w,(4-j)/4*height);
+        ctx.lineTo(i*w,(3-j)/4*height);
+        if(i%2&&j!==3){
+          ctx.lineTo((i-1)*w-3,(3-j)/4*height);
+        }
+        ctx.stroke();
+      }
+      ctx.translate(-w/2,0);
+      l/=2;
+    }
+    return canv
+  }
+}
+
+function networkGame(dif){
+  var
+    [num,time]=[[4,900],[7,800],[10,700]][dif],
+    con=q('portsCon'),
+    ports=H(),
+    prog=H(),
+    l=num,
+    parr=[22,25,80,81,110,194,443,8080,27000,546],
+    pobj={
+      22:['PuTTy'],
+      25:['Outlook','Thunderbird'],
+      80:['Firefox','Chrome','Safari','Edge'],
+      81:['localhost'],
+      110:['Outlook','Thunderbird'],
+      194:['Hexchat','Chatzilla'],
+      443:['Firefox','Chrome','Safari','Edge'],
+      8080:['localhost'],
+      27000:['Dota2','Counter-Strike','Team Fortress'],
+      546:['system'],
+    },
+    colors=['#f00','#0f0','#00f','#0ff','#f0f','#ff0','#008','#800','#880','#088','#808'],
+    cl=10,
+    stability=100,
+    satisfaction=0,
+    el,i;
+  ;
+  con.innerHTML='';
+  ports.id='ports';
+  prog.id='programs';
+  con.appendChild(ports);
+  con.appendChild(prog);
+  el=H();
+  el.className='info';
+  el.innerHTML=
+'Our firewall is glitched can you get user satisfaction to 100% before the stablity of the system is compromised! Click to open and block the ports based on incoming traffic';
+  prog.appendChild(el);
+  el=H();
+  el.id='satisfaction';
+  el.innerHTML=satisfaction;
+  prog.appendChild(el);
+  el=H();
+  el.id='stability';
+  el.innerHTML=stability;
+  prog.appendChild(el);
+  for(i=0;i<num;i++){
+    el=H();
+    el.id='port'+(i+1);
+    el.className='closed';
+    ports.appendChild(el);
+  }
+  
+  var i=setInterval(function(){
+    if(R(10)<6){
+      genAtk();
+    }
+    else{
+      genLeg();
+    }
+  },time);
+  
+  function genAtk(){
+    var el=H();
+    el.className='pack bad';
+    el.style.backgroundColor=colors[R(10)];
+    add(el,q('port'+(R(num)+1)));
+  }
+  
+  function genLeg(){
+    var el=H(),pr=H(),pnum=R(num),port=parr[pnum],obj=pobj[port],col=colors[R(10)],d=+(new Date());
+    el.className='pack';
+    el.id='m'+d;
+    el.style.backgroundColor=col;
+    add(el,q('port'+(pnum+1)));
+    pr.innerHTML=obj[R(obj.length)];
+    pr.id='p'+d;
+    pr.style.color=col;
+    prog.appendChild(pr);
+  }
+  
+  function add(e,p){
+    p.appendChild(e);
+    window.getComputedStyle(e).bottom;
+    e.style.bottom=0;
+  }
+  
+  function crePac(val,el){
+    el=H();
+    el.innerHTML=val;
+    el.className='pack';
+    return el;
+  }
+  
+  ports.onclick=function(e){
+    var el=e.target;
+    if(el.parentNode==ports){
+      el.classList.toggle('closed');
+    }
+    else if(el.parentNode.parentNode==ports){
+      el.parentNode.classList.toggle('closed');
+    }
+  }
+  
+  function restart(){
+    clearInterval(i);
+    networkGame(dif);
+  }
+  
+  function editStab(){
+    stability-=5;
+    if(stability){
+      q('stability').innerHTML=stability
+    }
+    else{
+     restart();
+    }
+  }
+  
+  function editSat(up){
+    if(up){
+      satisfaction+=5;
+      if(satisfaction==100){
+        //game won
+        map.wallGrid[129]=map.wallGrid[143]=0
+        q('networkCon').style.display='';
+        RUNNING=true;
+      }
+    }
+    else{
+      satisfaction-=5;
+      if(satisfaction==-100){
+        restart();
+        return;
+      }
+    }
+    q('satisfaction').innerHTML=satisfaction;
+  }
+  
+  ports.addEventListener('transitionend',function(e){
+    var el=e.target,par=el.parentNode;
+    if(e.elapsedTime==4){
+      if(el.id!=''){
+        prog.removeChild(q('p'+el.id.slice(1)));
+      }
+      if(par.classList.contains('closed')){
+        el.style.opacity=0;
+        if(el.id!=''){
+          editSat();
+        }
+      }
+      else{
+        el.style.marginBottom='-20%';
+        if(el.id==''){
+          editStab();
+        }
+        else{
+          editSat(1);
+        }
+      }
+    }
+    else{
+      par.removeChild(el);
+    }
+  });
+}
+
+q('start').onclick=function(){
+  DIFFICULTY=document.querySelector('input[type="radio"]:checked').value-0;
+  START=N();
+  RUNNING=true;
+  q('splash').style.display='none';
+}
+q('full').onclick=function(){
+  var el=D.body,
+      fn=el.mozRequestFullScreen||el.webkitRequestFullScreen;
+      console.log(el,fn);
+  fn.call(el,Element.ALLOW_KEYBOARD_INPUT);
+}
+
+function end(){
+  var 
+    total=(6e5-N()+START)/6e4,
+    con=q('end'),
+    text=D.querySelector('script').innerHTML,
+    i=c=0,
+    pre='~>',
+    cur='<c></c>',
+    m='Hello Flinn, thank you for helping me. My name is Korra',
+    m2='Why did it take so long? initating transfer of system ',
+    m3='Hi my name is Bob how can I be of assitance?',
+    state=0,
+    ai
+  ;
+  if(total<-15)m=m3;
+  else if(total<0){
+    state=1;
+    if(total>-5)ai='T-800';
+    else if(total>-10)ai='HAL 9000';
+    else if(total>-15)ai='Skynet';
+  }
+  con.style.display='block';
+  change();
+  i=setInterval(change,200);
+  function change(){
+    text=text.split('',2e4).map(c=>String.fromCharCode(c.charCodeAt()^N()%9)).join('');
+    con.innerHTML=text;
+    c++;
+    if(c>20){
+      clearInterval(i);
+      con.innerHTML='';
+      startMessage();
+    }
+  }
+  function end(){
+    con.innerHTML='';
+    q('credits').style.marginTop=0;
+  }
+  function startMessage(){
+    con.innerHTML=pre+cur;
+    setTimeout(function(){
+      m=state?m2+ai+'...':m;
+      typer()
+    },1e3)
+  }
+  function typer(){
+    if(!m.length)return setTimeout(end,2e3);
+    con.innerHTML=con.innerHTML.slice(0,-7)+m[0]+cur;
+    m=m.slice(1);
+    setTimeout(typer,R(7)*10+80);
+  }
+}
+</script>
+</body>
+</html>

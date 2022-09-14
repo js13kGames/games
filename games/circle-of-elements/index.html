@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>circle of elements</title>
+
+    <meta charset="ISO-8859-1"/>
+    <meta name="description" content="Play circle of elements, created for js13kGames competition 2014"/>
+    <meta name="author" content="Stefan Blamberg"/>
+    <meta name="keywords" content="js13kGames, HTML5, Stefan Blamberg, Games, Competition, Minimalistic"/>
+    
+    <link href="style.css" type="text/css" rel="stylesheet" />
+    <script src="script.js"></script>
+
+<body>
+    <div id="main">
+        <header>
+            <table>
+                <tr>
+                    <td><img src="src/circle_b.png" width="100px" height="100px"></td>
+                    <td><h1>circle of elements</h1>
+                    <h2>created by <a target="_blanc" href="https://twitter.com/StefanBlamberg">@StefanBlamberg</a> for <a target="_blanc" href="https://twitter.com/search?q=%23js13kGames">#js13kGames</a> 2014</h2></td>
+                </tr>
+            </table>    
+        </header>
+        <div id="content" style="height: 650px;">
+            <noscript>
+                <p>Looks like JavaScript is deactivated in your browser.<br/><br/>Unfortunately you need JavaScript to run this game. See how to activate JavaScript <a target='_blank' href='http://www.activatejavascript.org/'>here</a></p>
+            </noscript>
+            <div style=' padding: 200px;'>
+                <p style='border: 1px solid black;' onclick='changeUI(1)'>Play</p>
+                <p style='border: 1px solid black; margin-top: 30px;' onclick='changeUI(2)'>Instructions</p>
+                <p style='border: 1px solid black; margin-top: 30px;' onclick='changeUI(5)'>About</p>
+            </div>
+        </div>
+        <footer>
+            <p><a onclick="changeUI(1)">Play Again!</a> | <a onclick="changeUI(2)">Rules</a> | <a target="_blanc" href="http://www.blamberg.org">blamberg.org</a></p>
+        </footer>
+    </div>
+</body>
+</html>

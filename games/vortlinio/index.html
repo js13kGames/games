@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="eo">
+<head>
+    <meta charset="utf-8">
+    <title>Vortlinio</title>
+    <link rel="stylesheet" href="ludo.css">
+    <script src="ludo.js" charset="utf-8"></script>
+    <script src="vortaro.js" charset="utf-8"></script>
+</head>
+<body>
+    <div id="ludo">
+        <div id="poentaro"></div>
+
+        <div id="superteksto">
+            <div id="superteksto-ne" class="nevidebla">NE</div>
+            <div id="superteksto-jes" class="nevidebla">JES</div>
+        </div>
+        <div id="bildo"></div>
+
+        <div id="teksto-respondo"><input id="teksto-respondo-enmetejo" size="30" type="text" placeholder="Priskribu tion, kio okazas en la bildo" onkeypress="return xSistemigi(this, event);"> <button type="button" onclick="kontroliRespondon();">Kontroli</button></div>
+        <div id="respondejo" class="nevidebla">
+            <p class="titolo">Priskribo</p>
+            <div id="elektitaj" class="elektoj"><button id="kontroli-elektitajn" type="button" onclick="kontroliRespondon();">Kontroli</button></div>
+        </div>
+        <div id="elektoj" class="elektoj nevidebla"><p class="titolo">Vortlisto</p></div>
+
+        <div id="helpi"><button type="button" onclick="helpi();">?? Helpi min</button></div>
+    </div>
+
+    <audio id="bing">
+        <source src="bing.mp3" type="audio/mp3">
+    </audio>
+    <audio id="barp">
+        <source src="barp.mp3" type="audio/mp3">
+    </audio>
+    <audio id="hooray">
+        <source src="hooray.mp3" type="audio/mp3">
+    </audio>
+
+    <div id="finita" class="nevidebla">
+        <h1>Vi venkis la ludon</h1>
+        <p>😀 🎉🎉🎉 😀 Gratulon al vi 😀 🎉🎉🎉 😀</p>
+        <p><button type="button" onclick="komenci();">Ludi denove</button></p>
+    </div>
+
+    <script>
+    komenci();
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="monetization" content="$coil.xrptipbot.com/3fPQrE1rTCC3ci-YkfSerA">
+    <title>Boat Racing 404</title>
+    <meta name="description" content="Boat racing game developed for js13kgames 2020">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Boat racing 404">
+    <meta property="og:url" content="https://boat-racing-404.herokuapp.com/">
+    <meta property="og:site_name" content="Boat racing 404">
+    <meta property="og:description" content="Boat racing game developed for js13kgames 2020">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" href="./favicon.ico">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <h1>Boat Racing 404</h1>
+    <p>Sail against other players for 404 meters. <strong>Hold Space</strong> or touch your screen <strong>on light blue water</strong> to speed.</p>
+    <div id="message"></div>
+    <canvas id="canvas" width="320" height="320"></canvas>
+    <div id="restartButtonDiv" style="display:none">
+        <button id="restartButton">Restart race</button> for everyone.
+    </div>
+    <div id="highscore" style="display:none">
+        <h2>Highscore of the last race</h2>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filled in by JavaScript-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h2>Credits</h2>
+    <ul>
+        <li><a href="https://opengameart.org/content/sail-ships-in-8-directions">Sail boat by veil (CC0)</a></li>
+        <li><a href="https://opengameart.org/content/road-and-water-tiles-from-isometric-set">Road and water tiles by Kenney (CC0)</a></li>
+    </ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js"></script>
+</body>
+</html>

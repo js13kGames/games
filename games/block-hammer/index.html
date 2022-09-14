@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background: url("bg.gif");
+        }
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            border: 1px solid black;
+        }
+        #ins{
+            text-align: center;
+            color: Red;
+        }
+    </style>
+</head>
+
+<body>
+    <br/>
+    
+    <canvas id="canvas" width='425' height='850'/>
+    
+    
+    <script>
+        
+        
+        
+        function ang2Rad(ang) {
+            return ang * (Math.PI / 180);
+        }
+        
+        const Part = function(x,y, ticks){
+            this.x = x;
+            this.y = y;
+            this.xS = -5 + Math.random() * 7;
+            this.yS = -10 + Math.random() * 10;
+            this.lifeTime = 0;
+            
+            this.update = function(){
+                this.lifeTime++;
+                this.x += this.xS;
+                this.y += this.yS;
+                this.yS += 1;
+            };
+            
+            this.draw = function(){
+                ctx.fillStyle = 'orange';
+                ctx.fillRect(this.x, this.y, 2, 2);
+            };
+            
+        }
+        
+        const Boom = function(x,y,partCount){
+            this.x = x;
+            this.y = y;
+            this.parts = [];
+            
+            for(var i=0; i<partCount; i++){
+                this.parts.push(new Part(this.x, this.y, 30));
+            };
+            
+            this.draw = function(){
+                for(var i=0; i<this.parts.length; i++){
+                    this.parts[i].update();
+                    this.parts[i].draw();
+                }
+            }
+        }
+
+        const Player = function (x, y) {
+            this.x = x;
+            this.y = y;
+            this.g = c.width / 2 - 15;
+            this.a = 0;
+            this.s = 6;
+            this.clockWise = true;
+            this.update = function () {
+                if(Math.abs(this.s) > 0)
+                    this.s  += this.s > 0 ? -0.01 : 0.01;
+                
+                if (keys.left && !keys.right) {
+                    this.clockWise = false;
+                }
+                if (keys.right && !keys.left) {
+                    this.clockWise = true;
+                }
+
+                if (!pause) this.a += this.clockWise ? this.s % 360 : -this.s % 360;
+            };
+            this.draw = function () {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(ang2Rad(this.a));
+                ctx.fillStyle = "rgb(0,0,255)";
+                ctx.translate(-this.x, -this.y);
+                ctx.fillRect(this.x - 10, this.y - this.g - 5, 20, 10);
+                ctx.fillRect(this.x - 10, this.y + this.g - 5, 20, 10);
+                //ctx.fillRect(this.x - 3, this.y - 3, 6, 6);
+                ctx.restore();
+            };
+        }
+
+        const Block = function (maxSpeed) {
+            
+            this.maxSpeed = maxSpeed;
+            this.s = Math.random() * maxSpeed + 2;
+            this.h = Math.random() * 20 + 10;
+            this.w = Math.random() * 10 + 5;
+            this.x = Math.random() * (c.width - this.w);
+            this.y = -2 * this.h * level - (100 * this.s);
+            //this.x = c.width + 2* this.w * level;
+            //this.y = Math.random() * (c.height - this.h);
+            
+            this.update = function () {
+                if (!pause) this.y += this.s;
+                if(this.y - this.h > c.height){
+                    this.score(-1);
+                    hitsInARow = 0;
+                    scoreMultiplyer = 1;
+                    playNote(false, 1);
+                }
+            };
+            
+            this.score = function(points){
+                if(points > 0) boom = new Boom(this.x, this.y, 30);
+                score += points;
+                this.x = Math.random() * (c.width - this.w);
+                this.s = Math.random() * this.maxSpeed + 1;
+                this.h = Math.random() * 20 + 10;
+                this.w = Math.random() * 10 + 5;
+                this.y = 0 - this.h;
+            }
+            
+            this.draw = function () {
+                ctx.fillStyle = "Red";
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+            };
+            
+            this.checkCollision = function(){
+                // check for hit underneath
+                var data = ctx.getImageData(this.x, this.y, this.w, this.h);
+
+                var hit = false;
+                for (var i = 0; i < data.data.length; i += 4) {
+                    if (data.data[i] == 0 && data.data[i + 1] == 0 && data.data[i + 2] == 255) {
+                        
+                        hit = true;
+                    }
+                }
+                return hit;
+            };
+        }
+
+        
+
+        function kDown(e) {
+            p.s = 6
+            if (e.code == "ArrowLeft") {
+                keys.left = true;
+            }
+            if (e.code == "ArrowRight") {
+                keys.right = true;
+            }
+
+            pause = false;
+        }
+
+        function kUp(e) {
+            if (e.code == "ArrowLeft")
+                keys.left = false;
+            if (e.code == "ArrowRight")
+                keys.right = false;
+            
+
+        }
+
+        window.onload = function () {
+            
+            audioCtx = null;
+            level = 2;
+            gameState = 0
+            pause = false;
+            c = document.getElementById("canvas");
+            //c.height = window.innerHeight - 120;
+            //c.width = c.height * 0.60
+            ctx = c.getContext("2d");
+            ctx.font = "30px Courier New";
+            p = new Player(c.width / 2, c.height - c.width / 2);
+            keys = { left: false, right: false };
+            document.addEventListener('keydown', kDown);
+            document.addEventListener('keyup', kUp);
+            c.addEventListener("mousedown", canvasClicked);
+            setInterval(update, 1000 / 30);
+            
+            //Notes A B C# D E F# G#
+            badNotes = [220.0, 246.9, 138.6, 146.8, 164.8, 185.0, 207.7];
+            notes = [440, 493.9, 277.2, 293.7, 329.6, 370, 415.3];
+            
+            boom = new Boom(c.width/2, c.height /2, 5);
+        }
+        
+        function canvasClicked(e){
+            if(gameState ==0){
+                if(audioCtx == null){
+                    audioCtx = new AudioContext();
+                    osc = audioCtx.createOscillator();
+                    osc.type = 'sawtooth';
+                    gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(0);
+                    gain.gain.value = 0.0;
+                }
+                level = 2;
+                startGame();
+                gameState++;
+            } else if(gameState == 1){
+                p.s = 6;
+                // This has an issue when a block gets stuck deep under the player
+                p.clockWise = !p.clockWise;
+                //pause = false;
+            }
+        }
+        
+        function playNote(goodNote, t){
+            index = Math.floor(Math.random() * notes.length );            
+            gain.gain.value = 0.4;
+            osc.frequency.value = goodNote ? notes[index] : badNotes[index];
+           gain.gain.setTargetAtTime(0.00001, audioCtx.currentTime, t);
+            
+        }
+        
+        function startGame(){
+            hitsInARow = 0;
+            scoreMultiplyer = 1;
+            score = 0;
+            b = [];
+            var mSpeed = level*1.05;
+            if(mSpeed > 6) mSpeed = 6;
+            for(var i=0; i<level; i++){
+                b.push(new Block(mSpeed));
+            }
+        }
+
+        function makeMenu(){
+            ctx.fillStyle = "black";
+            ctx.fillRect(0,0,c.width,c.height);
+            ctx.fillStyle = "White";
+            ctx.fillText("Directions!", 115, 80);
+            ctx.fillText("Level:" + (level - 1), c.width - 150, 35);
+            ctx.font = "15px Courier New";
+            ctx.fillText("Left and Right arrows or mouse / tap to",                   20,100);
+            ctx.fillText("change the direction of the hammers! Your",
+                        20,115);
+            
+            ctx.fillText("goal is to hit the blocks to gain points.",
+                        20,130);
+            ctx.fillText("If a block passes the bottom of the screen",
+                        20,145);
+            ctx.fillText("your score will go BACKwards. If your score",
+                        20,160);
+            ctx.fillText("reaches -2 you will start BACK at level 1." ,
+                        20,175);
+            ctx.fillText("Try to get to the highest level!", 
+                        20,190);
+            
+            ctx.font = "30px Courier New";
+            ctx.fillText("Click to Start",90, c.height - 50);
+            
+        }
+        
+        function update() {
+            switch(gameState){
+                case 0:
+                    makeMenu();
+                    
+                    break;
+                case 1:
+                    //Restart the level
+                    if(score <= -2){
+                        
+                        gameState = 0;
+                    }
+                    //Go up a level
+                    if(score > level * 3){
+                        level++;
+                        startGame();
+                    }
+                    ctx.fillStyle = "Black";
+                    ctx.fillRect(0, 0, c.width, c.height);
+                    ctx.fillStyle = "White";
+                    ctx.fillText("Score:" + score, 10,35);
+                    ctx.fillText(scoreMultiplyer + "X", 10,70);
+                    ctx.fillText("Level:" + (level - 1), c.width - 150, 35);
+                    p.update();
+                    p.draw();
+                    boom.draw();
+                    for(var i=0; i<b.length; i++){
+                
+                        if(b[i].checkCollision()){
+                            hitsInARow++;
+                            if(hitsInARow > scoreMultiplyer){
+                                scoreMultiplyer++;
+                            }
+                            b[i].score(1 * scoreMultiplyer);
+                            playNote(true, 0.25);
+                            
+                        
+                        }
+                        b[i].update();
+                        b[i].draw();    
+                    }
+                    break;
+            }
+            
+            
+            
+        }
+    </script>
+</body>
+
+</html>

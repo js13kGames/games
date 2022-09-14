@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+    <title>Code Farm</title>
+  </head>
+  <body>
+    <audio id="pop">
+      <source src="pop.mp3" type="audio/mpeg" />
+    </audio>
+    <div class="board" id="board">
+      <div class="header">Code Farm</div>
+      <div class="cell" id="1" data-cell></div>
+      <div class="cell" id="2" data-cell></div>
+      <div class="cell" id="3" data-cell></div>
+      <div class="cell" id="4" data-cell></div>
+      <div class="cell" id="5" data-cell></div>
+      <div class="cell" id="6" data-cell></div>
+      <div class="cell" id="7" data-cell></div>
+      <div class="cell" id="8" data-cell></div>
+      <div class="cell" id="9" data-cell></div>
+      <div class="cell" id="10" data-cell></div>
+      <div class="cell" id="11" data-cell></div>
+      <div class="cell" id="12" data-cell></div>
+      <div class="button">
+        <div></div>
+        <button id="button" onclick="startGame()">NEW COMBINATION</button>
+        <div>
+          <button id="button"><a href="rules.html">RULES</a></button>
+        </div>
+      </div>
+    </div>
+    <div class="winning-message show" id="winningMessage">
+      <div data-winning-message-text></div>
+      <button id="restartButton">New Combination</button>
+    </div>
+    <div class="O">
+      <span>Orange</span>
+      <div id="O"></div>
+    </div>
+    <p>VS</p>
+    <div class="T">
+      <span>Tomato</span>
+      <div id="T"></div>
+    </div>
+    <br /><br />
+    <div class="colorCode">
+      <span>Final Code</span>
+      <div id="colorCode"></div>
+    </div>
+  </body>
+</html>

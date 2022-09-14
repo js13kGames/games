@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SLIP</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no, minimal-ui"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <style>
+	* { padding: 0; margin: 0; background: #000;  } 
+	canvas { background: #000; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }</style>
+	
+	<script src="js/tinymusic.min.js"></script>
+</head>
+<body>
+
+	<canvas id="myCanvas" width="480" height="480"></canvas>
+
+	<script src="js/global.js"></script>
+	<script src="js/title.js"></script>
+	<script src="js/games.js"></script>
+	<script src="js/util.js"></script>
+	
+<script>
+
+	document.addEventListener("touchstart", mouseDownHandler, false);
+	document.addEventListener("touchend", mouseUpHandler, false);
+	document.addEventListener("mousedown", mouseDownHandler, false);
+	document.addEventListener("mouseup", mouseUpHandler, false);
+
+	function mouseDownHandler(e) {
+		scene.onPointerDown(e);
+	}
+	function mouseUpHandler(e) {
+		scene.onPointerUp(e);
+	}
+	
+	function changeScene(newScene){
+		if(scene) scene.end();
+		scene = newScene;
+		scene.init();
+	}
+
+    function update() {
+	
+		//Background
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = "rgba("+backgroundColor.r+", "+backgroundColor.g+", "+backgroundColor.b+", "+backgroundColor.a+")";
+		ctx.fill();
+	
+		scene.update();
+		scene.draw();
+		
+		//Border
+		ctx.beginPath();
+		ctx.lineWidth = "4";
+		ctx.strokeStyle = "rgba(255, 255, 255, 0.5";
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.stroke();
+        
+        requestAnimationFrame(update);
+    }
+
+	changeScene(new Title());
+    update();
+	
+</script>
+
+</body>
+</html>

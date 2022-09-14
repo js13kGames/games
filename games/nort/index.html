@@ -1,0 +1,223 @@
+<html>
+  <head>
+    <title>Nort | Tron</title>
+    <style>
+      body{background-color:#000;color:#fff;}
+      canvas{position:absolute;top:0;left:50%;height:100%;margin-left:-25%;}
+      #news{border:1px solid black;}
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <canvas id="game" width="120" height="120"></canvas>
+    <h1>Nort! Dig your way</h1>
+    <p>You are a backhoe digging through sand.</p>
+    <p>The dark one kills you</p>
+
+    <p id="news"></p>
+    <script>
+
+      window.requestAnimationFrame =
+      window.requestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function(fn){ setTimeout(fn, 20); };
+
+      var gameCanvas = document.getElementById('game');
+      var gameContext = gameCanvas.getContext("2d");
+      gameContext.fillStyle = "#F6E1B5";
+      gameContext.fillRect(0, 0, 120, 120);
+
+      var playing = false;
+      var winner = null;
+
+      var player = {
+          posX: 0,
+          posY: 0,
+          newPos: [ ],
+          who: '',
+          lastPixel: 0,
+          ID: prompt( "Can I has a name?" )
+      };
+
+      var enemy = {
+          posX: 0,
+          posY: 0,
+          newPos: [ ],
+          who: '',
+          lastPixel: 0
+          };
+      
+      function connect() {
+        console.log('connecting');
+        socket = io(document.location.href);
+        socket.emit('playerInfo',{ name: player.ID } );
+        socket.on('news', onNews);
+        socket.on('config', onConfig);
+        socket.on( 'tic', onTic );
+        socket.on( 'winner', onWinner );
+        setTimeout(tic, 20);
+      }
+
+      function tic (data) {
+      //loogic    
+        if(!playing){
+          window.requestAnimationFrame(tic);
+          return;
+        } 
+        if(player.RequestDirection){
+          socket.emit('canIHasChange', player.RequestDirection);
+          player.RequestDirection = null;
+        }
+
+        var nextP = player.newPos.pop();
+        var nextE = enemy.newPos.pop();
+
+        if( nextP ) {
+          if ( player.lastPixel ) {
+            switch(player.lastPixel)
+            {
+              case 246:
+                gameContext.fillStyle = "#E2BF81";
+              break;
+
+              case 226:
+                gameContext.fillStyle = "#B21E4B";
+              break;
+
+              case 178:
+                gameContext.fillStyle = "#3C1B1F";
+              break;
+            }
+            gameContext.fillRect( player.posX, player.posY, 1, 1 );
+          }
+          var ppixels = gameContext.getImageData( nextP[ 0 ], nextP[ 1 ], 1, 1 );
+          player.lastPixel = ppixels.data[0];
+
+          player.posX = nextP[ 0 ];
+          player.posY = nextP[ 1 ]; 
+
+          gameContext.fillStyle = "#3412ff";
+          gameContext.fillRect(player.posX, player.posY, 1, 1);
+        }
+
+
+        if( nextE ) {
+          if ( enemy.lastPixel ) {
+            switch(enemy.lastPixel)
+            {
+              case 246:
+                gameContext.fillStyle = "#E2BF81";
+              break;
+
+              case 226:
+                gameContext.fillStyle = "#B21E4B";
+              break;
+
+              case 178:
+                gameContext.fillStyle = "#3C1B1F";
+              break;
+            }
+            gameContext.fillRect( enemy.posX, enemy.posY, 1, 1 );
+          }
+          var epixels = gameContext.getImageData( nextE[ 0 ], nextE[ 1 ], 1, 1 );
+          enemy.lastPixel = epixels.data[0];
+
+          enemy.posX = nextE[ 0 ];
+          enemy.posY = nextE[ 1 ]; 
+
+          gameContext.fillStyle = "#ff1234";
+          gameContext.fillRect(enemy.posX, enemy.posY, 1, 1);
+        }
+
+        window.requestAnimationFrame(tic);
+      }
+
+      function onTic ( data ) {
+        if(player.who == "player1")
+        {
+          player.newPos.unshift( data.backhoe1 );
+          enemy.newPos.unshift( data.backhoe2 );
+        }
+        else
+        {
+          player.newPos.unshift( data.backhoe2 );
+          enemy.newPos.unshift( data.backhoe1 );
+        }
+      }
+
+      function onNews(data)
+      {
+        var news = document.getElementById('news');
+        news.innerHTML = news.innerHTML + '<br>' + data.message;
+        if(news.key)
+        {
+          player.who = news.key;
+        }
+      }
+      
+      function onConfig(data)
+      {
+        if( data.player1 ) {
+          onNews( { message:'<h3>Player 1: '+data.player1+'</h3>' } );
+        }
+
+        if( data.player2 ) { 
+          onNews( { message:'<h3>Player 2: '+data.player2+'</h3>' } );
+        }
+
+        if(player.who == "player1")
+        {
+          player.posX = 60;
+          player.posY = 25;
+          player.DeltaY = -1;
+
+          enemy.posX = 60;
+          enemy.posY = 95;
+          enemy.DeltaY = 1;
+        }
+        else
+        {
+          player.posX = 60;
+          player.posY = 95;
+          player.DeltaY = 1;
+
+          enemy.posX = 60;
+          enemy.posY = 25;
+          enemy.DeltaY = -1;
+        }
+
+        if ( data.playing ) {
+          playing = data.playing;
+        }
+        
+      }
+
+      function onWinner ( data ) {
+        playing = false;
+        onNews( { message: '<h1>'+data.winner+' wins!</h1>' } );
+      }
+
+      document.onkeydown = function(e) {
+        e = e || window.event;
+        switch(e.which || e.keyCode) {
+          case 37: // left
+            player.RequestDirection = 'left';
+          break;
+          case 38: // up
+            player.RequestDirection = 'up';
+          break;
+          case 39: // right
+            player.RequestDirection = 'right';
+          break;
+          case 40: // down
+            player.RequestDirection = 'down';
+          break;
+        }
+      }
+
+      connect();
+    </script>
+  </body>
+</html>

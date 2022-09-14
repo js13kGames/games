@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+  </head>
+  <body>
+    <!--
+    <a-scene class="fullscreen" camera look-controls mouse-cursor>
+      <a-entity id="game"> 
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+          <a-sky color="blue"></a-sky>
+          <a-box id="mapmenu" position="1 0.5 -3" color="red"></a-box>
+      </a-entity>
+        
+      <a-entity id="map">
+      </a-entity>
+      
+      <a-box id="mapmenu" position="0 0.5 -3" color="#4CC3D9"></a-box>
+      
+      <a-text value="Hello, A-Frame!" color="#BBB"
+              position="-0.9 1.5 -3" scale="1.5 1.5 1.5"></a-text>
+      
+      <a-entity cursor="fuse: true; fuseTimeout: 500" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: black; shader: flat">
+
+      </a-entity> 
+    </a-scene>
+
+-->
+   <a-scene>
+      <a-assets>
+        <a-mixin id="cube" geometry="primitive: box"></a-mixin>
+        <a-mixin id="green" material="color: indigo"></a-mixin>
+	<a-mixin id="blue" material="color: white"></a-mixin>
+      </a-assets>
+
+      <a-entity id="game">
+        <a-entity position="0 2.2 4">
+          <a-entity camera look-controls>
+            <a-entity position="0 0 -3"
+                      geometry="primitive: ring; radiusOuter: 0.30;
+                                radiusInner: 0.20;"
+                      material="color: cyan; shader: flat"
+                      cursor="maxDistance: 30; fuse: true">
+
+            </a-entity>
+          </a-entity>
+        </a-entity>
+
+
+        <a-sky color="#75b3ce"></a-sky>
+      
+        <a-entity id="intro" >
+          <a-text  id="IntroText" value="You are in a spacecraft which collided with a space object contaminated by an alien life form. Foreign debris entered the hull. Your objective is to control a robotic arm with your head and dispose the debris back to the space. Watch out for the openings. On the left there are your points! Press the purple area to start the game!" color="indigo" position="-2 3 0" scale="1.5 1.5 1.5"></a-text>
+          <a-entity position="0 1 0" id="mapmenu">
+            <a-entity  id="mapmenu" mixin="cube green" onclick= cls();> </a-entity>
+          </a-entity>
+        </a-entity>
+       
+        <a-entity id="points">
+          <a-text  id="PointsText" value="Debris back in space" color="#BBB" position="-30 10 25" scale="30 30 30" rotation="0 90 0"></a-text>
+          <a-entity  id="Point"></a-entity>
+        </a-entity>
+
+        <a-entity id="room">
+          <a-entity id="wall1">
+            <a-plane color="#CCC" height="10" width="10" position="0 20 -30" opacity="0.5" ></a-plane>
+            <a-plane color="black" height="10" width="10" position="-20 20 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-20 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-10 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-10 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="0 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-10 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-30 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-30 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-30 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-40 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-40 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-40 10 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-40 20 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-30 20 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-30 30 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-40 30 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-10 30 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-20 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-10 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-30 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-40 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="0 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="10 40 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="10 30 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="10 20 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="10 0 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="10 -10 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="0 -10 -30" opacity="0.5"></a-plane>
+            <a-plane color="black" height="10" width="10" position="-20 -10 -30" opacity="0.5"></a-plane>
+            <a-plane color="#CCC" height="10" width="10" position="-40 -10 -30" opacity="0.5"></a-plane>
+          </a-entity>
+            <a-plane color="#CCC" height="60" width="80" position="-71 15 0" opacity="0.5" rotation="0 45 0"></a-plane>
+            <a-plane color="#CCC" height="60" width="80" position="42.5 15 0" opacity="0.5" rotation="0 -45 0"></a-plane>
+            <a-plane color="#CCC" height="60" width="190" position="0 45 0" opacity="0.5" rotation="90 0 0"></a-plane>
+            <a-plane color="#CCC" height="60" width="190" position="0 -15 0" opacity="0.5" rotation="270 0 0"></a-plane>
+            <a-plane color="#CCC" height="60" width="200" position="0 15 28" opacity="0.5" rotation="0 180 0"></a-plane>
+          <a-entity id="shit">
+            <a-sphere position="0 -15 10" radius="3" color="brown"></a-sphere>
+            <a-sphere position="5 -15 10" radius="3" color="brown"></a-sphere>
+            <a-sphere position="2 -10 11" radius="2" color="brown"></a-sphere>
+            <a-sphere position="5 -15 5" radius="2" color="brown"></a-sphere>
+            <a-sphere position="20 -15 25" radius="3" color="brown"></a-sphere>
+            <a-sphere position="-20 -15 25" radius="3" color="brown"></a-sphere>
+            <a-sphere position="-20 -15 20" radius="3" color="brown"></a-sphere>
+            <a-sphere position="0 -15 10" radius="3" color="brown"></a-sphere>
+            <a-sphere position="5 -15 20" radius="10" color="brown"></a-sphere>
+            <a-sphere position="0 -15 30" radius="20" color="brown"></a-sphere>
+          </a-entity>
+        </a-entity>
+        <a-entity id="shitball"></a-entity>
+        <a-entity id="lostshits"></a-entity>
+    </a-scene>
+    <script src="pingpong.js"></script>
+
+
+<!-- <a-scene>     
+<a-assets>
+        <a-mixin id="cube" geometry="primitive: box"></a-mixin>
+        <a-mixin id="green" material="color: green"></a-mixin>
+      </a-assets>
+
+      <a-entity id="game">
+        <a-entity position="0 2.2 4">
+          <a-entity camera look-controls>
+            <a-entity position="0 0 -3"
+                      geometry="primitive: ring; radiusOuter: 0.30;
+                                radiusInner: 0.20;"
+                      material="color: cyan; shader: flat"
+                      cursor="maxDistance: 30; fuse: true">
+
+            </a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity position="0 -1 2" id="mapmenu">
+          <a-entity  id="mapmenu" mixin="cube green">
+          </a-entity>
+          <a-text  id="mapmenu" value="Open the map" color="#BBB" position="-0.3 1 0" scale="1.5 1.5 1.5"></a-text>
+        </a-entity>
+        <a-sky color="#75b3ce"></a-sky>
+      </a-entity>
+      
+      <a-entity id="map">
+      </a-entity>
+      
+    </a-scene>
+    <script src="mapmaker.js"></script>-->
+  </body>
+</html>

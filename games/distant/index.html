@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>distant game</title>
+    </head>
+    <body>
+        <center>
+            <table>
+                <tr><td><div id="canvas"></div></td></tr>
+                <tr><td>
+                    <table><tr><td>
+                                <div style="font-size:9pt;"><center>
+                                    welcome to planet mars<br>
+                                    build (m)ines to increase supply, 
+                                    then place space hubs (#) to let space travellers settle,<br> 
+                                    keep supply and (s)ettlements in balance, 
+                                    try to let as many space travellers settle as possible
+                                </center></div>
+                            </td><td>
+                                <table style="font-size:9pt;">
+                                    <tr>
+                                        <td>message: </td><td id="message" ></td></tr><tr>
+                                        <td>supply: </td><td id="supply"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>        
+                    </table>
+                </td></tr>
+            </table>
+        </center>
+    </body>
+    <script>
+        var UP = 38;
+        var DOWN = 40;   
+        var RIGHT = 39;   
+        var LEFT = 37; 
+        
+        var COL = 50;
+        var ROW = 18;
+        
+        var pos = [ROW/2,COL/2];
+        var map = [];
+        var supply = 300;
+
+        display("message", "move using key arrows or build (m)ine or space hub (#)");
+        display("supply", supply)
+
+        for (var row = 0; row < 20; row++) {
+            var line = []
+            for (var col = 0; col < 50; col++) {
+                line.push("...");
+            }
+            map.push(line);
+        }
+
+        window.addEventListener("keydown", keydownHandler, false);
+        
+        function keydownHandler(event) {
+            switch(event.keyCode) {
+                case UP:
+                    if(pos[0]>0) {
+                        pos[0]--;
+                    }
+                    display("message", "you moved up");
+                    break;
+                case DOWN:
+                    if(pos[0]< ROW-1) {
+                        pos[0]++;
+                    }
+                    display("message", "you moved down");
+                    break;
+                case LEFT:
+                    if(pos[1]>0) {
+                        pos[1]--;
+                    }
+                    display("message", "you moved left");
+                    break;
+                case RIGHT:
+                    if(pos[1]< COL-1) {
+                        pos[1]++;
+                    }
+                    display("message", "you moved right");
+                    break;
+                /*case 83:
+                    display("message", "you built a settlement");
+                    buildBuilding(pos[0], pos[1], "s");
+                    break;*/
+                case 77:
+                    display("message", "you built a mine");
+                    buildBuilding(pos[0], pos[1], "m");
+                    break;
+                case 191:
+                    display("message", "you built a space hub");
+                    buildBuilding(pos[0], pos[1], "#");
+                    break;
+            }
+            
+            var nr_mines = find("m").length
+            var nr_settlements = find("s").length;
+            
+            if (supply>300) {
+                grow();
+                supply -= 100;
+            } else if (supply <100 && nr_settlements > 0) {
+                shrink();
+            }
+            
+            supply = Math.round(supply + nr_mines*20 - nr_settlements*10 - randomNr(100));
+            display("supply", supply);
+
+            render();
+        }
+
+        function buildBuilding(row, col, type) {
+            map[row][col] = type;
+        }
+
+        function render() {            
+            var table = "";
+            table += "<table>";
+            for (var row = 0; row < ROW; row++) {
+                table += "<tr>";
+                for (var col = 0; col < COL; col++) {
+                    var item = "";
+                    if(row == pos[0] && col == pos[1]) {
+                        item = "x";
+                    } else {
+                        item = map[row][col];
+                    }
+                    table += "<td>" + item + "</td>";
+                }
+                table += "</tr>";
+            }
+            table += "</table>";
+            display("canvas", table);
+        }
+
+        function display(id, content) {
+            document.getElementById(id).innerHTML = content;
+        }
+
+        function find(char) {
+            var result = [];
+            for (var row = 0; row < 20; row++) {
+                for (var col = 0; col < 50; col++) {
+                    if (map[row][col] == char) {
+                        result.push([row, col]);
+                    }
+                }
+            }
+            return result;
+        }
+
+        function getNeighbors(row, col) {
+            var result = [];
+            for (var y = row-1; y < row+2; y++) {
+                for (var x = col-1; x < col+2; x++) {
+                    if (y >= 0 && x >= 0 && y < 20 && x < 50) {
+                        if (y != row || x != col) {
+                            result.push([y, x]);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        function settle(row, col) {
+            if (row >= 0 && col >= 0 && row < 20 && col < 50) {
+                map[row][col] = "s";
+            }
+        }
+
+        function grow() {
+            var pipes = find("#");
+            for (var i = 0; i < pipes.length/3; i++) {
+                var target = pipes[randomNr(pipes.length-1)];
+                var neighbors = getNeighbors(target[0], target[1]);
+                var free_neighbors = [];
+                for (var j = 0; j < neighbors.length; j++) {
+                    if (map[neighbors[j][0]][neighbors[j][1]] == "...") {
+                        free_neighbors.push(neighbors[j]);
+                    }
+                }
+                var newSettlement = free_neighbors[randomNr(free_neighbors.length-1)];
+                if (newSettlement != undefined) {
+                    settle(newSettlement[0], newSettlement[1]);
+                }
+            }
+        }
+
+        function shrink() {
+            var settlements = find("s");
+            for (var i = 0; i < settlements.length/10; i++) {
+                var target = settlements[randomNr(settlements.length-1)];
+                map[target[0]][target[1]] = "...";
+            }
+        }
+
+        function randomNr(max) {
+            return Math.round(Math.random()*(max));
+        }
+
+        render();
+    </script>
+</html>

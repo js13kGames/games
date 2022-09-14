@@ -1,0 +1,61 @@
+<html>
+<head>
+	<style>
+	.hidden {
+		display: none;
+	}
+
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: Arial;
+	}
+	.canvas-game {
+		/*background-color: #222;*/
+	}
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	#message-box {
+		position: fixed;
+		padding: 20px;
+		top: 30%;
+		left: 50%;
+		width: 300px;
+		margin-left: -150px;
+		box-sizing: border-box;
+		background: white;
+		text-align: center;
+		opacity: 0.9;
+		border: 10px solid #F3F3F3;
+		border-radius: 15px;
+		z-index: 1000;
+	}
+
+	button {
+		background: hsl(85, 70%, 31%);
+		border: none;
+		padding: 15px 30px;
+		color: white;
+		cursor: pointer;
+	}
+	button:HOVER {
+		background: hsl(85, 70%, 40%);
+	}
+	</style>
+</head>
+<body>
+
+<canvas class="canvas-bg1" id="bg1"></canvas>
+<canvas class="canvas-game" id="c"></canvas>
+<canvas class="canvas-fg1" id="fg1"></canvas>
+<div id="lost" class="hidden">
+	You lost. Refresh to play again.
+</div>
+
+<script type="text/javascript" src="script.min.js"></script>
+</body>
+
+</html>

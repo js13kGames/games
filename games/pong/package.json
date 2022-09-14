@@ -1,0 +1,6 @@
+{
+  "name": "pong",
+  "main": "pong-srv.js",
+  "author": "Aurélio A. Heckert <aurium@colivre.coop.br>",
+  "license": "AGPLv3"
+}

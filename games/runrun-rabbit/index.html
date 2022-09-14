@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RunRun Rabbit!</title>
+    <link href="./site.css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="container" class="container">
+        <h1>RunRun Rabbit!</h1>
+        <h4 id="backToMenu" class="hidden"><a href="">Return to menu</a></h4>
+        <div id="menu">
+            <button id="startSinglePlayer" type="button" class="btn player-0">Start Single Player Sandbox</button>
+            <button id="startMultiplayer" type="button" class="btn player-0">Start Multiplayer Game</button>
+            <br /><br />
+            <button id="settingsAndInstructions" class="btn player-0">Instructions and Settings</button>
+        </div>
+        <div id="settings" class="hidden">
+            <h2>Instructions</h2>
+            <div>
+                <h3 id="rabbits">Rabbits</h3>
+                <p>Earn points by guiding the purple bunnies safely to your home square.</p>
+            </div>
+            <div>
+                <h3 id="foxes">Foxes</h3>
+                <p>If one of the orange foxes reaches your home square, they'll eat half of your rabbits!</p>
+            </div>
+            <div>
+                <h3 id="arrows">Arrows</h3>
+                <blockquote>Practise here!</blockquote>
+                <p>Place arrows to guide critters around.
+                   You can only place up to three arrows at a time, so use them wisely&hellip;</p>
+            </div>
+            <h2>Input method</h2>
+            <label>
+                <h3><input type="radio" name="input" value="desktop" /> Desktop</h3>
+                <p>Place arrows by pressing one of the <span class="nowrap">&larr;/&uarr;/&rarr;/&darr;</span>
+                    or <span class="nowrap">W/A/S/D</span> keys <b>then clicking on</b> a square.</p>
+            </label>
+            <label>
+                <h3><input type="radio" name="input" value="laptop" /> Laptop</h3>
+                <p>Place arrows by pressing one of the <span class="nowrap">&larr;/&uarr;/&rarr;/&darr;</span>
+                    or <span class="nowrap">W/A/S/D</span> keys <b>while hovering over</b> a square.</p>
+            </label>
+            <label>
+                <h3><input type="radio" name="input" value="mobile" disabled /> Tablet/Phone (coming soon)</h3>
+                <p>Place arrows by <b>touching</b> a square and <b>swiping</b> left/right/up/down</p>
+            </label>
+        </div>
+        <script src="./bundle.js"></script>
+    </div>
+</body>
+</html>

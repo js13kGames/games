@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="space.css">
+    <script src="space.js"></script>
+    <title>Lakshman | Space</title>
+</head>
+
+<body align="center">
+    <canvas class="circleCanvas"></canvas>
+    <div>
+        <h1>Space Game</h1>
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h2>How to Play?</h2>
+                </div>
+                <ul>
+                    <li> This is a SPACE(empty area) finding game.</li>
+                    <li> Approximately calculate the SPACE percentage(%) of the shape.</li>
+                    <li> Set the slider to your calculated space %.</li>
+                    <li> Click on GUESS SPACE button.</li>
+                    <li> You will be given a point if your Answer is close to Correct Answer.</li>
+                    <li> Game gets over after playing for 1 minute.</li>
+                    <li> BONUS: You will be given 2 points if you predict Correct Answer.</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <br>
+    <div class="game">
+        <div class="timeAndPoints">
+            <div>Time: <span class="time">1:00</span></div>
+            <div>Points: <span class="points">0</span>/<span class="total">0</span></div>
+        </div>
+        <div>
+            <canvas class="canvas"></canvas>
+        </div>
+        <div class="sliderValue">50%</div>
+        <div class="slidecontainer">
+            <input type="range" min="0" max="100" value="50" class="slider" id="myRange">
+        </div>
+        <br>
+        <div class="correctStatement" hidden="true">
+            <div>
+                Correct Space Percentage = <span class="correctAnswer">0</span>%
+            </div>
+            <br>
+        </div>
+        <div>
+            <button class="guessButton btn btn-primary">Guess Space</button>
+        </div>
+    </div>
+    <div class="gameOverText" hidden>
+        <h2>Game Over</h2>
+        <br>
+        <div class="gameOverPoints">Points: <span class="points">0</span>/<span class="total">0</span></div>
+        <br>
+        <button class="playAgain btn btn-primary">Play Again</button>
+    </div>
+    </div>
+
+</body>
+
+</html>

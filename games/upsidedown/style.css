@@ -1,0 +1,29 @@
+body {
+    padding:0;
+    margin:0;
+    height:100%;
+    width:100%;
+    background-color: #443333;
+}
+div {
+    text-align: center;
+}
+h1 {
+    font-family: Courier;
+    margin-bottom: 0px;
+    padding-botton: 0px;
+    color: white;
+    font-size: 40px;
+}
+
+button {
+    background-color: transparent;
+    width: 50px;
+    height: 40px;
+    padding: 10px 10px 10px 10px;
+    font-size: 40px;
+    color: white;
+    border: transparent;
+
+}
+

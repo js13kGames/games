@@ -1,0 +1,187 @@
+﻿<style>
+@keyframes intro {
+  0% { transform: rotateX(0deg) translateY(-43vmin) translateZ(290vmin) }
+  70% { transform: rotateX(10deg) translateX(-36vmin) translateY(-37vmin) translateZ(23vmin); }
+  100% { transform: rotateX(84deg) translateX(-26vmin) translateY(13vmin) translateZ(13vmin); }
+}
+
+@keyframes wiggle {
+  0% { transform: rotateY(20deg); }
+  100% { transform: rotateY(-20deg); }
+}
+
+
+* { margin: 0; box-sizing: border-box; padding: 0; }
+.perspective { perspective: 60vmin; margin: 50vh 25vw; }
+.perspective * { transform-style: preserve-3d; }
+#left, #right { width: 50vw; height: 100vh; position: absolute; overflow: hidden; }
+#left { left: 0; }
+#right { right: 0 }
+.scene { position: fixed; width: 30vmin; height: 20vmin; transform: rotateX(84deg) translateX(-26vmin) translateY(13vmin) translateZ(13vmin); }
+.scene.intro { animation: intro 10s };
+.cube { transform-style: preserve-3d; position: fixed; top: 0; left: 0; }
+.cube .face { border: 1px solid #555; width: 25vmin; height: 25vmin; position: fixed; top: 0; left: 0; background: linear-gradient(transparent, transparent 95%, #666 95%), linear-gradient(90deg, #888, #888 90%, #555 90%); background-size: 90vmin 90vmin, 1vmin 1vmin; }
+.cube .face.top { background: #888 }
+.cube .face.front { height: 250vmin; transform: rotateX(-90deg); transform-origin: 0 0; }
+.cube .face.back { height: 250vmin; transform: rotateX(-90deg) translateZ(25vmin); transform-origin: 0 0;  }
+.cube .face.right { height: 250vmin; transform-origin: 0 0; transform: rotateX(-90deg) rotateY(90deg) translateX(-25vmin) translateZ(25vmin); }
+.cube .face.left { height: 250vmin; transform-origin: 0 0; transform: rotateX(-90deg) rotateY(90deg) translateX(-25vmin) }
+
+.wire { position: fixed; top: 0; left: 0; width: .3vmin; height: 25.1vmin; background: #ccc; transform: translateX(25vmin) translateY(25vmin); }
+
+.character { position: fixed; top: 0; left: 0; transform: translateX(24vmin) translateY(48vmin) rotateX(-75deg); }
+#character_rotation, #character_rotation2 { transition: transform .1s; transform: translateY(-2vmin); width: 2vmin; height: 4vmin; transform-origin: bottom center; }
+.character_inner { width: 2vmin; height: 4vmin; background: url(character.png) no-repeat; background-size: 100% 100%; animation: wiggle 1s linear infinite alternate; }
+</style>
+
+<div id="left">
+
+  <div class="perspective">
+    <div class="scene">
+      <div class="cube" style="transform: translateX(.5vmin)">
+        <p class="face left">
+        <p class="face right">
+        <p class="face back">
+        <p class="face top">
+      </div>
+      
+      <div class="cube" style="transform: translateX(25vmin) translateY(50vmin)">
+        <p class="face left">
+        <p class="face right">
+        <p class="face front">
+        <p class="face top">
+      </div>
+      
+      <div class="wire"></div>
+      <div class="character">
+        <div id="character_rotation">
+          <div class="character_inner"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div id="right">
+
+  <div class="perspective">
+    <div class="scene">
+      <div class="cube" style="transform: translateX(.5px)">
+        <p class="face right">
+        <p class="face front">
+        <p class="face back">
+        <p class="face top">
+      </div>
+      
+      <div class="cube" style="transform: translateX(25vmin) translateY(50vmin)">
+        <p class="face left">
+        <p class="face front">
+        <p class="face back">
+        <p class="face top">
+      </div>
+      
+      <div class="wire"></div>
+      <div class="character">
+        <div id="character_rotation2">
+          <div class="character_inner"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+$ = function(n){
+  return document.querySelectorAll(n);
+}
+
+retry = location.hash.slice(1) === "retry";
+angle = 0; 
+onload = function(){
+  
+  scene = $(".scene");
+  character = $(".character");
+  angle = 0;
+  
+  setTimeout(function(){
+    for(i = 0; i < 2; i++){
+      if(!retry) scene[i].classList.add("intro");
+      scene[i].style.transition = "all 60s linear";
+    }
+  }, 100);
+
+  setTimeout(function(){
+
+    for(i = 0; i < 2; i++){
+    
+      scene[i].style.transform = "rotateX(13deg) translateX(-24vmin) translateY(-11vmin) translateZ(52vmin)";
+    
+      character[i].style.transition = "all 60s linear";
+      character[i].style.transform = "translateX(23.9vmin) translateY(20vmin) rotateX(-75deg)";
+      
+      time = 0;
+      dir = 0;
+      inte = setInterval(function(){
+        if(time % 300 == 0){
+          dir = Math.random() < .5 ? -1  : 1;
+          if(time > 1000) dir *= 1.1;
+          if(time > 1600) dir *= 1.1;
+        }
+        if(time < 2900 && (time % 300) < 60) angle += dir / 2;
+        
+        else if(time < 2900 && (time % 300) > 120 && (time % 300) < 180) angle -= dir / 2;
+        
+        time ++;
+        
+        if(time > 3600){
+          clearInterval(inte);
+          location = "end.html#VICTORY";
+        }
+        
+        console.log(time, angle, beta, angle+beta);
+
+      }, 33);
+      
+    }
+  }, retry ? 1000 : 10500);
+
+}
+
+dead = 0;
+frames = 0;
+ondeviceorientation = function(e){
+  beta = 0;
+  if(e.beta > 90) beta = 180 - e.beta;
+  else if(e.beta < -90) beta = -180 - e.beta;
+  else beta = e.beta || 0;
+  
+  if(!dead){
+    character_rotation.style.transform = character_rotation2.style.transform = "translateY(-2vmin) rotateZ(" + (angle + beta) + "deg)";
+  }
+  
+  
+  if(!dead && (angle + beta) > 25 || (angle + beta) < -25){
+    frame ++;
+    if(frame > 5) {
+    
+      dead = 1;
+      
+      character_rotation.style.transition = character_rotation2.style.transition = "5s";
+      
+      character_rotation.style.transform = character_rotation2.style.transform = "translateY(200vmin) rotateZ(" + (angle + beta) * 3 + "deg)";
+      
+      setTimeout(function(){
+        clearInterval(inte);
+        location = "end.html#FALL";
+      }, 500);
+    }
+  }
+  
+  else {
+    frame = 0;
+  }
+}
+
+</script>

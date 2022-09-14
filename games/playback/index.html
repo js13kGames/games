@@ -1,0 +1,47 @@
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="game.css">
+<canvas id="static-background"></canvas>
+<canvas id="background"></canvas>
+<canvas id="level"></canvas>
+<canvas id="fx"></canvas>
+<canvas id="player"></canvas>
+<div id="ui">
+    <div id="home">
+        <div class="menu">
+            <h1>PLAYBACK</h1>
+            <div class="menu-option current" onclick="play()">Play</div>
+            <div class="menu-option" onclick="freePlay()">Free Play</div>
+            <div class="menu-option" onclick="credits()">Credits</div>
+        </div>        
+    </div>
+    <div id="credits">
+        <h1>Adrian Lissot</h4>
+        <h2>github.com/harmades</h3>
+        <h3>Special thanks :
+            <ul>
+                <li>JavaScript</li>
+                <li>undefined</li>
+                <li>null</li>
+                <li>NaN</li>
+            </ul>
+        </h3>
+    </div>
+    <div id="songs">
+        <span class="song">qetyipsdq</span>
+        <span class="song">puetup</span>
+        <span class="song">ootos</span>
+        <span class="song">peyipeyipeyit</span>
+        <span class="song">qetetutup</span>
+        <span class="song">dsppsdsppsipe</span>
+        <span class="song">pppppppdyip</span>
+        <span class="song">qdiyiytyiqdiyiytyi</span>
+        <span class="song">qtispyeypds</span>
+        <span class="song">dsdiydsdiydsd</span>
+        <span class="song">qyoiydaiyoituq</span>
+        <span class="song">tuipiut</span>
+    </div>
+    <div id="hint"></div>
+    <div id="controller"></div>
+</div>
+<script src="levels.js"></script>
+<script src="game.js"></script>

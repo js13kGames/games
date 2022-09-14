@@ -1,0 +1,30 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<title>Found bomb ?</title>
+		<style>
+			html, body {
+				overflow : hidden;
+			}
+			body {
+				margin : 0;
+				background-color : black;
+			}
+			#gamepanel {
+				position : relative;
+			}
+			canvas {
+				position : absolute;
+			}
+			* {
+				touch-action: manipulation;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="gamepanel"></div>
+		<img id="ground_image" hidden src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAARISURBVDhPTVRdTFtlGH5OD5YCpZzCWPnpGNIAZcJGGT8mMFhkbC44t7jEC+NisnhjoomJV/Oq1154M43xZhpn4s2CMZoswoyBjdQxYFj2A2xsEAqlLdDuQLuyrq3neWenT3LynXznO+/3vs/zvK/irtSyn5x/BxN/TaPz9TZEI2H8+OsNvH+qBw8WA1hajUCzFUErLgTBM4fbW3Ht6jDs5XtlL3DnNpzNHswZ59XfLn/h/fP6JMYm76LL04SCoiKU2IphzVexFdUBRUFHawO6+7qRTSWRTMQxOz4Gs9WG5fUo1HQSo9OLKMlsw15mh2lqcgYOmxmOkiJcvDQkGY6MTsjNVVYF8ythyZRwt7TIulNQLisR0p9JBfeCcTmnxiNhb+Z5Wjad5RrKSm1waSqWQzpmH0cQ303BajHD77+PwcF+mAsKsbwSlApyTyL+FOsbMcwHIlBOdzZkY3octdXliG0nhCuuLJMYGbuNgV6PZBdaD8FR4ZB9p7MS33x1CTfvLaFx3wsuWY2qZNLeZle1fGjzvIZDBxuxGdnA1XE/CvJM6PA0SikTt/yyvxNYhFpYjKqqCphMCpTdp0g+S+FApcF9iQZ1sMvtpZJS1vySCFJTaUdfTzsKjXLioVWsbCbk9tVIDO1tzah11cFmnMtkshj+w4cjXc2IZizINwTNI/E3n8RFlK4DtejrPiyl0UYsnSAlLIt0HDt5XPZ++f47rO1khXsRa3ZWVuWD/tZsvcsphwh6i0rzR3JE2Iw9/8xdeSefOdWZDNUleNmpMyehavmqt8KSEV/xhqm/5xEMBLHweFVKf55nEVtZ7WXYTSTQP3BUeCw2/xespq7W+BbH5aFrUI8ecnnJUXNLE9zueoRXlsTQDMYsS7VipLMQA9Me5GzyURhzqzHkKcDbb72BE8d70dHpgdWUgvrtl597CwvMwhlVY6ds76ZxxkifyJG/x+HAwtxD1LhexSuZlDjiYIPzpUABoyqfbxpqaiPoHRr2iYJUeMPITjc4ZHBag9D1HRGK51y11XgSNc7aNTH1T1d+x8O5Baxv6mI5GQ78aaCvU1qOStNGBBXMGZz2KXJUv2y/i1//gNC/7qBQOTHVT9875qXn9hgtR5N+9PF5NLldyNODeLAWg2t/pQTp7D0C3/R9abvroz4kjZa88NmHCK+tyeAg/3X1LigXTnskQ3qK9uHPLI8YHrmBc+fOYs7w2P9HGZEbZwRtRSfcmlmAKSc9PcVgo+NTEoizLReM/ZwLxhbjk6OF5ncbiTAYu8lEjsiNDEjjZ97EQAQzlYwNrvgQHF08++7ZExKUXSRdZazkU+1yFnk5INV8i6jG0jTNhuTaItKKio1wGKHQJpx77RKQCpfaLOgxeFNSCTxaXpcBshXdlp5W3+xr9/r8i4jHXggwfcd413VU7HOKsUl0qWaVScOpwq5gJ135eRicoyyZwcjpVlTHP0EzG+lLTUzPAAAAAElFTkSuQmCC" />
+		<script src="main.js"></script>
+	</body>
+</html>

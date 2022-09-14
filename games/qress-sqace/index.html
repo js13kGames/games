@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>nesro - js13k-2021-press-space</title>
+        
+        <style>
+            * {margin:0;padding:0}
+        </style>
+
+        <!-- thanks to xem for the tip :) https://css-tricks.com/emojis-as-favicons -->
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌨️</text></svg>">
+    </head>
+    <body>
+        <div id="info" style="border: 1px solid white; padding: 0.5em;background: rgba(255,255,255,0.9); position:absolute; top: 75px; left:25px; z-index: 666; width: 450px">
+            <h1>qress sqace</h1>
+            <p>This game works only in <b>Google Chrome</b> because I use Audio time to control animation (nobody should ever do that), sorry.</p>
+            <p>The game doesn't scale on height. Canvas size is 1000px. If you play this on laptop, use at least Chrome in full screen. You should be able to see a white bar in the bottom.</p>
+            <p>This is a very simple game inspired by three other games I like: Tyrian, ZType and Taiko no Tatsujin.</p>
+            <p>As you press a key, music start playing and you need to hit the notes. To hit a note, you press a corresponding key of the note and have your "spaceship" in the right slot.</p>
+            <p>Letters are generated on page load so as the music repeats, you can memorize the letters better.</p>
+            <p>The green bars are useless, ignore them. So is the name. The first idea was a bit different. I didn't have much time for this project and the result code is a mess. But I learned something so that is going good for me. No library was used to make this game and that was definitely a mistake :D I will take a look for some good libraries for next year.</p>
+            <p>So the goal is to hit all the notes! :) Good luck.</p>
+            <p>Checkout out github for more info: <a href="https://github.com/nesro/js13k-2021-press-space">https://github.com/nesro/js13k-2021-press-space</a></p>
+        </div>
+        <script src="game.min.js"></script>
+        <!-- <script src="game.js"></script> -->
+    </body>
+</html>

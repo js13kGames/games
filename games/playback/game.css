@@ -1,0 +1,169 @@
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: Helvetica;
+    font-weight: lighter;
+}
+
+#background, #static-background, #level, #player, #fx, #ui {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+#ui, #home {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#home .menu {
+    width: 100%;
+    height: 100%;
+    text-shadow: 0px 0px 4px black;
+}
+
+#credits {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 35%;
+    overflow: hidden;
+    text-align: center;
+    display: none;
+}
+
+#credits.changing {
+    animation: moving 5s linear;
+    display: block;
+}
+
+@keyframes moving {
+    from { top: 100%; }
+    to { top: 35%; }
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#home .menu-option {
+    font-size: 48px;
+    margin: 12px;
+    width: 500px;
+}
+
+.menu-option {
+    border: 4px solid black;
+    border-radius: 4px;
+    text-align: center;
+    cursor: default;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+h1 { font-size: 60px; }
+
+h2 { font-size: 52px; }
+
+h2 { font-size: 44px; }
+
+.menu-option:hover {
+    border-color: ghostwhite;
+}
+
+.menu-option.current {
+    border-color: ghostwhite;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#controller {
+    border: 4px solid black;
+    background-color: transparent;
+    color: ghostwhite;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border-color: ghostwhite;
+    border-radius: 4px;
+    position: absolute;
+    right: 0%;
+    bottom: 0%;
+    margin: 8px;
+    opacity: 0;
+}
+
+#controller.visible {
+    animation: visibility 2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#controller.hidden {
+    animation: non-visibility 2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#hint {
+    border: 4px solid black;
+    background-color: transparent;
+    color: ghostwhite;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border-color: ghostwhite;
+    border-radius: 4px;
+    position: absolute;
+    left: 0%;
+    bottom: 0%;
+    margin: 8px;
+    opacity: 0;
+}
+
+#songs {
+    position: absolute;
+    left: 0%;
+    top: 2%;
+    display: none;
+}
+
+.song {
+    margin: 8px;
+    border: 4px solid black;
+    background-color: transparent;
+    color: ghostwhite;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border-color: ghostwhite;
+    border-radius: 4px;
+    margin: 8px;
+}
+
+#hint.visible {
+    animation: visibility 2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#hint.hidden {
+    animation: non-visibility 2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+
+@keyframes visibility {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes non-visibility {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

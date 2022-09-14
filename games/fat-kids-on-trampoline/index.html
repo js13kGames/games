@@ -1,0 +1,92 @@
+<html>
+    <head>   
+        <title>Fat Kids on Trampoline</title>
+        <script type="text/javascript" src="bundle.js"></script>
+
+        <style>
+          .centered {
+            width: 1200px;
+            height: 760px;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-evenly;
+          }
+    
+          button,
+          span,
+          footer,
+          body {
+            font-size: 18px;
+            padding: 0px;
+            color: black;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 200;
+            text-align: center;            
+            text-shadow: 1px 1px 2px 2px gray;
+          }
+    
+          .container {
+            width: calc(100% - 10px);
+            position:absolute;
+          }
+    
+          .row, .container{
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+          }
+    
+          .field {
+            background: lightskyblue;
+            box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.7);
+            border: solid 0.5px gray;
+          }
+    
+          h1 {
+            font-weight: 500;
+            margin: 5px;
+          }
+    
+          .nop{
+            pointer-events: none;
+          }
+    
+          button{
+            pointer-events: all;
+            background: black;
+            border: solid 1px #888;
+            height:40px;
+            cursor:pointer;
+            width:200px;
+            margin:3px;
+          }
+    
+          button:hover{
+            background: #333;
+          }
+    
+          button:disabled{
+            background: none;
+            cursor: not-allowed;
+            opacity: 0.5;
+            border: solid 1px #333;
+          }
+
+          .footer{
+            top:800;
+          }
+        
+        </style>
+    
+    </head>
+    <body>
+      <div class="container">
+        <canvas class="centered field" id="main"></canvas>        
+      </div>
+      <div class="container nop">
+        <div class="centered ui" >
+          <div id="ui"/>
+        </div>
+      </div>
+    </body>
+</html>

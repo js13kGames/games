@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>shoot</title>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe/dist/aframe-master.js"></script>
+    <script src="./script.js"></script>
+  </head>
+  <body>
+    <a-scene background="color: #aa00e8">
+      <a-camera id="camera" position="0 0 0">
+        <a-entity id="gun" geometry="primitive: box; width: 0.05; height: 0.1; depth: 0.3" material="shader: standard; metalness: 0.5 roughness: 0" position="0.5 -0.5 -0.75">
+          <a-entity id="slide" shooter geometry="primitive: box; width: 0.051; height: 0.05; depth: 0.3" material="shader: standard; color: #ef0000; metalness: 0 roughness: 0.5" click-to-shoot position="0 0.03 0.005">
+          <a-animation attribute="material.opacity" dur="1000" from="0" to="1"></a-animation>
+          </a-entity>
+          <a-animation attribute="material.opacity" dur="1000" from="0" to="1"></a-animation>
+          <a-animation delay="300" attribute="rotation" dur="1500" from="-720 0 0" to="0 0 0" easing="ease-in-out-back"></a-animation>
+          <a-animation attribute="material.opacity" dur="1000" from="0" to="1"></a-animation>
+          <a-animation delay="300" attribute="rotation" dur="1500" from="-720 0 0" to="0 0 0" easing="ease-in-out-back"></a-animation>
+          <a-animation begin="reload" attribute="rotation" dur="500" from="0 0 0" to="30 30 -40" easing="ease-in-out-back"></a-animation>
+          <a-animation begin="reload" delay="510" attribute="rotation" dur="500" from="0 0 0" to="30 30 -40" easing="ease-in-out-back" direction="reverse"></a-animation>
+        </a-entity>
+        <!-- To do: Add a reloading animation with "begin: reload". Add a gun slide or similar. Add a cartridge. Add elements to the game. Add score.-->
+        <!-- Add offline screen for game over. Add interactive enemies. Add offline "insert cd 2" screen for level passed. Add procedurally generated white noise screen.-->
+        <!-- slide position for animation: 0 0.03 0.059-->
+      </a-camera>
+      <a-entity id="bulletTemplate" bullet geometry="primitive: sphere; radius: 0.0175" material="color: orange"></a-entity>
+      <a-entity class="target" target="healthPoints: 5" geometry="primitive: box" position="0 0 -6" hit-handler></a-entity>
+      <a-entity class="target" target="healthPoints: 5" geometry="primitive: box" position="3 0 -4" hit-handler></a-entity>
+      <a-entity class="target" target="healthPoints: 5" geometry="primitive: box" position="-3 2 -5" hit-handler></a-entity>
+    </a-scene>
+  </body>
+</html>

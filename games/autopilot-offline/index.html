@@ -1,0 +1,41 @@
+<canvas id="offline" width="240" height="240"></canvas><canvas id="gamebackground" width="200" height="200"></canvas><style>#offline {
+    position: absolute;
+    width: 99.5vmin;
+    top: 49.9%;
+    left: 49.9%;
+    transform: translateX(-50%)translateY(-50%);
+    background: transparent;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 1;
+  }
+
+  #gameoverlay {
+    position: absolute;
+    width: 99.5vmin;
+    top: 49.9%;
+    left: 49.9%;
+    transform: translateX(-50%)translateY(-50%);
+    background: transparent;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 3;
+  }
+
+  #gamebackground {
+    position: fixed;
+    width: 99.5vmin;
+    top: 49.9%;
+    left: 49.9%;
+    transform: translateX(-50%)translateY(-50%);
+    background: #000;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 0;
+  }</style><script src="TinyMusic.min.js"></script><script src="game.js"></script>

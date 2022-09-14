@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="none">
+<style>
+  .c { fill: #444; font: 30px bold sans-serif; }
+  .m { fill: #333; font: 25px bold sans-serif; }
+  .f { fill: #222; font: 15px bold sans-serif; }
+</style>
+<defs>
+	<pattern patternTransform="rotate(45)" id="a" width="35%" height="35%" x="0" y="0">
+		<text x="25" y='25' class='c'>SPACE!</text>
+	</pattern>
+	<pattern patternTransform="rotate(-45)" id="b" width="30%" height="30%" x="0" y="0">
+		<text x="20" y='20' class='m'>Space...</text>
+	</pattern>
+	<pattern patternTransform="rotate(15)" id="c" width="25%" height="25%" x="0" y="0">
+		<text x="20" y='20' class='f'>...space...</text>
+	</pattern>
+</defs>
+<rect fill="black" x="0" y="0" width="100%" height="100%" />
+<rect fill="url(#c)" x="0" y="0" width="100%" height="100%" style="overflow:visible"/>
+<rect fill="url(#b)" x="0" y="0" width="100%" height="100%" style="overflow:visible"/>
+<rect fill="url(#a)" x="0" y="0" width="100%" height="100%" style="overflow:visible"/>
+</svg>

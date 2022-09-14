@@ -1,0 +1,88 @@
+#text,#gameS,#gameC,#state{
+  box-sizing:border-box;
+  position:absolute;
+  height:100vh;
+  top:0;
+  font-family:"Courier New",Courier,monospace;
+  background:black;
+  color:#ddd;
+  font-size:10vh;
+}
+#text{
+  width:25vw;
+  left:0;
+  overflow:hidden;
+}
+#text>div{
+  color:#888;
+  font-size:4.5vh;
+  border:1px solid grey;
+}
+#text>div:last-child{
+  color:#eee;
+}
+#gameS,#gameC{
+  width:50vw;
+  left:25vw;
+  text-align:center;
+  padding:2vh;
+}
+#gameC{
+  background:none;
+  color:#48f;
+}
+#state{
+  width:25vw;
+  left:75vw;
+}
+#inventory{
+  height:60vh;
+}
+#inventory>.title{
+  font-size:5vh;
+  width:100%;
+  height:6vh;
+  text-align:center;
+}
+#inventory>div{
+  width:5vw;
+  height:5vw;
+  float:left;
+  position:relative;
+  text-align:center;
+  box-sizing:border-box;
+}
+#inventory>div.active{
+  border:1px solid #48f;
+}
+#inventory>div>div:first-child{
+  position:absolute;
+  top:0;
+  right:0;
+  font-size:21px;
+}
+#inventory>div>div:last-child{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  text-align:center;
+  line-height:5vw;
+  cursor:pointer;
+}
+#status{
+  height:40vh;
+  font-size:6.5vh;
+}
+#zombie{
+  cursor:pointer;
+}
+
+
+i{
+  font-style:normal;
+  background:black;
+  border-color:#48f;
+  box-sizing:border-box;
+}

@@ -1,0 +1,4 @@
+html, body {margin: 0; padding: 0;width: 100%;height:110%;}
+canvas { position: relative;top:0;left:0;}
+div{ font-size: inherit;margin: 0;padding: 0; display: block;}
+.canvasBg {  position: fixed;top: 0;left: 0; opacity: 0.8;}

@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style type="text/css">
+body {
+	padding: 0;
+}
+
+#canvas_cont canvas {
+	position: absolute;
+	margin-left: 50%;
+	-webkit-user-select: none;
+}
+.err {
+	text-decoration: line-through;
+	color: #dde;
+}
+#overlay {
+	background: rgba(0,0,0,.4);
+	position: absolute;
+	top: 20%;
+	color: #eef;
+	text-align: center;
+	padding: 20px;
+	margin-left: 50%;
+	width:100%;
+	left: -50%;
+	box-sizing: border-box;
+	font-family: arial, sans-serif;
+}
+h3,h1 { 	
+	text-shadow: 2px 2px 5px #66a;
+}
+h3 > em {
+	text-shadow: 1px 1px 8px #88a;
+}
+#pbar {
+	border: 1px inset #337;
+	height: 12px;
+	margin: 0 auto;
+	width: 202px;
+}
+#pbar-in {
+	border: 2px outset #448;
+	height: 10px;
+	margin: -1px -1px;
+	background-color: #77b;
+	width: 1px;
+}
+
+</style>
+</head>
+<body>
+	<div id="canvas_cont">
+		
+	</div>
+	<div id="overlay">
+		<h1>Space Invaders - <em><u>Reimagined</u></em></h1>
+		<hr>
+		<h3><span>Please wait while <span class="err">Loading</span> <em>Generating</em></span></h3>
+		<br>
+		<h4 id="text">Reading script</h4>
+		<div id="pbar">
+			<div id="pbar-in"></div>
+		</div>
+		<br>
+		<input type="button" id="start" disabled value="Please Wait...">
+		<hr>
+		<p>Use <strong>Arrows</strong> or <strong>WAD</strong> keys to <strong>move</strong>. Use the <strong>Mouse</strong> to <strong>aim</strong> and <strong>fire</strong></p>
+		<p>Survive <strong>10 waves of Evil Space Invaders</strong> to <em>win</em>,<br>
+		but if you die or if the aliens reach the water, the entire Earth is doomed!</p>
+		<p><strong>Good Luck!</strong></p>
+	</div>
+	
+
+	<script type="text/javascript" src="js13.js"></script>
+</body>
+</html>

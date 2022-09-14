@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+
+	<body onload="onLoad()">
+
+		<link rel="stylesheet" href="css/css.css">
+
+		<div id="content" class="container">
+
+			<canvas id="game" class="disabled" width="800" height="600" style="border:1px solid #CCCCCC"> </canvas>
+
+			<div id="l1i" class="l1Instructions">
+				<div class="i" id="collect">&lt;-- Collect this</div>
+				<div class="i" id="avoid">&lt;-- Avoid/Shoot these</div>
+				<div class="i" id="go">&lt;-- Go here</div>
+			</div>
+
+			<div id="howto">
+				<hr>
+				<h3>Controls</h3><p>Movement <span class="ctrl">WASD</span> or <span class="ctrl">&leftarrow; &rightarrow; &uparrow; &downarrow;</span> Sprint <span class="ctrl">SHIFT</span> Shoot <span class="ctrl">SPACE</span> Change element <span class="ctrl">1234</span> </p>
+				<hr>
+				<h3>Instructions</h3><p>Pick up the elements to allow to you shoot and pass through walls.</p>
+				<p>Kill enemies by shooting them (use different element type to the enemy)</p>
+				<hr>
+			</div>
+
+		</div>
+
+		<div id="dead" class="hidden">
+			DEAD :(
+		</div>
+		<button id="btn" onclick="again()">Start</button>
+
+	</body>
+
+	<script type="text/javascript" src="js/js.js"></script>
+
+</html>

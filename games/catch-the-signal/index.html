@@ -1,0 +1,93 @@
+<!--@author Harshali Talele - https://github.com/harshalitalele/Catch-the-Signal-->
+<html>
+    <head>
+        <style>
+            body {
+                background-color: lightskyblue;
+            }
+            #gameboard {
+                background-image: repeating-linear-gradient(-135deg, #c1d11f, #6ec007, #34a203, #3d860b, #00610e);
+                border-top-right-radius: 100%;
+                width: 100%;
+                height: 500px;
+                position: relative;
+                margin-top: 20px;
+            }
+            #player {
+                width: 50px;
+                height: 50px;
+                position: absolute;
+            }
+            .loading-line {
+                position: absolute;
+                height: 15px;
+                z-index: 1;
+                width: 100%;
+                background-color: darkgray;
+                bottom: 0;
+            }
+            .red-line {
+                position: absolute;
+                background-color: red;
+                height: 15px;
+                z-index: 3;
+            }
+            .grey-line {
+                position: absolute;
+                background-color: gray;
+                height: 15px;
+                z-index: 2;
+            }
+            .content-board {
+                margin: 10px;
+                padding: 20px;
+                background-color: rgba(100, 100, 100, 0.4);
+                font-size: 20px;
+                color: white;
+            }
+            .scoreboard {
+                position: fixed;
+                top: 0;
+                right: 0;                
+            }
+            .instructions-board {
+                position: fixed;
+                top: 20%;
+                left: 30%;
+            }
+            .warning {
+                color: darkred;
+            }
+        </style>
+    </head>
+    <body onclick="startGame()">
+        <div id="gameboard" onmousemove="grabSignal(event)">
+            <div id="player"></div>
+            <div class="loading-line">
+                <div class="red-line" id="red-line"></div>
+                <div class="grey-line" id="grey-line"></div>
+            </div>
+        </div>
+        <div class="scoreboard content-board">
+            Score:
+            <span id="scoreboard"></span>
+        </div>
+        <div id="instructions-board" class="instructions-board content-board">
+            <div>
+                Information is the fuel, in this world...
+            </div>
+            <div>
+                Click anywhere to start gathering information online...
+            </div>
+            <br/>
+            <div class="warning">WARNING:</div>
+            <div class="warning">The world hates buffering!</div>
+            <div class="warning">Move cursor to learn about your mobility</div>
+        </div>
+        <div id="libraries">
+            <script>
+                function createCharacter(){var e=document.createElement("canvas"),t=e.getContext("2d"),n=e.style;e.width=characterSize,e.height=characterSize,n.width=characterSize+"px",n.height=characterSize+"px",n.position="absolute",n.top="25px",n.left="10px",n.zIndex="99",currentCharacterPosition.x=10,currentCharacterPosition.y=25;var a=5*characterSize/24,r=a,i=a,l=2*characterSize/24,o=2*characterSize/3,h=o,s=(h-2*i)/(o-r),d=(2*i-h+l)/(r-l-o),c=characterSize/5,g=characterSize/5;return t.beginPath(),t.arc(r,i,a,Math.PI/2,3*Math.PI/2),t.lineTo(r+l,0),t.arc(r+l,i,a,3*Math.PI/2,Math.PI/2),t.lineTo(r,2*i),t.fillStyle="yellow",t.lineTo(o,h),t.lineTo(o+2*l,h-l),t.lineTo(r+l,2*i),t.moveTo(o,h),t.fill(),t.lineTo(o+c,c*s+h),t.moveTo(o+2*l,h-l),t.lineTo(o+2*l+c-10,(c-10)*d+h-l),t.moveTo(r,2*i),t.lineTo(r-g,2*i),t.moveTo(r+l,2*i),t.lineTo(r+2*g,2*i+5),t.moveTo(r-15+2,i),t.arc(r-15,i,2,0,2*Math.PI),t.stroke(),e}var characterObject,checkProgress,allAntennas,initializeBackground=function(){"use strict";var d,h,s,c,r,i,g,m=[],l=60,p=4,y=0,u=1;function o(){this.antennaWrapper=document.createElement("div");var e=c.width,t=c.height,n=[0,3*t],a=[3*e,0],r=[6*e,3*t],i=[e,2*t],l=[5*e,2*t],o=[2*e,t],h=[4*e,t];this.rangeCenter=a,this.antennaElement=document.createElement("canvas"),this.antennaElement.style.width=6*e+"px",this.antennaElement.style.height=3*t+"px";var s=this.antennaElement.getContext("2d");s.lineWidth="5px",this.antennaElement.setAttribute("id","antenna-"+d),this.antennaElement.width=6*e,this.antennaElement.height=3*t,s.moveTo(n[0],n[1]),s.lineTo(a[0],a[1]),s.lineTo(r[0],r[1]),s.lineTo(i[0],i[1]),s.lineTo(l[0],l[1]),s.lineTo(o[0],o[1]),s.lineTo(h[0],h[1]),s.lineTo(i[0],i[1]),s.lineTo(l[0],l[1]),s.lineTo(n[0],n[1]),s.lineTo(r[0],r[1]),s.stroke(),s.closePath(),this.antennaWrapper.appendChild(this.antennaElement),this.rangeElem=document.createElement("div"),this.rangeRadius=g}window.levelUp=function(e){var t=document.getElementById("gameboard");clearInterval(i),l-=e,c.height--,g--,setInterval(v,l),2<m.length&&(t.removeChild(m[m.length-1].antennaWrapper),m.pop())};var x=1;function w(e){e.rangeRadius=g/x;var t=e.rangeRadius;e.rangeElem.style.width=t+"px",e.rangeElem.style.height=t+"px",e.rangeElem.style.position="absolute",e.rangeElem.style.borderWidth="0px 2px",e.rangeElem.style.borderColor="red",e.rangeElem.style.borderStyle="solid",e.rangeElem.style.borderRadius="50%",e.rangeElem.style.left=e.rangeCenter[0]-t/2+"px",e.rangeElem.style.top=e.rangeCenter[1]-t/2+"px",e.antennaWrapper.append(e.rangeElem)}function v(){var e,t,n=0;for(n=0;n<m.length;n++){var a=m[n],r=parseFloat(a.antennaElement.style.width),i=parseFloat(a.antennaElement.style.height);a.antennaElement.style.width=r-.3+"px",a.antennaElement.style.height=i-1+"px";var l=parseFloat(a.antennaWrapper.style.left)-p;l<6*c.width?(a.antennaElement.style.width=6*c.width+"px",a.antennaElement.style.height=3*c.height+"px",a.y=s-3*c.height,a.x=Math.random()*(h-c.width-20),a.radius=a.x,a.pathRadius=Math.abs(y-a.x),a.antennaWrapper.style.top=a.y+"px",a.antennaWrapper.style.left=a.x+"px"):(a.x=l,a.antennaWrapper.style.left=a.x+"px",a.y=(void 0,t=(e=a).x,gamebordDim.height-Math.sqrt(e.radius*e.radius-t*t)-3*c.height),a.antennaWrapper.style.top=a.y+"px"),x=x%7+1,a.rangeRadius=g/x;var o=a.rangeRadius;a.rangeElem.style.width=o+"px",a.rangeElem.style.height=o+"px",a.rangeElem.style.left=a.rangeCenter[0]-o/2+"px",a.rangeElem.style.top=a.rangeCenter[1]-o/2+"px",u=u%3+1}}return function(e,t,n,a){return d=e||5,s=n,(h=t)-50,g=10*(c=a).width,r=document.getElementById("gameboard"),function(){var e,t=0;for(t=0;t<d;t++)(e=new o).x=Math.random()*(h-6*c.width),e.y=Math.random()*(s-3*c.height),e.radius=e.x,e.antennaWrapper.style.position="absolute",e.antennaWrapper.style.left=e.x+"px",e.antennaWrapper.style.top=e.y+"px",m.push(e),r.appendChild(e.antennaWrapper),w(e)}(),i=setInterval(v,l),m}}(),gamebordDim={width:600,height:600},playerDim={height:50,width:50},antennaDim={width:10,height:40},ymotion=gamebordDim.height-playerDim.height,x=0,motionCenter={y:gamebordDim.height,x:gamebordDim.width},radius=motionCenter.x-x,noOfAntennas=6,characterSize=100,currentCharacterPosition={},characterSwingLimit=15,characterDirection=1,greyLine=document.getElementById("grey-line"),redLine=document.getElementById("red-line"),score=0,gameStarted=!1;function stopCheckingProgress(){clearInterval(checkProgress)}function initializeSizes(){var e=document.getElementById("gameboard");e.style.width=gamebordDim.width+"px",e.style.height=gamebordDim.height+"px",e.style.margin="auto";var t=document.getElementById("player");t.style.width=playerDim.width+"px",t.style.height=playerDim.height+"px",characterObject=createCharacter(),t.appendChild(characterObject),setInterval(function(){var e=currentCharacterPosition.y-parseFloat(characterObject.style.top);Math.abs(e)>characterSwingLimit&&(characterDirection*=-1),characterObject.style.top=parseFloat(characterObject.style.top)-characterDirection+"px"},20)}function shiftPlayer(e,t){var n=document.getElementById("player");n.style.left=e+"px",n.style.top=t+"px"}function getRandomPosition(e){return Math.random()*e}function getCircularMotion(e){var t=gamebordDim.width-e;return gamebordDim.height-Math.sqrt(radius*radius-t*t)}function movePlayer(){document.getElementById("player");(x<5||gamebordDim.width-x>radius)&&(x=gamebordDim.width-playerDim.width),shiftPlayer(x=(x-5)%gamebordDim.width,getCircularMotion(x))}function isPlayerInRange(){var e=!1,t=player.getClientRects()[0],n={x:0,y:0,width:0,height:0};for(var a in allAntennas){n=allAntennas[a].antennaWrapper.getClientRects()[0];var r=t.x>n.x-t.width&&t.x<n.x+n.width,i=t.y>n.y-t.height&&t.y<n.y+n.height;if(r&&i){e=!0;break}}setProgressBar(e)}function setProgressBar(e){var t=parseInt(greyLine.style.width),n=parseInt(redLine.style.width);if(e?(greyLine.style.width||(greyLine.style.width="85px"),greyLine.style.width=t+10+"px",score++):(redLine.style.width||(redLine.style.width="0px"),redLine.style.width=n+4+"px"),t+5<=n){var a=document.getElementById("instructions-board");a.innerHTML="You lost! Refresh page to play again",a.style.display="block",stopCheckingProgress()}(.75<n/gameboard.getClientRects()[0].width||.75<t/gameboard.getClientRects()[0].width)&&(redLine.style.width=n/2+"px",greyLine.style.width=t/2+"px",levelUp(1),score+=100),document.getElementById("scoreboard").innerHTML=score}function startGame(){gameStarted||(document.getElementById("instructions-board").style.display="none",allAntennas=initializeBackground(noOfAntennas,gamebordDim.width,gamebordDim.height,antennaDim),setProgressBar(!0),checkProgress=setInterval(isPlayerInRange,100),gameStarted=!0)}function grabSignal(e){var t=e.x-gameboard.getClientRects()[0].left;x=t,movePlayer()}initializeSizes();
+            </script>
+        </div>
+    </body>
+</html>

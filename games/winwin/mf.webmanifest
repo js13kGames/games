@@ -1,0 +1,1 @@
+{ "name": "WinWin", "start_url": "index.html", "serviceworker": { "src":"sw.js", "scope": "/", "type": "", "update_via_cache": "none" }, "icons": [ { "src":"ico.png", "type":"image/png", "sizes":"224x224" } ], "display": "fullscreen", "orientation": "any" }

@@ -1,0 +1,6 @@
+{
+  "name": "nommon",
+  "main": "nommon-srv.js",
+  "author": "Carson Barlow",
+  "license": "AGPLv3"
+}

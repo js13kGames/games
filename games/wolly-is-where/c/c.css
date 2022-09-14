@@ -1,0 +1,33 @@
+html {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+*, *:before, *:after {
+    -webkit-box-sizing: inherit;
+            box-sizing: inherit;
+}
+
+.wrap {
+	width: 900px;
+	height: 900px;
+	margin: 30px auto;
+	border: 1px solid #e4e4e4;
+	margin: 0 auto;
+	text-align: center;
+	padding: 50px;
+}
+
+#okay {
+	display: none;
+}
+
+#wolly {
+	display: none;
+	margin-top: 400px;
+	margin-left: 400px;
+	cursor: pointer;
+}
+
+#win {
+	display: none;
+}

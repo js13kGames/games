@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Toe Tac Tic</title>
+  <meta name="monetization" content="$coil.xrptipbot.com/8wCYXpSjRJ67qwDLasYc3g">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Rules</h1>
+		<p style="font-size: 2em">1) You can only place X in this game</p>
+		<p style="font-size: 2em">2) If you make 3-X in a row or column or diagonally you loose the game</p>
+		<p style="font-size: 2em">3) This is a offline game so the opponent/friend should be sitting with you to play the game</p>
+		<button onClick="begin()" style="margin: 30vh 46%;">Start</button>
+	</div>
+	<h1>Toe-Tac-Tic</h1>
+
+	<table>
+		<tr>
+			<td class="cell" id="0"></td>
+			<td class="cell" id="1"></td>
+			<td class="cell" id="2"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="3"></td>
+			<td class="cell" id="4"></td>
+			<td class="cell" id="5"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="6"></td>
+			<td class="cell" id="7"></td>
+			<td class="cell" id="8"></td>
+		</tr>
+	</table>
+	<div class="endgame">
+		<div class="text"></div>
+	</div>
+	<button onClick="startGame()">Replay</button>
+
+  <script src="offine.js"></script>
+</body>
+</html>

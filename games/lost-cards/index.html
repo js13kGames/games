@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<title> Lost Cards </title>
+<head>
+	<style>
+		div#lost
+		{
+			background: #faa009;
+			border: #6C2DC7 1px solid;
+			width: 800px;
+			height: 500px;
+			padding: 12px;
+			margin: 5px auto;
+		}
+
+		div#lost>div
+		{
+			width: 60px;
+			height: 60px;
+			margin: 7px;
+			border: #800517 3px solid;
+			padding: 10px;
+			float: left;
+			font-size: 40px;
+			color: #FBB917
+			cursor: pointer;
+			text-align: center;
+		}
+	</style>
+	<script>
+		var card = [];
+		var cardlost = [['A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H','I','I','J','J','K','K','L','L','M','M','N','N','O','O','P','P','Q','Q','R','R','S','S','T','T'],
+		['1','1','2','2','3','3','4','4','5','5','6','6','7','7','8','8','9','9','10','10','11','11','12','12','13','13','14','14','15','15','16','16','17','17','18','18','19','19','20','20'],
+		['!!','!!','##','##','@@','@@','%%','%%','&&','&&','**','**','^^','^^','$$','$$','++','++','==','==']];
+		var card_prop = [];
+		var sel = Math.floor(Math.random() * (3)) + 0;
+		var cardflip = 0;
+		var array_sel;
+		Array.prototype.cardShuffle = function()
+		{
+			var i = this.length;
+			var k;
+			var t;
+			var card_check_flag = 0;
+			while (--i > 0)
+			{
+				k = Math.floor(Math.random() * (i + 1));
+				t = this[k];
+				this[k] = this[i];
+				this[i] = t;
+				card_check_flag = 1;
+			}
+		}
+
+		function card_change(cardl, prop)
+		{
+			var state = 0;
+			if (cardl.innerHTML == "" && card.length < 2)
+			{
+				cardl.style.background = '#966F33';
+				cardl.innerHTML = prop;
+				if (card.length == 0)
+				{
+					card.push(prop);
+					card_prop.push(cardl.id);
+				}
+				else if (card.length == 1)
+				{
+					card.push(prop);
+					card_prop.push(cardl.id);
+					if (card[0] == card[1])
+					{
+						state = 1;
+						cardflip += 2;
+						card = [];
+						card_prop = [];
+						if (cardflip == cardlost[sel].length)
+						{
+							alert("Thanks for playing... Click to play again");
+							document.getElementById('lost').innerHTML = "";
+							location.reload();
+							findcard();
+						}
+					}
+					else
+					{
+						function original_state()
+						{
+							state = 0;
+							var cardl_1 = document.getElementById(card_prop[0]);
+							var cardl_2 = document.getElementById(card_prop[1]);
+							cardl_1.innerHTML = "";
+							cardl_2.innerHTML = "";
+							card = [];
+							card_prop = [];
+						}
+						setTimeout(original_state, 400);
+					}
+				}
+			}
+		}
+
+		function findcard()
+		{
+			cardflip = 0;
+			var output = '';
+			cardlost[sel].cardShuffle();
+			var i = 0;
+			while(i < cardlost[sel].length)
+			{
+				output += '<div id="cardl_' +i+ '" onclick="card_change(this,\'' +cardlost[sel][i]+ '\')"></div>';
+				i++;
+			}
+			document.getElementById('lost').innerHTML = output;
+		}
+	</script>
+</head>
+
+<body>
+	<div id="lost"></div>
+	<p align='center' style='color:#cc0000'><b> Find All The Lost Matching Cards under 5 minutes !!</b></p>
+	<script>
+	function startTimer(duration, display)
+	{
+    var start = Date.now(),
+        diff,
+        minutes,
+        seconds;
+    function timer()
+		{
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+        minutes = (diff / 60) | 0;
+        seconds = (diff % 60) | 0;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        display.textContent = minutes + ":" + seconds;
+        if (diff <= 0)
+				{
+            start = Date.now() + 1000;
+						alert("Game ended");
+						location.reload();
+
+        }
+    };
+    timer();
+    setInterval(timer, 1000);
+}
+
+window.onload = function ()
+ {
+    var fiveMinutes = 60 * 5;
+        display = document.querySelector('#time');
+    startTimer(fiveMinutes, display);
+};
+		findcard();
+	</script>
+	<div>Game ends in <span id="time"></span> minutes!</div>
+</body>
+</html>

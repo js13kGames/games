@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<title>cosmic shooters</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="game.css">
+		<script type="text/javascript">
+			window.starImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADMCAMAAAAI/LzAAAAASFBMVEUAAAAvLzALCgkSEhJJSUk7OzscHBdaWlohISEoKCiFhYVqamqurq45OROXl5dWVhzGxsbb29t0dHR6ei2PAABRAAAsAAD8/PzdmsXsAAADoElEQVR4Xu3da27jOgyA0Y96y3bebWf/O71/LjAFJkntxpYlhWcFERLHFClSLBQpxXmem0ZeNFGKdzQsJPphLL1QWehHEn5HAjs5O7YWE8+5M88ESz9cZJZwYCc2MlfyKy4mWzYQ2IU17CGmAh+4lKPnl1LgMWWpm1jmu3BfEB4QZkiZJjhWZx39MMJMkthGEEqzUWiUOrOFG1sz3CG0GdWJYU9hGCz7ORxYUTgeLQWU2UqlxA+UEjoS+A7w1CwISxg2cKE1+rh56hDYjtdIebUsUnQd5Z3HyJ6cMF/INCwItYmOfsTI2zmdWIG45hKhPtGPo2MRNfI2VBJdzG6UUsol9pJMIwFXmreYMrzwkkRFgqU34QZUVes7Uoi32y9moBBv+JfyngaEbJhhvLKCE9vKY6KAMosxwVAl53lDgW3kmqqG06WjkEm8/hzvSrHRIrbjX36gTZ5vlHl4UN+Y5hpT/aPGY3s7sMgYqZxGDp71GMNfYqmUnhhVYrnrbHmNFZb4+Jj1TD1nfo5op8j2Pj6549u+VqJpOSgHBuF/BGdYxGTapBIdyVRBpfjWm7FDoDjf02LcrkeyjH+TFMPhWSO+T22dfLw9y14NkSWGSHna1rURHTuQJ+5QKqdibYPKJvphA4/IxBxnoTL2UvuLwHjdnBdw7ilt4miTWOZQjo74tepUOVEPY3gbSlnPT5QSKZAczaFMNlZust5k0+zs8heJXXHAkAirmf64bRIVVihuHIz2RlTPGtriHf2IV4rQ0rmRjmZ7+4nncqIfPvOqZPUv+7Hx9Tt6fH1FSnGsJPISkyzdsNH3c1Df5EDlDJUwQSuM+1GS+JFdMwozX2xmGDcv64jhm89PnTb3na91MISbACD1lNGOtOTrkxql0NFirKF1eX52+Kv6G2Yj9+WBv65XgA8AG6iOjDyXh3aiQZMpy/Z0eF+om1K3wDzZ8dzBUIANrMANPHc6sA478Zi1tMWxj2jolJWlkcBl1rjFLJV8z9kz17Bw3vXhVCAKqDazqf7QkWnNCuIxNtD2GMy8HYCkZkvkFz0j+Es6fOlwKvNAl3+7SdARaRs1tyttigr0w2TKm1ju1NMtV4eit85pwJASFRKpNQIcBvphLdvxZ5bSuXRNGyf6YWxFpT6JfdxNrfBe7wktX4iariyQfhtse6n/pRJX3DlcR/YlfbY16i25w6tHoRnqWczx5cUceTOXEk10mppNrGAYO9o+eaF1/wG04Q/XmxWRKgAAAABJRU5ErkJggg==';
+			window.requestAnimFrame = (function(){
+			  return  window.requestAnimationFrame       ||
+			          window.webkitRequestAnimationFrame ||
+			          window.mozRequestAnimationFrame    ||
+			          window.oRequestAnimationFrame      ||
+			          window.msRequestAnimationFrame     ||
+			          function(callback, element){
+			            window.setTimeout(callback, 1000 / 60);
+			          };
+			})();
+		</script>
+	</head>
+	<body>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="src/quadtree.js"></script>
+		<script type="text/javascript" src="src/Map.js"></script>
+		<script type="text/javascript" src="src/camera.js"></script>
+		<script type="text/javascript" src="src/Keys.js"></script>
+		<script type="text/javascript" src="src/Player.js"></script>
+		<script type="text/javascript" src="src/game.js"></script>
+		<div class="container" id="container">
+			<div class="inner-container">
+				<div class="heading">Cosmic Shooters</div>
+				<div class="title">Battleship</div>
+				<div class="currentship">
+					<a href="#"><img id="current-ship" src="assets/battleship.png"/></a>
+				</div>
+				<div class="title">Nickname</div>
+				<input type="text" id="nickname"></input>
+				<div class="play" id="play">Play</div>
+				<div class="controls">
+					<h2>Controls</h2>
+					<ul>
+						<li>Use Left/Right arrow to rotate</li>
+						<li>Up/Down to move</li>
+						<li>Space to shoot</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<canvas id="gameCanvas" style="display:none"></canvas>
+		<div class="info" id="info">
+			Attacks: <span id="attacks">5</span> |
+			Deaths: <span id="deaths">3</span>
+		</div>
+		<script type="text/javascript">
+			document.getElementsByTagName('body')[0].style['background-image'] = "url('"+window.starImage+"')";
+			var nickname= "";
+			var gameON =  function(){
+				nickname = document.getElementById('nickname').value;
+				if(nickname){
+					document.getElementById('container').style.display = 'none';
+					document.getElementById('gameCanvas').style.display = 'block';
+					init(nickname,0);
+					animate();
+				} else
+					alert('Please Choose a Nickname and Battleship')
+			}
+			document.onkeypress = function(evt){
+				if ((evt.keyCode == 13))  {
+					gameON();
+				}				
+			}; 
+			document.getElementById('play').addEventListener('click',gameON);
+			document.getElementById("nickname").focus();
+		</script>
+	</body>
+</html>

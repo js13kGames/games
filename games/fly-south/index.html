@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="origin-trial">
+<title>Fly South</title>
+<script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+<body class="a-body ">
+<a-scene class="fullscreen" canvas vr-mode-ui fog="type: exponential; color: #87CEFA; density: 0.02;">
+    <a-assets>
+        <a-plane id="street" material="color:#333;"></a-plane>
+        <a-box id="building" material="color:#a1b7dc; metalness:0.3;"></a-box>
+        <a-circle id="moon" position="3000 700 0" rotation="10 -90 0" geometry="radius: 250" material="shader: flat; color: #ddd; fog: false"></a-circle>
+
+    <a-entity id="level1">
+        <a-entity id="streets" position="0 0.3 0"></a-entity>
+        <a-entity id="buildings"></a-entity>
+
+        <a-entity id="park 1" position="325 0.3 325">
+            <a-plane color="#2cb037" position="0 0 0" geometry="primitive: plane; height: 45; width: 45" rotation="270 0 0"></a-plane>
+            <a-circle color="#d9c4aa" position="0 0.1 0" geometry="primitive: circle; radius: 10" rotation="270 0 0"></a-circle>
+            <a-entity position="7 0 9">
+                <a-box position="0 0.5 0" open-ended="true" material="color:#6B4226;"></a-box>
+                <a-cone id="tree" position="0 6 0" color="#143306" radius-bottom="2" height="10" segments-height="2" segments-radial="4"></a-cone>
+            </a-entity>
+            <a-entity position="-4 0 -20">
+                <a-box position="0 2 0" open-ended="true" height="4" material="color:#6B4226;"></a-box>
+                <a-box position="0 6 0" open-ended="true" width="4" height="4" depth="4" material="color:#143306;"></a-box>
+            </a-entity>
+        </a-entity>
+
+        <a-entity id="park 2" position="325 0.3 275">
+            <a-plane color="#2cb037" position="0 0 0" geometry="primitive: plane; height: 45; width: 45" rotation="270 0 0"></a-plane>
+            <a-entity position="-10 0 -18">
+                <a-box position="0 2 0" open-ended="true" height="4" material="color:#6B4226;"></a-box>
+                <a-box position="0 6 0" open-ended="true" width="4" height="4" depth="4" material="color:#143306;"></a-box>
+            </a-entity>
+            <a-entity position="5 0 10">
+                <a-box position="0 2 0" open-ended="true" height="4" material="color:#6B4226;"></a-box>
+                <a-box position="0 6 0" open-ended="true" width="4" height="4" depth="4" material="color:#143306;"></a-box>
+            </a-entity>
+        </a-entity>
+
+        <a-entity id="intro-room">
+            <a-entity id="intro-1">
+                <a-text position="0 2 -3" align="center" color="black" value="You are a goose and it's getting cold."></a-text>
+                <a-text position="0 1.7 -3" opacity="0.5" align="center" color="black" value="Turn right --->"></a-text>
+            </a-entity>
+
+            <a-entity id="intro-2">
+                <a-text position="3 2 0" rotation="0 -90 0" align="center" color="black" value="The other geese left for south but you are still hungry."></a-text>
+                <a-text position="3 1.7 0" opacity="0.5" rotation="0 -90 0" align="center" color="black" value="--->"></a-text>
+            </a-entity>
+
+            <a-entity id="intro-3">
+                <a-text position="0 2 3" rotation="0 180 0" align="center" color="black" value="Find the central park and land."></a-text>
+                <a-text position="0 1.7 3" opacity="0.5" rotation="0 180 0" align="center" color="black" value="--->"></a-text>
+            </a-entity>
+
+            <a-entity id="intro-4">
+                <a-text position="-3 2 0" rotation="0 90 0" align="center" color="black" value="Look up to take off."></a-text>
+                <a-text position="-3 1.7 0" opacity="0.5" rotation="0 90 90" align="center" color="black" value="--->"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <a-entity id="park-room" position="10000 -1000 0">
+            <a-entity id="park-1">
+                <a-text position="0 2 -3" align="center" color="black" value="Yummy! Breadcrumbs!"></a-text>
+                <a-text position="0 1.7 -3" align="center" color="black" value="Now take off to the cloud above you."></a-text>
+                <a-text position="0 1.4 -3" opacity="0.5" rotation="0 0 90" align="center" color="black" value="--->"></a-text>
+            </a-entity>
+
+            <a-entity id="park-2">
+                <a-text position="0 2 3" rotation="0 180 0" align="center" color="black" value="Yummy! Breadcrumbs!"></a-text>
+                <a-text position="0 1.7 3" rotation="0 180 0" align="center" color="black" value="Now take off to the cloud above you."></a-text>
+                <a-text position="0 1.4 3" opacity="0.5" rotation="0 180 90" align="center" color="black" value="--->"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <a-entity id="portal-cloud" position="10000 -1000 0">
+            <a-sphere scale="10 4 10" opacity="0.4" material="shader: flat; color: #fff" transparent="true"></a-sphere>
+            <a-box scale="6 2 6" material="shader: flat; color: #001848"></a-box>
+        </a-entity>
+
+        <a-light type="directional" color="#fff" intensity="0.2" position="-1 2 1" light=""></a-light>
+        <a-light type="ambient" color="#fff" light=""></a-light>
+        <a-plane id="ground" color="#ccf" position="0 -0.1 0" geometry="primitive: plane; height: 5000; width: 5000" rotation="270 0 0"></a-plane>
+        <a-sky material="shader: flat; color: #000" geometry="radius: 4000" segments-height="2" segments-width="4"></a-sky>
+        <a-circle id="sun" position="200 1700 -200" rotation="85 -90 0" geometry="radius: 100" material="shader: flat; color: #fff; fog: false"></a-circle>
+    </a-entity>
+
+    <a-entity id="level2">
+        <a-entity id="clouds" rotation="0 45 0"></a-entity>
+
+        <a-sky material="shader: flat; color: #001848; fog: false" geometry="radius: 5000" segments-height="2" segments-width="4"></a-sky>
+        <a-light position="5 5 0" light="color: #fff; intensity: 1; type: directional"></a-light>
+    </a-entity>
+    </a-assets>
+
+    <a-entity id="world">
+
+    </a-entity>
+
+    <a-entity id="player">
+        <a-camera id="camera" far="10000"></a-camera>
+    </a-entity>
+</a-scene>
+<script>
+'use strict';
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clearChildren(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(myNode.firstChild);
+    }
+}
+
+// Settings
+const BLOCKS = 10;
+const BLOCKSIZE = 50;
+const BLG_MIN_HEIGHT = 10;
+const BLG_MAX_HEIGHT = 60;
+const GOOSE_HEIGHT = 0.4;
+
+// === scene wrappers ===
+var scene = document.querySelector('a-scene');
+var ground = document.getElementById('ground');
+var sky = document.querySelector('a-sky');
+var streets = document.getElementById('streets');
+var buildings = document.getElementById('buildings');
+var clouds = document.getElementById('clouds');
+var cloudPortal = document.getElementById('clouds');
+
+var intro = document.getElementById('intro-room');
+var parkRoom = document.getElementById('park-room');
+var portalCloud = document.getElementById('cloud-portal');
+
+// === player objects ===
+var player = document.getElementById('player');
+var player_animation = document.getElementById('player_animation');
+var camera = document.getElementById('camera');
+
+var currentStage;
+var flyingBlocked = true;
+var portalActive = false;
+
+function startLevel1() { // City
+    world.appendChild(level1);
+    currentStage = INTRO;
+    flyingBlocked = true;
+    setTimeout(() => flyingBlocked = false, 1000);
+    continueStanding();
+
+    const startCrossing = {x: randomInt(1, 10), y: randomInt(1, 10) };
+    const x = startCrossing.x * BLOCKSIZE;
+    const z = startCrossing.y * BLOCKSIZE;
+    player.object3D.position.set(x, GOOSE_HEIGHT, z);
+    intro.setAttribute('position', {x, y:0, z});
+
+    clearChildren(streets);
+    clearChildren(buildings);
+
+    for(let i = 0; i < BLOCKS + 1; i++) {
+        // Main roads
+        const roadLength = BLOCKS * BLOCKSIZE;
+        addStreet(createStreet([i * BLOCKSIZE, 0], [i * BLOCKSIZE, roadLength], 6));
+        addStreet(createStreet([0, i * BLOCKSIZE], [roadLength, i * BLOCKSIZE], 6));
+        // Service roads
+        //addStreet(createStreet([i * 50+25, 0], [i * 50+25, 0], 4));
+    }
+
+    for(let x = 0; x < BLOCKS; x++) {
+        for(let y = 0; y < 10; y++) {
+            if (x === 6 && (y === 5 || y === 6)) continue; // leave empty for the park
+            const buildingX = x * BLOCKSIZE + (BLOCKSIZE / 2);
+            const buildingY = y * BLOCKSIZE + (BLOCKSIZE / 2);
+            const buildingWidth = BLOCKSIZE - 10;
+            const height = Math.random() * (BLG_MAX_HEIGHT - BLG_MIN_HEIGHT) + BLG_MIN_HEIGHT;
+            addBuilding(createBuilding([buildingX, buildingY], buildingWidth, buildingWidth, height));
+        }
+    }
+}
+
+function startLevel2() { // Clouds
+    world.removeChild(level1);
+    world.appendChild(level2);
+    player.object3D.position.set(x, 0, z);
+
+    clearChildren(streets);
+    clearChildren(buildings);
+
+    for(let i = 0; i < 100; i++) {
+        const asset_cloud = document.getElementById('cloud');
+        const cloud = asset_cloud.cloneNode(true);
+        cloud.setAttribute('position', {
+            x: Math.random() * 200,
+            y: Math.random() * 2,
+            z: Math.random() * 80,
+        });
+        cloud.setAttribute('rotation', {
+            x: Math.random() * 20,
+            y: Math.random() * 360,
+            z: 0,
+        });
+        cloud.setAttribute('scale', {
+            x: Math.random() * 20 + 2,
+            y: Math.random() * 2 + 1,
+            z: Math.random() * 20 + 2,
+        });
+        clouds.appendChild(cloud);
+    }
+}
+
+function startLevel3() { // Beach in the south (not implemented)
+    player.object3D.position.set(x, GOOSE_HEIGHT, z);
+}
+
+function createStreet([x1,y1], [x2,y2], width = 5) {
+    const value_street = document.getElementById('street');
+    const newStreet = value_street.cloneNode(true);
+    const deltaX = x2 - x1;
+    const deltaY = y2 - y1;
+    const avrX = x1 + deltaX / 2;
+    const avrY = y1 + deltaY / 2;
+    const length = Math.hypot(deltaX, deltaY);
+    newStreet.setAttribute('height', length);
+    newStreet.setAttribute('width', width);
+    newStreet.setAttribute('position', {x:avrX, y:0, z:avrY});
+    const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+    newStreet.setAttribute('rotation', {x:270, y:0, z:angle+90});
+    return newStreet;
+}
+
+function createBuilding([x1,y1], width, length, height) {
+    const value_building = document.getElementById('building');
+    const newBuilding = value_building.cloneNode(true);
+    newBuilding.setAttribute('width', width);
+    newBuilding.setAttribute('depth', length);
+    newBuilding.setAttribute('height', height);
+    newBuilding.setAttribute('position', {x:x1, y:height/2, z:y1});
+    return newBuilding;
+}
+
+const addStreet=street=>streets.appendChild(street);
+const addBuilding=building=>buildings.appendChild(building);
+
+const INTRO = 0;
+const FLYING = 2;
+
+function continueStanding() {
+    if (lastTimestamp) {
+        lastTimestamp = null;
+
+        // Am I in the park to eat?
+        const pos = player.object3D.position;
+        if (pos.x > 310 && pos.x < 390 && pos.z > 310 && pos.z < 340) {
+            parkRoom.setAttribute('position', pos);
+            portalActive = true;
+            portalCloud.setAttribute('position', {x: 350, y: 60, z: 325})
+        }
+    }
+    setTimeout(standingLoop, 100);
+}
+
+function continueFlying() {
+    requestAnimationFrame(flyingingLoop);
+}
+
+function standingLoop() {
+    if (!flyingBlocked) {
+        const rot_x = camera.getAttribute('rotation').x;
+        if (rot_x > 85) {
+            currentStage = FLYING;
+            continueFlying();
+            scene.setAttribute('fog', {density:0.01});
+            return;
+        }
+    }
+    continueStanding();
+}
+
+function flyingingLoop(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const deltaSeconds = (timestamp - lastTimestamp) / 1000;
+    lastTimestamp = timestamp;
+    const speed = -5;
+    let pos = player.getAttribute('position');
+    const org_rotation = player.object3D.rotation;
+    const cam_rotation = camera.getAttribute('rotation');
+
+    player.setAttribute('rotation', cam_rotation);
+    player.object3D.translateZ(deltaSeconds * speed);
+    player.setAttribute('rotation', {x:0, y:0, z:0});
+
+    pos = player.object3D.position;
+    if (pos.y < GOOSE_HEIGHT) {
+        player.object3D.position.set(pos.x, GOOSE_HEIGHT, pos.z);
+        continueStanding();
+        scene.setAttribute('fog', {density:0.02});
+        return;
+    } else if (portalActive) {
+        if ((pos.x > 347 && pos.x < 353) &&
+            (pos.y > 59 && pos.y < 61) &&
+            (pos.z > 323 && pos.z < 328)) {
+            startLevel2();
+        }
+    }
+    continueFlying();
+}
+
+var lastTimestamp = null;
+
+// Starts the game
+setTimeout(() => startLevel1());
+</script>
+</body></html>

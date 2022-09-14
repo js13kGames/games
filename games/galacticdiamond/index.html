@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dnimesol</title>
+    <meta name="GalacticDiamond by mitruska" content="A-Frame game for JS13KGames">
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script> 
+    <script src="3dtext.min.js"></script>
+    <script type='text/javascript'>
+    
+    AFRAME.registerComponent('scale-on-mouseenter', {
+      schema: {
+        to: {default: '2.5 2.5 2.5'}
+      },
+      init: function () {
+        var data = this.data;
+        this.el.addEventListener('mouseenter', function () {
+          this.setAttribute('scale', data.to);
+        });
+      }
+      });
+  
+      AFRAME.registerComponent('scale-on-mouseleave', {
+        schema: {
+          to: {default: '1 1 1'}
+        },
+        init: function () {
+          var data = this.data;
+          this.el.addEventListener('mouseleave', function () {
+            this.setAttribute('scale', data.to);
+          });
+        }
+      });
+  
+      AFRAME.registerComponent('follow', {
+        schema: {speed: {default: '2'}},
+      
+        tick: function (time, timeDelta) {
+          var progress = this.el.getAttribute('position');
+
+          var toX = progress.x;
+          var toY = progress.y; 
+          var toZ = progress.z - 0.1;
+
+          this.el.setAttribute('position', {x: toX, y: toY, z: toZ});
+          this.data.speed+=50;
+        }
+      });
+
+      AFRAME.registerComponent('rotate', {
+        schema: {speed: {default: '2'}},
+
+        tick: function (time, timeDelta) {
+          var progress = this.el.getAttribute('rotation');
+          var toX = progress.x;
+          var toY = progress.y + 1;
+          var toZ = progress.z;
+          this.el.setAttribute('rotation', {x: toX, y: toY, z: toZ});
+        }
+      });
+  
+   </script>
+  </head>
+
+  <body>
+    <a-scene>
+        <a-sky id="mySky" color="rgb(0, 0, 5)"></a-sky>
+        <a-entity id="gameScene" visible="true" startGame>
+          <a-entity id="gameCamera" position="0 3 10">
+          <a-entity camera="active:true" look-controls wasd-controls>
+            <a-entity id="score" position="0 -15 -20" scale="5.021 4.475 1" text="value:;color:#018b88;align:center;height:25;varterSpacing:3;width:7" geometry="primitive:plane" material="opacity:0;color:#a49a1e"></a-entity>                         
+            <a-entity position="0 0 -1"
+                      scale="1.4 1.4 1.4"
+                      geometry="primitive: ring; radiusOuter: 0.016; radiusInner: 0.01;"
+                      material="color:#708e8a; opacity:0.8; shader: flat"
+                      cursor="fuse:true; fuseTimeout: 1500">
+                <a-animation begin="fusing" easing="ease-in" attribute="scale"
+                  fill="backwards" from="1.4 1.4 1.4" to="0.5 0.5 0.5" dur="1700"></a-animation>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="portal" position="0 0 -200" scale="9.715 8.691 6.896" geometry="radiusTubular:0.1;primitive:torus" material="metalness:1;color:#207d68">
+          <a-animation attribute="scale" from="55 55 55" to="45 45 30" direction="alternate" dur="4000" repeat="indefinite"></a-animation>
+        </a-entity>
+
+        <a-entity id="display3dscore" position="-19.352 56.702 -259.164" scale="51.124 36.625 108.154" text-geometry="value: ; font:3dfont.json" material="color:#796c33"></a-entity>
+        <a-entity id="display3dlvl" position="-19.352 56.702 -259.164" scale="51.124 36.625 108.154" text-geometry="value: ; font:3dfont.json" material="color:#796c33"></a-entity>
+        <a-entity id="display3dtime" position="-19.352 56.702 -259.164" scale="51.124 36.625 108.154" text-geometry="value: ; font:3dfont.json" material="color:#796c33"></a-entity>
+
+    </a-entity>
+
+    <a-entity id="start-menu" visible="true">
+      
+      <a-entity position="-0.186 7.075 -10.364" scale="9.715 8.691 6.896" geometry="radiusTubular:0.1;primitive:torus" material="metalness:1;color:#207d68">
+        <a-animation attribute="scale" to="9 8 6" direction="alternate" dur="4000" repeat="indefinite"></a-animation>
+      </a-entity>
+      <a-entity id="start-button" position="0.009 7.32 -7.976" scale="2.939 3.228 1" text="align:center;color:#b9ffef;height:25;varterSpacing:3;value:play;width:7" geometry="primitive:plane" material="color:#a49a1e"></a-entity>
+      <a-box position="-0.078 7.15 -10.716" rotation="0 -88.35 0" color="#c20752" metalness="0.5" scale="4.994630333716146 5.986066272657369 1.028886577951257">
+        <a-animation attribute="scale" to="5 6 6" direction="alternate" dur="4000" repeat="indefinite"></a-animation>
+      </a-box>
+
+      <a-entity id="restart-info" position="0.079 -1.926 -4.331" scale="11.686 3.228 1" text="align:center;color:#b9ffef;height:25;varterSpacing:3;value: ;width:7" geometry="primitive:plane" material="transparent:true;visible:false"></a-entity>    
+    
+    </a-entity>
+    <script type="text/javascript" src=bundle.min.js> </script>
+     </script>
+    </a-scene>
+  </body>
+</html>

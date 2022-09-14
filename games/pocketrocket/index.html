@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+
+        ██
+       ████           POCKETROCKET
+      ██  ██          A game for the @js13games competition
+      ██████
+      ██████          Idea, design, development
+      ██████          Zoltan Szalay - @insgraphizm
+    ███    ███        Peter Schmíz - @pety7439
+       █  █
+       █  █
+       █  █
+
+-->
+<html xmlns="http://www.w3.org/1999/html" >
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>PocketRocket</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <style>html,body,div,span,b,h1,h2,h4,a,p{margin:0;padding:0;font-family:Helvetica,Arial}html,body{width:100%;height:100%;background:#000}#w{position:absolute;width:960px;height:600px}#h{position:absolute;display:none;width:784px;height:24px;padding:0 80px 0 95px;left:0;bottom:0;z-index:99;font-size:12px;font-weight:bold;line-height:24px;color:#fff}#h>div{display:inline-block;padding:0 0 0 40px}#h span{display:inline-block;font-size:16px}#h span b.b{height:17px}#h b{display:inline-block;height:16px;color:#333}#h i{font-style:normal;color:#e30057}#l{position:absolute;display:none;width:100%;height:100%;left:0;top:0;z-index:999;background:#000}#l h2{position:absolute;width:100%;height:50px;top:235px;left:0;font-size:40px;line-height:40px;text-align:center;color:#fff}#l h4{position:absolute;width:100%;height:20px;top:280px;left:0;font-size:20px;line-height:20px;text-align:center;color:#e30057}#restart,#home{position:absolute;width:400px;height:16px;top:320px;left:50%;margin:0 0 0 -200px;font-size:12px;font-weight:bold;line-height:16px;text-align:center;cursor:pointer;color:#fff;text-decoration:none}#home{top:360px}#l a b{height:16px;font-size:16px}#s{position:relative;width:960px;height:auto;margin:0 auto;padding:20px 0 60px 0;z-index:9999;overflow:hidden;text-align:center;color:#fff;background:#000}#s h1{font-size:60px}#s p{margin:16px 0;font-size:20px;font-weight:bold;line-height:16px;color:#df5239}#s p span{color:#fff;font-weight:normal}#s p.s{font-size:16px;font-weight:normal;line-height:20px}#s p.h{font-size:20px;font-weight:bold;line-height:40px;color:#fff;background:#df5239}#s h2{margin:20px 0;font-size:40px;line-height:40px;letter-spacing:-3px}#s h2.p{margin-top:40px}#s p a{margin:0 6px;color:#fff;cursor:pointer;text-decoration:none}@media only screen and (min-device-width :320px) and (max-device-width :480px){#w{width:480px;height:300px}#h{width:470px;height:12px;bottom:5px;padding:0 0 0 10px;font-size:10px}#h>div{padding:0 0 0 4px}#h span{display:inline-block;font-size:12px}#l{height:310px}#l h2{top:85px}#l h4{top:140px}#restart{top:195px;width:200px;margin:0 0 0 -100px}#home{top:250px}#s{width:460px;padding:0 10px 50px 10px}#s h1{font-size:48px}#s p{font-size:15px;margin:6px 0 0 0}#s p.s{font-size:15px;line-height:13px;margin:20px 0 20px 0}#s p.h{font-size:15px;line-height:24px;padding:5px}}</style>
+</head>
+<body>
+    <div id="w">
+	    <canvas id="c" width="960" height="600"></canvas>
+        <div id="h">
+            <div id="hi">HI <span>[ <b>0000000<i>0</i></b> ]</span></div>
+            <div id="score">SCORE <span>[ <b>0000000<i>0</i></b> ]</span></div>
+            <div id="bomb">BOMB <span>[ <b>+++</b> ]</span></div>
+            <div id="charge">SHIELD <span>[ <b class="b">||||||||||</b> ]</span></div>
+            <div id="zone">ZONE <span>[ <b><i>001</i></b> ]</span></div>
+        </div>
+        <div id="l">
+            <h2>Do you like fireworks?</h2>
+            <h4>Well, next time try not to cross the line ;)</h4>
+            <a id="restart"><b>[ </b><span>LAUNCH ANOTHER ROCKET</span><b> ]</b></a>
+            <a id="home" href="index.html"><b>[ </b><span>BACK TO TITLE</span><b> ]</b></a>
+        </div>
+    </div>
+    <div id="s">
+        <p class="s"><span><a href="https://twitter.com/pety7439" target="_blank">&lt;p&gt;</a></span> and <span><a href="https://twitter.com/insgraphizm" target="_blank">ins</a></span> proudly presents<br />a game for the <a href="http://js13kgames.com/" target="_blank">js13kgames.com</a> game competition</p>
+        <h1>POCKETROCKET</h1>
+        <p class="h">On iPhone add this page to the homescreen to play in fullscreen</p>
+        <h2>Instructions</h2>
+        <p>You are <span>PocketRocket</span></p>
+        <p>Don’t cross <span>your beamline (unless you have a shield)</span></p>
+        <p>Collect <span>all blue gems to</span> open <span>the wormhole</span></p>
+        <p>Pickup special gems <span>for extra score.</span></p>
+        <p>Deflector Shield <span>protection against beamlines (Temporary)</span></p>
+        <p>Beam-Bombs <span>to clear some space (3 pieces)</span></p>
+        <h2 class="p">Controls</h2>
+        <p>Turn clockwise / counterclockwise</p>
+        <p><span>PRESS left / right  or TAP left / right side of the screen</span></p>
+        <p>Use powerup</p>
+        <p><span>PRESS space or TAP center of the screen</span></p>
+        <h2 class="p">Start Game</h2>
+        <p>Choose your rocket</p>
+        <p>
+            <a id="p4">[ POCKET ]</a>
+            <a id="p1">[ TANK ]</a>
+            <a id="p2">[ ELROY ]</a>
+            <a id="p3">[ LIZ ]</a>
+        </p>
+    </div>
+	<script src="script.min.js"></script>
+</body>
+</html>

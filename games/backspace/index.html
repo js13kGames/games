@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="shortcut icon" href="icon.png" />
+  <title>BACKSPACE</title>
+</head>
+
+<body>
+  <div class="game">
+    <div id="top">
+      <h1>
+        score:
+        <span id="score">0</span>
+      </h1>
+    </div>
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" id="svg"></svg>
+    </div>
+    <div>
+      volume<br><input id="volume" min="-100" max="100" type="range"></input>
+    </div>
+  </div>
+  <div class="result" id="result">
+    <svg xmlns="http://www.w3.org/2000/svg" class="result-svg">
+      <rect width="3000" height="2000" class="result-rect"></rect>
+    </svg>
+    <div class="result-text">
+      <div>Game Over</div>
+      <div>
+        <button id="replay-button">Replay</button><br>
+        <button id="menu-button">Back To Menu</button>
+      </div>
+    </div>
+  </div>
+  <div class="result" id="menu">
+    <svg xmlns="http://www.w3.org/2000/svg" class="result-svg">
+      <rect width="3000" height="2000" class="result-rect"></rect>
+    </svg>
+    <div class="result-text">
+      Menu<br>
+      <button id="play-button">Play</button><br>
+      <button id="endless-button">Endless Mode</button><br>
+      <!-- <button id="custom-button">Custom Mode</!-->
+    </div>
+  </div>
+  <script src="bundle.js"></script>
+</body>
+
+</html>

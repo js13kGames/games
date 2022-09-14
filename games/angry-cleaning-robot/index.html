@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Angry Cleaning Robot</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="code.js"></script> 
+	</head>
+	
+	<body>
+		<div id='main-frame'>
+			<div id='title-bar'>A DAY IN THE LIFE OF AN ANGRY CLEANING ROBOT</div>
+			<div id='game-canvas-frame'>
+				<canvas id='game-canvas' width='480' height='480'></canvas>
+				<div id='ingame-message'>IN GAME MESSAGE</div>
+				<div id='pause-message'> Game Paused. Press any key to continue</div>
+				<div id='middle-message'></div>
+			</div>
+			<div id='info-area-frame'>
+				<div id='total-carnage'> CARNAGE (TOTAL): <span id='total-carnage-count'></span></div>
+				<div id='your-carnage'> YOUR KILLS: <span id='your-carnage-count'></span></div>
+				<div id='hits'> YOUR SUCCESSFUL HITS: <span id='hits-count'></span></div>
+				<div id='coor'> </div>
+				<div id='help'>
+					<p>
+						<hr>
+						You and your fellow cleaning robots hate each other.
+						And due to malfunction in your moral circuits, you have 
+						the will to do something about it.
+						<hr>
+						When the network is online, you can't shoot each other, 
+						so you must wait until it breaks.
+						<hr>
+						<span id='keys-help'>
+						Left / Right to rotate
+						<br>
+						Up / Down to move
+						<br>
+						Space bar to shoot
+						<br>
+						Esc to pause
+						</span>
+					</p>
+					
+					
+				</div>
+			</div>
+			<div id='combat-death-message'> 
+				<div class='death-title'> YOU DIED </div>
+				<div class='death-body'> 
+					<p>One of your fellow robots shot you down. <br>
+					You can smell your own burning plastic.</p>
+					<p>GAME OVER</p>
+					(refreash to restart)
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

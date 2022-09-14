@@ -1,0 +1,796 @@
+<!doctype html>
+<html>
+	
+<!-- ************************** CREDITS AND SPECIAL THANKS ************************** -->
+<!-- *********************** @feiss (aframe-super-shooter-kit) ********************** -->
+<!-- ************************ @andgokevin (look-at component) *********************** -->
+<!-- ****************** @dmarcos ...and all the A-Frame Community! ****************** -->
+	
+<head>
+	<title>Gear Of War | WebVR Experience</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A cover-based combat game designed and coded by Danilo Pasquariello specifically for Gear VR using Samsung Internet VR | Follow me on Twitter @theDart76">
+	<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+	<script src="aframe-super-shooter-kit.min.js"></script>
+	<script src="aframe-look-at-component.min.js"></script>
+	<script src="gow-components.js"></script>
+</head>
+
+<body>
+	<a-scene background="color: #FFFFFF" antialias="true" reload>
+		
+		<!-- *********************************************************************** -->
+		<!-- *********************** ASSET MANAGEMENT SYSTEM *********************** -->
+		<!-- *********************************************************************** -->
+		
+		<a-assets>
+			<a-mixin id="wall" target
+					 geometry="primitive: plane"
+					 material="color: #424242; shader: flat; side: double">
+			</a-mixin>
+			<a-mixin id="checkpoint" look-at="#camera"
+					 geometry="primitive: circle; radius: 0.25"
+					 material="color: #FFB000; shader: flat; opacity: 0.5; side: double">
+			</a-mixin>
+			<a-mixin id="cover" target="healthPoints: 5"
+					 geometry="primitive: box"
+					 hit-handler="isCover: true; colorAlive: #3366CC; colorDead: #CC0000;
+								  colorAddScalar: 0.08">  
+			</a-mixin>
+			<a-mixin id="health" target="healthPoints: 1"
+					 geometry="primitive: box; width: 0.5; height: 0.5; depth: 0.5"
+					 hit-handler="isHealth: true; colorAlive: #006600; colorDead: #007700">
+			</a-mixin>
+			<a-mixin id="enemy-target" target="healthPoints: 5"
+					 geometry="primitive: cylinder; radius: 0.5; height: 2"
+					 hit-handler="colorAlive: #999999; colorDead: #CC0000;
+								  colorAddScalar: 0.04"
+					 class="restart-game">
+			</a-mixin>
+			<a-mixin id="enemy-gun-wrapper" look-at="#player-body">
+			</a-mixin>
+			<a-mixin id="enemy-gun"
+					 geometry="primitive: box"
+					 material="color: #424242"
+					 rotation="0 180 0" position="0 0 0.8" scale="0.5 0.5 0.2">
+			</a-mixin>
+			<a-mixin id="enemy-target-boss" target="healthPoints: 30"
+					 geometry="primitive: cylinder; radius: 2; height: 4"
+					 hit-handler="colorAlive: #990000; colorDead: #FF0000;
+								  colorAddScalar: 0.03"
+					 class="restart-game">
+			</a-mixin>
+			<a-mixin id="enemy-gun-boss"
+					 geometry="primitive: box"
+					 material="color: #424242"
+					 rotation="0 180 0" position="0 0 2.4" scale="1 1 0.2">
+			</a-mixin>
+			<a-mixin id="server"
+					 geometry="primitive: box; height: 2"
+					 material="color: #212121;"
+					 server-details>
+			</a-mixin>
+			<a-mixin id="losedows"
+					 position="0 1.8 -1.5"
+					 geometry="primitive: plane; height: 0.12; width: 0.4"
+					 material="color: #FFFFFF; shader: flat"
+					 text="width: 1.6; wrapCount: 50; lineHeight: 40; align: center; 
+						   color: #0033FF; value: Losedows">
+			</a-mixin>
+			<a-mixin id="losedows-message"
+					 position="0 1.5 -1.5"
+					 geometry="primitive: plane; height: auto; width: auto"
+					 material="color: #0033FF; shader: flat"
+					 text="width: 1.5; wrapCount: 51; lineHeight: 60;
+						   value: Your avatar ran into a problem and needs to restart. We're not going to collect any error info, but we'll restart the game for you.">
+			</a-mixin>
+			<a-mixin id="power-off"
+					 geometry="primitive: circle; radius: 0.2"
+					 material="color: #FF0000; shader: flat; opacity: 0.5; side: double">
+			</a-mixin>
+		</a-assets>
+		
+		<!-- *********************************************************************** -->
+		<!-- ******************************** START ******************************** -->
+		<!-- *********************************************************************** -->
+		
+		<!-- START INFO -->
+		<a-entity id="start-info" position="0 10001.6 -2"
+				  geometry="primitive: plane; height: 1.5; width: 2.4"
+				  material="color: #212121; shader: flat"
+				  text="width: 1.6; wrapCount: 50; lineHeight: 60;
+						value: \n\n A cover-based combat game designed and coded specifically for Gear VR using Samsung Internet VR. \n\n - Press the trigger to shoot \n - Fire at the checkpoints to teleport \n - Press and hold the trackpad to get cover \n\n SHOOT ALL THE ENEMIES AND TAKE THE SYSTEM OFFLINE! \n\n\n\n">
+			<!-- TITLE -->
+			<a-entity position="0 0.5 0.001"
+					  text="width: 2.4; align: center; value: GEAR OF WAR">
+			</a-entity>
+			<!-- START BUTTON -->
+			<a-entity id="start-button" position="0 -0.5 0.001" class="clickable"
+					  geometry="primitive: plane; height: 0.16; width: 0.4"
+					  material="color: #FF0000; opacity: 0.5; shader: flat"
+					  text="width: 1.6; align: center; value: START"
+					  checkpoint="cameraRigTo: -1 0 0;
+								  getCover_from_X: -1; getCover_to_X: -1;
+								  getCover_from_Y: 0; getCover_to_Y: -0.6;
+								  triggerEnemies: .stage-a;
+								  removeEntity: #start-info;
+								  makeInvisible: #checkpoint-00;
+								  nextCP_1: #a-01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- *********************************************************************** -->
+		<!-- ******************************** SCENE ******************************** -->
+		<!-- *********************************************************************** -->
+		
+		<!-- BULLET -->
+		<a-entity id="bulletTemplate" bullet
+				  geometry="primitive: sphere; radius: 0.1"
+				  material="color: #FF0000">
+		</a-entity>
+		
+		<!-- GROUND -->
+		<a-plane material="color: #E0E0E0; shader: flat"
+				 rotation="-90 0 0" scale="50 50 1">
+		</a-plane>
+		<!-- GAME AREA -->
+		<a-entity position="0 0 0">
+			<!-- NORTH -->
+			<a-plane material="color: #F9F9F9; shader: flat"
+					 position="0 7.5 -25" scale="50 15 1">
+			</a-plane>
+			<!-- EAST -->
+			<a-plane material="color: #F0F0F0; shader: flat"
+					 position="25 7.5 0" scale="50 15 1" rotation="0 -90 0">
+			</a-plane>
+			<!-- SOUTH -->
+			<a-plane material="color: #CFCFCF; shader: flat"
+					 position="0 7.5 25" scale="50 15 1" rotation="0 180 0">
+			</a-plane>
+			<!-- WEST -->
+			<a-plane material="color: #C0C0C0; shader: flat"
+					 position="-25 7.5 0" scale="50 15 1" rotation="0 90 0">
+			</a-plane>
+		</a-entity>
+		
+		<!-- WALLS -->
+		<a-entity mixin="wall"
+				  position="-5 2 5" scale="20 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="20 2 -10" scale="10 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="10 2 -2.5" scale="10 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-17.5 2 -5" scale="15 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-12.5 2 -15" scale="5 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-7.5 2 10" scale="5 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-12.5 2 15" scale="5 4 1">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-5 2 -10" scale="30 4 1" rotation="0 90 0">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="5 2 " scale="30 4 1" rotation="0 90 0">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-5 2 17.5" scale="15 4 1" rotation="0 90 0">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-15 2 12.5" scale="15 4 1" rotation="0 90 0">
+		</a-entity>
+		<a-entity mixin="wall"
+				  position="-10 2 -10" scale="10 4 1" rotation="0 90 0">
+		</a-entity>
+		
+		<!-- ******************************* STAGE A ******************************* -->
+		
+		<!-- COVER 00 -->
+		<a-entity mixin="cover" position="-1 0.5 -1">
+		</a-entity>
+		<!-- CHECKPOINT 00 -->
+		<a-entity id="a-00" mixin="checkpoint" id="checkpoint-00" position="-1 1.6 0" class="clickable"
+				  checkpoint="cameraRigTo: -1 0 0;
+							  getCover_from_X: -1; getCover_to_X: -1;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 0; getCover_to_Z: 0;
+							  nextCP_1: #a-01">
+		</a-entity>
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 2 1" position="2 1 -5"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="a-01" mixin="checkpoint" position="3 1.6 -4" class="clickable"
+				  checkpoint="cameraRigTo: 3 0 -4;
+							  getCover_from_X: 3; getCover_to_X: 2.4;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: -4; getCover_to_Z: -4;
+							  prevCP_1: #a-00; nextCP_1: #b-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-a01" mixin="enemy-target" position="3 1 -12"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-a01-gun-wrapper" mixin="enemy-gun-wrapper" position="3 1 -12">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-a01-gun" mixin="enemy-gun" class="stage-a"
+					  firing-enemy="enemyID: #enemy-a01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="3 0.25 -12" class="clickable"></a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-a02" mixin="enemy-target" position="-2 1 -14"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-a02-gun-wrapper" mixin="enemy-gun-wrapper" position="-2 1 -14">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-a02-gun" mixin="enemy-gun" class="stage-a"
+					  firing-enemy="enemyID: #enemy-a02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE B ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 1" position="1 0.5 -19"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="b-01" mixin="checkpoint" position="0 1.6 -19" class="clickable"
+				  checkpoint="cameraRigTo: 0 0 -19;
+							  getCover_from_X: 0; getCover_to_X: 0;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -19; getCover_to_Z: -19;
+							  triggerEnemies: .stage-b;
+							  prevCP_1: #a-01; nextCP_1: #b-02">
+		</a-entity>
+		
+		<!-- COVER 02 -->
+		<a-entity mixin="cover" scale="1 2 1" position="8 1 -17"></a-entity>
+		<!-- CHECKPOINT 02 -->
+		<a-entity id="b-02" mixin="checkpoint" position="7 1.6 -16" class="clickable"
+				  checkpoint="cameraRigTo: 7 0 -16;
+							  getCover_from_X: 7; getCover_to_X: 7;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: -16; getCover_to_Z: -16.6;
+							  prevCP_1: #b-01; nextCP_1: #c-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-b01" mixin="enemy-target" position="12 1 -22"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-b01-gun-wrapper" mixin="enemy-gun-wrapper" position="12 1 -22">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-b01-gun" mixin="enemy-gun" class="stage-b"
+					  firing-enemy="enemyID: #enemy-b01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-b02" mixin="enemy-target" position="21 1 -17"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-b02-gun-wrapper" mixin="enemy-gun-wrapper" position="21 1 -17">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-b02-gun" mixin="enemy-gun" class="stage-b"
+					  firing-enemy="enemyID: #enemy-b02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="21 0.25 -17" class="clickable"></a-entity>
+		
+		<!-- ******************************* STAGE C ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 1" position="12 0.5 -8"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="c-01" mixin="checkpoint" position="11 1.6 -8" class="clickable"
+				  checkpoint="cameraRigTo: 11 0 -8;
+							  getCover_from_X: 11; getCover_to_X: 11;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -8; getCover_to_Z: -8;
+							  triggerEnemies: .stage-c;
+							  prevCP_1: #b-02; nextCP_1: #d-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-c01" mixin="enemy-target" position="21 1 -8"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-c01-gun-wrapper" mixin="enemy-gun-wrapper" position="21 1 -8">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-c01-gun" mixin="enemy-gun" class="stage-c"
+					  firing-enemy="enemyID: #enemy-c01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE D ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="3 1 1" position="20 0.5 0"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="d-01" mixin="checkpoint" position="20 1.6 -1" class="clickable"
+				  checkpoint="cameraRigTo: 20 0 -1;
+							  getCover_from_X: 20; getCover_to_X: 20;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -1; getCover_to_Z: -1;
+							  triggerEnemies: .stage-d;
+							  prevCP_1: #c-01; nextCP_1: #d-02">
+		</a-entity>
+		
+		<!-- COVER 02 -->
+		<a-entity mixin="cover" scale="1 2 1" position="14 1 6"></a-entity>
+		<!-- CHECKPOINT 02 -->
+		<a-entity id="d-02" mixin="checkpoint" position="13 1.6 5" class="clickable"
+				  checkpoint="cameraRigTo: 13 0 5;
+							  getCover_from_X: 13; getCover_to_X: 13.6;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 5; getCover_to_Z: 5;
+							  prevCP_1: #d-01; nextCP_1: #e-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-d01" mixin="enemy-target" position="13 1 12"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-d01-gun-wrapper" mixin="enemy-gun-wrapper" position="13 1 12">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-d01-gun" mixin="enemy-gun" class="stage-d"
+					  firing-enemy="enemyID: #enemy-d01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="13 0.25 12" class="clickable"></a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-d02" mixin="enemy-target" position="20 1 18"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-d02-gun-wrapper" mixin="enemy-gun-wrapper" position="20 1 18">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-d02-gun" mixin="enemy-gun" class="stage-d"
+					  firing-enemy="enemyID: #enemy-d02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE E ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 3" position="10 0.5 20.5"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="e-01" mixin="checkpoint" position="11 1.6 20.5" class="clickable"
+				  checkpoint="cameraRigTo: 11 0 20.5;
+							  getCover_from_X: 11; getCover_to_X: 11;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 20.5; getCover_to_Z: 20.5;
+							  triggerEnemies: .stage-e;
+							  prevCP_1: #d-02; nextCP_1: #f-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-e01" mixin="enemy-target" position="-3 1 19"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-e01-gun-wrapper" mixin="enemy-gun-wrapper" position="-3 1 19">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-e01-gun" mixin="enemy-gun" class="stage-e"
+					  firing-enemy="enemyID: #enemy-e01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-e02" mixin="enemy-target" position="-2 1 22"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-e02-gun-wrapper" mixin="enemy-gun-wrapper" position="-2 1 22">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-e02-gun" mixin="enemy-gun" class="stage-e"
+					  firing-enemy="enemyID: #enemy-e02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE F ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 1" position="2.5 0.5 15"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="f-01" mixin="checkpoint" position="2.5 1.6 16" class="clickable"
+				  checkpoint="cameraRigTo: 2.5 0 16;
+							  getCover_from_X: 2.5; getCover_to_X: 2.5;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 16; getCover_to_Z: 16;
+							  triggerEnemies: .stage-f;
+							  prevCP_1: #e-01; nextCP_1: #g-00a">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-f01" mixin="enemy-target" position="0 1 8"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-f01-gun-wrapper" mixin="enemy-gun-wrapper" position="0 1 8">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-f01-gun" mixin="enemy-gun" class="stage-f"
+					  firing-enemy="enemyID: #enemy-f01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE G ******************************* -->
+		
+		<!-- CHECKPOINT 00a -->
+		<a-entity id="g-00a" mixin="checkpoint" position="-5 1.6 7.5" class="clickable"
+				  checkpoint="cameraRigTo: -5 0 7.5;
+							  getCover_from_X: -5; getCover_to_X: -5;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 7.5; getCover_to_Z: 7.5;
+							  prevCP_1: #f-01; nextCP_1: #g-00b">
+		</a-entity>
+		
+		<!-- CHECKPOINT 00b -->
+		<a-entity id="g-00b" mixin="checkpoint" position="-11 1.6 7.5" class="clickable"
+				  checkpoint="cameraRigTo: -11 0 7.5;
+							  getCover_from_X: -11; getCover_to_X: -11;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 7.5; getCover_to_Z: 7.5;
+							  prevCP_1: #g-00a; nextCP_1: #g-00c">
+		</a-entity>
+		
+		<!-- CHECKPOINT 00c -->
+		<a-entity id="g-00c" mixin="checkpoint" position="-11 1.6 12.5" class="clickable"
+				  checkpoint="cameraRigTo: -11 0 12.5;
+							  getCover_from_X: -11; getCover_to_X: -11;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 12.5; getCover_to_Z: 12.5;
+							  prevCP_1: #g-00b; nextCP_1: #g-01">
+		</a-entity>
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 1" position="-7 0.5 15"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="g-01" mixin="checkpoint" position="-7 1.6 14" class="clickable"
+				  checkpoint="cameraRigTo: -7 0 14;
+							  getCover_from_X: -7; getCover_to_X: -7;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 14; getCover_to_Z: 14;
+							  triggerEnemies: .stage-g;
+							  prevCP_1: #g-00c; nextCP_1: #g-02">
+		</a-entity>
+		
+		<!-- COVER 02 -->
+		<a-entity mixin="cover" scale="1 2 1" position="-10 1 18"></a-entity>
+		<!-- CHECKPOINT 02 -->
+		<a-entity id="g-02" mixin="checkpoint" position="-11 1.6 17" class="clickable"
+				  checkpoint="cameraRigTo: -11 0 17;
+							  getCover_from_X: -11; getCover_to_X: -10.4;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 17; getCover_to_Z: 17;
+							  prevCP_1: #g-01; nextCP_1: #h-00">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-g01" mixin="enemy-target" position="-9 1 23"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-g01-gun-wrapper" mixin="enemy-gun-wrapper" position="-9 1 23">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-g01-gun" mixin="enemy-gun" class="stage-g"
+					  firing-enemy="enemyID: #enemy-g01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-g02" mixin="enemy-target" position="-11 1 23"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-g02-gun-wrapper" mixin="enemy-gun-wrapper" position="-11 1 23">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-g02-gun" mixin="enemy-gun" class="stage-g"
+					  firing-enemy="enemyID: #enemy-g02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="-11 0.25 23" class="clickable"></a-entity>
+		
+		<!-- ******************************* STAGE H ******************************* -->
+		
+		<!-- CHECKPOINT 00 -->
+		<a-entity id="h-00" mixin="checkpoint" position="-13 1.6 22" class="clickable"
+				  checkpoint="cameraRigTo: -13 0 22;
+							  getCover_from_X: -13; getCover_to_X: -13;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 22; getCover_to_Z: 22;
+							  prevCP_1: #g-02; nextCP_1: #h-01">
+		</a-entity>
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="2 1 1" position="-19 0.5 20"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="h-01" mixin="checkpoint" position="-19 1.6 21" class="clickable"
+				  checkpoint="cameraRigTo: -19 0 21;
+							  getCover_from_X: -19; getCover_to_X: -19;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 21; getCover_to_Z: 21;
+							  triggerEnemies: .stage-h;
+							  prevCP_1: #h-00; nextCP_1: #h-02; nextCP_2: #h-03">
+		</a-entity>
+		
+		<!-- COVER 02 -->
+		<a-entity mixin="cover" scale="1 1 1" position="-17 0.5 15"></a-entity>
+		<!-- CHECKPOINT 02 -->
+		<a-entity id="h-02" mixin="checkpoint" position="-17 1.6 16" class="clickable"
+				  checkpoint="cameraRigTo: -17 0 16;
+							  getCover_from_X: -17; getCover_to_X: -17;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 16; getCover_to_Z: 16;
+							  prevCP_1: #h-01; nextCP_1: #h-03">
+		</a-entity>
+		
+		<!-- COVER 03 -->
+		<a-entity mixin="cover" scale="1 2 1" position="-23 1 10"></a-entity>
+		<!-- CHECKPOINT 03 -->
+		<a-entity id="h-03" mixin="checkpoint" position="-22 1.6 11" class="clickable"
+				  checkpoint="cameraRigTo: -22 0 11;
+							  getCover_from_X: -22; getCover_to_X: -22.6;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 11; getCover_to_Z: 11;
+							  prevCP_1: #h-02; prevCP_2: #h-01; nextCP_1: #i-00">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-h01" mixin="enemy-target" position="-23 1 -3"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-h01-gun-wrapper" mixin="enemy-gun-wrapper" position="-23 1 -3">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-h01-gun" mixin="enemy-gun" class="stage-h"
+					  firing-enemy="enemyID: #enemy-h01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-h02" mixin="enemy-target" position="-20 1 -3"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-h02-gun-wrapper" mixin="enemy-gun-wrapper" position="-20 1 -3">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-h02-gun" mixin="enemy-gun" class="stage-h"
+					  firing-enemy="enemyID: #enemy-h02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 03 TARGET -->
+		<a-entity id="enemy-h03" mixin="enemy-target" position="-17 1 -3"></a-entity>
+		<!-- ENEMY 03 GUN WRAPPER -->
+		<a-entity id="enemy-h03-gun-wrapper" mixin="enemy-gun-wrapper" position="-17 1 -3">
+			<!-- ENEMY 03 SHOOTER -->
+			<a-entity id="enemy-h03-gun" mixin="enemy-gun" class="stage-h"
+					  firing-enemy="enemyID: #enemy-h03">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="-17 0.25 -3" class="clickable"></a-entity>
+		
+		<!-- ******************************* STAGE I ******************************* -->
+		
+		<!-- CHECKPOINT 00 -->
+		<a-entity id="i-00" mixin="checkpoint" position="-15 1.6 0" class="clickable"
+				  checkpoint="cameraRigTo: -12.5 0 0;
+							  getCover_from_X: -12.5; getCover_to_X: -12.5;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: 0; getCover_to_Z: 0;
+							  prevCP_1: #h-03; nextCP_1: #i-01">
+		</a-entity>
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 1" position="-7.5 0.5 -1"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="i-01" mixin="checkpoint" position="-7.5 1.6 0" class="clickable"
+				  checkpoint="cameraRigTo: -7.5 0 0;
+							  getCover_from_X: -7.5; getCover_to_X: -7.5;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: 0; getCover_to_Z: 0;
+							  triggerEnemies: .stage-i;
+							  prevCP_1: #i-00; nextCP_1: #j-01">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET -->
+		<a-entity id="enemy-i01" mixin="enemy-target" position="-6 1 -16"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-i01-gun-wrapper" mixin="enemy-gun-wrapper" position="-6 1 -16">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-i01-gun" mixin="enemy-gun" class="stage-i"
+					  firing-enemy="enemyID: #enemy-i01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE J ******************************* -->
+		
+		<!-- COVER 01 -->
+		<a-entity mixin="cover" scale="1 1 2" position="-9 0.5 -21"></a-entity>
+		<!-- CHECKPOINT 01 -->
+		<a-entity id="j-01" mixin="checkpoint" position="-8 1.6 -21" class="clickable"
+				  checkpoint="cameraRigTo: -8 0 -21;
+							  getCover_from_X: -8; getCover_to_X: -8;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -21; getCover_to_Z: -21;
+							  triggerEnemies: .stage-j;
+							  prevCP_1: #i-01; nextCP_1: #j-02; nextCP_2: #j-03">
+		</a-entity>
+		
+		<!-- COVER 02 LEFT -->
+		<a-entity mixin="cover" scale="1 2 1" position="-12 1 -16"></a-entity>
+		<!-- COVER 02 RIGHT -->
+		<a-entity mixin="cover" scale="1 1 1" position="-12 0.5 -17"></a-entity>
+		<!-- CHECKPOINT 02 -->
+		<a-entity id="j-02" mixin="checkpoint" position="-11 1.6 -17" class="clickable"
+				  checkpoint="cameraRigTo: -11 0 -17;
+							  getCover_from_X: -11; getCover_to_X: -11;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -17; getCover_to_Z: -16.4;
+							  prevCP_1: #j-01; nextCP_1: #j-03">
+		</a-entity>
+		
+		<!-- COVER 03 -->
+		<a-entity mixin="cover" scale="1 1 3" position="-15 0.5 -23"></a-entity>
+		<!-- CHECKPOINT 03 -->
+		<a-entity id="j-03" mixin="checkpoint" position="-14 1.6 -23" class="clickable"
+				  checkpoint="cameraRigTo: -14 0 -23;
+							  getCover_from_X: -14; getCover_to_X: -14;
+							  getCover_from_Y: 0; getCover_to_Y: -0.6;
+							  getCover_from_Z: -23; getCover_to_Z: -23;
+							  prevCP_1: #j-02; prevCP_2: #j-01; nextCP_1: #k-00">
+		</a-entity>
+		
+		<!-- ENEMY 01 TARGET BOSS -->
+		<a-entity id="enemy-j01" mixin="enemy-target-boss" position="-22 2 -19"></a-entity>
+		<!-- ENEMY 01 GUN WRAPPER -->
+		<a-entity id="enemy-j01-gun-wrapper" mixin="enemy-gun-wrapper" position="-22 2 -19">
+			<!-- ENEMY 01 SHOOTER -->
+			<a-entity id="enemy-j01-gun" mixin="enemy-gun-boss" class="stage-j"
+					  firing-enemy="enemyID: #enemy-j01">
+			</a-entity>
+		</a-entity>
+		
+		<!-- HEALTH -->
+		<a-entity mixin="health" position="-22 0.25 -19" class="clickable"></a-entity>
+		
+		<!-- ENEMY 02 TARGET -->
+		<a-entity id="enemy-j02" mixin="enemy-target" position="-22.5 1 -15"></a-entity>
+		<!-- ENEMY 02 GUN WRAPPER -->
+		<a-entity id="enemy-j02-gun-wrapper" mixin="enemy-gun-wrapper" position="-22.5 1 -15">
+			<!-- ENEMY 02 SHOOTER -->
+			<a-entity id="enemy-j02-gun" mixin="enemy-gun" class="stage-j"
+					  firing-enemy="enemyID: #enemy-j02">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ENEMY 03 TARGET -->
+		<a-entity id="enemy-j03" mixin="enemy-target" position="-22.5 1 -23"></a-entity>
+		<!-- ENEMY 03 GUN WRAPPER -->
+		<a-entity id="enemy-j03-gun-wrapper" mixin="enemy-gun-wrapper" position="-22.5 1 -23">
+			<!-- ENEMY 03 SHOOTER -->
+			<a-entity id="enemy-j03-gun" mixin="enemy-gun" class="stage-j"
+					  firing-enemy="enemyID: #enemy-j03">
+			</a-entity>
+		</a-entity>
+		
+		<!-- ******************************* STAGE K ******************************* -->
+		
+		<!-- CHECKPOINT 00 -->
+		<a-entity id="k-00" mixin="checkpoint" position="-19 1.6 -10" class="clickable"
+				  checkpoint="cameraRigTo: -19 0 -10;
+							  getCover_from_X: -19; getCover_to_X: -19;
+							  getCover_from_Y: 0; getCover_to_Y: 0;
+							  getCover_from_Z: -10; getCover_to_Z: -10;
+							  prevCP_1: #j-03; nextCP_1: #offline">
+		</a-entity>
+		
+		<!-- SERVERS -->
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -14"></a-entity>
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -13"></a-entity>
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -12"></a-entity>
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -8"></a-entity>
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -7"></a-entity>
+		<a-entity mixin="server" rotation="0 -90 0" position="-10.52 1 -6"></a-entity>
+		
+		<a-entity mixin="server" rotation="0 180 0" position="-15.5 1 -5.52"></a-entity>
+		<a-entity mixin="server" rotation="0 180 0" position="-16.5 1 -5.52"></a-entity>
+		<a-entity mixin="server" rotation="0 180 0" position="-17.5 1 -5.52"></a-entity>
+		<a-entity mixin="server" rotation="0 180 0" position="-18.5 1 -5.52"></a-entity>
+		<a-entity mixin="server" rotation="0 180 0" position="-19.5 1 -5.52"></a-entity>
+		<a-entity mixin="server" rotation="0 180 0" position="-20.5 1 -5.52"></a-entity>
+		
+		<!-- SYSTEM SCREEN -->
+		<a-entity id="system-screen"
+				  geometry="primitive: box; width: 2.5; height: 1.6; depth: 0.1"
+				  material="color: #000000" position="-10.06 1.6 -10" rotation="0 -90 0">
+			<!-- TITLE -->
+			<a-entity id="screen-title"
+					  geometry="primitive: plane; height: 1.5; width: 2.4"
+					  material="color: #212121; shader: flat" position="0 0 0.1"
+					  text="width: 3; align: center; color: #33FF00;
+							value: SYSTEM ONLINE \n\n\n\n\n\n\n\n;">
+				<a-entity id="screen-message"
+						  text="width: 2; wrapCount: 50; lineHeight: 60; color: #00FF00;
+								value: \n\n\n\n\n\n 0101111101111110000101000111101010101000000110010100001100111010111110010010111100110111000101100110110001001100001000110010111000111110110010111111010010111101010111110111111000010100011110101010100000011001010000110011101011111001001011110011011100010110011011000100110000100011001011100011111011001011111101001011110101011111011111100001010001111010101010000001100101000011001110101111100100101111\n\n\n\n">
+				</a-entity>
+			</a-entity>
+		</a-entity>
+		
+		<a-cylinder radius="0.25" height="0.1" color="#000000"
+					position="-10.1 0.4 -10" rotation="90 90 0">
+			<a-entity id="offline" mixin="power-off"
+					  position="0 -0.06 0" rotation="90 0 0" class="clickable"
+					  checkpoint="cameraRigTo: -12.76 0 -10;
+								  getCover_from_X: -12.76; getCover_to_X: -12.76;
+								  getCover_from_Y: 0; getCover_to_Y: 0;
+								  getCover_from_Z: -10; getCover_to_Z: -10;
+								  powerOff: true;
+								  prevCP_1: #k-00; nextCP_1: #offline"
+					  end-game="title: SYSTEM OFFLINE \n\n\n\n\n\n\n\n;
+								message: \n\n\n Congratulations, you made it! Thank you for playing my game :-) \n Special thanks and credits to: \n - @feiss (aframe-super-shooter-kit) \n - @andgokevin (look-at component) \n - @dmarcos ...and all the A-Frame Community! \n\n GEAR OF WAR is a WebVR experience designed and coded by Danilo Pasquariello @theDart76.">
+			</a-entity>
+		</a-cylinder>
+		
+		<!-- *********************************************************************** -->
+		<!-- ****************************** GAME OVER ****************************** -->
+		<!-- *********************************************************************** -->
+		
+		<a-entity position="0 5000 0"
+				  geometry="primitive: box; width: 8; height: 8; depth: 8"
+				  material="color: #0033FF; shader: flat; side: double">
+			<a-entity>
+				<a-entity mixin="losedows"></a-entity>
+				<a-entity mixin="losedows-message"></a-entity>
+			</a-entity>
+			<a-entity rotation="0 90 0">
+				<a-entity mixin="losedows"></a-entity>
+				<a-entity mixin="losedows-message"></a-entity>
+			</a-entity>
+			<a-entity rotation="0 180 0">
+				<a-entity mixin="losedows"></a-entity>
+				<a-entity mixin="losedows-message"></a-entity>
+			</a-entity>
+			<a-entity rotation="0 270 0">
+				<a-entity mixin="losedows"></a-entity>
+				<a-entity mixin="losedows-message"></a-entity>
+			</a-entity>
+		</a-entity>
+		
+		<!-- *********************************************************************** -->
+		<!-- ************************** CONTROLS | PLAYER ************************** -->
+		<!-- *********************************************************************** -->
+		
+		<!-- CAMERA RIG -->
+		<a-entity id="camera-rig" position="0 10000 0">
+			<!-- GEAR VR CONTROLS -->
+			<a-entity id="pointer" shooter click-to-shoot get-cover
+					  gearvr-controls="hand: right">
+				<!-- LASER RAYCASTER -->
+				<a-entity id="laser" cursor="fuse: false"
+						  raycaster="showLine: true; objects: .clickable"
+						  line="color: #FF0000; opacity: 0.5">
+				</a-entity>
+			</a-entity>
+			<!-- CAMERA -->
+			<a-camera id="camera">
+				<!-- GORE -->
+				<a-image id="gore"
+						 material="color: #FF0000; opacity: 0"
+						 position="0 0 -0.1">
+				</a-image>
+			</a-camera>
+		</a-entity>
+		<!-- PLAYER BODY -->
+		<a-entity id="player-body" position="0 10001.4 0" target="static: false" gore-fx
+				  geometry="primitive: box; width: 0.2; height: 0.2; depth: 0.2"
+				  material="color: #333333; opacity: 0">
+			<a-entity position="0 -0.7 0"
+					  geometry="primitive: box; width: 0.2; height: 1.2; depth: 0.2"
+					  material="color: #999999; opacity: 0">
+			</a-entity>
+		</a-entity>
+		
+	</a-scene>
+</body>
+</html>

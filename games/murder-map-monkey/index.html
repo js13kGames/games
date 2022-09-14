@@ -1,0 +1,62 @@
+<head>
+  <link rel="stylesheet" href="main.css" />  
+</head>
+
+<body>
+  <div id=Wall></div>
+  <div id=Table>
+    <div id="World"></div>
+    <div id=Board></div>
+  </div>
+  <svg id=S fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id=warp>
+        <feTurbulence baseFrequency="0.01 0.01" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" scale="5"></feDisplacementMap>
+      </filter>
+      <filter id=StringsFilter>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+        <feOffset dx=0 dy=2></feOffset>
+        <feMerge>
+          <feMergeNode></feMergeNode>
+          <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
+      </filter>
+      <filter id=WorldFilter>
+        <feGaussianBlur stdDeviation="3" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0
+                           0 1 0 0 0
+                           0 0 1 0 0
+                           0 0 0 2 -0.5" />
+        <feComponentTransfer result="foo">
+          <feFuncA type="discrete" tableValues="0 0.4 0 0.6 0 0.8" />
+        </feComponentTransfer>
+        <feTurbulence baseFrequency="0.05 0.5" numOctaves="2"></feTurbulence>
+        <feColorMatrix type="matrix" values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0.3 0 0 0 0" result="a" />
+        <feTurbulence type="turbulence" baseFrequency="0.01 0.01" numOctaves="3" result="NOISE"></feTurbulence>
+        <feDisplacementMap in="a" in2="NOISE" scale="50" />
+        <feBlend in2="foo" mode="lighten" />
+      </filter>
+    </defs>
+    <path stroke="rgba(255,255,255,0.5)" stroke-width="5" id="HighlightPath" />
+    <path stroke="#f00" filter="url(#StringsFilter)" stroke-width="1.5" id="StringsPath" />
+    <path stroke-dasharray="4" stroke="#f00" stroke-width="1" id="StringsWrongPath" />
+  </svg>
+  <div id="Pins"></div>
+  <div class="light"></div>
+  <div class="lamp" style="left:10%"></div>
+  <div class="lamp" style="right:10%"></div>
+  <div id="Talk">
+    <div id="Char"></div>
+    <div id="Speak">
+      <p id="CST"></p>
+      <p id="CTC">Click to continue</p>
+    </div>
+  </div>
+  <input id="Input" type="text" id="seed" />
+  <div id="LevBtns"></div>
+  <script src="./bundle.js"></script>  
+</body>

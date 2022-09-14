@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Backshot Tactics</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jsfxr.js"></script>
+    <script src="/shared.js"></script>
+    <script src="/client.js"></script>
+  </head>
+  <body class="initial">
+    <div class="splash">
+      <h1>Backshot Tactics</h1>
+      <form class="start">
+        <input required maxlength="15" minlength="3" type="text" name="user" placeholder="Username" aria-label="Username"/>
+        <button type="submit">Play</button>
+      </form>
+      <a class="ranking" href="#">Ranking</a>
+      <div class="how-info">
+        <h2>How to play</h2>
+        <ol>
+          <li>Pick phase: select your <b>4</b> ships on the grid.</li>
+          <li>
+            Play phase: When your turn come, you can <b>activate</b> a ship
+            <ul>
+              <li>It moves in the active direction by <b>4</b> cells</li>
+              <li>It shots the nearest opponent damaging him by <b>distance between them * 3</b></li>
+              <li>If the opponent is hit on the <b>back side</b> the damage is <b>tripled</b></li>
+            </ul>
+          </li>
+          <li>Kill all the enemy ships to win</li>
+        </ol>
+      </div>
+    </div>
+    <div class="connecting">Connecting</div>
+    <div class="wait">
+      <span>Waiting for another player</span>
+      <small>invite a friend to play sharing this link <a></a></small>
+      <a href="#" class="bot">or play vs a bot</a>
+    </div>
+    <div class="won">
+      <span>You won!</span>
+      <a href="/">Play again!</a>
+      <a class="ranking" href="#">See Ranking</a>
+    </div>
+    <div class="lost">
+      <span>You lost!</span>
+      <a href="/">Try again!</a>
+      <a class="ranking" href="#">See Ranking</a>
+    </div>
+    <div class="abandon">
+      <span>Your opponent left - You won!</span>
+      <a href="/">Search for another match.</a>
+      <a class="ranking" href="#">See Ranking</a>
+    </div>
+    <div class="ranking">
+      <h2>Ranking</h2>
+      <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Name</th>
+              <th>Elo Rating</th>
+              <th>Won</th>
+              <th>Lost</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="button">Close</button>
+    </div>
+    <main></main>
+    <header></header>
+    <footer>
+      <div class="picking">
+        <span class="pick-chars">Pick 4 ships</span>
+        <span class="wait-opp">Wait for your opponent</span>
+      </div>
+      <div class="me">Activate a ship</div>
+      <div class="opp">Wait for opponent move</div>
+    </footer>
+  </body>
+</html>

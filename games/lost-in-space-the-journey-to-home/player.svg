@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg width="150" height="70" xmlns="http://www.w3.org/2000/svg">
+	<ellipse cx="74" cy="48" rx="50" ry="18" style="fill: #FFE600; stroke: black;" />
+	<ellipse cx="75" cy="40" rx="75" ry="18" style="fill: grey; stroke: black;" />
+	<ellipse cx="20" cy="38" rx="8" ry="4" style="fill: #FFE600; stroke: black;" />
+	<ellipse cx="75" cy="45" rx="12" ry="5" style="fill: #FFE600; stroke: black;" />
+	<ellipse cx="130" cy="38" rx="8" ry="4" style="fill: #FFE600; stroke: black;" />
+	<path d="M110,36 A1,1 0 0,0 40,36 Z" style="fill: #00FFFA; stroke: #000; stroke-width: 2px;" />
+</svg>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>thief city</title>
+    <style media="screen">
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    body{
+      background-color: rgba(198,1,200,.7);
+    }
+    .content{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+    }
+    .info1{
+      width: 100%;
+    }
+    .info{
+      color: white;
+      background-color: rgba(0,0,0,.6);
+      padding: 10px;
+      width: 600px;
+      text-align: center;
+      font-style: italic;
+      margin:0 auto;
+    }
+    .platform{
+      width: 100%;
+      align-self: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+      .zero{
+        background-color: black;
+      }
+      .two{
+        background-color: black;
+      }
+      .one{
+        background-color: black;
+      }
+      .three{
+        background-color: rgba(0,123,0,.8);
+      }
+      .image{
+        position: absolute;
+        top:450px;
+        z-index: 1;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        transition: .2s linear;
+        font-size: 50px;
+        background-color: rgba(210,210,210,1);
+      }
+      .im{
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        left: 0;
+        width: 50px;
+        height: 50px;
+        transition: .2s linear;
+        font-size: 50px;
+        background-color: rgba(210,210,210,1);
+      }
+      button{
+        border: 0;
+        padding: 10px;
+        background-color: rgba(200,0,0,1);
+        color: white;
+        cursor: pointer;
+        margin-top: 30px;
+      }
+      .buto{
+        width: 210px;
+        align-self: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      .buto1{
+        width: 100%;
+      }
+      .fix{
+        width: 100%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(128,1,200,1);
+        z-index: 5;
+        visibility: hidden;
+        font-size: 40px;
+        color: white;
+      }
+      .fix>p{
+        text-align: center;
+        margin-top: 50px;
+      }
+      .fix>button{
+        margin-left: 45%;
+      }
+      .plat{
+        width: 500px;
+        height: 500px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+
+<div class="content">
+  <div class="info1">
+  <div class="info">
+    <p>You are passing by a city having a thief.</p>
+    <p>You need to get to the green block.</p>
+    <p>You are the white king and the thief is the black king.</p>
+  </div>
+</div>
+  <div class="plat">
+    <div class="platform" style="position:relative;height:500px;width:100%;">
+      <p></p>
+  <div class="image">
+    &#9812;
+  </div>
+  <div class="im">
+    &#9818;
+  </div>
+    </div>
+  </div>
+  <div class="buto1">
+    <div class="buto">
+    <button onclick="move(1)">up</button>
+    <button onclick="move(2)">down</button>
+    <button onclick="move(3)">left</button>
+    <button onclick="move(4)">right</button>
+  </div>
+</div>
+  </div>
+    <div class="fix">
+      <p id="para"></p>
+      <button type="button" name="button" onclick="replay()">play again</button>
+    </div>
+    <script type="text/javascript">
+      var plat = document.querySelector(".platform");
+      var imag = document.querySelector(".image");
+      var im = document.querySelector(".im");
+      var para = document.querySelector("#para");
+      var but = document.querySelectorAll("button");
+
+      /* initializing the map of game */
+      var map = [
+        [2,0,0,0,0,0,0,0,0,3],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [1,0,0,0,0,0,0,0,0,0],
+      ];
+      /*end of initializing of map*/
+
+      var rows = map.length;
+      var colm = map[0].length;
+      var k=0;
+
+      var playertop=9,playerleft=0;
+      var thieftop=0,thiefleft=0;
+
+      /* making of map */
+      for(var i=0;i<rows;i++)
+      {
+        for(var j=0;j<colm;j++)
+        {
+          var cell = document.createElement("div");
+          cell.style.width=50+"px";
+          cell.style.height=50+"px";
+          cell.style.border=1+"px solid rgba(40,40,40,1)";
+          cell.style.position="absolute";
+          cell.style.top=i*50+"px";
+          cell.style.left=j*50+"px";
+          cell.setAttribute("id","divi"+i+j);
+
+          plat.appendChild(cell);
+
+          var ch = map[i][j];
+
+          switch (ch) {
+            case 0:cell.setAttribute("class","zero");
+                  break;
+            case 1:cell.setAttribute("class","one");
+                  break;
+            case 2:cell.setAttribute("class","two");
+                  break;
+            case 3:cell.setAttribute("class","three");
+                  break;
+            default:break;
+
+          }
+        }
+      }
+      /* end of making of map */
+
+blocked();
+
+      function move(a)                        //function to move player
+      {
+        var chan;
+          if(a==1)
+          {
+            if(playertop-1>=0)
+            if(map[playertop-1][playerleft]==5){
+            para.innerHTML="wroung move";
+            return;
+          }
+          }
+          if(a==2)
+          {
+            if(playertop+1<10)
+            if(map[playertop+1][playerleft]==5){
+            para.innerHTML="wroung move";
+            return;
+          }
+          }
+          if(a==3)
+          {
+            if(playerleft-1>=0)
+            if(map[playertop][playerleft-1]==5){
+            para.innerHTML="wroung move";
+            return;
+          }
+          }
+          if(a==4)
+          {
+            if(playerleft+1<10)
+            if(map[playertop][playerleft+1]==5){
+            para.innerHTML="wroung move";
+            return;
+          }
+          }
+
+
+
+        switch(a)
+        {
+          case 1: if((playertop-1)>=0)
+          {
+            playertop=playertop-1;
+            imag.style.top=playertop*50+"px";
+            chan = change(playertop+1,playerleft,playertop,playerleft);
+          }
+                  break;
+          case 2: if((playertop+1)<10)
+          {
+            playertop=playertop+1;
+            imag.style.top=playertop*50+"px";
+            chan = change(playertop-1,playerleft,playertop,playerleft);
+          }
+                  break;
+          case 3: if((playerleft-1)>=0)
+          {
+            playerleft=playerleft-1;
+            imag.style.left=playerleft*50+"px";
+            chan = change(playertop,playerleft+1,playertop,playerleft);
+          }
+                  break;
+          case 4: if((playerleft+1)<10)
+          {
+            playerleft=playerleft+1;
+            imag.style.left=playerleft*50+"px";
+            chan = change(playertop,playerleft-1,playertop,playerleft);
+          }
+                  break;
+          default:break;
+      }
+      console.log(chan);
+      if(chan==2){
+      thief();
+    }
+    }
+
+
+
+      function change(a,b,c,d)                    //function to change the values in map array
+      {
+        if(map[a][b]==1)
+        {
+          if(map[c][d]==2)
+          {
+            para.innerHTML="you loos";
+            document.querySelector(".fix").style.visibility="visible";
+            stop();
+            return(0);
+          }
+          else if(map[c][d]==3)
+          {
+            para.innerHTML="you win";
+            document.querySelector(".fix").style.visibility="visible";
+            stop();
+            return(1);
+          }
+          else if(map[c][d]==0)
+          {
+            var x;
+            x=map[a][b];
+            map[a][b]=map[c][d];
+            map[c][d]=x;
+            return(2);
+          }
+        }
+        else
+        {
+          if(map[c][d]==1)
+          {
+            para.innerHTML="you loss";
+            document.querySelector(".fix").style.visibility="visible";
+            stop();
+            return(2);
+          }
+          else if(map[c][d]==0)
+          {
+            var x;
+            x=map[a][b];
+            map[a][b]=map[c][d];
+            map[c][d]=x;
+            return(2);
+          }
+        }
+
+        console.log(map[playertop][playerleft]);
+      }
+
+      function thief()                  //function for the path of thief
+      {
+        if((Math.abs(thieftop-playertop))>(Math.abs(thiefleft-playerleft)))
+        {
+          if((thieftop-playertop)>0)
+          {
+            if(map[thieftop-1][thiefleft]==5)
+            return;
+
+          thieftop=thieftop-1;
+
+          change(thieftop+1,thiefleft,thieftop,thiefleft);
+        }
+        else {
+          if(map[thieftop+1][thiefleft]==5)
+          return;
+          thieftop=thieftop+1;
+          change(thieftop-1,thiefleft,thieftop,thiefleft);
+        }
+          im.style.top=thieftop*50+"px";
+        }
+        else{
+          if((thiefleft-playerleft)>0)
+          {
+            if(map[thieftop][thiefleft-1]==5)
+            return;
+          thiefleft=thiefleft-1;
+          change(thieftop+1,thiefleft,thieftop,thiefleft);
+        }
+        else {
+          if(map[thieftop][thiefleft+1]==5)
+          return;
+          thiefleft=thiefleft+1;
+          change(thieftop-1,thiefleft,thieftop,thiefleft);
+        }
+          im.style.left=thiefleft*50+"px";
+        }
+      }
+
+
+var block;
+  function blocked()
+  {
+    block = Math.floor(3*Math.random())+10;
+    for(i=0;i<block;i++)
+    {
+      var blockleft = Math.floor(8*Math.random())+1;
+      var blocktop = Math.floor(8*Math.random())+1;
+      var divis = document.querySelector("#divi"+blocktop+blockleft);
+      console.log(divis);
+      console.log(blocktop);
+      console.log(blockleft);
+      divis.style.backgroundColor="rgba(200,80,0,1)";
+      map[blocktop][blockleft]=5;
+    }
+  }
+  function stop() {
+    but.remove();
+  }
+
+  function replay()
+  {
+    location.reload();
+  }
+    </script>
+
+  </body>
+</html>

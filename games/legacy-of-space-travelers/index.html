@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>Lost</title>
+        <link rel="stylesheet" href="app.css" type="text/css" />
+        <script src="app.js"></script>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <div id="initial" class="active view">
+            <div class="content">
+                <div class="title">LEGACY OF SPACE TRAVELERS</div>
+                <button id="btnStart">START</button>
+                <button id="btnHelp">HELP</button>
+            </div>
+        </div>
+
+        <div id="help" class="view">
+            <div class="content">
+                <div class="title">LEGACY OF SPACE TRAVELERS</div>
+                <p>Your goal is to reach your home planet.</p>
+                <p>The planets are represented by small circles in the edge of the screen, and the home planet is shown with a red border.</p>
+                <p>By landing on the planets you can reload your fuel and food.</p>
+                <p>Arrow up accelerates forward</p>
+                <p>Arrow left steers to the left</p>
+                <p>Arrow right steers to the right</p>
+                <p>SPACE stabilizes</p>
+                
+                <button id="btnBack">BACK</button>
+            </div>
+        </div>
+
+        <div id="gameover" class="view">
+            <div class="content">
+                <div class="title">GAME OVER</div>
+                <div id="gameresult">
+                    <div id="gameover_win">
+                            <p>Congratulations, you reached the home planet!</p>
+                        </div>
+                        <div id="gameover_crashed">
+                            <p>You crashed on a planet!</p>
+                            <p>In order to land, try stabilizing a bit far from the planet and then approach the planet slowly.</p>
+                        </div>
+                        <div id="gameover_out_of_fuel">
+                            <p>You ran out of fuel!</p>
+                            <p>Landing on a planet will charge your fuel.</p>
+                        </div>
+                        <div id="gameover_out_of_food">
+                            <p>You ran out of food!</p>
+                            <p>Landing on a planet will charge your food supply.</p>
+                        </div>
+                    </div>
+                <button id="btnGameOverBack">BACK</button>
+            </div>
+        </div>
+
+        <div id="transition" class="off"></div>
+    </body>
+</html>

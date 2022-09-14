@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Master of 13k Suns - an incremental space game in a procedural galaxy in 13kb</title>
+<meta charset="utf-8">
+<meta name="description" content="js13k 2021">
+<meta name="author" content="Luke Nickerson">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+	html, body { padding: 0; margin: 0; }
+	body {
+		background: black;
+		color: #cdd;
+		font-size: calc(10px + 1vmin);
+		font-family: 'Monaco', 'Lucida Console', monospace;
+	}
+	#display {
+		position: absolute;
+		top: 0; bottom: 100%;
+		left: 0; right: 100%;
+		display: none;
+	}
+	main {
+		position: absolute;
+		top: 0;
+		height: 97vh;
+		left: 0;
+		width: 500vmin;
+		display: flex;
+		/* border: solid 1px red; */
+	}
+	a {
+		color: #6cc;
+    	text-decoration: none;
+	}
+	article {
+		box-sizing: border-box;
+		height: 100%;
+		overflow: auto;
+		width: 24em;
+		max-width: 19%;
+		padding: calc(1em + 1vmin);
+		border-right: solid 1px rgba(255, 255, 255, 0.2);
+	}
+	header {
+		font-size: 130%;
+		margin-bottom: 5vmin;
+	}
+	.intro {
+		min-height: 40vh;
+		margin-bottom: 5vmin;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+	}
+	.intro header {
+		font-size: 300%;
+		text-align: center;
+	}
+	.sun {
+		/* font-size: 30vmin; */
+		margin: 0;
+		/* line-height: 1em; */
+		text-align: center;
+	}
+	.sun-1, .sun-2, .sun-3, .sun-4, .sun-5 {
+		margin: 0 -0.3em;
+	}
+	.sun-1 { font-size: 0.5em; }
+	.sun-2 { font-size: 1em; }
+	.sun-3 { font-size: 2.25em; }
+	.sun-4 { font-size: 3em; }
+	.sun-5 { font-size: 5em; }
+	.version, .subtitle {
+		margin: 1.5em 0;
+		text-align: center;
+		font-size: 80%;
+		line-height: 1.5em;
+	}
+
+	#empire {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	/* .sector-grid,
+	.sector-coords {
+		stroke: rgba(150, 100, 200, 0.4);
+	} */
+
+	/* Thing List */
+	.thing-name {
+		width: 7em;
+	}
+	.none {
+		opacity: 0.7;
+	}
+	.thing:hover {
+		background: rgba(200, 255, 255, 0.1);
+	}
+	.none .thing-count {
+		opacity: 0.2;
+	}
+	.thing-list {
+		display: block;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	.thing-list > li {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+		padding: 2vh 2vw;
+	}
+	.thing-info {
+		max-height: 0;
+		transform: scale(0);
+		opacity: 0;
+		width: 100%;
+		font-size: 80%;
+		padding:0;
+		transition: ease-in-out 0.2s all;
+	}
+	.show-info .thing-info {
+		max-height: 10em;
+		transform: scale(1);
+		opacity: 1;
+		padding: 1em 0;
+	}
+	.build-progress {
+		width: 100%;
+	}
+
+	ul {
+		margin: 5vh 0;
+		padding-left: 1em;
+	}
+	ul > li {
+		margin-bottom: 0.5em;
+	}
+
+	.selected {
+		color: #08f;
+	}
+	.save-load-actions {
+		display: flex;
+		justify-content: space-between;
+		padding: 2vh 0;
+	}
+
+	.progress {
+		/* background: rgba(240, 255, 255, 0.4); */
+		background: rgb(235, 101, 38);
+		white-space: nowrap;
+		color: #333;
+		font-size: 80%;
+		box-sizing: border-box;
+		padding: 0.5em 0;
+	}
+	#station-list .build-button::after {
+		content: '🔨';
+	}
+	#fleet-list .build-button::after {
+		content: '🔧';
+	}
+	#save-load-info {
+		min-height: 1em;
+		font-size: 80%;
+		padding: 1em 0;
+	}
+	button {
+		border: solid 1px white;
+		background: rgba(0, 0, 0, 0.5);
+		padding: 0.2em 0.8em;
+		color: #fff;
+		border-radius: 0.5em;
+		font-size: inherit;
+	}
+	button:active {
+		transform: scale(0.9);
+	}
+	/* System / Travel */
+	.system-fluff {
+		margin: 5vh 0;
+	}
+
+	.travel-help, .travel-fleet-info {
+		margin-bottom: 1em;
+	}
+	#travel .travel-fleet-info {
+		display: none;
+	}
+	#travel.ready .travel-fleet-info {
+		display: block;
+	}
+	#travel.ready .travel-help {
+		display: none;
+	}
+	input:disabled, button:disabled {
+		opacity: 0.2;
+	}
+	.system-list-sector {
+		font-size: 80%;
+	}
+</style>
+<!-- <link href="./styles/galaxy.css" rel="stylesheet" /> -->
+  <script type="module" crossorigin src="./index.js"></script>
+  </head>
+<body scroll="no">
+	<main>
+		<svg id=display width=100% height=100%>
+			<polygon points="0 600, 0 450,
+		100 400, 0 0, 20 0, 120 400,
+		680 400, 780 0, 800 0, 700 400,
+		800 450, 800 600" />
+		</svg>
+		<article class="intro">
+			<header>Master of<br><span class="13k">13k</span> Suns</header>
+			<div class="sun">
+				<span class="sun-1">☀️</span>
+				<span class="sun-2">☀️</span>
+				<span class="sun-3">☀️</span>
+				<span class="sun-4">☀️</span>
+				<span class="sun-5">☀️</span>
+				<span class="sun-4">☀️</span>
+				<span class="sun-3">☀️</span>
+				<span class="sun-2">☀️</span>
+				<span class="sun-1">☀️</span>
+			</div>
+			<div>
+				<div class="version">v<span id="version"></span> 2021</div>
+				<div class="subtitle">
+					An incremental space game in a procedural galaxy in 13kb | 
+					Made for <a href="https://js13kgames.com/entries/2021">JS13k Games 2021</a>
+					as a quasi-sequel to <a href="http://deathraygames.com/play-online/master-of-1k-suns/">Master of a Thousand Suns</a>
+				</div>
+			</div>
+			<div>
+				<p>
+					Scroll left and right to move between sections.
+					Works best on a mobile device.
+				</p>
+				<p>
+					On desktop, hold shift while mouse-wheel scrolling, or use 
+					left and right arrows.
+				</p>
+			</div>
+		</article>
+		<article id="empire">
+			<header>🌌 Galactic Empire</header>
+			<div>
+				<ul>
+					<li>Explored Systems: <span id="explored-count"></span> / 13000</li>
+					<li>Settled Systems: <span id="settled-count"></span> / 13000</li>
+					<li>Science: <span id="empire-science"></span> / 13000</li>
+				</ul>
+				<p>Win by getting all empire values to 13k.</p>
+			</div>
+			<div>
+				Galaxy Seed: <span id="seed"></span>
+			</div>
+			<section>
+				<div class="save-load-actions">
+					<button type="button" id="save-game">Save</button>
+					<button type="button" id="load-game">Load</button>
+					<button type="button" id="new-game">New</button>
+				</div>
+				<div id="save-load-info"></div>
+			</section>
+		</article>
+		<article>
+			<header>🪐 System: <span id="system-name"></span></header>
+			<!-- <div>Resources: <span></span>🔋🛢💾💎</div> -->
+			<ul class="thing-list">
+				<li>Resources: <span id="resources"></span> / <span id="maxResources"></span></li>
+				<li>Resource Collection: +<span id="resourceCollectionRate"></span></li>
+				<li>Construction Queue: <span id="queueSize"></span> / <span id="queueMax"></span></li>
+				<li>Ship Construction: +<span id="shipConstructionRate"></span></li>
+				<li>Station Construction: +<span id="stationConstructionRate"></span></li>
+				<li>Science Rate: +<span id="scienceRate"></span></li>
+				<li>Science Left: <span id="scienceLeft"></span></li>
+			</ul>
+			<ul class="system-fluff">
+				<li>Sector: <span id="sector-name"></span></li>
+				<li>Sector Coordinates: <span id="sector-coords"></span></li>
+				<li>Spectral classification: <span id="spectral"></span></li>
+				<li>Planets: <span id="planet-count"></span></li>
+				<!-- <li>Native inhabitants: None</li> -->
+			</ul>
+		</article>
+		<article>
+			<header>🛰 Stations</header>
+			<!-- <button type="button">🔨⌛️ Build</button> -->
+			<ol id="station-list" class="thing-list">
+				<!-- -->
+			</ol>
+		</article>
+		<article>
+			<header>
+				🛸 Fleet
+			</header>
+			<div id="fleet-construction"></div>
+			<!-- <button type="button">🔧⌛️ Build</button> -->
+			<ol id="fleet-list" class="thing-list">
+				<!-- -->
+			</ol>
+		</article>
+		<article id="travel">
+			<header>☄️ Travel</header>
+			<div>
+				<div class="travel-help">
+					⬅️ Select ships from the fleet to travel
+				</div>
+				<div class="travel-fleet-info">
+					✅ Ships selected: <span id="selected-count"></span>
+				</div>
+			</div>
+			<!-- <div>
+				<button type="button">🌀 Activate Worm Hole</button>
+			</div> -->
+			<ol id="system-list" class="thing-list">
+				<!-- -->
+			</ol>
+		</article>
+	</main>
+	
+</body>
+</html>

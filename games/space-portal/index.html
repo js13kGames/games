@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Portal</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        *{user-select:none}body{overflow:hidden;background:#000}.fullsize{position:absolute;width:100%;height:100%;top:0;left:0}.camera{--x:0;--y:250px;--z:0;--rotX:0;--rotY:0;--perspective:50vh;background:pink;perspective:var(--perspective);overflow:hidden}.camera .scene{position:absolute;top:0;left:0;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(var(--rotY)) rotateY(var(--rotX)) translateX(var(--x)) translateY(var(--y)) translateZ(var(--z)) translateZ(var(--perspective));transform-origin:50% 50% var(--perspective);z-index:100}.faceV2{--x:0;--y:0;--z:0;--width:0;--height:0;--birghtness:100%;position:absolute;width:var(--width);height:var(--height);left:calc(50% - 50px);bottom:calc(50% - 50px);transform-origin:50px 50px;box-sizing:border-box;background:grey;background-image:url(texture.png);background-size:100px 100px;background-color:var(--color);--color:blue;filter:brightness(var(--birghtness)) hue-rotate(var(--hue))}.orientation0{transform:translate3d(var(--x),var(--y),var(--z)) translate3d(100px,-50px,-50px) rotateY(90deg);--birghtness:100%}.orientation1{transform:translate3d(var(--x),var(--y),var(--z)) translate3d(0,-50px,-50px) rotateY(90deg);--birghtness:85%}.orientation2{transform:translate3d(var(--x),var(--y),var(--z)) translate3d(50px,-50px,100px) rotateY(0);--birghtness:65%}.orientation3{background:linear-gradient(135deg,#708090 21px,#d9ecff 22px,#d9ecff 24px,transparent 24px,transparent 67px,#d9ecff 67px,#d9ecff 69px,transparent 69px),linear-gradient(225deg,#708090 21px,#d9ecff 22px,#d9ecff 24px,transparent 24px,transparent 67px,#d9ecff 67px,#d9ecff 69px,transparent 69px) 0 64px;background-size:64px 128px;background-color:var(--color);transform:translate3d(var(--x),var(--y),var(--z)) translate3d(50px,-50px,0) rotateY(0);--birghtness:55%}.orientation4{transform:translate3d(var(--x),var(--y),var(--z)) translate3d(50px,-100px,-50px) rotateY(90deg) rotateX(90deg);--birghtness:80%}.orientation5{transform:translate3d(var(--x),var(--y),var(--z)) translate3d(50px,0,-50px) rotateY(90deg) rotateX(90deg);--birghtness:75%}.floorTexture{background:linear-gradient(315deg,transparent 75%,#d45d55 0) -10px 0,linear-gradient(45deg,transparent 75%,#d45d55 0) -10px 0,linear-gradient(135deg,#a7332b 50%,transparent 0) 0 0,linear-gradient(45deg,#6a201b 50%,#561a16 0) 0 0 #561a16;background-size:20px 20px}.endTexture,.wallTexture{background:#892121;background-image:linear-gradient(white 2px,transparent 2px),linear-gradient(90deg,#fff 2px,transparent 2px),linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px);background-size:100px 100px,100px 100px,20px 20px,20px 20px;background-position:-2px -2px,-2px -2px,-1px -1px,-1px -1px}.projectile{width:20px;height:20px;border-radius:50%;position:absolute;left:calc(50% - 10px);bottom:calc(50% - 10px);--scale:1;transform:translate3d(var(--x),calc(-1 * var(--y)),var(--z)) rotateY(var(--rotX)) rotateX(var(--rotY)) scale(var(--scale))}.end{background:radial-gradient(green,#adff2f);background-size:50px 50px;animation:endBlock 1s linear infinite;--scale:3}@keyframes endBlock{from{background-position:0 0}to{background-position:50px 50px}}.projectileBlue{background:#d6f9ff;box-shadow:#0f0 0 0 30px,#0f0 0 0 25px}.projectileOrange{background:#fff1e9;box-shadow:red 0 0 30px,red 0 0 25px}.portalV2{--rot:0;width:100px;height:200px;position:absolute;border-radius:50%;left:calc(50% - 145px);bottom:calc(50% - 135px);background:#e7e7e7;transform:translate3d(var(--x),var(--y),var(--z)) translate3d(50px,50px,50px) rotateY(var(--rot)) translateZ(51px);border:none;overflow:hidden}.portalV2 .scene{--rotX:.5turn;--rotY:0}.portalBlue{box-shadow:#ff0 0 0 20px;background:#e9f7ff}.portalOrange{box-shadow:red 0 0 20px;background:#fff2e0}#gui{z-index:200}#mousearea{z-index:300}#gui .portalgun{position:absolute;bottom:0;right:0;height:40vh}#gui .crosshair{position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%)}.f3pos{text-align:left}#f3{position:absolute;top:10px;left:10px;font-family:Arial;color:#0ff;text-shadow:#170e1f 1px 1px 0}#win{background:#000;color:gold;text-align:center;line-height:100vh;font-size:3em;z-index:3000}#menu{background:gray;z-index:4000;text-align:center}.logo{font-size:4em;text-align:center;left:calc(50% - 300px);width:600px;color:#0ff;margin:0 auto}.p1{margin-top:50px;clip-path:polygon(0 0,100% 0,0 100%);transform:translate(-5px,-5px);text-shadow:#0f0 0 0 20px}.p2{margin-top:-80px;clip-path:polygon(100% 0,100% 100%,0 100%);transform:translate(5px,5px);text-shadow:red 0 0 20px}.txt{margin:100px;text-align:center;color:#0ff;font-size:2em}.but{display:inline-block;width:200px;height:350px;line-height:350px;text-align:center;border:5px solid;font-size:100px;transition:transform .2s;cursor:pointer}.b1{background:#9e9eff;color:#00005f}.b2{background:#9effa8;color:#115f00}.b3{background:#ff9e9e;color:#5f0000}.but:hover{transform:scale(1.1)}
+    </style>
+</head>
+<body>
+<div id='camera' class='fullsize camera'>
+
+</div>
+<div id='gui' class='fullsize'>
+    <svg class='crosshair' version="1.1"  width="30" height="30" viewBox="0,0,30,30"><g transform="translate(-225,-165)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill-rule="nonzero" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><path d="M226,180h28" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/><path d="M240,166v28" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/><path d="M238.98702,181.0133v-2.14286h2.14286v2.14286z" fill="#000000" stroke="none" stroke-width="0" stroke-linecap="butt"/><path d="M227.08333,180c0,-7.13368 5.78299,-12.91667 12.91667,-12.91667c7.13368,0 12.91667,5.78299 12.91667,12.91667c0,7.13368 -5.78299,12.91667 -12.91667,12.91667c-7.13368,0 -12.91667,-5.78299 -12.91667,-12.91667z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="butt"/></g></g></svg>
+    <div id='f3'>
+        Double click to enter FPS mode<br>
+        ESC to disable it<br>
+        Shoot portals using the left and right mouse buttons<br>
+        Reach the green orb to complete the level<br>
+    </div>
+
+
+
+</div>
+<div id='mousearea' class='fullsize'>
+
+</div>
+
+<div hidden class='fullsize' id='win'>LEVEL COMPLETED</div>
+<div class='fullsize' id='menu'>
+    <div class='logo p1'>SPACE PORTAL</div>
+    <div class='logo p2'>SPACE PORTAL</div>
+
+    <div class='txt'>Select a level</div>
+    <div class='but b1' onclick='game.loadLevel(0)'>1</div>
+    <div class='but b2' onclick='game.loadLevel(1)'>2</div>
+    <div class='but b3' onclick='game.loadLevel(2)'>3</div>
+</div>
+
+
+</body>
+
+<script>
+
+</script>
+<script type='module'>
+    import {Game} from './src/Game.js';
+    import {Vector} from "./src/Vector.js";
+    game = new Game();
+    window.Vector = Vector;
+    window.Tools = {posToCSS: (number) => (number * 100000) / 1000 + 'px'}
+
+</script>
+</html>

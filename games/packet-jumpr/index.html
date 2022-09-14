@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="EN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jump little packet!</title>
+    <style type="text/css">
+      body {
+        text-align: center;
+        background-color: #281e5d;
+        color: #fff;
+      }
+      canvas {
+        border: 5px solid #9EAEFF;
+        background-color: #6E83EB;
+        display: inline-block;
+      }
+      .cursor{cursor: pointer;}
+      a { display: block;}
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="800" height="600"></canvas>
+    <p>Use the mouse and click on the canvas or press the Spacebar to jump</p>
+    <script src="index.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        JLP();
+      });
+    </script>
+</html>

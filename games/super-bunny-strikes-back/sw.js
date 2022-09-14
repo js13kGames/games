@@ -1,0 +1,1 @@
+self.addEventListener("install",a=>{a.waitUntil(caches.open("v2").then(b=>{return b.addAll(["index.html"])}))});self.addEventListener("fetch",a=>{"only-if-cached"===a.request.cache&&"same-origin"!==a.request.mode||a.respondWith(caches.match(a.request).then(b=>{return b||fetch(a.request).then(c=>{return caches.open("v2").then(d=>{d.put(a.request,c.clone());return c})})}))});

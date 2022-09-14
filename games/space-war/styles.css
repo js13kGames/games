@@ -1,0 +1,316 @@
+:root {
+  --b: #000;
+  --i: #fff;
+  --shadow: #151419;
+}
+
+/* Estilos globales */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--i);
+  font-weight: bold;
+}
+
+a:visited {
+  color: var(--i);
+}
+
+html,
+body {
+  background: var(--b);
+  color: var(--i);
+  font-family: Arial;
+  overflow: hidden;
+  position: fixed;
+  user-select: none;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+/* Clase para centrar elementos en la pantalla*/
+.cs {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+/* Clase para establecer elementos all 100% en alto y en ancho */
+.wh {
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  height: var(--h);
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: var(--w);
+  background: #1e1e26;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+/* Para la nave uno */
+.s1 {
+  background-image: linear-gradient(#ff4a69, #ff4a69),
+    linear-gradient(#ffffff, #ffffff), linear-gradient(#ff4a69, #ff4a69),
+    linear-gradient(#ffffff, #ffffff), linear-gradient(#ffff83, #ffff83),
+    linear-gradient(#f3b700, #f3b700), linear-gradient(#c8cbd4, #c8cbd4);
+
+  background-size: 12% 100%, 22% 100%, 12% 100%, 22% 100%, 22% 50%, 22% 22%,
+    100% 45%;
+  background-position: 88% 0, 100% 0, 12% 0, 0 0, center 40%, center top, 0 16%;
+  background-repeat: no-repeat;
+}
+/* fin de la nave uno */
+
+/* Para la nave 2 */
+.s2 {
+  /* border: 1px solid red; */
+  background-image: linear-gradient(#ffffff, #ffffff),
+    linear-gradient(#ffffff, #ffffff), linear-gradient(#ffffff, #ffffff),
+    linear-gradient(#cbced7, #cbced7), linear-gradient(#009aff, #009aff),
+    linear-gradient(#ff5071, #ff5071), linear-gradient(#00ccff, #00ccff),
+    linear-gradient(#ffffff, #ffffff), linear-gradient(#cbced7, #cbced7);
+
+  background-size: 17% 60%, 17% 60%, 22% 22%, 22% 22%, 22% 22%, 22% 22%, 22% 22%,
+    100% 6%, 100% 35%;
+  background-position: 0 75%, 100% 75%, center 25%, center top, center 75%,
+    center bottom, center center, 0 90%, 0 85%;
+  background-repeat: no-repeat;
+}
+/* fin de la nave 2 */
+
+/* Botón de Pause */
+#pause {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2em;
+  position: absolute;
+  left: 5%;
+  top: 3%;
+  width: 40px;
+  height: 40px;
+}
+
+#score {
+  position: absolute;
+  right: 5%;
+  top: 3%;
+  font-size: 2.5em;
+  font-weight: bold;
+  text-shadow: -5px 0px 4px var(--shadow);
+}
+
+.bullet {
+  width: 8px;
+  height: 40px;
+  z-index: 1;
+  position: absolute;
+  background: #d8829f;
+  box-shadow: -7px -7px 6px 0px var(--shadow);
+  visibility: hidden;
+}
+
+#particle {
+  height: 40px;
+  left: 45%;
+  position: absolute;
+  width: 40px;
+  z-index: 1;
+}
+
+@keyframes shakeY {
+  from,
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translate3d(0, -10px, 0);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+/* Estilos para el modal */
+modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+modal.hide {
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 200ms;
+}
+
+modal.show {
+  visibility: visible;
+}
+
+modal a {
+  color: var(--b) !important;
+}
+
+.ms,
+.mw {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.ms {
+  backdrop-filter: blur(5px);
+  background: #b6b7c742;
+}
+
+.mw {
+  z-index: 1;
+}
+
+.mc {
+  border-radius: 5px;
+  overflow: hidden;
+  width: 71%;
+  background: var(--i);
+  overflow: hidden;
+}
+
+.mc .txt {
+  color: #8f9cb5;
+  padding: 20px;
+  flex-direction: column;
+}
+
+.mb button {
+  width: 100%;
+  border: none;
+  height: 50px;
+  background: #fc7169;
+  cursor: pointer;
+  color: var(--i);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.mb button:nth-child(2) {
+  background: #b6bece;
+}
+
+modal.show .mc {
+  animation: fD 200ms both;
+}
+
+modal.hide .mc {
+  animation: fUp 200ms both;
+}
+
+@keyframes fD {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fUp {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+/* fin estilos del modal */
+
+/* Para el logo */
+.logo {
+  font-size: 50px;
+  font-weight: bold;
+  animation : lSpeed 1s both;
+}
+
+.copy {
+  font-size: 20px;
+  line-height: 1.3;
+  margin: 40px 0;
+  text-align: justify;
+  width: 80%;
+}
+
+
+.button {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: #ef233c;
+  box-shadow: 0 5px #d90429;
+  font-size: 20px;
+}
+.button:hover {
+  box-shadow: 0 3px #d90429;
+  top: 1px;
+}
+.button:active {
+  box-shadow: 0 0 #d90429;
+  top: 5px;
+}
+
+@keyframes rOut {
+  from { opacity: 1; }
+  to { transform: rotate3d(0, 0, 1, 200deg); opacity: 0; }
+}
+
+@keyframes swing {
+  20% { transform: rotate3d(0, 0, 1, 15deg); }
+  40% { transform: rotate3d(0, 0, 1, -10deg); }
+  60% { transform: rotate3d(0, 0, 1, 5deg); }
+  80% { transform: rotate3d(0, 0, 1, -5deg); }
+  to { transform: rotate3d(0, 0, 1, 0deg); }
+}
+
+@keyframes lSpeed {
+  from { transform: translate3d(-100%, 0, 0) skewX(30deg); opacity: 0; }
+  60% { transform: skewX(-20deg); opacity: 1; }
+  80% { transform: skewX(5deg); }
+  to { transform: translate3d(0, 0, 0); }
+}

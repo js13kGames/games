@@ -1,0 +1,38 @@
+<!doctype html>
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <link rel="stylesheet" href="styles/main.css">
+    </head>
+    <body>
+        <div class="clouds">
+            <div class="cloud x1"></div>
+            <div class="cloud x2"></div>
+            <div class="cloud x3"></div>
+            <div class="cloud x4"></div>
+            <div class="cloud x5"></div>
+        </div>
+        <div class="hills">
+            <div class="hill h1"></div>
+            <div class="hill h2"></div>
+            <div class="hill h3"></div>
+            <div class="hill h4"></div>
+            <div class="hill h5"></div>
+        </div>
+        <div class="main">
+            <div class="title">MileHigh</div>
+            <canvas id="gameCanvas"></canvas>
+            <div class="title">Your score is <span id="score">0</span></div>
+            <div class="instruction-panel">Instructions: Use your arrow keys or swipe to move around. Flirt with folks, invite them to the lavatory, and score. Try flirting with multiple people at once.</div>
+            <div class="score-panel">Turn: <span id="turnCounter"></span> Turns left: <span id="turnsLeftCounter"></span></div>
+            <div id="turbulence-alert" class="alert hide">Turbulence!</div>
+            <div id="seatbelt-alert" class="alert hide seats">Fasten seat belts!</div>
+            <div id="gameover-alert" class="alert hide">Game Over</div>
+        </div>
+
+        <script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset = utf-8>
+        <title>FOREST</title>
+    </head>
+    <body>
+        <canvas id = c></canvas>
+        <script>
+            let ctx = c.getContext('2d')
+            addEventListener('resize', resize)
+            oncontextmenu = e => e.preventDefault()
+
+            let look_horizontal = 0
+            let look_vertical = 0
+            let player_x = 0
+            let player_z = 0
+            let speed = 6
+            let amount = 999
+            let world_size = 5000
+
+            let mouse_x = c.width / 2
+            let mouse_y = c.height / 2
+
+            let people = 5
+            let flies = 1000
+
+            let hover = []
+            let things = []
+
+            let key = {up: false, down: false, left: false, right: false, space: false}
+            let p = 0
+            let found = 0
+            let begin = true
+            let lose = false
+            let good = false
+            let win = false
+
+            let value = 0
+
+            amount<people?(alert('tree amount must be greater than people'),amount=999):0
+
+            onkeydown = e => {
+                if (e.key == 'ArrowUp') key.up = true
+                if (e.key == 'ArrowDown') key.down = true
+                if (e.key == 'ArrowLeft') key.left = true
+                if (e.key == 'ArrowRight') key.right = true
+                if (e.key == ' ') key.space = true
+            }
+            
+            onkeyup = e => {
+                if (e.key == 'ArrowUp') key.up = false
+                if (e.key == 'ArrowDown') key.down = false
+                if (e.key == 'ArrowLeft') key.left = false
+                if (e.key == 'ArrowRight') key.right = false
+                if (e.key == ' ') key.space = false
+            }
+
+            onmousedown = () => {
+                c.requestPointerLock()
+
+                if (hover.length == 1) {
+                    things[hover[0]].selected = true
+                    found ++
+                }
+                if (hover.length > 1) {
+                    things[hover[hover.length - 1]].selected = true
+                    found ++
+                }
+            }
+
+            onmousemove = e => {
+                if (!lose && !good && !win && !begin) {
+                    look_horizontal += e.movementX / 9
+                    look_vertical -= e.movementY / 45
+                }
+            }
+
+            function random(min, max) {
+                return Math.round(Math.random() * (max - min) + min)
+            }
+
+            function forest() {
+                for (let i = 0; i < amount; i ++) {
+                    things.push({x: random(0, world_size) - world_size / 2, z: random(0, world_size) - world_size / 2, position: 0, type: 'tree'})
+                }
+
+                for (let i = 0; i < people; i ++) {
+                    things.push({x: things[i].x + 10, z: things[i].z - 10, position: 0, type: 'man', selected: false})
+                }
+
+                for (let i = 0; i < flies; i ++) {
+                    things.push({x: random(0, world_size) - world_size / 2, z: random(0, world_size) - world_size / 2, position: 0, type: 'fly', offset: random(-10, 10)})
+                }
+
+                things.push({x: player_x, z: player_z + 100, position: 0, type: 'base'})
+            }
+
+            function sort_forest() {
+                things.sort((tree_1, tree_2) => tree_2.position - tree_1.position)
+            }
+
+            function resize() {
+                c.width = innerWidth
+                c.height = innerHeight
+
+                mouse_x = c.width / 2
+                mouse_y = c.height / 2
+            }
+
+            function start() {
+                document.body.style.background = '#fff'
+                document.body.style.margin = 0
+                document.body.style.overflow = 'hidden'
+                c.style.background = '#8ff'
+
+                forest()
+
+                resize()
+            }
+
+            function loop() {
+                sort_forest()
+                value += 0.04
+
+                ctx.fillStyle = '#000'
+                ctx.fillRect(0, 0, c.width, c.height)
+
+                if (!lose && !good && !win && !begin) {
+                    hover = []
+
+                    for (let i of things) {
+                        if (key.up) {
+                            i.z -= speed * Math.cos(look_horizontal * Math.PI / 180)
+                            i.x -= speed * Math.sin(look_horizontal * Math.PI / 180)
+                        }
+
+                        if (key.down) {
+                            i.z += speed * Math.cos(look_horizontal * Math.PI / 180)
+                            i.x += speed * Math.sin(look_horizontal * Math.PI / 180)
+                        }
+
+                        if (key.left) {
+                            i.z -= speed * Math.sin(look_horizontal * Math.PI / 180)
+                            i.x += speed * Math.cos(look_horizontal * Math.PI / 180)
+                        }
+
+                        if (key.right) {
+                            i.z += speed * Math.sin(look_horizontal * Math.PI / 180)
+                            i.x -= speed * Math.cos(look_horizontal * Math.PI / 180)
+                        }
+
+                        let z = Math.cos(look_vertical * Math.PI / 180) * (Math.sin(look_horizontal * Math.PI / 180) * (i.x - player_x) + Math.cos(look_horizontal * Math.PI / 180) * (i.z - player_z))
+
+                        i.position = z
+
+                        if (z > 0) {
+                            ctx.save()
+                            ctx.translate(c.width / 2, c.height / 2)
+                            ctx.scale(700 / z, 700 / z)
+
+                            let x = Math.cos(look_horizontal * Math.PI / 180) * (i.x - player_x) - Math.sin(look_horizontal * Math.PI / 180) * (i.z - player_z)
+                            let y = Math.sin(look_vertical * Math.PI / 180) * z * 5 + 45
+
+                            y -= 104
+
+                            if (i.type == 'base' && i.draw) {
+                                ctx.fillStyle = 'rgb(' + 5e4 / z + ', ' + 3e4 / z + ', ' + 1e4 / z + ')'
+                                ctx.fillRect(x - 5, y, 10, 100)
+                                ctx.fillStyle = 'rgb(0, ' + 4e4 / z + ', 0)'
+                                ctx.fillRect(x - 50, y, 100, -100)
+
+                                ctx.fillStyle = '#f00b'
+                                ctx.fillRect(x - 5, y, 10, 100)
+                                ctx.fillRect(x - 50, y, 100, -100)
+                            }
+                            
+                            if (i.type == 'man') {
+                                let v = Math.sin(value * 2) * 5
+
+                                ctx.fillStyle = 'rgb(0, ' + (3e4 / z) / 2.5 + ', ' + (5e4 / z) / 2.5 + ')'
+                                ctx.fillRect(x, y + 50 + v, 20, 50)
+                                ctx.fillStyle = '#fff'
+                                ctx.fillRect(x + 2, y + 52 + v, 7, 7)
+                                ctx.fillRect(x + 11, y + 52 + v, 7, 7)
+                                ctx.fillStyle = '#000'
+                                ctx.fillRect(x + 5, y + 65 + v, 10, 3)
+
+                                ctx.fillRect(x + 5, y + 56 + v, 3, 3)
+                                ctx.fillRect(x + 12, y + 56 + v, 3, 3)
+
+                                if ((mouse_x - c.width / 2) / (700 / z) > x &&
+                                    (mouse_x - c.width / 2) / (700 / z) < x + 20 &&
+                                    (mouse_y - c.height / 2) / (700 / z) > y + 50 &&
+                                    (mouse_y - c.height / 2) / (700 / z) < y + 100 && z < 300) {
+                                        hover.push(things.indexOf(i))
+
+                                        ctx.fillStyle = '#fffb'
+                                        ctx.fillRect(x, y + 50 + v, 20, 50)
+                                }
+                            }
+
+                            if (i.type == 'fly') {
+                                ctx.fillStyle = '#ff0'
+                                ctx.fillRect(x + Math.sin(value + i.offset) * 50, y + Math.cos(value + i.offset) * 50, i.offset / 2, i.offset / 2)
+                                i.z += i.offset / 5
+                            }
+
+                            if (i.type == 'tree') {
+                                ctx.fillStyle = 'rgb(' + 5e4 / z + ', ' + 3e4 / z + ', ' + 1e4 / z + ')'
+                                ctx.fillRect(x - 5, y, 10, 100)
+                                ctx.fillStyle = 'rgb(0, ' + 4e4 / z + ', 0)'
+                                ctx.fillRect(x - 50, y, 100, -100)
+                                ctx.fillStyle = '#0f09'
+                                ctx.fillRect(x + 2.5, y + 90, 5, 5)
+                                ctx.fillRect(x - 8, y + 95, 5, 5)
+                                ctx.fillRect(x + .3, y + 80, 5, 5)
+                                ctx.fillRect(x + 30, y + 95, 5, 5)
+                                ctx.fillStyle = '#0ff'
+                                ctx.fillRect(x + 50, y + 95, 5, 5)
+                            }
+
+                            ctx.restore()
+                        }
+
+                        if (i.type == 'man' && i.selected) {
+                            for (let n of things) {
+                                if (n.type == 'base') {
+                                    let dx = n.x - i.x
+                                    let dz = n.z - i.z
+
+                                    let angle = Math.atan2(dz, dx)
+
+                                    i.x += Math.cos(angle) * speed / 1.3
+                                    i.z += Math.sin(angle) * speed / 1.3
+
+                                    if (i.x > n.x - 50 - speed &&
+                                        i.x < n.x + 50 + speed &&
+                                        i.z > n.z - speed &&
+                                        i.z < n.z + speed) {
+                                            lose = true
+                                    }
+
+                                    if (player_x > n.x - 100 &&
+                                        player_x < n.x + 100 &&
+                                        player_z < n.z + 100 &&
+                                        player_z > n.z - 100) {
+                                            good = true
+                                    }
+                                }
+                            }
+                        }
+
+                        if (i.type != 'base') {
+                            if (i.x < -world_size / 2) i.x = world_size / 2
+                            if (i.x > world_size / 2) i.x = -world_size / 2
+                            if (i.z < -world_size / 2) i.z = world_size / 2
+                            if (i.z > world_size / 2) i.z = -world_size / 2
+                        }
+
+                        else {
+                            if (i.x < -world_size / 2 ||
+                                i.x > world_size / 2 ||
+                                i.z < -world_size / 2 ||
+                                i.z > world_size / 2)
+                                    i.draw = false
+                            else
+                                i.draw = true
+                        }
+                    }
+
+                    ctx.fillStyle = '#fff'
+                    ctx.fillRect(c.width / 2 - 21, c.height / 2 - 1, 41, 2)
+                    ctx.fillRect(c.width / 2 - 1, c.height / 2 - 21, 2, 41)
+                    ctx.fillStyle = '#000'
+                    ctx.fillRect(c.width / 2 - 20, c.height / 2, 41, 2)
+                    ctx.fillStyle = '#222'
+                    ctx.fillRect(c.width / 2, c.height / 2 - 20, 2, 41)
+                }
+
+                ctx.fillStyle = '#fff'
+                ctx.textAlign = 'left'
+                ctx.font = '3em arial'
+                ctx.fillText(found + ' / ' + people + ' found', 0, 14 * 3)
+
+                if (begin) {
+                    ctx.fillStyle = '#fff'
+                    ctx.textAlign = 'center'
+                    ctx.font = c.width / 100 + 'em monospace'
+                    ctx.fillText('44 Save All', c.width / 2 + Math.sin(value) * 50, c.height / 2)
+                    ctx.font = c.width / 200 + 'em monospace'
+                    ctx.fillText('Space to start', c.width / 2, c.height / 1.5)
+
+                    if (key.space) {
+                        begin = false
+                    }
+                }
+
+                if (lose) {
+                    ctx.fillStyle = '#fff'
+                    ctx.textAlign = 'center'
+                    ctx.font = c.width / 100 + 'em monospace'
+                    ctx.fillText('LOSE', c.width / 2, c.height / 2)
+                    ctx.font = c.width / 200 + 'em monospace'
+                    ctx.fillText('Space to restart', c.width / 2, c.height / 1.5)
+
+                    if (key.space) {
+                        lose = false
+                        look_horizontal = 0
+                        look_vertical = 0
+                        p = 0
+                        found = 0
+                        things = []
+                        ctx.textAlign = 'left'
+                        forest()
+                    }
+                }
+
+                if (good) {
+                    if (found < people) {
+                        ctx.fillStyle = '#fff'
+                        ctx.textAlign = 'center'
+                        ctx.font = c.width / 100 + 'em monospace'
+                        ctx.fillText('Good!', c.width / 2, c.height / 2)
+                        ctx.font = c.width / 200 + 'em monospace'
+                        ctx.fillText('Space to find more', c.width / 2, c.height / 1.5)
+
+                        if (key.space) {
+                            for (let i of things) {
+                                if (i.type == 'man' && i.selected) {
+                                    things.splice(things.indexOf(i), 1)
+                                }
+
+                                if (i.type == 'base') {
+                                    i.z -= 100
+                                }
+                            }
+                            look_horizontal = 0
+                            look_vertical = 0
+                            good = false
+                            ctx.textAlign = 'left'
+                        }
+                    }
+
+                    else 
+                        win = true
+                }
+
+                if (win) {
+                    ctx.fillStyle = '#fff'
+                    ctx.textAlign = 'center'
+                    ctx.font = c.width / 100 + 'em monospace'
+                    ctx.fillText('Well Done!', c.width / 2 + Math.sin(value) * 10, c.height / 2)
+                    ctx.font = c.width / 200 + 'em monospace'
+                    ctx.fillText('All the people were found!', c.width / 2, c.height / 1.5)
+                    ctx.fillText('Space to try again', c.width / 2, c.height)
+
+                    if (key.space) {
+                        win = false
+                        look_horizontal = 0
+                        look_vertical = 0
+                        p = 0
+                        found = 0
+                        things = []
+                        ctx.textAlign = 'left'
+                        forest()
+                    }
+                }
+
+
+                requestAnimationFrame(loop)
+            }
+
+            start()
+            loop()
+        </script>
+    </body>
+</html>

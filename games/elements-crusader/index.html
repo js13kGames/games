@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no" />
+	<title>Elements Crusader</title>
+	<style type="text/css">
+body {
+	margin: 0;
+	background-color: black;
+	color: white;
+	overflow: hidden;
+	width:100%;
+	height:100%;
+	text-align: center;
+}
+
+canvas {
+	width: 90%;
+	position: absolute;
+	top: 0;
+	right: 5%;
+	left: 5%;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	image-rendering: optimizeSpeed;
+	image-rendering: crisp-edges;
+    image-rendering: optimize-contrast;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+	</style>
+	<script src="jsfxr.js"></script>
+</head>
+<body>
+	<canvas id="s" width="640" height="360"></canvas>
+	<canvas id="p" width="640" height="360"></canvas>
+	<canvas id="t" width="640" height="360"></canvas>
+	<script src="player.js"></script>
+	<script src="music.js"></script>
+	<script src="code.js"></script>
+</body>
+</html>

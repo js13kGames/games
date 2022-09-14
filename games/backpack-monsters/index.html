@@ -1,0 +1,99 @@
+<html><head><title>Backpack Monsters - js13k 2019</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=monetization content=$coil.xrptipbot.com/5qQ651XPS3am9QvADZ7EgQ><style>body {
+		font-family: sans-serif;
+		text-align: center;
+		margin: 0;
+	}
+	#intro, #game { display: none; padding: 20px; margin-left: auto; margin-right: auto; max-width: 400px;}
+	#container {
+		position: relative;
+		display: inline-block;
+		min-height: 150px;
+		margin-top: 75px;
+	}
+	#location {
+		margin-bottom: 10px;
+		background-color: #555;
+		color: white;
+		position: fixed;
+		height: 25px;
+		width: 100%;
+		margin: 0; 
+		padding-top: 5px; 
+		top: 0;
+		left: 0;
+	}
+	#am {
+		margin-top: 5px;
+		height: 10px;
+		background-color: green;
+	}
+	#energyP {
+		border-bottom-left-radius: 20px;
+		right: 0;
+		width: 100px;
+		font-size: large;
+	}
+
+	#energyP, #bpp {
+		padding: 5px;
+		width: 70px;
+		height: 50px;
+		position: fixed;
+		background-color: #333;
+		color: white;
+		top: 0;
+	}
+
+	#energyP p, #bpp p {
+		margin: 2px;
+	}
+
+	#bpp {
+		font-size: small;
+		border-bottom-right-radius: 20px;
+		height: 70px;
+		left: 0;
+	}
+
+	#cmessage {
+		position: fixed;
+		left: 0; right:0; top: 60px;
+		padding-top: 10px;
+		font-style: italic;
+		background-color: green;
+		color: white;
+		height: 60px;
+		font-size: x-large;
+		display: none;
+	}
+	button {
+		margin: 5px;
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+	}</style><body onload=init()><script src=b.js></script><div id=loading><p>Loading Music...</p></div><div id=intro><h2>Backpack Monsters!</h2><p>Welcome to the world of Backpack Monsters!</p><p>Your goal is to collect the 151 different types of monsters.</p><p>Moving around and trying to catch a monster will consume your action points.</p><p>You will recover 1 Action Point every 20 seconds.</p><button onclick=start()>Start</button><p>An entry by <a href=https://slashie.net>Slashie</a> for #js13k 2019.</p><p>Graphics and Music contributions by Ryan Malm</p></div><div id=game><div id=container></div><div id=message></div><div id=buttons></div><div id=location></div><div id=energyP><div id=energyL></div><div id=am></div></div><div id=bpp onclick=bpm.backpack()><div id=bpo><svg height=50px width=50px viewbox="0 0 80 100" style=fill:#FFF><path d="M67.83,64.129c0.028-2.929,0.017-9.357-0.493-15.71c0.045,2.677,0.115,5.127,0.206,6.409
+		C67.594,55.563,67.706,59.413,67.83,64.129z"></path><path d="M43.334,9.037c0.087-2.058-0.024-4.262,1.72-4.136c0.837,0.061,2.279,0.274,4.063,0.631
+		c1.978,0.396,1.699,11.121,1.699,11.121l7.171,2.788c0.236-7.761-1.704-16.773-3.64-17.325c-3.244-0.925-8.005-2.854-12.736-1.819
+		c-3.161,0.691-4.007,12.296-4.007,12.296l5.532,1.449C43.136,14.042,43.194,12.33,43.334,9.037z"></path><path d="M9.969,48.267c1.165,0.431,3.085,1.064,5.358,1.777c1.699-4.705,4.58-8.294,4.58-8.294
+		s0.665-1.743,4.006-1.041c3.341,0.701,3.497,2.226,3.497,2.226s-2.164,3.508-4.268,8.236c-0.13,0.292-0.301,0.655-0.431,1.102
+		c5.297,1.544,10.415,2.911,11.887,3.045c2.897,0.265,10.174,0.583,11.557-6.42c1.364-6.911,2.714-11.127,3.864-13.759
+		c0.23-0.575,0.437-1.051,0.589-1.395c0.313-0.708,1.266-2.128,2.652-3.52c0-0.001,0-0.001,0-0.002
+		c0.004-0.01,0.01-0.015,0.018-0.017c1.852-1.85,4.472-3.642,7.397-3.631c0.154,0,0.342,0.019,0.551,0.051
+		c-1.721-1.914-3.682-3.544-5.77-4.349c-0.475-0.183-17.718-6.998-22.87-6.269c-0.148,0.021-0.286,0.041-0.419,0.06
+		c0.25-0.036,0.419-0.06,0.419-0.06S20.775,16.3,12.965,24.104c-4.08,4.076-7.662,11.388-9.911,18.414
+		C3.025,44.301,5.3,46.541,9.969,48.267z"></path><path d="M33.018,60.553c-2.322-0.426-6.635-1.608-11.232-2.967c-0.7,2.769-0.105,7.525-0.105,7.525
+		s-0.904,2.158-4.467,1.369c-3.036-0.674-2.958-2.865-2.958-2.865s-0.776-4.446-0.092-8.359c-4.376-1.378-8.094-2.615-9.462-3.14
+		c-1.646-0.63-2.833-1.508-3.688-2.489c-0.063,0.389-0.119,1.96-0.172,2.334C-2.26,74.053,4.178,83.567,4.634,85.576
+		c0.613,2.701,12.381,8.364,23.741,12.513c6.59,2.407,13.947,1.94,16.869,1.73l0.214-0.012c0.465-8.542,1.731-30.777,2.352-44.384
+		C46.826,60.419,38.577,61.571,33.018,60.553z"></path><path d="M67.83,64.129c-0.124-4.716-0.235-8.564-0.287-9.303c-0.091-1.28-0.161-3.73-0.206-6.408
+		c-0.455-5.656-1.913-11.727-3.16-14.882c-2.096-5.312-8.183,1.351-9.902,5.546c-1.78,4.344-3.465,54.419-3.629,59.383
+		c4.25-1.107,10.338-2.696,11.084-3.867c1.581-2.476,2.438-4.873,2.833-6.914c0.262-1.359,3.777-2.63,3.777-2.63
+		s-0.249-10.8-0.474-19.516l-0.062,0.23C67.804,65.77,67.821,65.169,67.83,64.129z"></path><path d="M83.415,42.354c0,0-0.901-10.732-1.105-12.818c-0.494-5.037-5.038-21.237-20.526-8.825l4.103,4.476
+		c0,0,10.496-9.432,10.892,13.042c0.033,1.902,0.159,4.559,1.303,20.549c1.266,17.679-5.648,17.777-5.648,17.777l0.312,7.518
+		c0,0,2.568-0.672,5.22-1.788c3.753-1.581,7.349-8.198,7.349-17.897C85.311,60.55,83.415,42.354,83.415,42.354z"></path><path d="M29.176,12.348l3.424-0.526V8.924l0.659-2.37c0,0-3.162,1.449-4.083,2.897
+		c-0.922,1.449-1.318,2.239-1.318,2.897C27.858,13.007,29.176,12.348,29.176,12.348z"></path></svg><p>Backpack</p></div><div id=backo style="display: none"><p>&lt; Back</p></div></div></div><div id=cmessage></div></body></head></html>

@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+  </head>
+  <body>
+   <a-scene >
+      <a-assets>
+        <a-mixin id="cube" geometry="primitive: box"></a-mixin>
+        <a-mixin id="green" material="color: green"></a-mixin>
+		<a-mixin id="blue" material="color: white"></a-mixin>
+		<img id="my-texture" src="theif.jpg">
+      </a-assets>
+
+      <a-entity id="game">
+        <a-entity position="0 2.2 4">
+          <a-entity camera look-controls >
+            <a-entity position="0 0 -3"
+                      geometry="primitive: ring; radiusOuter: 0.15;
+                                radiusInner: 0.09;"
+                      material="color:cyan; shader: flat"
+                      cursor="maxDistance: 30; fuse: true"> 
+  <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+               fill="backwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+
+
+        <a-sky color=black></a-sky>
+      
+        <a-entity id="intro" >
+          <a-text  id="IntroText" value="Captian!! After you hvae been in hibernation our planet was attacked by Thanos and our defences were destroyed.. So Tony this we need to get our people back and maintain global peace....Look at the box to start the revenge " color="red" position="-2 3 0" scale="1.5 1.5 1.5"></a-text>
+          <a-entity position="0 1 0" id="mapmenu">
+            <a-entity  id="mapmenu" mixin="cube green" onclick= cls();> </a-entity>
+          </a-entity>
+        </a-entity>
+       
+        <a-entity id="points">
+          <a-text  id="PointsText" value="Inmates lost" color="#BBB" position="-30 10 25" scale="30 30 30" rotation="0 90 0"></a-text>
+          <a-entity  id="Point"></a-entity>
+        </a-entity>
+
+        <a-entity id="room">
+          <a-entity id="cell">
+          	<a-entity id="front">
+	            <a-plane id="1"  height="10" width="10" position="-30 30 -28" opacity="0" onclick=shoot(1); ></a-plane>
+	            <a-plane id="2"  height="10" width="10" position="-10 30 -28" opacity="0" onclick=shoot(2); ></a-plane>
+	            <a-plane id="3"  height="10" width="10" position="10 30 -28" opacity="0" onclick=shoot(3); ></a-plane>
+	            <a-plane id="4"  height="10" width="10" position="30 30 -28" opacity="0" onclick=shoot(4); ></a-plane>
+	            <a-plane id="5"  height="10" width="10" position="-30 10 -28" opacity="0" onclick=shoot(5); ></a-plane>
+	            <a-plane id="6"  height="10" width="10" position="-10 10 -28" opacity="0" onclick=shoot(6); ></a-plane>
+	            <a-plane id="7"  height="10" width="10" position="10 10 -28" opacity="0" onclick=shoot(7); ></a-plane>
+	            <a-plane id="8"  height="10" width="10" position="30 10 -28" opacity="0" onclick=shoot(8); ></a-plane>
+          	</a-entity>
+          	<a-entity id="right">
+	            <a-plane id="9"  height="10" width="10" position="40 25 -10" opacity="0" onclick=shoot(9); rotation="0 270 0"></a-plane>
+	            <a-plane id="10"  height="10" width="10" position="40 25 10" opacity="0" onclick=shoot(10); rotation="0 270 0"></a-plane>
+	            <a-plane id="11"  height="10" width="10" position="40 25 30" opacity="0" onclick=shoot(11); rotation="0 270 0"></a-plane>
+	            <a-plane id="12"  height="10" width="10" position="40 25 50" opacity="0" onclick=shoot(12); rotation="0 270 0"></a-plane>
+	            <a-plane id="13"  height="10" width="10" position="40 10 50" opacity="0" onclick=shoot(13); rotation="0 270 0"></a-plane>
+	            <a-plane id="14"  height="10" width="10" position="40 10 30" opacity="0" onclick=shoot(14); rotation="0 270 0"></a-plane>
+	            <a-plane id="15"  height="10" width="10" position="40 10 10" opacity="0" onclick=shoot(15); rotation="0 270 0"></a-plane>
+	            <a-plane id="16"  height="10" width="10" position="40 10 -10" opacity="0" onclick=shoot(16); rotation="0 270 0"></a-plane>
+          	</a-entity>
+          	<a-entity id="left">
+	            <a-plane id="17"  height="10" width="10" position="-40 25 -10" opacity="0" onclick=shoot(17); rotation="0 90 0"></a-plane>
+	            <a-plane id="18"  height="10" width="10" position="-40 25 10" opacity="0" onclick=shoot(18); rotation="0 90 0"></a-plane>
+	            <a-plane id="19"  height="10" width="10" position="-40 25 30" opacity="0" onclick=shoot(19); rotation="0 90 0"></a-plane>
+	            <a-plane id="20"  height="10" width="10" position="-40 25 50" opacity="0" onclick=shoot(20); rotation="0 90 0"></a-plane>
+	            <a-plane id="21"  height="10" width="10" position="-40 10 50" opacity="0" onclick=shoot(21); rotation="0 90 0"></a-plane>
+	            <a-plane id="22"  height="10" width="10" position="-40 10 30" opacity="0" onclick=shoot(22); rotation="0 90 0"></a-plane>
+	            <a-plane id="23"  height="10" width="10" position="-40 10 10" opacity="0" onclick=shoot(23); rotation="0 90 0"></a-plane>
+	            <a-plane id="24"  height="10" width="10" position="-40 10 -10" opacity="0" onclick=shoot(24); rotation="0 90 0"></a-plane>
+          	</a-entity>
+          	<a-entity id="behind">
+	            <a-plane id="25"  height="10" width="10" position="25 25 60" opacity="0" onclick=shoot(25); rotation="0 180 0"></a-plane>
+	            <a-plane id="26"  height="10" width="10" position="5 25 60" opacity="0" onclick=shoot(26); rotation="0 180 0"></a-plane>
+	            <a-plane id="27"  height="10" width="10" position="-15 25 60" opacity="0" onclick=shoot(27); rotation="0 180 0"></a-plane>
+	            <a-plane id="28"  height="10" width="10" position="-35 25 60" opacity="0" onclick=shoot(28); rotation="0 180 0"></a-plane>
+	            <a-plane id="29"  height="10" width="10" position="-35 10 60" opacity="0" onclick=shoot(29); rotation="0 180 0"></a-plane>
+	            <a-plane id="30"  height="10" width="10" position="-15 10 60" opacity="0" onclick=shoot(30); rotation="0 180 0"></a-plane>
+	            <a-plane id="31"  height="10" width="10" position="5 10 60" opacity="0" onclick=shoot(31); rotation="0 180 0"></a-plane>
+	            <a-plane id="32"  height="10" width="10" position="25 10 60" opacity="0" onclick=shoot(32); rotation="0 180 0"></a-plane>
+	            <a-plane id="33"  height="10" width="5" position="-4 -7.5 60" opacity="0" onclick=shoot(33); rotation="0 180 0"></a-plane>
+          	</a-entity>
+          </a-entity>
+            <a-plane color="black" height="60" width="100" position="0 15 -30" opacity="1" rotation="0 0 0"></a-plane>
+            <a-plane id="right" color="black" height="60" width="100" position="50 15 20" opacity="1" rotation="0 270 0"></a-plane>
+            <a-plane id="left" color="black" height="60" width="100" position="-50 15 20" opacity="1" rotation="0 90 0"></a-plane>
+            <a-plane id="behind" color="black" height="60" width="100" position="-0 15 70" opacity="1" rotation="0 180 0"></a-plane>
+            <a-plane color="black" height="350" width="250" position="0 -40 0" opacity="1" rotation="-90 0 0"></a-plane>
+
+
+        </a-entity>
+        <a-entity id="bullet"></a-entity>
+        <a-entity id="lostPrison"></a-entity>
+    </a-scene>
+    <script src="pingpong.js"></script>
+
+  </body>
+</html>

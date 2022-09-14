@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DISCONNECTED</title>
+<meta charset=utf-8>
+<style type=text/css>html{background-color:black;color:white;font-family:Lucida Console}body{margin:30px auto 0;width:820px}#canvasHolder{width:600px;height:600px;cursor:crosshair;overflow:hidden;float:left;background-color:#6b4e10}#canvas{position:relative}#GUI{float:right;width:200px}.stat{font-size:12px;font-weight:bold;color:#3cec33;text-transform:uppercase;line-height:30px;padding:5px 10px;background-color:#2b2b2b;margin-bottom:10px}.amount{font-size:20px;float:right;border-left:2px solid #333;padding-left:10px;margin-left:30px;color:white}#maxHealth{font-size:14px;color:#666;font-weight:bold}#pause{background-color:#909090;color:white;font-size:24px;text-align:center}#msg{display:inline-block;font-size:14px;line-height:30px}.info{display:none;width:100%;height:100%;position:fixed;top:0;left:0;background-color:black;text-align:center;line-height:30px;padding-top:100px;opacity:.7;filter:alpha(opacity=70)}.info h1{border:2px dashed white;width:50%;margin:0 auto 30px;padding:20px}.info strong{background-color:#333;padding:2px}.start{width:20%;box-shadow:3px 3px #666;padding:10px;margin:auto;background-color:#111;margin-top:60px;font-weight:bold;text-transform:uppercase}</style>
+</head>
+<body>
+<noscript>Please enable javascript.</noscript>
+<div id=canvasHolder>
+<canvas id=canvas width=1200 height=1200>Your browser does not support HTML5 canvas element.</canvas>
+</div>
+<div id=GUI>
+<div class=stat>
+Health
+<span class=amount><span id=health>-</span><span id=maxHealth>/-</span>
+</div>
+<div class=stat>
+Traps
+<span class=amount id=traps>-</span>
+</div>
+<div class=stat>
+Bullets
+<span class=amount id=bullets>-</span>
+</div>
+<div class=stat>
+Carrying
+<span class=amount id=carry>&#x2611;</span>
+</div>
+<div class=stat>
+Batteries
+<span class=amount id=batteries>-</span>
+</div>
+<div id=msg>
+Made by Maarten F.<br>JS13kGames 2018
+</div>
+</div>
+<div class=info id=start>
+<h1>Welcome to DISCONNECTED!</h1>
+<h2>What to do?</h2>
+<p>Shoot enemies and bring all the drone's batteries to the helipad to get <br>it back online.</p>
+<h2>How to play?</h2>
+<p>Use <strong>z, q, d, s</strong> or <strong>arrow keys</strong> to move, <strong>left click</strong> to shoot and <br><strong>right click</strong> to place traps (for tank drones). You lose a battery if you're <br>carrying one and an enemy shoots you. Walk over an ammobox, medkit or <br>battery to pick it up.</p>
+<p class=start>Click to start</p>
+</div>
+<div class=info id=gameOver>
+<h1>Game Over!</h1>
+<p>You have no health left. Thank you for playing. :)</p>
+<p class=start>Refresh to restart.</p>
+</div>
+<script type=text/javascript src=script.js></script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Peasant</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+<body>
+<style>
+*
+{
+    font-family: courier
+}
+#player
+{
+    animation: playerFlip 2s infinite;
+    -webkit-animation:  playerFlip 2s infinite; 
+}
+@keyframes playerFlip
+{
+
+    1% {color:#610B0B}
+    49% {color:#610B0B}
+    50% {color:#FF0000}
+    100% {color:#FF0000}
+}
+@-webkit-keyframes playerFlip
+{
+
+    1% {color:#610B0B}
+    49% {color:#610B0B}
+    50% {color:#FF0000}
+    100% {color:#FF0000}
+}
+</style>
+<script>
+addEventListener("keypress", function (e)
+{
+    if (e.keyCode == 49)
+    {
+        choose(1);
+    }
+    if (e.keyCode == 50)
+    {
+        choose(2);
+    }
+    if (e.keyCode == 51)
+    {
+        choose(3);
+    }
+    else
+    return;
+})
+var eventQueue = [];
+var adjectives = [" Sullen"," Smelly","n Arrogant","n Ugly"," Shady"," Conspicuous"," Drunken"," Confused",
+                  " Pitiful"," Flea-bitten"," Contemptuous"," Shrunken"," Stalwart"," Poor example of a",
+                  " Sad excuse for a", " Pathetic", "n Accursed", "n Infernal", "n Idiotic", "n Insufferable",
+                  " Gigantic", " Godless", " Fanatical", " Rabid", " Relentless", "n Unkind", "n Indifferent",
+                  " Shambling", "n Artless", " Bawdy", " Churlish", " Craven", " Fool-born", " Goatish", " Half-witted",
+                  "n Ill-bred", " Lousy", " Lumpish", " Maggot-infested", " Milk-livered", " Pasty", " Brackish", " Roughish",
+                  " Roguish"," Rump-fed", " Ruttish", " Saucy", " Sultry", " Surly", " Termagant", " Wayward", " Whey-faced",
+                  " Foppish", " Conceited", " Surprisingly buff", " Crippled", " Haggard", " Low-born", " Muddy", " Pestilent",
+                  " Gluttonous", " Classless", " Pious", " Irritating", " Battle-scarred", " Haunted", " Ghostly", " Zombified",
+                  " Poorly made ascii representation of a"];
+var names = ["Grok", "Glom", "Tord", "Flan", "Brick", "Ponce", "Chump", "Rock", "Slurb", "Plob", "Zork", "Blurst", "Clob", ];
+function Event()
+{
+    this.title = 'defaultTitle';
+    this.char = 'e';
+    this.chance = 0.0;
+    this.adjective = randFromArray(adjectives);
+    this.c1 = ['choice 1', ['r1','r2','r3']];
+    this.c2 = ['choice 2', ['r1','r2','r3']];
+    this.c3 = ['choice 3', ['r1','r2','r3']];
+}
+Event.prototype.description = function()
+{
+    return 'A' +this.adjective +' '+ this.title + ' approaches!';
+}
+var morning = new Event();
+morning.title = 'Morning';
+morning.description = function(){return 'The sun rises and you have a moment to....';};
+morning.c1 = ['plant crop', "plant()"];
+morning.c2 = ['harvest crop', "harvest()"];
+morning.c3 = ['make gruel', "makeGruel()"];
+
+var nightChoice = new Event();
+nightChoice.title = 'Night';
+nightChoice.description = function(){return 'The sun sets on another miserable day.  In the twilight hours, you....';};
+nightChoice.c1 = ['sleep', 'player.exhausted = false;'];
+nightChoice.c2 = ['make gruel', "makeGruel(); player.exhausted = true;"];
+nightChoice.c3 = ['stand guard', "guard(); player.exhausted = true;"];
+
+var knight = new Event();
+knight.title = 'Knight';
+knight.c1 = ['Ignore him',
+             [['The Knight calmly loots your house.  Finding nothing of value, he begrudingly takes a portion of your GRUEL.',4,-2,2,1],
+              ['The Knight seems to look right through you.  A perk of being the lowest member of society',1,1],
+              ['The Knight is outraged by nothing whatsoever and rampages through your farm.',2,-1]]
+             ];
+knight.c2 = ['Feed him',
+             [['The Knight pulls out some roast lamb and honeyed bread.  He leaves you to your GRUEL.',0,0],
+              ['The Knight happily accepts your hospitality. What a standup guy!',2,1,4,-2],
+              ['Revolted by the mud present in your GRUEL, the knight purges the land of your culinary creation.',4,-4]]
+             ];
+knight.c3 = ['Give him a kid',
+             [['The Knight callenges your eldest to single combat... and heroically defeats your son!',3,-1],
+                ['The Knight accepts your child as his paige. He gives you every asurance your son will die in battle!', 3,-1],
+                ['The knight accepts your offer and then graciously "trades" it back for your CROP...',5,-1]]
+             ];
+
+var wolves = new Event();
+wolves.title = 'Pack of wolves';
+wolves.c1 = ['Hide from the pack',
+             [['The wolves are distracted by the plump children of your smarty pants neighbor!',0,0],
+             ['The pack finds nothing of interest and seems generally disgusted with your living conditions.',0,0],
+             ['The pack discovers your GRUEL hoard and ravages 5 of your food like substance.',4,-5]]
+             ];
+wolves.c2 = ['Pray for a miracle',
+             [['Intimidated by the depth of your faith, the wolves flee howling.',1,1],
+             ['The wolves bring a feral child to your doorstep.',3,1],
+             ['Knights arrive and fight off the wolves with flaming torches!  Which would have been great if they didnt light your fields on fire!',5,-1]]
+             ];
+wolves.c3 = ['Fight them off',
+             [['You battle the wolves to a standstill! You stare at one another akwardly until they cut their losses and head back into the forest.',0,0],
+             ['In a bloody rampage you kill two wolves.  Hmm what does wolf taste like...',4,3],
+             ['Two of your shabby family are taken by the wolves. Fighting feral creatures without proper tactics and equipment was a bad choice.',3,-2]]
+             ];
+var monk = new Event();
+monk.title = 'Monk';
+monk.c1 = ['Turn him away',
+           [['The monk continues on, not realizing what he thought was a large dirty rock was actually a dwelling.',0,0],
+           ["Uh oh that's no Monk, it's a Sorcerer! He casts merlf's acid arrow. Direct hit! Your face is permanently disfigured.",1,2],
+           ['The Monk finds your lack of faith disturbing. He summons a plague of locusts to destroy your crops. The locusts immediately move on to your neighbors crops and gorge themselves',1,1,5,-1]]
+           ];
+monk.c2 = ['Invite him inside',
+           [["This Monk seems shifty. In the morning you realize he stole your familly's one shared fork.",0,0],
+           ['After an awkard line of questioning you realize you and your family are participating in an inquisition! Hurrah!',1,1,2,2],
+           ["Now that he's inside, you realize this is one fat monk. While breaking bread, he breaks the bench he's sitting on. Spilling the gruel. He'll need a refill.",4,-2]]
+           ];
+monk.c3 = ['Pray Feverishly',
+           [["The Monk tells you there's more to life than just praying dude. You take a moment to reflect on the nature of existence.",1,2],
+           ['Pleased by your devotion, the Monk tosses you a sack of potatoes. Hobbled by a life of backbreaking work, you miss the potatoes and they fall down a well.',0,0],
+           ["While praying you fail to notice a bear creeping into your house. You lose a son.",3,-1]]
+           ];
+var king = new Event();
+king.title = 'King';
+king.c1 = ["Hide from the King's Wrath",
+           [["You are honored with a merciless beating!",0,0 ],
+            ["The King's horses have deficated all over your farm! That poop is as good as gold! well not really but here are some crops.",5,1],
+            ["Unaware of your existence king and his army ride over some of your family.",3,-2]]
+           ];
+king.c2 = ["Bring your Family oustide to Cheer for your Noble King",
+           [['Your daughter cleans up nice! The King demands she join his royal court.',2,1,3,-1],
+            ['Your King Demands you pay tribute. You bring a bushel of your finest crop.',5,-1],
+            ['Your Son misses a step in your rehearsed "Praise the King" dance routine. But some quick thinking alows you to improvise it into a tasteful tribute to the Lord.',1,1,2,1]]
+           ];
+king.c3 = ["Lecture the King on the merits of a narco syndicalist commune",
+           [['You are quartered by the King','killPlayer'],
+            ['You are beheaded by the King','killPlayer'],
+            ['You are immolated by the King','killPlayer']]
+           ];
+var barber = new Event();
+barber.title = 'Barber'
+barber.c1 = ["Wave as he passes",
+           [['The Barber waves back. What a pleasant exchange.',0,0],
+            ["The Barber hands you a used scroll extolling the virtues of the chrurch. If you could read you'd be truley inspired, but you get the idea from the cover art.",1,1],
+            ["The Barber mistakes your friendly act as a rude guesture. When you're not looking he sets fire to your crops.",5,-1]]
+           ];
+barber.c2 = ["Invite the barber in.",
+           [['Oops, did we say Barber? We meant Barbarian! He ransacks your home and runs through one of your children.',1,1,3,-1],
+            ["The 'Barber' offers you a bag of strange looking meat.. Oh well food is food!",4,2],
+            ["The Barber notices you are looking a little under the weather. His offer of a free bleeding goes horribly wrong, leaving your family one child lighter",3,-1]]
+           ];
+barber.c3 = ["Fight him off",
+           [['The Barber takes pitty on your attempts to harm him and tells the King of your bravery.  After beating you mercillesly of course.',2,1],
+            ["The Barber takes one of your children as his bride to be.  You are powerless to stop him!",3,-1,1,1],
+            ["The Barber mistakes your friendly act as a rude guesture. When you're not looking he sets fire to your crops.",5,-1]]
+           ];
+
+var dayEvents = [knight, wolves, monk, king, barber];
+var nightEvents = [wolves, knight, monk, barber];
+function Peasant()
+{
+    this.name = 'Peasant';
+    this.hunger = 5;
+    this.church = 0;
+    this.king = 0;
+    this.attitude;
+    this.exhausted = false;
+}
+var player = new Peasant();
+
+function Farm()
+{
+    this.crop = 1;
+    this.gruel = 5;
+    this.time = 0;
+    this.children = 1;
+    this.field = []; //an array of ints, counting down to when the plant rots.
+    this.maxField = 3;
+}
+Farm = new Farm;
+function randFromArray(arr)
+{
+    return arr[Math.floor(Math.random()*arr.length)];
+}
+function makeGruel()
+{
+    console.log(Farm.crop);
+    if (Farm.crop < 1)
+    {
+        say("You don't have enough CROP to make GRUEL, so you set some mud aside to eat later.  You still call it GRUEL because that makes you feel better about eating mud.");
+        statUp(4,1);
+        return
+    }
+    else if (player.exhausted)
+    {
+            say("You're tired, so you accidentally burn some of the GRUEL. It's somehow even less edible than mud.");
+            statUp(5,-1);
+            statUp(4,5);
+            return;
+    }
+    else
+    {
+        say("You use one of your CROP to make some of your world famous GRUEL.  By 'world famous', you mean 'vile'.");
+        statUp(4,10);
+    }
+    
+}
+function plant()
+{
+    if (Farm.field.length >= Farm.maxField)
+    {
+        say("Your field is full of CROP, so you harvest one of them instead.");
+        harvest();
+        return
+    }
+    if (player.exhausted)
+    {
+        say("You're tired, so you do a really bad job tilling the field.  That's going to take some time to grow.");
+        Farm.field.push(30);
+    }
+    else
+    {
+        say("You plant a CROP in your field.  Maybe you'll live to see it grow into something beautiful.  Probably not.");
+        Farm.field.push(Math.floor(Math.random()*5)+15);
+    }
+}
+function harvest()
+{
+    if (Farm.field.length == 0)
+    {
+        say("There are no CROP growing in your field, so you spend some time screaming hopelessly at the dirt. Then you plant something.");
+        plant();
+    }
+    else
+    {
+        var min = Math.min.apply(null,Farm.field);
+        if(min <= 14)
+        {
+            Farm.field.splice(Farm.field.indexOf(min),1);
+            say("You harvest a CROP!");
+            statUp(5,1);
+            for (var c = 0;c< Farm.field.length;c++)
+            {
+                    var h = Farm.field[c];
+                    if (h <= 3 && h > 0)
+                    {
+                            document.getElementById('crop'+c).innerHTML = '#';
+                            document.getElementById('crop'+c).style.color = '#663300';
+                    }
+                    else if(h < 8)
+                    {
+                            document.getElementById('crop'+c).innerHTML = '#';
+                            document.getElementById('crop'+c).style.color = '#CCCC33';
+                    }
+                    else if( h <= 14 )
+                    {
+                            document.getElementById('crop'+c).innerHTML = '#';
+                            document.getElementById('crop'+c).style.color = '#00FF00';
+                    }
+                    else
+                    {
+                            document.getElementById('crop'+c).innerHTML = '&#160';
+                    }
+            }
+        }
+        else
+        {
+            say("None of your CROP are ready for harvest.");
+        }
+        
+    }
+}
+function guard()
+{
+    say('You guard your worthless hovel instead of sleeping, so nothing bad happens tonight.');
+    eventQueue.shift();
+}
+function say(text)
+{
+    if (text == "")
+    {
+        return;
+    }
+    document.getElementById('eventTextbox').innerHTML += "<br> > " +text;
+    var objDiv = document.getElementById("eventTextbox");
+    objDiv.scrollTop = objDiv.scrollHeight;
+}
+var gameOver = false;
+function killPlayer()
+{
+	if(Farm.children <= 0)
+	{
+		say('You and your whole family are dead.  GAME OVER');
+                document.getElementById('attitude').innerHTML = "ATTITUDE:<br>&#160 &#160 ###<br>&#160 #x &#160 x#<br>&#160 # . &#160 #<br>&#160 &#160 ###"
+		gameOver = true;
+	}
+	else
+	{
+		--Farm.children;
+		var son = new Peasant;
+		son.name = randFromArray(names) + ' son of ' +player.name;
+		document.getElementById('name').innerHTML = son.name;
+                player = son;
+		say('You died.  You are now ' + player.name);
+	}
+}
+function statUp(stat,amt)
+{
+    var sign = '';
+    if (amt == 0)
+    {
+        return;
+    }
+    else if (amt > 0)
+    {
+        sign = '+';
+    }
+    else if (amt < 0)
+    {
+        sign = '-';
+    }
+    var amtStr = Math.abs(amt);
+    switch (stat)
+    {
+        case 1:
+            player.church +=amt;
+            if (player.church < 0)
+            {
+                player.church = 0;
+            }
+            document.getElementById('eventTextbox').innerHTML += "<div style = 'color:#FF00FF;'> " + sign + amtStr + '&#167HAMELITUDE</div>';
+            if (player.church >= 15)
+            {
+                say("Your &#167HAMELITUDE is the highest in all the land.  Nobody grovels like you!  GAME OVER")
+                gameOver = true;
+            }
+            break;
+        case 2:
+            player.king +=amt;
+            if (player.king < 0)
+            {
+                player.king = 0;
+            }
+            document.getElementById('eventTextbox').innerHTML += "<div style = 'color:#FFFF00;'> " + sign + amtStr + '&#937PRESSION</div>';
+            if (player.king >=15)
+            {
+                say("Your &#937PRESSION knows no bounds.  Since you're his favorite peon, the King beheads you last.  GAME OVER")
+                gameOver = true;
+            }
+            break;
+        case 3:
+            Farm.children +=amt;
+            if (Farm.children < 0)
+            {
+                say('You have no children.  They take you instead.');
+                killPlayer();
+            }
+            document.getElementById('eventTextbox').innerHTML += "<div style = 'color:#00FFFF;'>" +sign + amtStr + '&#1043AMLINESS</div>';
+            if (Farm.children >=15)
+            {
+                say("Holy crap you have a lot of kids.  Yay?  GAME OVER");
+                gameOver = true;
+            }
+            break;
+        case 4:
+            Farm.gruel +=amt;
+            if(Farm.gruel < 0)
+            {
+                Farm.gruel = 0;
+            }
+            document.getElementById('eventTextbox').innerHTML += "<div style = 'color:#00FF00;'>" +sign + amtStr + ' GRUEL</div>';
+            break;
+        case 5:
+            document.getElementById('eventTextbox').innerHTML += "<div style = 'color:#FF0000;'>" +sign + amtStr + ' CROP</div>';
+            Farm.crop +=amt;
+            if (Farm.crop < 0)
+            {
+                Farm.crop = 0;
+            }
+            break;
+        
+    }
+
+}
+function advance()
+{
+    if (!gameOver)
+	{
+		currentEvent = eventQueue.shift();
+		if (!currentEvent)
+		{
+			enqueueFullDay();
+			currentEvent = eventQueue.shift();
+		}
+		say(currentEvent.description());
+		//advance time
+		document.getElementById('c1').innerHTML = currentEvent.c1[0].toUpperCase();
+		document.getElementById('c2').innerHTML = currentEvent.c2[0].toUpperCase();
+		document.getElementById('c3').innerHTML = currentEvent.c3[0].toUpperCase();
+		document.getElementById('gruel').innerHTML = "GRUEL: " +Farm.gruel;
+		document.getElementById('crop').innerHTML = "CROP: " +Farm.crop;
+		document.getElementById('shame').innerHTML = "&#167HAMELITUDE: "
+		document.getElementById('opression').innerHTML = "&#937PRESSION: "
+		document.getElementById('folksiness').innerHTML = "&#1043AMLINESS: "
+		for (var i =0;i<player.church;i++)
+		{
+			document.getElementById('shame').innerHTML += '+';
+		}
+		for (var j =0;j<player.king;j++)
+		{
+			document.getElementById('opression').innerHTML += '+';
+		}
+		for (var k =0;k<Farm.children;k++)
+		{
+			document.getElementById('folksiness').innerHTML += '+';
+		}
+		for (var c = 0;c< Farm.field.length;c++)
+		{
+			var h = Farm.field[c];
+			if (h <= 3 && h > 0)
+			{
+				document.getElementById('crop'+c).innerHTML = '#';
+				document.getElementById('crop'+c).style.color = '#663300';
+			}
+			else if(h < 8)
+			{
+				document.getElementById('crop'+c).innerHTML = '#';
+				document.getElementById('crop'+c).style.color = '#CCCC33';
+			}
+			else if( h <= 14 )
+			{
+				document.getElementById('crop'+c).innerHTML = '#';
+				document.getElementById('crop'+c).style.color = '#00FF00';
+			}
+			else
+			{
+				document.getElementById('crop'+c).innerHTML = '&#160';
+			}
+		}
+	}
+}
+function enqueueFullDay()
+{
+    if (player.exhausted) {
+        document.getElementById('attitude').innerHTML = "ATTITUDE:<br>&#160 &#160 ###<br>&#160 #- &#160 -#<br>&#160 # o &#160 #<br>&#160 &#160 ###<br>EXHAUSTED"
+    }
+    if (Farm.gruel >= Farm.children +1)
+    {
+        Farm.gruel -=Farm.children +1
+        player.hunger = 5;
+        document.getElementById('attitude').innerHTML = "ATTITUDE:<br>&#160 &#160 ###<br>&#160 #Q &#160 Q#<br>&#160 # &#9697 &#160 #<br>&#160 &#160 ###"
+    }
+    else
+    {
+        say("You don't have enough GRUEL to feed your family.  You are hungry.")
+        --player.hunger;
+        document.getElementById('attitude').innerHTML = "ATTITUDE:<br>&#160 &#160 ###<br>&#160 #Q &#160 Q#<br>&#160 # o &#160 #<br>&#160 &#160 ###<br>HUNGRY"
+    }
+    if (player.hunger < 3)
+    {
+        say("You are starving.")
+        document.getElementById('attitude').innerHTML = "ATTITUDE:<br>&#160 &#160 ###<br>&#160 #Q &#160 Q#<br>&#160 # @ &#160 #<br>&#160 &#160 ###<br>STARVING"
+    }
+    if(player.hunger <=0)
+    {
+        say("You starved to death.");
+        killPlayer();
+    }
+    
+    eventQueue.push(morning);
+    var dayEvent = randFromArray(dayEvents);
+    dayEvent.adjective = randFromArray(adjectives);
+    eventQueue.push( dayEvent );
+    eventQueue.push(nightChoice);
+    var nightEvent = randFromArray(nightEvents);
+    nightEvent.adjective = randFromArray(adjectives);
+    eventQueue.push( nightEvent );
+    console.log('queue:');
+    console.log(eventQueue);
+    console.log('endqueue');
+    console.log(Farm.field);
+    for(var i = 0; i < Farm.field.length; i++)
+    {
+        Farm.field[i] -= 1;
+        if (Farm.field[i] <= 0 )
+        {
+            document.getElementById('crop'+i).innerHTML = '';
+            Farm.field.splice(i,1);
+            say('One of your CROP has rotted in the field!  You should harvest them sooner.');
+        }
+    }
+    //advance road
+}
+function choose(choice)
+{
+    if (gameOver)
+    {
+        say('You and your family are dead.  Reload to start over.');
+    }
+    else if (typeof currentEvent != 'undefined')
+    {
+        var e = currentEvent;
+        console.log(e.c1[1]);
+        console.log(e.c2[1]);
+        console.log(e.c3[1]);
+        var results = null;
+        switch (choice)
+        {
+            case 1:
+                (typeof e.c1[1] == 'string' ? eval(e.c1[1]) : results = randFromArray(e.c1[1]));
+                break;
+            case 2:
+                (typeof e.c2[1] == 'string' ? eval(e.c2[1]) : results = randFromArray(e.c2[1]));
+                break;
+            case 3:
+                (typeof e.c3[1] == 'string' ? eval(e.c3[1]) : results = randFromArray(e.c3[1]));
+                break;
+            default:
+                console.log('invalid choice, what have you done');
+                break;
+        }
+        if (results !=null)
+        {
+            say(''+results[0]);
+            if (results[1] == 'killPlayer') {
+                killPlayer();
+            }
+            else
+            {
+                statUp(results[1],results[2]);
+                if (results[3] && results[4])
+                {
+                    statUp(results[3],results[4]);
+                }
+            }    
+        }
+        advance();
+        
+    }
+    
+    else
+    {
+        advance();    
+    }
+}
+</script>
+<div id = 'masterDiv' style="position:absolute;width:100%;height:100%;background-color:#000000";>
+    <div id = 'time' style = "display:none;position:absolute;left:26%;top:1%;color:#FFFFFF">-------&#9728------- NOON</div>
+    <div id = 'farm' style = "position:absolute;top:5%;left:26%;width:14%;height:27%;background-color:inherit;">
+        <div id = 'farmBG' style="position:absolute;color:#663300;">
+            ______________________
+            <br>
+            |*********************|
+            <br>
+            |*********************|
+            <br>
+            |*********************|
+            <br>
+            |*********************|
+            <br>
+            |*********************|
+        </div>
+        <div id = 'crops' style = "position:absolute;top:50%;left:5%;width:100%;height:100%;font-size: 150%;">
+            <div id = 'crop0' style = "position:absolute;top:0%;left:0%;"></div>
+            <div id = 'crop1' style = "position:absolute;top:0%;left:25%;"></div>
+            <div id = 'crop2' style = "position:absolute;top:0%;left:50%;"></div>
+        </div>
+    </div>
+    
+    <div id = 'player' style = "position:absolute;left:28%;top:26%;color:red;">@</div>
+    <div id = 'eventTextbox' style = "position:absolute;height:93%;width:24%;top:5%;left:1%;color:#FFFFFF;background-color:inherit;overflow-y: scroll">
+        > You are Peasant.  First of your family line.  It's not important how you got here.
+        <br>
+    </div>
+    <div id = 'road' style = "display:none;position:absolute;left:26%;top:23%;width:2%;height:56%;color:#999999;overflow: hidden;">
+        =
+        <br>
+        K
+        <br>
+        =
+        <br>
+        W
+        <br>
+        =
+        <br>
+        E
+        <br>
+        =
+        <br>
+        &#937
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+        <br>
+        =
+    </div>
+    <div id = 'choice 1' onclick = "choose(1);" style = "position:absolute;left:32%;top:60%;height:25%;width:10%;color:#FFFFFF;background-color:inherit;border-style: solid;border-color:#ff0000;">
+        &#160 > Choice (1)
+        <br>
+        <div id = 'c1' style = "position:absolute;left:1%;"></div>
+    </div>
+    <div id = 'choice 2' onclick = "choose(2);" style = "position:absolute;left:46%;top:60%;height:25%;width:10%;color:#FFFFFF;background-color:inherit;border-style: solid;border-color:#00ff00;">
+        &#160 > Choice (2)
+        <br>
+        <div id = 'c2' style = "position:absolute;left:1%;"></div>
+    </div>
+    <div id = 'choice 3' onclick = "choose(3);" style = "position:absolute;left:60%;top:60%;height:25%;width:10%;color:#FFFFFF;background-color:inherit;border-style: solid;border-color:#0000ff;">
+        &#160 > Choice (3)
+        <br>
+        <div id = 'c3' style = "position:absolute;left:1%;"></div>
+    </div>
+    <div id = 'stats' style = "position:absolute;left:50%;top:5%;height:50%;width:30%;border-style:solid;border-color:#999999;">
+        <div id = 'name' style="position:absolute;left:2%;top:1%;color:#FFFFFF;text-wrap: normal">Peasant</div>
+        <div id = 'attitude' style = "position:absolute;left:73%;top:1%;color:#FFFFFF;">
+            ATTITUDE:
+            <br>
+            &#160 &#160 ###
+            <br>
+            &#160 #Q &#160 Q#
+            <br>
+            &#160 # &#9697 &#160 #
+            <br>
+            &#160 &#160 ###
+        </div>
+        <div id = 'shame' style = "position:absolute;left:5%;top:30%;color:#FF00FF;">&#167HAMELITUDE +++++</div>
+        <div id = 'opression' style = "position:absolute;left:5%;top:40%;color:#FFFF00;">&#937PRESSION +++++</div>
+        <div id = 'folksiness' style = "position:absolute;left:5%;top:50%;color:#00FFFF;">&#1043AMLINESS +++++</div>
+        <div id = 'gruel' style = "position:absolute;left:5%;top:60%;color:#00FF00;">GRUEL: </div>
+        <div id = 'crop' onclick = "statUp(1,5);" style = "position:absolute;left:5%;top:70%;color:#FF0000;">CROP: </div>
+    </div>
+    <div id = 'titleScreen' onclick = "document.getElementById('titleScreen').style.display = 'none';advance();" style="position:absolute;left: 0%;top:0%;height: 100%;width: 100%;background-color:#000;color:#FFF">
+&nbsp;&nbsp;&nbsp;___&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___&nbsp;&nbsp;&nbsp;<br/>&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;<br/>|&nbsp;&nbsp;|___/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\___|&nbsp;&nbsp;|<br/>|\___________________________________________________________________________________________/|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;______&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__|.--.--.-----.-----.----.&nbsp;|&nbsp;&nbsp;&nbsp;__&nbsp;\.-----.---.-.-----.---.-.-----.|&nbsp;&nbsp;|_&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|__&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;_&nbsp;&nbsp;|&nbsp;&nbsp;-__|&nbsp;&nbsp;&nbsp;_|&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;__/|&nbsp;&nbsp;-__|&nbsp;&nbsp;_&nbsp;&nbsp;|__&nbsp;--|&nbsp;&nbsp;_&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;_|&nbsp;|__|&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_______||_____|&nbsp;&nbsp;&nbsp;__|_____|__|&nbsp;&nbsp;&nbsp;|___|&nbsp;&nbsp;&nbsp;|_____|___._|_____|___._|__|__||____|&nbsp;&nbsp;__&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|__|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|__|&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;|__________________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//xxxxx||____________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\\xxxxx||___________________________________/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\_|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br/>&nbsp;\___________________________________________________________________________________________/<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________________________________________________________&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----&gt;&nbsp;START&nbsp;GROVELING!&nbsp;&lt;----&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;______________________________________________________________________&nbsp;&nbsp;|&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|/&nbsp;&nbsp;___&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;___&nbsp;&nbsp;\|&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;\&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;/&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;\&nbsp;___&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;___&nbsp;/&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_.-^-._&nbsp;&nbsp;&nbsp;&nbsp;.--.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.-'&nbsp;&nbsp;&nbsp;_&nbsp;&nbsp;&nbsp;'-.&nbsp;|__|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_____&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|\&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;|==|==|&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---|---|---|---|---|&nbsp;&nbsp;&nbsp;&nbsp;|--|--|&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/____\&nbsp;&nbsp;&nbsp;|<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|---|---|---|---|---|&nbsp;&nbsp;&nbsp;&nbsp;|==|==|&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;/<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    </div>
+</div>
+
+</body>
+</html>

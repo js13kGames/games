@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Rogue Reversal</title>
+  <meta name="author" content="Frank Mitchell" />
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="stylesheet" media="screen, handheld" href="css/game.min.css" />
+</head>
+<body>
+<div id="ruins" class="ruins">
+  <div class="quests">
+    <p id="title" class="title">Rogue Reversal</p>
+    <p id="quest" class="quest">Heal the bat with the potion.</p>
+    <p id="score" class="score">0</p>
+  </div>
+  <div id="room" class="unselectable room">
+    <div class="walkable">
+      <p id="stairs" class="stairs token"><span id="stairs-fx" class="fx"></span></p>
+      <p id="rock" class="rock token"><span id="rock-fx" class="fx"></span></p>
+      <p id="chest" class="chest token"><span id="chest-fx" class="fx"></span></p>
+      <p id="fountain" class="fountain token"><span id="fountain-fx" class="fx"></span></p>
+      <p id="monster" class="monster token fly"><span id="monster-fx" class="fx"></span></p>
+      <p id="hero" class="hero token"><span id="emote" class="emote"></span><span id="hero-fx" class="fx"></span><span id="hero-hair" class="hair"></span></p>
+    </div>
+  </div>
+  <div id="items" class="unselectable items">
+  </div>
+</div>
+<p class="colophon">Design <abbr title="and">&amp;</abbr> dev by <a href="http://www.frankmitchell.org/" title="designer, engineer, wizard">Frank Mitchell</a> for <a href="http://js13kgames.com/" title="Andrzej Mazur (Enclave Games): HTML5 and JavaScript game development competition in just 13 kB">js13kGames</a><br />Graphics by various <a href="http://opengameart.org/" title="Open Game Art">OGA</a> artists</p>
+<canvas id="gfx" class="hidden pixelated"></canvas>
+<script src="js/jquery.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

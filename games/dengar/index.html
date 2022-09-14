@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="theme-color" content="#0E1011"/>
+    <meta name="viewport"    content="width=device-width">
+    <title>JS13K 2019 | Theme: "Back"</title>
+    <link href="index.css" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    <canvas></canvas>
+
+    <!-- dpad touch controls -->
+    <img src="gamepad.png" id=gamepad usemap="#gamepad"><br>
+    <!-- overlay map -->
+    <map name="gamepad">
+      <area shape="rect"   id=touchL coords=" 20,  20, 120, 220"/>
+      <area shape="rect"   id=touchR coords="160,  20, 260, 220"/>
+      <area shape="circle" id=touchJ coords="520, 120, 100"/>
+    </map>
+
+    <img src="spritesheet.png" id="spritesheet" width="0" height="0"/>
+    <script src="main.js" type="text/javascript"></script>
+  </body>
+</html>

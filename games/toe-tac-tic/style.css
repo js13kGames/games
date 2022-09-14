@@ -1,0 +1,103 @@
+body{
+	background: rgb(55,57,61);
+	background: radial-gradient(circle, rgba(55,57,61,1) 0%, rgba(12,12,13,1) 100%, rgba(0,212,255,1) 100%);
+	overflow: hidden;
+}
+
+h1{
+	color: white;
+	text-align: center;
+}
+.wrapper{
+	color: white;
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 99;
+	top: 0;
+	text-align: center;
+}
+
+td {
+	border:  10px solid white;
+	height:  100px;
+	width:  100px;
+	color: white;
+	text-align:  center;
+	vertical-align:  middle;
+	font-family:  "Comic Sans MS", cursive, sans-serif;
+	font-size:  70px;
+	cursor: pointer;
+}
+
+table {
+	border-collapse: collapse;
+	position: absolute;
+	left: 50%;
+	margin-left: -155px;
+	top: 100px;
+}
+
+table tr:first-child td {
+	border-top: 0;
+}
+
+table tr:last-child td {
+	border-bottom: 0;
+}
+
+table tr td:first-child {
+	border-left: 0;
+}
+
+table tr td:last-child {
+	border-right: 0;
+}
+
+.endgame {
+  display: none;
+  width: 200px;
+  top: 120px;
+  background-color: rgba(205,133,63, 0.8);
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-size: 2em;
+}
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 65vh 46%;
+}
+.button{
+	background-color: white;
+  border: 2px solid black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  position: absolute;
+  top: 90vh;
+  left: 43.5%;
+}
+
+
+
+
+
+
+

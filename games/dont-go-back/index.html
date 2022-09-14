@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Don't Go Back</title>
+  <link href="favicon.ico" rel="icon" type="image/x-icon" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+<body>
+<h1>Don't Go Back</h1>
+  <div id="container">
+    <div id="creatorModeMenu" class="hidden">
+      <nav>
+        <ul>
+          <li>
+            <a href="#">Create</a>
+            <ul>
+              <li><a id="crSmallLevel" href="#">New Small Level</a></li>
+              <li><a id="crMediumLevel" href="#">New Medium Level</a></li>
+              <li><a id="crLargeLevel" href="#">New Large Level</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#">Creator's Tools</a>
+            <ul>
+              <li><a id="edCurrLevel" href="#">Edit Current Level</a></li>
+              <li><a id="tryEdLevel" href="#">Try Edited Level</a></li>
+              <li><a id="saveToBrowser" href="#">Save To Browser</a></li>
+              <li><a id="loadJsonFromBrowserEdit" href="#">Load From Browser</a></li>
+              <li><a id="showLevelJson" href="#">Export Level JSON</a></li>
+              <li><a id="loadLevelJsonEd" href="#">Load Level JSON</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div id="mainMenu">
+      <nav>
+        <ul>
+          <li>
+            <a href="#">Play</a>
+            <ul id="genPlayMenu">
+            </ul>
+          </li>
+          <li>
+            <a href="#">Generate</a>
+            <ul>
+              <li><a id="genSmallLevel" href="#">Small Level</a></li>
+              <li><a id="genMediumLevel" href="#">Medium Level</a></li>
+              <li><a id="genLargeLevel" href="#">Large Level</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#">Load</a>
+            <ul>
+              <li><a id="loadJsonFromBrowser" href="#">From Browser</a></li>
+              <li><a id="loadLevelJson" href="#">From JSON</a></li>
+            </ul>
+          </li>
+          <li><a id="records" href="#">Records</a></li>
+          <li><a id="help" href="#">Help</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="mainContent">
+    <div class="row">
+      <div class="column left">
+        <div></div>
+      </div>
+      <div class="column middle">
+        <div id="gameAndEdit">
+          <canvas id="game" width="541" height="541"></canvas>
+          <canvas id="gameData" width="541" height="30" ></canvas>
+        </div>
+        <div class="hidden" id="loadGameContent">
+        </div>
+        <div class="hidden" id="recordsContent">
+        </div>
+        <div class="hidden" id="helpContent">
+         <h1>Help</h1>
+         <p>"Don't Go Back" is a maze game. Use Play menu to load main game. Use arrow keys to control player. You have to go to the green spot to win. Field of view is restricted. Visited places are dangerous. You will lose some life if you will visit them again. Make your own levels using Creator's Mode.</p>
+        </div>
+      </div>
+      <div class="column right">
+         <label class="tools">Creator's Mode <input type="checkbox" id="crModeOnOff" autocomplete="off"/></label>
+              <div id="createTools" class="hidden">
+                <label class="tools">Level Name </label>
+                <input id="levelName" type="text" class="tools"></input>
+    
+                <label class="tools">Player Life </label>
+                <input id="playerLife" type="text" value="100" class="tools"></input>
+    
+                <label class="tools">Visible Area </label>
+                <input id="visibleArea" class="tools" type="range" min="1" max="10" value="5">
+
+                <label class="tools">JSON </input></label>
+                <input id="genJson" class="tools" type="text">
+
+                <div class="tools">
+                    <p><b>Keys usage:</b><p>
+                    <p><b>Arrows</b> - movements.</p>
+                    <p><b>A/S/D/W</b> - create/delete Left/Down/Right/Top wall of the current cell.</p>
+                    <p><b>Z</b> - set level's start cell.</p>
+                    <p><b>X</b> - set level's end cell.</p>
+                </div>
+              </div>
+          </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+
+</body>
+
+</html>

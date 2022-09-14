@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JS13K</title>
+</head>
+<meta name="viewport" content="user-scalable=0"/>
+<body style="background-color: #000">
+	<div style="width: 600px; margin: 0 auto; padding-top: 20px;">
+		<canvas id="canvas" width="600" height="200"></canvas>
+		<p style="color: #fff">HOW TO PLAY: Press "A" or "D" to punch.</p>
+		<p style="color: #fff">When you see the word 'Reverse' the punch buttons reverse.</p>
+	</div>
+	
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var width = canvas.width;
+		var height = canvas.height;
+		var enemies = [];
+		// Screen Shake
+		var shakeTimeInterval = 100;
+		var screenShakeDistance = "5px";
+		// Spawn enemies and reverse game
+		var reverseGame = false;
+		var countToReverse = 0;
+		var nextWaveReady = true;
+		var spawnWaveInterval = 1000;
+		var reverseFlipTime = 1000;
+		var killsToFlip = 10;
+
+		var ground = {
+			width: canvas.width,
+			height: 100,
+			pos: {
+				x: 0, 
+				y: 100
+			},
+			draw: function(){
+				ctx.fillStyle = returnFillColor();
+				ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+			}
+		};
+
+		var player = {
+			width: 25,
+			height: 25,
+			pos: {
+				x: 288,
+				y: 75
+			},
+			score: 0,
+			draw: function() {
+				ctx.font = "24px serif";
+				ctx.fillStyle = "#000";
+  				ctx.fillText("Score: " + this.score, 260, 25);
+				if ( !this.isDead ) {
+					ctx.fillStyle = returnFillColor();
+					ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+					if ( this.punchLeft && !this.hasPunched ) {
+						ctx.fillRect( this.pos.x - 30, this.pos.y + 10, 30, 10);
+						setTimeout( function() {
+							cancelPunchLeft();
+						}, 100);
+					}
+					else if ( this.punchRight && !this.hasPunched ) {
+						ctx.fillRect( this.pos.x + 25, this.pos.y + 8, 30, 10);
+						setTimeout( function() {
+							cancelPunchRight();
+						}, 100);
+					}
+
+					if ( reverseGame ) {
+						ctx.font = "48px serif";
+						ctx.fillStyle = '#000';
+	  					ctx.fillText("REVERSE!", 185, 150);
+					}
+
+				} else {
+					ctx.font = "48px serif";
+					ctx.fillStyle = '#fff';
+  					ctx.fillText("GAME OVER", 160, 145);
+  					ctx.font = "22px serif";
+  					ctx.fillText("Press 'space' to play again", 185, 170);
+  					ctx.fillText("Or click here", 245, 195);
+				}
+			},
+			punchRight: false,
+			punchLeft: false,
+			hasPunched: false,
+			isDead: false
+		};
+
+		function createEnemy() {
+			var enemy = {
+				width: 20,
+				height: 40,
+				pos: {
+					x: 0,
+					y: 60
+				},
+				speed: 2,
+				draw: function(){
+					if ( !this.isDead ) {
+						ctx.fillStyle = returnFillColor();
+						ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+						if ( !player.isDead && !this.headingRight ) {
+							this.pos.x += this.speed;
+						} else if ( !player.isDead && this.headingRight ) {
+							this.pos.x -= this.speed;
+						}
+					} else if ( this.isDead && !this.playedDeathAnim ) {
+						var particleCount = 0;
+						for ( var i = 0; i < this.deathAnim.length; i++ ) {
+							if ( !this.deathAnim[ i ].isDead ) {
+								this.deathAnim[ i ].draw();
+							} else if ( this.deathAnim[ i ].isDead ) { 
+								particleCount++;
+							}
+						}
+						if ( particleCount === this.deathAnim.length ) {
+							this.playedDeathAnim = true;
+						}
+					}
+				},
+				isDead: true,
+				headingRight: false,
+				playedDeathAnim: true,
+				deathAnim: []
+			};
+			return enemy;
+		}
+		
+		for ( var i = 0; i < 6; i++ ) {
+			var temp = createEnemy();
+			if ( i%2 === 0 ) {
+				temp.headingRight = true;
+				temp.pos.x = 600;
+			}
+			enemies.push( temp );
+		}
+
+		function setupBlocks( coords, isFlipped ) {
+			var blocks = [];
+			var posX = coords.x + 20; // enemy width
+			var posY = coords.y + 50; // enemy height / 2
+
+			for ( var i = 0; i < 6; i++ ) {
+				var tempY = posY - ( i * 15 );	
+
+				var temp = {
+					width: 10,
+					height: 10,
+					pos: {
+						x: posX,
+						y: tempY
+					},
+					draw: function(){
+						if ( !this.isDead ) {
+							ctx.fillStyle = returnFillColor();
+							ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+							if ( !player.isDead ) {
+								if ( this.flip ) {
+									this.pos.x += getRandomInt(5, 10);
+								} else {
+									this.pos.x -= getRandomInt(5, 10);	
+								}
+								if ( this.id < 2 ) {
+									this.pos.y += 0.5;
+								}else{
+									this.pos.y -= 0.5;
+								}
+								if ( this.TTL < 0 ) {
+									this.isDead = true;
+								}
+								this.width -= 0.25;
+								this.height -= 0.25;
+								this.TTL--;
+							}
+						}
+					},
+					id: i,
+					isDead: false,
+					TTL: 50,
+					flip: isFlipped
+				}
+				blocks.push(temp);
+			}
+			return blocks;
+		};
+
+		var leftButton = {
+			width: 100,
+			height: 100,
+			pos: {
+				x: 50,
+				y: 100
+			},
+			draw: function() {
+				if ( this.isPressed ) {
+					ctx.fillStyle = returnFillColor();
+					ctx.fillRect(this.pos.x + 20, this.pos.y + 20, this.width - 40, this.height - 40);
+				}else{
+					ctx.fillStyle = '#686868';
+					ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+
+					ctx.font = "48px serif";
+					ctx.fillStyle = '#fff';
+  					if ( reverseGame ) {
+						ctx.fillText("D", this.pos.x + 35, this.pos.y + 65);	
+					}else{
+						ctx.fillText("A", this.pos.x + 35, this.pos.y + 65);
+					}
+				}
+			},
+			isPressed: false
+		};
+
+		var rightButton = {
+			width: 100,
+			height: 100,
+			pos: {
+				x: 450,
+				y: 100
+			},
+			draw: function() {
+				if ( this.isPressed ) {
+					ctx.fillStyle = returnFillColor();
+					ctx.fillRect(this.pos.x + 20, this.pos.y + 20, this.width - 40, this.height - 40);
+				}else{
+					ctx.fillStyle = '#686868';
+					ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+
+					ctx.font = "48px serif";
+					ctx.fillStyle = '#fff';
+
+					if ( reverseGame ) {
+						ctx.fillText("A", this.pos.x + 35, this.pos.y + 65);	
+					}else{
+						ctx.fillText("D", this.pos.x + 35, this.pos.y + 65);
+					}
+				}
+			},
+			isPressed: false
+		};
+
+		//ctx.fillRect(160, 100, 280, 100);
+		var restartButton = {
+			width: 280,
+			height: 100,
+			pos: {
+				x: 160,
+				y: 100
+			}
+		};
+
+		function checkAgainstEnemies() {
+			for ( var i = 0; i < enemies.length; i++ ) {
+				if ( ( enemies[ i ].pos.x + enemies[ i ].width ) > player.pos.x && 
+					 !enemies[ i ].headingRight ) {
+
+					player.isDead = true;
+				}
+				if ( enemies[ i ].pos.x < ( player.pos.x + player.width ) &&
+					 enemies[ i ].headingRight ) {
+
+					player.isDead = true;
+				}
+				if ( player.punchLeft && enemies[ i ].pos.x > (player.pos.x - 60) &&
+					 enemies[ i ].pos.x < (player.pos.x + player.width) &&
+					 !enemies[ i ].isDead && !player.isDead ) {
+
+					player.score++;	
+					screenShake();				
+					enemies[ i ].isDead = true;
+					countToReverse++;
+					enemies[ i ].deathAnim = setupBlocks( enemies[ i ].pos, enemies[ i ].headingRight );
+				}
+				if ( player.punchRight && enemies[ i ].pos.x < (player.pos.x + 60) &&
+					 enemies[ i ].pos.x > (player.pos.x + player.width) &&
+					 !enemies[ i ].isDead && !player.isDead ) {
+
+					player.score++;
+					screenShake();
+					enemies[ i ].isDead = true;
+					countToReverse++;
+					enemies[ i ].deathAnim = setupBlocks( enemies[ i ].pos, enemies[ i ].headingRight );
+				}
+			}
+		}
+
+		function drawEnemies() {
+			for ( var i = 0; i < enemies.length; i++ ) {
+				enemies[ i ].draw();
+			}
+		}
+
+		function spawnEnemies() {
+			if ( !nextWaveReady && !player.isDead ) return;
+			for ( var i = 0; i < enemies.length; i++ ) {
+				if ( enemies[ i ].isDead && enemies[ i ].playedDeathAnim ) {
+					enemies[ i ].pos.x = 0;
+					if ( enemies[ i ].headingRight ) {
+						enemies[ i ].pos.x = 600;
+					}
+					enemies[ i ].isDead = false;
+					enemies[ i ].playedDeathAnim = false;
+					enemies[ i ].speed = getRandomInt(1, 3);
+					break;
+				}
+			}
+			nextWaveReady = false;
+			setTimeout( function() {
+				nextWaveReady = true;
+			}, spawnWaveInterval);
+
+			if ( countToReverse > killsToFlip && !reverseGame ) {
+				reverseGame = true;
+
+				setTimeout( function() {
+					reverseGame = false;
+					countToReverse = 0;
+
+					killsToFlip = getRandomInt(4, 10);
+					reverseFlipTime = getRandomInt(1000, 3000);
+					spawnWaveInterval = getRandomInt(1000, 3000);
+
+				}, reverseFlipTime );
+			}
+		}
+
+		function update() {
+			checkAgainstEnemies();
+			spawnEnemies();
+		}
+
+		function render() {
+			ground.draw();
+			player.draw();
+			leftButton.draw();
+			rightButton.draw();
+			drawEnemies();
+		}
+
+		function restartGame() {
+			player.isDead = false;
+			player.score = 0;
+			for ( var i = 0; i < enemies.length; i++ ) {
+				enemies[ i ].pos.x = 0;
+				if ( enemies[ i ].headingRight ) {
+					enemies[ i ].pos.x = width;
+				}
+				enemies[ i ].isDead = true;
+				enemies[ i ].playedDeathAnim = true;
+			}
+		}
+
+		function animate() {
+			if ( reverseGame ) {
+				ctx.fillStyle = '#000';	
+			}else{
+				ctx.fillStyle = '#fff';	
+			}
+			ctx.fillRect(0, 0, width, height);
+		  	window.requestAnimationFrame( animate );
+		  	update();
+		  	render();
+		}
+
+		function setPunchLeft() {
+			player.punchLeft = true;
+			leftButton.isPressed = true;
+		}
+
+		function setPunchRight() {
+			player.punchRight = true;
+			player.hasPunched = false;
+			rightButton.isPressed = true;
+		}
+
+		function cancelPunchLeft() {
+			player.punchLeft = false;
+			player.hasPunched = false;
+			leftButton.isPressed = false;
+		}
+
+		function cancelPunchRight() {
+			player.punchRight = false;
+			rightButton.isPressed = false;
+		}
+
+		function getRandomInt(min, max) {
+ 			return Math.floor(Math.random() * (max - min)) + min;
+		}
+
+		window.requestAnimationFrame( animate );
+		window.addEventListener('keydown', function(e) {
+			if ( e.keyCode === 65 ) { // 65 - Left
+				if ( reverseGame ) {
+					setPunchRight();
+				}else{
+					setPunchLeft();	
+				}
+			}else if ( e.keyCode === 68 ) { // 68 - Right
+				if ( reverseGame ) {
+					setPunchLeft();
+				}else{
+					setPunchRight();
+				}
+			}
+		});
+
+		window.addEventListener('keyup', function(e) {
+			if ( e.keyCode === 65 ) {
+				if ( reverseGame ) {
+					cancelPunchRight();
+				}else{
+					cancelPunchLeft();
+				}
+			}else if ( e.keyCode === 68 ) {
+				if ( reverseGame ) {
+					cancelPunchLeft();					
+				}else{
+					cancelPunchRight();
+				}
+			}
+
+			if ( e.keyCode === 32 && player.isDead ) {
+				restartGame();
+			}
+		});
+
+		window.addEventListener('mouseup', function(e) {
+			cancelPunchLeft();
+			cancelPunchRight();
+		});
+
+		function checkBtnCollision ( mouseCoords, rect2 ) {
+			if ( mouseCoords.x > rect2.pos.x &&
+				 mouseCoords.x < ( rect2.pos.x + rect2.width ) &&
+				 mouseCoords.y > rect2.pos.y &&
+				 mouseCoords.y < ( rect2.pos.y + rect2.height ) ) {
+
+				return true;
+			}
+			return false;
+		}
+
+		window.addEventListener('mousedown', function(e) {
+			processEvent( e );
+		});
+
+		window.addEventListener('touchstart', function(e) {
+			for ( var i = 0; i < e.touches.length; i++ ) {
+
+				checkUITouch( e.touches[ i ] );
+			}
+		});
+
+		function checkUITouch( e ) {
+			processEvent( e );
+		}
+
+		function processEvent( e ) {
+			var X = e.clientX - canvas.offsetLeft;
+			var Y = e.clientY - canvas.offsetTop;
+			var temp = {
+				x: X,
+				y: Y
+			}
+			
+			if ( checkBtnCollision( temp, leftButton) ) {
+				if ( reverseGame ) {
+					setPunchRight();					
+				}else{
+					setPunchLeft();
+				}
+			}
+
+			if ( checkBtnCollision( temp, rightButton) ) {
+				if ( reverseGame ) {
+					setPunchLeft();					
+				}else{
+					setPunchRight();
+				}
+			}
+
+			if ( player.isDead ) {
+				
+				if ( checkBtnCollision( temp, restartButton ) ) {
+
+					restartGame();
+
+				}
+			}
+		}
+
+		window.addEventListener('touchend', function(e) {
+			cancelPunchLeft();
+			cancelPunchRight();
+		});
+
+		function screenShake() {
+			canvas.style.marginLeft = screenShakeDistance;
+			setTimeout( function() {
+				canvas.style.marginLeft = "0";
+				setTimeout( function() {
+					canvas.style.marginRight = screenShakeDistance;
+					setTimeout( function() {
+						canvas.style.marginRight = "0";
+					}, shakeTimeInterval);
+				}, shakeTimeInterval);
+			}, shakeTimeInterval);
+		}
+
+		function returnFillColor () {
+			if ( reverseGame ) {
+				return '#fff';
+			}
+			return '#000';	
+		}
+	</script>
+
+</body>
+</html>

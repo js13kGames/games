@@ -1,0 +1,823 @@
+<div id="root">
+  <div id="container">
+    <div id="stars"></div>
+    <div id="mainDot">
+      <span
+        class="crater"
+        style="width: 40px; height: 40px; top: 2px; left: 0px"
+      ></span>
+      <span
+        class="crater"
+        style="width: 20px; height: 20px; top: 50px; left: 20px"
+      ></span>
+      <span
+        class="crater"
+        style="width: 30px; height: 30px; top: 20px; left: 60px"
+      ></span>
+      <span
+        class="crater"
+        style="width: 30px; height: 30px; top: 80px; left: 40px"
+      ></span>
+    </div>
+    <div style="display: none">
+      <span id="astroid-prototype" class="astroid">
+        <div class="content">
+          <span
+            class="crater"
+            style="width: 10px; height: 10px; top: 4px; left: 0px"
+          ></span>
+          <span
+            class="crater"
+            style="width: 10px; height: 10px; top: 0px; left: 17px"
+          ></span>
+          <span
+            class="crater"
+            style="width: 20px; height: 20px; top: 14px; left: 15px"
+          ></span>
+        </div>
+      </span>
+      <span id="dead-astroid-prototype" class="dead-astroid"> </span>
+    </div>
+    <span id="chargeContainer">
+      <span id="chargeBar" style="width: 0%">
+        <span id="ChargedMsg" style="display: none">
+          CLICK SPACE OR HERE!
+        </span>
+      </span>
+    </span>
+    <span id="ScoreContainer">SCORE:<span id="ScoreOutput">0</span></span>
+    <div id="UIContainer">
+      <div id="GameOver" style="display: none">
+        <h1>GAME OVER</h1>
+        <div>YOU SCORED: <span id="GameOverScore">0</span></div>
+        <span id="NewTopScore" style="display: none">NEW TOP SCORE!!!</span>
+        <button id="ReplayBtn">PLAY AGAIN</button>
+        <button id="StartScreenBtn">HOME</button>
+      </div>
+      <div id="Guide" style="display: none">
+        <button id="BackBtn">BACK</button>
+        <h1>HOW TO PLAY</h1>
+        <ul style="width: 70%">
+          <li style="position: relative">
+            Click the astroids to destroy them before they hit the moon:
+            <span class="astroid" style="bottom: 10px; right: 0px">
+              <div class="content">
+                <span
+                  class="crater"
+                  style="width: 10px; height: 10px; top: 4px; left: 0px"
+                ></span>
+                <span
+                  class="crater"
+                  style="width: 10px; height: 10px; top: 0px; left: 17px"
+                ></span>
+                <span
+                  class="crater"
+                  style="width: 20px; height: 20px; top: 14px; left: 15px"
+                ></span>
+              </div>
+            </span>
+          </li>
+          <li style="position: relative; margin-top: 30px">
+            Clicking 10 will charge your blast, click space to clear the screen
+            <span
+              class="blast"
+              style="top: -30px; right: 100px; transform: scale(0.3)"
+            ></span>
+          </li>
+        </ul>
+      </div>
+      <div id="Start">
+        <button id="StartBtn">PLAY</button>
+        <button id="GuideBtn">HOW TO PLAY</button>
+        <div>TOP SCORE: <span id="TopScore">0</span></div>
+        <button id="ClearScore">clear</button>
+        <span id="Warning">WARNING: THIS GAME CONTAINS FLASHING LIGHTS</span>
+        <p>
+          Audio from
+          <a
+            target="_blank"
+            rel="noopener"
+            href="https://github.com/xem/GameAudioBundleMP3"
+            >GameAudioBundleMP3</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('root');
+  const container = document.getElementById('container');
+  const astroidProtoType = document.getElementById('astroid-prototype');
+  const deadAstroidProtoType = document.getElementById(
+    'dead-astroid-prototype'
+  );
+  const chargeBar = document.getElementById('chargeBar');
+  const ScoreOutput = document.getElementById('ScoreOutput');
+  const GameOverScore = document.getElementById('GameOverScore');
+  const ChargedMsg = document.getElementById('ChargedMsg');
+  const starsRoot = document.getElementById('stars');
+
+  // Screens + UI
+  const UIContainer = document.getElementById('UIContainer');
+  const StartScreen = document.getElementById('Start');
+  const GameOverScreen = document.getElementById('GameOver');
+  const StartBtn = document.getElementById('StartBtn');
+  const ReplayBtn = document.getElementById('ReplayBtn');
+  const StartScreenBtn = document.getElementById('StartScreenBtn');
+  const TopScore = document.getElementById('TopScore');
+  const NewTopScore = document.getElementById('NewTopScore');
+  const ClearScore = document.getElementById('ClearScore');
+  const BackBtn = document.getElementById('BackBtn');
+  const GuideBtn = document.getElementById('GuideBtn');
+  const GuideScreen = document.getElementById('Guide');
+  const SpaceButton = document.getElementById('chargeContainer');
+
+  //Audio
+  var boom = new Audio('./boom.mp3');
+
+  let center = [0, 0];
+  let astroids = [];
+  let dead = false;
+  let astroidSpawnRadius = 600;
+  let charge = 0;
+  let score = 0;
+  let topScore = Number(localStorage.getItem('moonGameId_topScore')) || 0;
+  let spawners = [];
+  let spawnerDelays = [];
+
+  let astroidSpeed = 2;
+
+  function guidGenerator() {
+    const S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (
+      S4() +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      S4() +
+      S4()
+    );
+  }
+  function possiblyUpdateTopScore(score) {
+    if (score > topScore) {
+      topScore = score;
+      localStorage.setItem('moonGameId_topScore', topScore);
+      TopScore.innerHTML = topScore;
+      NewTopScore.style.display = 'block';
+    }
+  }
+
+  function clearScore() {
+    topScore = 0;
+    localStorage.setItem('moonGameId_topScore', topScore);
+    TopScore.innerHTML = topScore;
+  }
+
+  function hideUI() {
+    GameOverScreen.style.display = 'none';
+    StartScreen.style.display = 'none';
+    UIContainer.style.display = 'none';
+    NewTopScore.style.display = 'none';
+    GuideScreen.style.display = 'none';
+  }
+
+  function showGameOver() {
+    GameOverScreen.style.display = 'flex';
+  }
+
+  function showStart() {
+    StartScreen.style.display = 'flex';
+  }
+
+  function showGuide() {
+    GuideScreen.style.display = 'flex';
+  }
+
+  const showScreen = (screen) => {
+    hideUI();
+    UIContainer.style.display = 'flex';
+    if (screen === 'gameOver') {
+      showGameOver();
+    }
+    if (screen === 'start') {
+      showStart();
+    }
+    if (screen === 'guide') {
+      showGuide();
+    }
+  };
+
+  function collision(rad1, x1, y1, rad2, x2, y2) {
+    var dx = x1 - x2;
+    var dy = y1 - y2;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+
+    return distance < rad1 + rad2;
+  }
+
+  function setCharge(value) {
+    if (value === 10) {
+      ChargedMsg.style.display = 'block';
+    } else {
+      ChargedMsg.style.display = 'none';
+    }
+    chargeBar.style.width = value * 10 + '%';
+    charge = value;
+  }
+
+  function setScore(value) {
+    score = value;
+    ScoreOutput.innerHTML = value;
+    GameOverScore.innerHTML = value;
+  }
+
+  function addStar(
+    top = Math.floor(Math.random() * 100),
+    left = Math.floor(Math.random() * 100)
+  ) {
+    const newStar = document.createElement('div');
+    newStar.style.top = top + '%';
+    newStar.style.left = left + '%';
+    newStar.style.animationDelay = `${Math.random() * 3}s`;
+    newStar.className = 'star';
+    starsRoot.appendChild(newStar);
+  }
+
+  function addStars() {
+    const stars = [];
+    while (stars.length < 100) {
+      stars.push([
+        Math.floor(Math.random() * 100),
+        Math.floor(Math.random() * 100),
+      ]);
+    }
+    stars.forEach((coords, i) => {
+      addStar(...coords);
+    });
+  }
+
+  function addAstroid() {
+    const newAstroid = astroidProtoType.cloneNode(true);
+    const id = guidGenerator();
+    var angle = Math.random() * Math.PI * 2;
+    const top = center[0] + Math.cos(angle) * astroidSpawnRadius;
+    const left = center[1] + Math.sin(angle) * astroidSpawnRadius;
+    newAstroid.id = id;
+    newAstroid.style.top = top + 'px';
+    newAstroid.style.left = left + 'px';
+    const rotationAngle = 180 - angle * (180 / Math.PI);
+    newAstroid.style.transform = `rotate(${rotationAngle}deg)`;
+    const destroy = (chargable = true) => {
+      boom.play();
+      const target = astroids.find(({ key }) => key === id);
+      if (target) {
+        const { top, left, rotationAngle } = target;
+        addExplosion(top, left, rotationAngle);
+      }
+      newAstroid.remove();
+      astroids = astroids.filter(({ key }) => key !== id);
+      if (chargable && charge < 10) {
+        setCharge(charge + 1);
+      }
+      setScore(score + 1);
+    };
+    astroids.push({
+      key: id,
+      target: newAstroid,
+      rotationAngle,
+      top,
+      left,
+      radius: 15,
+      destroy,
+    });
+    container.appendChild(newAstroid);
+    newAstroid.addEventListener('click', destroy);
+  }
+
+  function addExplosion(top, left, rot) {
+    const newExplosion = deadAstroidProtoType.cloneNode(true);
+    newExplosion.style.top = top + 'px';
+    newExplosion.style.left = left + 'px';
+    newExplosion.style.transform = `rotate(${rot}deg)`;
+    container.appendChild(newExplosion);
+    setTimeout(() => newExplosion.remove(), 500);
+  }
+
+  function fireBlast() {
+    setCharge(0);
+    chargeBar.style.width = charge * 10 + '%';
+    for (let i = 0; i < 5; i++) {
+      const newBlast = document.createElement('div');
+      newBlast.className = 'blast';
+      newBlast.style.width = 1000;
+      newBlast.style.height = 1000;
+      setTimeout(() => {
+        container.appendChild(newBlast);
+        setTimeout(() => newBlast.remove(), 2000);
+      }, i * 100);
+    }
+    astroids.forEach(({ destroy }) => destroy(false));
+  }
+
+  function playGameOver() {
+    dead = true;
+    spawners.forEach((spawner) => {
+      clearInterval(spawner);
+    });
+    spawnerDelays.forEach((spawnerDelay) => {
+      clearTimeout(spawnerDelays);
+    });
+
+    container.className = 'dead';
+
+    setTimeout(() => {
+      container.className = '';
+      showScreen('gameOver');
+      possiblyUpdateTopScore(score);
+    }, 1500);
+  }
+
+  function animate() {
+    astroids.forEach((astroid, i) => {
+      let { top, left, target, radius } = astroid;
+      const YDiff = center[0] - astroid.top;
+      const XDiff = center[1] - astroid.left;
+      const directionY = Math.sign(YDiff);
+      const directionX = Math.sign(XDiff);
+      const absYDiff = Math.abs(YDiff);
+      const absXDiff = Math.abs(XDiff);
+      const Xspeed = (absXDiff / (absYDiff + absXDiff)) * astroidSpeed;
+      const Yspeed = (absYDiff / (absYDiff + absXDiff)) * astroidSpeed;
+
+      top = top + directionY * Yspeed;
+      left = left + directionX * Xspeed;
+      target.style.top = top;
+      target.style.left = left;
+      astroids[i] = { ...astroid, top, left };
+      if (
+        collision(
+          radius,
+          left + radius,
+          top + radius,
+          50 - 2,
+          center[0],
+          center[1]
+        )
+      ) {
+        playGameOver();
+      }
+    });
+    if (!dead) requestAnimationFrame(animate);
+  }
+
+  function megaBlast() {
+    boom.play();
+    fireBlast();
+    addStar();
+    addStar();
+    addStar();
+    addStar();
+    addStar();
+    addStar();
+    addStar();
+  }
+
+  document.body.onkeyup = function (e) {
+    if (e.keyCode == 32 && charge === 10) {
+      megaBlast();
+    }
+  };
+
+  function startSpawningAstroids() {
+    addAstroid();
+    spawners.push(setInterval(addAstroid, 3000));
+    spawnerDelays.push(
+      setTimeout(() => spawners.push(setInterval(addAstroid, 3000)), 10000)
+    );
+    spawnerDelays.push(setTimeout(() => (astroidSpeed = 2.5), 20000));
+    spawnerDelays.push(
+      setTimeout(() => spawners.push(setInterval(addAstroid, 3000)), 30000)
+    );
+    spawnerDelays.push(setTimeout(() => (astroidSpeed = 3), 40000));
+    spawnerDelays.push(
+      setTimeout(() => spawners.push(setInterval(addAstroid, 3000)), 50000)
+    );
+    spawnerDelays.push(setTimeout(() => (astroidSpeed = 3.5), 60000));
+    spawnerDelays.push(
+      setTimeout(() => spawners.push(setInterval(addAstroid, 3000)), 70000)
+    );
+    spawnerDelays.push(setTimeout(() => (astroidSpeed = 4), 80000));
+  }
+
+  const start = () => {
+    astroidSpeed = 2;
+    NewTopScore.style.display = 'none';
+    astroids.forEach(({ destroy }) => destroy(false));
+    astroids = [];
+    spawners = [];
+    spawnerDelays = [];
+    dead = false;
+    setScore(0);
+    setCharge(0);
+    hideUI();
+    center = [root.clientHeight / 2, root.clientWidth / 2];
+    startSpawningAstroids();
+    animate();
+  };
+
+  window.onload = function () {
+    addStars();
+    TopScore.innerHTML = topScore;
+    StartBtn.onclick = start;
+    ReplayBtn.onclick = start;
+    StartScreenBtn.onclick = () => showScreen('start');
+    BackBtn.onclick = () => showScreen('start');
+    GuideBtn.onclick = () => showScreen('guide');
+    ClearScore.onclick = clearScore;
+    SpaceButton.onclick = megaBlast;
+  };
+</script>
+
+<style>
+  @keyframes sizeAlter {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes blown {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      display: none;
+      opacity: 0;
+    }
+  }
+  @keyframes grow {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    75% {
+      transform: scale(0.75);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+  @keyframes astroid {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes color {
+    0% {
+      background: #46b345;
+    }
+    50% {
+      background: #b34545;
+    }
+    100% {
+      background: #46b345;
+    }
+  }
+  @keyframes shadow-color {
+    0% {
+      box-shadow: 0px 6px 18px 7px #46b345;
+    }
+    50% {
+      box-shadow: 0px 6px 18px 7px #b34545;
+    }
+    100% {
+      box-shadow: 0px 6px 18px 7px #46b345;
+    }
+  }
+  @keyframes dead {
+    0% {
+      filter: invert(1);
+      transform: translate(30px, 10px);
+    }
+    10% {
+      transform: translate(-30px, -10px);
+    }
+    20% {
+      filter: invert(0);
+      transform: translate(30px, 10px);
+    }
+    30% {
+      transform: translate(-30px, -10px);
+    }
+    40% {
+      filter: invert(1);
+      transform: translate(30px, 10px);
+    }
+    50% {
+      transform: translate(-30px, -10px);
+    }
+    60% {
+      filter: invert(0);
+      transform: translate(30px, 10px);
+    }
+    70% {
+      transform: translate(-30px, -10px);
+    }
+    80% {
+      filter: invert(1);
+      transform: translate(30px, 10px);
+    }
+    90% {
+      transform: translate(-30px, -10px);
+    }
+    100% {
+      filter: invert(0);
+      transform: translate(0px, 0px);
+    }
+  }
+
+  * {
+    font-family: monospace;
+  }
+
+  .blown {
+    animation: blown 0.5s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  #root {
+    width: 800px;
+    height: 800px;
+    background: black;
+    position: relative;
+    overflow: hidden;
+  }
+  #container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 1s all;
+  }
+  .dead {
+    animation: dead 1.5s cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  #starsRoot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  #mainDot {
+    width: 100px;
+    height: 100px;
+    display: block;
+    position: relative;
+    border-radius: 50%;
+    background: rgb(152, 182, 200);
+    background: linear-gradient(
+      308deg,
+      rgba(152, 182, 200, 1) 0%,
+      rgba(235, 239, 240, 1) 100%
+    );
+    box-shadow: 20px 20px 60px #a4a4a6, -20px -20px 60px #dedee0;
+    z-index: 9999;
+    overflow: hidden;
+    animation: astroid 100s linear infinite;
+  }
+  #mainDot .crater {
+    display: block;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #cccccc00, #ffffff00);
+    z-index: 101;
+    box-shadow: inset 6px 8px 12px 0px #1f3b4638;
+    position: absolute;
+  }
+  .star {
+    position: absolute;
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px 7px #dedee052;
+
+    animation-name: sizeAlter;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+  }
+  .blast {
+    box-shadow: 0px 0px 34px 72px #0affff3b, inset 0px 0px 42px 62px #1abd9a80,
+      inset 0px 0px 20px 20px #04f7ff63;
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    border-radius: 50%;
+    z-index: 100;
+    opacity: 1;
+    animation: grow 2s linear;
+  }
+
+  .astroid {
+    filter: blur(1px);
+    width: 30px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    background: rgb(97, 57, 19);
+    background: linear-gradient(0deg, rgb(136 84 26) 0%, rgb(208 133 98) 100%);
+    box-shadow: 0px -12px 8px 0px #c95715, 0px -26px 16px 4px #b10404;
+    z-index: 99;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .astroid .crater {
+    display: block;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f3af7500, #ca575700);
+    z-index: 101;
+    box-shadow: inset 6px 8px 12px 0px #63222238;
+    position: absolute;
+  }
+  .astroid .content {
+    animation: astroid 4s linear infinite;
+    transform-origin: center;
+    width: 100%;
+    height: 100%;
+  }
+  .dead-astroid {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(
+      circle,
+      rgb(200 40 40 / 87%) 0%,
+      rgb(245 85 8 / 35%) 40%,
+      rgb(249 152 9 / 0%) 80%
+    );
+    border-radius: 50%;
+    animation: grow 0.5s linear;
+  }
+  #chargeContainer {
+    position: absolute;
+    margin: 0 auto;
+    top: 10px;
+    width: 70%;
+    height: 30px;
+    background-color: grey;
+    box-shadow: inset 6px 8px 12px 5px #4a4a4aa1,
+      inset 8px 4px 12px 5px #4a4a4aa1;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #chargeBar {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 6px 8px 12px 5px #4a4a4a56;
+    background: linear-gradient(
+      90deg,
+      rgba(40, 200, 173, 1) 0%,
+      rgba(142, 203, 51, 1) 100%
+    );
+    transition: 1s all;
+  }
+  #ChargedMsg {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+  }
+  #ScoreContainer {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    color: white;
+    font-size: 40px;
+    pointer-events: none;
+    user-select: none;
+  }
+  #UIContainer {
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.418);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  #GameOver,
+  #Start,
+  #Guide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 25px;
+    width: 100%;
+    height: 100%;
+  }
+  button {
+    background: none;
+    cursor: pointer;
+    margin: 30px;
+    font-size: 50px;
+    color: white;
+    border: none;
+    text-decoration: underline;
+  }
+  button:hover {
+    opacity: 0.5;
+  }
+  #ClearScore {
+    font-size: 20px !important;
+    margin: 10px !important;
+  }
+  #Warning {
+    margin-top: 20px;
+    font-size: 25px;
+    color: rgb(158, 40, 40);
+    font-weight: bold;
+  }
+
+  .UFO {
+    width: 70px;
+    height: 35px;
+    position: absolute;
+  }
+  .UFO .head {
+    position: absolute;
+    top: 0px;
+    width: 50%;
+    background-color: #00dcff9e;
+    border-radius: 100%;
+    height: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .UFO .body {
+    position: absolute;
+    top: 25%;
+    width: 100%;
+    background: #383838;
+    height: 60%;
+    border-radius: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+    display: flex;
+    justify-content: space-around;
+    overflow: hidden;
+  }
+  .UFO .body .dot {
+    width: 15%;
+    height: 50%;
+    background: #46b345;
+    display: block;
+    border-radius: 100%;
+    filter: blur(2px);
+    margin-top: 6%;
+    animation: color 2s linear infinite;
+  }
+  .UFO .base {
+    position: absolute;
+    top: 60%;
+    width: 60%;
+    background-color: #696969;
+    height: 40%;
+    border-radius: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 6px 18px 7px green;
+    animation: shadow-color 2s linear infinite;
+  }
+</style>

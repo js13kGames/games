@@ -1,0 +1,220 @@
+<html><head><script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script><style>div.text {
+        font: 24px impact;
+        color: white;
+        position:absolute;
+        width:100%;
+        text-align:center;
+        z-index:100;
+        display:block;
+        -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+             -khtml-user-select: none; /* Konqueror HTML */
+               -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                    user-select: none; /* Non-prefixed version, currently
+                                          supported by Chrome and Opera */
+    }</style></head><body><script type="application/javascript">// Intro music
+var game = {
+    inProgress: false,
+    score: 0,
+    highScore: document.cookie || 0
+};
+const growthFactor = 2; // How big it grows each interval
+const interval = 1500; // How long each interval is
+const resetInterval = 1000;
+var colors = [
+    '#3c6e6f','#9c0e3e', '#007727',"#730075", '#b8aa01','#48019d', '#966401', '#0350a0'
+];
+var colorIndex = 0;
+var myAudioContext = new AudioContext;
+
+const initialize = function () {
+    game.inProgress = false;
+    game.highScore = parseInt(document.cookie) || 0;
+    // Screen text
+    var scoreMessage = (game.score > 0) ? "Last: " + game.score + " " : "Swivel chair recommended. ";
+    document.getElementById('score').setAttribute("canvas-text", "text: " + scoreMessage + " Best: " + game.highScore);
+    document.getElementById('shapes').setAttribute("visible", false);
+    document.getElementById('titleShape').setAttribute("visible", true);
+    document.getElementById('instructions').setAttribute("visible", true);
+    document.getElementById('sky').setAttribute('color', "#000000");
+}
+window.onload = initialize;
+
+const newGame = function () {
+    if (game.inProgress) return;
+    game.inProgress = true;
+    game.score = 0;
+    document.getElementById('shapes').setAttribute("visible", true);
+    document.getElementById('titleShape').setAttribute("visible", false);
+    document.getElementById('instructions').setAttribute("visible", false);
+    document.getElementById('score').setAttribute("canvas-text", "text:;");
+    playSound("intro");
+}
+
+const increaseScore = function () {
+    game.score++;
+    playSound("point");
+    document.getElementById('score').setAttribute("canvas-text", "text: " + game.score);
+}
+
+const gameOver = function () {
+    game.inProgress = false;
+    playSound("end");
+    if (game.score > game.highScore) {
+        // TODO: Celebrate new high score
+        game.highScore = game.score;
+        document.cookie = game.highScore;
+    }
+    initialize();
+}
+
+const playSound = function (soundName) {
+    myAudioContext.close();
+    myAudioContext = new AudioContext;
+    if(soundName == "intro") {
+        with(myAudioContext)[1,1,6,6,6,6,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,10,10,10,10,13,13,13,13,13,13,15,15,15,15].map((v,i)=>{with(createOscillator())v&&start(e=[15,16,5,6,13,14,21,22,23,24,25,26,28,29,30,31,32,33,34,36,27,35,3,4,11,12,1,2,7,9,17,19,8,10,18,20][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+    } else if (soundName == "point") {
+        let index = Math.floor(game.score / 4) % 5;
+        if(index == 0) {
+        with(myAudioContext)[18,18,20,20,22,23,23,25,25].map((v,i)=>{with(createOscillator())v&&start(e=[2,7,3,8,10,4,9,1,6][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+        } else if (index == 1) {
+            with(myAudioContext)[10,11,13,13,15,20,22].map((v,i)=>{with(createOscillator())v&&start(e=[3,4,6,7,5,2,1][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+        } else if (index == 2) {
+            with(myAudioContext)[13,13,15,15,18,18,18,20].map((v,i)=>{with(createOscillator())v&&start(e=[1,4,2,5,3,7,8,6][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+        } else if (index == 3) {
+            with(myAudioContext)[18,18,20,22,23,25,25,25,25].map((v,i)=>{with(createOscillator())v&&start(e=[1,7,2,4,3,5,6,8,9][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+        } else {
+            with(myAudioContext)[13,17,18,20,22,25,25].map((v,i)=>{with(createOscillator())v&&start(e=[6,5,3,4,2,1,7][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+        }
+    } else if (soundName == "end") {
+        with(myAudioContext)[15,16,17,18,18].map((v,i)=>{with(createOscillator())v&&start(e=[1,2,3,4,5][i]/5,connect(destination),frequency.value=988/1.06**v,type='triangle',)+stop(e+.2)})
+    }
+}
+    AFRAME.registerComponent('canvas-text', {
+        schema: {
+            text: {type: 'string', default: ''},
+            width: {type: 'number', default: 256},
+            height: {type: 'number', default: 64}
+        },
+        init: function() {
+            this.update();
+        },
+        update: function (oldData) {
+            var _ = this;
+            if (!oldData) this.createCanvas(this.data.width, this.data.height);
+            var fontSize = 48;
+            var textSize = {};
+            _.ctx.font = fontSize + "px Impact";
+            _.ctx.fillStyle = "white";
+            _.ctx.textBaseline="hanging"; 
+            while (true) {
+                textSize = _.ctx.measureText(this.data.text);
+                if(textSize.width < this.data.width) {
+                    break;
+                }
+                fontSize -= 2;
+                _.ctx.font = fontSize + "px Impact";
+            }
+            var textDiff = this.data.width - textSize.width;
+            _.ctx.clearRect(0, 0, _.canvas.width, _.canvas.height);
+            _.ctx.fillText(this.data.text, textDiff/2, 10);
+            this.el.setAttribute("src", _.canvas.toDataURL())
+            this.el.setAttribute("width", _.canvas.width/100.0)
+            this.el.setAttribute("height", _.canvas.height/100.0)
+        },
+        createCanvas: function (w, h) {
+            var _ = this;
+            var canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            _.canvas = canvas;
+            _.ctx = canvas.getContext('2d');
+
+        }
+    });
+    AFRAME.registerComponent('collider-check', {
+      dependencies: ['raycaster'],
+      init: function () {
+        var e = this.el.addEventListener('raycaster-intersection', function (evt) {
+            if (game.inProgress) {
+                gameOver();
+            }
+        });
+      }
+    });
+    AFRAME.registerComponent('floating-shape', {
+        init: function () {
+            this.forward = new THREE.Vector3(0,0,-32);
+            this.helperVector = new THREE.Vector3();
+            this.parentPosition = new THREE.Vector3();
+            this.mainCamera = document.querySelector("#mainCamera");
+        },
+        tick: function (time, timeDelta) {
+            this.helperVector.copy(this.forward).applyQuaternion(this.mainCamera.object3D.quaternion);
+            this.parentPosition.copy(this.mainCamera.getAttribute('position'));
+            this.el.setAttribute('position', {
+                x: this.helperVector.x + this.parentPosition.x,
+                y: this.helperVector.y + this.parentPosition.y,
+                z: this.helperVector.z + this.parentPosition.z
+            })
+            
+        }
+    })
+    AFRAME.registerComponent('growing-shape', {
+        schema: {
+            interval: {type: 'number', default: 1}
+        },
+        init: function() {
+            this.startScale = this.el.getAttribute('scale');
+            this.randomize();
+
+            this.scored = false;
+            this.loops = 0;
+        },
+        tick: function (time, timeDelta) {
+            // Scale is exponential (doubling every interval)
+            if (game.inProgress) {
+                let scale = this.el.getAttribute('scale').x
+                scale = scale * Math.pow(growthFactor, (timeDelta/(interval-75*this.loops)));
+                if (scale > 36 && !this.scored) {
+                    increaseScore();
+                    this.scored = true;
+                };
+                if (scale > 256.0) {
+                    let newScale = scale;
+                    document.querySelectorAll('.shape').forEach(function (shape, currentIndex, listObj) {
+                        newScale = Math.min(shape.getAttribute('scale').x, newScale);
+                    })
+                    document.getElementById('sky').setAttribute('color', this.color);
+                    scale = newScale / 4.0;
+                    this.randomize();
+                    this.scored = false;
+                    this.loops++;
+                }
+                this.el.setAttribute('scale',{
+                    x: scale,
+                    y: scale,
+                    z: scale
+                });
+            } else {
+                this.loops = 0;
+                this.scored = false;
+                this.el.setAttribute('scale', this.startScale);
+            }
+        },
+        randomize: function () {
+            this.color = colors[colorIndex++ % colors.length];
+            var material = new THREE.MeshStandardMaterial( { shading: THREE.FlatShading, color: this.color, side:THREE.DoubleSide } );
+            var geometry = new THREE.DodecahedronGeometry(1,0);
+            geometry.faces.splice(Math.floor(Math.random()*12) * 3, 3);
+            geometry.faces.splice(Math.floor(Math.random()*11) * 3, 3);
+            var mesh = new THREE.Mesh(geometry, material);
+            this.el.setObject3D('mesh', mesh);
+            var raycasterEl = AFRAME.scenes[0].querySelector('[raycaster]');
+            if(raycasterEl.components.hasOwnProperty("raycaster"))
+                raycasterEl.components.raycaster.refreshObjects();
+        }
+    })
+    document.querySelector('body').addEventListener('mousedown', newGame)
+    document.querySelector('body').addEventListener('touchstart', newGame);</script><a-scene id="scene"><a-sky id="sky" color="#000000"></a-sky><a-entity id="shapes"><a-entity id="shape1" floating-shape growing-shape class="shape collidable" scale="1 1 1"></a-entity><a-entity id="shape2" floating-shape growing-shape class="shape collidable" scale=".25 .25 .25"></a-entity><a-entity id="shape3" floating-shape growing-shape class="shape collidable" scale=".0625 .0625 .0625"></a-entity><a-entity id="shape4" floating-shape growing-shape class="shape collidable" scale=".0156 .0156 .0156"></a-entity></a-entity><a-entity id="titleShape"><a-dodecahedron floating-shape color="red" material="flatShading:true;" position="0 0 -10" scale="16 16 16"></a-dodecahedron><a-dodecahedron floating-shape color="black" material="wireframe:true;" position="0 0 -10" scale="16 16 16"></a-dodecahedron></a-entity><a-camera id="mainCamera" userheight="0"><a-entity id="instructions"><a-image id="title" canvas-text="text:Polyhedron Runner; width:256;height:64" position="0 1.5 -2.5"></a-image><a-image id="title" canvas-text="text:You are always flying toward the center; width:256;height:64" position="0 1.0 -2.5"></a-image><a-image id="title" canvas-text="text:Move your body to line up with the holes; width:256;height:64" position="0 0.5 -2.5"></a-image></a-entity><a-image id="score" canvas-text="text:Loading; width:256;height:64" position="0 -1.5 -2.5"></a-image><a-entity><a-entity collider-check raycaster="objects:.collidable; far:4; interval: 17;"></a-entity></a-entity><a-entity light="color: #AFA; intensity: 1.5" position="0 1 1"></a-entity></a-camera><a-entity light="type: ambient; color: #BBB"></a-entity></a-scene></body></html>

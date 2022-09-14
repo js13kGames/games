@@ -1,0 +1,186 @@
+<html>
+<head>
+
+<style id="webmakerstyle">
+body {
+  text-align: center;
+  font-size: 24px;
+  font-family: Georgia, Helvetica, Arial;
+}
+h1 {
+  font-size: 12vw;
+  margin-bottom: 0;
+}
+.panel {
+  margin: 20px 0;
+}
+.home-screen {
+  position: relative;
+  z-index: 3;
+  transition: 0.3s ease;
+}
+.game-progress .home-screen {
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+}
+button {
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: inherit;
+}
+.p {
+  height: 10px;
+  width: 10px;  
+  background: red;
+  position: absolute;
+}
+.super-level .p {
+  width: 6px;
+  height: 6px;
+}
+.target {
+  background: green;
+  z-index: 1;
+}
+.hard .target {
+  background: pink;
+}
+.target:hover {
+  background: black;
+}
+.color-blind .p {
+  filter: grayscale(100%);
+}
+.game-over #container .p {
+  display: none;
+}
+.game-over #container .target {
+  display: block;  
+  background: black;
+  width: 20px;
+  height: 20px;
+}
+.overlay {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 70%, rgba(0, 0, 0, 0.2));
+  background-size: 4px 4px;
+}
+#art {
+	width: 96px;
+	height: 96px;
+  margin: 0 auto;
+}
+#art:after {
+	content: '';
+	display: block;
+	width: 6px;
+	height: 6px;
+	background: transparent;
+	box-shadow:24px 24px #cf7e21,30px 24px #cf7e21,24px 30px #cf7e21,30px 30px #cf7e21,42px 30px #cf7e21,36px 24px #cf7e21,48px 24px #cf7e21,42px 24px #cf7e21,24px 48px #cf7e21,24px 54px #cf7e21,24px 42px #cf7e21,66px 30px #cf7e21,60px 30px #cf7e21,66px 42px #cf7e21,24px 60px #cf7e21,30px 60px #cf7e21,36px 66px #cf7e21,42px 36px #cf7e21,48px 48px #cf7e21,48px 30px #cf7e21,48px 36px #cf7e21,42px 42px #cf7e21,30px 54px #cf7e21,36px 60px #cf7e21,42px 60px #cf7e21,42px 48px #cf7e21,48px 42px #cf7e21,60px 54px #cf7e21,54px 54px #cf7e21,48px 60px #cf7e21,54px 60px #cf7e21,66px 66px #995d18,72px 48px #995d18,78px 24px #995d18,72px 42px #995d18,66px 54px #995d18,78px 36px #995d18,78px 30px #995d18,60px 60px #b36d1c,72px 36px #b36d1c,66px 48px #b36d1c,72px 24px #b36d1c,66px 24px #b36d1c,60px 24px #b36d1c,72px 30px #b36d1c,54px 24px #b36d1c,54px 66px #b36d1c,36px 36px #ffffff,54px 36px #ffffff,30px 42px #ffffff,60px 36px #0d0d0d,54px 30px #0d0d0d,66px 36px #0d0d0d,36px 30px #0d0d0d,30px 36px #0d0d0d,24px 36px #0d0d0d,60px 42px #ffffff,36px 54px #cf7e21,78px 42px #995d18,78px 48px #995d18,78px 54px #995d18,78px 66px #995d18,78px 60px #995d18,30px 66px #cf7e21,24px 66px #cf7e21,42px 54px #cf7e21,48px 54px #cf7e21,24px 72px #cf7e21,30px 72px #cf7e21,36px 72px #cf7e21,48px 72px #cf7e21,42px 72px #cf7e21,54px 72px #cf7e21,60px 72px #cf7e21,78px 72px #995d18,72px 72px #995d18,72px 60px #b36d1c,66px 60px #b36d1c,72px 66px #b36d1c,66px 72px #b36d1c,60px 66px #b36d1c,72px 54px #b36d1c,30px 48px #ffffff,54px 48px #ffffff,54px 42px #ffffff,36px 42px #ffffff,60px 48px #0d0d0d,36px 48px #0d0d0d,18px 24px #ffb18a,18px 42px #ffb18a,18px 60px #ffb18a,18px 72px #ffb18a,18px 48px #cf7e21,18px 66px #ff9b29,18px 54px #ff9b29,18px 36px #ff9b29,18px 30px #ff9b29,42px 66px #7d4c14,48px 66px #7d4c14;
+}
+</style>
+</head>
+<body>
+<body class="">
+
+  <div id="container"></div>
+  <div class="home-screen">
+    <h1>The Lost Pixel</h1>
+    <div id="art"></div>
+  <div class="panel">
+    <label>
+      <input id="easyRadio" type="radio" checked name="difficulty"/> Easy
+    </label>
+     <label>
+      <input id="hardRadio" type="radio" name="difficulty" /> Hard
+    </label>
+  </div>    
+    <div class="panel">
+      <label >
+        <input type="checkbox" id="colorBlindCheckbox" /> Color-blind mode
+      </label>
+    </div>
+    <button id="startBtn">Start Game</button>
+    <h2>How to Play?</h2>
+    <div>
+      Find the hidden pixel (<div class="p target" style="position:static;display:inline-block"></div>) and click it within 5 seconds!
+    </div>
+    <div class="panel" style="margin-top:80px">
+      <small>A <a href="http://js13kgames.com/" target="_blank">JS13KGames</a> compo entry (made in 2 hours) by <a target="_blank" href="https://twitter.com/chinchang457">Kushagra Gour</a></small>
+    </div>
+  </div>
+  <div class="overlay"></div>
+</body>
+
+<script src="chrome-extension://lkfkkhfhhdkiemehlpkgjeojomhpccnh/lib/screenlog.js"></script><script>
+const W = window.innerWidth - 40;
+const H = window.innerHeight - 40;
+const levels = [5, 25, 125, 625, 1125, 3625, 4525, 5575, 6235, 7235];
+var currentLevel = 0;
+var timer;
+function makeLevel (count) {
+  var n, x, y;
+  clearTimeout(timer);
+  container.innerHTML = ''
+  var target = ~~(Math.random() * count);
+  for (let i = count; i--;) {
+    n = document.createElement('div');
+    n.classList.add('p');
+    if (i === target) {
+      n.classList.add('target');
+      n.addEventListener('click', () => {
+        makeLevel(levels[++currentLevel]);
+      });
+    }
+    x = Math.random() * W;
+    y = Math.random() * H;
+    n.style.transform = `translate(${x + 20}px, ${y + 20}px)`;
+    container.appendChild(n)
+  }
+  if (currentLevel > 5) {
+    document.body.classList.add('super-level');
+  } else {
+    document.body.classList.remove('super-level');
+  }
+  timer = setTimeout(() => {
+    gameOver();
+  }, 5000)
+}
+
+function startGame() {
+  currentLevel = 0;
+  makeLevel(levels[currentLevel]);
+  document.body.classList.add('game-progress');
+  document.body.classList.remove('game-over');
+}
+
+function gameOver() {
+  document.body.classList.remove('game-progress');
+  document.body.classList.remove('super-level');
+  document.body.classList.add('game-over');
+  const difficulty = hardRadio.checked ? 'hard' : 'easy';
+  const url = `https://twitter.com/intent/tweet?text=I reached level ${currentLevel} on ${difficulty} mode in "The Lost Pixel" game!&url=http://js13kgames.com/games/the-lost-pixel/index.html&hashtags=js13kgames,js13k,gamedev&related=chinchang457`;
+  window.open(url, 'The Lost Pixel', 'width=420,height=230,resizable');
+}
+startBtn.onclick = startGame;
+easyRadio.onchange = () => {
+  document.body.classList.remove('hard');
+}
+hardRadio.onchange = () => {
+  document.body.classList.add('hard');
+}
+colorBlindCheckbox.onchange = () => {
+    document.body.classList[colorBlindCheckbox.checked ? 'add':'remove']('color-blind');
+}
+//# sourceURL=userscript.js
+</script>
+</body>
+</html>

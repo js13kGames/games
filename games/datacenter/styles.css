@@ -1,0 +1,211 @@
+* {
+    box-sizing: border-box;
+    font-family: monospace;
+    font-size: 12pt;
+}
+
+*::selection {
+    background-color: lime;
+    color: black;
+}
+
+*::-moz-selection {
+    background-color: lime;
+    color: black;
+}
+
+html {
+    background-color: black;
+    color: white;
+}
+
+h1 {
+    font-size: 20pt;
+}
+
+body {
+    width: 1600px;
+    height: 800px;
+    display: grid;
+    grid-template-columns: 400px 600px 600px;
+}
+
+div.left {
+    padding-right: 20px;
+    display: grid;
+    grid-template-rows: 300px auto;
+}
+
+div.right {
+    padding-left: 20px;
+    overflow-y: auto;
+}
+
+div.right * {
+    color: rgb(163, 163, 163);
+}
+
+div.right p, div.right p *, div.right button {
+    font-size: 11pt;
+}
+
+div.stats p {
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+div.stats .grey {
+    color: grey;
+}
+
+canvas#graph {
+    border: 2px solid white;
+    width: 380px;
+    height: 40px;
+}
+
+div.shop {
+    height: 500px;
+    border: 2px solid white;
+    overflow-y: scroll;
+}
+
+div.shop-item {
+    border-bottom: 2px solid white;
+    color: grey;
+    padding: 10px;
+}
+
+div.shop-item h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 12pt;
+    color: white;
+}
+
+div.shop-item p {
+    margin: 0;
+}
+
+button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 0;
+    margin-bottom: 5px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+div.rack {
+    border: 2px solid white;
+    padding: 10px;
+}
+
+div.machine {
+    height: 40px;
+    border: 3px solid rgb(117, 117, 117);
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 76px repeat(19, 26px);
+}
+
+div.machine div {
+    padding: 5px;
+    pointer-events: none;
+}
+
+div.machine div.port {
+    position: relative;
+}
+
+div.machine div.hole {
+    pointer-events: all;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    height: 12px;
+    margin: auto;
+    outline: 2px solid white;
+    cursor: pointer;
+    z-index: 1;
+}
+
+div.port.net div.hole {
+    background-color: rgb(70, 60, 201);
+}
+
+div.port.power div.hole {
+    background-color: rgb(255, 182, 47);
+}
+
+div.hole.selected {
+    background-color: red !important;
+}
+
+div#cables div {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition-duration: 0.5s;
+}
+
+div#cables div:hover {
+    background-color: white;
+    transition-duration: 0s;
+}
+
+div#alert-curtain {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+div#alert {
+    width: 500px;
+    height: 200px;
+    border: 2px solid white;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+    top: 0;
+    margin: auto;
+    z-index: 2;
+}
+
+div#alert p {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+div#alert footer {
+    padding-left: 10px;
+    padding-right: 16px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 2.5em;
+    line-height: 2.5em;
+    border-top: 2px solid white;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+div#alert footer button {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px;
+}

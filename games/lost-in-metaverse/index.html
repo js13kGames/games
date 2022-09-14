@@ -1,0 +1,74 @@
+
+<html>
+
+<head>
+  <title>Lost in Metaverse</title>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js" /></script>
+</head>
+
+<body>
+  <div style="position: absolute; bottom: 10px; width:100%; text-align: center; z-index: 1;">
+	Made by <a href="https://twitter.com/karanganesan" target="_blank">@karanganesan</a>
+</div>
+    <a-scene>
+        <a-camera>
+            <a-entity cursor="fuse: true; fuseTimeout: 500" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: black; shader: flat">
+            </a-entity>
+            <a-text id="t" position="-1.25 1.7 -3" value="Score : 0" color="white">
+                <a-plane position="1.2 0 0" width="3" height="0.5" color="green"></a-plane>
+            </a-text>
+        </a-camera>
+        <a-box id="b" position="-2 0 -3" color="blue">
+            <a-animation attribute="rotation" to="360 360 360" dur="3000" easing='linear' repeat="indefinite"></a-animation>
+        </a-box>
+        <a-box id="b2" position="2 0 -3" color="red" rotation="360 360 360">
+            <a-animation attribute="rotation" to="0 0 0" dur="3000" easing='linear' repeat="indefinite"></a-animation>
+        </a-box>
+        <a-sky color="white"></a-sky>
+    </a-scene>
+    <script type="text/javascript">
+    alert("Welcome to the Lost in Metaverse. Now you are now lost in space. See the blue qubes to get a point and red to lose one point ! the blue and red qubes come randomly around you in all 6 directions ...");
+    var v = 0;
+    var be = document.getElementById("b");
+    var be2 = document.getElementById("b2");
+    var te = document.getElementById("t");
+    te.setAttribute('value', "Score : 0");
+    be.addEventListener('mouseenter', function(evt) {
+        v++;
+        te.setAttribute('value', "Score : " + v);
+    });
+    be2.addEventListener('mouseenter', function(evt) {
+        v--;
+        te.setAttribute('value', "Score : " + v);
+    });
+    // var random = Math.random() * (max - min) + min;
+    function startTime() {
+        var rv1 = Math.random() * (5 - -5) + -5;
+        var rv2 = Math.random() * (5 - -5) + -5;
+        var rv3 = Math.random() * (5 - -5) + -5;
+        var rv01 = Math.random() * (5 - -5) + -5;
+        var rv02 = Math.random() * (5 - -5) + -5;
+        var rv03 = Math.random() * (5 - -5) + -5;
+        be.setAttribute('position', {
+            x: Math.round(rv1),
+            y: Math.round(rv2),
+            z: Math.round(rv3)
+        });
+        be2.setAttribute('position', {
+            x: Math.round(rv01),
+            y: Math.round(rv02),
+            z: Math.round(rv03)
+        });
+        var t = setTimeout(startTime, 1500);
+
+    }
+    startTime();
+    </script>
+   
+
+
+
+
+</body>
+
+</html>

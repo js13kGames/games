@@ -1,0 +1,40 @@
+body {
+    margin: auto;
+    width: 400px;
+    background-color: black;
+    color: white;
+}
+
+nav {
+    color: #aaa;
+    position: relative;
+    top: -40px;
+}
+nav strong {
+    color: #fbb;
+}
+
+input {
+    width: 50px;
+}
+
+a {
+    color: #bbf;
+}
+a:hover {
+    background-color: #333;
+}
+
+img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    image-rendering: optimize-contrast;
+    margin-left: 50px;
+}
+
+#startgame, #endgame {
+    font-style: italic;
+    color: #ffb;
+}

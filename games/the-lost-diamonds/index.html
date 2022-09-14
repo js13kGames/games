@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>The Lost Diamonds</title>
+	<style type="text/css">
+		button {
+			background-color: black;
+			color: white;
+			border: none;
+			font-weight: bold;
+			padding: 10px;
+			width: 100%;
+		}
+
+		h3 {
+			margin: 5px 0px 0px 0px;
+		}
+
+		table tr td{
+			vertical-align: top;
+		}
+
+		div {
+			width: 500px;
+			height: 450px;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			margin-top: -225px;
+			margin-left: -250px;
+			z-index: 1000000;
+			background-color: white;
+			padding: 20px;
+		}
+
+		input {
+			margin :10px 0px;
+			padding: 4px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+<!-- Started with the name of Allah Almighty -->
+<div id="introd">
+	<b>Welcome User</b> This is a Multiplayer "The Lost Diamonds" game there are lost diamonds behind the black screen you have to find atleast 6 green diamonds and then the black diamond to win the game.<br />
+	When you will eat diamonds your speed will be increased but their are some poisoned diamonds which will reduce your speed so be carefull.<br />
+	Every diamond has a specific spot from where you can eat them its tricky.<br />
+	You have to press the keys again and again to walk on the screen, the more quickly you presses the keys the faster you will walk.<br />
+	Every time you eats a diamond the black diamond will be repositioned on the black screen. Which means it will be lost again. <b>So its a real lost game :p</b><br />
+	<b>Best of luck</b><br /><br />
+	Player1 : Arrow keys<br />
+	Player2 : A, W, S, D<br /><br />
+	Rename Players Below:
+	<input type="text" name="" id="player1" value="Player 1" placeholder="Enter player 1 name">
+	<input type="text" name="" id="player2" value="Player 2" placeholder="Enter player 2 name">
+	<button id="start">Start Game</button>
+</div>
+	<table>
+		<tr>
+			<td>
+			<object id="svgObject" data="img/svgfile.svg" type="image/svg+xml" height="50" width="50">
+
+			</object>
+
+<svg width="1200" height="620" viewBox="0 0 1200 620">
+	<g id="bg">
+		<rect fill-rule="evenodd" clip-rule="evenodd" fill="rgb(0,150,0)" width="1200" height="620"/>
+	</g>
+	<g id="gems">
+	</g>
+	<polygon id="bldiam" points="462,532 477,532 482,542 477,552 462,552 457,542" id="stp" style="fill:black;stroke:white;stroke-width:2"></polygon>
+		<defs>
+			<filter id="f3" x="0" y="0" width="100%" height="100%">
+				<feOffset result="offOut" in="SourceAlpha" dx="2" dy="2" />
+				<feGaussianBlur result="blurOut" in="offOut" stdDeviation="30" />
+				<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+			</filter>
+		</defs>
+
+		<path id="light" fill="#000000"  filter="url(#f3)" fill-rule="evenodd" d="M0,0 H620 V0 h1200 V620 H0z M 10, 310 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0z M 1186, 310 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0z"/>
+	</svg>
+			</td>
+			<td>
+				<button onclick="window.location.reload()">Restart</button>
+				<h3 id="gemStat">GEMS Left: 10</h3>
+				<span id="stats" style="max-height: 554px;
+overflow-y: scroll;
+height: 554px;
+display: block;">
+				</span>
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+//randome number generator
+function gRI(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var gemCount = 10;
+
+//the winning pot destination change
+function rPot () {
+	var x = gRI(20, 1180);
+	var y = gRI(20, 600);
+	document.getElementById("bldiam").setAttribute('points',""+x+","+y+" "+(x+15)+","+y+" "+(x+20)+","+(y+10)+" "+(x+15)+","+(y+20)+" "+x+","+(y+20)+" "+(x-5)+","+(y+10)+"");
+}
+
+
+//player object create player
+//@Attributes: plC:playerColor
+function plOb(x,y,plC,name) {
+	//get svg physical layer 
+	var pl = document.getElementsByTagName('svg')[0];
+
+	// player wrap
+	var plWr = pl.namespaceURI;
+	
+	//player body
+	this.plB = document.createElementNS(plWr, 'circle');
+
+	//calculate points
+	this.pn = 0;
+	this.gemC = 10;
+	//player coordinate constant
+	var COR = 7;
+	this.mov = 2;
+
+	//player name
+	this.name = name;
+
+	//stylize all the player costume and things (i mean all the attributes to make up our physical player which will definitely rock in game.)
+	this.plB.setAttribute('cx',COR+x);
+	this.plB.setAttribute('cy',COR+y);
+	this.plB.setAttribute('r',COR);
+	this.plB.setAttribute('fill',plC);
+
+	//append svg player to the html document
+	pl.appendChild(this.plB);
+
+	this.pow = function (x,y,i) {
+		var el = document.elementsFromPoint(x,y);
+		if(el[0].nodeName == 'polygon') {
+			switch(el[0].id) {
+				case 'stp': 		//upgrade up power by 5
+					if(this.pn<12)this.pn+=3;
+					document.getElementById("stats").append(this.name + ' got GEM + Speed Bonus\n\n\n');
+					document.getElementById("gemStat").innerHTML = 'Gems Left: ' + --gemCount;
+					--this.gemC;
+					rPot ()
+					break;
+				case 'los': 	//move player 1 down
+					if(this.pn>3)this.pn -= 3;
+					document.getElementById("stats").append(this.name + ' got Poisoned GEM + Speed degrade\n\n\n');
+					rPot ()
+					break;
+				case 'bldiam':
+					if(this.gemC <= 5) {
+						alert(this.name + " Game Won!\nClick OK to restart");
+						window.location.reload();
+					}
+					break;
+			}
+			el[0].remove();
+		}
+	}
+
+	//move up method
+	this.mU = function (i) {
+		var x = parseInt(this.plB.getAttribute('cx'));
+		var y = parseInt(this.plB.getAttribute('cy'));
+		this.plB.setAttribute('cy',y-this.mov-this.pn);
+		console.log(document.getElementById("light").attributes);
+		document.getElementById("light").pathSegList[i].y = y-this.mov;
+		this.pow(x,y,i);
+	};
+
+	//move down method
+	this.mD = function (i) {
+		var x = parseInt(this.plB.getAttribute('cx'));
+		var y = parseInt(this.plB.getAttribute('cy'));
+		this.plB.setAttribute('cy',y+this.mov+this.pn);
+		document.getElementById("light").pathSegList[i].y = y+this.mov;
+		this.pow(x,y,i);
+	};
+
+	//move right method
+	this.mR = function (i) {
+		var x = parseInt(this.plB.getAttribute('cx'));
+		var y = parseInt(this.plB.getAttribute('cy'));
+		this.plB.setAttribute('cx',x+this.mov+this.pn);
+		document.getElementById("light").pathSegList[i].x = x+this.mov;
+		this.pow(x,y,i);
+	};
+
+	//move left method
+	this.mL = function (i) {
+		var x = parseInt(this.plB.getAttribute('cx'));
+		var y = parseInt(this.plB.getAttribute('cy'));
+		this.plB.setAttribute('cx',x-this.mov-this.pn);
+		document.getElementById("light").pathSegList[i].x = x-this.mov;
+		this.pow(x,y,i);
+	};
+}
+
+//game bricks
+function brF(x) {
+	//get svg physical layer 
+	var br = document.getElementsByTagName('svg')[0];
+	// brick wrap
+	var brWr = br.namespaceURI;
+
+	//Brick body
+	var brB = document.createElementNS(brWr, 'rect')
+
+	//Styling the bricks and making attributes.
+	brB.setAttribute('x',x*70*2);
+	brB.setAttribute('y',0);
+	brB.setAttribute('width',70);
+	brB.setAttribute('height',620);
+	brB.setAttribute('fill','rgb(0,'+ gRI(130,180) +',0)');
+
+	//append svg brick to the html document
+	document.getElementById("bg").appendChild(brB);
+}
+
+//gems for game
+function gems(x,y,id) {
+	//get svg physical layer 
+	var br = document.getElementsByTagName('svg')[0];
+	// gem wrap
+	var geWr = br.namespaceURI;
+
+	//gem body
+	var geB = document.createElementNS(geWr, 'polygon')
+
+	//Styling the gems and making attributes.
+	geB.setAttribute('points',""+x+","+y+" "+(x+15)+","+y+" "+(x+20)+","+(y+10)+" "+(x+15)+","+(y+20)+" "+x+","+(y+20)+" "+(x-5)+","+(y+10)+"");
+	geB.setAttribute('id',id);
+	geB.setAttribute('style','fill:lime;stroke:purple;stroke-width:1');
+
+	//append svg gems to the html document
+	document.getElementById("gems").appendChild(geB);
+}
+
+//Game board
+function gB() {
+	var br = document.getElementsByTagName('svg')[0];
+	var gr = br.namespaceURI;
+	var grB = document.createElementNS(gr, 'g')
+	for(var i=0; i<10; i++) {
+		brF(i);
+		gems(gRI(10, 1190),gRI(10, 610), 'stp');
+	}
+	br.appendChild(grB);
+	for(var i=0; i<5; i++) {
+		gems(gRI(10, 1190),gRI(10, 610), 'los');
+	}
+}
+
+// create two player objects
+var pl1;
+var pl2;
+document.getElementById("start").onclick = function(){
+	document.getElementById("introd").style.display = "none";
+	 pl1 = new plOb(10, 310, '#2985FD', document.getElementById("player1").value);
+	 pl2 = new plOb(1186,310,'red', document.getElementById("player2").value);
+};
+
+//create game board
+gB();
+
+document.addEventListener("keyup", function (e) {
+	switch(e.key) {
+		case 'ArrowUp': 	//move player 1 up
+			pl1.mU(7);
+			break;
+		case 'ArrowDown': 	//move player 1 down
+			pl1.mD(7);
+			break;
+		case 'ArrowLeft': 	//move player 1 left
+			pl1.mL(7);
+			break;
+		case 'ArrowRight': 	//move player 1 right
+			pl1.mR(7);
+			break;
+		case 'w': 			//move player 2 up
+			pl2.mU(12); 
+			break;
+		case 's': 			//move player 2 down
+			pl2.mD(12); 
+			break;
+		case 'a': 			//move player 2 left
+			pl2.mL(12); 
+			break;
+		case 'd': 			//move player 2 right
+			pl2.mR(12); 
+			break;
+	}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>Big Fish</title>
+    </head>
+    <style>
+        body{
+            font-family: Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: top;
+            flex-direction: column;
+            align-items: center;
+            background-color: '#222222';
+        }
+        #canvas-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+        #canvas {
+            visibility: hidden;
+            width: 80vw;
+            height: 40vw;
+            z-index: 1;
+        }
+        #title {
+            visibility: hidden;
+        }
+        #stats {
+            visibility: hidden;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: row;
+            vertical-align: middle;
+        }
+        #stats * {
+           text-align: center;
+        }
+        h1 {
+            font-size: 3vw;
+            margin: 1vw;
+        }
+        h2 {
+            font-size: 1vw;    
+            margin: 0 1vw 1vw 0.5vw;
+        }
+        h3 {
+            font-size: 3vh;
+            margin: 2vh 0 2vh 0;
+        }
+        h4 {
+            font-size: 2vh;
+            margin: 0 0 0 0;
+        }
+        #bar {
+            height: 1vw;
+            width: 6vw;
+            border: 2px solid black;
+            background-color: white;
+        }
+        #progress {
+            height: 1vw;
+            width: 0;
+            background-color: green;
+        }
+        #blur {
+            transition: opacity 1000ms;;
+            visibility: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #000000;
+            opacity: .8;
+            z-index: 2;
+        }
+        #intro, #game-over, #won-game, #info-panel {
+            background: #ffffff;
+            visibility: hidden;
+            position: absolute;
+            min-width: 750px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-height: 80vh;
+            z-index: 3;
+            border-radius: 4vw;
+            border: 2px solid black;
+        }
+        .flex {
+            align-items: center;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .flex * {
+            text-align: center;
+            min-width: 100%;
+        }
+        #start-button, #restart-button, #back-button, #hide-info{
+            min-width: 220px;
+            border: 0.1vh black solid;
+            font-size: 2vh;
+            background: white;
+            height: 5vh;
+            cursor: pointer;
+            margin-bottom: 2vh;
+        }
+        #restart-button, #back-button {
+            margin-top: 2vh;
+        }
+        #info {
+            position:absolute;
+            top: 1vh;
+            left: 1vh;
+            width: 3vw;
+            height: 3vw;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .info-canvas {
+            height: 8vh;
+            min-width: 750px
+        }
+    </style>
+    <body>
+        <button id = 'info'>?</button>
+        <h1 id='title'>Big Fish</h1>
+        <div id = 'stats'>
+            <h2>FISH EATEN <div id='count'>0</div></h2>
+            <h2>SCORE <div id='score'>0</div></h2>
+            <h2>PROGRESS <div id='bar'>
+                <div id='progress'></div>
+            </div></h2>
+        </div>
+        <div id = 'blur'></div>
+        <div id = 'intro'>
+            <div class = 'flex'>
+                <h3>Rules of the Pond</h3>
+                <h4>1. Use the arrow keys to avoid larger fish</h4>
+                    <canvas class = 'info-canvas' id = 'intro-avoid'></canvas>
+                <h4>2. Eat smaller fish to grow in size</h4>
+                    <canvas class = 'info-canvas' id = 'intro-eat'></canvas>
+                <h4>3. Beware of odd-sized fish</h4>
+                    <canvas class = 'info-canvas' id = 'intro-odd'></canvas>
+                <h4>4. Tails do not count towards collisions</h4>
+                    <canvas class = 'info-canvas' id = 'intro-tails'></canvas>
+                <h4>5. Collect bonus items to gain points and power-ups</h4>
+                    <canvas class = 'info-canvas' id = 'intro-bonus'></canvas>
+                <h4>6. Become the biggest fish in the pond to win</h4>
+                    <canvas class = 'info-canvas' id = 'intro-win'></canvas>
+                <button id = 'start-button'>Play!</button>
+            </div>
+        </div>
+        <div id = 'game-over'>
+            <div class = 'flex'>
+                <h3>Game Over</h3>
+                <h4>You got a little too ambitious.</h4>
+                <h4>Maybe there's a smaller pond?</h4>
+                <button id = 'restart-button'>Restart</button>
+            </div>
+        </div>
+        <div id = 'won-game'>
+            <div class = 'flex'>
+                <h3>I would say congrats but...</h3>
+                <h4>there's always a bigger pond.</h4>
+                <button id = 'back-button'>Back to Being Small</button>
+            </div>
+        </div>
+        <div id = 'info-panel'>
+                <div class = 'flex'>
+                    <h3>Big Fish</h3>
+                    <h4>Created by Mark Racette for the 2019 JS13k competition.</h4><br>
+                    <h4>Some colors contributed by @manekineko via <a href='https://www.colourlovers.com/palette/92095/Giant_Goldfish'>colour lovers.</a></h4><br>
+                    <h4>You can connect with me through <br> 
+                        <a href='mailto:markracette@gmail.com'>email</a>, 
+                        <a href='https://twitter.com/markracette'>twitter</a>, 
+                        <a href='https://instagram.com/rgb.ig'>instagram</a>, or 
+                        <a href='https://github.com/mracette'>github</a>.</h4><br>
+                    <h4>Thanks for playing!</h4><br>
+                    <button id = 'hide-info'>Close</button>
+                </div>
+            </div>
+        <canvas id='canvas-background'></canvas>
+        <canvas id='canvas'></canvas>
+        <script src="./dist/bundle.js"></script>
+	</body>
+</html>

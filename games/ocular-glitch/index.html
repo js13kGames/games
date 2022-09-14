@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  <title>Ocular Glitch</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #444;
+      color: #FFF;
+      text-align: center;
+    }
+    #c {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      cursor: none;
+    }
+    .started #c {
+      width: 100%;
+      height: 100%;
+    }
+    p {
+      display: inline-block;
+      text-align: left;
+      font-size: 30px;
+      text-shadow: 0 0 14px #FFF, 0 0 14px #FFF;
+      margin-top: 10%;
+    }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<p>
+  You are experiencing an ocular glitch. <br>
+  Your retina remains excited by light too much time. <br>
+  Right now when you must escape from falling bombs... <br>
+  <b>Click to start.</b>
+</p>
+<audio id="step" src="data:audio/wav;base64,UklGRtgAAABXQVZFZm10IBAAAAABAAEAiBUAAIgVAAABAAgAZGF0YbQAAAAAhISEfnFxcXF9hISEhHN2dnZ4emtra3eDkpKSkZCAgIB9f4ODiI6ZoaF/d3Z2eISEgYGAf4SJiYSDZF1eYmNvb3N9fHp6enp2dXViYmVma3p+hoaHiIiIiHh2ZmVodHmFhYB7fX5+g4R2dXRvcnt7fX97d3h4eX1+foGAfX16dXd4eHp7fHx8fHx+fn+DgX19e3l7e3yAgYCAf3x9f39/f359fXx9f39/gH9+fn9/f39/f38="></audio>
+<script>
+var explosion = 'data:audio/wav;base64,UklGRksUAABXQVZFZm10IBAAAAABAAEAiBUAAIgVAAABAAgAZGF0YScUAABK/wAA/wAAAAAAAAD//////wAAHv/////4to5DR///////AAAAAAAAAADWAAAhAAAAAMz//wAAAAAAAAAAAP////8kKkn//////////////////wAAAAAAAAAAAAAAAAAAAAAAAF3//////////////////////////4cAAAAAAAD/////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//////////6UAAAAAAAAAAAAAAAAAAAAAAAAAJKn//////+xYAAAAAAAAAOj//////////74AAAAAAAAAAAAAAAAAAAAAAAAAAJGJiIiIiIeHh2toUElKS0xNTk9QUU4sLw0NDxETFRcZGx0fIf///////wAAAAAAAAAAAAACBAYICw0PERMVFxkbHR8gIiQlJykqLC0vMDIzNTY3OTo7PD5eZGyKioqKiomJiYmJiYiIiIiIiIiHh4eHh4eHhoaGhoaGhoaGhYWFhYWFhYWFhYWEo6Oiwb++vby7urm4t7a1tLSzsrGwr6+uraysq6qpqainp6ampaSko6OioaGgoJ+fbQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABeXV70/////////////////////////////////fv5+Pb08vHv7ezq6efm5OPh4N///////////////////////////////////////////////////////////////////6SlpCEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKvNzMv///////////////////////////////////////////////////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6SioaGh//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8XAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA///////////////////////////////////////////////////////////////////////////zioqKioqKioqKiomJiYmJiYmJiYmJiYmJiYiIiIiIiIiIiIiIiIiIiP7/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIeRkZGRkJCQkP////////////////////////////////////////////////////////////////8qAAAAAAECAwMEBQUGBwcICQkKCwsMDA0ODg8QEBEREhMTFBQVFRYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsf//////////////////////////////////////////////////////////////////////////////0tPT09LS0tHR0NDQz8/Pzs7Nzc3MzMzLy8vKysrJycnIyMjHx7lAQ0NDRERERUVFKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICAwMEBAUFBgYHOkBBQUFCQkJCQ0NDQ0RERERFRUVFRUZGRkZHR0dHR0hISEhJSSoaGhobGxwcHB0dHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9OTk5PT09PT09PUFBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoKGhoaGhoaGhoKCgoP//////////////////////////////////////////////zldYWFhYWFlZWVlZWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtLi4uLi3t7e3t7e3trb//////////////////////////////////////////////////////////////////////////////////////////////////////////////5oNCwsLCwwMDAwNDQ0ODg4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcW9vb29vb29vb29vb29v///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+/v7+/f39/cIPCgoKCwsLCwwMDAwNDQ0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMS4uLi8vLy8vLzAwMDAwkv//////////////////////////////////////////+Nvb29ra2tra2dnZ2dnZ2LGWlpaWlpaWlpaWlZWVlZWVlZWVlZWVlZWVlZWVlZWVlbbCwsLCwsLBwcHBwcHBwcDi7e3t7ezs7Ozs6+vr6+vr6urq6urp6enp6ejo6Ojo5+f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////6qjo6Ojo6Ojo6Ojo6OjokoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABcWlpaWlpaWlpaWlpaWlq5/////////////////////////////////////////////////////////////////fLx8fHx8fHx8PDw8PDw7+/v7+/v7+7u7u7u7u7t7e3tt6ampqampqampqampqampm9gYGBgYGBgYGBgYGBgYGBgYGBgYGBhYWFhYWFhYWFhYW1tbW1tbW1tbm5ubm5ubm55enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6enAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ0ZGRkZGRkZGRkZGR0dHgf//////////////////////////////////////////8t/g39/f39/f39/f3t7e3s68vby8vLy8vLy8vLy8vLy8u7u7u7u7u7u7u7u7u7u6urazs7Ozs7OysrKysrKysrKtqqqqqqqqqqqqqqqqqqqqqqqqqqqqqampqampqampqamhn5+fn5+fn5+fn5+fn5+fl5aWlpWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWV//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+5Y2NjY2NjY2NjY2NjZGRkEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARYmJiIiIiIiIiIiIiIiIiP////////////////////////////////////////////jp6enp6eno6Ojo6Ojo6OeekZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGQkJCQkJCQkJA5OTk5OTk5Ojo6Ojo6Ojo6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOjs7Ozs7Ozw8PDw8PDw8TIuMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMZRYXFxgYGBgYGBgYGRkZGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfICAgICAgISEhISEhISFekJGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZBvX2BgYGBgYGBgYGBgYGBgPjAwMDAwMDExMTExMTExMTEyMjIyMjIyMjIzMzMzMzMzAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuMDAwMDExMTExMTExMTJQra+vr6+vr6+vr6+vr66urq6urq6urq6urq6urq2tra2ALzExMTExMTIyMjIyMjIyBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHWVnZ2dnZ2dnZ2dnZ2dnZ8X//////////////////////////////////////////8CjpKSkpKSko6Ojo6Ojo6NeQ0RERERERERFRUVFRUVFRUVFRUZGRkZGRkZGRkZGRkd/hoaGhoaGhoaGhoaGhoaGv8XFxcTExMTExMTExMPDw8PDw8PDw8PCwsLCwsLCwsLAlJWVlZWVlZWVlZWVlZWVk2hqampqampqampqampqampqampqampqampqampqa2trZFFRUVFRUVFRUVFRUVJSUks5ODg5OTk5OTk5OTk6Ojo6Ojo6Ojo7Ozs7Ozs7Ozs8PGGcm5qampqampqampqamprA+Pf29vb29vX19fX19PT09PTz8/Pz8/Py8vLy8vHx8fGvgYCAgICAgICAgICAgICAPhISEhISEhMTExMTFBQUFBQVFRUVFRUWFhYWFhcXFxcXPElJSUlJSUlJSUlJSkpKSm96enp6enp6enp6enp6enp6enp6enp6enp6enp6enp6ent7e3t7e3t7e3t7e3t7e3t8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fH2KiYmJiYmJiYmJiYmJiYmKlpaWlpaWlpWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZSZo6Ojo6OjoqKioqKioqKiprCwsLCvr6+vr6+vr6+vr66urq6urq6urq6tra2tra2tl3p7e3t7e3t7e3t7e3t7e2VJSkpKSkpKS0tLS0tLS0tLTExMTExMTExMTU1NTU1NTT40NDQ0NTU1NTU1NjY2NjYnHh4eHh8fHx8fICAgICAhISEhIiIiIiIjIyMjJCQkJCRSX19fX19gYGBgYGBgYGBgjpmZmZmZmZmZmZmYmJiYmJiYmJiYmJiYmJiYmJeXl5eXjY2NjYyMjIyMjIyMjIyMjIKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoODg4ODg4ODg4ODg4ODg4OEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhHliYmJiYmJjY2NjY2NjY2NZQ0NDQ0REREREREVFRUVFRkZGRkZGR0dHR0dHSEhISEhPV1dYWFhYWFhYWFlZWVlZYGdnZ2hoaGhoaGhoaGhoaGlpaWlpaWlpaWlpaWlqampqeYKCgoKCgoKCgoKCgoKCgpGZmZmZmZmYmJiYmJiYmJiYmJeXl5eXl5eXl5eWlpaWlpSTk5OTk5OTk5OSkpKSkpKQj4+Pj4+Pj4+Pj4+Pjo6Ojo6Ojo6Ojo6Ojo6Ojo2NjY2Xl5eXl5eXlpaWlpaWlpaWn5+enp6enp6enZ2dnZ2dnJycnJycnJubm5ubm5qampqWgYGBgYGBgYGBgYGBgYGBfGpqampqampqa2tra2tra2xsbGxsbGxsbW1tbW1tbW5ubm9vb29vb29vcHBwcHBwcHFxcXFxcnJycnJycnJzc3Nzc3Nzc3N0dHR0dHR0dHR1dXd4eXl5eXl5eXl5eXl5eXp7fX19fX19fX19fX19fX19fX19fX19fX19fn5+fn5+fn5/gICAgICAgICAgICAgICAgYGBgYGBgYGBgYGBgYGBgYCAgICAgICAgICAgICAgICAgA==';
+
+document.body.onclick = function() {
+  if (document.body.webkitRequestFullscreen) document.body.webkitRequestFullscreen();
+  if (document.body.mozRequestFullScreen) document.body.mozRequestFullScreen();
+  if (document.body.requestFullscreen) document.body.requestFullscreen();
+  document.body.onclick = null;
+  setTimeout(start, 300);
+  //setTimeout(gameOver, 3000);
+}
+
+var ctx = c.getContext('2d'),
+    ratio = 2, //window.devicePixelRatio * 2,
+    w=0, h=0, pi=Math.PI,
+    alive = false,
+    usrX = 200,
+    usrFrame = 0,
+    bombs = [],
+    escapedCounter = 0;
+
+function start() {
+  document.body.className = 'started';
+  w = c.width = document.body.clientWidth / ratio;
+  h = c.height = document.body.clientHeight / ratio;
+  usrX = Math.round(w/2);
+  alive = true;
+  // Paint Sky
+  var grd = ctx.createLinearGradient(0,0,0,h);
+  grd.addColorStop(0, '#00F');
+  grd.addColorStop(1, '#0FF');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, w, h);
+  // Make First Bombs
+  for (var i=5; i<w-30; i+=100)
+    bombs.push({x:i+Math.random()*30, y:-150+Math.random()*150, c:'#F0'+Math.floor(Math.random()*15).toString(16)});
+  tic();
+}
+
+function dot(x, y, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x,y,r,0,Math.PI*2,true);
+  ctx.fill();
+  ctx.closePath();
+}
+
+//c.onclick = function(ev) {
+//  dot(ev.clientX/ratio, ev.clientY/ratio, 10, '#F0'+Math.floor(Math.random()*15).toString(16));
+//}
+
+function boneco(dir, x, y, frame1) {
+  if ( frame1 == 1 || frame1 == 11 ) step.play();
+  var frame2 = frame1 + 10;
+  if (frame2>=20) frame2 -= 20;
+  var waveX1 = frame1;
+  var waveX2 = frame2;
+  if ( waveX1 > 10 ) waveX1 = 20 - waveX1;
+  if ( waveX2 > 10 ) waveX2 = 20 - waveX2;
+  var waveY1 = Math.sin(2*pi*frame1/20);
+  if (waveY1 > 0) waveY1 /= 3;
+  var waveY2 = Math.sin(2*pi*frame2/20);
+  if (waveY2 > 0) waveY2 /= 3;
+
+  ctx.lineWidth = 12;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  if (frame1 == -1) { // stoped
+    ctx.strokeStyle = 'rgba(255,160,0,1)';
+    ctx.beginPath();
+    ctx.arc(x, y-55, 5, 1.5,pi*2.5, true);
+    ctx.lineTo(x, y-25);
+    ctx.moveTo(x - 10, y-23);
+    ctx.lineTo(x - 5, y-40);
+    ctx.lineTo(x + 5, y-40);
+    ctx.lineTo(x + 10, y-23);
+    ctx.moveTo(x - 10, y-7);
+    ctx.lineTo(x, y-25);
+    ctx.lineTo(x + 10, y-7);
+    ctx.stroke();
+    ctx.closePath();
+  } else { // walk
+    ctx.strokeStyle = 'rgba(255,160,0,.6)';
+    ctx.beginPath();
+    ctx.moveTo(x, y-45);
+    ctx.lineTo(x + (5 - waveX1*2)*dir, y-33);
+    ctx.lineTo(x + (17 - waveX1*2)*dir, y-38);
+    ctx.moveTo(x, y-25);
+    ctx.lineTo(x + (15 - waveX2*2.5)*dir, y-7-waveY2*-7);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.strokeStyle = 'rgba(255,160,0,1)';
+    ctx.beginPath();
+    ctx.moveTo(x, y-45);
+    ctx.lineTo(x + (5 - waveX2*2)*dir, y-33);
+    ctx.lineTo(x + (17 - waveX2*2)*dir, y-38);
+    ctx.stroke();
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.arc(x, y-55, 5, 1.5,pi*2.5, true);
+    ctx.lineTo(x, y-25);
+    ctx.lineTo(x + (15 - waveX1*2.5)*dir, y-7-waveY1*-7);
+    ctx.stroke();
+    ctx.closePath();
+  }
+}
+
+function explode(bomb) {
+  var i = bombs.indexOf(bomb);
+  bombs = bombs.slice(0, i).concat(bombs.slice(i+1));
+  var grd = ctx.createRadialGradient(bomb.x, bomb.y, 0, bomb.x, bomb.y, 60);
+  grd.addColorStop(1.0, 'rgba(255,0,0,0)');
+  grd.addColorStop(0.6, bomb.c);
+  grd.addColorStop(0.5, bomb.c);
+  grd.addColorStop(0.2, '#F8F');
+  dot(bomb.x,bomb.y,60,grd);
+  //<audio id="explosion" src=""></audio>
+  var a = document.createElement('audio');
+  a.src = explosion;
+  a.play();
+}
+
+function gameOver() {
+  alive = false;
+  usrX = -100;
+}
+
+var ticCounter = 0;
+function tic() {
+  ticCounter++;
+  // Bombs...
+  if (ticCounter%12==0) bombs.push({x:Math.random()*(w-10)+5, y:-30+Math.random()*20, c:'#F0'+Math.floor(Math.random()*15).toString(16)});
+  for (var bomb,i=0; bomb=bombs[i]; i++) {
+    bomb.y+=2;
+    dot(bomb.x,bomb.y,10,bomb.c);
+    if ( bomb.y > h-95 && Math.abs(bomb.x-usrX) < 25 ) {
+      explode(bomb);
+      gameOver();
+    }
+    if ( bomb.y > h-24 ) {
+      explode(bomb);
+      if (alive) escapedCounter++;
+      notifyEscaped();
+    }
+  }
+  // Blur...
+  var px={}, N,S,W,E, sum, pixels = ctx.getImageData(0,0,w,h);
+  var data = pixels.data;
+  for (px.r=0; px.r<data.length; px.r+=4) {
+    px.g = px.r + 1; px.b = px.r + 2;
+    for ( var unit,i=0; unit=['r','g','b'][i]; i++ ) {
+      N = data[px[unit] - w*4] || 0;
+      S = data[px[unit] + w*4] || 0;
+      W = data[px[unit] -  4 ] || 0;
+      E = data[px[unit] +  4 ] || 0;
+      sum = N + S + W + E;
+      if ( data[px[unit]]*4 > sum ) {
+        data[px[unit]] = ( data[px[unit]]*4 + sum ) / 8;
+      } else {
+        data[px[unit]] = ( data[px[unit]] + sum*2 ) / 9;
+      }
+      if (data[px[unit]] > 200) data[px[unit]] -= 5;
+      data[px[unit]] += Math.round(Math.random()*5-3);
+    }
+    //data[px.r] += Math.round(Math.random()*5-3);
+    //data[px.g] += Math.round(Math.random()*5-3);
+    //data[px.b] += Math.round(Math.random()*5-3);
+  }
+  ctx.putImageData(pixels, 0, 0);
+
+  // Draw elements...
+
+  if (alive) {
+    if (keyRight) { usrX += 3; usrFrame++ }
+    if (keyLeft) { usrX -= 3; usrFrame++ }
+    if (!keyRight && !keyLeft) usrFrame=-1;
+    if (usrFrame == 20) usrFrame = 0;
+    console.log('usrFrame',usrFrame);
+    if (usrX < 18) usrX = 18;
+    if (usrX > w-18) usrX = w-18;
+    boneco(keyRight?1:-1, usrX, h-20, usrFrame);
+  }
+  else {
+    ctx.fillStyle = 'rgba(255,255,100,0.1)';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('Survived '+escapedCounter+' explosions!', w-30, 40);
+    ctx.font = 'bold 38px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("You died. 😢", w/2, h/3);
+  }
+
+  ctx.fillStyle = '#4A0';
+  ctx.fillRect(0,h-20,w,20);
+
+  for (var x=0; x<w; x+=8) dot(x, h-20, 3, '#4A0');
+
+  setTimeout(tic, 33);
+}
+
+function notifyEscaped() {
+    ctx.fillStyle = 'rgba(255,255,100,1)';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('Survived '+escapedCounter+' explosions!', w-30, 40);
+}
+
+var keyTop=false, keyDown=false, keyLeft=false, keyRight=false;
+
+document.body.onkeydown = function(ev) {
+  if (ev.keyCode == 38) keyUp = true;
+  if (ev.keyCode == 40) keyDown = true;
+  if (ev.keyCode == 37) keyLeft = true;
+  if (ev.keyCode == 39) keyRight = true;
+}
+document.body.onkeyup = function(ev) {
+  if (ev.keyCode == 38) keyUp = false;
+  if (ev.keyCode == 40) keyDown = false;
+  if (ev.keyCode == 37) keyLeft = false;
+  if (ev.keyCode == 39) keyRight = false;
+}
+
+</script>
+</body>
+</html>

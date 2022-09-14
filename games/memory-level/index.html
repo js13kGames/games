@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="ico.png" />
+    <title>Memory Level</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link href="app.css" rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+    <div id="a">
+        <h1>Memory Level</h1>
+        <p>Game created for Js13kGames competition. Game is testing your memory by showing you growing sequence of colored squares which you then need to repeat. In the easy mode sequence will add one new element every level. In the hard mode every level you will get all new squares.</p>
+
+        <h2>Memory Level - Normal</h2>
+        <p>Remember normal square order how they appeared on the screen</p>
+        <h2>Memory Level - Reversed</h2>
+        <p>Remember reversed square order from the one that appeared on the screen. First element you see needs to be the last when you are solving the game.</p>
+        <h2 onclick="hideAbout()">X Close</h2>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

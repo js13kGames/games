@@ -1,0 +1,6 @@
+{
+  "name": "iAmGeoffreyServer",
+  "main": "server.min.js",
+  "author": "Jack Hicks <jack.hicks@soshinysoftware.uk>",
+  "license": "MIT"
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GiveSpace 13kGame</title>
+        <script src='https://aframe.io/releases/0.6.1/aframe.min.js'></script>
+    </head>
+    <body>
+        <a-scene>
+
+            <!-- Side boundary lines -->
+            <a-entity line="start: -1.5 -1 -3; end: -1.5 11.5 -28; color: red"
+                   line__2="start:  1.5 -1 -3; end:  1.5 11.5 -28; color: red">
+            </a-entity>
+            <!-- Following hidden spheres will watch when player is going out of boundary -->
+            <a-sphere id="plane1" radius="1" color="pink" material="transparent:true; opacity:0;">
+                <a-animation attribute="position" to="-2.1 -1 -3" from="-2.1 1.5 -8" duration="10" repeat="indefinite"></a-animation>
+            </a-sphere>
+            <a-sphere id="plane2" radius="1" color="pink" material="transparent:true; opacity:0;">
+                <a-animation attribute="position" to="2.1 -1 -3" from="2.1 1.5 -8" repeat="indefinite"></a-animation>
+            </a-sphere>
+
+            <!-- Osbtacle coming through -->
+            <a-sphere id="alien1" radius="0.6" color="gray"></a-sphere>
+            <a-sphere id="alien2" radius="0.6" color="gray"></a-sphere>
+            <a-sphere id="alien3" radius="0.6" color="gray"></a-sphere>
+            <a-sphere id="alien4" position="0.5 9 -23" radius="0.6" color="gray"></a-sphere>
+            <a-sphere id="alien5" position="0.5 11.5 -28" radius="0.6" color="gray"></a-sphere>
+
+            <!-- Camera with a triangle representing player's location (which is movable with WASD/look controls) -->
+            <a-entity id="camera-container" position="0 3 -4">
+                <a-entity id="camera" camera look-controls wasd-controls="wsAxis:x">
+                    <a-triangle id="me-triangle" height="0.5" position="0 -2 -2.5" color="red" cursor="fuse: true; fuseTimeout: 1;">
+                    </a-triangle>
+                </a-entity>
+            </a-entity>
+
+        </a-scene>
+    </body>
+</html>
+
+<script>
+
+    var playerHit = false;
+
+    // Obstacle positions (L/R = -0.5 / 0.5)
+    var obstacles_position = ['', '', '', 0.5, 0.5];
+    for(var a=5; a<200; a++) {
+        obstacles_position[a] = Math.floor(Math.random() * 2) ? 0.5 : -0.5;
+    }
+
+    var i = 2; // i is used to adjust Y & Z axis of obstacles in new position after animation.
+    var count = 0; // Also used to calculate score.
+
+    // Function for animation frame renderAnimationFrameing
+    function renderAnimationFrame() {
+        if(playerHit){
+            alert('You lost the game, you were either hit by obstacle or you touched the boundary line. \n\nYou scored '+ count +', score 200 to win the game. Refresh the page to play again!\n');
+            return;
+        }
+        if (i > 7) {
+            count++;
+            i = 2;
+        } else {
+            // Setting new position of every alien obstacle
+            i += .1 + (count/1500);
+            // sample animation of alien1 position from 0 1.5 -8   to 0 -1 -3
+            // sample animation of alien2 position from 0 4 -13    to 0 1.5 -8
+            // sample animation of alien3 position from 0 6.5 -18  to 0 4 -13
+            // sample animation of alien4 position from 0 9 -23    to 0 6.5 -18
+            // sample animation of alien5 position from 0 11.5 -28 to 0 9 -23
+            document.querySelector('#alien1').setAttribute('position', obstacles_position[count + 0] + ' ' + (2.5-i/2) + ' ' + (-10+i) );
+            document.querySelector('#alien2').setAttribute('position', obstacles_position[count + 1] + ' ' + (5-i/2)   + ' ' + (-15+i) );
+            document.querySelector('#alien3').setAttribute('position', obstacles_position[count + 2] + ' ' + (7.5-i/2) + ' ' + (-20+i) );
+            document.querySelector('#alien4').setAttribute('position', obstacles_position[count + 3] + ' ' + (10-i/2)  + ' ' + (-25+i) );
+            document.querySelector('#alien5').setAttribute('position', obstacles_position[count + 4] + ' ' + (12.5-i/2)+ ' ' + (-30+i) );
+        }
+        
+        if(parseInt(count+1) > parseInt(obstacles_position.length)) {
+            // If user have won the game
+            alert('Congratualtions, you won the game :-) Your score: '+ count +'.\n\n Refresh the page to play again!');
+            return;
+        }
+        requestAnimationFrame(renderAnimationFrame);
+    }
+
+    alert('INSTRUCTION: Save yourself (triangle) from obstacles (balls) using WASD/Look controls and red boundary line. \n\nGAME WILL START IN 5 SECONDS.');
+    setTimeout(init, 5000);
+    function init() {
+        // Detecting obstacle hit
+        document.querySelector('#alien1').addEventListener('fusing', function(){
+            playerHit = true;
+        });
+
+        // Detecting boundary hits
+        document.querySelector('#plane1').addEventListener('fusing', function(){
+            playerHit = true;
+        });
+        document.querySelector('#plane2').addEventListener('fusing', function(){
+            playerHit = true;
+        });
+
+        // Starting rendering frames
+        renderAnimationFrame();
+    }
+</script>

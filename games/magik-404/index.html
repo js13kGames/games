@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>MAGIK-404</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.min.css?22">
+</head>
+
+<body onload='start()'>
+  <template id=A_tem>
+    <svg>
+      <g class='avatar'>
+        <path  />
+        <path  />
+        <path  />
+        <path class='bg' />
+        <path class='bg torso' />
+        <path class='bg' />
+      </g>
+    </svg>
+  </template>
+  <template id=B_tem>
+    <svg>
+      <g class=we>
+        <path d="M-25,20 L25,20" />
+      </g>
+    </svg>
+  </template>
+  <template id=S_tem>
+    <svg>
+      <g class=shield>
+        <path d="M0,10 Q30,30 0,50" />
+      </g>
+    </svg>
+  </template>
+  <template id=C_tem>
+    <svg>
+      <g class=we>
+        <path d="M0,10 Q30,30 0,50" />
+      </g>
+    </svg>
+  </template>
+  <template id=P_tem>
+    <svg>
+      <g class=plat>
+        <path d="M0,10" />
+        <path d="M0,10" class='shine'/>
+        <path d="M0,10" class='shine2'/>
+      </g>
+    </svg>
+  </template>
+  <template id=M_tem>
+    <svg>
+      <g class=bg>
+        <path d="M0,10 Q30,30 0,50" />
+      </g>
+    </svg>
+  </template>
+  <template id=T_tem>
+    <svg>
+      <g class=bg>
+        <path d="M0,10 Q30,30 0,50" />
+      </g>
+    </svg>
+  </template>
+  <template id=U_tem>
+    <svg>
+      <g class=bg>
+        <path d="M0,10 Q30,30 0,50" />
+      </g>
+    </svg>
+  </template>
+  <template id=Card_tem>
+    <div class=card>
+      <span class=name></span>
+      <svg viewBox="-50 0 100 100">
+        <g>
+          <path d="M0,10 Q20,30 0,50" />
+        </g>
+      </svg>
+    </div>
+  </template>
+  <template id=Menu_tem>
+    <svg>
+      <text>
+        <textPath>
+        </textPath>
+      </text>
+    </svg>
+  </template>
+  <template id=Ctl_tem>
+    <div class=ctltop>
+      <div class=crds></div>
+      <div class=pname>
+      </div>
+
+      <div class=hb>
+        <div>HEALTH</div>
+        <div class=hbf></div>
+      </div>
+    </div>
+  </template>
+  <div id=warning>Please turn your device landscape to play MAGE 404</div>
+  <div id=full tabindex="0">
+    <div id=msg>
+      Message Space
+    </div>
+    <svg viewBox="-20 -10 1000 500" class=wld id=wld preserveAspectRatio="none">
+      <defs>
+        <pattern id="pattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
+          <rect x1=-1 y1=-1 width=41 height=41 fill="#FFFFF8" stroke-width=0 />
+          <line x1=5 y1=-10 x2=5 y2=40 stroke="rgba(0,0,64,.3)" stroke-width=1 stroke-dasharray="2 4" />
+          <line x1=-5 y1=7 x2=40 y2=7 stroke="rgba(64,0,0,.2)"  stroke-width=1 />
+          <line x1=-5 y1=2 x2=40 y2=2 stroke="rgba(64,0,0,.1)"  stroke-width=1 />
+          <line x1=-5 y1=0 x2=20 y2=10 stroke="rgba(255,220,220,.5)" stroke-width=5 />
+          <line x1=5 y1=-5 x2=12 y2=20 stroke="rgba(255,255,220,.5)" stroke-width=7 />
+        </pattern>
+
+        <filter id='ptex' x='0%' y='0%' width='100%' height='100%'>
+          <feTurbulence type="fractalNoise" baseFrequency='0.04' result='noise' numOctaves="4" />
+          <feDiffuseLighting in='noise' lighting-color='white' surfaceScale='8' result='paper'>
+            <feDistantLight azimuth='45' elevation='60' />
+          </feDiffuseLighting>
+          <feComposite in="SourceGraphic" in2="paper" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+        </filter>
+        <path id="tp0" fill="none" stroke="red" d="M10,60 Q50,110 400,60 T800,70 T600,300 T700,2000" />
+        <path id="tp1" fill="none" stroke="red" d="M80,120 Q300,200 400,120 T800,50 T1000,-100" />
+        <path id="tp2" fill="none" stroke="red" d="M80,200 Q150,250 400,210 T800,500 T1000,2500" />
+        <path id="tp3" fill="none" stroke="red" d="M90,250 Q150,275 400,250 T800,500 T1000,2500" />
+        <path id="tp4" fill="none" stroke="red" d="M100,300 Q250,280 400,300 T600,250 T2000,2500" />
+        <path id="tp5" fill="none" stroke="red" d="M110,330 Q200,380 400,360 T800,450 T2000,2500" />
+
+      </defs>
+      <g id=paper>
+        <rect x=-50 y=-500 width=1300 height=3000 />
+        <g id=menu>
+
+        </g>
+      </g>
+      <g id=lines>
+
+      </g>
+    </svg>
+  </div>
+  <script src="scripts.min.js?23"></script>
+</body>
+
+</html>

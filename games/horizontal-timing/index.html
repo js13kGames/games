@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Horizontal Timing</title>
+
+		<script src="main.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="main.css">
+	</head>
+	<body id='b'>
+		<table id="t">
+			<tr>
+				<td id="f"></td>
+			</tr>
+			<tr>
+				<td class="s"><canvas id="c"></canvas></td>
+			</tr>
+			<tr>
+				<td class="s"><progress id="pb"></progress></td>
+			</tr>
+			<tr>	
+				<td id="l"></td>
+			</tr>
+		</table>
+		<img id="r" src="r.svg">
+		<div id="mms"><p>Horizontal Timing</p><p id="i">Find the path on a time-evolving board. You see each step the board will take all together and must reform the progression timeline on your own<br><br><b>Instructions:</b> go from the <label style="color:#00ff00">green</label> square to the <label style="color:#ffff00">yellow</label> square, avoid <label style="color:#800000">red</label> squares. On top you see the evolution of the board each move you make. You have a limited amount of time to find the right path.<br><b>Controls:</b><br>WASD for directions<br>SPACEBAR to wait a move<br>ENTER to submit the sequence earlier.</p><br><button id="bs" class="b" onclick="newLevel();">Start</button></div>
+		<div id="gos"><p id="got"></p><br><br><button id="bgo" class="b" onclick="newLevel();">New Game</button></div>
+		<div id="nls">Level Cleared!<br><br><p  class="nlt">Next level in</p><br><br><p class="t" id="cd">3</p></div>
+		<div id="egs">Congratulations!<br><br><button id="beg" class="b" onclick="newLevel();">Play Again</button><br><br></div>
+		<script type="text/javascript">
+			window.onload = function () {
+				bodyDOM = document.getElementById ('b');
+				tableDOM = document.getElementById ('t');
+				listDOM = document.getElementById ('l');
+				framesDOM = document.getElementById ('f');
+				canvasDOM = document.getElementById ('c');
+				progressBarDOM = document.getElementById ('pb');
+				coolDownDOM = document.getElementById ('cd');
+
+				res = document.getElementById ('r');
+				ctx = c.getContext('2d'); 
+
+				mainMenuSplash = document.getElementById ('mms');
+				gameOverSplash = document.getElementById ('gos');
+				nextLevelSplash = document.getElementById ('nls');
+				endGameSplash = document.getElementById ('egs');
+
+				pb.value = 100;
+			}
+		</script>
+	</body>
+</html>

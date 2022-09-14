@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chem Fight - Chemistry Battle Game</title>
+<script type="text/javascript" src="js/Stratiscape-prod.js"></script>
+<script type="text/javascript" src="js/audio-interface.js"></script>
+<script type="text/javascript" src="cf.js"></script>
+<style type="text/css">
+body {
+	font: 12px 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+	color: #FE0;
+	background-color: #000;
+}
+#knownCompoundList ul {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 1em;
+	text-indent: -1em;
+}
+#knownCompoundList ul li:before {
+	content: "\00BB \0020";
+}
+</style>
+<script type="text/javascript">
+function SetupCF() {window.name = "chemfight-home";SetupChemFight();}
+</script>
+</head>
+<body onload="SetupCF();">
+<table>
+	<tr>
+	<td colspan="2">
+	<p style="text-align:center;">
+		Welcome to Chem Fight HTML 5 Chemistry Battle Game<br />
+		Purchase Atoms for attack and defense by spending "Atom Bucks"<br />
+		Battles are decided based on if a known compound will be formed between the attacker and the defenders.<br />
+		After each round, players are given a number of Atom Bucks for surviving the round.<br />
+	</p>
+	</td>
+	</tr>
+	<tr>
+	<td>
+		<div id="gameElementsContainer" style="position: relative;width:960px;height:640px;">
+			<div id="canvasContainer" style="position: relative;"></div>
+			<div id="canvasMouseHitDetector" style="position: absolute;top:10px;left:10px;width:940px;height:620px;z-index:1000;background-color:black;opacity:0;"></div>
+		</div>
+	</td>
+	<td>
+		<div id="chemFightInfo">
+			<span>Known Compounds:</span>
+			<div id="knownCompoundList" style="height:620px;overflow:auto;">
+			</div>
+		</div>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">
+	<p>
+	Tips: 
+	<ul>
+	<li>Elements with higher atomic numbers are generally better for attacking, elements with lower atomic number are generally better for defense.</li>
+	<li>When choosing defenders, you will not know the exact element the opponent is attacking with but you will know the number of valence electrons.</li>
+	<li>Typically, compounds will form when the combined valence electrons of the atoms fill the outer electron shells (i.e. 2 or 8 total electrons).</li>
+	</ul>
+	</p>
+	<p style="color:#FFF;text-align:center">
+	Chem Fight was created by <a href="http://mattpalmerlee.com/">Matt Palmerlee</a> of <a href="http://masteredsoftware.com/">Mastered Software</a> for the <a href="http://js13kgames.com/">js13KGames</a>
+competition.</p>
+	</td>
+	</tr>
+</table>
+</body>

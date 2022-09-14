@@ -1,0 +1,19 @@
+{
+	"short_name": "Offline",
+	"name": "Offline",
+	"orientation": "portrait",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#FF0000",
+	"start_url": "index.html",
+	
+	"icons": [
+		{
+			"src": "icon.svg"
+		},
+		{
+			"src": "icon-192.png",
+			"sizes": "192x192"
+		}
+	]
+}

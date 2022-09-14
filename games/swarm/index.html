@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Swarm - Canvas Game</title>
+</head>
+
+<body>
+<canvas id='canvas' height='300' width='600' style='border:solid'></canvas>
+<br>
+<progress id='progress' value='50' max='100'></progress>
+<br>
+<span id='level'></span>
+<br>
+<ul>
+<li>Use the arrow keys to move.</li>
+<li>Avoid red rectangles.</li>
+<li>Gather green rectangles for a health bonus.</li>
+<li>Hit the space bar to pause.</li>
+</ul>
+Cross all 10 levels if you can!
+
+<style>
+progress,          /* All HTML5 progress enabled browsers */
+progress::-webkit-progress-bar
+{
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	/* gets rid of default border in Firefox and Opera. */
+	border: none;
+
+	/* Needs to be in here for Safari polyfill so background images work as expected. */
+	background-size: auto;
+
+	/* Dimensions */
+	width: 600px;
+	height: 10px;
+	/* background-color: white; */
+
+}
+</style>
+
+<script type="text/javascript">
+(function(){var a=document.getElementById("canvas"),e=a.getContext("2d"),s=document.getElementById("progress"),n={},p,i=1,l=!1,v=function(d){var b,c,t,u,h=0,o,f=0*Math.PI/180,j=1;this.stopped=!1;if(d){b=300;c=200;o=10;this.health=255;var m=0,k=50*Math.pow(i,2)}else b=-100+Math.random()*(a.width+100),c=-100+Math.random()*(a.height+100),0<b&&(b<a.width&&0<c&&c<a.height)&&(0.5<Math.random()?b=0.5<Math.random()?-(50*Math.random()):a.width+50*Math.random():c=0.5<Math.random()?-(50*Math.random()):a.height+
+50*Math.random()),o=2+5*Math.random();this.anim=function(){var l=Math.atan(0.5);Math.sqrt(500);Math.cos((90-180*f/Math.PI)*Math.PI/180);Math.sin((90-180*f/Math.PI)*Math.PI/180);Math.cos(f+l);Math.sin(f+l);Math.cos(f);Math.sin(f);d?(0<h&&(n["39"]&&(f+=10*Math.PI/180),n["37"]&&(f-=10*Math.PI/180)),n["38"])?(j=1,h+=j):!0===this.stopped&&(h-=j,0>=h&&(h=0,this.stopped=!1)):(h=o,f=Math.atan2(g.y-c,g.x-b));h>o&&(h=o);t=h*Math.cos(f);u=h*Math.sin(f);b+=t;c+=u;b=b>a.width?0:0>b?a.width:b;c=c>a.height?0:0>
+c?a.height:c;if(d){if(this.x=b,this.y=c,m+=p/30,s.value=m,m>k&&(i++,document.getElementById("level").textContent=i,m=0,q(20*i),k=50*Math.pow(i,2),s.max=k),0>=g.health)q(20*i),m=0}else 20>Math.sqrt(Math.pow(g.x-b,2)+Math.pow(g.y-c,2))&&(this.anim=function(){},g.health-=0===d?-80:10,0!==d&&p--);e.save();e.translate(b,c);e.rotate(f);e.fillStyle=d?"black":0===d?"green":"maroon";e.strokeStyle="white";e.fillRect(0,0,20,10);e.strokeRect(0,0,20,10);e.restore()}},g=new v(!0);window.addEventListener("keydown",
+function(d){n[d.which]=!0;32===d.which&&(!0===l?(console.log("set"),j=window.setInterval(function(){e.fillStyle="rgb(255,"+g.health+","+g.health+")";e.fillRect(0,0,a.width,a.height);e.fill();w();10<i&&window.clearInterval(j)},100/3),l=!1):(window.clearInterval(j),l=!0))},!1);window.addEventListener("keyup",function(d){delete n[d.which];38===d.which&&(g.stopped=!0)},!1);var k,r=[],q=function(d){k=[];r.forEach(function(a){window.clearInterval(a)});r=[];p=d;g.health=255;for(var b=5,c,a=1;a<=d;a++)c=
+0===a%30?0:!1,function(a){r.push(setTimeout(function(){k.push(new v(a))},1E3*Math.random()*b))}(c),0===a%10&&(b+=5)},w=function(){console.log("a");g.anim();for(var a=k.length-1;0<=a;a--)k[a].anim()};q(20*i);var j=window.setInterval(function(){e.fillStyle="rgb(255,"+g.health+","+g.health+")";e.fillRect(0,0,a.width,a.height);e.fill();w();10<i&&window.clearInterval(j)},100/3)})();
+</script>
+
+</body>
+</html>

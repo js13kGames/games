@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <style> canvas { background-color: #222222; border: 1px solid black;}</style>
+            <link rel="stylesheet" href="src/style.css">
+            <meta name="viewport" content="user-scalable=0, initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width, minimal-ui=1">
+            <title>SUBSPACE ZERO</title>
+        </head>
+        <body>
+            <div id='d1' style="position:relative; left:4px; z-index:2">
+                <canvas id="canvasMain" width="640" height="320"></canvas>
+                <div id='d3' style="position:absolute; top:10px; left:10px; z-index:1">
+                    <canvas style="display: none;"  id="compileIMG" width="20" height="20"></canvas>
+                </div>            
+            </div>
+
+            <button id="up">U</button>
+            <button id="left">L</button>
+            <button id="right">R</button>
+            <button id="down">D</button>
+
+            <script src="/socket.io/socket.io.js"></script>
+            <script src="src/lib/kontra.min.js"></script>
+            <script src="client.js"></script>
+            <script src="shared.js"></script>
+            <script src="src/utilities.js"></script>
+            <script src="src/renderqueue.js"></script>
+            <script src="src/pixelart.js"></script>
+            <script src="src/ui.js"></script>
+            <script src="src/decoder.js"></script>
+            <script src="src/main.js"></script>
+        </body>
+</html>

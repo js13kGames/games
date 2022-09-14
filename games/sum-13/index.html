@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+<head>
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon-precomposed" href="icon.png">
+  <link rel="shortcut icon" href="icon.png">
+  <title>Sum 13</title>
+  <link rel="stylesheet" href="sum13.css">
+  <script src="sum13.js"></script>
+</head>
+<body>
+  <div id="board">
+    <div id="blocks"></div>
+    <div id="game-over-panel">
+      <h1>Game Over</h1>
+      <a id="start-button" href="#">Start Game</a>
+    </div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+    <div class="row"><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div></div>
+  </div>
+  <div id="scoreboard">
+    <div id="logo-button" title="Sum 13 - Tap To Pause/Learn How To Play">
+      <span>Sum</span><div class="block r">1</div><div class="block g">3</div>
+    </div>
+    <span>Score: </span>
+    <span id="score">0</span>
+    <p>Developed By: <a href="http://entropi.co" target="_blank">entropi</a></p>
+  </div>
+  <audio id="destroy-sound" src="destroy.mp3" preload="auto">
+</body>
+</html>

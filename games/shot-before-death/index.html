@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Capture Before Lost</title>
+<script type="text/javascript" src="index.js"></script>
+<link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+
+<body bg-color="black" onload="start()" oncontextmenu="return false;" id="bod">
+    <img src="images/2.jpg" onclick="bul_l()" oncontextmenu="bul_r()" id="bullet" />
+<svg height="100%" width="100%" id="game" onclick="left()" oncontextmenu="right()">
+    
+</svg>
+<div id="namespace">
+	Name:<br>
+	<span id="name"></span><br>
+	<br>
+	Shots:<br>
+	<p id="score"></p>
+	<br>
+    Timer:
+    <p id="time" class="fb" style="position:absolute;right:30%;"></p><br><br><br>
+    <br>
+    Bullets:
+    <p id="power" class="fb" style="position:absolute;right:30%;"></p>
+</div>
+</body>
+</html>

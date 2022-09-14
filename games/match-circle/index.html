@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Water-Fire Flight</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+<style>
+    * {margin:0;padding:0;overflow:hidden;}
+    button {
+        position : relative;
+        margin: 10px;
+        width : 100px;
+        height :20px;
+    }
+    #canvas {
+        width:520px;
+        height:720px;
+        position: absolute;
+        left: 50%;
+        margin-left: -260px;
+        border: 1px solid black;
+    }
+</style>
+</head>
+<body>
+    Rule : Match same color circle...
+    Possible match needs path which has to be composed of max 3 lines without hinderence...
+    <div class="centerAlign">
+        <button onclick="init(0)">stage 1</button>
+        <button onclick="init(1)">stage 2</button>
+        <button onclick="init(2)">stage 3</button>
+        <button onclick="init(3)">stage 4</button>
+        <button onclick="init(4)">stage 5</button>
+        <button onclick="init(5)">stage 6</button>
+    </div>
+    <canvas class="centerAlign" id="canvas" width="520" height="720"></canvas>
+<script src="./js/lib.min.js"></script>
+<script src="./js/game.min.js"></script>
+</body>
+</html>

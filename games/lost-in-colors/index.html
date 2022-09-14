@@ -1,0 +1,315 @@
+<!DOCTYPE Html>
+
+<html>
+
+<head>
+    <title>
+        Lost Colors
+    </title>
+    <style type="text/css">
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .bg {
+            /* The image used */
+            background-image: url("images.png");
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #grids {
+            background: Aquamarine;
+            border: #6C2DC7 1px solid;
+            width: 800px;
+            height: 500px;
+            padding: 12px;
+            margin: 5px auto;
+        }
+
+        .btn {
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            text-shadow: 1px 1px 3px #666666;
+            font-family: Georgia;
+            color: #ffffff;
+            font-size: 31px;
+            padding: 10px 20px 10px 20px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            text-decoration: none;
+        }
+
+        #fieldset {
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 32px;
+            width: 200px;
+            text-align: center;
+            font-weight: bold;
+            padding: 16px;
+        }
+
+        #myProgress {
+            width: 100%;
+            background-color: #ddd;
+        }
+
+        #myBar {
+            width: 20%;
+            height: 30px;
+            background-color: #4CAF50;
+        }
+
+        .myButton {
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #70736e));
+            background: -moz-linear-gradient(top, #000000 5%, #70736e 100%);
+            background: -webkit-linear-gradient(top, #000000 5%, #70736e 100%);
+            background: -o-linear-gradient(top, #000000 5%, #70736e 100%);
+            background: -ms-linear-gradient(top, #000000 5%, #70736e 100%);
+            background: linear-gradient(to bottom, #000000 5%, #70736e 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#70736e', GradientType=0);
+            background-color: #000000;
+            -moz-border-radius: 28px;
+            -webkit-border-radius: 28px;
+            border-radius: 28px;
+            border: 1px solid #e0e0e0;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: Arial;
+            font-size: 17px;
+            padding: 16px 31px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #2f6627;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <div align="center" style='color:#ffffff'>Game ends in <span id="time" style='color:#ffffff'></span> minutes!</div>
+        <p align='center' style='color:#cc0000'><b> Find Maximum Color Pair Possible.</b></p>
+        <div id="grids">
+            <br><br><br><br><br>
+            <div style="background-color:cyan" align="center">
+                <h2><u>Rules:</u></h2>
+                <ul>
+                    <li>You are <b>LOST</b> in woods.</li>
+                    <li>There are 6 colors.</li>
+                    <li>A color name will be shown to you, and a backgroung color with it.</li>
+                    <li>You have to respond according to the name written, <b>not according to the background color</b>.</li>
+                    <li>For every correct answer you get increment in your progress.</li>
+                    <li>For every wrong answer you get decrement in your progress.</li>
+                    <li>You can play for 12 seconds.</li>
+                    <li>You only have mouse controls.</li>
+                    <li><b>ENJOY PLAYING!!</b></li>
+                </ul>
+                <button onclick="Create()" class="myButton" style="backgroundColor:Black">Start Game</button>
+            </div>
+            <br>
+        </div>
+    </div>
+    <script>
+        function startTimer(duration, display) {
+            var start = Date.now(),
+                diff,
+                minutes,
+                seconds;
+
+            function timer() {
+                diff = duration - (((Date.now() - start) / 1000) | 0);
+                minutes = (diff / 60) | 0;
+                seconds = (diff % 60) | 0;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+                if (diff <= 0) {
+                    start = Date.now() + 1000;
+                    alert("Game ended");
+                    location.reload();
+                }
+            };
+            timer();
+            setInterval(timer, 1000);
+        }
+        arrname = ["red", "blue", "yellow", "green", "aqua", "magenta"]
+        arr = [0, 1, 2, 3, 4, 5]
+        var tmpcolor = "";
+        var callcolor = "";
+        var width = 20;
+
+        function Create() {
+            // move();
+            var Minutes = 12;
+            display = document.querySelector('#time');
+            startTimer(Minutes, display);
+            mainfunc();
+        }
+
+        function mainfunc() {
+            document.getElementById('grids').innerHTML = "";
+            for (i = arr.length; i; i--) {
+                j = Math.floor(Math.random() * i);
+                x = arr[i - 1];
+                arr[i - 1] = arr[j];
+                arr[j] = x;
+            }
+            doc = document.getElementById('grids');
+            var pb = document.createElement('div');
+            pb.id = "myProgress";
+            var mypb = document.createElement('div');
+            pb.id = "myBar";
+            console.log(pb.style.width);
+            pb.style.width = width + '%';
+            console.log(pb.style.width);
+            pb.appendChild(mypb);
+            doc.appendChild(pb);
+            doc.innerHTML += "<br><br><br><br>";
+            doc.appendChild(document.createElement('hr'));
+
+            var rand = Math.floor(Math.random() * 6);
+            var x = document.createElement('fieldset');
+            x.id = "fieldset";
+            x.innerHTML = arrname[arr[rand]];
+            tmpcolor = arrname[arr[rand]];
+            x.style.color = arrname[(arr[rand] + 3) % 6];
+            x.style.backgroundColor = arrname[(arr[rand] + 5) % 6];
+            x.style.textAlign = "center"
+            doc.appendChild(x);
+
+            doc.appendChild(document.createElement('hr'));
+            doc.innerHTML += "<br><br><br><br>";
+            grid = document.createElement('table');
+            var tr = grid.appendChild(document.createElement('tr'));
+            var x = document.createElement('button');
+            x.className = "btn";
+            x.innerHTML = arrname[arr[0]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[0]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[0]];
+                btncall();
+                console.log(callcolor);
+            });
+
+
+            var x = document.createElement('button');
+            x.className = "btn"
+            x.innerHTML = arrname[arr[1]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[1]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[1]];
+                btncall();
+                console.log(callcolor);
+            });
+
+            var x = document.createElement('button');
+            x.className = "btn"
+            x.innerHTML = arrname[arr[2]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[2]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[2]];
+                btncall();
+                console.log(callcolor);
+            });
+            tr.setAttribute('align', 'center');
+            grid.appendChild(tr);
+            var tr = grid.appendChild(document.createElement('tr'));
+
+            var x = document.createElement('button');
+            x.className = "btn"
+            x.innerHTML = arrname[arr[3]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[3]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[3]];
+                btncall();
+                console.log(callcolor);
+            });
+
+            var x = document.createElement('button');
+            x.className = "btn"
+            x.innerHTML = arrname[arr[4]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[4]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[4]];
+                btncall();
+                console.log(callcolor);
+            });
+
+            var x = document.createElement('button');
+            x.className = "btn"
+            x.innerHTML = arrname[arr[5]];
+            x.style.color = "Black";
+            x.style.backgroundColor = arrname[arr[5]];
+            tr.appendChild(x);
+            x.addEventListener('click', function() {
+                callcolor = arrname[arr[5]];
+                btncall();
+                console.log(callcolor);
+            });
+            tr.setAttribute('align', 'center');
+            grid.appendChild(tr);
+            grid.setAttribute('align', 'center');
+            doc.appendChild(grid);
+        };
+
+        function move() {
+            var elem = document.getElementById("myBar");
+            var id = setInterval(frame, 300);
+
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                } else {
+                    width--;
+                    elem.style.width = width + '%';
+                }
+            }
+        }
+
+        function btncall() {
+            var elem = document.getElementById("myBar");
+            if (tmpcolor == callcolor) {
+                width += 10;
+                if (width >= 100) {
+                    elem.style.width = 100 + '%';
+                    width = 0;
+                    alert('you win');
+                } else elem.style.width = width + '%';
+            } else {
+                width -= 10;
+                if (width <= 0) {
+                    elem.style.width = 0 + '%';
+                    width = 0;
+                    alert('you lost');
+                } else elem.style.width = width + '%';
+            }
+            mainfunc();
+        }
+    </script>
+</body>
+
+</html>

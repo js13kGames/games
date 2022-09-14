@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/stageTwo.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="gameArea">
+    <div class="desktop">
+      <div class="closingTime">
+        <a class="leftSide" onclick="closeStageOne()">X</a>
+      </div>
+
+      <div class="myPc" id="formatPc">
+        <figure>
+          <a>
+            <img src="../images/pcIcon.png" alt="pcIcon">
+            <figcaption>This PC</figcaption>
+          </a>
+        </figure>
+        <div class="clickMenu">
+          <a onclick="openPcStage()">Open</a>
+          <a onclick="formatPc()" class="borderOnly">Format PC</a>
+        </div>
+      </div>
+
+      <div class="myRouter" id="formatRouter">
+        <figure>
+          <a>
+            <img src="../images/routerIcon.png" alt="pcRouter">
+            <figcaption>My router</figcaption>
+          </a>
+        </figure>
+        <div class="clickMenu">
+          <a onclick="openStageOne()">Stage 1</a>
+          <a onclick="formatRouter()" class="borderOnly">Delete</a>
+        </div>
+      </div>
+
+      <div class="myBin" id="formatEvidence">
+        <figure>
+          <a>
+            <img src="../images/emptyBinIcon.png" alt="pcBin">
+            <figcaption>Evidence</figcaption>
+          </a>
+        </figure>
+        <div class="clickMenu">
+          <a onclick="openEvidenceStage()">Open</a>
+          <a onclick="formatEvidence()" class="borderOnly">Delete</a>
+        </div>
+      </div>
+
+      <div class="emptySpace"></div>
+
+      <div class="toDo" id="selfDistruct">
+        <ul>
+          <p>Emergency Procedure</p>
+          <li><input type="checkbox">Copy PC files</li>
+          <li><input type="checkbox">Delete PC files</li>
+          <li><input type="checkbox">Copy evidence files files</li>
+          <li><input type="checkbox">Delete evidence files</li>
+          <li><input type="checkbox">Router Stage 1 first</li>
+          <li><input type="checkbox" id="selfRouter">Uninstall router</li>
+          <li><input type="checkbox" id="selfEvid">Delete evidence folder</li>
+          <li><input type="checkbox" id="selfFormat">Format PC</li>
+          <li><input type="checkbox" id="selfDelete">Delete this list</li>
+        </ul>
+      </div>
+      <!--adding the iframe-->
+      <iframe id="routerStageOne" src="routerStageOne.html" class="routerStageOne"></iframe>
+      <iframe id="pcStage" src="pcStage.html" class="pcStage"></iframe>
+      <iframe id="evidenceStage" src="evidenceStage.html" class="evidenceStage"></iframe>
+      <!--adding the iframe-->
+
+      <div id="clockdiv">
+        <div>
+          <span class="drawEye">!</span>
+          <span>TIME :</span>
+          <span class="minutes"></span>
+          <span>:</span>
+        </div>
+        <div>
+          <span class="seconds"></span>
+        </div>
+      </div>
+
+      <div class="watchu">
+        <a class="selfDistruct" onclick="selfDistruction()">Destroy list! (check boxes)</a>
+
+        <span id="time"></span>
+      </div>
+    </div>
+  </div>
+  <script src="../js/stageTwo.js"></script>
+  <script src="../js/routerStageOne.js"></script>
+</body>
+
+</html>

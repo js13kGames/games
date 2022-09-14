@@ -1,0 +1,55 @@
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+    <head>
+        <script src="Game.js" type="text/javascript"></script>
+        <script src="GameLogic.js" type="text/javascript"></script>
+        <script src="Ship.js" type="text/javascript"></script>
+        <script src="Stars.js" type="text/javascript"></script>
+        <script src="TypeWriter.js" type="text/javascript"></script>
+        <style type="text/css">
+            body {
+                padding:0px;
+                text-align:center;
+                background-color: #010F35;
+                height: 100%;
+                width: 100%;
+                color: white;
+                font-family:arial, Serif;
+
+            }
+            .shadow{
+                box-shadow: 1px 1px 8px gray;
+                horiz-align: center;      
+            }
+            h1 {
+                padding: 0px;
+                margin: 2px;
+            }
+              
+        </style>
+    </head>
+    <body style="margin: 0px; padding: 0px;">
+        <div>
+            <h1>Agent XIII</h1>
+            Attack of the atmospheric space junk!<br/>
+            <canvas id="gameCanvas" class="shadow" width="640" height="480"></canvas>
+            <br/>
+            Mobile Users :) 
+            <button onclick="Game.prototype.keysDown[90]=true;">Z</button>
+            <button onclick="Game.prototype.keysDown[88]=true;">X</button>
+            <br/>
+            <a href="mailto:craigpayne1985@googlemail.com">craigpayne1985@googlemail.com</a> <a href="http://craigpayne.info">Craigs Blog</a>
+            <br/>
+            Craig Payne's (ErrorOccured) submission for js13kGames contest
+        
+            <script type="text/javascript">
+
+                function ErrorOccuredGames() {}
+                window.ErrorOccuredGames = new ErrorOccuredGames();
+                window.ErrorOccuredGames.game = new Game();
+                window.ErrorOccuredGames.game.Initialise();
+            </script>
+
+        </div>
+    </body>
+</html>

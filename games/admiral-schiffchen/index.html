@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="_css/main.css">
+        <script src="_js/min.js"></script>
+        <script type="text/javascript">
+        	var MINI = require('minified');
+			var _=MINI._, $=MINI.$, $$=MINI.$$, EE=MINI.EE, HTML=MINI.HTML;
+			$.ready(function(){
+                PIECESIZE = 55;
+                var $playerOverlay = $('.bg-overlay');
+                var $aICheckbox = $('input[name="ai"]');
+                var $player2Div = $('.no-ai');
+                $('input[type="submit"]', $playerOverlay).onClick(function(){
+                  $playerOverlay.hide();                  
+                  game = new Game($aICheckbox.get('checked'));
+                });
+                $($aICheckbox).onChange(function(){
+                    $player2Div.toggle("hidden", "shown");
+                });
+			});
+        </script>
+    </head>
+    <body>
+        <div id="game-wrapper">
+        	<div id="header">
+        		<h1>Admiral Schiffchen</h1>
+        		<span><a href="">restart</a> | <a href="#" class="help">help</a></span>
+        	</div>
+        	<div id="field">
+            </div>
+            <div class="bg-overlay">
+                <div class="start-screen overlay">
+                    Name Player I:<br />
+                    <input type="text" name="player1" value="Player 1"/>
+                    <br /><br />
+                    <input type="checkbox" name="ai" checked="checked"/>I want to play aginst Computer.<br />
+                    <br />
+                    <div class="no-ai hidden">
+                        Name Player II:<br />
+                        <input type="text" name="player2" value="Player 2"/>
+                        <br /><br />
+                    </div>
+                    Grid size:<br />
+                    <select name="grid">
+                        <option value="6_8">6 X 8</option>
+                        <option value="7_7">7 X 7</option>
+                        <option value="7_9">7 X 9</option>
+                        <option value="8_8">8 x 8</option>
+                    </select>
+                    <input type="submit" value="START"/>
+                </div>
+            </div>
+            <div id="console" style="display: none">
+                WELCOME TO "Admiral Schiffchen", see help for instructions
+            </div>
+        	<div id="message-overlay" class="overlay" style="display: none">
+        		<div class="close">X</div>
+        		<div class="content">&nbsp;</div>
+        	</div>
+        </div>
+    </body>
+</html>

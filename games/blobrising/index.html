@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   Blob Rising
+  </title>
+  <link rel="stylesheet" media="screen" href="css/game.min.css" />
+  <meta charset="UTF-8" />
+ </head>
+ <body>
+  <div id="content">
+   <div id="score">
+    <span class="title">
+     Blob Rising
+    </span>
+    - Score :
+    <span class="count">
+     0
+    </span>
+   </div>
+   <div id="mainMenu" class="mainMenu">
+    <div class="keyboard">
+     Press space to start/resume game
+    </div>
+    <div class="menuInGame">
+     ------------------------------ Goal ------------------------------
+    </div>
+    <p>
+     Blobs
+     <img src="" class="blob" />
+     are coming from your main source
+     <img src="img/source.gif" width="20px" height="20px" />
+     . Your goal is to carry them to the final well
+     <img src="img/wellFinal.gif" width="20px" height="20px" />
+     .
+    </p>
+    <p>
+     To achieve this goal, you can use rotate
+     <img src="img/rotate.gif" width="20px" height="20px" />
+     and magnet
+     <img src="img/magnet.gif" width="20px" height="20px" />
+     machine at your disposal.
+    </p>
+    <p>
+     Beware, on your path there are traps, like wall
+     <img src="img/wall.gif" width="20px" height="20px" />
+     or fake well
+     <img src="img/well.gif" width="20px" height="20px" />
+     .
+    </p>
+    <div class="menuInGame">
+     ------------------------------ Gameplay ------------------------------
+    </div>
+    <p>
+     <div class="keyboard">
+      Space
+     </div>
+     : Pause/Resume game
+    </p>
+    <p>
+     <div class="keyboard">
+      L
+     </div>
+     : Restart the level ---
+     <div class="keyboard">
+      R
+     </div>
+     : Restart the game
+    </p>
+    <p>
+     <div class="keyboard">
+      C
+     </div>
+     : Add a magnet machine
+     <img src="img/magnet.gif" width="20px" height="20px" />
+     with radius which attract blob to itself. Use them to provide some direction to your blob.
+    </p>
+    <p>
+     <div class="keyboard">
+      X
+     </div>
+     : Add a rotate machine
+     <img src="img/rotate.gif" width="20px" height="20px" />
+     . When blob is near its radius, it will rotate around. Use them to avoid traps.
+    </p>
+    <p>
+     <div class="keyboard">
+      S
+     </div>
+     : Show/Hide none entities, for save cpu perf hide none entities (entities who does nothing on game) !
+    </p>
+    <div class="menuInGame">
+     ------------------------------ Score ------------------------------
+    </div>
+    <p>
+     The less machine you use, the more you will score. Same if you win on minimum tries.
+    </p>
+   </div>
+   <div id="startBlob">
+   </div>
+   <div id="menuEntitiesNb" class="menuEntitiesNb">
+    <img src="img/rotate.gif" width="20px" height="20px" />
+    :
+    <div id="nbMenuRotate" style="display:inline">
+    </div>
+    (X)
+    <br />
+    <img src="img/magnet.gif" width="20px" height="20px" />
+    :
+    <div id="nbMenuMagnet" style="display:inline">
+    </div>
+    (C)
+   </div>
+   <div id="endOfGame">
+   </div>
+   <canvas id="canvas">
+    Your browser doesn't support canvas element !
+   </canvas>
+  </div>
+  <script src="game.min.js">
+  </script>
+ </body>
+</html>

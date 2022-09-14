@@ -1,0 +1,167 @@
+
+<!-- Created by Alvin Wan (alvinwan.com) -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stylized Low Poly Wilderness in Virtual Reality</title>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+
+    <script src="weaknesses.js"></script>
+    <script src="strength.js"></script>
+    <script src="jobs.js"></script>
+    <script src="names.js"></script>
+    <script src="main.js"></script>
+
+    <!-- Development -->
+    <script src="src/main.js"></script>
+    <script src="src/primitives/box.js"></script>
+    <script src="src/primitives/circle.js"></script>
+    <script src="src/primitives/cylinder.js"></script>
+    <script src="src/primitives/sphere.js"></script>
+    <script src="src/primitives/plane.js"></script>
+    <script src="src/primitives/cone.js"></script> 
+
+
+    <style>
+html {
+  background-color:#333;
+}
+    </style>
+  </head>
+  <body>
+    <a-scene fog="type: linear; color: #333; near:5; far:15">
+      <a-sky color="#333"></a-sky>
+      <!-- Mixins -->
+      <a-assets>
+        <a-mixin id="foliage" material="color:#849812"></a-mixin>
+        <a-mixin id="foliage-light" material="color:#AFC91B"></a-mixin>
+        <a-mixin id="text" text="
+            font:kelsonsans;
+            anchor:center;
+            align:center;"></a-mixin>
+      </a-assets>
+      </a-assets>
+
+      <!-- Lights! -->
+      <a-entity light="
+          type: directional;
+          castShadow: true;
+          intensity: 0.6;
+          color: #FFF;"
+        position="5 3 1"></a-entity>
+      <a-light intensity="0.6" type="ambient" position="1 1 1" color="#FFF"></a-light>
+
+      <!-- Camera! -->
+      <a-entity id="rig" position="0 1 10">
+        <a-camera look-controls wasd-controls-enabled="false">
+            <a-entity cursor="fuse: true; fuseTimeout: 500"
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: black; shader: flat">
+            </a-entity>
+        </a-camera>
+      </a-entity>
+      
+      <!-- Action! -->
+      <a-box shadow width="50" height="0.1" depth="60" position="0 -2 -2" color="#222"></a-box>
+
+      <a-entity id="carousel"  >
+        
+        <a-entity id="globe" shadow>
+          <lp-sphere id="earth" radius="1.5" color="#A5602D" rotation="90 0 0" >
+          </lp-sphere>
+         
+          <a-entity class="pine_tree" id="pine_tree" position="0 1.5 0" scale="0.2 0.2 0.2">
+            <lp-cylinder class="trunk reseed" radius-top="0.01" radius-bottom="0.1" height="2" color="#A5602D"></lp-cylinder>
+            <lp-cone class="reseed" radius="0.35" height="1" segments-height="5" mixin="foliage" position="0 1.4 0"></lp-cone>
+            <lp-cone class="reseed" radius="0.5" height="0.8" segments-height="3" mixin="foliage" position="0 0.8 0" seed="1"></lp-cone>
+            <lp-cone class="reseed" radius="0.6" height="0.8" segments-height="3" mixin="foliage" position="0 0.4 0" seed="2"></lp-cone>
+            <lp-cone class="reseed" radius="0.7" height="0.8" segments-height="3" mixin="foliage" position="0 0 0" seed="3"></lp-cone>
+          </a-entity>
+          
+          <a-entity class="tree" id="tree" position="1 1.1 0" rotation="0 0 -45" scale="0.2 0.2 0.2">
+            <lp-cylinder class="trunk reseed" radius-top="0.02" radius-bottom="0.3" height="2.5" color="#795110" position="0 0.25 0"></lp-cylinder>
+            <lp-sphere class="reseed" position="0 0.6 0" color="#59810C" radius="1" segments-width="10" segments-height="10"></lp-sphere>
+          </a-entity>
+          
+          <a-entity clone="#tree" position="0 1 -1" rotation="-45 0 0"  scale="0.2 0.2 0.2"></a-entity>
+          
+          <a-entity class="rocks" scale="0.2 0.2 0.2">
+            <lp-sphere class="reseed" color="#666" radius="0.25" position="0 6.5 1"></lp-sphere>
+            <lp-sphere class="reseed" color="#666" radius="0.3" position="-0.5 6.5 1" rotation="0 45 0"></lp-sphere>
+          </a-entity>
+
+          <a-entity clone="#tree" position="-1.017 0.222 -1.002" rotation="45 -90 30"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="-1.2 0 -1" rotation="0 0 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="-1.537 -0.004 0.098" rotation="0 0 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="-1.537 -0.004 0.098" rotation="0 0 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="-1.361 -0.586 0.096" rotation="45 0 45"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="1.656 -0.03 0.-008" rotation="0 0 -90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#tree" position="0 0.388 1.587" rotation="45 0 0"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="0 -1.5 0" rotation="180 0 0"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="0 1.2 1" rotation="45 0 0"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="-0.661 0.057 1.438" rotation="45 0 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="1.554 0.056 0.472" rotation="-45 180 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="1.365 -0.814 0.472" rotation="-45 180 90"  scale="0.2 0.2 0.2"></a-entity>
+          <a-entity clone="#pine_tree" position="-0.45 -0.814 1.277" rotation="-45 90 130"  scale="0.2 0.2 0.2"></a-entity>
+        </a-entity>
+
+      <a-entity class="cloud" position="0 1.1 1.5" scale="0.2 0.2 0.2">        
+        <lp-box class="reseed" rotation="20 0 5" position="-0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="0 15 0" color="#c6e0ef" height="0.65" width="0.65" depth="0.65" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="-30 -10 0" position="0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <a-animation attribute="position" from="0 1.1 1.5" to="0.2 1.3 1.5" direction="alternate" repeat="indefinite" dur="10000"></a-animation>
+      </a-entity>
+
+      <a-entity id="cloud" position="-0.45 -2 1.277" scale="0.2 0.2 0.2">
+        <lp-box class="reseed" rotation="20 0 5" position="-0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="0 15 0" color="#c6e0ef" height="0.65" width="0.65" depth="0.65" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="-30 -10 0" position="0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <a-animation attribute="position" from="-0.45 -2 1.277" to="0 -2 1.277" direction="alternate" repeat="indefinite" dur="7000"></a-animation>
+      </a-entity>
+
+      <a-entity id="cloud" position="-1.361 -0.586 0.096"  scale="0.2 0.2 0.2">        
+        <lp-box class="reseed" rotation="20 0 5" position="-0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="0 15 0" color="#c6e0ef" height="0.65" width="0.65" depth="0.65" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+        <lp-box class="reseed" rotation="-30 -10 0" position="0.5 0 0" color="#c6e0ef" height="0.5" width="0.5" depth="0.5" segments-height="2" segments-width="2" segments-depth="2" ></lp-box>
+     
+      </a-entity>
+
+      <a-animation attribute="rotation" to="0 360 360" direction="loop" repeat="indefinite" dur="50000"></a-animation>
+      </a-entity>
+
+      <a-entity text="value: Population;" position="0 1.5 8" ></a-entity>
+      <a-entity id="pop" text="value:7974047463" v="7974047463" position="0.3 1.5 8" ></a-entity>
+      
+      <a-entity id="p1" rotation="0 10 0" onclick="clickonperson1('p1')" cursor-listener>
+        <a-text id="thing1" value="Animae1" position="-3.5 1.5 8" ></a-text>
+        <a-text id="name1" value="name" position="-3.5 1.2 8" ></a-text>
+        <a-text id="age1" value="age" position="-3.5 0.9 8" ></a-text>
+        <a-text id="job1" value="job" position="-3.5 0.6 8" ></a-text>
+        <a-text id="weakness1" value="weaknesses" position="-3.5 0.3 8" ></a-text>
+        <a-text id="strength1" value="strength" position="-3.5 0 8" ></a-text>
+        <a-entity id="box1" cursor-listener geometry="primitive: box"  position="-3 -0.6 8" depth="0.1" height="0.1" width="0.1" material="color: blue" scale="0.3 0.3 0.3" value="0" ></a-entity>
+      </a-entity>
+  
+      <a-entity id="p2" rotation="0 -10 0" onclick="clickonperson('p2')" cursor-listener>
+        <a-text id="thing2" value="Animae2" position="2.5 1.5 8" ></a-text>
+        <a-text id="name2" value="name" position="2.5 1.2 8" ></a-text>
+        <a-text id="age2" value="age" position="2.5 0.9 8" ></a-text>
+        <a-text id="job2" value="job" position="2.5 0.6 8" ></a-text>
+        <a-text id="weakness2" value="weaknesses" position="2.5 0.3 8" ></a-text>
+        <a-text id="strength2" value="strength" position="2.5 0 8" ></a-text>
+        <a-entity id="box2" cursor-listener geometry="primitive: box"  position="3 -0.6 8" depth="0.1" height="0.1" width="0.1" material="color: blue" scale="0.3 0.3 0.3"  value="0"></a-entity>
+      </a-entity>
+
+      <a-text value="GAME OVER" id="go" visible="false" position="-0.5 1 9"></a-text>
+      
+      <a-text value="Level" position="0 0 9"></a-text>
+      <a-text id="levelid" value="1" position="0.7 0 9"></a-text>
+      
+      <a-text value="animarum" position="-10 1 8" rotation="0 90 0"></a-text>
+      <a-text id="animarumid"value="0" position="-10 0.7 8" rotation="0 90 0"></a-text>
+
+
+    </a-scene>
+  </body>
+</html>

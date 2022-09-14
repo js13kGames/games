@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+  <script type="text/javascript" src="game.js">
+  </script>
+
+  <div id="rules"  style="float:left;width:20%;" >
+    <h2>Cloud Sweeper</h2>
+    <div style="float:left;" >
+      <div>
+	<table style="width:100%;">
+	  <tr style="width:15%;">
+	    <th>Score</th>
+	    <th>Freed</th>
+	    <th>Backed-up</th>
+	    <th>Deleted</th>
+	  </tr>
+	  <tr>
+	    <td id="boxScore" >0</td>
+	    <td id="boxFreed">0</td>
+	    <td id="boxCreated">0</td>
+	    <td id="boxDestroyed">0</td>
+	  </tr>
+	</table>
+	
+
+      </div>
+      <div>
+	<p> Free up your cloud storage by moving your data <strong>offline</strong>! Copy units "off the grid" and free up some storage.</p>
+	<h3> Rules: </h3>
+	<ul>
+	  <li> Move with your keyboard arrow keys or the "Mouse controls" below.</li>
+	  <li> Clouds that are backed-up to the border are moved offline. </li>
+	  <li> Every time you move, the 8 neighbouring cells are checked:
+	    <ul>
+	      <li> If a unit has 2 or 3 neighbours, it is backed-up (copied) to an empty neighbouring cell. </li>
+	      <li> If a unit has more than 3 neighbours, it is redundant and is deleted. </li>
+	      <li> If a unit has less than 2 neighbours, it is unreliable and is deleted. </li>	      
+	      <li> You lose if you get cornered by clouds or the border. </li>
+	      </ul>
+	  <li> Try to clear the grid with the highest score.</li>
+	  <li> Score = 2*(Unit Freed) + (Units copied) - 2*(Units deleted)   </li>
+	</ul>
+	<p><em>Don't or "backup" into a corner. Minimize files deleted.</em></p>
+      </div>
+    </div>
+    <div style="float:left;">
+      <p> &nbsp; </p>
+    </div>
+    <div>
+      <button id="startButton" type="button" onclick="startGame()"> Start </button>
+    </div>
+    <hr/>
+    <div>
+      <h3>Mouse controls</h3>
+      <table style="width:100%;">
+	<tr>
+	  <td></td>
+	  <td> <button onclick="Grid.moveUp();">&nbsp;&nbsp;&nbsp;^&nbsp;&nbsp;&nbsp;</button> </td>
+	  <td></td>
+	</tr>
+	
+	<tr>
+	  <td> <button onclick="Grid.moveLeft();">&nbsp;&nbsp;&nbsp;&lt;&nbsp;&nbsp;&nbsp; </button> </td>
+	  <td></td>	  
+	  <td> <button onclick="Grid.moveRight();">&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;&nbsp; </button></td>
+	  
+	</tr>
+	
+	<tr>	    
+	  <td></td>
+	  <td> <button onclick="Grid.moveDown();">&nbsp;&nbsp;&nbsp;v&nbsp;&nbsp;&nbsp;</button></td>
+	  <td></td>
+	</tr>
+      </table>	
+    </div>
+  </div>
+</body>
+</html>

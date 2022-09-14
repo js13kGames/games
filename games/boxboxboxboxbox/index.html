@@ -1,0 +1,73 @@
+<style>
+    body, html {
+        background-color: black;
+        overflow: hidden;
+        text-align: center;
+        margin: 0;
+    }
+    canvas {
+        border: 8px solid white;
+    }
+    #title {
+        font-size: 64px;
+        font-family: sans-serif;
+        color: white;
+        height: 96px;
+        padding-top: 32px;
+    }
+    #shoot {
+        font-size: 32px;
+        height: 48px;
+    }
+    div {
+        margin: 0px;
+        padding: 0px;
+    }
+    #container {
+        width: 800px;
+        float: none;
+        margin: auto;
+    }
+    #envcount {
+        width: 148px;
+        font-size: 24px;
+        margin-top: 16px;
+        float: right;
+        text-align: left;
+    }
+    #deathcount {
+        width: 148px;
+        font-size: 16px;
+        margin-top: 16px;
+        float: left;
+        text-align: right;
+    }
+    #credits {
+        font: small-caps 12px sans-serif;
+        color: darkslategrey;
+    }
+    #timer {
+        font: small-caps 24px sans-serif;
+        color: white;
+        margin-bottom: 16px;
+        height: 32px;
+    }
+</style>
+<title>📦📦📦📦📦</title>
+<div id="title"></div>
+<div id="timer"></div>
+<div id="container">
+    <div id="deathcount">
+    </div>
+<canvas width="416" height="320" style="background-color: darkslategrey;"></canvas>
+<div id="envcount">
+</div>
+</div>
+<div id="shoot"></div>
+<p id="credits">
+Design and Programming by Igor Moreno<br />
+with assets by Sharm, surt and vk
+</p>
+<script src="levels.min.js"></script>
+<script src="kontra.min.js"></script>
+<script src="game.min.js"></script>

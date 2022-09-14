@@ -1,0 +1,337 @@
+<!DOCTYPE HTML><html>
+<head><title>Quiz Game Master - Cryptomania</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="aboxstyle.css" />
+<style type='text/css'>
+body {text-align:center;font-family:verdana;font-size:10pt;font-weight:bold;}
+
+#content {width:700px;margin:auto;border:solid 1px #444444;}
+
+#alertbox h1, #title /* h1 for alertbox and game title*/
+   {font-size:14pt;margin:2px;
+    border-style:ridge;border-color:#ffd68c;
+    color:black;background-image:url(goldbar.jpg);background-repeat:repeat-x;}
+
+#instructions {margin-bottom:10px;}
+
+#hintbutton {visibility:hidden;}
+#nextbutton {visibility:hidden;}
+
+.codecol {color:yellow;}
+
+.letter {border:solid 1px white;width:25px;background-color:#222244;color:yellow;}
+
+.guess {font-weight:bold;width:30px;background-color:white;text-align:center;font-size:20pt;
+        text-transform:uppercase;}
+
+.guess:hover {background-color:orange;
+              box-shadow:rgba(255, 255, 255, 0.8) 0px 0px 3px 3px;
+}
+
+.button {font-weight:bold;font-size:8pt;
+         text-decoration:none;color:#ffa500;background-color:#8b0000;
+         border:2px solid;border-color:red black black red;border-radius: 10px;
+         width:80px;margin:0px 5px 10px 5px;padding:1px 15px 1px 15px;
+}
+.button:hover {color:#ffffff;box-shadow:rgba(255, 180, 2, 0.8) 0px 0px 3px 3px;}
+
+.boxes {width:555px;
+        border:solid 1px #ffd68c;
+        margin:auto;padding:3px;
+}
+
+.codetable {text-align:center;margin:auto;font-weight:bold;width:550px;}
+
+.alphabettable {margin:auto;margin-top:10px;font-size:12pt;width:500px;border:solid 1px #ffd68c;}
+
+#decode, #code {color:white;background-color:#222244;font-size:12pt;padding:7px;width:270px;height:130px;
+                margin:auto;border:solid 1px #ffd68c;overflow:auto;text-align:left;}
+
+.radial {/* blue radial glow for ff chrome ie10*/
+          background: -moz-radial-gradient(#00f,#000058);
+	      background: -webkit-gradient(radial, center center,10,center center,300, from(#00f), to(#000058));
+          background: -ms-radial-gradient(center, ellipse cover, #0000ff 0%,#000058 100%);
+}
+#siteurl {margin:auto;width:100%;text-align:center;font-size:8pt;color:white;position:absolute;bottom:0px;}
+#siteurl a {color:white;text-decoration:none;}
+#alertboxtext {color:white;background-color:black;
+          background: -moz-radial-gradient(#00f,#000058);
+	      background: -webkit-gradient(radial, center center,10,center center,300, from(#00f), to(#000058));
+          background: -ms-radial-gradient(center, ellipse cover, #0000ff 0%,#000058 100%);
+}
+.splash {color:white;font-size:16pt;font-family:lucinda serif;margin:15px;}
+</style>
+
+<script type='text/javascript' src='myalert.js'></script>
+<script type='text/javascript' src='crypto.js'></script>
+<script  type='text/javascript'>
+// Game specific alert messages that can be displayer with alertboxer()
+   aboxtitle="Cryptomania";
+   splashscreen="<h1>Welcome</h1><p class='splash'>Bhdhe <span class='codecol'>CRACK</span> gdcv ";
+   splashscreen=splashscreen+" <span class='codecol'>THE</span> duyc";
+   splashscreen=splashscreen+"  gdcv <span class='codecol'>SECRET</span> duc  duyc hfgt vheeg ";
+   splashscreen=splashscreen+". Jhb  duc lun  vdy. Yd dsyv <span class='codecol'>CODES</span> yd dsyv aokujg.</p>";
+  var hinttext='';
+
+  helptext="<h1>Help</h1>"; // create help message
+  helptext=helptext+"<p>Tip1 - Single letter words will be A or I </p>";
+  helptext=helptext+"<p>Tip 2 - The possible two letter words are<br />";
+  helptext=helptext+"an, as, at, be, by, do, go, if, in, is, it, me, my, no, of, on, or, so, to, up, we</p>";
+  helptext=helptext+"<p>Tip 3 - The letter 'e' is the most common letter in english followed by<br />";
+  helptext=helptext+" t, o, i, a, n, s</p>";
+
+  soundfiles=['sound.mp3'];
+
+  for (i=0;i<soundfiles.length;i++)  //preload sound files
+       {soundfiles[i]= new Object();}
+
+function soundplayer(x){  // use new html audio tag to play mp3s
+   document.getElementById("sndplayer").src=x+".mp3";
+   document.getElementById("sndplayer").play();
+}
+
+function startup(){
+  soundplayer('sound');
+  if(typeof title!='string'){title=''} // use game title if available
+  document.getElementById('title').innerHTML=" Cryptomania "+title;
+  q=new Array();  // initialise q array
+  q=message.slice(0);  // copy all questions
+  nexttext();  // get first message
+}
+
+function nexttext(){  // let user goto next message
+  document.getElementById('nextbutton').style.visibility='hidden';
+  document.getElementById('codebutton').style.visibility='visible';
+  document.getElementById('hintbutton').style.visibility='visible';
+  document.getElementById('helpbutton').style.visibility='visible';
+
+  // get random quote from q
+  messagenumber=Math.floor(Math.random()*(q.length)); // get random number for quote
+
+  currentmessage=q[messagenumber];
+
+
+  if (hint[messagenumber]!='')
+     {document.getElementById('hintbutton').style.visibility='visible';
+      hinttext='<h1>Hint</h1><p>'+hint[messagenumber]+'</p>';}
+
+  document.getElementById('code').innerHTML=currentmessage;
+  document.getElementById('decode').innerHTML=currentmessage;
+  for (var i=1;i<27;i++) // clear guessboxes
+      {document.getElementById('A'+i).value='';
+       document.getElementById('A'+i).style.backgroundImage='none';}
+ }
+
+function decode(){
+
+ // Save encoded text so we can preserve case
+ originalcodetext=document.getElementById('code').innerHTML;
+ codetext=originalcodetext;  //preserve original codetext
+
+ flag=1;  //set flag to say no letter selected
+ for (i=1;i<27;i++)
+     {idletter="A"+i;
+       // if the cell is not empty swap letter via regex
+       if(document.getElementById(idletter).value!='')
+         { flag=0;
+           document.getElementById(idletter).style.backgroundImage='url(goldbar.jpg)';
+
+          // Build Replacement letter, replacement
+          // convert letter in box to a number
+           x=document.getElementById(idletter).value;
+           xnumber=x.charCodeAt(0);
+
+           replacement=xnumber+100;  // add 100 to save replacement from multiple regexs
+           replacement=String.fromCharCode(replacement);  //now convert back to ascii
+
+          // do text global replacements
+          regex=eval('/'+String.fromCharCode(64+i)+'/g');  //uppercase
+          codetext=codetext.replace(regex,replacement);
+          regex=eval('/'+String.fromCharCode(96+i)+'/g');  //lowercase
+          codetext=codetext.replace(regex,replacement);
+         }
+       else {document.getElementById(idletter).style.backgroundImage='none';}
+      }
+ // Rewrite string
+ // To display adjust codetext back by 100 and highlight for matched letters
+ decodedletter='';
+ newcodetext='';
+ newletter='';
+ decodedlettercount=0; // count number of decoded letters in string
+ for (var i=0;i<codetext.length;i++)
+    {newletter=codetext[i];
+
+     letternum=codetext.charCodeAt(i); // getchar code at location i in codetext
+     if (letternum>164)
+        {letternum=letternum-100;  // move back into AZaz range
+
+         decodedletter=String.fromCharCode(letternum); //convert to letter
+
+         newletter="<span style='color:yellow;'>"+decodedletter+"</span>"; // add highlight
+
+         // count number of decoded letters in string
+         decodedlettercount=decodedlettercount+1;
+        }
+
+     // if original letter uppercase, make decoded same
+     if(originalcodetext[i]==originalcodetext[i].toUpperCase())
+	   {newletter=newletter.toUpperCase();}
+
+     newcodetext=newcodetext+newletter; // build output string for display in decode box
+    }
+
+  document.getElementById('decode').innerHTML=newcodetext;
+
+  // Check at least one letter entered
+  if (flag==1)
+     {alertboxer("<h1>Information</h1><p>You Must Enter at least One Letter in the White Boxes.</p>");}
+
+  checkwin(); // is decoding complete ?
+}
+
+function checkwin()
+   {// function used to recreate orignal message
+    alphabet='abcdefghijklmnopqrstuvwxyz';
+    origstring='';
+
+    keyarray=key[messagenumber].split(" ");  //turn string key into an array of actual integers
+    for(var i=0; i<keyarray.length; i++)
+       {keyarray[i] = parseInt(keyarray[i]);}
+
+    regex = /[A-Za-z]/;  // regex to only decrypt letters
+
+    for(var j=0;j<currentmessage.length;j++)
+       {
+        codeletter=currentmessage.charAt(j);  // get char in coded text
+
+	    if(regex.test(codeletter))            // regex to only decrypt letters
+          {
+           codeletter=codeletter.toLowerCase();   // make lowercase
+
+           //find numeric location of letterindex in alphabet of codeletter
+           letterindex=alphabet.indexOf(codeletter)+1;
+
+           // now find location of letterindex in keyarray
+           origlettervalue=keyarray.indexOf(letterindex);
+
+           // get letter at that location in alphabet
+           origletter=alphabet[origlettervalue];
+
+           //add letter to string
+           origstring=origstring+origletter;
+          }
+        else {origstring=origstring+codeletter;} // add unchanged non alphabet char
+       }
+
+   // Check for win
+   // strip all span tags from newcodetext to become newcodetextcheck before checking
+   newcodetextcheck=newcodetext;
+   newcodetextcheck=newcodetextcheck.replace(/<span.*?>/gi, "");
+   newcodetextcheck=newcodetextcheck.replace(/<\/span>/gi, "");
+
+   if(newcodetextcheck.toLowerCase()==origstring.toLowerCase())
+     {alertboxer('<h1>Congratulations</h1><p>It Looks Like You Cracked the Code !</p>');
+      soundplayer('sound');
+      // add next quote button if available
+      if(message.length>1)
+        {document.getElementById('nextbutton').style.visibility='visible';
+         document.getElementById('codebutton').style.visibility='hidden';
+         document.getElementById('hintbutton').style.visibility='hidden';
+         document.getElementById('helpbutton').style.visibility='hidden';
+        }
+     }
+}
+</script>
+</head>
+<body class='radial' onload='startup();alertsetup();alertboxer(splashscreen);'>
+<div id='content' class='radial'>
+<h1 id='title'>Cryptomania</h1>
+<div id='instructions' class='codecol'>
+Instructions - To discover the Coded Message<br />
+enter Substitute Letters in the white boxes below.<br />
+Press the 'Decode' button to see the result.</div>
+
+<table class='codetable'>
+<tr><td><div class='codecol'>Coded Message</div>
+        <div id='code'>.</div>
+    </td>
+    <td>
+        <input id='nextbutton' type='button' value='NEXT'  class='button' onclick='nexttext();' />
+        <input id='codebutton' type='button' value='DECODE' class='button' onclick='decode();' />
+        <input id='helpbutton' type='button' value='HELP'  class='button' onclick='alertboxer(helptext);' />
+        <input id='hintbutton' type='button' value='HINT'  class='button' onclick='alertboxer(hinttext);' />
+    </td>
+    <td><div class='codecol'>Decoded Message Now Reads</div>
+        <div id='decode'>.</div>
+    </td>
+</tr>
+</table>
+
+<table class='alphabettable'>
+<tr>
+<td class='letter'>A</td>
+<td class='letter'>B</td>
+<td class='letter'>C</td>
+<td class='letter'>D</td>
+<td class='letter'>E</td>
+<td class='letter'>F</td>
+<td class='letter'>G</td>
+<td class='letter'>H</td>
+<td class='letter'>I</td>
+<td class='letter'>J</td>
+<td class='letter'>K</td>
+<td class='letter'>L</td>
+<td class='letter'>M</td>
+</tr>
+<tr>
+<td><input  maxlength='1'  class='guess' type='text' id='A1' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A2' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A3' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A4' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A5' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A6' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A7' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A8' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A9' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A10' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A11' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A12' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A13' value='' /></td>
+</tr>
+<tr>
+<td class='letter'>N</td>
+<td class='letter'>O</td>
+<td class='letter'>P</td>
+<td class='letter'>Q</td>
+<td class='letter'>R</td>
+<td class='letter'>S</td>
+<td class='letter'>T</td>
+<td class='letter'>U</td>
+<td class='letter'>V</td>
+<td class='letter'>W</td>
+<td class='letter'>X</td>
+<td class='letter'>Y</td>
+<td class='letter'>Z</td>
+</tr>
+<tr>
+<td><input  maxlength='1'  class='guess' type='text' id='A14' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A15' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A16' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A17' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A18' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A19' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A20' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A21' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A22' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A23' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A24' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A25' value='' /></td>
+<td><input  maxlength='1'  class='guess' type='text' id='A26' value='' /></td>
+</tr>
+</table>
+
+</div>
+<p id='siteurl'>Created using Quiz Game Master - <a href='http://cybertrain.info/'>http://cybertrain.info/</a></p>
+<audio id='sndplayer'></audio>
+</body>
+</html>

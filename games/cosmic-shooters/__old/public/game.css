@@ -1,0 +1,99 @@
+html, body{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+	overflow: auto;
+  background-repeat: repeat;
+  color:#fff;
+}
+canvas {
+	display: block;
+  width:100%;
+  height:100%;
+  background-color: #000;
+}
+.heading{
+  font-weight: bold;
+  font-size: 40px;
+}
+.container{
+  width: 100%;
+  height: 100%;
+  background-color: red;
+}
+.inner-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10000;
+}
+.container .title{
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 20px;
+}
+.container .ship{
+  width: 40px;
+  cursor: pointer;
+}
+.container .ship.current,.container .ship:hover.current{
+  border: 2px solid #fff;
+}
+.container .ship:hover{
+  border: 1px solid #fff;
+}
+.container .currentship{
+  width: 70px;
+  height:70px;
+  padding: 10px;
+  opacity: 1;
+  float:none;
+  margin: 0 auto;
+}
+.currentship img{
+    -moz-animation:4s rotateRight infinite linear; 
+    -webkit-animation:4s rotateRight infinite linear; 
+}
+@-moz-keyframes rotateRight{
+    0%{ -moz-transform:rotate(0deg); -moz-transform-origin:50% 50%; }
+    100%{ -moz-transform:rotate(360deg); }
+}
+@-webkit-keyframes rotateRight{
+    0%{ -webkit-transform:rotate(0deg); -webkit-transform-origin:50% 50%; }
+    100%{ -webkit-transform:rotate(360deg);}
+}
+.controls{
+  text-align: left;
+}
+.controls h2{
+  text-align: center;
+}
+.play{
+  width: 100px;
+  height: 20px;
+  background-color: seagreen;
+  border-radius: 7px;
+  border: 0;
+  margin: 50px auto;
+  padding: 5px;
+  cursor: pointer;
+}
+.info{
+  display: none;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  text-align: center;
+  background-color: rgba(165, 42, 42,0.5);
+  height: 20px;
+  padding: 18px;
+}

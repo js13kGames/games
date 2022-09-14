@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Envisionator</title>
+<meta charset="utf-8" />
+
+<script src="bundle.js"></script>
+<style>
+html, body {
+height:100%;
+}
+body {
+background-color:#000;
+color:#fff;
+font-family:"Lucida Console", Monaco, monospace;
+margin:0;
+overflow:hidden;
+width:100%;
+}
+img {
+visibility:hidden;
+}
+div, canvas, span {
+position:absolute;
+}
+span {
+white-space:pre;
+text-shadow:0 0 .1em #fff;
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+canvas {
+height:100%;
+width:100%;
+image-rendering:-moz-crisp-edges;
+image-rendering:-webkit-crisp-edges;
+image-rendering:pixelated;
+image-rendering:crisp-edges;
+}
+</style>
+</head>
+<body>
+<img src="./sprites-min.png" />
+<div>
+<canvas></canvas>
+<span></span>
+<span></span>
+<canvas></canvas>
+</div>
+</body>
+</html>

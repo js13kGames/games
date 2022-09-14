@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>What's That Sound?</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas {
+        background: #000;
+        display: block;
+        margin: 0 auto;
+
+        image-rendering: optimizeSpeed;             /* Older versions of FF          */
+        image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+        image-rendering: -webkit-optimize-contrast; /* Safari                        */
+        image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+        image-rendering: pixelated;                 /* Awesome future-browsers       */
+        -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+      }
+    </style>
+    <script src="src/js/jsfxr.js"></script>
+    <script src="src/js/main.js"></script>
+    <script src="src/js/vector.js"></script>
+    <script src="src/js/rectangle.js"></script>
+    <script src="src/js/camera.js"></script>
+    <script src="src/js/player.js"></script>
+    <script src="src/js/enemy.js"></script>
+    <script src="src/js/levels.js"></script>
+    <script src="src/js/map.js"></script>
+    <script src="src/js/hud.js"></script>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+	startGame();
+</script>
+
+</body>
+</html>

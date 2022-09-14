@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Toe Tac Tic</title>
+  <meta name="monetization" content="$coil.xrptipbot.com/8wCYXpSjRJ67qwDLasYc3g">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+	<div class="wrapper">
+	<h1>Rules</h1>
+	<p style="font-size: 2em">1) This is back-ward Tic-Tak-Toe</p>
+	<p style="font-size: 2em">2) If you make 3-O in a row or column or diagonally you loose the game</p>
+	<p style="font-size: 2em">3) If you have a friend click start and then click the "Play with friends" mode</p>
+	<button onClick="begin()" style="margin: 30vh 46%;">Start</button>
+	</div>
+	<h1>Toe-Tac-Tic</h1>
+
+	<table>
+		<tr>
+			<td class="cell" id="0"></td>
+			<td class="cell" id="1"></td>
+			<td class="cell" id="2"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="3"></td>
+			<td class="cell" id="4"></td>
+			<td class="cell" id="5"></td>
+		</tr>
+		<tr>
+			<td class="cell" id="6"></td>
+			<td class="cell" id="7"></td>
+			<td class="cell" id="8"></td>
+		</tr>
+	</table>
+	<div class="endgame">
+		<div class="text"></div>
+	</div>
+	<button onClick="startGame()">Replay</button>
+	<a href="friends.html" class="button">Play with friends</a>
+
+  <script src="game.js"></script>
+</body>
+</html>
