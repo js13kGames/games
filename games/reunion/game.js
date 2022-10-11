@@ -13,7 +13,7 @@ let context = canvas.getContext('2d');
 let splashAnimationFrameId;
 let pikuAnimationFrameId;
 let updatePiecesAnimationFrameId;
-let gameLevel = 8;
+let gameLevel = 1;
 let platform = createLevel(gameLevel);
 let arena = createMatrix(42, 44, 0);
 let totalLevel = 9;
