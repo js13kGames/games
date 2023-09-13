@@ -1,0 +1,478 @@
+:root {
+  --col-primary: teal;
+  --col-secondary: coral;
+  --duration-blur-animation: 6000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+.screen {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  font-weight: 100;
+  position: relative;
+  overflow: hidden;
+}
+
+button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 200ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: linen;
+}
+
+.play-screen {
+  background: linear-gradient( 90deg,
+      rgba(255, 225, 132, .7) 50%, rgba(255,255,255, 0) 50%),
+    linear-gradient( 90deg,
+      rgba(32, 113, 120, .3) 50%, rgba(255,255,255, 0) 50%),
+    linear-gradient( 90deg,
+      rgba(255, 150, 102, .3) 50%, rgba(255,255,255, 0) 50%),
+    linear-gradient( 90deg,
+      rgba(23, 76, 79, .1) 50%, rgba(255,255,255, 0) 50%);
+  background-size: 7em 7em, 5em 5em, 3em 3em, 1em 1em;
+  background-color: #F5E9BE;
+}
+
+@keyframes blur-out {
+  0% {
+    filter: blur(2vw);
+    scale: 1.4;
+  }
+  
+  100% {
+    filter: blur(0px);
+    scale: 0.9;
+  }
+}
+
+.animate-blur {
+  animation: blur-out calc(var(--duration-blur-animation) * 1ms) linear forwards;
+}
+
+@keyframes skew-y-shaking{
+ 0% { transform: skewY(-15deg); }
+ 5% { transform: skewY(15deg); }
+ 10% { transform: skewY(-15deg); }
+ 15% { transform: skewY(15deg); }
+ 20% { transform: skewY(0deg); }
+ 100% { transform: skewY(0deg); }
+}
+
+.animate-error {
+  animation: skew-y-shaking 500ms forwards;
+}
+
+.animate-error #char,
+.animate-error input {
+  background-color: red;
+}
+
+.slide-out {
+  transform: translateY(-100%);
+}
+
+@keyframes vertical-shaking {
+  0% { transform: translateY(0) }
+  25% { transform: translateY(5px) }
+  50% { transform: translateY(-5px) }
+  75% { transform: translateY(5px) }
+  100% { transform: translateY(0) }
+}
+
+.animate-success {
+  animation: vertical-shaking 300ms forwards;
+}
+
+.animate-success #char,
+.animate-success input {
+  background-color: green;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+.start-screen {
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+
+  background-size: 170;
+  transform: rotate(deg);
+  background-image: 
+    conic-gradient(from 160deg at 70px 168.5px, #FDC12D 0deg 90deg, transparent 90deg),
+    conic-gradient(from 21deg at 168px 71px, #FDC12D 0deg 90deg, transparent 90deg),
+    conic-gradient(from 21deg at 141px 141px, #FEEBAE 0deg 114deg, transparent 114deg),
+    conic-gradient(from -21deg at 96.5px 44px, #1483CA 0deg 131.5deg, transparent 131.5deg), 
+    conic-gradient(from -70deg at 43.5px 97px, #FDC12D 0deg 115.5deg, transparent 115.5deg), 
+    conic-gradient(from 134.5deg at 141px 141px, #1483CA 0deg 114.5deg, transparent 114deg),
+    conic-gradient(from 160deg at 43.5px 97px, #FEEBAE 0deg 130.5deg, transparent 120deg 360deg);
+  background-color: skyblue;
+  background-size: 195px 195px;
+  background-position: -30px -30px;
+  background-repeat: repeat, repeat;
+}
+
+p {
+  padding: 0 5%;
+  text-align: center;
+}
+
+.intro {
+  text-shadow: 0 0 5px black;
+  color: linen;
+  font-size: 2rem;
+}
+
+.btn {
+  font-size: 1.25rem;
+  background-color: var(--col-primary);
+  border: none;
+  padding: 1em 2em;
+  border-radius: 5px;
+  color: linen;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px grey;
+  transition: box-shadow 100ms, scale 100ms;
+}
+
+.btn:active {
+  box-shadow: 0 0 2px grey;
+  transform: scale(0.98);
+}
+
+progress {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2rem;
+}
+
+::-webkit-progress-value {
+  background-color: var(--col-secondary);
+}
+
+::-webkit-progress-bar {
+  background-color: linen;
+}
+
+::-moz-progress-bar {
+  background-color: var(--col-secondary);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-left: 5%;
+}
+
+.control-btns {
+  display: flex;
+  gap: 1rem;
+}
+
+.icon-btn {
+  position: relative;
+  padding: 0;
+  border-radius: 4rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: linen;
+}
+
+.icon {
+  transition: opacity 200ms;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+.icon-btn > .icon:last-child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.icon-btn > .icon:only-child {
+  opacity: 1;
+}
+
+.icon-btn.active > .icon:first-child {
+  opacity: 0;
+}
+
+.icon-btn.active > .icon:last-child {
+  opacity: 1;
+}
+
+.level {
+  background-color: var(--col-secondary);
+  color: linen;
+  padding: 0.5rem 1rem;
+  border-radius: 3rem;
+  text-transform: uppercase;
+}
+
+.score-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.score-wrapper,
+.max-score-wrapper {
+  display: grid;
+  grid-template-columns: min-content auto min-content;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: min(7vw,2rem);
+  background-color: var(--col-secondary);
+  padding: min(1vw,1rem) min(2vw,2rem);
+  color: linen;
+  text-align: right;
+  min-width: 2.5em;
+  width: 100%;
+  padding-left: 0.5em;
+}
+
+.score-wrapper {
+  border-radius: 1.5rem 0 0 0;
+}
+
+.score,
+.max-score {
+  text-align: center;
+}
+
+.score-label {
+  text-transform: uppercase;
+  color: linen;
+  text-orientation: upright;
+  writing-mode: vertical-lr;
+  font-size: 0.25em;
+}
+
+.max-score-wrapper {
+  border-radius: 0 0 0 1.5rem;
+}
+
+.clear-score,
+.clear-max-score {
+  color: linen;
+  font-size: 0.5em;
+  border: solid 1px linen;
+  border-radius: 1rem;
+  display: inline-block;
+  aspect-ratio: 1;
+  width: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 0.1em;
+}
+
+.glasses-wrapper {
+  padding: 0 5%;
+  width: 100%;
+}
+
+.glasses {
+  width: auto;
+  position: relative;
+  margin: 0 auto;
+  max-height: 50vh;
+  aspect-ratio: 1.44;
+}
+
+.glasses svg {
+  width: 100%;
+  height: auto;
+  fill: var(--col-primary);
+  transition: fill 100ms;
+}
+
+.left-eye {
+  border-radius: 50%;
+  position: absolute;
+  left: 4%;
+  bottom: 0;
+  overflow: hidden;
+  border: solid min(3vw,20px) var(--col-primary);
+  width: 41%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+}
+
+#char {
+  font-family: 'Brush Script MT', cursive;
+  filter: blur(2vw);
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: min(31vw, 30vh);
+  overflow: hidden;
+  text-align: center;
+}
+
+.no-blur {
+  filter: blur(0) !important;
+}
+
+input {
+  position: absolute;
+  right: 4%;
+  bottom: 0;
+  border-radius: 50%;
+  border: solid min(3vw,20px) var(--col-primary);
+  outline: none;
+  font: inherit;
+  font-size: min(20vw, 6rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 41%;
+  aspect-ratio: 1;
+  background-color: transparent;
+  color: black;
+  overflow: hidden;
+}
+
+.instructions {
+  font-size: 1.5rem;
+  width: 100%;
+  flex: 1;
+  background-color: linen;
+  padding-top: 1rem;
+  color: var(--col-primary);
+}
+
+dialog[open] {
+  width: 80vw;
+  height: 80vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background-color: linen;
+}
+
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.stats-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  text-align: center;
+  border-spacing:0;
+  border-collapse: collapse;
+}
+
+td {
+  border: none;
+  color: linen;
+  padding: 0.5rem;
+}
+
+thead td {
+  background-color: orange;
+}
+
+tbody td {
+  background-color: gray;
+}
+
+#graph {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  place-items: end center;
+  flex: 1;
+  width: 100%;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.char-stat {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.char-stat_bar {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.char-stat_bar_ok,
+.char-stat_bar_ko {
+  transition: flex 200ms 300ms;
+  flex: 0
+}
+
+.char-stat_bar_ok {
+  background-color: green;
+}
+
+.char-stat_bar_ko {
+  background-color: red;
+}
+
+.char-stat_label {
+  border-top: solid 3px var(--col-secondary);
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  min-width: 2em;
+}

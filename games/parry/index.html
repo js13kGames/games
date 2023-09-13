@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parry</title>
+    <link
+      rel="stylesheet"
+      href="styles.css"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗡️</text></svg>"
+    />
+  </head>
+  <body>
+    <h1>Parry</h1>
+    <section id="info">
+      <div id="round-info">
+        <h3>Last round, you were...</h3>
+        <h1 id="rating"></h1>
+        <p>
+          <span id="your-score">-</span> points /
+          <span id="possible-score">-</span> total <br />
+          (<span id="score-percent">-</span>%)
+        </p>
+      </div>
+      <div id="enemy-info">
+        <h3>Next Enemy...</h3>
+        <h1 id="next-enemy"></h1>
+        <p>Ready?</p>
+        <div>
+          <button id="go-sound">Start (with sound)</button>
+          <button id="go"></button>
+        </div>
+      </div>
+      <div id="last-info">
+        <h1>Thanks for playing!</h1>
+        <p>
+          High score: <span id="high-score"></span
+          ><span id="new-high-score">New!</span>
+        </p>
+      </div>
+    </section>
+    <canvas
+      id="cvs"
+      width="700"
+      height="500"
+    ></canvas>
+    <div id="scoreBoard">
+      <p>Score: <span id="score">0</span></p>
+    </div>
+    <script src="script.min.js"></script>
+  </body>
+</html>

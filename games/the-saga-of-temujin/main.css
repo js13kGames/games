@@ -1,0 +1,198 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin:0;
+}
+
+.gridarea{
+    width: 625px;
+    height: 625px;
+    background-color: green;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 5px solid black;
+    position: relative;
+}
+
+.finishRound{
+    position: absolute;
+    right: -110px;
+    top:12.5px;
+    width: 100px;
+    height: 25px;
+    z-index: 1;
+}
+
+.display{
+    position: absolute;
+    right: -110px;
+    top:    50px;
+    width: 100px;
+    height: 575px;
+    z-index: 1;
+    background-color: green;
+    display: flex;
+    flex-direction: column;
+}
+
+.hoverable, .selected{
+    height: 287.5px;
+    border: 2.5px solid black;
+    text-align: center;
+}
+
+.hoverable, .selected{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+h3{
+    padding:0;
+    margin: 0;
+}
+
+.imgHover, .imgSelect{
+    height: 54px;
+    width: 95px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgHover img, .imgSelect img{
+    transform: scale(2);
+    border: 1px solid turquoise;
+    box-sizing: border-box;
+}
+
+.baseStats{
+    height: 150px;
+}
+
+b{
+    font-size: small;
+    font-weight:bolder;
+}
+
+.display button{
+    background: linear-gradient(grey, dimgrey, grey);
+}
+
+.square{
+    background-image: green;
+    border: 1px dashed darkslategray;
+    box-sizing: border-box;
+    width: 25px;
+    height: 25px;
+    position: relative;
+}
+
+.unit{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+}
+
+.square_overlay{
+    width: 100%;
+    height: 100%;
+}
+
+.square_overlay:hover{
+    background-color: rgba(0,0,0, 0.3);
+    outline: 1px solid rgba(0,0,0, 0.3);
+}
+
+.square_overlay:active{
+    background-color: rgba(255,255,255, 0.2);
+    outline: 1px solid rgba(255,255,255, 0.2);
+}
+
+.squares_container{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.dirt{
+    background-color:sienna;
+}
+
+.dark_dirt{
+    background-color: saddlebrown;
+}
+
+
+.river{
+    background-color:cornflowerblue;
+}
+
+.bridge{
+    background-color:brown;
+}
+
+
+.villager{
+    background-image: url(Villager.png);
+    background-size: cover;
+}
+
+.cavalry{
+    background-image: url(Cavalry.png);
+    background-size: cover;
+}
+
+.building{
+    position: absolute;
+    z-index: 10;
+}
+
+.stables{
+    width: 50px;
+    height: 50px;
+    background-image: url(Stables.png);
+}
+
+
+.farm{
+    width: 25px;
+    height: 25px;
+    background-image: url(Farm.png);
+    background-size: contain;
+    
+}
+
+.yurt{
+    width: 25px;
+    height: 25px;
+    background-image: url(Yurt.png);
+    background-size: contain;
+}
+
+.movable{
+    background-color: rgba(173, 255, 47,0.21);
+}
+
+.attackable{
+    background-color: rgba(255,0,0, 0.4);
+}
+
+.player{
+    background-color: rgba(0,0,0, 0.3);
+    background-color: rgb(0, 255, 255);
+    background-color:rgba(0, 255, 255, 0.3);
+    background-color: darkcyan;
+}
+
+body{background-color: #111;}
+

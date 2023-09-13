@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Slowed Dao Runner</title>
+  <link rel="stylesheet" href="style.min.css">
+</head>
+
+<body id=mybod onload="start()">
+  <script src="index.js"></script>
+  
+  <div id=edittarget>
+    <svg viewbox="-1200 -300 1200 300" id=rendertarget>      
+      <rect width="9000" height="5000" x="-1500" y="-1200" fill="url(#canvas)"/>
+      <g id=menu>
+        <path id="titp" d="M-900,-280 Q-700,-450 -300,-320"/>
+        <text >
+          <textPath id=tit href="#titp">Slowed Dao Runner</textPath>
+        </text>
+        <text id=sub x="-600" y="-320" text-anchor="middle">a game by elementalsystems for js13kgames 2024</text>
+        <text id=sub x="-900" y="-250" text-anchor="start">Select a level to play</text>
+        <text id=m1  x="-600" y="-150" text-anchor="middle" onclick="startLev(1)" fill="#080D">Rural Niigata Prefecture 1282ad</text>
+        <text id=m2  x="-600" y="-100" text-anchor="middle" onclick="startLev(2)" fill="#800D">Kotokuin Temple 1214ad</text>
+        <text id=m3  x="-600" y="-200" text-anchor="middle" onclick="startLev(3)" fill="#448D">Kyoto City 1256ad</text>
+
+        <text id=com x="-600" y="300" text-anchor="middle">Level Completed</text>
+        <text id=spdf x="-600" y="400" text-anchor="middle">xx</text>
+        <text id=stlf x="-600" y="450" text-anchor="middle">xx</text>
+        <text x="-600" y="550" text-anchor="middle" onclick="startLev(0)">Main Menu</text>
+
+        
+      
+      </g>
+      
+    </svg>
+    <div id=spd></div>
+    <div id=stl></div>
+    <div id=inst>Select Next Move (or use arrows keys)</div>
+    <div id=s1 class=slot tabindex=1 onclick="ctl(1)"><span>↑</span></div>
+    <div id=s2 class=slot onclick="ctl(2)"><span>→</span></div>
+    <div id=s3 class=slot onclick="ctl(3)"><span>↓</span></div>
+
+  </div>
+  <svg>
+    <defs>
+    <filter id='roughpaper'>
+        
+        <feDiffuseLighting  in='sourceAlpha' lighting-color='#DDD' surfaceScale='-2' result="paper">
+          <feDistantLight azimuth='45' elevation='60' />
+        </feDiffuseLighting>
+        <!--<feGaussianBlur in='SourceGraphic' stdDeviation="1" result="test" /> -->
+        <feBlend in='SourceGraphic' in2="paper" mode="darken"/>
+    </filter>
+
+    <pattern id="brick" viewBox="0,0,30,30" width="25" height="25" patternUnits="userSpaceOnUse" >
+      <rect width="30" height="30"/>      
+      <path d="M0,0 L30,30 M15,0 L30,15 M0,15 L15,30 M0,1 L15,1 M15,15 L30,15 M0,7 L7,7 M23,7 L30,7 M10,23 L23,23"></path>     
+    </pattern>
+
+    <pattern id="temple" viewBox="0,0,30,30" width="10" height="10" patternUnits="userSpaceOnUse" >
+      <rect width="30" height="30" fill="#A405"/>      
+      <path d="M0,0 L30,30" stroke="#000A"></path>     
+      <path d="M15,5 L20,10" stroke="#F00F"></path>     
+      <path d="M25,5 L30,10" stroke="#F00F"></path>     
+    </pattern>
+    
+    
+    <pattern id="board" viewBox="0,0,30,30" width="12.5" height="12.5" patternUnits="userSpaceOnUse" >
+      <rect width="30" height="30"/>      
+      <path d="M2,8 L2,30 M8,8 L8,24 M16,4 L16,20 M25,3 L25,24 "></path>            
+    </pattern>
+
+    <pattern id="canvas" viewBox="0,0,20,20" width="5" height="5" patternUnits="userSpaceOnUse">
+      <path d="M3,0 L3,20" stroke="#F003"></path>      
+      <path d="M0,3 L20,3" stroke="#FF03"></path>          
+      <path d="M13,0 L13,20" stroke="#F003"></path>    
+      <path d="M6,13 L20,13" stroke="#FF03"></path>                  
+    </pattern>
+    
+    </defs>
+  </svg>
+</body>
+
+</html>

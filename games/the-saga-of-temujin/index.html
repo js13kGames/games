@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+    
+    <script src = "utils.js"></script>
+    <script src = "models/model.utils.js"></script>
+    <script src = "controller/controller.utils.js"></script>
+
+    <script defer src = "models/MapModel.js"></script>
+    <script defer src = "models/PlayerModel.js"></script>
+    <script defer src = "models/ComputerModel.js"></script>
+    <script defer src = "models/UnitModel.js"></script>
+    <script defer src = "models/BuildingModel.js"></script>
+
+    <script defer src = "View/View.js"></script>
+
+    <script defer src = "controller/Controller.js"></script>
+
+
+</head>
+<body>
+    <div class="gridarea" id = "grid">
+        <button class="finishRound">Finish Turn</button>
+        <div class="display">
+            <div class="hoverable">
+                <h3>Hover:</h3>
+                <div class="imgHover"></div>
+
+                <div class="baseStats">
+                    <div class="ownerHover"></div>
+                    <div class="nameHover"></div>
+                    <div class="healthHover"></div>
+                    <div class="movementHover"></div>
+                    <div class="rangeHover"></div>
+                    <div class="damageHover"></div>
+                    <div class="buildHover"></div>
+                </div>
+
+            </div>
+            <div class="selected">
+                <h3>Selected:</h3>
+                <div class="imgSelect"></div>
+
+                <div class="baseStats">
+                    <div class="ownerSelect"></div>
+                    <div class="nameSelect"></div>
+                    <div class="healthSelect"></div>
+                    <div class="movementSelect"></div>
+                    <div class="rangeSelect"></div>
+                    <div class="damageSelect"></div>
+                    <div class="buildSelect"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

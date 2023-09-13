@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>13th Century Siege</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="./assets/tower.png" />
+		<script type="module" crossorigin src="./assets/index-6387152a.js"></script>
+		<link rel="stylesheet" href="./assets/index-f23565b9.css">
+	</head>
+	<body>
+		<div id="game">
+			<div id="gui">
+				<div id="coin_icon"></div>
+				<div id="coins">50</div>
+				<div id="lifes"></div>
+				<div id="wave">Wave: 0</div>
+				<div id="vel">X1</div>
+			</div>
+			<canvas id="canvas"></canvas>
+			<button id="start_wave"></button>
+			<div id="tower_select">
+				<div class="tower_btn" id="tower1" data-tower="1">
+					<div class="tower_price">100</div>
+				</div>
+				<div class="tower_btn" id="tower2" data-tower="2">
+					<div class="tower_price">150</div>
+				</div>
+			</div>
+			<div id="screens">
+				<div id="start_screen">
+					<div class="title">13th Century Siege</div>
+					<button id="start_game">Start</button>
+					<button id="show_howto">How to play</button>
+				</div>
+				<div id="game_over">
+					<div class="title">Game Over</div>
+					<div id="killed">Killed enemies: <span>0</span></div>
+					<button id="goto_start">Main title</button>
+				</div>
+				<div id="howto">
+					<h2>How to play</h2>
+					<div>
+						Press <img src="./assets/signal.png" /> to open the construction menu
+					</div>
+					<div>
+						Press <img src="./assets/enemy_alert.png" /> to start the wave of enemies
+					</div>
+					<button id="close_howto">Close</button>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>
