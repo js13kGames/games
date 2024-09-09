@@ -1,0 +1,28 @@
+<html>
+
+    <head>
+            <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+
+    <body>
+
+        <div class="hud">
+            <a>Score: </a>
+            <a id="score">0</a>
+        </div>
+        
+        <canvas id="screen"  width= "128"  height="128" onkeypress="start_game()">
+        </canvas>
+
+        <div class="hud">
+            <a id="text-box">LOADING...</a>
+        </div>
+
+        <script src="lib/kontra.min.js"></script>
+        <script src="src/global.js"></script>
+        <script src="src/strings.js"></script>
+        <script src="src/mechanics.js"></script>
+        <script src="src/game.js"></script>
+    </body>
+
+</html>

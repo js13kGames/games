@@ -1,0 +1,34 @@
+body
+{
+    text-align: center;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height:100%;
+    background-color: #545155;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+canvas{
+   
+    width: 100%;
+    height: 100%;
+   
+  }
+  html, body {
+    height:100%;
+  }
+  
+  .container {
+    width: 100%;
+  height: 100%;
+  margin: 0;
+  outline: solid 1px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  

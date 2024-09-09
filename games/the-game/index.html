@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>js13k - 2017</title>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="gameWrapper">
+        <div class="gameWrapperBox">
+            <canvas id="myCanvas" width="800" height="600"></canvas>
+
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p id="modalContent">You Win!</p>
+                </div>
+            </div>
+
+            <div class="buttons">
+
+                <input type="button" value="Block" name="Block" data-id="B" id="Block" class="EditorEntrie"><br>
+                <input type="button" value="Enemy" name="Enemy" data-id="E" id="Enemy" class="EditorEntrie"><br>
+                <input type="button" value="Coin" name="Coin" data-id="C" id="Coin" class="EditorEntrie"><br>
+                <input type="button" value="Door" name="Door" data-id="D" id="Door" class="EditorEntrie"><br>
+                <input type="button" value="Player" name="Player" data-id="P" id="Player" class="EditorEntrie"><br>
+                <input type="button" value="X" name="X" data-id="0" class="EditorEntrie"><br>
+
+                <textarea id="code" rows="20" cols="30" placeholder="Place you code hear"></textarea><br>
+
+                <input type="button" value="Genarate Map" id="btnGenerateMap"><br>
+                <input type="button" value="Load Map" id="btnLoadMap"><br>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="./js/input/Keyboard.js"></script>
+    <script src="./js/input/Mouse.js"></script>
+    <script src="./js/Printer.js"></script>
+    <script src="./js/maps.js"></script>
+    <script src="./js/master.js"></script>
+</body>
+
+</html>

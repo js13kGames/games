@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tilted</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<style>
+
+    *
+    {
+        user-select: none;
+        font-family: Arial;
+    }
+    body
+    {
+        background: #525245;
+    }
+    .a
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+    }
+    .cont
+    {
+        position: absolute;
+        width:0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+        transform-style: preserve-3d;
+        transform: rotateY(0);
+    }
+    .rectangle
+    {
+        --w: 0;
+        --h: 0;
+        position: absolute;
+        width: var(--w);
+        height: var(--h);
+        left: calc(50% - (var(--w)/2));
+        bottom: calc(50% - (var(--h)/2));
+
+    }
+    #camera
+    {
+        z-index: 100;
+        perspective: 1000vmin;
+    }
+    .ball
+    {
+        --x: 0;
+        --y: 0;
+    /background: rgba(211, 198, 216, 0.6) radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: #d8d8d8 radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: goldenrod radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: #b84033 radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: #5b8499 radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: #47995d radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+    /background: #565656 radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+        background: #7a7a7a radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .3),transparent,rgba(0,0,0,.5)); / radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(255, 255, 0, 255) 50%);
+        transform: translate3d(var(--x),var(--y),-4.98vmin);
+        border-radius: 50%;
+    }
+    .hole
+    {
+        --x: 0;
+        --y: 0;
+        transform: translate3d(var(--x),var(--y),-4.99vmin);
+        border-radius: 50%;
+    }
+    .ingamebutton
+    {
+        border-radius: 50%;
+        transform: translate3d(var(--x),var(--y),-4.98vmin);
+        transition: background 300ms;
+        text-align: center;
+        /*--color: #526dd6;
+        --color: #2ba963;
+        --color: #c8504d;*/
+        background: var(--color) radial-gradient(ellipse at center, rgba(255,255,255,.2) 0%, transparent 44%, rgba(128,128,128,0.96) 50%, rgba(192,192,192,0.97) 59%, rgba(128,128,128,0.97) 71%, rgba(128,128,128,1) 100%);
+    }
+    .ingamebutton[use='1']
+    {
+        background: var(--color) radial-gradient(ellipse at center, rgba(255,255,255,.6) 0%, rgba(255,255,255,.46) 44%, rgba(128,128,128,0.96) 50%, rgba(192,192,192,0.97) 59%, rgba(128,128,128,0.97) 71%, rgba(128,128,128,1) 100%);
+
+    }
+    #gui
+    {
+        z-index: 600000000;
+        position: fixed;
+        top:0;
+        left: 0;
+        width:100%;
+    }
+    #edbut
+    {
+        z-index: 600000000;
+        position: fixed;
+        top:0;
+        left: 0;
+    }
+    #ground
+    {
+        --w: 96vmin;
+        --h: 142vmin;
+        background: #f4c58f;
+        transform: translateZ(-5vmin);
+
+    }
+    @keyframes death {
+        0%
+        {
+            transform: translate3d(var(--x),var(--y),-4.98vmin) scale(1);
+            opacity: 1;
+        }
+        40%
+        {
+            transform: translate3d(var(--x2),var(--y2),-4.98vmin) scale(1);
+            opacity: 1;
+        }
+        100%
+        {
+            transform: translate3d(var(--x2),var(--y2),-4.98vmin) scale(.5);
+            opacity: 0;
+        }
+
+    }
+    #editor
+    {
+        z-index: 300;
+        background: #525245;
+    }
+    .editor
+    {
+        --w: 66vmin;
+        --h: 98vmin;
+        border: .5px solid;
+    }
+    .button
+    {
+        min-width: 15vmin;
+        font-size: 3vmin;
+        line-height: 3.3vmin;
+        height: 7vmin;
+        text-align: center;
+        position: relative;
+        margin-left: 2vmin;
+    //border: .3px solid white;
+        background: whitesmoke;
+        box-shadow: black 0 0 1vmin;
+    }
+    .button:active
+    {
+        background: #2CAFE3;
+    }
+    .button[selected='1']
+    {
+        background: lightblue;
+    }
+    .menuelem
+    {
+        position: relative;
+        margin: 0 auto;
+        margin-top: 6vmin;
+        box-shadow: black 0 0 1vmin;
+        width: 86vmin;
+        padding: 2vmin;
+        min-height: 11vmin;
+        background: lightskyblue;
+        font-size: 6vmin;
+        font-style: italic;
+
+    }
+    #worlds
+    {
+        z-index: 300;
+        background: #525245;
+        overflow-y: scroll;
+
+    }
+    .menuelemdots
+    {
+        position: relative;
+        width: 88vmin;
+        min-height: 4vmin;
+    //top: 9vmin;
+        left: -.5vmin;
+        display: flex;
+        flex-wrap: wrap
+    }
+    .leveldot
+    {
+        position: relative;
+        width:2.5vmin;
+        height: 2.5vmin;
+        border-radius: 50%;
+        border: .3vmin black solid;
+        margin: .5vmin;
+        background: white;
+    }
+    #levelselect
+    {
+        z-index: 300;
+        background: #525245;
+    }
+    #mapsketch
+    {
+        position: absolute;
+        width: 94vmin;
+        height: 140vmin;
+        border: 1vmin black solid;
+        transform: rotate(90deg) scale(.5);
+        top: calc(50% - 71vmin);
+        left: calc(50% - 48vmin);
+        background: #f4c58f;
+    }
+    #title
+    {
+        position: absolute;
+        width: 100%;
+        color: white;
+        text-align: center;
+        font-size: 5vmin;
+        top: calc(50% - 60vmin);
+
+    }
+    #title:first-line
+    {
+        font-size: 12vmin;
+    }
+    #levelcount
+    {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        top: calc(50% + 30vmin);
+        position: absolute;
+        width: 100%;
+        min-height: 3vmin;
+    / background: white;
+    }
+    .arrowbutton
+    {
+        position: absolute;
+        height: 30vmin;
+        background: white;
+        width: 8vmin;
+        clip-path: polygon(100% 0, 0 50%, 100% 100%);
+        top: calc(50% - 15vmin);
+        left: 3vmin;
+
+    }
+    #arrowright
+    {
+        left: 89vmin;
+        transform: rotate(180deg);
+    /    color: wheat;
+    }
+    #record
+    {
+        position: absolute;
+        width: 100%;
+        color: white;
+        text-align: center;
+        font-size: 5vmin;
+        top: calc(50% + 35vmin);
+    }
+    #start
+    {
+        --w: 30vmin;
+        --h: 8vmin;
+        font-size: 7vmin;
+        text-align: center;
+        color: white;
+        text-shadow: var(--c) .3vmin .3vmin 0,var(--c) -.3vmin .3vmin 0,var(--c) .3vmin -.3vmin 0,var(--c) -.3vmin -.3vmin 0;
+        --c: black;
+        position: absolute;
+        background: darkolivegreen;
+        border: .3vmin black solid;
+        top: calc(50% + 50vmin);
+    }
+    #start[locked='0']
+    {
+        background: gray;
+
+    }
+    #win
+    {
+        background: #657ba0;
+        font-size: 7vmin;
+        text-align: center;
+        color: white;
+        text-shadow: var(--c) .3vmin .3vmin 0,var(--c) -.3vmin .3vmin 0,var(--c) .3vmin -.3vmin 0,var(--c) -.3vmin -.3vmin 0;
+        --c: black;
+        z-index: 300;
+    }
+    #mainmenu
+    {
+        background: #657ba0;
+        z-index: 300;
+    }
+    #editormisc
+    {
+        background: rgba(255,255,255,.8);
+        z-index: 500;
+        text-align: center;
+    }
+    #title2
+    {
+        width: 100%;
+        font-size: 8vmin;
+        color: white;
+        text-shadow: var(--c) .3vmin .3vmin 0,var(--c) -.3vmin .3vmin 0,var(--c) .3vmin -.3vmin 0,var(--c) -.3vmin -.3vmin 0;
+        --c: black;
+        text-align: center;
+        position: relative;
+        height: 35vmin;
+    }
+    #title2:first-line
+    {
+        font-size: 20vmin;
+    }
+    .mainbut
+    {
+        position: relative;
+        margin: 0 auto;
+        margin-top: 15vmin;
+        width: 60vmin;
+        height: 20vmin;
+        font-size: 7vmin;
+        line-height: 20vmin;
+        background: lightseagreen;
+        color: darkslategrey;
+        text-align: center;
+    }
+    .mainbut:hover
+    {
+        background: lightblue;
+    }
+    button
+    {
+        background: #26d2c8;
+        color: #203535;
+        font-size: 4vmin;
+    }
+</style>
+<body>
+<div class='a' id='camera'>
+    <div class='cont' id='cont'>
+
+        <div class='rectangle' id='ground'></div>
+        <!--<div id='ball'></div>-->
+
+    </div>
+</div>
+
+
+<div id='editor' class='a'>
+    <div style='display: flex; flex-wrap: wrap; position: absolute;width: 100%;height: 17vmin; bottom: 1vmin;'>
+        <div onclick='change_editor_action("barrier"); this.setAttribute("selected","1")' class='button'>Place<br>Barrier</div>
+        <div onclick='change_editor_action("ball"); this.setAttribute("selected",1)' class='button'>Place<br>Ball</div>
+        <div onclick='change_editor_action("hole"); this.setAttribute("selected",1)' class='button'>Place<br>Hole</div>
+        <div onclick='change_editor_action("finish"); this.setAttribute("selected",1)' class='button'>Place<br>Finish</div>
+        <div onclick='change_editor_action("door"); this.setAttribute("selected","1")' class='button'>Place<br>Door</div>
+        <div onclick='change_editor_action("button0"); this.setAttribute("selected",1)' class='button'>Place<br>Hold Button</div>
+        <div onclick='change_editor_action("button1"); this.setAttribute("selected",1)' class='button'>Place<br>Open Button</div>
+        <div onclick='change_editor_action("button2"); this.setAttribute("selected",1)' class='button'>Place<br>Close Button</div>
+        <div onclick='change_editor_action("delete"); this.setAttribute("selected",1)' class='button'>Delete<br>Objects</div>
+
+
+    </div>
+
+    <div onclick='tomain()' class='button' style='top: 1vmin; left:10vmin;position: absolute;'>Return to<br>Menu</div>
+    <div onclick='playlevel()' class='button' style='top: 1vmin; left: calc(50% - 7.5vmin);position: absolute;'>Play<br>Level</div>
+    <div onclick='tempshare()' class='button' style='top: 1vmin; right:10vmin;position: absolute;'>Finish<br>Level</div>
+    <div class='rectangle editor' id='editor_bottom'></div>
+    <div class='rectangle editor' id='editor_top' style='z-index: 200' ontouch='clickeditortop(event)' onclick='clickeditortop(event)'></div>
+    <!--<div class='rectangle editor' id='editor_bg' style='z-index: 1; background: sandybrown'</div>-->
+
+
+</div>
+
+<div hidden class='a' id='worlds'>
+
+</div>
+
+<div hidden class='a' id='levelselect'>
+    <div id='title'></div>
+    <div id='mapsketch'></div>
+    <div id='levelcount'></div>
+    <div class='arrowbutton' onclick='change_menulevel(menulevel-1)'></div>
+    <div class='arrowbutton' onclick='change_menulevel(menulevel+1)' id='arrowright'></div>
+    <div id='record'></div>
+    <div class='rectangle' id='start' onclick='startlevel()'></div>
+</div>
+
+<div class='a' id='mainmenu'>
+    <div id='title2'>Tilted<br>The Phone Game</div>
+    <div class='mainbut' onclick='launchgame()'>Play Game</div>
+    <div class='mainbut' onclick='launcheditor()'>Level Editor</div>
+    <!--<button>Select Skin</button>-->
+</div>
+
+<div id='gui' hidden>
+    <button onclick='document.body.requestFullscreen()'>Fullscreen</button>
+    <button onclick='data.running ? quitlevel() : (currentmenu == "levels" ? toworlds() : tomain())' style='position: absolute;right:0'>Back</button>
+    <button onclick='loadlevel(levelpacks[menuworld].levels[menulevel])' id='restartbut' hidden>Restart</button>
+</div>
+<button id='edbut' onclick='win(); cancomplete = 0;' hidden>Back</button>
+
+<div class='a' hidden id='win' onclick='hidewin()'>
+
+</div>
+
+</body>
+<script>
+
+
+    const s = gid = id => document.getElementById(id);
+
+    const cd = name =>
+    {
+        var elem = document.createElement('div');
+        elem.className = name;
+        return elem;
+    }
+
+    var cr = (w,h,bg,t) => {
+        var elem = cd('rectangle');
+        elem.style.setProperty('--w',w+'vmin');
+        elem.style.setProperty('--h',h+'vmin');
+        elem.style.background = bg;
+        elem.style.transform = t;
+        elem.style.backgroundSize = '100% 100%,15vmin 15vmin';
+        return elem;
+    }
+
+    const get_distance = (x1, y1, x2, y2) => Math.hypot(x2-x1,y2-y1);
+
+    var wood = 'linear-gradient(45deg,sandybrown,wheat,sandybrown,wheat,sandybrown,wheat,sandybrown,wheat)';
+    var steel = 'linear-gradient(45deg,gray,lightgray,gray,lightgray,gray,lightgray,gray,lightgray)';
+    var door = 'linear-gradient(45deg,#CCC,#DDD,#CCC,#DDD,#CCC,#DDD,#CCC,#DDD)';
+    //var wood = 'linear-gradient(45deg,sandybrown,#CBB27B,sandybrown,#CBB27B,sandybrown,#CBB27B,sandybrown,#CBB27B)';
+
+
+    var rot = {a:0,b:0,g:0};
+    var pos = {x:0,y:0};
+
+    var radius = 2.5;
+
+    var devicerot = {alpha:0,beta:0,gamma:0};
+
+    function deviceOrientationHandler(e)
+    {
+        devicerot = {alpha:e.alpha,beta:e.beta,gamma:e.gamma};
+
+        if(data.depth)s('camera').style.perspectiveOrigin = `calc(50% + ${(-e.gamma*15)}vmin) calc(50% + ${(-e.beta*15)}vmin)`;
+
+    }
+
+    function mousemovement(e)
+    {
+
+        var X = (e.clientX - (window.innerWidth / 2))/20;
+        var Y = (e.clientY - (window.innerHeight / 2))/20;
+        devicerot = {beta:Y,gamma:X};
+
+        if(data.depth)s('camera').style.perspectiveOrigin = `calc(50% + ${(-e.gamma*15)}vmin) calc(50% + ${(-e.beta*15)}vmin)`;
+
+    }
+    if (window.DeviceOrientationEvent) {
+
+        if(navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i)) window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+        else window.onmousemove = mousemovement;
+        console.log('supported')
+    }
+
+    var barriers = [];
+    class Ball
+    {
+        constructor(x,y,rad)
+        {
+            this.active = true;
+            this.rad = rad;
+            this.pos = {x:x,y:y};
+            this.speed = {x:0,y:0};
+            this.look = cd('rectangle ball');
+            this.look.style.setProperty('--w',rad*2+'vmin');
+            this.look.style.setProperty('--h',rad*2+'vmin');
+            s('cont').appendChild(this.look);
+        }
+        move(x,y,delta)
+        {
+            if(this.active) {
+
+
+                var posposY = this.pos.y + this.speed.y * delta;
+                var posposX = this.pos.x + this.speed.x * delta;
+
+
+                for (var i in barriers) {
+                    var bar = barriers[i];
+                    if (bar.active && ((posposX - this.rad < bar.r && posposX + this.rad > bar.l && posposY < bar.b && posposY > bar.t) || (posposX < bar.r && posposX > bar.l && posposY - this.rad < bar.b && posposY + this.rad > bar.t) || (get_distance(bar.l, bar.t, posposX, posposY) <= this.rad || get_distance(bar.l, bar.b, posposX, posposY) <= this.rad || get_distance(bar.r, bar.t, posposX, posposY) <= this.rad || get_distance(bar.r, bar.b, posposX, posposY) <= this.rad))) {
+                        //
+                        var left = Math.abs(posposX + this.rad - bar.l);
+                        var right = Math.abs(posposX - this.rad - bar.r);
+                        var top = Math.abs(posposY + this.rad - bar.t);
+                        var bottom = Math.abs(posposY - this.rad - bar.b);
+
+                        var smallest = Math.min(left, right, top, bottom);
+
+                        if (smallest == left) {
+                            if (Math.abs(this.speed.x) > 20) navigator.vibrate(50);
+                            this.speed.x *= -1;
+                            posposX = bar.l - this.rad;
+                        }
+                        else if (smallest == right) {
+                            if (Math.abs(this.speed.x) > 20) navigator.vibrate(50);
+                            this.speed.x *= -1;
+                            posposX = bar.r + this.rad;
+                        }
+                        else if (smallest == top) {
+                            if (Math.abs(this.speed.y) > 20) navigator.vibrate(50);
+                            this.speed.y *= -1;
+                            posposY = bar.t - this.rad;
+                        }
+                        else if (smallest == bottom) {
+                            if (Math.abs(this.speed.y) > 20) navigator.vibrate(50);
+                            this.speed.y *= -1;
+                            posposY = bar.b + this.rad;
+                        }
+
+
+                    }
+                }
+
+                for (var i in balls) if (balls[i] != this && balls[i].active) {
+                    var ball = balls[i];
+                    if (get_distance(posposX, posposY, ball.pos.x, ball.pos.y) <= (this.rad + ball.rad)) {
+                        this.speed.x *= -.7;
+                        this.speed.y *= -.7;
+
+                        posposX = this.pos.x;
+                        posposY = this.pos.y;
+                    }
+
+                }
+
+                for (var i in holes) {
+                    var hole = holes[i];
+                    if (get_distance(hole.pos.x, hole.pos.y, this.pos.x, this.pos.y) < hole.rad && this.rad <= hole.rad) {
+
+                        this.active = false;
+                        this.look.style.animation = 'death 300ms linear infinite';
+                        this.look.style.setProperty('--x2', hole.pos.x + 'vmin');
+                        this.look.style.setProperty('--y2', hole.pos.y + 'vmin');
+
+                        if (hole.type == 'death')
+                        {
+                            this.die();
+
+                        }
+
+                        else if (hole.type == 'win')
+                        {
+                            setTimeout(win,1000);
+                            var this2 = this;
+                            setTimeout(()=>{this2.look.hidden = 1},300);
+                        }
+
+                    }
+
+                }
+                this.pos.x = posposX;
+                this.pos.y = posposY;
+
+
+
+
+                this.look.style.setProperty('--x', this.pos.x + 'vmin');
+                this.look.style.setProperty('--y', this.pos.y + 'vmin');
+            }
+
+
+        }
+        die()
+        {
+
+            var this2 = this;
+            setTimeout(()=>{this2.look.remove()},300);
+            var j = 0;
+            for(var i of balls)if(i.active)++j;
+            // alert(j);
+            if(j==0)
+            {
+
+                for(var k in currentlevel.balls)
+                {
+                    var b = currentlevel.balls[k];
+                    balls.push(new Ball(b[0],b[1],b[2]));
+                }
+
+            }
+        }
+    }
+    var doors = [];
+    class Barrier
+    {
+        constructor(x,y,w,h,type,id)
+        {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+
+            this.l =x-(w/2);
+            this.r =x+(w/2);
+            this.t =y-(h/2);
+            this.b =y+(h/2);
+
+            this.active = 1;
+
+            this.type = type || 0;
+            this.id = id;
+
+
+
+            this.look = cd('cont');
+            for(var i = 0; i < 4; ++i)this.look.appendChild(cr(i % 2 == 0 ? w : h, 10, 'linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.1),transparent),' + (type ? door : wood), 'rotateX(90deg) rotateY('+(i * 90)+'deg) translateZ(' + (i % 2 == 0 ? (h/2) : (w/2)) + 'vmin)'));
+
+            var elem = cr(w,h,'linear-gradient(transparent,transparent),' +  (type ? door : wood),'translateZ(5vmin)');
+            //elem.style.filter = 'blur(.0001vmin)';  //Giving blur to barrier top prevents a display glitch in chrome mobile
+            this.look.appendChild(elem);
+
+
+            /* var shadow = cr(w,h,'rgba(0,0,0,.3)','translateZ(-4.99vmin)');
+             shadow.style.filter = 'blur(.5vmin)';
+             this.look.appendChild(shadow);*/
+
+            this.look.style.transform = 'translateX('+x+'vmin) translateY('+y+'vmin)';
+            if(type)
+            {
+                this.look.style.transition = 'transform 300ms';
+                doors[id] = this;
+            }
+
+            s('cont').appendChild(this.look);
+        }
+        open()
+        {
+            this.look.style.transform = 'translateX('+this.x+'vmin) translateY('+this.y+'vmin) translateZ(-9.995vmin)';
+            this.active = 0;
+        }
+        close()
+        {
+            this.look.style.transform = 'translateX('+this.x+'vmin) translateY('+this.y+'vmin) translateZ(0)';
+            this.active = 1;
+        }
+    }
+    class Hole
+    {
+        constructor(x,y,rad,type)
+        {
+            this.pos = {x:x,y:y};
+            this.rad = rad;
+            this.type = type;
+            this.look = cr(rad*2,rad*2,(type=='death'?'#333':'lightgreen') + ' radial-gradient(circle at 70% 70%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.5) 60%)');
+            this.look.className += ' hole';
+            this.look.style.setProperty('--x',x+'vmin');
+            this.look.style.setProperty('--y',y+'vmin');
+
+            console.log(this.look);
+            s('cont').appendChild(this.look);
+        }
+    }
+
+    class Button
+    {
+        constructor(x,y,type,rad,id)
+        {
+            this.pos = {x:x,y:y};
+            this.rad = rad;
+            this.type = type; //0: HOLD   1: ON   2: OFF   3: DUMMY
+            this.id = id;
+            this.inuse = 0;
+            this.look = cr(rad*2,rad*2);
+            this.look.style.setProperty('--x',x+'vmin');
+            this.look.style.setProperty('--y',y+'vmin');
+            this.look.style.setProperty('--color',type == 0 ? '#526dd6' : (type == 1 ? '#2ba963' : (type == 2 ? '#c8504d' : 'yellow')));
+            this.look.className += ' ingamebutton';
+            s('cont').appendChild(this.look);
+        }
+        check()
+        {
+
+            var lastinuse = this.inuse;
+            this.inuse = 0;
+            for (var i in balls) {
+                var ball = balls[i];
+                if (ball.active && get_distance(this.pos.x, this.pos.y, ball.pos.x, ball.pos.y) < this.rad) {
+                    this.inuse = 1;
+                    break;
+                }
+
+            }
+            if(lastinuse != this.inuse)
+            {
+                this.look.setAttribute('use',String(this.inuse));
+                if(this.inuse)
+                {
+                    if(this.type == 0)
+                    {
+                        doors[this.id].open();
+                    }
+                    if(this.type == 1)
+                    {
+                        doors[this.id].open();
+                    }
+                }
+                else
+                {
+                    if(this.type == 0)
+                    {
+                        doors[this.id].close();
+                    }
+                    if(this.type == 2)
+                    {
+                        doors[this.id].close();
+                    }
+                }
+            }
+
+
+        }
+    }
+
+
+    function win()
+    {
+        //data.running = false;
+        clearInterval(timerinterval);
+        s('restartbut').hidden = 1;
+        if(!editormode)
+        {
+            savedata[menuworld][menulevel][0] = 2;
+
+            if(savedata[menuworld][menulevel + 1] == undefined && levelpacks[menuworld].levels.length > menulevel)
+            {
+                savedata[menuworld][menulevel + 1] = [1,0];
+            }
+            else if(savedata[menuworld][menulevel + 1][0] == 0)savedata[menuworld][menulevel + 1][0] = 1;
+
+            timertime = Math.round(timertime * 10)/10;
+            if(savedata[menuworld][menulevel][1] == 0 || savedata[menuworld][menulevel][1] > timertime) savedata[menuworld][menulevel][1] = timertime;
+
+            localStorage.p94 = JSON.stringify(savedata);
+            s('win').hidden = 0;
+            s('win').innerHTML = "<br><br>Congratulations!<br><small>You've beaten " + levelpacks[menuworld].levels[menulevel].name + "<br><br>Your time: "+ timertime +"s<br>Your record: "+savedata[menuworld][menulevel][1]+"s</small>";
+
+        }
+        else
+        {
+            data.running = false;
+            cancomplete = 1;
+            s('editor').hidden = 0;
+            s('edbut').hidden = 1;
+        }
+
+
+    }
+
+
+
+    const data = {};
+    data.running = false;
+    data.depth = 1;
+    var editormode = 0;
+    function loadlevel(level, editor)
+    {
+        doors = [];
+        editormode = editor;
+        currentlevel = level;
+        console.log(level);
+        s('cont').innerHTML = '<div class=\'rectangle\' id=\'ground\'></div>';
+        barriers = [];
+        holes = [];
+        balls = [];
+        buttons = [];
+        data.running = true;
+        barriers.push(new Barrier(50,0,6,140));
+        barriers.push(new Barrier(-50,0,6,140));
+        barriers.push(new Barrier(0,73,106,6));
+        barriers.push(new Barrier(0,-73,106,6));
+        for(var i in level.holes)
+        {
+            var b = level.holes[i];
+            holes.push(new Hole(b[0],b[1],b[2],b[3]));
+        }
+        for(var i in level.buttons)
+        {
+            var b = level.buttons[i];
+            buttons.push(new Button(b[0],b[1],b[2],b[3],b[4]));
+        }
+        for(var i in level.barriers)
+        {
+            var b = level.barriers[i];
+            barriers.push(new Barrier(b[0],b[1],b[2],b[3]));
+        }
+        for(var i in level.doors)
+        {
+            var b = level.doors[i];
+            barriers.push(new Barrier(b[0],b[1],b[2],b[3],1,b[4],b[5]));
+        }
+        for(var i in level.balls)
+        {
+            var b = level.balls[i];
+            balls.push(new Ball(b[0],b[1],b[2]));
+        }
+
+        timertime = 0;
+        clearInterval(timerinterval);
+        timerinterval = setInterval(timer, 100);
+        if(editor)s('edbut').hidden = 0;
+        else s('restartbut').hidden = 0;
+        //prevtime = undefined;
+    }
+
+
+
+    var prevtime = undefined;
+    function gameloop()
+    {
+
+        var delta = (+new Date() - (prevtime || +new Date())) / 1000;
+        prevtime = +new Date();
+
+        if(data.running && delta < .5) {
+
+
+
+            for (var x of balls) if (x.active) {
+
+
+                x.speed.x += (20 * devicerot.gamma) * delta;
+                x.speed.y += (20 * devicerot.beta) * delta;
+
+                x.move(x.speed.x, x.speed.y, delta);
+
+                x.speed.x *= Math.pow(.37, delta * 4);
+                x.speed.y *= Math.pow(.37, delta * 4);
+            }
+
+            for (var x of buttons) {
+                x.check();
+            }
+        }
+
+    }
+    var gameinterval = setInterval(gameloop);
+
+    var timertime = 0;
+    var timerinterval = null;
+    function timer()
+    {
+        timertime += .1
+    }
+
+    var holes = [];
+    var balls = [];
+
+    var currentitem = 'barrier';
+    var firstclick = secondclick = null;
+    var tempdot = cr(2,2,'red','translate(var(--x),var(--y))');
+    tempdot.style.borderRadius = '50%';
+    tempdot.style.zIndex = 9999999999;
+    s('editor_bottom').appendChild(tempdot);
+    tempdot.hidden = true;
+
+    function clickeditortop(e)
+    {
+        var elem = s('editor_top');
+
+        var left = Math.round(2* 33 *((((e.touches ? e.touches[0].pageX : e.clientX) - elem.offsetLeft) / elem.offsetWidth) - .5));
+        var top = Math.round(2* 49 * ((((e.touches ? e.touches[0].pageY : e.clientY) - elem.offsetTop) / elem.offsetHeight) - .5));
+        cancomplete = 0;
+        if(currentitem == 'barrier')
+        {
+            if(firstclick == null)
+            {
+                firstclick = [left,top];
+                tempdot.style.setProperty('--x',left + 'vmin');
+                tempdot.style.setProperty('--y',top + 'vmin');
+                tempdot.hidden = false;
+            }
+            else
+            {
+                secondclick = [left,top];
+                tempdot.hidden = true;
+                place_barrier();
+            }
+        }
+        if(currentitem == 'door')
+        {
+            if(firstclick == null)
+            {
+                firstclick = [left,top];
+                tempdot.style.setProperty('--x',left + 'vmin');
+                tempdot.style.setProperty('--y',top + 'vmin');
+                tempdot.hidden = false;
+            }
+            else
+            {
+                secondclick = [left,top];
+                tempdot.hidden = true;
+                place_barrier(true, prompt('What should the id of the door be?',editordata.doors.length));
+            }
+        }
+        else if(currentitem == 'hole')
+        {
+            var elem = cr(6*.7,6*.7,'#333 radial-gradient(circle at 70% 70%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.5) 60%)','translate(var(--x),var(--y))');
+            elem.className += ' hole';
+            elem.id=editordata.holes.length;
+            elem.onclick=function(){delete editordata.holes[this.id]; this.remove()};
+            setxy(elem, left, top);
+            s('editor_bottom').appendChild(elem);
+            editordata.holes.push([left,top,3,'death']);
+        }
+        else if(currentitem == 'finish')
+        {
+            var elem = cr(6*.7,6*.7,'lightgreen radial-gradient(circle at 70% 70%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.5) 60%)','translate(var(--x),var(--y))');
+            elem.className += ' hole';
+            elem.id=editordata.holes.length;
+            elem.onclick=function(){delete editordata.holes[this.id]; this.remove()};
+            setxy(elem, left, top);
+            s('editor_bottom').appendChild(elem);
+            editordata.holes.push([left,top,3,'win']);
+        }
+        else if(currentitem == 'ball')
+        {
+            var elem = cr(5.8*.7,5.8*.7,'','translate(var(--x),var(--y))');
+            elem.className += ' ball';
+            elem.id=editordata.balls.length;
+            elem.onclick=function(){delete editordata.balls[this.id]; this.remove()};
+            setxy(elem, left, top);
+            s('editor_bottom').appendChild(elem);
+            editordata.balls.push([left,top,3]);
+        }
+        else if(currentitem.includes('button'))
+        {
+            var elem = cr(8*.7,8*.7);
+            elem.className += ' ingamebutton';
+            elem.id=editordata.buttons.length;
+            elem.onclick=function(){delete editordata.buttons[this.id]; this.remove()};
+            setxy(elem, left, top);
+            s('editor_bottom').appendChild(elem);
+            var num =Number(currentitem.split('button')[1]);
+            elem.style.setProperty('--color',num == 0 ? '#526dd6' : (num  == 1 ? '#2ba963' : (num  == 2 ? '#c8504d' : 'yellow')));
+            var id = prompt("What should the button's ID be?",(editordata.doors.length-1));
+            elem.innerHTML = id;
+            editordata.buttons.push([left,top,num,4,id]);
+        }
+
+
+
+    }
+
+    function change_editor_action(action)
+    {
+        tempdot.hidden = true;
+        firstclick = null;
+        secondclick = null;
+        currentitem = action;
+        s('editor_bottom').style.zIndex = action == 'delete' ? 300 : 100;
+        for(var i = 0; i < 11; ++i)document.querySelectorAll('.button')[i].setAttribute('selected',0);
+    }
+
+    function setxy(elem,x,y)
+    {
+        elem.style.setProperty('--x',x+'vmin');
+        elem.style.setProperty('--y',y+'vmin');
+    }
+    var editordata = {barriers: [],balls: [],holes:[],buttons:[],doors:[]};
+    function place_barrier(door,id)
+    {
+        door = door || false;
+        var h = Math.abs(firstclick[1] - secondclick[1]) || 1;
+        var w = Math.abs(firstclick[0] - secondclick[0]) || 1;
+        var x = (firstclick[0] + secondclick[0])/2;
+        var y = (firstclick[1] + secondclick[1])/2;
+        var elem = cr(w,h,'saddlebrown','translate(var(--x),var(--y))');
+        elem.type = 'barrier';
+        elem.style.border = '.3px solid';
+
+
+        setxy(elem,x,y);
+        s('editor_bottom').appendChild(elem);
+        firstclick = null;
+        secondclick = null;
+        if(door)
+        {
+            elem.id=editordata.doors.length;
+            elem.style.background = 'lightgray';
+            elem.innerHTML = id;
+            editordata.doors.push([x,y,w,h,id]);
+            elem.onclick=function(){delete editordata.doors[this.id]; this.remove()};
+
+        }
+        else
+        {
+            elem.id=editordata.barriers.length;
+            editordata.barriers.push([x,y,w,h]);
+            elem.onclick=function(){delete editordata.barriers[this.id]; this.remove()};
+        }
+
+    }
+
+
+
+
+    /*var levels = [
+        {
+            balls:[[0,0,2.9]],
+            holes: [[10,10,3,'death'],[-10,-10,3,'death'],[-10,10,3,'death'],[10,-10,3,'death']],
+            barriers: [[20,50,3,40],[35,50,3,40],[-20,-50,10,10],[-30,-20,13,13],[-35,-60,6,8]]
+        }
+    ];*/
+
+    function show_editor_misc()
+    {
+        s('editormisc').hidden = 0;
+    }
+    function save_editor_misc()
+    {
+        s('editormisc').hidden = 1;
+        var values = s('editormisc').querySelectorAll('input');
+    }
+
+    var cancomplete = 0;
+    var currentlevel = null;
+    function playlevel()
+    {
+        var level = {barriers: [],balls: [],holes:[],buttons:[],doors:[]};
+        for(var i of editordata.barriers)if(i != undefined)level.barriers.push([1.428*i[0],1.428*i[1],1.428*i[2],1.428*i[3]]);
+        for(var i of editordata.doors)if(i != undefined)level.doors.push([1.428*i[0],1.428*i[1],1.428*i[2],1.428*i[3],i[4],i[5]]);
+        for(var i of editordata.holes)if(i != undefined)level.holes.push([1.428*i[0],1.428*i[1],i[2],i[3]]);
+        for(var i of editordata.balls)if(i != undefined)level.balls.push([1.428*i[0],1.428*i[1],i[2]]);
+        for(var i of editordata.buttons)if(i != undefined)level.buttons.push([1.428*i[0],1.428*i[1],i[2],i[3],i[4]]);
+        loadlevel(level, true);
+        s('editor').hidden = true;
+    }
+    function tempshare()
+    {
+        if(cancomplete)
+        {
+            var level = {barriers: [],balls: [],holes:[],buttons:[],doors:[]};
+            for(var i of editordata.barriers)if(i != undefined)level.barriers.push([~~(1.428*i[0]),~~(1.428*i[1]),~~(1.428*i[2]),~~(1.428*i[3])]);
+            for(var i of editordata.doors)if(i != undefined)level.doors.push([~~(1.428*i[0]),~~(1.428*i[1]),~~(1.428*i[2]),~~(1.428*i[3]),i[4],i[5]]);
+            for(var i of editordata.holes)if(i != undefined)level.holes.push([~~(1.428*i[0]),~~(1.428*i[1]),i[2],i[3]]);
+            for(var i of editordata.balls)if(i != undefined)level.balls.push([~~(1.428*i[0]),~~(1.428*i[1]),i[2]]);
+            for(var i of editordata.buttons)if(i != undefined)level.buttons.push([~~(1.428*i[0]),~~(1.428*i[1]),i[2],i[3],i[4]]);
+            level.creator = prompt("What is your (the creator's) name?");
+            level.name = prompt("What is your level's name?");
+            saved_levels.push(JSON.stringify(level));
+            localStorage.p94l = JSON.stringify(saved_levels);
+            levelpacks[7].levels.push(level);
+            savedata[7].push([1,0]);
+            alert('Level saved!');
+            tomain();
+            localStorage.p94 = JSON.stringify(savedata);
+            //prompt('Your level in JSON:',JSON.stringify(level));
+        }
+        else
+        {
+            alert('You need to play through your level before you can save it');
+        }
+
+
+
+    }
+
+    function buildmenu()
+    {
+        s('worlds').innerHTML = '';
+        for(var i in levelpacks)
+        {
+            var elem = cd('menuelem');
+            elem.innerHTML = levelpacks[i].name;
+            var dots = cd('menuelemdots');
+            for(var j in levelpacks[i].levels)
+            {
+                var lvl = levelpacks[i].levels[j];
+                var dot = cd('leveldot');
+                if(savedata[i] && savedata[i][j] && savedata[i][j][0] == 2)dot.style.background = 'lightgreen';
+                dots.appendChild(dot);
+            }
+            elem.appendChild(dots);
+            elem.pack = i;
+            if(levelpacks[i].levels.length > 0)elem.onclick = function(){showlevels(this.pack)};
+            s('worlds').appendChild(elem);
+        }
+    }
+    var menulevel = 0;
+    var menuworld = 0;
+    var currentmenu = 'main';
+    function showlevels(world)
+    {
+        currentmenu = 'levels';
+        menuworld = world;
+        var pack = levelpacks[world];
+        s('worlds').hidden = true;
+        s('levelselect').hidden = 0;
+        s('levelcount').innerHTML = '';
+        var levels = pack.levels.length;
+        for(var i in pack.levels) s('levelcount').appendChild(cd('leveldot'));
+        change_menulevel(0);
+        /*alert(world);
+        alert(levelpacks[world].levels.length);*/
+    }
+
+    function change_menulevel(to)
+    {
+
+        menulevel = to;
+        s('mapsketch').innerHTML = '';
+        if(menulevel < 0) menulevel = levelpacks[menuworld].levels.length - 1;
+        if(menulevel >= levelpacks[menuworld].levels.length) menulevel = menulevel = 0;
+        var lvl = levelpacks[menuworld].levels[menulevel];
+        s('title').innerHTML = lvl.name + '<br>by ' + lvl.creator;
+        for(var i = 0; i < levelpacks[menuworld].levels.length; ++i) s('levelcount').childNodes[i].style.background = 'white';
+        s('levelcount').childNodes[menulevel].style.background = '#222';
+        for(var i in lvl.balls)
+        {
+            var b = lvl.balls[i];
+            var elem = cr(b[2]*2,b[2]*2,'','translate(var(--x),var(--y))');
+            elem.className += ' ball';
+            setxy(elem, b[0], b[1]);
+            s('mapsketch').appendChild(elem);
+        }
+        for(var i in lvl.holes)
+        {
+            var b = lvl.holes[i];
+            //holes.push(new Hole(b[0],b[1],b[2],b[3]));
+
+            var elem = cr(b[2]*2,b[2]*2,(b[3]=='death'?'#333':'lightgreen') + ' radial-gradient(circle at 70% 70%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.5) 60%)','translate(var(--x),var(--y))');
+            elem.className += ' hole';
+            setxy(elem, b[0],b[1]);
+            s('mapsketch').appendChild(elem);
+        }
+        for(var i in lvl.buttons)
+        {
+            var b = lvl.buttons[i];
+            var elem = cr(b[3]*2,b[3]*2,'','translate(var(--x),var(--y))');
+            elem.style.setProperty('--color','#526dd6');
+            elem.className += ' ingamebutton';
+            setxy(elem, b[0],b[1]);
+            s('mapsketch').appendChild(elem);
+        }
+        for(var i in lvl.doors)
+        {
+            var b = lvl.doors[i];
+
+            var elem = cr(b[2],b[3],'#CCC','translate(var(--x),var(--y))');
+            elem.style.border = '.3px solid';
+            setxy(elem,b[0],b[1]);
+
+            s('mapsketch').appendChild(elem);
+        }
+        for(var i in lvl.barriers)
+        {
+            var b = lvl.barriers[i];
+
+            var elem = cr(b[2],b[3],'saddlebrown','translate(var(--x),var(--y))');
+            elem.style.border = '.3px solid';
+            setxy(elem,b[0],b[1]);
+
+            s('mapsketch').appendChild(elem);
+        }
+
+
+
+        s('record').innerHTML = 'Your record: ' + (savedata[menuworld][menulevel][1] || '- ') + 's';
+
+        if(savedata[menuworld][menulevel][0]) s('start').innerHTML = 'PLAY';
+        else s('start').innerHTML = 'LOCKED';
+
+        s('start').setAttribute('locked',savedata[menuworld][menulevel][0]);
+
+
+    }
+    function toworlds()
+    {
+        currentmenu = 'worlds';
+        s('levelselect').hidden = true;
+        s('worlds').hidden = false;
+        buildmenu();
+    }
+    function startlevel()
+    {
+        if(savedata[menuworld][menulevel][0])
+        {
+
+            s('levelselect').hidden = true;
+            s('worlds').hidden = true;
+            s('editor').hidden = true;
+            loadlevel(levelpacks[menuworld].levels[menulevel]);
+        }
+    }
+    function quitlevel()
+    {
+        currentmenu = 'levels';
+        data.running = false;
+        s('levelselect').hidden = 0;
+        s('restartbut').hidden =1;
+    }
+
+    function hidewin()
+    {
+        s('win').hidden = 1;
+        s('levelselect').hidden = 0;
+        change_menulevel(menulevel+1);
+    }
+    function launchgame()
+    {
+        currentmenu = 'worlds';
+        s('mainmenu').hidden = 1;
+        s('gui').hidden = 0;
+        s('worlds').hidden = 0;
+        buildmenu();
+    }
+    function launcheditor()
+    {
+        currentmenu = 'editor';
+        s('mainmenu').hidden = 1;
+        s('editor').hidden = 0;
+    }
+    function tomain()
+    {
+        currentmenu = 'main';
+        s('worlds').hidden = 1;
+        s('editor').hidden = 1;
+        s('mainmenu').hidden = 0;
+        s('gui').hidden = 1;
+    }
+
+
+    //s('worlds').hidden = true;
+    s('levelselect').hidden = true;
+
+    //Build editor
+
+    var levelpacks =
+        [
+            {
+                name: 'Easy Levels',
+                levels: [
+                    {"barriers":[[-8.5,54,77,2],[5,40,84,2],[-37,-11,1,100],[-0.5,-59.5,71,3],[33,-14.5,4,87],[12,-1,2,80],[-7.5,-40,37,2],[-18.5,-27,35,2],[-7,-13,34,2],[-22.5,8.5,3,41],[-9.5,28,23,2],[-1,11.5,6,31]],"balls":[[-39,62,3]],"holes":[[-12,21,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 1"},
+                    {"barriers":[[0.5,10.5,25,1],[12,-1,2,22],[-10.5,-1,3,22],[0.5,-27,55,2],[27,2.5,2,57],[-26.5,2.5,1,57],[-1,31,52,1],[1.5,51.5,57,19],[1,-46.5,52,19]],"balls":[[0,3,3]],"holes":[[22,-23,3,"death"],[-22,-22,3,"death"],[1,25,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 2"},
+                    {"barriers":[[-33,5,2,130],[33,-4,4,130],[4.5,58,51,4],[-6,-58,52,4],[18.5,-6.5,1,99],[-19.5,4.5,3,103],[-5,-46,26,2],[3.5,41.5,29,3]],"balls":[[-41,65,3]],"holes":[[14,-34,3,"death"],[-17,-24,3,"death"],[0,-13,3,"death"],[16,-3,3,"death"],[0,9,3,"death"],[-17,18,3,"death"],[0,26,3,"death"],[16,36,3,"death"],[41,-64,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 3"},
+                    {"barriers":[[-11,-54.5,72,5],[10.5,-31,73,6],[-8,-2.5,78,7],[8.5,25.5,77,7],[-37.5,50.5,17,3]],"balls":[[-42,-64,3]],"holes":[[-42,-48,3,"death"],[-28,-48,3,"death"],[-14,-48,3,"death"],[0,-48,3,"death"],[16,-48,3,"death"],[-22,-23,3,"death"],[-6,-23,3,"death"],[13,-23,3,"death"],[32,-23,3,"death"],[25,6,3,"death"],[4,5,3,"death"],[-19,5,3,"death"],[-40,5,3,"death"],[-24,34,3,"death"],[-6,34,3,"death"],[14,33,3,"death"],[35,33,3,"death"],[-37,55,3,"death"],[-37,64,3,"win"],[41,64,3,"death"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 4"},
+                    {"barriers":[[-8,-58,77,1],[29,-29,1,57],[28,31,1,34],[-1,48,59,1],[-21,34,51,1],[6,13,44,1],[-3,23,61,1],[-9,-2,75,1]],"balls":[[-42,-64,3]],"holes":[[22,42,3,"death"],[22,27,3,"death"],[-44,29,3,"death"],[-44,9,3,"death"],[-35,9,3,"death"],[-27,9,3,"death"],[28,1,3,"death"],[27,8,3,"death"],[18,5,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 5"},
+                    {"barriers":[[-2,-49,1,1],[-38,-37,1,1],[-18,-37,1,1],[-2,-37,1,1],[17,-37,1,1],[34,-38,1,1],[24,-17,1,1],[7,-18,1,1],[-11,-18,1,1],[-29,-19,1,1],[-39,-4,1,1],[-19,-4,1,1],[-1,-2,1,1],[17,-1,1,1],[34,-1,1,1],[24,14,1,1],[7,14,1,1],[-11,14,1,1],[-31,14,1,1],[-39,32,1,1],[-21,31,1,1],[-1,31,1,1],[17,32,1,1],[34,34,1,1],[-42,0,1,138],[37,0,1,138],[-2,44,78,1]],"balls":[[-2,-62,3]],"holes":[[-34,38,3,"death"],[-25,38,3,"death"],[-15,38,3,"death"],[-7,38,3,"death"],[2,38,3,"death"],[21,38,3,"death"],[29,38,3,"death"],[11,37,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 6"}                ]
+            },
+            {
+                name: 'Medium Levels',
+                levels: [
+                    {"barriers":[[-27.5,57,39,6],[-13,38.5,10,31],[-32.5,23,29,1],[-1,9.5,72,3],[5.5,39.5,1,41],[-34,-7.5,4,29],[-28,-35.5,8,27],[-20.5,-59.5,7,21]],"balls":[[-42,65,3]],"holes":[[6,65,3,"death"],[6,14,3,"death"],[41,10,3,"death"],[-44,-67,3,"death"],[-30,-54,3,"death"],[-37,-60,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 1"},
+                    {"barriers":[[-13,56,67,4],[-33,-47,27,4]],"balls":[[-41,64,3]],"holes":[[-37,44,3,"death"],[27,41,3,"death"],[-5,22,3,"death"],[29,-18,3,"death"],[-37,-31,3,"death"],[-8,-38,3,"death"],[-38,-59,3,"win"],[-39,8,3,"death"],[39,24,3,"death"],[11,-2,3,"death"],[-17,-11,3,"death"],[-7,42,3,"death"],[-25,17,3,"death"],[15,19,3,"death"],[31,-55,3,"death"],[11,-31,3,"death"],[42,-35,3,"death"],[8,-51,3,"death"],[-2,4,3,"death"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 2"},
+                    {"barriers":[[-19.5,0,9,140],[18.5,0,9,140]],"balls":[[-1,63,3]],"holes":[[-11,54,3,"death"],[-12,42,3,"death"],[-11,28,3,"death"],[-11,15,3,"death"],[-10,2,3,"death"],[-11,-11,3,"death"],[-11,-24,3,"death"],[-11,-36,3,"death"],[-11,-48,3,"death"],[10,-49,3,"death"],[10,-36,3,"death"],[10,-24,3,"death"],[10,-11,3,"death"],[9,2,3,"death"],[10,15,3,"death"],[10,28,3,"death"],[9,43,3,"death"],[9,56,3,"death"],[-2,-58,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 3"},
+                    {name: 'Level4', creator: 'Calada2', "barriers":[[-33.5,4,7,132],[28.5,-3,9,134],[-8.5,-58.5,43,7],[3.5,58.5,41,9],[-13.5,50.5,5,7],[-13,-1,6,94],[9,-5,8,100]],"balls":[[-42,66,3]],"holes":[[-7,39,3,"death"],[2,19,3,"death"],[-9,4,3,"death"],[2,-12,3,"death"],[-8,-31,3,"death"],[39,-65,3,"win"]]},
+                    {"barriers":[[-11,53,71,1],[24,44,1,15],[24,17,1,12],[10,9,69,1],[-24,-8,1,34],[-35,-25,22,1],[9,-12,54,27],[-2,-47,75,32]],"balls":[[-38,62,3]],"holes":[[-37,-19,3,"win"],[-41,45,3,"death"],[15,17,3,"death"]],"buttons":[[41,15,1,4,"0"],[17,45,1,4,"1"],[-39,-4,2,4,"1"],[-29,11,2,4,"1"],[-41,24,2,4,"1"]],"doors":[[24,30,1,12,"0",null],[-35,-12,22,1,"1",null]],"creator":"Calada2","name":"Level 5"},
+                    {"barriers":[[-0.5,0,5,140],[15.5,-52,1,8],[19.5,-48,9,1],[-10.5,28,15,2],[-40.5,28,13,2],[-9.5,-44,13,2],[-41.5,-44,11,2],[19.5,-56.5,9,1]],"balls":[[-25,57,3],[27,59,3]],"holes":[[-27,-61,3,"win"],[-36,-29,3,"death"],[-15,7,3,"death"]],"buttons":[[20,-52,0,4,"0"],[35,25,1,4,"1"]],"doors":[[-26,28,16,2,"1",null],[-26,-44,20,2,"0",null]],"creator":"Calada2","name":"Level 6"}
+
+                ]
+            },
+            {
+                name: 'Hard Levels',
+                levels: [
+                    {"barriers":[[-35,52,1,11],[-29,58,11,1],[-24,53,1,9],[31,-12,8,1],[34,-6,1,12],[31,0,5,1],[-12,-41,37,34],[26,49,15,18]],"balls":[[-29,52,3]],"holes":[[-24,44,3,"death"],[-19,39,3,"death"],[-14,37,3,"death"],[-8,35,3,"death"],[1,32,3,"death"],[-2,34,3,"death"],[4,27,3,"death"],[4,22,3,"death"],[2,17,3,"death"],[5,11,3,"death"],[12,7,3,"death"],[17,4,3,"death"],[21,2,3,"death"],[25,0,3,"death"],[-34,42,3,"death"],[-31,37,3,"death"],[-28,32,3,"death"],[-24,29,3,"death"],[-18,27,3,"death"],[-12,24,3,"death"],[-8,21,3,"death"],[-8,14,3,"death"],[-7,9,3,"death"],[-2,5,3,"death"],[11,-4,3,"death"],[14,-7,3,"death"],[1,1,3,"death"],[18,-11,3,"death"],[24,-12,3,"death"],[7,-1,3,"death"],[28,-7,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"Level 1"},
+                    {"barriers":[[-14,-3,1,115],[-9,53,8,1],[5,0,1,137],[1,34,8,1],[-9,17,7,1],[0,0,7,1]],"balls":[[-31,-9,3]],"holes":[[-44,-35,3,"death"],[-39,-35,3,"death"],[-34,-35,3,"death"],[-29,-35,3,"death"],[-25,-35,3,"death"],[-21,-35,3,"death"],[-18,-35,3,"death"],[-15,67,3,"death"],[-2,52,3,"death"],[-5,34,3,"death"],[-2,18,3,"death"],[-32,-54,3,"win"],[-5,1,3,"death"],[-12,-11,3,"death"],[-5,-18,3,"death"],[0,-18,3,"death"],[-11,-31,3,"death"],[-5,-31,3,"death"],[2,-44,3,"death"],[-5,-44,3,"death"],[-9,-59,3,"death"]],"buttons":[[-31,-22,1,4,"0"]],"doors":[[-31,-36,31,9,"0",null]],"creator":"Calada2","name":"Level 2"},
+                    {"barriers":[[0,0,1,138],[-25,-46,2,4]],"balls":[[-25,-61,3],[25,-61,3]],"holes":[[24,62,3,"win"],[-41,-37,3,"death"],[-35,-38,3,"death"],[-28,-39,3,"death"],[-22,-41,3,"death"],[-15,-39,3,"death"],[-7,-39,3,"death"]],"buttons":[[-25,-51,0,4,"0"]],"doors":[[24,52,45,5,"0",null]],"creator":"Calada2","name":"Level 3"}
+                ]
+            },
+            {
+                name: 'JS13K Pack',
+                levels: [
+                    {"barriers":[[21,-46,17,1],[28,-8,1,71],[22,27,11,1],[17,32,1,11],[-2,37,39,1],[-22,32,1,9],[-31,19,1,11],[-27,26,9,1],[-22,14,18,1],[-13,19,1,11],[-2,25,19,1],[6,18,1,11],[8,12,5,1],[12,-16,1,58]],"balls":[[19,-38,3]],"holes":[[-25,19,3,"win"],[22,21,3,"death"]],"buttons":[],"doors":[],"creator":"Calada2","name":"J"},
+                    {"barriers":[[24,-14,14,1],[16,-22,1,15],[-2,-29,37,1],[-20,-12,1,32],[4,4,49,1],[30,24,1,39],[0,43,64,1],[-33,33,1,18],[-27,23,11,1],[-21,28,1,8],[0,32,42,1],[20,22,1,19],[-6,12,52,1],[-32,-12,1,51],[0,-39,64,2],[31,-27,1,25]],"balls":[[24,-21,3]],"holes":[[-29,-35,3,"death"],[28,7,3,"death"],[27,39,3,"death"],[-31,39,3,"death"],[-22,34,3,"death"],[-28,27,3,"win"]],"buttons":[],"doors":[],"creator":"Calada2","name":"S"},
+                    {"barriers":[[21,62,14,1],[27,0,1,124],[13,9,1,105],[20,-61,15,1],[12,-58,1,5]],"balls":[[21,-52,3]],"holes":[[8,-58,3,"death"],[2,-52,3,"death"],[-2,-47,3,"death"],[-11,-38,3,"death"],[-7,-42,3,"death"],[11,-39,3,"death"],[5,-34,3,"death"],[1,-29,3,"death"],[-2,-25,3,"death"],[-7,-25,3,"death"],[-12,-25,3,"death"],[-18,-25,3,"death"],[-17,-32,3,"death"],[19,55,3,"win"]],"buttons":[[-5,-34,1,4,"1"]],"doors":[[20,48,12,1,"1",null]],"creator":"Calada2","name":"1"},
+                    {"barriers":[[-34,-55,1,28]],"balls":[[-38,7,3]],"holes":[[-29,-19,10,"death"],[-17,-32,10,"death"],[-4,-44,10,"death"],[8,-47,10,"death"],[22,-47,10,"death"],[29,-35,10,"death"],[29,-21,10,"death"],[25,-5,10,"death"],[15,1,10,"death"],[5,8,10,"death"],[-11,9,10,"death"],[-28,41,10,"death"],[-24,48,10,"death"],[-11,54,10,"death"],[5,57,10,"death"],[21,57,10,"death"],[32,42,10,"death"],[31,27,10,"death"],[17,19,10,"death"],[2,15,10,"death"],[-39,-65,3,"win"]],"buttons":[[11,38,1,4,"0"],[9,-24,1,4,"1"],[-25,-65,1,4,"2"],[39,62,1,4,"3"]],"doors":[[-40,-42,12,1,"0",null],[-41,-47,11,1,"1",null],[-40,-53,12,1,"2",null],[-40,-59,12,1,"3",null]],"creator":"Calada2","name":"3"},
+                    {"barriers":[[-34,4,1,117],[-26,-54,15,1],[-18,-30,1,47],[-25,61,17,1],[-17,37,1,47],[-9,-8,14,1],[-2,-18,1,19],[7,-29,19,1],[17,-43,1,27],[23,-56,12,1],[30,-37,1,37],[19,-17,21,1],[9,-7,1,17],[-2,24,1,19],[4,34,15,1],[12,47,1,25],[22,59,19,1],[10,10,1,21],[22,21,21,1],[32,39,1,37]],"balls":[[-27,4,3]],"holes":[[-9,21,3,"win"]],"buttons":[[-25,54,1,4,"0"],[-27,-47,1,4,"0"],[24,-48,1,4,"0"],[22,52,1,4,"0"],[-29,18,2,4,"0"],[-21,27,2,4,"1"],[-29,37,2,4,"1"],[-21,44,2,4,"1"],[-21,15,2,4,"0"],[-22,-35,2,4,"1"],[-31,-25,2,4,"1"],[-31,-14,2,4,"0"],[-22,-14,2,4,"0"],[24,-37,2,4,"1"],[22,-24,2,4,"1"],[7,-22,2,4,"1"],[2,-11,2,4,"1"],[4,18,2,4,"0"],[4,28,2,4,"1"],[19,28,2,4,"1"],[27,42,2,4,"1"]],"doors":[[-10,14,15,1,"0",null]],"creator":"Calada2","name":"K"}
+                ]
+            },
+            {
+                name: "Dadi5's Level Pack",
+                levels: [
+                    {
+                        name: 'Level 1',
+                        creator: 'Dadi5',
+                        "barriers":[[-3.5,24,13,92],[-3,-46,14,48]],"balls":[[26,58,3],[-32,56,3]],"holes":[[-19,32,3,"death"],[-40,16,3,"death"],[-18,0,3,"death"],[-40,-15,3,"death"],[12,37,3,"death"],[24,22,3,"death"],[35,16,3,"death"],[10,4,3,"death"],[33,-12,3,"death"],[25,-51,3,"win"],[-30,-53,3,"win"]]
+                    },
+                    {
+                        name: 'Level 2',
+                        creator: 'Dadi5',
+                        "barriers":[[-2.5,-11.5,29,27]],"balls":[[-3,48,3]],"holes":[[-5,-56,3,"win"],[29,-12,3,"death"],[-33,-13,3,"death"],[-1,-42,3,"death"],[11,-60,3,"death"],[-22,-65,3,"death"],[-25,-40,3,"death"]]
+                    },
+                    {"barriers":[[1.5,0.5,13,139],[-45,-49,4,4]],"balls":[[-23,56,3],[27,57,3]],"holes":[[-35,46,3,"death"],[-5,29,3,"death"],[-42,14,3,"death"],[-15,3,3,"death"],[-30,-9,3,"death"],[-42,-38,3,"death"],[-17,-30,3,"death"],[13,-25,3,"death"],[32,-37,3,"death"],[43,-24,3,"death"],[27,-10,3,"death"],[14,11,3,"death"],[34,11,3,"death"],[26,39,3,"death"],[-21,-64,3,"win"]],"buttons":[[25,-55,1,4,"0"]],"doors":[[-24,-48.5,40,3,"0",null]],"creator":"Calada2","name":"Level 3"},
+                    {"barriers":[[16.5,-1,57,12],[-4.5,17,13,24],[0,-51.5,90,31]],"balls":[[-5,64,3]],"holes":[[8,27,3,"death"],[23,28,3,"death"],[39,30,3,"death"],[16,13,3,"death"],[36,-24,3,"win"],[-2,-32,3,"death"],[-3,-10,3,"death"],[12,-22,3,"death"]],"buttons":[[36,14,1,4,"9"]],"doors":[[-28.5,-1,33,10,"9",null]],"creator":"Dadi5","name":"Level 4"},
+                    {"barriers":[[17,-11,58,17]],"balls":[[17,54,3]],"holes":[[32,-48,3,"win"],[-11,-2,3,"death"],[-4,7,3,"death"],[11,31,3,"death"],[-18,47,3,"death"],[28,14,3,"death"],[-32,61,3,"death"],[-31,21,3,"death"],[-37,-39,3,"death"],[-2,-41,3,"death"],[-31,-61,3,"death"],[-1,-68,3,"death"],[14,-52,3,"death"]],"buttons":[],"doors":[],"creator":"Dadi5","name":"Level 5"}
+                ]
+            },
+            {
+                name: "lopis' Level Pack",
+                levels: [
+                    {"barriers":[[-27,-8,7,119],[-12,63,8,12],[-19,54,21,5],[22,9,9,119],[43,50,7,12],[30,25,7,17],[42,0,9,9],[29,-24,8,11],[42,-54,8,8],[-3,-18,9,99]],"balls":[[-37,64,4.284],[39,64,4.284]],"holes":[[-15,-61,4.284,"win"],[-42,49,4.284,"death"],[-34,42,4.284,"death"]],"buttons":[[-22,65,0,5.712,"0"]],"doors":[[10,-43,15,1,"0",null]],"creator":"lopis","name":"Maybe Maybe Maybe"}
+                ]
+            },
+            {
+                name: "MsCalada's Level Pack",
+                levels: [
+                    {"barriers":[[-11,38,22,8],[30,-20,4,49],[25,38,11,1],[-28,-16,11,44],[5,-49,25,1],[14,-12,1,35],[4,59,44,4],[24,17,27,4],[-14,13,38,1],[-21,51,34,5],[-16,-65,32,2],[-14,-36,2,29],[37,-51,14,17]],"balls":[[0,-4,3]],"holes":[[41,8,3,"death"],[39,67,3,"win"],[-44,29,3,"death"],[4,42,3,"death"],[-34,-48,3,"death"],[25,42,3,"death"],[29,62,3,"death"],[37,32,3,"death"]],"buttons":[],"doors":[],"creator":"MsCalada","name":"follow mscalada"},
+                    {"barriers":[],"balls":[[14,-17,3]],"holes":[[24,48,3,"death"],[-17,47,3,"death"],[29,17,3,"death"],[-15,12,3,"death"],[9,-7,3,"death"],[1,31,3,"death"],[35,-12,3,"death"],[21,-42,3,"death"],[0,-52,3,"death"],[-15,-28,3,"death"],[-34,0,3,"death"],[-31,-49,3,"death"],[2,-59,3,"death"],[25,-55,3,"death"],[11,-32,3,"death"],[45,-61,3,"death"],[37,-35,3,"death"],[38,58,3,"death"],[4,59,3,"death"],[-31,61,3,"death"],[-32,28,3,"death"],[-5,-12,3,"death"],[7,11,3,"death"],[37,-1,3,"death"],[-32,-24,3,"death"],[19,64,3,"win"],[17,22,3,"death"],[24,1,3,"death"],[38,27,3,"death"],[-38,47,3,"death"]],"buttons":[],"doors":[],"creator":"MsCalada","name":"Evil map"},
+                    {"barriers":[[24,19,21,24],[-12,17,5,59],[7,-37,28,5],[10,-3,18,12],[29,57,15,5],[3,51,4,31],[7,-34,1,44],[20,-39,9,49],[19,-30,9,61],[-27,12,2,62]],"balls":[[35,-54,3]],"holes":[[19,-61,3,"death"],[25,-67,3,"death"],[21,-67,3,"death"],[19,-64,3,"death"],[27,65,3,"death"],[0,7,3,"death"],[-42,58,3,"death"],[-38,-62,3,"win"],[-45,-41,3,"death"],[-19,-58,3,"death"],[-27,-41,3,"death"]],"buttons":[[27,47,1,4,"1"]],"doors":[[7,22,1,19,"1",null]],"creator":"Kinga","name":"Mapmeister"},
+                    {"barriers":[],"balls":[[7,65,3]],"holes":[[-28,-42,3,"death"],[-27,-27,3,"death"],[-27,-5,3,"death"],[-25,15,3,"death"],[-28,38,3,"death"],[-22,61,3,"death"],[-25,48,3,"death"],[-28,29,3,"death"],[-24,5,3,"death"],[-24,-14,3,"death"],[-27,-31,3,"death"],[-15,15,3,"death"],[-4,1,3,"death"],[8,-12,3,"death"],[18,-24,3,"death"],[32,-38,3,"death"],[37,-42,3,"death"],[24,-31,3,"death"],[28,-32,3,"death"],[9,-9,3,"death"],[1,-1,3,"death"],[-12,17,3,"death"],[-9,12,3,"death"],[-5,8,3,"death"],[17,-19,3,"death"],[18,-19,3,"death"],[9,-9,3,"death"],[5,-2,3,"death"],[17,-12,3,"death"],[21,-17,3,"death"],[-8,22,3,"death"],[7,32,3,"death"],[19,44,3,"death"],[32,58,3,"death"],[27,48,3,"death"],[-1,31,3,"death"],[9,35,3,"death"],[38,24,3,"win"],[39,67,3,"death"],[25,49,3,"death"],[14,41,3,"death"],[31,59,3,"death"],[-22,68,3,"death"],[-24,55,3,"death"]],"buttons":[],"doors":[],"creator":"MsCalada","name":"Kkkkkk"}
+                ]
+            },
+            {
+                name: "My Levels",
+                levels: []
+            }
+        ];
+    var savedata = localStorage.p94 != undefined ? JSON.parse(localStorage.p94) : [
+        [
+            [1,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0]
+        ],
+        [
+            [1,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0]
+        ],
+        [
+            [1,0],
+            [0,0],
+            [0,0]
+        ],
+        [
+            [1,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0]
+        ],
+        [
+            [1,0],
+            [0,0],
+            [0,0],
+            [0,0],
+            [0,0]
+        ],
+        [
+            [1,0]
+        ],
+        [
+            [1,0],
+            [0,0],
+            [0,0],
+            [0,0]
+        ],
+        []
+    ];
+
+    var saved_levels =  localStorage.p94l != undefined ? JSON.parse(localStorage.p94l) : [];
+    for(var i in saved_levels)
+    {
+        levelpacks[7].levels.push(JSON.parse(saved_levels[i]));
+    }
+
+    var imported_levels = [];
+
+    buildmenu();
+
+
+
+</script>
+
+</html>

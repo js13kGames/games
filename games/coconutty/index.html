@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Coconutty</title>
+    <meta charset="utf-8"/>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+    <script src="aframe-orbit-controls-component.min.js"></script>
+    <script src="TinyMusic.min.js"></script>
+    <style>
+      #info {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 20px;
+        line-height: 1em;
+        font-size: 3em;
+        background: url('info.svg') no-repeat center center;
+      }
+      #info_popup {
+        position: absolute;
+        top: 50px;
+        left: calc(50vw - 200px);
+        width: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #333;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: 'Helvetica', 'Droid Sans', 'Arial', sans-serif;
+      }
+      h1 {
+        text-transform: uppercase;
+        font-weight: normal;
+        padding: 0px;
+        margin: 0.5em 0;
+        text-align: center;
+      }
+      .hide {
+        display: none;
+      }
+      .show {
+        display: block;
+      }
+      @media (max-width: 480px) {
+        #info_popup {
+          left: calc(50vw - 150px);
+          width: 300px;
+          max-height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene id="scene" vr-mode-ui="enabled: true" cursor="rayOrigin: mouse" fog="type: exponential; density: 0.03; color: #ccccff;">
+    </a-scene>
+    <div id="info" class="show"></div>
+    <div id="info_popup" class="hide">
+      <h1>Coconutty</h1>
+      <p>You're lost on a deserted island and the only food you can find is one coconut!</p>
+      <p>Keep the greedy crabs away from your coconut tree or you lose!</p>
+      <p><strong>How to Play:</strong></p>
+      <p>Desktop: Click and move to spin the island. Click on the crabs to defeat them!</p>
+      <p>Mobile: Swipe to spin the island. Tilt to aim up/down. Aim the reticule and tap to defeat the crabs.
+      <p>WebVR: Spin yourself to spin the island. Look down to aim toward the center of the island and look up to aim toward the edge. Press the cardboard button to defeat the crabs!</p>
+      <p>For more WebVR fun, go to <a href="http://maryknize.com">maryknize.com</a></p>
+    </div>
+    <script src="compressed.js"></script>
+  </body>
+</html>

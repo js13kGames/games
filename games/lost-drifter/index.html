@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head><title>Lost Drifter</title></head>
+
+<style>
+    html { background-color: white;}
+    body {   
+        background-color: #333;
+        width: 800px; 
+        height: 800px;
+        margin: 20px auto; 
+        padding: 20px;
+        border: 1px solid rgba(150, 150, 150, 0.6);
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05) inset, 0px 0px 8px rgba(220, 220, 220, 0.6);
+        font-family: Arial, Helvetica, sans-serif ; 
+        color: white;
+    }
+
+    canvas {
+        margin-top: 20px;
+    }
+
+    /* font sourced from: https://envato.com/blog/css3-typography-code-snippets/ */
+    /* https://codepen.io/juanbrujo/pen/yGpAK */
+    h1 {
+        margin: 0;
+        font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+        font-size: 92px;
+        /* padding: 10px 10px; */
+        text-align: center;
+        text-transform: uppercase;
+        text-rendering: optimizeLegibility;
+        
+        color: #e0dfdc;
+        background-color: #333;
+        letter-spacing: .1em;
+        text-shadow: 
+        0 -1px 0 #fff, 
+        0 1px 0 #2e2e2e, 
+        0 2px 0 #2c2c2c, 
+        0 3px 0 #2a2a2a, 
+        0 4px 0 #282828, 
+        0 5px 0 #262626, 
+        0 6px 0 #242424, 
+        0 7px 0 #222, 
+        0 8px 0 #202020, 
+        0 9px 0 #1e1e1e, 
+        0 10px 0 #1c1c1c, 
+        0 11px 0 #1a1a1a, 
+        0 12px 0 #181818, 
+        0 13px 0 #161616, 
+        0 14px 0 #141414, 
+        0 15px 0 #121212, 
+        0 22px 30px rgba(0, 0, 0, 0.9);
+    }
+       
+    p {padding-left: 10px;}
+
+    .controls {
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <!--<img src="t.png">-->
+    <h1>Lost Drifter</h1>
+    <canvas id='c' width="800" height="400">Unsupported</canvas>
+    <p>Asteroid Field Level: <span id="round-value"></span></p>
+    <p>Navigation is down. You are lost.<br>An asteroid field comes into vision. <br>Your last hope is to dodge.</p>
+    <p>Good luck!</p>
+    <p class="controls"><br><br>Use arrow keys or WASD to move. <br>Use R to try again. <br>Use P to pause.</p>
+    <!--<button id="m">Music</button>-->
+    <script src='main.js'></script>
+</body>
+</html>

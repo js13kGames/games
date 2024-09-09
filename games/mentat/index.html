@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mentat</title>
+  <meta name="author" content="Frank Mitchell" />
+  <link type="text/css" rel="stylesheet" href="css/screen.css" />
+</head>
+<body>
+  <h1>Mentat</h1>
+  <div id="player1">
+    <span id="player1icon" class="human-icon"><span class="cyan"></span><span class="cyan"></span></span>
+    <span id="player1score" class="score">0</span>
+  </div>
+  <div id="player2">
+    <span id="player2icon"  class="computer-icon"><span class="yellow"></span><span class="yellow"></span></span>
+    <span id="player2score" class="score">0</span>
+  </div>
+  <ul id="player2pieces">
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+    <li class="yellow piece">0</li>
+  </ul>
+  <table>
+    <tr>
+      <td class="r1 c1 d1"></td>
+      <td class="r1 c2"></td>
+      <td class="r1 c3"></td>
+      <td class="r1 c4 d2"></td>
+    </tr>
+    <tr>
+      <td class="r2 c1"></td>
+      <td class="r2 c2 d1"></td>
+      <td class="r2 c3 d2"></td>
+      <td class="r2 c4"></td>
+    </tr>
+    <tr>
+      <td class="r3 c1"></td>
+      <td class="r3 c2 d2"></td>
+      <td class="r3 c3 d1"></td>
+      <td class="r3 c4"></td>
+    </tr>
+    <tr>
+      <td class="r4 c1 d2"></td>
+      <td class="r4 c2"></td>
+      <td class="r4 c3"></td>
+      <td class="r4 c4 d1"></td>
+    </tr>
+  </table>
+  <ul id="player1pieces">
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+    <li class="cyan piece">0</li>
+  </ul>
+  <p id="info">i</p>
+  <div id="notes" class="hide">
+    <h2>How to Play</h2>
+    <p>You&rsquo;re blue, and you go first. Drag a numbered playing piece onto the game board.</p>
+    <p>You score points if the sum of the pieces in the row or column you played in (major diagonals count too) is evenly divisible by 3, 5, or 7.</p>
+    <p class="center">
+      <span class="magenta playing piece">3</span>
+      <span class="magenta playing piece">5</span>
+      <span class="magenta playing piece">7</span>
+    </p>
+    <p>So if you&rsquo;re first move is a 5 in a corner, you&rsquo;ll score 3 points. Five goes into five one time, and you score once for each row, column, and diagonal.</p>
+    <p>Additionally, you can score bonus points for getting two of a kind (2 points), three of a kind (6 points), four of a kind (12 points), or four consecutive numbers (4 points) in the same row, column, or diagonal.</p>
+    <p>There are 52 pieces in the game, four sets of 1 through 13.</p>
+    <h2>Taking Turns</h2>
+    <p>You can click the human and computer icons above the scores to toggle who plays which color.</p>
+    <p class="center">
+      <span class="human-icon"><span class="magenta"></span><span class="magenta"></span></span>
+      <span class="computer-icon"><span class="magenta"></span><span class="magenta"></span></span>
+    </p>
+    <p>Play against a friend, or have the computer go first if you want more of a challenge.</p>
+    <h2>Colophon</h2>
+    <p><em>Mentat</em> was named after the quick thinking humans in Frank Herbert&rsquo;s <em><a href="http://en.wikipedia.org/wiki/Dune_(novel)" title="Wikipedia&rsquo;s entry for Dune">Dune</a></em> books. Ethan Schoonover&rsquo;s <a href="http://ethanschoonover.com/solarized" title="Ethan Schoonover&rsquo;s precision colors for machines and people">Solarized</a> provies the color scheme, and the rules where inspired by Keith Stevens&rsquo; card game <em><a href="http://www.pagat.com/invented/kstevens/" title="Rules for playing Keith Stevens&rsquo; card game">DOM</a></em>. All the HTML, CSS, and JavaScript where hand written in <a href="http://code.google.com/p/macvim/" title="Vim for the Mac">MacVim</a>. Feel free to fork the code on <a href="https://github.com/elimossinary/mentat" title="Frank Mitchell&rsquo;s Github repository for Mentat">Github</a>.</p>
+  </div>
+  <p id="credits">Design <abbr title="and">&amp;</abbr> dev by <a href="http://frankmitchell.org/" title="designer, engineer, wizard">Frank Mitchell</a> for <a href="http://js13kgames.com/" title="HTML5 and JavaScript Game Development competition in just 13 kilobytes">js13kGames</a>.<br />Colored with <a href="http://ethanschoonover.com/solarized" title="Ethan Schoonover&rsquo;s precision colors for machines and people">Solarized</a> and inspired by <em><a href="http://www.pagat.com/invented/kstevens/" title="Rules for playing Keith Stevens&rsquo; card game">DOM</a></em>.</p>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/dnd.js"></script>
+  <script type="text/javascript" src="js/mentat.js"></script>
+</body>
+</html>

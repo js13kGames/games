@@ -1,0 +1,7 @@
+{
+    "browser": true,
+    "node": true,
+    "devel": true,
+    "es5": true,
+    "strict": true
+}

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html onkeypress='keyboardClick(event);'>
+<head>
+<title>Color Game</title>
+<style type="text/css">
+	body{
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+	.player1{
+		width: 50%;
+		margin: 0;
+		padding: 0;
+		float: left;
+		background-color: #c9ffc3;
+	}
+	.player2{
+		width: 50%;
+		margin: 0;
+		padding: 0;
+		float: left;
+		background-color: #ffc3c3;
+	}
+	.common{
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		background-color: #cacaca;
+		overflow: auto;
+	}
+	.box{
+	    width: 17%;
+	    float: left;
+	    border: 2px solid black;
+	    padding: 5px;
+	}
+	.grayFill{
+		background-color: gray;
+	}
+</style>
+</head>
+<body>
+
+<div class="player1"><h2>Player 1</h2></div>
+<div class="player2"><h2>Player 2</h2></div>
+
+<div id="p1p" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">P)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2p" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">P)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div id="p1t1" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">1)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2t1" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">1)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div id="p1t2" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">2)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2t2" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">2)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div id="p1t3" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">3)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2t3" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">3)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div id="p1t4" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">4)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2t4" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">4)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div id="p1t5" class="player1">
+	<h4 style="padding-left:25px;">
+		<div class="box">5)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+<div id="p2t5" class="player2">
+	<h4 style="padding-left:25px;">
+		<div class="box">5)</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+		<div class="box">&nbsp;</div>
+	</h4>
+</div>
+
+<div class="player1"><br/></div>
+<div class="player2"><br/></div>
+
+<div class="common">
+	<h2>Instructions ( X = Wrong color, Wrong Position | P = Right color, Wrong Position | O = Right color, Right Position ) </h2>
+	<h2 id="message"></h2>
+	<h4 style="padding-left:100px;">
+		<div class="box">(0)</div>
+		<div class="box">(1)</div>
+		<div class="box">(2)</div>
+		<div class="box">(3)</div>
+		<div class="box">(4)</div>
+
+		<div class="box" style="background-color:DeepPink;">&nbsp;</div>
+		<div class="box" style="background-color:blue;">&nbsp;</div>
+		<div class="box" style="background-color:brown;">&nbsp;</div>
+		<div class="box" style="background-color:violet;">&nbsp;</div>
+		<div class="box" style="background-color:green;">&nbsp;</div>
+		
+		<div class="box">(5)</div>
+		<div class="box">(6)</div>
+		<div class="box">(7)</div>
+		<div class="box">(8)</div>
+		<div class="box">(9)</div>
+
+		<div class="box" style="background-color:orange;">&nbsp;</div>
+		<div class="box" style="background-color:pink;">&nbsp;</div>
+		<div class="box" style="background-color:olive;">&nbsp;</div>
+		<div class="box" style="background-color:red;">&nbsp;</div>
+		<div class="box" style="background-color:yellow;">&nbsp;</div>
+	</h4>
+	<br/><br/><br/><br/><br/><br/>
+</div>
+
+</body>
+
+<script type="text/javascript">
+// -1 = No Input
+
+// 0  = Player 1 Enter Color Combination ...
+// 1  = Player 2 Enter Color Combination ...
+
+// 2  = Player 1's 1st Turn to guess the combination ...
+// 3  = Player 2's 1st Turn to guess the combination ...
+
+// 4  = Player 1's 2nd Turn to guess the combination ...
+// 5  = Player 2's 2nd Turn to guess the combination ...
+
+// 6  = Player 1's 3rd Turn to guess the combination ...
+// 7  = Player 2's 3rd Turn to guess the combination ...
+
+// 8  = Player 1's 4th Turn to guess the combination ...
+// 9  = Player 2's 4th Turn to guess the combination ...
+
+// 10  = Player 1's 5th Turn to guess the combination ...
+// 11 = Player 2's 5th Turn to guess the combination ...
+
+var state = -1;
+var turn = 0;
+var turn_count = -1;
+var colors = ['DeepPink','blue','brown','violet','green','orange','pink','olive','red','yellow'];
+var player_combination = [[-1,-1,-1,-1],[-1,-1,-1,-1]];
+var msg = document.getElementById("message");
+var player_box = [document.getElementById("p1p").getElementsByTagName('div'),document.getElementById("p2p").getElementsByTagName('div')];
+var player_trial = 	[
+						[
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1]
+						],
+						[
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1],
+							[-1,-1,-1,-1]
+						]
+					]
+var player_turn = [
+					[
+						document.getElementById("p1t1").getElementsByTagName('div'),
+						document.getElementById("p1t2").getElementsByTagName('div'),
+						document.getElementById("p1t3").getElementsByTagName('div'),
+						document.getElementById("p1t4").getElementsByTagName('div'),
+						document.getElementById("p1t5").getElementsByTagName('div')
+					],
+					[
+						document.getElementById("p2t1").getElementsByTagName('div'),
+						document.getElementById("p2t2").getElementsByTagName('div'),
+						document.getElementById("p2t3").getElementsByTagName('div'),
+						document.getElementById("p2t4").getElementsByTagName('div'),
+						document.getElementById("p2t5").getElementsByTagName('div')
+					]
+				];
+
+function keyboardClick(e){
+	//alert(e.which);
+	if(state == -1) return;
+	else if(state==100) location.reload();
+	else if(e.which<48 || e.which>57) return;
+	else if(state>1){
+		for(var i=0;i<4;i++){
+			if(player_trial[turn][turn_count][i]==-1){
+				player_trial[turn][turn_count][i] = e.key;
+				player_turn[turn][turn_count][i+1].style.backgroundColor = colors[e.which-48];
+				if(i==3) stateChange();
+				break;
+			}
+		}
+	}else{
+		for(var i=0;i<4;i++){
+			if(player_combination[turn][i]==-1){
+				if(player_combination[turn].indexOf(e.key)!=-1) return;
+				player_combination[turn][i] = e.key;
+				player_box[turn][i+1].classList.add("grayFill");
+				if(i==3) stateChange();
+				break;
+			}
+		}
+	}
+}
+
+document.onreadystatechange = () => {
+  if (document.readyState === 'complete') {
+    // document ready
+    stateChange();
+  }
+};
+
+function combinationCheck(){
+	// Check player turn result
+	var toMatch = -1;
+	var cnt = 0;
+	if(turn==0) toMatch = 1;
+	else toMatch = 0;
+	for(var i=0;i<4;i++)
+	if(player_trial[turn][turn_count][i]==player_combination[toMatch][i]){
+		player_turn[turn][turn_count][i+1].innerHTML = "O";
+		cnt++;
+	}
+	else{
+		if(player_combination[toMatch].indexOf(player_trial[turn][turn_count][i])==-1)
+			player_turn[turn][turn_count][i+1].innerHTML = "X";
+		else
+			player_turn[turn][turn_count][i+1].innerHTML = "P";
+	}
+	if(cnt==4){ // We have a winner
+		msg.innerHTML = "Player "+(turn+1)+" Wins ... <br/> Press any key to restart ...";
+		revealColor();
+		state = 100;
+		throw new Error("Fount a Winner ...");
+	}
+}
+
+function revealColor(){
+	for(var i=0;i<4;i++){
+		player_box[0][i+1].style.backgroundColor = colors[player_combination[0][i]];
+		player_box[1][i+1].style.backgroundColor = colors[player_combination[1][i]];
+	}
+}
+
+
+function stateChange(){
+	switch (state) {
+	    case -1:
+	        msg.innerHTML = "Player 1 Enter Color Combination ...";
+	        turn = 0;
+			state = 0;
+	        break;
+	    case 0:
+	        msg.innerHTML = "Player 2 Enter Color Combination ...";
+			turn = 1;
+			state = 1;
+	        break;
+	    case 1:
+	        msg.innerHTML = "Player 1's 1st Turn to guess the combination ...";
+			turn = 0;
+			state = 2;
+			turn_count = 0;
+	        break;
+	    case 2:
+	        combinationCheck();
+	        msg.innerHTML = "Player 2's 1st Turn to guess the combination ...";
+	        turn = 1;
+			state = 3;
+			turn_count = 0;
+	        break;
+	    case 3:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 1's 2nd Turn to guess the combination ...";
+	        turn = 0;
+			state = 4;
+			turn_count = 1;
+	        break;
+	    case 4:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 2's 2nd Turn to guess the combination ...";
+	        turn = 1;
+			state = 5;
+			turn_count = 1;
+	        break;
+	    case 5:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 1's 3rd Turn to guess the combination ...";
+	        turn = 0;
+			state = 6;
+			turn_count = 2;
+	        break;
+	    case 6:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 2's 3rd Turn to guess the combination ...";
+	        turn = 1;
+			state = 7;
+			turn_count = 2;
+	        break;
+	    case 7:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 1's 4th Turn to guess the combination ...";
+	        turn = 0;
+			state = 8;
+			turn_count = 3;
+	        break;
+	    case 8:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 2's 4th Turn to guess the combination ...";
+	        turn = 1;
+			state = 9;
+			turn_count = 3;
+	        break;
+	    case 9:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 1's Last Turn to guess the combination ...";
+	        turn = 0;
+			state = 10;
+			turn_count = 4;
+	        break;
+	    case 10:
+	    	combinationCheck();
+	        msg.innerHTML = "Player 2's Last Turn to guess the combination ...";
+	        turn = 1;
+			state = 11;
+			turn_count = 4;
+	        break;
+	    case 11:
+	    	combinationCheck();
+	        msg.innerHTML = "No One Wins ...";
+	        turn = -1;
+			state = 12;
+			turn_count = -1;
+			revealColor();
+	        break;
+	}
+}
+</script>
+
+</html>

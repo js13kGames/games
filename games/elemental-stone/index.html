@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Elemental Stone v0.1</title>
+<meta name="viewport" content="width=device-width; initial-scale=1.0">
+<style>
+*{position:relative;margin:0 auto;padding:0;text-align:center;overflow:hidden;color:#fff;}
+body{width:100%;background:rgb(20,20,20);}
+canvas{width:100%;cursor:pointer; display:none;}
+div{padding:2%;display:block;}
+b{color:orange;}
+button{color:darkblue;font-weight:bold;background-color:gold;padding:5px;cursor:help;}
+span, #history, #inst{float: left;width:30%;}
+span p, #inst p{padding-bottom:2%;}
+#e{padding-top:2%;padding-bottom:2%;text-align:justify;}
+.image{background-image: url(image.png);width: 32px;height: 32px;padding: 0;}
+.wind{background-position: 128px 0px;}
+.earth{background-position: 96px 0px;}
+.fire{background-position: 64px 0px;}
+.water{background-position: 32px 0px;}
+.stone{background-position: 32px 32px;}
+.flag{width: 200px;height: 10px;}
+.blue{background-color: blue;}
+.white{background-color: white;}
+.red{background-color: red;height: 20px;}
+#endGame{display:none;}
+#gameOver{display:none;}
+#timer{display:none; position: fixed; top: 0; right: 0; width: 100px; opacity: .5;}
+#timer:hover{opacity: 1;}
+#countdown{display: none;  font-weight: bold; font-size: 20px;}
+
+</style>
+<script src="soul.js"></script>
+</head>
+<body>
+<div id="main">
+<div id="history">
+<h1><b>Elemental Stone v0.1</b></h1>
+<p class="image stone"></p>
+<p id="es">Elemental Stone keeps in orden everything all around the world, The Evil Empire has steal it and has decided to destroy it, the olders of each elemental village have choosen it's more powerfull wariors, and now, 4 heroes are the only who can stop them, but they have work together to reach the stone.</p>
+<h3>Made By Desorden Organizado</h3>
+<div class="flag blue"></div>
+<div class="flag white"></div>
+<div class="flag red"></div>
+<div class="flag white"></div>
+<div class="flag blue"></div>
+<h4>VIVA COSTA RICA</h4>
+</div>
+<div id="inst">
+<h2>Instructions</h2>
+<p>You have <b>3:00 minutes</b> to get the Element Stone with the Water Hero or the Evil Empire will destroy it.</p>
+<p><b>Wind Hero:</b> Can fly around the map and move rocks that are placed on the road.</p>
+<p><b>Earth Hero:</b> Can crush the Evil Cactus.</p>
+<p><b>Fire Hero:</b> Can walk over the Lava, crush the Black Mages, and only one who can borken the fire magic seal to destroy the wall which interrupt the last bridge.</p>
+<p><b>Water Hero:</b> Can crush the Evil Spiders the only one who can get till the stone from the river.</p>
+<p>Try it in <b>FULLSCREEN MODE</b> to get a better performance (F11 will not work).</p>
+<p><b>MUSIC???</b> Enjoy your own :p</p>
+</div>
+<span>
+<h3>Control</h3>
+<p><b>Move:</b> Arrow keys</p>
+<b>Use Heroes:</b>
+<p class="image wind"></p>
+<p><b>Wind Hero:</b> By default</p>
+<p class="image earth"></p>
+<p><b>Earth Hero:</b> Holding Z key</p>
+<p class="image fire"></p>
+<p><b>Fire Hero:</b> Holding X key</p>
+<p class="image water"></p>
+<p><b>Water Hero:</b> Holding C key</p>
+<button id="button" onclick="game();">Play</button>
+</span>
+</div>
+<div id="endGame">
+<div><p class="image wind"></p><p class="image fire"></p><p class="image stone"></p><p class="image earth"></p><p class="image water"></p></div>
+<h1><b>Congratulations the world have been saved</b></h1>
+</div>
+<div id="gameOver">
+<h1><b>The new kingdom has arrive with the darkness for the ETERNITY</b></h1>
+<button id="button" onclick="location.reload();">Try again</button>
+</div>
+<canvas id="sceen"></canvas>
+<div id="timer"><div id="countdown"></div><button class="show" onclick="location.reload();">Try again</button></div>
+</body>
+</html>

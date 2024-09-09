@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="monetization" content="$ilp.uphold.com/enAn4LiZg6J6">
+    <title>Get Out Of My Personal Space</title>
+    <style>
+        html,
+        body {
+            background-color: black;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            overflow: auto;
+            position: fixed;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #main {
+            overflow: hidden;
+            position: relative;
+        }
+
+        #actionDiv {
+            width: 100%;
+            height: 100%;
+            transform: scale(5);
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        #gameOver,
+        #mainMenu,
+        #score,
+        #msgHandler {
+            top: 0px;
+            z-index: 999;
+        }
+
+        #minimap {
+            top: 24px;
+            left: 24px;
+            z-index: 999;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script src="main.js"></script>
+</body>
+
+</html>

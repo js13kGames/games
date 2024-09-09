@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id=top>
+    <div id=title>
+      The Lost Packets
+    </div>
+    <div id=mainf>
+      <div id=intro>
+      From the earliest days of the internet rampant network congestion,
+      misconfigured routers and violent DDoS attacks
+      have caused millions of packets to go missing in cyberspace.<br><br>
+      Your mission is to guide <b>The&nbsp;Lost&nbsp;Packets</b> to their endpoints.
+      </div>
+      <div class=main id=main>
+      </div>
+      <div id=menu class=sb>
+      </div>
+      <div id=dp>
+        <div id=dpl></div>
+        <div id=dpst></div>
+        <div id=dps class=sb>
+          <div id=dpr></div>
+          <div id=dpt></div>
+          <div class="cmd df" id=fcmd onclick="startNext();">Play</div>
+          <div class="cmd df" id=scmd onclick="start();">Start</div>
+          <div class="cmd df" id=ncmd onclick="startNext();">Next</div>
+          <div class=cmd id=rcmd onclick="start();">Restart</div>
+          <div class=cmd id=lcmd onclick="menu();">Levels</div>
+
+        </div>
+      </div>
+    </div>
+    <div id=panel>
+      <div id=ti class="tf sb">Time<b id=tm></b><br/> Out<b id=ot></b> Dead<b id=dd></b> Home<b id=hm></b> </div>
+      <div id=shr class="sb">Share<br>
+        <div onclick="sml('t')">Twitter</div>
+        <div onclick="sml('f')">Facebook</div>
+        <div onclick="sml('u')">Tumblr</div>
+        <div onclick="sml('r')">Reddit</div>
+      </div>
+      <div id=ti2 class="tc sb tf">
+        <div id=s0 onclick="setGS(0);">
+        </div>
+        <div id=s1 onclick="setGS(.5);">
+        </div>
+        <div id=s2 onclick="setGS(1);">
+        </div>
+        <div id=s3 onclick="setGS(2.5);">
+        </div>
+
+      </div>
+      <div id=ti3 class="tc sb tf">
+        <div id=rs onclick="start();">RESTART</div>
+        <div id=lv onclick="menu();">LEVELS</div>
+      </div>
+    </div>
+
+  </div>
+  <script src="scripts.js"></script>
+  <script>
+    decorate();
+    thm(lev[1],document.getElementById('top'));
+    mkLvlMenu();
+    level(0);
+    start();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+  <meta charset=UTF-8>
+  <title>GAME BUCKET</title>
+  <style>
+  html,body{
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    background-color:#000;
+    position:relative;
+  }
+  body > div { position: relative; }
+  canvas,img{
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select:none !important;
+    -o-user-select: none;
+    user-select: none;
+  }
+  #ipt {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    opacity: 0.4;
+    height: 20%;
+    width: 100%;
+    text-align: center;
+  }
+  #ipt img {
+    display: inline-block;
+    padding: 2vw;
+    width: 24vw;
+  }
+  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/><meta name="apple-mobile-web-app-capable" content="yes" /><body><div><canvas id=c></canvas><div id=ipt><img src="assets/down.svg" id=btndown><img src="assets/up.svg" id=btnup><img src="assets/act.svg" id=btnact></div></div><script src=bundle.js></script></body>

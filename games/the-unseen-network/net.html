@@ -1,0 +1,534 @@
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@keyframes intro {
+  from {
+    opacity: 0;
+    transform: rotateX(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+@keyframes fancy {
+  from {
+    filter: hue-rotate(720deg);  
+  }
+  to {
+    filter: hue-rotate(0deg);
+  }
+}
+#k *, #k, #l *, #l {
+  animation-name: intro;
+  animation-delay: 0;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+}
+body {
+  margin: 0px;
+  background: #802020;
+}
+#k {
+  position: absolute;
+  padding: 10px;
+  background: #333;
+  left: 100px;
+  margin-top: 2%;
+  width: 800;
+}
+#l {
+  left: 950px;
+  position: absolute;
+  top: 0px;
+  padding: 10px;
+  background: #333;
+  margin-top: 2%;
+  width: 300;
+  height: 500;
+}
+#notes {
+  width: 100%;
+  height: 90%;
+  margin-top: 5%;
+  resize: none;
+  background: #111;
+  color: #f11;
+  font-weight: bolder;
+  font-size: 15px;
+  animation-name: fancy;
+  animation-delay: 0;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
+}
+#url {
+  width: 80%;
+  margin: 10px;
+  background: #111;
+  border: none;
+  color: #fff;
+  padding: 5px;
+}
+#startbar {
+  background: #222;
+  width: 30px;
+  height: 100%;
+  top: 0px;
+  position: absolute;
+  font-size: 20px;
+}
+.windowbutton {
+  border-radius: 10px;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border: 1px solid black;
+}
+.kk {
+  cursor: pointer;
+}
+canvas {cursor:cell;}
+</style>
+<title>The Unseen Network</title>
+</head>
+<body>
+<div id=k>
+<span class="windowbutton" style="background: #700"></span>
+<span class="windowbutton" style="background: #770"></span>
+<span class="windowbutton" style="background: #070"></span>
+<center style="color:#0ff; width: 80%; display: inline-block;">🌐 TGR BROWSER</center> 
+<br/>
+<span style="color:#0ff"><a class="kk" onclick="gotourl(q)">🏠</a></span>
+<input id=url></input><a class="kk" onclick="showSecurity()">🧄</a><br>
+<canvas id="c" width=800 height=500></canvas>
+</div>
+<div id=l>
+<span class="windowbutton" style="background: #700"></span>
+<span class="windowbutton" style="background: #770"></span>
+<span class="windowbutton" style="background: #070"></span>
+<center style="color:#0ff; width: 50%; display: inline-block;">🖊️ NOTES</center>
+<br/>
+<textarea id=notes></textarea>
+</div>
+<script>
+// shortcuts & procedural generators
+c=document.getElementById("c");
+let urle=document.getElementById("url");
+let W=document.getElementById("k");
+let notes=document.getElementById("notes");
+x=c.getContext('2d')
+let r=Math.random
+let iHaveMySister = 0;
+x.R=x.fillRect
+let rdg=()=>(r()*10)|0 // random digit
+let rip=()=>`${r()*255|0}.${r()*255|0}.${r()*255|0}.${r()*255|0}` // random ip
+let rcc=()=>{k='';for(Q=16;Q--;)k+=rdg();return k} // random credit card
+function genUrl(prefix) { // url generator
+let G = prefix; while(G.length<36) { G += (Math.random()*36|0).toString(36) }return G+".garlic"; }
+q=genUrl("unseendir")
+
+// generate stolen cards
+cards={}
+for(i=20;i--;)cards[rcc()]=`${rdg()}${rdg()}${rdg()}`
+
+// generate shop items
+aP = []
+for(i=20;i--;){
+  aP.push((r()*89|0)+", "+(r()<.4?"M":"F"))
+}
+aQ = []
+for(i=14;i--;){
+  aQ.push((r()*17|0)+", "+(r()<.5?"B":"G"))
+}
+aQ.push("17, G")
+
+
+// zzfx micro
+'use strict';let zzfx,zzfxV,zzfxX
+zzfxV=.3
+zzfx=(t=1,a=.05,n=220,e=0,f=0,h=.1,M=0,r=1,z=0,o=0,i=0,s=0,u=0,x=0,c=0,d=0,X=0,b=1,m=0,l=44100,B=99+e*l,C=f*l,P=h*l,g=m*l,w=X*l,A=2*Math.PI,D=(t=>0<t?1:-1),I=B+g+C+P+w,S=(z*=500*A/l**2),V=(n*=(1+2*a*Math.random()-a)*A/l),j=D(c)*A/4,k=0,p=0,q=0,v=0,y=0,E=0,F=1,G=[],H=zzfxX.createBufferSource(),J=zzfxX.createBuffer(1,I,l))=>{for(H.connect(zzfxX.destination);q<I;G[q++]=E)++y>100*d&&(y=0,E=k*n*Math.sin(p*c*A/l-j),E=D(E=M?1<M?2<M?3<M?Math.sin((E%A)**3):Math.max(Math.min(Math.tan(E),1),-1):1-(2*E/A%2+2)%2:1-4*Math.abs(Math.round(E/A)-E/A):Math.sin(E))*Math.abs(E)**r*t*zzfxV*(q<B?q/B:q<B+g?1-(q-B)/g*(1-b):q<B+g+C?b:q<I-w?(I-q-w)/P*b:0),E=w?E/2+(w>q?0:(q<I-w?1:(q-I)/w)*G[q-w|0]/2):E),k+=1-x+1e9*(Math.sin(q)+1)%2*x,p+=1-x+1e9*(Math.sin(q)**2+1)%2*x,n+=z+=500*o*A/l**3,F&&++F>s*l&&(n+=i*A/l,V+=i*A/l,F=0),u&&++v>u*l&&(n=V,z=S,v=1,F=F||1);return J.getChannelData(0).set(G),H.buffer=J,H.start(),H},zzfxX=new(window.AudioContext||webkitAudioContext)
+
+// inits
+let mX = mY = mD = BW= 0; // mouseX, mouseY, mouseDown
+let errorRender = ''
+let ip="Tracing nodes...";
+let nodeHacked = 0, kidnapping = 0;
+let B = 4500+Math.floor(r()*500);
+let BTCRatio = 1e4+r()*1600, PH = 0
+let prezzed;
+let maxMA = 600, kbus = 2000;
+let kidnapperAlive = 1
+
+function btcBalance() {
+  return Math.floor(B/BTCRatio*1e5)/1e5
+} 
+
+
+// sites
+let seized = `P=(f++)/99;for(x.strokeStyle="red",x.lineWidth=4,x.beginPath(),x.arc(400,250,200,P,P+7),x.arc(400,250,220,P,P+7),x.stroke(),T("This website",270,150,1),T("has been",310,180,1),i=3;i--;)T("seized",306-i,220-i,1.4,"#f");for(x.fillStyle="#f00",x.beginPath(),i=7;i--;)k=i*Math.PI/3,x.arc(320+80*Math.sin(k),330+50*Math.cos(k),0,0,0);for(x.fill(),x.fillStyle="#00f",x.beginPath(),i=7;i--;)k=i*Math.PI/3,x.arc(480+80*Math.sin(k),330+50*Math.cos(k),0,0,0);for(x.fill(),x.fillStyle="#0f0",x.beginPath(),i=9;i--;)k=i*Math.PI/4,x.arc(400+90*Math.sin(k),330+90*Math.cos(k),0,0,0);for(x.fill(),i=8;i--;)T("anti cybercrime",261-i/2,324-i/2,.8,"#000"),T("group",346-i/2,351+i/2,1,"#000")`
+db = {
+  "tgr:loading":
+`
+if(!window.f)f=0;for(i=9;i--;)for(k=9;k--;)x.fillStyle=\`hsl(0,99%,\${i*4}%)\`,x.beginPath(),
+x.arc(
+400+Math.sin(f/99+Math.sin(f/5+i/8)/9+k*6.28/9)*(120-i*7+Math.sin(i/2+f/5)*8),
+250+Math.cos(f/99+Math.sin(f/5+i/8)/9+k*6.28/9)*(120-i*7+Math.sin(i/2+f/5)*8),
+10,0,7),x.fill();f++
+T("Connecting...",10,40,1)
+W.style.filter=''
+`}
+
+// generate a unique adress for each item in the directory
+urlS=genUrl("stolencc")
+urlJ=genUrl("jimmy")
+urlA=genUrl("anonchat1337")
+urlP=genUrl("h4ck3dwall3tsss")
+urlG=genUrl("guide")
+urlB=genUrl("theblogoffreedom")
+urlM=genUrl("shhhhhhh")
+urlR=genUrl("bloody")
+urlC=genUrl("cryptooooo")
+urlH=genUrl("hackme")
+urlD=genUrl("0xdeadpewpew")
+urlF=genUrl("dangerboards")
+urlN=genUrl("necromantic")
+urlO=genUrl("jailcuddle")
+urlZ=genUrl("9empire9of9nuhmiz9")
+url1=genUrl("darkforums")
+url2=genUrl("garlicflix")
+url3=genUrl("baste0garlic0pin")
+url4=genUrl("poor0gamerdb")
+
+// websites and their content
+db[urlH]=
+`T("You are getting hacked by GARLICDEATH TEAM >:D", r()*5, 20+r()*2, 0.7)
+for(i=10;i--;)T("Checking hash for "+(i+1)+": "+rip(), r()*5,i*30+50+r()*2, 0.8,'#0f0')
+if(f%100==0)ip="node "+(++nodeHacked)+": "+rip()
+T(ip,0,370,1.5),f++
+W.style.filter=\`blur(\${r()*4}px)\`
+T("💀".repeat(9),r()*5,470+r()*5,2)`
+// print the main page (unseen dir)
+db[q]=`T("The Unseen Dir",10,40,1)
+T("A directory of verified hidden services",10,60,0.5)
+dirs={
+"Free, Public Stolen CCs": urlS,
+"Jim's Hosting Service": urlJ,
+"Buy Hacked Virtual Wallets": urlP,
+"The Hidden Chat": urlA,
+"The complete guide on how to remain anonymous on The Garlic Net": urlG,
+"The Unseen Blog": urlB,
+"Garlicflix - pirate any movie ever": url2,
+"Shhmarket - Biggest Dark Market": urlM,
+"Red Room": urlR,
+"Personal Wallet - Unseencoins": urlC,
+"Garlicbin - share text": url3,
+"57005 Service": urlD,
+"Temple of Nuhmiz": urlZ,
+"Dark forums": url1,
+"Cracked games DB": url4,
+}
+k=0;for(i in dirs){
+T("-> ",10,90+k*18,0.4)
+T(i,40,90+k*18,0.4,"#0ef",dirs[i]),k++
+}`
+// add the pages listed as known
+db[urlS]=`T("Stolen Credit Cards",10,40,1)
+T("LIST: (NUMBER+CVV)",10,60,0.5);k=0;for(C in cards){T("-> ",10,90+k*18,0.4)
+T(C+", "+cards[C],40,90+k*18,0.4,"#0ef")
+if(k%11==k%5)T('blocked',240,90+k*18,0.4,"#ff0")
+else T("working",240,90+k*18,0.4,"#af0");k++}`
+db[url4]="T(`closed, sorry`,300,300)"
+db[urlR]=`T("RED ROOM - 9 HOURS REMAINING",10,40,1);x.fillStyle='#210';x.R(0,300,2e3,2e3);for(k=99;k--;)x.fillStyle=\`hsla(0,99%,\${15+(S=Math.sin,S)(k)*10}%,.2)\`,x.beginPath(),x.ellipse(400+S(k**3)*100,320+S(k*k)*k/2,k+5,k/5+5,0,0,7),x.fill(),x.fillStyle='#000',x.R(0,150,2e3,150),x.fillStyle='#fff',x.R(380,250,8,50),x.R(420,250,8,50),x.R(440,250,8,50),x.R(380,250,60,8),x.fillStyle='#aaa',x.R(398,200,50,50)`
+db[urlB] = db[urlM] = db[urlC] = db[url3] = seized
+db[urlC] = `T("Unseencoins",200,50,1.5,'#0f0');for(i=3;i--;)T("Balance:",20+i*2,90,1,"#00f");T(\`\${btcBalance()} BTC = ~\${B|0}$\`,20,130),T(\`1 BTC = ~\${Math.floor(BTCRatio*100)/100} USD\`,20,180,1)`
+db[urlP] = `x.fillStyle='#ff0'
+x.R(25,25,750,450)
+for(i=4;i--;)T("HVWMarket",299,60+i,1,'#000'),T("Buy a hacked virtual wallet",88+i,99,1,0)
+x.beginPath()
+x.fill(x.arc(100,200,50,0,7))
+T("B",80,220,2,"#ff0")
+T("''",86,182,.6,0)
+T("''",86,236,.6,0),BW=0
+T("BUY A RANDOM HACKED VIRTUAL WALLET",160,180,.78,"#000",toRender+"/bought")
+T("Price: USD 250 = BTC "+(250/BTCRatio),160,240,.58,"#200")
+T("WITH AN UNKNOW AMOUNT OF MONEY",160,212,.88,"#000",toRender+"/bought")`
+db[urlP+"/bought"]=`x.fillStyle='#ff0'
+x.R(25,25,750,450)
+for(i=4;i--;)T("HVWMarket",299,60+i,1,'#000'),T("You bought a random hacked wallet",38+i,99,.95,0),T("The money has been transfered",60,140+i,1,"#00f"),T("to your personal wallet",120,180+i,1,"#00f")
+T("Press here to go to your wallet",50,450,1,"#000",urlC)
+if(B>250){if(BW==0)B+=r()*maxMA-250,BW=1}
+else{gotourl(toRender+"?error")}`
+db[urlP+"/bought?error"]=`x.fillStyle='#ff0'
+x.R(25,25,750,450)
+for(i=4;i--;)T("HVWMarket",299,60+i,1,'#000'),T("There was an error!",38+i,99,.95,0)
+T("Press here to go to your wallet",50,450,1,"#000",urlC)`
+db[urlD]=`T("0xDEAD",180,100,3)
+for(i=9;i--;){T("Hitman For Hire",220+i,150+i,1-i/99,\`hsl(\${f*2-i*29},99%,50%)\`)};f++
+T("We kill any person you want for only 4999 $",20,210,.78)
+T("(BTC "+Math.floor(4999/BTCRatio*1e5)/1e5+")",589,239,.6)
+T("Submit target",80,360,2,"#0ff",urlD+"/form.php")`
+db[urlD+"/form.php"]=`if(B>4999){kill(prompt("Name of the person")+"~"+prompt("Other important information the target that help us track the victim"))}
+else{alert("You don't have enough money!")}
+gotourl(urlD)`
+oN=["rooty",G="anonymous",G,G,G,"meowmeowcat","fuwwyR4P157","00000venom",G,G,G,'11fan',G,'zep']
+cmsg = {
+"yep, it was sad that happened":"b0by",
+"مرحبا ماذا تفعل":"m1337h",
+"only english allowed here":"rooty",
+"oh ok":"m133h",
+"anyone here wanna vibe on psytrance?":"uwu420",
+"nobody?":"uwu420",
+"i'm addicted to vini's remix":"uwu420",
+"(to the free tibet song)":"uwu420",
+"who asked?":"rooty",
+"GUYS! where can i buy corpses?":G,
+"uh, here, weirdo":"rooty",
+"_1":urlN,
+"you are a weirdo too >;(":G,
+"never click this:":G,
+'_2':urlH,
+"why not?":"uwu420",
+"???????":"uwu420",
+"i'll press it lol":"uwu420",
+"be careful bro, u shouldn't trust these guys":"zep",
+"shut uc22     4 o1o21o copo":"uwu420",
+"lol":G
+}
+db[urlA]=`T("anonchat - chat anonymously",20,40,1,"#50a")
+x.fillStyle='#22f2'
+x.R(20,50,600,430)
+x.R(630,50,160,430)
+N=0;
+for(U in cmsg) {
+fromm = cmsg[U]
+T(\`[\${fromm}] \${U}\`,20,70+N*20,.5,'#f00',U[0]=="_"?cmsg[U]:"")
+N++
+}
+T("online chatters",625,52,.5,'#f0f')
+for(u in oN){
+T(oN[u],640,70+u*18,.5)
+}`
+db[urlN]=`T("st1ff sh0p",280,40)
+T("available products:",280,60,.55)
+N=0
+for(i of aP){N++
+T(i,270,80+N*20,.5)
+T("buy body (2500$)",360,80+N*20,.5,"#f0f",toRender+"/buy/")
+}
+T('Looking for alive people?',10,490,.4,"#f0f",urlO)`
+db[urlN+"/buy/"]=`if(B>2500){prompt("Enter delivery address");alert("You bought the corpse! Thanks for using stiffshop (hosted by Kamicelrau)");B-=2500}
+else{alert("You don't have enough money!")}
+gotourl(urlN)`
+let sd = 1;
+db[urlO]=`T("ch1t sh0p",290,40)
+T("available products:",280,60,.55)
+N=0
+for(i of aQ){N++
+T(i,270,80+N*20,.5)
+if(i!="17, G")T("buy (2993$)",360,80+N*20,.5,"#f0f",toRender+"/buy/")
+else T("buy (3013$)",360,80+N*20,.5,"#f0f",toRender+"/buy")
+if(sd)sd=0,addTask("The last girl in this list is probably my sister. I must buy her to rescue her")
+}`
+db[urlO+"/buy/"]=`if(B>2993){prompt("Enter delivery address");alert("You bought the child! It will arrive in 1 week. Thanks for using chitshop (hosted by Kamicelrau)");B-=2993}
+else{alert("You don't have enough money!")}
+gotourl(urlO)`
+db[urlO+"/buy"]=`if(B>3013){prompt("Enter delivery address");alert("You bought the child! It will arrive in 1 week. Thanks for using chitshop (hosted by Kamicelrau)");B-=3013;iHaveMySister=1;addTask("I just bought my sister. I should hire a hitman to 💀 the kidnapper")}
+else{alert("You don't have enough money!")}
+gotourl(urlO)`
+let sd2 = 1;
+db[urlZ]=`x.strokeStyle='red'
+x.lineWidth=4
+x.beginPath()
+for(_=9;_--;)x.arc(99+Math.sin(J=Math.PI/7*_*4)*90,86+Math.cos(J+f)*90,0,0,0)
+x.stroke()
+x.beginPath()
+for(_=9;_--;)x.arc(699+Math.sin(J=Math.PI/7*_*4)*90,86+Math.cos(J-f)*90,0,0,0),T("TEMPLE OF NUHMIZ",220,70+_/2),T("THE GREAT GODDESS OF TECHNOLOGY AND KNOWLEDGE",220,90,.38)
+x.stroke()
+f+=.01
+T("> Pray for web security and anonimity",160,300,.6,"#0f0","nuhmiz:security_please")
+T("> Pray for money",160,330,.6,"#0f0","nuhmiz:money_please")
+T("> Pray for faster internet speed",160,360,.6,"#0f0","nuhmiz:faster_speed")
+T("> Ask Nuhmiz about someone",160,390,.6,"#0f0","nuhmiz:whois")
+if(sd2)sd2=0,addTask("This website looks useful! It's called Temple of Nuhmiz")
+`
+db["nuhmiz:security_please"]=`PH-=r()/5;alert("You are now more secure!");gotourl(urlZ)`
+db["nuhmiz:money_please"]=`maxMA+=100;alert("You will recieve more money!");gotourl(urlZ)`
+db["nuhmiz:faster_speed"]=`kbus/=2;alert("You have faster internet speed now!");gotourl(urlZ)`
+db["nuhmiz:whois"]=`alert(whois(prompt("Who are you looking for?")));gotourl(urlZ)`
+function whois(he) {
+  he=he.toLocaleLowerCase()
+  if (he.indexOf("sister") >= 0) return "Your sister is alive, check out ch1tshop"
+  if (he.indexOf("rooty") >= 0) return "He's the owner of the anonymous chat"
+  if (he.indexOf("red room") >= 0) return "Don't ask me about that, I hate violence"
+  if (he.indexOf("uwu420") >= 0) return "Just a kid, EDM fan."
+  if (he.indexOf("kamicelrau") >= 0) return "He's the one who is hosting the shop. He also kidnapped your sister. His real name is James Abunoo Haki"
+  return ["Think about that youself",
+      "Don't ask me that",
+      "... You should pray more to me",
+      "Huh...",
+      "Are you sure that's the right question?",
+      "I'm not sure if that's a good question...",
+      "Ask me better next time, okay?",
+      "What?",
+      ";) I will tell you nothing about that",
+      "?"][rdg()]
+}
+
+
+// events
+c.onmousemove=evt=> {
+  RR=c.getBoundingClientRect()
+  mX=evt.clientX-RR.left
+  mY=evt.clientY-RR.top
+}
+
+// play a small 8bit sound when writing notes
+notes.onkeypress=evt=> {
+  zzfx(...[.02,,165,,.02,0,,.01,,,-100,,,.1,,,,,.02])
+}
+
+c.onmousedown=e=>{mD=1}
+c.onmouseup=e=>{mD=0}
+c.onkeypress=e=>{prezzed=e.key;console.log(e)}
+
+url.onkeypress = function(e) {
+  k = urle.value
+  if (e.key=="Enter") {
+    gotourl(k)
+  }
+}
+
+// modules & important functions
+// text
+function T(string, lX, lY, size=1, color="red", href=0) {
+  x.fillStyle=color
+  x.font=`${size}cm monospace`
+  x.fillText(string, lX, lY)
+  Z=string.length
+  if (href) {
+    // check if cursor is above element
+    if (mX > lX && mX < lX + (navigator.vendor[0]=='G'?size*Z*20.7:size*Z*22.7) && mY > lY-size*25 && mY < lY) {
+      x.fillStyle="#fff"
+      if (mD) { // if the element is clicked
+        if (r()>PH) gotourl(href)
+        else hacked()
+        zzfx(...[,,1283,.02,,.02,,2.79,-73,,1,,,.1,,,,.49])
+        PH += 0.02
+        console.log(`${PH*100}/100`)
+      }
+    } else {
+      x.fillStyle="#0ff"
+    }
+    // check if chrome is used here
+    x.R(lX,lY+4.5,navigator.vendor[0]=='G'?size*Z*20.7:size*Z*22.7,size*4)
+  }
+}
+
+l = 0; // loading
+function gotourl(url) {
+  clearTimeout(l)
+  urle.value = url
+  toRender = "tgr:loading"
+  zzfx(...[0.1,,90,.05,,.3,2,17,,,,,,,,,,.2,.33])
+  l = setTimeout(loadPage => {
+    if(toRender=='tgr:loading') toRender = url;
+    zzfx(...[,,24,.13,.02,.15,,.84,,,549,.12,.02,.3,,,.06,.94])
+  }, url==urlH?0:(r()**r())*kbus)
+}
+
+// main
+function renderPage() {
+  x.fillStyle='#000';
+  x.R(0,0,800,500)
+  if (Object.keys(db).indexOf(toRender) != -1) {
+    try{eval(db[toRender])}
+    catch(e){error=e}
+  } else {
+    T("HTTP CODE 404, server is not found", 10, 45, 1)
+    T("The Garlic Router couldn't find this location", 10, 75, 0.5)
+    T("Press here to go to The Unseen Dir", 10, 99, 0.5,'#0ff',q)
+    if(errorRender!=toRender) {
+      zzfx(...[,2,2,,.11,.15,,1.65,-0.1,.2,95,.02,,,,.2,,,.15])
+      errorRender = toRender
+    }
+  } 
+  if(nodeHacked>4) {
+    document.body.style.filter="saturate(100%) blur(1px) contrast(9) hue-rotate("+(360*r()|0)+"rad)"
+    zzfx(...[,1,115,.05,,.01,1,.01,,,-300,.09,,,,,,,.02])
+    kidnapping ++;
+    if (kidnapping > 123) {
+      alert("You got hacked and kidnapped. Press OK to restart the game")
+      window.location.reload()
+      localStorage["OS13kTrophy,☠️,The Garlic Network,Hacked"]=""
+    }
+  }
+  requestAnimationFrame(renderPage)
+  // live code debug trick
+  // db[urlZ] = notes.value;
+  if (iHaveMySister && !kidnapperAlive) {
+    alert("YOU WON! GAME OVER, THANKS FOR PLAYING <3")
+  }
+}
+
+// game functions
+
+function hacked() {
+  gotourl(urlH)
+  zzfx(...[2,.5,85,.04,2,.23,3,2,-1.3,,,,,,,.3,.1,.8,.27]);
+}
+
+function kill(info) {
+  info=info.toLocaleLowerCase()
+  alert("Target submitted! We will finish this mission shortly! Thanks for using 0xDEAD")
+  B -= 4999
+  addTask(info.split("~")[0]+" is 💀 now.")
+  if(info.split("~")[0].split("james abunoo haki").length>1) kidnapperAlive = 0
+
+}
+
+function addTask(task) {
+  for (i in task) {
+    setTimeout(`notes.value += "${task[i]}";notes.onkeypress()`, i*59)
+  }
+  setTimeout("notes.value += '\\n'", task.length*59)
+}
+
+function showSecurity() {
+  alert(`You are ${(99-PH*99)|0}% safe`)
+}
+
+// main
+requestAnimationFrame(renderPage)
+
+// nevermind, music sucks on horror games lol
+// // music
+// playNote = function (note) {
+//   pitch = 440 * ((2 ** (1 / 12)) ** note)
+//   zzfx(...[,0,pitch,.1,.3,.2,,.78,,,,,,.2,,,,.8]);
+// }
+
+// let pattern = [5,12,11,7,8,7,5,3,5,1,0,0,1,1,3,3,5,11,12,8,7,7,5,3,5,1,0,0,3,3,1,1]
+// let patternPosition = 0;
+
+// let mInterval = 500;
+
+// function playMelody() {
+//   if (patternPosition%64<32) playNote(playedNote=pattern[patternPosition++%pattern.length]-35)
+//   else playNote(playedNote=pattern[patternPosition++%pattern.length]-21)
+//   setTimeout(playMelody, mInterval)
+//   // console.log(patternPosition, playedNote)
+// }
+
+// // playBeat()
+// // playMelody()
+
+f=0
+gotourl(q)
+
+notes.value=''
+addTask("It's "+Date().split(" ").splice(1,4).join(" "))
+setTimeout(`addTask("I must search information about my kidnapped sister on the dark web")`,3000)
+setTimeout(`addTask("Important: If I get hacked, I must leave the page as fast as I can!")`,9000)
+</script>
+<div id="startbar">🌐📅🛡️</div></body></html>

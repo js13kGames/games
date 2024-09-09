@@ -1,0 +1,22 @@
+<html style='font-size:1vmin'>
+	<head>
+		<meta charset=utf-8>
+		<title>Hugo The Wizard</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui' />
+		<style>
+			@media(min-aspect-ratio:1){#r{display:none}}
+			*{user-select:none;-webkit-touch-callout:none}
+			#gNearBut{position:absolute;top:2rem;right:1rem;font-size:8rem;z-index:2;cursor:pointer;font-family:arial;background:linear-gradient(304deg,transparent 48%,black 50%,transparent 53%);line-height:.7;transform:scaleX(1.3);display:inline-block}
+		</style>
+		<script src="https://cdn.jsdelivr.net/npm/near-api-js/dist/near-api-js.min.js"></script>
+	</head>
+	<body style='margin:0;background:#000;text-align:center;overflow:hidden;height:100%'>
+		<canvas id=gCanvas width=1000 height=500 style='position:relative;z-index:2'></canvas>
+		<script src='game.min.js?9'></script>
+		<div id=r style='color:#FFF;font-size:5vh;padding:9px'>⤵📱</div>
+		<div style='position:absolute;width:100%;bottom:1px;color:#CCC;font-size:2rem'>
+			© 2023 <a href='https://curtastic.com/hugo/' style='color:inherit'>Curtastic Corp</a>
+		</div>
+		<div id=gNearBut>N</div>
+	</body>
+</html>

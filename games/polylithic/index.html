@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>PolyLithic</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      padding: 0px;
+      margin: 0px;
+      background: #263238;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    .red {
+      border: 1px solid red;
+    }
+
+    .green {
+      border: 1px solid green;
+    }
+
+    #fps {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: yellow;
+    }
+
+    #menu {
+      width: 1280px;
+      height: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #intro {
+      max-width: 720px;
+    }
+
+    #intro #title {
+      font-size: 32px;
+    }
+
+    #intro p b {
+      text-decoration: underline;
+    }
+
+    #intro #playButton {
+      margin-top: 60px;
+      font-size: 36px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    #intro #playButton:hover {
+      color: gray;
+    }
+
+    #message {
+      text-align: center;
+      font-size: 36px;
+    }
+
+    #canvas {
+      cursor: none;
+    }
+
+    #big-message {
+      color: blue;
+      font-size: 52px;
+      text-align: center;
+    }
+
+    #reload-hint {
+      margin-top: 200px;
+      font-size: 25px;
+      text-decoration: underline;
+    }
+
+    b.big {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+  <div id="fps">00</div>
+  <canvas id="canvas" width="1280" height="720" style="display: none;" oncontextmenu="return false;"></canvas>
+  <div id="menu">
+
+    <!--  intro - start -->
+    <div id="intro">
+      <div id="title">PolyLithic</div>
+      <p>PolyLithic is a fast paced, skill based, sci-fi MOBA.</p>
+      <p>Your
+        <b>mothership</b>'s power core is
+        <b>offline</b>. You must create
+        <b>drones</b> and gather
+        <b>uranium stones</b> jumping in and out of existence.</p>
+      <p>Your opponent is trying to do the exact same thing. Either beat him to a <b>350 stone reserves</b> or <b>destroy his mothership</b>.</p>
+      <b lass="big">Rules</b>
+      <ul>
+        <li>Drones pick up uranium stones on touch. They have to carry them back to the mothership.</li>
+        <li>Opposing drones get destroyed when they clash.</li>
+        <li>Drone damage enemy mothership by the amount of stone they are carrying.</li>
+      </ul>
+      <b class="big">Controls</b>
+      <ul>
+        <li>Left click own mothership to create new drone. Each drone cost 5 stones.</li>
+        <li>Left click a drone to select it.</li>
+        <li>Right click an empty space to move selected drone there.</li>
+      </ul>
+      <div id="playButton">
+        <a>Join the game!</a>
+      </div>
+    </div>
+    <!--  intro - end -->
+
+    <!--  message-box - start -->
+    <div id="message-box" style="display: none;">
+      <div id="message">...</div>
+      <div id="big-message">...</div>
+      <div id="reload-hint" onclick="window.location.reload()">Click here or reload this page to start anew</div>
+    </div>
+    <!--  message-box - start -->
+
+  </div>
+
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared.js"></script>
+  <script src="/client.js"></script>
+
+</body>
+
+</html>

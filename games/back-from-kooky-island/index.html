@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>js13k - Back From Kooky Island</title>
+<style>
+body {
+background-color: #000;
+color: #ddd;
+    text-align:center;
+}
+.c1 {
+color: rgb(226, 228, 49);
+}
+</style>
+</head>
+<body>
+<p><em>Arrow keys</em> to move. <em>Space</em> to jump. <em>Enter</em> to interact with objects.</p>
+<canvas id="c" width=128 height=72></canvas>
+<h1>Back From Kooky Island</h1>
+<p>While lost at sea you discover a mysterious island. Can you find a way to get back home? Hint: You'll need to find a
+    map!</p>
+<p><i>Made by Alexander Curtis for #js13k 2019</i></p>
+<script>
+
+
+k = new ImageData(128, 64 + 8);
+a = document.getElementById('c');
+au = new AudioContext;
+bh = 255;
+c = a.getContext('2d');
+c.fillStyle = '#fff';
+d = document;
+eM = 2;
+I = k.data;
+iR = undefined;
+inv = undefined;
+k18 = 0;
+L = 1;
+M = 16;
+mem = {};
+N = 255;
+n = X = Y = 0;
+oG=[[64,1264,840,1238,810,1271,850,2,1,0,0],[75,1600,759,1600,759,1600,759,0,0,0,32],[64,1539,765,1519,765,1549,765,1,0,0,0],[67,1658,725,1658,715,1658,730,0,1,0,32],[67,1731,720,1731,707,1731,722,0,1,0,32],[67,1873,683,1873,653,1873,687,0,1,0,32],[67,1865,672,1865,665,1865,687,0,1,0,32],[67,1857,682,1857,665,1857,687,0,1,0,32],[69,1500,889,1496,889,1600,889,1,0,0,0],[69,1700,889,1654,889,1730,889,1,0,0,0],[71,2486,612,2439,612,2570,612,0,0,0,0],[64,1790,690,1758,687,1802,703,2,1,0,0],[73,2000,550,1942,548,2052,553,2,1,0,0],[77,2257,588,2229,588,2269,588,1,0,0,32],[77,2283,588,2229,588,2284,588,1,0,0,32],[77,2297,588,2229,588,2299,588,1,0,0,32],[75,3172,676,3172,676,3172,676,0,0,0,32],[81,2447,373,2439,371,2488,375,4,2,0,32],[81,2457,373,2439,371,2488,375,4,-2,0,32],[81,2477,373,2439,371,2488,375,2,4,0,32],[81,2480,371,2439,371,2488,375,2,2,0,32],[81,2484,371,2439,371,2488,375,4,4,0,32],[97,2050,451,2038,451,2068,451,2,0,0,0],[97,2128,507,2118,507,2164,507,2,0,0,0],[97,2468,451,2448,451,2492,451,2,0,0,0],[97,2562,411,2512,411,2564,411,2,0,0,0],[85,2243,467,2231,467,2282,467,2,0,0,0],[85,2284,435,2260,435,2298,435,1,0,0,0],[73,2200,550,2186,492,2300,564,2,1,0,0],[67,2360,551,2360,533,2360,557,0,2,0,32],[67,2384,549,2384,533,2384,557,0,2,0,32],[67,2322,402,2322,392,2322,412,0,1,0,32],[67,2338,410,2338,392,2338,412,0,1,0,32],[67,2512,502,2512,482,2512,532,0,3,0,32],[67,2536,512,2536,482,2536,532,0,2,0,32],[67,2560,512,2560,482,2560,532,0,1,0,32],[64,2760,600,2755,592,2795,610,2,1,0,0],[71,2860,620,2854,620,2878,620,2,0,0,0],[97,2990,633,2988,633,3036,633,2,0,0,0],[64,3139,635,3134,630,3194,655,2,1,0,0],[67,3360,680,3360,670,3360,702,0,3,0,32],[75,3245,676,3245,676,3245,676,0,0,0,32],[67,3459,720,3459,700,3459,736,0,2,0,0],[67,3499,720,3499,700,3499,740,0,3,0,0],[64,3634,773,3634,743,3660,783,2,2,0,0],[85,3748,822,3743,822,3783,822,1,0,0,0],[85,3820,845,3818,845,3838,845,1,0,0,0],[75,3830,845,3830,845,3830,845,0,0,0,32],[91,1934,900,1930,892,1980,952,1,1,0,32],[91,2100,900,2092,892,2125,915,1,1,0,32],[71,2611,428,2611,428,2641,428,1,0,0,0],[40,3953,877,3953,877,4953,877,0,0,0,0],[42,3961,877,3961,877,4961,877,0,0,0,0],[44,3969,877,3969,877,4969,877,0,0,0,0],[46,3953,885,3953,885,4953,885,0,0,0,0],[48,3961,885,3961,885,4961,885,0,0,0,0],[50,3969,885,3969,885,4969,885,0,0,0,0],];
+oI=[[136,1944,636],[128,1934-3,554-6],[129,1452,868],[136,1477-3,873-5],[130,2038-4,767-2],[131,0,0],[137,1952-4,489-5],[140,2417-5,388],[138,2226-6,473-5],[135,2497-6,457-5],[134,2440-4,585-8],[132,2641,428],[136,2100-3,601-5],[141,1722,936],[141,1879,937],[136,2213-3,397-2],[0,0,0],[141,2035,937],[141,1821,950],[141,2141,911],[136,2621,599-3],[136,2625-5,509-1],[136,2137-5,567-3],[136,2493-5,535-3],];
+oS=[];
+P=[0,0,0,48,48,64,230,200,50,210,160,100,0,0,0,64,16,16,255,255,255,230,200,50,100,69,50,0,255,31,128,64,16,192,192,192,128,128,128,56,64,192,61,138,255,96,96,96,64,64,64,223,113,38,251,242,54,203,219,222,0,0,0,0,0,0,128,128,128,96,96,96,64,64,64];
+ra=255;
+rnd = myRandomGen(265);
+sD = [];
+sL = [];
+sh = 0;
+T = a.style.cssText += ';height:576px;width:1024px;image-rendering:pixelated;image-rendering:-moz-crisp-edges';
+uw = false;
+xx = x = 0;
+yy = y = 0;
+
+mE=[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{"304":19,"305":17,"306":17,"307":17,"308":17,"309":17,"310":17,"311":17,"312":17},{"288":6,"289":5,"294":5,"295":5,"296":5},{"288":6,"313":33},{"288":6,"306":21,"307":23,"308":21,"309":23,"310":21,"311":23,"312":21,"314":2,"315":2,"316":2,"317":2,"318":6,"319":2,"320":2},{"244":3,"245":3,"246":5,"247":5,"251":5,"252":3,"253":3,"254":3,"255":3,"256":3,"257":3,"259":5,"260":5,"263":5,"266":5,"267":5,"288":6,"297":21,"302":23,"305":6,"318":6},{"244":2,"253":2,"254":2,"255":2,"256":2,"257":2,"258":6,"268":2,"275":2,"276":2,"277":2,"288":6,"289":5,"305":6,"318":6,"336":37},{"242":3,"258":6,"264":6,"288":6,"289":5,"295":5,"298":33,"301":33,"305":6,"318":6,"322":5,"336":37},{"242":2,"258":6,"263":5,"264":6,"271":2,"288":6,"303":5,"305":2,"336":37},{"244":3,"252":5,"257":8,"258":23,"288":6,"295":3,"296":3,"297":5,"299":3,"300":3,"301":3,"302":3,"303":3,"305":3,"306":3,"307":3,"308":3,"309":3,"310":3,"336":37},{"244":2,"251":2,"253":2,"267":5,"268":5,"288":6,"295":2,"296":2,"297":5,"299":2,"300":2,"301":2,"302":2,"303":2,"305":2,"306":2,"307":2,"308":2,"309":2,"310":2,"329":6,"336":37},{"263":5,"267":5,"282":5,"329":6,"336":37},{"244":21,"248":21,"251":23,"253":23,"254":9,"261":3,"262":3,"263":3,"264":3,"265":3,"266":3,"267":3,"268":3,"269":3,"270":3,"271":3,"272":3,"273":3,"274":3,"282":3,"283":3,"284":3,"296":3,"297":3,"298":3,"299":3,"300":3,"329":6,"336":37},{"242":5,"255":6,"261":2,"262":2,"264":2,"265":2,"266":2,"269":2,"270":2,"271":2,"273":2,"274":2,"282":2,"283":2,"284":2,"296":2,"297":2,"298":2,"299":2,"300":2,"305":5,"323":2,"324":6,"325":2,"326":2,"327":2,"328":2,"329":2,"330":2,"331":2,"336":37,"339":16},{"242":5,"255":6,"278":22,"281":5,"305":5,"324":6,"336":37},{"255":6,"313":5,"324":6,"336":37},{"255":6,"297":5,"305":3,"306":3,"307":3,"313":5,"326":6,"336":37},{"244":2,"248":5,"255":6,"260":5,"262":5,"263":5,"281":5,"305":2,"306":2,"307":2,"312":3,"316":5,"326":6,"336":37},{"247":8,"255":6,"257":5,"258":5,"277":0,"278":31,"281":0,"282":31,"285":0,"286":31,"294":3,"295":3,"296":3,"297":3,"298":3,"312":2,"316":5,"322":5,"326":6,"336":37},{"246":8,"247":21,"254":5,"255":6,"272":5,"277":0,"278":31,"281":0,"282":31,"285":0,"286":31,"294":2,"295":2,"296":2,"297":2,"298":2,"310":3,"311":3,"312":3,"319":5,"326":6,"336":37},{"243":5,"245":8,"246":21,"247":23,"254":5,"273":2,"277":30,"281":30,"285":30,"303":6,"310":2,"311":2,"312":2,"319":5,"336":37},{"281":5,"303":6,"308":2,"336":37},{"273":5,"274":5,"275":5,"276":5,"277":5,"278":5,"279":5,"280":5,"281":5,"288":2,"303":6,"316":5,"336":37},{"260":5,"281":5,"289":5,"292":5,"293":5,"303":6,"305":5,"321":6,"336":37},{"263":5,"272":5,"281":5,"285":2,"289":5,"292":5,"293":5,"303":6,"305":5,"321":6,"336":37},{"248":5,"254":5,"281":5,"288":2,"290":2,"291":2,"294":9,"297":5,"300":5,"303":6,"304":5,"308":5,"309":5,"320":5,"321":6,"324":5,"327":5,"333":0,"334":0,"335":0,"336":11,"337":0,"338":0,"339":0},{"250":5,"256":5,"281":5,"298":6,"310":2,"311":2,"312":2,"313":2,"314":2,"315":2,"316":2,"317":2,"318":2,"319":2,"322":2,"323":2,"325":2,"326":2,"334":0,"335":0,"336":11,"337":0,"338":0,"339":0},{"298":6,"334":0,"336":11,"338":0},{"242":2,"243":2,"244":2,"245":2,"246":2,"247":2,"248":2,"249":2,"250":2,"259":6,"266":5,"275":5,"298":6,"301":37,"312":2,"320":5,"321":5,"324":5,"326":2,"336":37},{"259":6,"278":5,"288":5,"289":5,"290":5,"293":5,"298":6,"301":37,"305":2,"316":2,"322":6,"331":5,"332":5,"333":0,"334":0,"335":0,"336":16,"337":0,"338":0},{"242":2,"259":6,"271":5,"277":2,"291":2,"292":2,"298":2,"301":37,"322":6,"326":2,"331":5,"332":5,"333":0,"334":0,"335":0,"336":16,"337":0,"338":0,"339":0},{"244":2,"259":6,"276":2,"301":37,"308":2,"310":2,"311":2,"312":2,"313":2,"322":6,"333":0,"334":0,"335":0,"336":16,"337":0,"338":0,"339":0},{"256":5,"269":0,"270":0,"309":5,"320":5,"321":5,"322":6,"325":9,"331":5,"332":5,"333":0,"334":0,"335":0,"336":16,"337":0,"338":0},{"246":2,"247":2,"248":2,"249":2,"250":2,"261":0,"262":0,"263":0,"264":0,"265":0,"266":0,"267":0,"268":0,"269":0},{"251":5,"261":0,"262":0,"263":0,"264":0,"265":0,"266":0,"267":0,"268":0,"269":0},{"248":8,"252":9,"255":5,"261":0,"262":0,"263":0,"264":0,"265":0,"266":0,"267":0,"268":0,"269":12},{"261":0,"262":0,"263":0,"264":0,"265":0,"266":0,"267":0,"268":0,"269":12},{"241":0,"242":5,"243":5,"244":5,"245":5,"252":5,"253":5,"254":5,"255":5,"261":0,"262":0,"263":12,"264":14,"265":36,"266":36,"267":36,"268":14,"269":12},{"261":0,"262":0,"263":12,"264":0,"265":0,"266":0,"267":35,"268":0,"269":0},{"263":12,"264":0,"265":0,"266":0,"267":35,"268":0,"269":0},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"267":35},{"178":4,"179":4,"180":4,"181":10,"182":4,"267":35},{"181":10,"267":35},{"181":10,"267":35},{"181":10,"267":35},{"179":4,"180":4,"181":4,"267":35},{"182":176,"267":35},{"166":4,"167":4,"168":4,"169":4,"170":4,"171":4,"172":4,"173":4,"174":4,"175":4,"176":4,"177":4,"178":4,"179":4,"180":4,"181":4,"182":4,"183":4,"184":4,"185":4,"186":4}];
+
+function text(s, x, y) {
+c.fillText(s, x, y);
+c.fillText(s, x, y);
+}
+
+pw = (pwy, pwl) => (x, y) => {
+y = (y / 640);
+let i = 0;
+if (y < pwy[0]) {
+return [pwl[0], 0];
+}
+while (i < pwy.length) {
+if (y < pwy[i]) {
+return [
+(y - pwy[i - 1]) / (pwy[i] - pwy[i - 1]) * (pwl[i] - pwl[i - 1]) + pwl[i - 1],
+(pwl[i] - pwl[i - 1]) / (pwy[i] - pwy[i - 1]) / 640
+];
+}
+i++;
+}
+return [255, 0];
+};
+
+bend = f => (x, y) => f(x, y - (((x - 2560) / 2560) ** 2) * 940);
+
+dot = (x, y) => (x * 112.01716 + y * 718.233) * 437057.545323;
+
+Rw = (s, t) => (Math.sin(dot(s, t)) * 1000000) & 255;
+
+interpS = (tl, tr, bl, br, dL, dR, dT) => {
+let sHorz = 3 * dL * dL - 2 * dL * dL * dL;
+let sVert = 3 * dT * dT - 2 * dT * dT * dT;
+let A = (br - bl - tr + tl);
+let B = (bl - tl);
+let C = (tr - tl);
+let D = tl;
+let res = sVert * sHorz * A + sVert * B + sHorz * C + D;
+let dresdx = (sVert * A + C) * (6 * dL - 6 * dL * dL);
+let dresdy = (sHorz * A + B) * (6 * dT - 6 * dT * dT);
+return [res, dresdx, dresdy];
+};
+
+frac = n => n - Math.floor(n);
+
+flicker = (x, y, octave, phx, phy) => {
+x /= octave;
+y /= octave;
+x += phx;
+y += phy;
+dL = frac(x);
+dR = 1 - dL;
+dT = frac(y);
+dB = 1 - dT;
+x = Math.floor(x);
+y = Math.floor(y);
+flickerTL = Rw(x, y);
+flickerTR = Rw(x + 1, y);
+flickerBL = Rw(x, y + 1);
+flickerBR = Rw(x + 1, y + 1);
+let [l, dx, dy] = interpS(flickerTL, flickerTR, flickerBL, flickerBR, dL, dR, dT, dB);
+return [l, dx / octave, dy / octave];
+};
+
+superR = (x, y) => {
+let [fl128, dx128, dy128] = flicker(x, y, 160, 0, 0);
+let [fl64, dx64, dy64] = flicker(x, y, 80, .3, 0);
+let [fl32, dx32, dy32] = flicker(x, y, 40, .6, 0);
+let [fl16, dx16, dy16] = flicker(x, y, 20, 0, 0);
+return [(fl128 * 27 / 8 + fl64 * 9 / 4 + fl32 * 3 / 2 + fl16 * 2) / (27 / 8 + 9 / 4 + 3 / 2 + 2),
+(dx128 * 27 / 8 + dx64 * 9 / 4 + dx32 * 3 / 2 + dx16 * 2),
+(dy128 * 27 / 8 + dy64 * 9 / 4 + dy32 * 3 / 2 + dy16 * 2)
+];
+};
+
+terrain = (fi, gi) => {
+fi = (fi) | 0;
+gi = (gi - 512) | 0;
+if (mem[fi + "," + gi]) {
+return mem[fi + "," + gi];
+}
+let [r, dx, dy1] = superR(fi, gi);
+let [thresh1, dThresh1] = bend(pw(
+[.0, .1, .2, .3, .5, .8, .9, 1.0, 2],
+[0, 0, 180, 160, 128, 128, 128, 255, 255]
+))(fi, gi);
+let [thresh2] = bend(pw(
+[.0, .2, .3],
+[0, 0, 255]
+))(fi, gi);
+let dy = dy1 - dThresh1 * 27 / 8 - dThresh1 * 9 / 4 - dThresh1 * 3 / 2 - dThresh1 * 2;
+let res = r > thresh1 ?
+(gi > 380 ? 9988 : 10752) :
+r > thresh1 - 5 && r > thresh2 && dy < 0 && gi <= 380?6976:
+r > thresh2 ?
+7745:17729;
+mem[fi + "," + gi] = res;
+return res;
+};
+
+
+function clear() {
+let d = [];
+for (let y = 0; y < 64; y++) {
+d[y] = 0;
+}
+return d;
+}
+
+function setPoint(x, y, c) {
+if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+this[y * 8 + x] = c;
+}
+}
+
+function lineV(x, y, fg, width, height, hi, lo, round, dx, dy, rh, rv) {
+if (round) {
+x -= 1;
+y -= 1;
+width += 2;
+height += 2;
+}
+let v = y;
+for (let h = 0; h <= height; h++) {
+let u = x;
+for (let w = 0; w <= width; w++) {
+if (!round ||
+(w !== 0 || h !== 0) && (w !== width || h !== 0) && (w !== 0 || h !== height) && (w !== width || h !== height)) {
+let px = u + w + dx * h;
+let py = v + h + dy * w;
+let pc = (w == 0 || h == 0) ? hi : (w == width || h == height) ? lo : fg;
+setPoint.call(this, px, py, pc);
+if (rh) {
+setPoint.call(this, (2 * rh - px), py, pc);
+}
+if (rv) {
+setPoint.call(this, px, (2 * rv - py), pc);
+if (rh) {
+setPoint.call(this, (2 * rh - px), (2 * rv - py), pc);
+}
+}
+}
+}
+}
+}
+
+function gen(s) {
+let data = clear();
+let aDecoder = decoder(s);
+let d = aDecoder.decode;
+let fg = 0;
+do {
+let op = 5;
+while (op--) {
+if (!d(1)) {
+break;
+}
+}
+if (op == 3) {
+fg = d(6);
+} else if (op == 0) {
+break;
+} else {
+let x = d(3);
+let y = d(3);
+if (op == 4) {
+lineV.call(data, x, y, fg, 0, 0, fg, fg, 0, 0, 0, 0, 0);
+} else {
+let w = d(3);
+let h = d(3);
+let r = d(1);
+if (op == 2) {
+lineV.call(data, x, y, fg, w, h, fg, fg, r, 0, 0, 0, 0);
+} else {
+let dx = d(3);
+let dy = d(3);
+lineV.call(data, x, y, fg, w, h, fg, fg, r, dx & 4 ? -8 + dx : dx, dy & 4 ? -8 + dy : dy, 0, 0);
+}
+}
+}
+} while (!aDecoder.finished());
+return data;
+}
+
+function decoder(s) {
+let i = 0;
+let b = 32;
+return {
+decode: function (nBits) {
+let res = 0;
+while (nBits--) {
+let c = s[i];
+let n = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+-'.indexOf(c);
+res <<= 1;
+let bit = (n & b) ? 1 : 0;
+res |= bit;
+b /= 2;
+if (b < 1) {
+b = 32;
+i++;
+}
+}
+return res;
+},
+finished: function () {
+return i > s.length;
+}
+}
+}
+
+
+function setRock(x, y) {
+setPixel(x, y, 20 + (y % 2) * 2 + x % 2);
+}
+
+function setPixel(x, y, c) {
+if (!oS[y]) {
+oS[y] = {[x]: c};
+} else {
+oS[y][x] = c;
+}
+}
+
+function getPixel(x, y) {
+return oS[y] && oS[y][x];
+}
+
+function room(x, y, w, h, chance, solid) {
+w -= 1;
+h -= 1;
+let l = x;
+let t = y;
+let r = x + w;
+let b = y + h;
+let dx = 0;
+let dy = 0;
+let cw = rnd() > .5;
+let a = cw ? [-1, 1] : [1, -1];
+if (rnd() > .5) {
+y = ((rnd() * h) | 0) + y;
+dx = 0;
+if (rnd() > .5) {
+dy = cw ? 1 : -1;
+} else {
+x = x + w;
+dy = cw ? -1 : 1;
+}
+} else {
+x = ((rnd() * w) | 0) + x;
+dy = 0;
+if (rnd() > .5) {
+dx = cw ? -1 : 1;
+} else {
+y = y + h;
+dx = cw ? 1 : -1;
+}
+}
+let len = 0;
+while (1) {
+setRock(x, y);
+len++;
+if (dx > 0 && x >= r || dy < 0 && y <= t || dx < 0 && x <= l || dy > 0 && y >= b
+|| rnd() < chance
+|| solid && getPixel(x + dx, y + dy)
+) {
+len = 0;
+let ndx = dy;
+dy = a[0] * dx;
+dx = a[1] * ndx;
+}
+x += dx;
+y += dy;
+if (getPixel(x, y) >= 20) {
+break;
+}
+}
+}
+
+function rect(x, y, w, h) {
+let ow = w;
+let r = rnd() < .5 ? 1 : 2;
+while (--w) {
+if (r == 0 || r == 2) {
+setRock(x + w, y);
+}
+if (r == 2 && ((x + w) % 2)) {
+setRock(x + w, y - 1);
+}
+setRock(x + w, y + h - 1);
+}
+while (h--) {
+setRock(x, y + h);
+setRock(x + ow, y + h);
+}
+}
+
+function castle(x, y, w, h) {
+if (w < 2 || h < 2) {
+return;
+}
+if (w < 12 && h < 12) {
+room(x, y, w, h, .1, false);
+rect(x, y, w, h);
+} else {
+if (w > h) {
+let split = (w * rnd()) | 0;
+castle(x, y, split, h);
+castle(x + split, y, w - split, h);
+} else {
+let split = (h * rnd()) | 0;
+castle(x, y, w, split);
+castle(x, y + split, w, h - split);
+}
+}
+}
+
+function rectf(x, y, w, h, c) {
+for (let v = 0; v < h; v++) {
+for (let u = 0; u < w; u++) {
+setPixel(x + u, y + v, 5);
+}
+}
+}
+
+function myRandomGen(seed) {
+return function myRandom() {
+let r = Math.sin(seed / 100) * 1000000;
+seed = seed + 1;
+return (r & 65535) / 65536;
+}
+}
+
+function openDoor(x, y, open) {
+if (!sL[y]) {
+sL[y] = [];
+}
+sL[y][x] = open;
+}
+
+
+
+init = () => {    sL = oS.map(o => ({...o}));
+mE.map((o, row) => Object.keys(o).map(col => {
+if (!sL[row]) {
+sL[row] = {};
+}
+sL[row][col] = o[col];
+}));
+openDoor(182, 109, 20);
+openDoor(278, 59, 20);};
+
+function reverse([a, s], v = 7) {
+let d = [];
+for (let i = 0; i < 64; i++) {
+d[i] = s[(i & 0xf8) + (v - i % 8 + 8) % 8];
+}
+return [a, d];
+}
+
+function tileAt(x, y) {
+let X = Math.floor(x / 8);
+let Y = Math.floor(y / 8);
+if (Y >= sL.length) {
+return 0;
+}
+let row = sL[Y];
+if (!row) return 0;
+let s = row[X];
+if (!s) return 0;
+let sprite = sD[s];
+if (!sprite) {
+return 0;
+}
+return s * 256 + sprite[0];
+}
+
+function tileTexture(t, x, y) {
+if (!t) {
+return 0;
+}
+if (!sD[t]) {
+}
+let X = Math.floor(x / 8);
+let Y = Math.floor(y / 8);
+x = x - X * 8;
+y = y - Y * 8;
+return sD[t][1][y * 8 + x];
+}
+
+map = (x, y) => {
+x |= 0;
+y |= 0;
+let s = tileAt(x, y);
+let t = terrain(x, y);
+let tt = tileTexture(s >> 8, x, y);
+let tilePixel = (tt << 8) | (s & 255);
+if ((tt !== 0 || (s & 32)) && ((tt & 0xf0) == 0x00)) {
+tilePixel &= 0xfff0;
+}
+return (t & 31) == 0 ? (tt !== 0 ? tilePixel : t) : ((s & 32) ? tilePixel : t);
+};
+
+function isZero(x) {
+return Math.abs(x) < .001;
+}
+
+function getEnv() {
+wallB = (map(xx, (yy + 7)) & 3) || (map((xx + 6), (yy + 7)) & 3);
+wallR = (map((xx + 7), Math.floor(yy)) & 1) || (map((xx + 7), (Y < 0 ? Math.floor(yy + 6) : Math.ceil(yy + 6))) & 1);
+wallL = (map((xx - 1), Math.floor(yy)) & 1) || (map((xx - 1), (Y < 0 ? Math.floor(yy + 6) : Math.ceil(yy + 6))) & 1);
+ladderB = (tileAt((3 + xx), (yy + 7)) & 8) && (tileAt((5 + xx), (yy + 7)) & 8);
+onLadder = tileAt((4 + xx), (yy + 6)) & 8;
+ladderT = tileAt((4 + xx), (yy)) & 8;
+wallT = (map(xx, (yy - 1)) & 1) || (map((xx + 6), (yy - 1)) & 1);
+slopeL = wallB && (map((xx - 1), (yy + 6)) & 1)
+&& !(map((xx - 1), yy - 1) & 1)
+&& !(map((xx - 1), yy + 5) & 1);
+slopeR = wallB && (map((xx + 7), (yy + 6)) & 1)
+&& !(map((xx + 7), yy - 1) & 1)
+&& !(map((xx + 7), yy + 5) & 1);
+waterU = (map((4 + xx), (3 + yy)) & 4);
+waterD = (map((4 + xx), (5 + yy)) & 4);
+inWater = waterU || waterD;
+uw = waterU && waterD;
+wind = 0;
+inm = (map(xx, yy + 6) & 1) || (map(xx + 6, yy + 6) & 1);
+return {
+wallB,
+wallR,
+wallL,
+ladderB,
+ladderT,
+onLadder,
+wallT,
+inWater,
+uw,
+wind,
+slopeL,
+slopeR,
+inm
+};
+}
+
+function doX() {
+let {ladderB, wallB, wallR, wallL, onLadder, wallT, inWater, wind, slopeL, slopeR} = getEnv();
+canWalk = true;
+fX = 0;
+if (inWater) {
+fX -= X / 10;
+}
+if (wallB || ladderB || inWater || kX !== 0) {
+X =
+kX * (inWater ? 1 / 2 : 1);
+}
+rX = 0;
+if (X < 0 && (wallL && !slopeL) || X > 0 && (wallR && !slopeR)) {
+rX = (X < 0 ? Math.max(0, -fX) : Math.min(0, -fX))
+X = 0;
+let xxx = Math.floor(xx);
+xx = xxx;
+}
+xx += X / 8;
+X += (fX + rX) / 8;
+}
+
+function doY() {
+let {ladderB, wallB, onLadder, ladderT, wallT, inWater, uw, inm} = getEnv();
+canClimb = ladderB && kY > 0 || ladderT || onLadder || uw;
+canJump = (wallB || ladderB) && !wallT && isZero(Y);
+fY = 0;
+fY += inWater ? .02 : .16;
+let jumping = kJumpReq * canJump * (inWater ? -8 : -19);
+if (jumping) playSound(6);
+fY += jumping;
+if (inWater) {
+fY -= Y / 10;
+}
+if (canClimb && kY) {
+Y = kY * (inWater ? 1 / 2 : 1);
+if (!inWater) {
+xx = Math.floor((xx + 4) / 8) * 8;
+X = 0;
+}
+} else if (inm) {
+yy -= 1;
+}
+rY = 0;
+if ((wallB || (ladderB && kY <= 0)) && Y > 0) {
+rY = Math.min(0, -1 * fY) - ((Y > 4 ? .2 : 0)) * Y * 8;
+Y = 0;
+let yyy = Math.floor(yy);
+yy = yyy;
+} else if (wallT && Y < 0) {
+rY = Math.max(0, -fY)
+- (.2) * Y * 8;
+Y = 0;
+let yyy = Math.floor(yy);
+yy = yyy;
+}
+yy += Y / 8;
+Y += (fY + rY) / 8;
+}
+
+function move() {
+kJumpReq = !!k[1];
+kX = (!!k[8] - !!k[6]);
+kY = (!!k[9] - !!k[7]);
+time = 8;
+while (time--) {
+doX();
+doY();
+}
+x = xx | 0;
+y = yy | 0;
+updatePalette(x, y);
+}
+
+function updatePalette(x, y) {
+bend((x, y) => {
+let p = Math.max(0, Math.min(1, 1 - ((y - 600) / 160)));
+P[42] = (p * 61) & 255;
+P[43] = (p * 138) & 255;
+P[44] = (p * 255) & 255;
+})(x, y);
+}
+
+
+function drawSpriteView(gll, gtt, gu, gv, gw, gh, t) {
+for (let v = gtt + gv; v < gtt + gh; v++) {
+for (let u = gll + gu; u < gll + gw; u++) {
+let q = (v * 128 + u) * 4;
+let r = ((v - gtt) * 8 + (u - gll));
+let colour = sD[t] && sD[t][1][r];
+if (colour) {
+I[q++] = P[colour++];
+I[q++] = P[colour++];
+I[q++] = P[colour++];
+I[q++] = 255;
+}
+}
+}
+}
+
+function drawSprite(gx, gy, t, onCollision) {
+let w_vt = y - 32;
+let w_vl = x - 64;
+let w_vr = x + 64;
+let w_vb = y + 32;
+let w_gl = gx;
+let w_gr = gx + 8;
+let w_gt = gy;
+let w_gb = gy + 8;
+if (w_gb >= w_vt && w_gt < w_vb && w_gr >= w_vl && w_gl < w_vr) {
+let v_gv = Math.max(0, w_vt - w_gt);
+let v_gu = Math.max(0, w_vl - w_gl);
+let v_gw = Math.min(8, w_vr - w_gl);
+let v_gh = Math.min(8, w_vb - w_gt);
+let v_gtt = w_gt - w_vt;
+let v_gll = w_gl - w_vl;
+drawSpriteView(v_gll, v_gtt, v_gu, v_gv, v_gw, v_gh, t);
+}
+let pl = x - 4;
+let pr = x + 3;
+let pt = y - 4;
+let pb = y + 3;
+if (w_gl < pr && w_gr > pl && w_gt < pb && w_gb > pt) {
+onCollision();
+}
+}
+
+function drawGuardians(onCollision) {
+gu.forEach(([i, x, y, l, t, r, b, dx, dy, gz, dz], n) => {
+if (i) drawSprite(x, y, i + (dx > 0) * (!dz) + (gz >= 128 ? 1 : 0), () => onCollision(n));
+});
+}
+
+function moveGuardians() {
+gu.forEach(moveGuardian);
+}
+
+function moveGuardian(guardian, i) {
+let [n, gx, gy, bl, bt, br, bb, dx, dy, gz, dz] = guardian;
+gx += dx;
+gy += dy;
+gz += dz;
+if (gx >= br || gx < bl) {
+dx = -dx;
+}
+if (gy >= bb || gy < bt) {
+dy = -dy;
+}
+if (gz >= 255 || gz < 0) {
+dz = -dz;
+}
+gu[i] = [n, gx, gy, bl, bt, br, bb, dx, dy, gz, dz];
+}
+
+function drawItems(onCollision) {
+iT.forEach((item, i) => {
+if (item[1]) {
+drawSprite(item[1], item[2], item[0], () => {
+onCollision(i, item[0]);
+});
+}
+});
+}
+
+function doAction() {
+let kAction = k18 && !k[-18];
+k18 = !!k[-18];
+if (kAction) {
+if (inv) {
+playSound(8);
+if (inv == 1) {
+openDoor(182, 109, 20);
+}
+if (inv == 6) {
+openDoor(278, 59, 20);
+}
+if (inv == 11) {
+if (x > 2434 && x < 2585 && y > 610 && y < 620) {
+let dx = (gu[10][1] < x) ? 1 : -1;
+gu[10][7] = dx;
+gu[10][0] = 71;
+}
+}
+if (iR !== 7 && iR !== 10) {
+iT[inv] = [iT[inv][0], x - 5, y - 5];
+inv = 0;
+}
+}
+if (iR) {
+playSound(7);
+if (iR == 11) {
+gu[10][7] = 0;
+}
+if (iR == 1) {
+openDoor(182, 109, 0);
+}
+if (iR == 6) {
+openDoor(278, 59, 5);
+}
+if (iR == 7) {
+if (iT[7][0] == 140) {
+iT[7][0] = 139;
+for (let i = 0; i < 8; i++) {
+sL[46][305 + i] = 5;
+if (!sL[45 - i]) sL[45 - i] = {};
+sL[45 - i][304] = 18;
+if (i < 5) {
+gu[17 + i][4] = 0;
+}
+}
+playSound(12);
+}
+} else if (iR == 10) {
+if (iT[10][0] == 134) {
+iT[10][0] = 133;
+for (let i = 0; i < 3; i++) {
+sL[77 - i][336] = 0;
+sL[73 - i][336] = 16;
+}
+playSound(11);
+}
+} else {
+iT[iR] = [iT[iR][0], 0, 0];
+inv = iR;
+}
+iR = 0;
+}
+}
+if (inv == 4 && y > 889) {
+iT[4][1] = 0;
+inv = 5;
+}
+let bx = iT[5][1];
+let by = iT[5][2];
+for (let i = 13; i < 16; i++) {
+let dx = gu[i][1] - bx;
+let dy = gu[i][2] - by;
+if (dx >= 0 && dx < 6 && dy >= 0 && dy < 8) {
+gu[i][0] = 0;
+}
+}
+}
+
+function drawInventory() {
+if (inv) {
+drawSpriteView(0, 64, 0, 0, 8, 8, iT[inv][0]);
+}
+}
+
+
+function bu(duration, layers) {
+let buffer = au.createBuffer(1, 44100 * duration, 44100);
+let data = buffer.getChannelData(0);
+let endSpl = duration * 44100;
+layers.forEach(([amplitude, inflectAmp, f1, inflectFreq, f2, jitter]) => {
+let inflectSpl = endSpl * inflectAmp;
+let inflectSplF = endSpl * inflectFreq;
+let phase = 0;
+for (var i = 0; i < endSpl; i++) {
+let amp = i < inflectSpl ? 1 - Math.exp(-i / inflectSpl * 6) : Math.exp(-((i - inflectSpl) * 3 / (44100 * duration - inflectSpl)));
+let d = amp * amplitude * Math.sin(phase);
+let fPan = (i < inflectSplF) ? (i / inflectSplF) : ((endSpl - i) / (endSpl - inflectSplF));
+let f = f2 * fPan + f1 * (1 - fPan);
+let noise = jitter * (Math.random() * 2 - 1);
+let timeElapsed = 1 / 44100;
+let radiansPerSecond = Math.PI * 2 * f;
+phase += noise + timeElapsed * radiansPerSecond;
+data[i] += d;
+}
+});
+return [duration, buffer];
+}
+
+function playSound(n) {
+let [duration, buffer] = sfx[n];
+let playing = false;
+if (playing) {
+return;
+}
+playing = true;
+setTimeout(() => playing = false, duration * 1000);
+let bS = au.createBufferSource();
+bS.buffer = buffer;
+bS.connect(au.destination);
+bS.start();
+}
+
+
+function attract() {
+startGame();
+ra = 51;
+c.font = "10px sans-serif";
+eM = 2;
+}
+
+function startGame() {
+init();
+ra = 255;
+N = 255;
+bh = 512;
+inv = 0;
+xx = x = 1202;
+yy = y = 873;
+c.font = "8px sans-serif";
+eM = 0;
+kJumpReq = 0;
+iT = oI.map(i => [...i]);
+gu = oG.map(g => [...g]);
+}
+
+function gameOver() {
+playSound(14);
+c.font = "18px sans-serif";
+ra = 128;
+eM = 3;
+}
+
+function win() {
+playSound(15);
+c.font = "18px sans-serif";
+ra = 255;
+eM = 4;
+}
+
+onkeydown = onkeyup =f=>{
+if(f.which>36&&f.which<41||f.which==32||f.which==13)f.preventDefault();
+if (eM == 2&&f.key==' ') {
+startGame();
+} else {
+if (f.type == "keydown") {
+lastKey = f;
+}
+k[f.which - 31] = f.type == "keyup" ? false : f;
+}
+};
+
+function clearStatusBar() {
+for (let i = 128 * 64 * 4; i < 128 * 64 * 4 + 8 * 128 * 4;) {
+I[i++] = 0;
+I[i++] = 0;
+I[i++] = 0;
+I[i++] = 255;
+}
+}
+
+tick = () => {
+moveGuardians();
+if (eM == 0) {
+doAction();
+y || !M && (L++, x = 216, M = 16, Y = 0);
+let e = 96 * ((4 + y) / 8 | 0) + ((4 + x) / 8 | 0);
+if (map((4 + x), (4 + y)) & 16) k[e] = ++n, M && --M, N = 255;
+move();
+lastKey = null;
+if (uw) {
+if (!sh) {
+sh = 1;
+playSound(1);
+}
+if (bh > 0) {
+bh--;
+if (bh % 64 == 0) {
+playSound(4);
+}
+} else {
+N--;
+if (N % 16 == 0) {
+playSound(5);
+}
+}
+} else {
+sh = 0;
+bh = 512;
+}
+if (!--ra) {
+ra = 255;
+N--;
+}
+if (N <= 0) gameOver();
+} else if (eM == 2) {
+[x, y] = [[1202, 873], [1431, 808], [1961, 641], [2092, 762], [1202, 873]][ra / 256 * 5 | 0];
+if (!--ra) {
+ra = 255;
+}
+xx = x;
+yy = y;
+updatePalette(x, y);
+} else if (eM == 3) {
+if (!ra--) {
+attract();
+}
+} else if (eM == 4) {
+if (!--ra) {
+ra = 255;
+c.font = "10px sans-serif";
+eM = 2;
+}
+}
+if (inv == 11 && !gu[10][7]) {
+gu[10][0] = gu[10][1] > x ? 71 : 72;
+} else {
+if ((gu[10][1] - iT[11][1]) ** 2 + (gu[10][2] - iT[11][2]) ** 2 < 64) {
+gu[10][7] = 0;
+gu[10][0] = gu[10][1] > iT[11][1] ? 71 : 72;
+}
+}
+};
+
+
+function render() {
+window.requestAnimationFrame(render);
+for (q = 0;
+q < 16384 * 2;
+t = q / 64 / 8 | 0,
+s = q / 4 & 127,
+u = s + x - 60,
+v = t + y - 28,
+l = map(u, v) ,
+i = u / 8 | 0, j = v / 8 | 0,
+p = 1 - (
+l & 64 ?
+Rw(u, v) / 255 / 4 :
+0
+),
+u %= 8,
+v %= 8,
+m = !eM &&
+(
+t == 0 && s < N / 2
+|| uw && t == 1 && s < bh / 4
+? 255
+:
+t == 30 + 3 ||
+!t || (s - 63) ** 2 + (t - 31) ** 2 > 456 / t ||
+t == 30 + Math.sign(Y*2|0) && (s - Math.sign(X|0) - 63) ** 2 == 1 ||
+q == (34 * 128 + 63) * 4
+? 0 : N + 16),
+f =
+l >> 8,
+I[q++] = m + P[f++] * p,
+I[q++] = m + P[f++] * p ,
+I[q++] = m + P[f++] * p ,
+I[q++] = 255
+) ;
+drawGuardians((n) => {
+if (!eM) {
+if (n == 10) {
+N -= 12;
+playSound(0);
+} else if (n < 51) {
+N -= 6;
+playSound(0);
+} else if (inv == 9) {
+for (let i = 51; i < 57; i++) {
+gu[i][7] = 1;
+}
+win();
+}
+}
+});
+iR = 0;
+drawItems((nItem, type) => {
+if (type == 129 && inv == 1 || type == 138 && inv == 6) {
+iT[inv] = [0, 0, 0];
+iT[nItem] = [0, 0, 0];
+playSound(3);
+} else if (type == 136) {
+iT[nItem] = [0, 0, 0];
+N = 255;
+playSound(9);
+} else if (type == 141) {
+iT[nItem] = [0, 0, 0];
+bh = 512;
+playSound(10);
+} else {
+iR = nItem;
+}
+});
+clearStatusBar();
+drawInventory();
+c.putImageData(k, 0, 0);
+if (eM == 2) {
+text("PRESS", 47, 20);
+text("SPACE", 47, 30);
+text("TO", 56, 40);
+text("START", 47, 50);
+} else if (eM == 3) {
+text("GAME", 35, 30);
+text("OVER", 37, 50);
+} else if (eM == 4) {
+text("YOU", 47, 30);
+text("WON!", 40, 50);
+}
+}
+
+
+rectf(241, 46, 98, 40, 0);
+castle(241, 46, 98, 40);
+sD[1] = [0, gen('dSRJLcviqBE1QWaYHimXHuDAfLeOyc7br-W')];
+sD[2] = [2, gen('WS1+cS0KcCHYy0')];
+sD[3] = [0, gen('WS1+Yi9mqeIBpeJm')];
+sD[4] = [1, gen('cS1ycCJWml0KBACcQoPIm1j6hI30Zm7u')];
+sD[5] = [0, gen('WS1+y0')];
+sD[6] = [8, gen('YSHUYiamop21o339iikmm0xS3l0')];
+sD[8] = [1, gen('hS1+WU0sSKZfAsy')];
+sD[9] = [1, gen('WS1+hU0-0qWiw6y')];
+sD[10] = [8, gen('bCHUWCWmoRBBi9N9CCimy0')];
+sD[11] = [8, gen('eSoAneJMXCG4r0Ia9aaQ8iLJ9J-W')];
+sD[12] = [1, gen('ei1+ey1Gmb3DKCzGSF0GeCEy')];
+sD[14] = [2, gen('cS3wdi2WnS32i6Bbhu0')];
+sD[15] = [1, gen('fi1+cC5mml0mPSEJnzy-5Z5QmIW9l5mVm0')];
+sD[16] = [1, gen('aiGEp0xK3W152o25KhQX46LGmwky')];
+sD[17] = [1, gen('WS1+dTIWmY0YP56dGD6pIBF0')];
+sD[18] = [1, gen('dSW4reGmXL8rPGuLF9-0')];
+sD[19] = [1, gen('WS1+byYtdSqJg399KZEU')];
+sD[20] = [1, gen('iC1+fCJvhSJuFQv1ISR074kIImwzhNlW')];
+sD[21] = [1, gen('iC1+hS3PfC1G8eLHC8iEZl0')];
+sD[22] = [1, gen('iC1+hS3PfC1G8gGGisTMXYoRm0')];
+sD[23] = [1, gen('iC1+fCJvhSJuBQPXISQm74cM99Ozy0')];
+sD[30] = [2, gen('WS1+iC1my0')];
+sD[31] = [2, gen('WS1+Wy0EnD35eCQmnx21CgJlW0')];
+sD[33] = [0, gen('WS1+hz0EKAQxC3Y17m')];
+sD[34] = [2, gen('WS1+hyDmhiFmy0')];
+sD[35] = [8, gen('YSmEYiWEq0w98eIgM0G6IIGwMy0')];
+sD[36] = [8, gen('cS3wdcBbg14YrOKR4vWT5P0Te1qIHGbKioP993fQ0GU0')];
+sD[37] = [8, gen('WS1+eSoAneJMXCG4r0Ia9aaQ8iLJ9J-W')];
+sD[40] = sD[41] = [0, gen('az8qPEfHLfK4mnPj-0')];
+sD[42] = sD[43] = [0, gen('aymYoSR219Gpb2KmYJ+0')];
+sD[44] = sD[45] = [0, gen('ay9296fGK56p14cMB+0')];
+sD[46] = sD[47] = [1, gen('cC1wdiXG00ZIfq4EB7a05y0')];
+sD[48] = sD[49] = [1, gen('cC3udi1m56bJ8OSMFF0')];
+sD[50] = sD[51] = [1, gen('cE1iSCNAEUm731OC8my')];
+sD[128] = [0, gen('byopp2wTpAFI1Ynw0q98vBcZFW')];
+sD[129] = [1, gen('dS1+byYsBBW3W4w2F0pwCp9h9Cl0')];
+sD[130] = [0, gen('kSgqnLGYWQs6QGKAcIC4YVW')];
+sD[131] = [0, gen('kSgqnLGYWQgP8mI9t6QG2ZPtm0')];
+sD[132] = [0, gen('ayRGmPB34jcOAB9Hxda7W0')];
+sD[133] = [0, gen('cC2BYieYqgB11YVW')];
+sD[134] = [0, gen('cC2BYiaYqAB11YdW')];
+sD[135] = [0, gen('bCox441vUWqHUTpIQWCd9HMjYG88K6YX8xm')];
+sD[136] = [0, gen('eSR3fCYceHAaaY9ewF6agdEel0')];
+sD[137] = [0, gen('biopp2wcpAFI1Ynw0q98vB6ZFW')];
+sD[138] = [0, gen('fi1+biYsBBW3W4w2F0pwCp9h9Cl0')];
+sD[139] = reverse(sD[133]);
+sD[140] = reverse(sD[134]);
+sD[141] = [0, gen('kSYxmNQ1oJUv96YVW0')];
+sD[64] = [0, gen('XjAXFFWuwCnALOjJDdia956JKmMF+0')];
+sD[65] = reverse(sD[64]);
+sD[67] = [0, gen('eJ69XOC9imaJYuHqSMJhvOeay0')];
+sD[68] = reverse(sD[67], 6);
+sD[69] = [2, gen('biN3tGQLpGRL1XGn362u0Ru')];
+sD[70] = reverse(sD[69]);
+sD[71] = [2, gen('eyNNOENLU4po0kTUnWmD06iqmV9n-W')];
+sD[72] = reverse(sD[71]);
+sD[73] = [2, gen('fyIxsGnV02ZHHOSEhMeviFB+')];
+sD[74] = reverse(sD[73]);
+sD[75] = [0, gen('Zicd4jPFD2igm8gLJCOEh4PqGe0cGRjw6RU0')];
+sD[76] = reverse(sD[75]);
+sD[77] = [0, gen('iyP5jieb9MUT95ZX55u')];
+sD[78] = [0, gen('iyR3jiwJnWGcZiyiWG4aGiw4y0')];
+sD[81] = [0, gen('ZC66nWR82ioAq0hM1ja8tOGl1arSiHG+')];
+sD[82] = [0, gen('ZC2A5ZCWAp8hG2jM6s0JS28CcgbYA7m')];
+sD[85] = [0, gen('di4anaJS1095cFNpeCdu')];
+sD[86] = reverse(sD[85]);
+sD[91] = [0, gen('Zi0snR9KoTh1frgEJFYwzl6aHI9MLMjctW')];
+sD[92] = [0, gen('Zi0snKB68b31IvPl0grg6F3qw+D8YbIGhu0')];
+sD[97] = [0, gen('Zyip3qUy2AsRUM7U')];
+sD[98] = reverse(sD[97]);
+sfx=[bu(.1,[[.5,.1,800,0,4100,.5]]),bu(.8,[[.1,.1,400,0,400,1]]),bu(.6,[[.05,.1,460,0,460,0],[.05,.1,440,0,440,0]]),bu(.6,[[.5,.1,460,0,460,0],[.3,.1,460,0,460,0],[.2,.1,540,0,540,0]]),bu(.2,[[.5,.1,300,0,100,0],[.5,.1,300,0,105,0]]),bu(.5,[[.5,.1,300,0,100,.08]]),bu(.5,[[.3,.1,800,0,400,.0]]),bu(.2,[[.5,.5,600,1,900,.02]]),bu(.2,[[.5,.6,900,1,600,.02]]),bu(.5,[[.8,.1,240,0,100,0],]),bu(.6,[[.5,.8,300,0,100,0],]),bu(1,[[.5,.3,300,0,300,.4]]),bu(.5,[[.5,.3,200,.6,600,.4]]),bu(.2,[[.2,0,100,.6,100,.1]]),bu(3,[[.2,.05,440,0,440,0],[.2,.05,440,0,523.25,0],[.2,.05,440,0,659.25,0],[.2,.05,440,0,880,0]]),bu(5,[[.2,.5,440,0,440,0],[.2,.5,554.37,0,554.37,0],[.2,.5,659.25,0,659.25,0],[.2,.5,880,0,880,0]])];
+
+attract();
+
+setInterval(tick, 31);
+init();
+
+
+render();
+
+</script>
+</body>
+</html>

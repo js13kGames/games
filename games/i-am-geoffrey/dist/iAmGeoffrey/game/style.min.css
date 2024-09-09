@@ -1,0 +1,1 @@
+body{background-color:#000;font-family:monospace;margin:0;padding:0;overflow-x:hidden;overflow-y:hidden;color:#bbb}#tl,#tr{text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;position:absolute;width:100%;color:#fff;font-family:monospace;font-weight:bolder;top:0;font-size:1.2em}#tr{text-align:right}#tl{text-align:left}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Coler</title>
+  <link rel="icon" href="data:;base64,iVBORwOKGO=" />
+  <style>
+   html, body {
+       width: 100%;
+       height: 100%;
+       padding: 0px;
+       margin: 0px;
+   }
+   section {
+       width: 100%;
+       height: 100%;
+       background: #202020;
+   }
+   #app {
+       margin: auto;
+       width: 98vw;
+       height: 98vh;
+   }
+   #app canvas {
+       image-rendering: pixelated;
+       image-rendering: crisp-edges;
+       display: block;
+       padding: 0;
+       margin: auto;
+   }
+  </style>
+<script type="text/javascript" src="bundle.js"></script></head>
+<body>
+  <section>
+    <div id="app"></div>
+  </section>
+  <script>
+   Tetris(document.getElementById('app'), {});
+  </script>
+</body>
+</html>

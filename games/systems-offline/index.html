@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>Systems Offline - dhmstark</title>
+<meta charset='utf-8'>
+<!--<meta property="og:image" content="offlineogimage.png">-->
+<style>
+*{
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	-o-user-select: none;
+	user-select: none;
+}
+body{
+    background-color:#151515;
+    color:white;
+	font-family: 'fixedsys', monospace;
+	letter-spacing:4px;
+}
+h1, h2{
+    font-weight:normal;
+}
+p{
+	margin-bottom: 0;
+}
+#container{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+<script src="tinymusic.min.js"></script>
+<script src="font.min.js"></script>
+</head>
+<body>
+<div id="container">
+	<h1>Systems Offline</h1>
+    <div id="canvasContainer"></div>
+	<h2>@dhmstark - JS13K 2018</h2>
+	<p>Click adjacent hex to move.</p>
+	<p>Click current hex to rotate</p>
+</div>
+<script src="main.min.js"></script>
+</body>
+</html>

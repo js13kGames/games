@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        body {
+            margin: 0 auto;
+            text-align: center;
+        }
+        canvas {
+            background: #eceff1;
+            border: 1px solid #000;
+        }
+        button {
+            background: #fff;
+            border: 0;
+            color: #000;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            height: 100px;
+            width: 200px;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        .intro {
+            margin: 10% auto;
+            font-size: 20px;
+            color: #fff;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.85);
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+        </style>
+    </head>
+    <body id="container">
+        <div class="overlay" id="olay">
+            <div class="intro">
+                <div id="intro-txt">
+                    <h1> SunBurn</h1>
+                    <p> 20,000 AD</p>
+                    <p> Earth is now radio active . . . The heat burns you as you walk this land . .  </p>
+                    <p> Watch out for the fireballs . . Use your powers [ spacebar ;)  ] to glitch into the shadow world to cool down and heal </p>
+                    <p> Be careful though . . Time is unstable in the nether realm !
+                </div>
+                <button id="start">Start</button>
+            </div>
+        </div>
+        <canvas id="js13kCanvas"></canvas>
+        <script src="games.js"></script>
+    </body>
+</html>

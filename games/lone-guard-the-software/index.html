@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Lone Guard</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</head>
+	
+	<body>
+		<link rel="stylesheet" type="text/css" href="game.css" />
+		
+		<!--Home-->
+		<div id="home">
+			<h2 id="title">Lone Guard</h2>
+			<div id="details">
+
+				<h4 id="story">Story</h4>
+				<p>There has been reports of angry glitch-causing viruses, rampaging through places in devices and computers. You play the role of a new batch of antivirus software, Lone Guard, intended to combat and defeat these viruses, as well as win the hearts of victims.</p>
+
+				<h4 id="obj">Objective</h4>
+				<p>Destroy every virus found in customers' devices and try to survive. Shoot projectiles at viruses, earn cash rewards and buy Bytes in the Shop.</p>
+
+				<h4 id="ctrls">Navigation/Controls</h4>
+				<p>Click/Touch anywhere in the game area to move. To kill viruses and/or shoot, <span id="btnShoot"></span>.</p>
+
+				<h4 id="ents">Game Entities</h4>
+				<p>The antiviruses are the white circles (you), while the viruses are red. Viruses smartness increase as your level increases.</p>
+
+				<h4 id="bytes">Bytes</h4>
+				<p>Bytes can only be used if you have bought them already in the shop. To use them, you are to move to their respective trigger points, and stay there for about 3 seconds. You can identify a hotspot by the letter in it.</p>
+				<p> - Recharge: you receive an extra life. Upper-left and right corners.</p>
+				<p> - Backup: 1 or 2 antiviruses join you to battle. Lower-left and right corners.</p>
+				<p> - Destroy: all viruses present are destroyed, with the exception of certain ones. Center area.</p>
+
+			</div>
+
+			<div id="credits">
+				<h3>Credits</h3>
+				<p>All credits go to the developer, John Afolayan.</p>
+			</div>
+
+			<div id="play">Play The Game</div>
+		</div>
+
+		<!--Main Game Screen-->
+		<div id="gameArea">
+			<canvas id="g" width="700" height="500"></canvas>
+			<canvas id="u" width="700" height="500"></canvas>
+		</div>
+		
+		<script type="text/javascript" src="loneguard.min.js"></script>
+	</body>
+</html>

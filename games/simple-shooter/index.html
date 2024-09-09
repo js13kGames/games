@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>Simple Shooter</title>
+	<style>
+  html,body{width:100%;height:100%;background-color:#111;font-family:Helvetica, sans-serif;margin:0;padding:0}
+  canvas{display:block}
+  #stage-message{position:absolute;top:48%;background-color:rgba(0,0,0,.7);border-radius:10px;text-align:center;width:50%;left:50%;margin-left:-25%;color:#fff;opacity:0;-webkit-transition:all .3s ease-out;-moz-transition:all .3s ease-out;-o-transition:all .3s ease-out;transition:all .3s ease-out}
+  #live-cont{color:#FFF;position:absolute;right:10px;top:10px}
+  #score-cont{color:#FFF;position:absolute;left:10px;top:25px}
+  #bomb-cont{color:#FFF;position:absolute;right:80px;top:8px}
+  .heart{color:#fc4758;font-size:1.5em}
+  .bomb{color:#de7545;font-size:2em}
+  #overlay{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.7);display:none;text-align:center;z-index:10}
+  #paused,#game-over{margin-top:22%;color:#fff}
+  #home{margin-top:15%;color:#fff}
+  #howto{margin-top:5%;color:#fff}
+  ul{list-style:none}
+  ul li{margin:5px 0}
+  #home h1{font-size:4em}
+  .hidden{display:none}
+  #play,#how{display:inline-block;height:20px;width:140px;font-size:1.2em;text-transform:uppercase;margin:10px 0}
+  #play:hover,#how:hover,#again:hover,#back:hover{color:#49a6b6}
+  .shield-power,.bomb-power{margin-right:30px;width:20px;height:20px;display:inline-block;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px}
+  .shield-power{background-color:#49a6b6;margin-right:65px}
+  .bomb-power{background-color:#de7545}
+  *{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+  #back,#again,#play,#how{cursor:pointer}
+	</style>
+</head>
+<body>
+	<div id="overlay">
+		<div id="paused" class="hidden">
+			<h1>PAUSED</h1>
+		</div>
+		<div id="game-over" class="hidden">
+			<h1 id="game-over-text">GAME OVER</h1>
+			<span id="again">play again?</span>
+		</div>
+		<div id="howto" class="hidden">
+		  <h1>How to play</h1>
+		  <h2>Controls:</h2>
+		  <ul>
+		    <li>S(hold) - shield : This depletes over time, deactivate shield to recharge</li>
+		    <li>D - bomb : Creates a large blast that damages all enemies that touch it, only one bomb can be activated at a time</li>
+		    <li>CLICK(mouse) - shoot : Your primary weapon against your enemies, aim with the mouse and fire by clicking</li>
+		    <li>CLICK+HOLD(mouse) - charge shot : Holding down the mouse button will charge your shot, your player will change color when it fully charged</li>
+		    <li>SPACE - pause : Toggle pause</li>
+		  </ul>
+		  <h2>Powerups:</h2>
+		  <ul>
+		    <li><span class="shield-power"></span> : Adds power to your shield</li>
+		    <li><span class="bomb-power"></span> : Adds one bomb to your arsenal</li>
+		  </ul>
+		  <span id="back">back</span>
+		</div>
+		<div id="home" class="hidden">
+			<h1>SIMPLE SHOOTER</h1>
+			<span id="play">play</span>
+			<span id="how">how to play</span>
+		</div>
+	</div>
+	<div id="live-cont">
+		<span class="heart">&hearts;</span> x <span id="lives"></span>
+	</div>
+	<div id="bomb-cont">
+		<span class="bomb">&oplus;</span> x <span id="bombs">2</span>
+	</div>
+	<div id="score-cont">
+		Score: <span id="score">00</span>
+	</div>
+	<div id="stage-message">
+		Stage <span id="stage">1</span>
+	</div>
+	<canvas id="canvas"></canvas>
+	<script src="utils.js"></script>
+	<script src="objects.js"></script>
+	<script src="game.js"></script>
+</body>
+</html>

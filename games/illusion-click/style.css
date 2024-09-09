@@ -1,0 +1,90 @@
+body
+{
+    background-color: black;
+}
+
+#a {
+border : 3px solid grey;
+padding:40;
+background-color: black;
+
+}
+.padding-0
+{
+    padding-right:0;
+    padding-left:0;
+    padding-top:0;
+    padding-bottom:0;
+}
+
+@keyframes change
+{
+    0%
+    {
+        color:#9A2617;
+    }
+    10%
+    {
+color:#CD594A;
+    }
+    20%
+    {
+color:#C2571A;
+    }
+    30%
+    {
+color:#F58B4C;
+    }
+    40%
+    {
+color:#107896;
+    }
+    50%
+    {
+color:#43ABC9;
+    }
+    60%
+    {
+color:#0C374D;
+    }
+    70%
+    {
+color:#3C6478;
+    }
+    80%
+    {
+color:#BCA136;
+    }
+    90%
+    {
+color:#EFD469;
+    }
+    100%
+    {
+color:#F58B4C;
+    }
+
+}
+#namespace
+{
+    position: absolute;
+    top:3%;
+    left:89%;
+    font-size: 20;
+    animation:change 5s infinite;
+
+}
+@keyframes bounce
+{
+    0%
+    {
+        transform:scale(1);
+    }
+    40%
+    {
+        transform:scale(2.8);
+    }
+}
+.fb {
+    animation : bounce 1s infinite;
+}

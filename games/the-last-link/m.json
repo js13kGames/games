@@ -1,0 +1,16 @@
+{
+  "short_name": "The last link",
+  "name": "The last link",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#fff",
+  "background_color": "#fff",
+  "orientation": "portrait"
+}

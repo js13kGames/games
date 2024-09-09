@@ -1,0 +1,16 @@
+{
+  "name": "Jet Back Gravity",
+  "description": "Controls : Left + Right + Up or Space. Or Mouse or Touch (it's even friendlier).\n
+  Contol the ship inside the planet's gravity field by pointing it's propulsion engine.\n
+  Destroy the approaching asteroids with the engine jet. Don't let the aseroids hit a Planet.\n",
+  "images" : {
+    "image_large": "screenshots/img-big.png",
+    "image_thumbnail": "screenshots/img-small.png"
+  },
+  "categories": ["Desktop", "Mobile"],
+  "user" : {
+    "name": "Dmytro Kozhukhar",
+    "website": "dkozhukhar.github.io",
+    "twitter": "none"
+  }
+}

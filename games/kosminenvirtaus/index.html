@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>JS13k 2021</title>
+
+        <style type="text/css">
+            body { 
+                margin: 0;
+                overflow: hidden;
+                padding: 0;
+                background-color: black;
+            }
+            #canvasgl {
+                position: absolute;
+            }
+            #canvas2d {
+                position: absolute;
+            }
+            div {
+                color: white;
+                padding-left: 16px;
+                padding-top: 16px;
+                position: absolute;
+            }
+        </style>
+    <body>
+        <div id="hello">
+            Kosminenvirtaus
+            <br/><br/>How to play: Move your mouse to control direction.
+            <br/>Follow the path of blue particles, avoid red particles.
+            <br/>Blue particles increase your energy (and speed), red particles decrease it, don't lose all your energy.
+            <br/>To change graphics settings, press 1, 2, 3 or 4.
+            <br/><br/>Click screen to start
+        </div>
+        <canvas id="canvasgl" width="1280" height="700"></canvas>
+        <canvas id="canvas2d" width="1280" height="700"></canvas>
+        <div id="debug_div"></div>
+        <script src="bundle.js"></script>
+    </body>
+</html>

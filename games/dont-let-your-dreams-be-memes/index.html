@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset=utf8>
+        <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>A-Frame</title>
+        <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+        <script src=components.js></script>
+    </head>
+    <body>
+        <a-scene program="canvas-screen">
+            <a-assets>
+                <canvas id="canvas-wall" width="512" height="512" crossorigin="anonymous"></canvas>
+                <canvas id="canvas-button" width="256" height="128" crossorigin="anonymous"></canvas>
+                <canvas id="canvas-screen" width="800" height="450" crossorigin="anonymous"></canvas>
+                <canvas id="canvas-reel" width="200" height="1600" crossorigin="anonymous"></canvas>
+            </a-assets>
+
+            <a-camera wasd-controls-enabled="false">
+                <a-entity id="pointer" geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015; thetaLength: 0"
+                    position="0 0 -1" rotation="0 0 90" material="color: black; opacity: 0.5; shader: flat"
+                    cursor="fuse: true; fuseTimeout: 600" raycaster="far: 64; objects: .clickable" cursor-defuse>
+                    <a-entity geometry="primitive: circle; radius: 0.005" position="0 0 0"
+                        material="color: black; opacity: 0.5; shader: flat"></a-entity>
+                    <a-animation begin="cursor-fusing" easing="ease-out-sine" attribute="geometry.thetaLength"
+                        fill="backwards" from="360" to="0" dur="600"></a-animation>
+                </a-entity>
+            </a-camera>
+
+            <a-plane rotation="-90 0 0" width="4" height="4" color="#fdf4e3" metalness="0.32" roughness="0.24"></a-plane>
+            <a-plane position="0 6 0" rotation="90 0 0" width="4" height="4" color="#fdf4e3"></a-plane>
+
+            <a-entity geometry="primitive: plane; width: 4; height: 6" position="0 3 -2"
+                material="src: #canvas-wall" canvas-paint-wall="canvas-wall"></a-entity>
+            <a-entity geometry="primitive: plane; width: 4; height: 6" position="2 3 0" rotation="0 -90 0"
+                material="src: #canvas-wall" canvas-paint-wall="canvas-wall"></a-entity>
+            <a-entity geometry="primitive: plane; width: 4; height: 6" position="-2 3 0" rotation="0 90 0"
+                material="src: #canvas-wall" canvas-paint-wall="canvas-wall"></a-entity>
+            <a-entity geometry="primitive: plane; width: 4; height: 6" position="0 3 2" rotation="0 180 0"
+                material="src: #canvas-wall" canvas-paint-wall="canvas-wall"></a-entity>
+
+            <a-entity geometry="primitive: plane; width: 2; height: 1.125" position="0 1.48 -1.9" rotation="-5 0 0"
+                material="src: #canvas-screen; metalness: 0.1">
+                <a-entity id="insert-coin" geometry="primitive: plane; width: 0.5; height: 0.25" position="0 -0.4 0.2"
+                    material="src: #canvas-button" canvas-paint-button="canvas-button" class="clickable">
+                    <a-animation begin="click" easing="ease-in-out" attribute="position"
+                        from="0 -0.4 0.2" to="0 -0.4 0.15" direction="alternate" repeat=1 dur="100"></a-animation>
+                </a-entity>
+            </a-entity>
+
+            <a-light type="ambient" color="#808080"></a-light>
+            <a-light type="point" color="#fff" intensity="0.69" position="0 4 0"></a-light>
+        </a-scene>
+    </body>
+</html>

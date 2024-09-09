@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+		<title>space capture</title>
+		<link rel='stylesheet' href='main.css' />
+		<!--<script src="../src/main.js" type="module"></script>-->
+		<script src="./bundle.js"></script>
+		<script>
+		window.addEventListener('DOMContentLoaded', (event) => {
+		});
+		</script>
+	</head>
+	<body>
+		<div id="intro">
+			<h1>space capture</h1>
+			<ul>
+				<li><a id="mode_player">2 Player mode</a></li>
+				<li><a id="mode_com_hard">Computer mode</a></li>
+			</ul>
+		</div>
+		<svg id="board" width="296" height="296"></svg>
+		<div id="info">
+			<div id="player1">
+				<div class="arrow current">
+					<h2>&gt;</h2>
+				</div>
+				<div>
+					<h2>Player 1</h2>
+					<p class="spaces">Spaces: <span>0</span></p>
+				</div>
+			</div>
+			<div id="player2">
+				<div class="arrow">
+					<h2>&gt;</h2>
+				</div>
+				<div>
+					<h2>Player 2</h2>
+					<p class="spaces">Spaces: <span>0</span></p>
+				</div>
+			</div>
+			<div id="msg">
+				<p>Click on the bar!</p>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>flip-flop</title>
+  <meta name="author" content="Frank Mitchell" />
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="stylesheet" media="screen, handheld" href="css/game.min.css" />
+</head>
+<body>
+<div class="bench">
+<div class="workspace">
+
+<div class="pcb unselectable">
+  <div id="fab"></div>
+  <div class="controls">
+    <div id="power" class="button"></div>
+    <div class="counters">
+      <div class="indicators">
+        <span id="count-8" class="led off"></span>
+        <span id="count-4" class="led off"></span>
+        <span id="count-2" class="led off"></span>
+        <span id="count-1" class="led off"></span>
+      </div>
+      <div id="score" class="lcd"></div>
+    </div>
+    <div id="reset" class="button"></div>
+  </div>
+  <div id="shout" class="overlay"></div>
+</div>
+
+<div id="tray" class="unselectable tray">
+  <p id="chip0" class="ic"></p>
+  <p id="chip1" class="ic"></p>
+  <p id="chip2" class="ic"></p>
+</div>
+
+<div id="finals" class="unselectable tray hidden">
+  <a id="tweetGame" class="ic" href="https://twitter.com" title="Share your score on Twitter">
+    <div class="dip">
+      <div class="pins">
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+      </div>
+      <div class="chip">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABaUlEQVQ4y2NgGBygcZMAXrnGTf1AvB+I5wOxApKcAogwYGzZdgGrIUAxsNzMK/8ZFt7/zzDnxn/Gtl0foAae5+/dF8ogP/2oJ8OSx/+BCh+ADEPWz9K2vQgkx7DmHQKvfPUfZCDz0sefeCafWM7gt/6KHlhi+fP/DJ17/yM7U3LexT4UzUhYfdvblf///9dgEJtwwE1r18fVcEmgMxnadoEMus8y4+JjXAYAgQrYmWZLztmC/YiuCOQiEMaimW/j+9twfwJN4kFxARFYecPzZSiBXXv6pb3x3o8LWNa++0yMASD1KAb4rT4vzj7z4lVwCBPQrLj9w3agqzlQDAAKsACxifeRzx0gBbg0g/y+6eFnU1wpzkBs1rketnk3n+DSfODlD0eQZegaG4D4PTgNTLuAEfKgcAGFD3bNEOcrHHvzyyPq5JcakEKpLR8Og7wBYoPEQHIgNVg1o4WBCFShDiiFQdkieDUCAQDllKJMKv363gAAAABJRU5ErkJggg==" height="16px" width="16px" alt="Twitter Bird" title="Twitter Bird" />
+      </div>
+      <div class="pins">
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+      </div>
+    </div>
+  </a>
+  <a id="linkGame" class="ic" href="https://github.com/onefrankguy/flip-flop" title="Frank Mitchell (GitHub): flip-flop">
+    <div class="dip">
+      <div class="pins">
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+      </div>
+      <div class="chip">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAA4UlEQVQoFQXBvUpCAQAG0FMSXoe2IAiiF7DELQia2nqL6E1sDhzUS7g2hW8QUS0NQVBDolNNDa2BP+X9OgeAttLUwsLEQAsAaBiKiIiISqkAaHgUEREREXGvAIbiyblXSx8+/Xpx5lkMoC2ii5o6qKuhLyotShGXAAC6InpMxco2AIAdlRizEF8AAOBbzFmKH2sAAGrmYs5UxDEAgBMRY0oR73YBwJ6JiB5tlY6RmRtN0DYyE1E5gCt/Dl27tQm2RET0gcKDN6eOABsi4k4BUChVAqiLlZ46ALCvA1h3oQnwD/jZbQoyc5DcAAAAAElFTkSuQmCC" height="16px" width="16px" alt="GitHub Octocat" title="GitHub Octocat" />
+      </div>
+      <div class="pins">
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+        <span class="pin"></span>
+      </div>
+    </div>
+  </a>
+</div>
+
+</div>
+<div class="note">
+  <h3>Installing Chips</h3>
+  <ol>
+    <li>Pick an empty spot on the board.</li>
+    <li>Pick a chip to install.</li>
+    <li>Every fourth chip scores!</li>
+  </ol>
+</div>
+
+<div class="note">
+  <h3>Reminders</h3>
+  <p>Glitchy chips may change when installed.</p>
+  <p>Higher number chips are less glitchy.</p>
+  <p>Reset is glitched! Hold until light blinks.</p>
+  <p>Hold power to swap LEDs for letters.</p>
+</div>
+
+<p class="colophon">Design <abbr title="and">&amp;</abbr> dev by <a href="https://www.frankmitchell.org/" title="retrofuturist decker and ice cream piggy">Frank Mitchell</a> for <a href="http://js13kgames.com/" title="Andrzej Mazur (Enclave Games): HTML5 and JavaScript game development competition in just 13 kB">js13kGames</a>. <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" title="Creative Commons - Attribution-NonCommercial-ShareAlike 3.0 Unported">CC BY-NC-SA 3.0</a><br />A glitchy twist on P.D. Magnus and Jack Neal&rsquo;s <a href="http://wiki.decktet.com/game:jacynth" title="P.D. Magnus and Jack Neal (The Decktet Wiki): Jacynth"><em>Jacynth</em></a></p>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+	<title>My 13k Game</title>
+	<link rel="stylesheet" href="gamestyles.css" />
+	<link rel="stylesheet" href="fontstyles.css" />
+	<!--link rel="stylesheet" href="canvasstyles.css" /-->
+  </head>
+  <body>
+    <div id="game">
+      <div class="screen" id="introScreen">
+	    <h1 class="logo">Reversed Ice Throwers</h1>
+		<span id="play">Play</span>
+		<p>Avoid all ice falling up and down, and goal is to reach the door.</p>
+		<!-- I'm no expert, but, a game without images was a little bit more tricky to pull-off 
+			but, it was sure fun. No tricky JavaScript code, as JavaScript itself is tricky enough.
+			But, I'm still learning, soo... thanks for this opportunity. -->
+	  </div>
+	  <div class="screen" id="gameScreen">
+	    <canvas id="gameCanvas" width="800" height="600"></canvas>
+	  </div>
+	</div>
+	<script src="gamescripts.js"></script>
+  </body>
+</html>

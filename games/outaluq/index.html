@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title></title>
+    <script src="http://192.168.4.115:8080/socket.io/socket.io.js"></script>
+    <script src="keydrown.js"></script>
+    <script src="store.js"></script>
+    <script src="gamesounds.js"></script>
+	<style>
+		table{width:1000px;}
+		td{padding:20px;color:black;background:#cccccc;text-align:center;}
+	</style>
+</head>
+<body style="background: #2b2b2b;">
+<div id="wrap" style="position: relative;">
+    <div style="width: 1000px; height: 500px; position: absolute; top: 0; left: 0; z-index: -1; overflow: hidden;">
+        <canvas width="5000" height="5000" id="canvas0" style="position: absolute;"></canvas>
+    </div>
+    <canvas width="1000" height="500" id="canvas1" style="float: left; background: transparent;"></canvas>
+    <span id="data" style="font-family: courier; font-size: 12px; color: white;"></span>
+    <span id="theirdata" style="font-family: courier; font-size: 12px; color: white;"></span>
+	<div style="clear: both;">
+		<table style="width: 1000px;">
+			<tr>
+				<td id="i1">?</td>
+				<td id="i2">?</td>
+				<td id="i3">?</td>
+				<td id="i4">?</td>
+				<td id="i5">?</td>
+				<td id="i6">?</td>
+				<td id="i7">?</td>
+				<td id="i8">?</td>
+				<td id="i9">?</td>
+				<td id="i10">?</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<script src="shape.js"></script>
+<script src="ship.js"></script>
+<script src="player.js"></script>
+<script>
+    // TODO: collision detection strategy - http://jsfiddle.net/DV9Bw/1/     http://stackoverflow.com/questions/6735470/get-pixel-color-from-canvas-on-mouseover
+
+    // Global vars used throughout the game
+    var canvas;
+    var ctx;
+    var playerPosX;
+    var playerPosY;
+    var triangleSideLength = 20;
+    var playerColour = '#ff0000';
+    var moveRate = 0;
+    var moveSteps = 5;
+    var moveAngle = 0;
+    var angleSteps = 5;
+    var keys = {};
+    var player;
+    var pulses = [];
+    var mapOffsetX = 0;
+    var mapOffsetY = 0;
+    var playerMapPosition;
+    var friction = 10;
+    var map = {};
+    map.width = 5000;
+    map.height = 5000;
+    var players = {};
+    var mapArray = [];
+    var startTime = Date.now();
+    var lastScoreDisplayedTime = 0;
+    var lastScoreDisplayed;
+    var luck = 100;
+    var socketId;
+    var socket = io.connect('http://192.168.4.115:8080'),
+            username;
+    var people;
+    var worldItems = [];
+    var colourCollisionRange = 4;
+    var ded = false;
+    var globalScoreThatJarredWillNeedToRefactor;
+    var items = [];
+    var myItems = [];
+    var gs;
+	gs = new GameSounds({
+                shipSound: {wave:0,freq:{points:[[0,114,1]]},vol:{points:[[0,5,1]]},mod:{wave:0,freq:26,gain:11}},
+                itemPickup: {wave:1,duration:0.9,freq:{points:[[0,646,1],[0.1,342,1],[0.4,304,1]]},vol:{points:[[0,0,1],[0.1,0.68,1],[0.2,0.76,1],[0.3,0.6,1],[0.5,0.48,1],[0.6,0.68,1],[0.9,0,1]]},mod:{wave:1,freq:43,gain:41}},
+                itemSpawn:{wave:0,duration:0.5,freq:{points:[[0,114,1],[0.2,646,1],[0.3,380,1]]},vol:{points:[[0,0,1],[0.1,0.6,1],[0.5,0,1]]},mod:{wave:0,freq:51,gain:51}},
+                pulse: {wave:0,duration:2.6,freq:{points:[[0,114,1],[0.1,646,1],[0.2,456,1],[0.5,760,1],[1.5,646,1],[2.4,266,1],[2.5,0,1]]},vol:{points:[[0,0,1],[0.1,0.6,1],[0.5,0.12,1],[0.6,0.4,1],[2.6,0,1]]},mod:{wave:2,freq:49,gain:78}},
+                speedBoostUp: {wave:0,duration:1.8,freq:{points:[[0,76,1],[0.4,114,1],[0.8,228,1],[1,380,1],[1.1,494,1]]},vol:{points:[[0,0.56,1],[0.7,0.64,1],[1.3,0.84,1],[1.8,0,1]]},mod:{wave:1,freq:43,gain:41}},
+                speedBoostDown: {wave:0,duration:1.1,freq:{points:[[0,456,1],[0.4,418,1],[0.8,304,1],[1,190,1],[1.1,0,1]]},vol:{points:[[0,0.56,1],[0.7,0.64,1],[1.1,0,1]]},mod:{wave:1,freq:43,gain:41}},
+                invisibilityOn: {wave:1,duration:1.6,freq:{points:[[0,608,1],[0.1,646,1],[0.4,494,1],[0.8,456,1],[0.9,456,1],[1.5,380,1]]},vol:{points:[[0,0,1],[0.8,0.6,1],[1.6,0,1]]},mod:{wave:2,freq:22,gain:69}},
+                invisibilityOff: {wave:1,duration:1.6,freq:{points:[[0,380,1],[0.4,494,1],[0.8,456,1],[0.9,456,1],[1.2,494,1],[1.5,646,1]]},vol:{points:[[0,0,1],[0.8,0.6,1],[1.6,0,1]]},mod:{wave:2,freq:22,gain:69}},
+                wallHit:{wave:1,duration:0.1,freq:{points:[[0,0,1]]},vol:{points:[[0,0.68,1],[0.1,0.68,1]]},mod:{wave:1,freq:43,gain:41}},
+                ded: {wave:1,duration:1.4,freq:{points:[[0,228,1],[0.5,228,1],[0.7,152,1],[1.4,114,1]]},vol:{points:[[0,0,1],[0.1,0.4,1],[0.2,0.4,1],[0.4,0,1],[0.6,0,1],[0.7,0.24,1],[0.9,0.24,1],[1.4,0,1]]},mod:{wave:0,freq:22,gain:89}},
+                siren: {wave:3,freq:{points:[[0,700,1]]},vol:{points:[[0,5,1]]},mod:{wave:3,freq:2,gain:100}}
+            });
+
+            gs.setVolume(100);
+    var temp;
+
+    // second canvas stuff
+    var canvas0;
+    var ctx0;
+
+    socket.on('connect', function () {
+        if (!store.get('username')) {
+            username = prompt('What is your username?');
+            store.set('username', username);
+        } else {
+            username = store.get('username');
+        }
+
+        var loginObject = {
+            username: username,
+            socketId: socketId,
+            version: '0.0.1'
+        }
+
+        socket.emit('connect', loginObject);
+    });
+
+    socket.on('updateOtherPlayers', function (data) {
+    //                log(data);
+        switch (data.type) {
+            case 'moved' :
+                players[data.socketId].updateCoords(data.data.coords.x, data.data.coords.y, data.data.direction);
+                break;
+            case 'luckUpdate' :
+                players[data.socketId].updatePlayerState(data, false);
+                break;
+            case 'disconnected' :
+                delete players[data.socketId];
+                break;
+            case 'playerJoined' :
+                players[data.socketId] = new Player(data.data.coords.x, data.data.coords.y, data.data.colour, data.data.socketId, data.data.direction, data.data.username, data.data.luck, {});
+                break;
+            case 'dead' :
+                gs.get('ded').vol(0.5).at(players[socketId].x,players[socketId].y).fire();
+                delete players[data.socketId];
+                break;
+        }
+
+    });
+
+    function addWorldItem(type, colour) {
+
+        worldItems.push({
+            type: type,
+            colour: colour.split(',')
+        });
+
+        return worldItems.length;
+
+    }
+
+    function removeWorldItem(pos) {
+        worldItems = worldItems.splice(pos, 1);
+    }
+    socket.on('worldEvents', function (data) {
+        switch (data.type) {
+            case 'pulse' :
+                var pos = addWorldItem(data.type, data.data.colour);
+                pulses.push(new Pulse(data.data.mapX, data.data.mapY, data.data.colour, function () {
+                    removeWorldItem(pos);
+                }));
+                    gs.get('pulse').at(data.data.mapX,data.data.mapY).fire();
+                break;
+        }
+    });
+
+    socket.on('updateItems', function (data) {
+        log('yo got items dawg');
+        //@todo point to player object
+        items = data;
+    });
+
+
+    // update player
+    socket.on('updatePlayer', function (data) {
+        //@todo point to player object and handle there
+        // Cody is sending through a type which we'll see what we need to do with it
+        switch (data.type) {
+            case 'initialise' :
+                initialise(data);
+                break;
+            case 'luckUpdate' :
+                players[data.socketId].updatePlayerState(data, true);
+                break;
+            case 'updateInventory' :
+                myItems = data.data;
+                break;
+            case 'dead' :
+                players[data.socketId].kill(); //@todo make active player separate
+                // TODO: reset score to 0
+                // Show a screen with scores and show a button that has 'Retry'
+                break;
+            case 'map':
+                log(data);
+                data.data.map.forEach(function(row, i) {
+                    row.forEach(function(col, j) {
+                        if(col) {
+                            drawBlock(j, i, data.data.width, data.data.colour);
+                        }
+                    });
+                });
+                break;
+            case 'itemUsed':
+                var tmp = '';
+                for(key in data.data.effect) {
+                    tmp = eval(key);
+                    eval(key + '= data.data.effect[key]');
+                };
+                setTimeout(function() {
+                    eval(key + ' = ' + tmp);
+                }, data.data.duration * 1000);
+                break;
+        }
+
+    });
+
+    function initialise(data) {
+        socketId = data.socketId;
+        people = data.data;
+        for (var key in people) {
+            if (!people.hasOwnProperty(key)) {
+                continue;
+            }
+
+            var p = people[key];
+            if (key == socketId) {
+                mapOffsetX = people[key].coords.vpx;
+                mapOffsetY = people[key].coords.vpy;
+                p.coords.x += people[key].coords.vpx;
+                p.coords.y += people[key].coords.vpy;
+            }
+            //log('socketId: ' + key);
+            //@todo init active player
+            
+            players[key] = new Player(p.coords.x, p.coords.y, p.colour, key, p.direction, p.username, p.luck, {});
+
+        }
+    }
+
+    /**
+     * This is now used instead of setInterval();
+     * It basically calls a function when it's ready, giving the browser time to catch
+     * up if it's lagging behind. Before, with setInterval it would call a function before
+     * it was ready to.
+     */
+    var requestAnimationFrame;
+    (function () {
+        requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        window.requestAnimationFrame = requestAnimationFrame;
+    })();
+
+    /**
+     * Standard initialising function
+     * Sets up the canvas context, player position and
+     * creates that player.
+     *
+     * Starts the update function which begins the game
+     */
+    function init() {
+
+        // top canvas
+        canvas = document.getElementById('canvas1');
+        ctx = canvas.getContext('2d');
+
+        // background canvas
+        canvas0 = document.getElementById('canvas0');
+        ctx0 = canvas0.getContext('2d');
+
+        playerPosX = canvas.width / 2;
+        playerPosY = canvas.height / 2;
+
+        // play the music
+        //gameMusic.play();
+        // when the browser is ready, we'll send it to update()
+        requestAnimationFrame(update);
+    }
+
+    /**
+     * This is called every animation frame, checks for new players
+     * If there are, it will add them to the players array and
+     * render will draw them
+     */
+    function update() {
+        render();
+        // once it has been display, display it again if when it's ready
+        requestAnimationFrame(update);
+    }
+
+
+    function findObjectICollidedWith(coloursArray) {
+        // loop through each worldItems array and check for the 3 matching colour values within a range of 4 either side
+        for (var i = 0; i < worldItems.length; i++) {
+            if (
+                    (coloursArray[0] < worldItems[i].colour[0] + colourCollisionRange && coloursArray[0] > worldItems[i].colour[0] - colourCollisionRange) &&
+                            (coloursArray[1] < worldItems[i].colour[1] + colourCollisionRange && coloursArray[1] > worldItems[i].colour[1] - colourCollisionRange) &&
+                            (coloursArray[2] < worldItems[i].colour[2] + colourCollisionRange && coloursArray[2] > worldItems[i].colour[2] - colourCollisionRange)
+                    ) {
+                // we have a hit
+                return worldItems[i];
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Player object
+     * This will create the other players in the world
+     * The name and positions will be sent through from Cody's server
+     */
+
+    //@todo create "world" class
+    function Pulse(px, py, colour, cb) {
+        var pulse = {
+            transparency: 0.8,
+            lineWidth: 2,
+            myx: 2,
+            px: px,
+            py: py,
+            colour: colour,
+            draw: function () {
+                var lw = ctx.lineWidth;
+                var ss = ctx.strokeStyle;
+                var fs = ctx.fillStyle;
+                ctx.save();
+                ctx.translate(this.px + mapOffsetX, this.py + mapOffsetY);
+                ctx.beginPath();
+                ctx.lineWidth = this.lineWidth;
+                ctx.strokeStyle = "rgba(" + this.colour + "," + this.transparency + ")";
+                ctx.fillStyle = 'transparent';
+                ctx.arc(0, 0, this.myx * 1.5, 0, Math.PI * 2, false);
+                ctx.stroke();
+                ctx.closePath();
+                ctx.lineWidth = lw;
+                ctx.strokeStyle = ss;
+                ctx.fillStyle = fs;
+                ctx.restore();
+            },
+            cb: cb
+        }
+        return pulse;
+    }
+
+
+    //@todo move to player class
+    function moveX(x, y, step, angle, height, multiplier) {
+        blahX = x + Math.abs(mapOffsetX);
+        blahX -= step * Math.sin(angle * Math.PI / 180) + ( (height + 1) * multiplier) ;
+        y = y + Math.abs(mapOffsetY);
+        var p = ctx0.getImageData(blahX, y, 1, 1).data;
+        if(p[0] == 255) {
+            return 0;
+        } else {
+            return step * Math.sin(angle * Math.PI / 180);
+        }
+    }
+    //@todo move to player class
+    function moveY(x, y, step, angle, height, multiplier) {
+        blahY = y + Math.abs(mapOffsetY);
+        blahY += step * Math.cos(angle * Math.PI / 180) + ( (height + 1) * multiplier) ;
+        x = x + Math.abs(mapOffsetX);
+        var p = ctx0.getImageData(x, blahY, 1, 1).data;
+        if (p[0] == 255 && p[1] == 255 && p[2] == 255) {
+            return 0;
+        } else {
+            return step * Math.cos(angle * Math.PI / 180);
+        }
+    }
+
+    function displayScore() {
+    //@todo move to game class
+        if (!ded) {
+            var score = 'Score: ' + (Date.now() - startTime);
+
+            if (Date.now() - lastScoreDisplayedTime > 500) {
+                lastScoreDisplayedTime = Date.now();
+            } else {
+                score = lastScoreDisplayed;
+            }
+
+            var scoreOffsetX = canvas.width - 10;
+            ctx.beginPath();
+            ctx.fillStyle = 'white';
+            ctx.fillText(score, scoreOffsetX, 20);
+            ctx.font = '20px Lucida Console';
+            ctx.textAlign = 'right';
+            ctx.closePath();
+            lastScoreDisplayed = score;
+
+            globalScoreThatJarredWillNeedToRefactor = score;
+        }
+
+
+    }
+    function displayLuck() {
+        var r = 255 - (255 * (luck / 100));
+        var g = 255 * (luck / 100);
+        var b = 0;
+        ctx.fillStyle = 'rgba(' + Math.floor(r) + ',' + Math.floor(g) + ',' + Math.floor(b) + ',0.8)';
+        ctx.fillRect(10, 10, canvas.width * (luck / 400), 20);
+        document.getElementById('data').innerHTML = "<br> Yo luck: " + luck;
+        for (var key in players) {
+            if (players[key].socketId != socketId) {
+                document.getElementById('data').innerHTML += "<br><span style=' color: rgb(" + players[key].colour + "); '>" + players[key].username + " - Luck: " + players[key].luck + "</span>";
+            } else {
+                document.getElementById('data').innerHTML += "<br><span style=' color: rgb(" + players[key].colour + "); '>" + players[key].username + " - Luck: " + luck + "</span>";
+            }
+
+        }
+
+    }
+    function displayItems() {
+        for (var i = 0; i < items.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = 'green';
+            ctx.fillRect(items[i].x, items[i].y, items[i].width, items[i].height);
+            ctx.closePath();
+        }
+    }
+    function displayPulses() {
+        // Do pulse here
+        for (var i = 0; i < pulses.length; i++) {
+            pulses[i].draw();
+            pulses[i].myx++;
+            pulses[i].transparency -= 0.01;
+            pulses[i].lineWidth += 0.05;
+
+            if (pulses[i].transparency < 0.02) {
+                if (typeof pulses[i].cb !== 'undefined') {
+                    pulses[i].cb();
+                }
+                pulses.splice(0, 1);
+            }
+        }
+    }
+    function displayItems() {
+        for (var i = 0; i < items.length; i++) {
+
+            ctx.beginPath();
+            ctx.fillStyle = 'green';
+            ctx.fillRect(items[i].x, items[i].y, items[i].width, items[i].height);
+            ctx.closePath();
+
+        }
+    }
+    function drawBlock(x, y, width, color) {
+        var xpos = x * width;
+		var ypos = y * width;
+		ctx0.beginPath();
+		ctx0.fillStyle = 'white';
+		ctx0.fillRect(xpos,ypos,width,width);
+		ctx0.closePath();
+    }
+
+    /**
+     *
+     * render function
+     * This is where the canvas is cleared and redrawn every frame
+     * Players positions are updated through here
+     */
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // draw any pulses
+        displayPulses();
+        // draw the map with items
+        ctx.save();
+        ctx.translate(mapOffsetX, mapOffsetY);
+        displayItems();
+        ctx.restore();
+
+        for (var key in players) {
+            if (!players.hasOwnProperty(key)) {
+                continue;
+            }
+            players[key].update();
+        }
+		displayInventory();
+        displayScore();
+        displayLuck();
+        canvas0.style.left = mapOffsetX + 'px';
+        canvas0.style.top = mapOffsetY + 'px';
+
+    }
+	
+	function displayInventory() {
+
+        for(var i=0;i<10;i++) {
+            var el = document.getElementById('i'+(i+1))
+            el.style.backgroundColor = '#cccccc';
+            el.innerHTML = '?';
+        }
+
+		for(var i=0;i<myItems.length;i++){
+			var el = document.getElementById('i'+(i+1))
+			el.style.backgroundColor = myItems[i].colour;
+			el.innerHTML = (i+1);
+            if(i+1 == 10) {
+                el.innerHTML = (0);
+            }
+		}
+	}
+
+    /**
+     * moveTriangle function
+     * Sets up the key event handling
+     * N.B. the event listener is on the <body> tag.
+     * This should probably be moved
+     */
+	
+    kd.LEFT.down(function () {
+        players[socketId].lastX = players[socketId].x;
+        players[socketId].lastDirection = players[socketId].direction;
+        //moveAngle -= angleSteps;
+        players[socketId].direction -= angleSteps;
+        if (players[socketId].direction < 0) {
+            players[socketId].direction = 360 + players[socketId].direction;
+        } else if (players[socketId].direction > 360) {
+            players[socketId].direction = players[socketId].direction - 360;
+        }
+        players[socketId].updateCoords(players[socketId].x, players[socketId].y, players[socketId].direction); // left
+    });
+
+    kd.RIGHT.down(function () {
+        players[socketId].lastX = players[socketId].x;
+        players[socketId].lastDirection = players[socketId].direction;
+        players[socketId].direction += angleSteps;
+        if (players[socketId].direction < 0) {
+            players[socketId].direction = 360 + players[socketId].direction;
+        } else if (players[socketId].direction > 360) {
+            players[socketId].direction = players[socketId].direction - 360;
+        }
+        players[socketId].updateCoords(players[socketId].x, players[socketId].y, players[socketId].direction); // right
+
+    });
+
+    kd.UP.down(function () {
+        if (!ded) {
+            players[socketId].lastY = players[socketId].y;
+            moveSteps = Math.abs(moveSteps) * -1;
+            players[socketId].updateCoords(moveSteps, players[socketId].direction);
+        }
+    });
+
+    kd.P.up(function () {
+        // trigger pulse for player
+        if (!ded) {
+            pulses.push(new Pulse(players[socketId].mapX, players[socketId].mapY, players[socketId].colour));
+            playerEvent({type: 'pulse', data: {mapX: players[socketId].mapX, mapY: players[socketId].mapY, colour: players[socketId].colour} });
+    //                    gameSounds.getSound('pulse', players[socketId].mapX, players[socketId].mapY).start();
+            gs.get('pulse').vol(0.5).at(players[socketId].x,players[socketId].y).fire();
+        }
+    });
+	
+	// Do stuff if player has an item
+	// Check the array of myItems[0] (key minus 1 position)
+	kd.ONE.up(function(){   myItems[0] ? useItem(0) :''; });
+	kd.TWO.up(function(){   myItems[0] ? useItem(1) :''; });
+	kd.THREE.up(function(){ myItems[0] ? useItem(2) :''; });
+	kd.FOUR.up(function(){  myItems[0] ? useItem(3) :''; });
+	kd.FIVE.up(function(){  myItems[0] ? useItem(4) :''; });
+	kd.SIX.up(function(){   myItems[0] ? useItem(5) :''; });
+	kd.SEVEN.up(function(){ myItems[0] ? useItem(6) :''; });
+	kd.EIGHT.up(function(){ myItems[0] ? useItem(7) :''; });
+	kd.NINE.up(function(){  myItems[0] ? useItem(8) :''; });
+	kd.ZERO.up(function(){  myItems[0] ? useItem(9) :''; });
+
+    // This update loop is the heartbeat of Keydrown
+    kd.run(function () {
+        kd.tick();
+    });
+
+    function useItem(slot) {
+        socket.emit('useItem', {slot:slot});
+        if(myItems[slot].name == 'Pulse') {
+            pulses.push(new Pulse(players[socketId].mapX, players[socketId].mapY, players[socketId].colour));
+            playerEvent({type: 'pulse', data: {mapX: players[socketId].mapX, mapY: players[socketId].mapY, colour: players[socketId].colour} });
+            gs.get('pulse').vol(0.5).at(players[socketId].x,players[socketId].y).fire();
+        } else if(myItems[slot].name == 'Speed') {
+            gs.get('speedBoostUp').vol(0.5).at(players[socketId].x,players[socketId].y).fire();
+        }
+        myItems.splice(slot,1);
+
+    }
+
+    function playerEvent(data) {
+        socket.emit('worldEvent', data);
+    }
+
+    window.onload = init;
+
+    function log(blah) {
+        //console.log(blah);
+    }
+
+
+</script>
+</body>
+</html>

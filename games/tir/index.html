@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+<svg style="width:100%;height:calc(100vh - 20px);background:#000822" width="5000px" height="5000px" viewBox="0 0 5000 5000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <style>
+    #s {transform-origin: 20px 20px;}#r {opacity: 0;transition: all 400ms ease-in-out;}.e,#b {transition: opacity 2000ms ease-in-out;}#tw{color:#fff;font-family:'Arial', sans-serif}
+  </style>
+    <rect fill="#000822" x="0" y="0" width="5000" height="5000"></rect>
+    <g id="b" style="opacity: 1"></g>
+      <g id="s">
+          <g stroke="#979797">
+            <circle fill="#D8D8D8" cx="26.5" cy="6.5" r="6"></circle>
+            <line x1="26.5" y1="13.5" x2="26.5" y2="26.5"></line>
+            <line x1="26.5" y1="0.5" x2="0.5" y2="35.5"></line>
+            <line x1="26.5" y1="0.5" x2="52.5" y2="35.5"></line>
+          </g>
+          <circle id="r" style="transform:translate(-100px, -100px)" fill="#C9EDFF" cx="125.5" cy="125.5" r="125.5"></circle>
+      </g>
+      <foreignObject id="tw" x="2225" y="2225" width="350" height="60">
+          <div>
+            Earth became dark. Scan for life, keep us alive in the minds of others. (Arrow keys to move/scan objects. 'M' to toggle music.)
+          </div>
+          <div></div>
+          <div></div>
+      </foreignObject>
+</svg>
+
+<script>
+// A thoroughly mangled version of TinyMusic. A phenomenal music player!
+// https://github.com/kevincennis/TinyMusic
+let tm = (ac, tempo, arr) => {
+    let gain;
+    let SE = {}
+    let osc;
+    let enharmonics = 'B#-C|C#-Db|D|D#-Eb|E-Fb|E#-F|F#-Gb|G|G#-Ab|A|A#-Bb|B-Cb',
+    middleC = 440 * Math.pow( Math.pow( 2, 1 / 12 ), -9 ),
+    numeric = /^[0-9.]+$/,
+    octaveOffset = 4,
+    space = /\s+/,
+    num = /(\d+)/,
+    offsets = {};
+
+    // populate the offset lookup (note distance from C, in semitones)
+    enharmonics.split('|').forEach(function( val, i ) {
+        val.split('-').forEach(function( note ) {
+        offsets[ note ] = i;
+        });
+    });
+
+    let waveType = this.waveType || 'sine';
+    let trebleType = this.trebleType || 'lowpass';
+    SE.wet = ac.createGain();
+    SE.dry = ac.createGain();
+
+    createFxNodes();
+    let loop = true;
+    let smoothing = 0;
+    let staccato = 0;
+    let notes = setNotes();
+
+    function Note( str ) {
+        let couple = str.split( space );
+        // frequency, in Hz
+        this.frequency = getFrequency( couple[ 0 ] ) || 0;
+        // duration, as a ratio of 1 beat (quarter note = 1, half note = 0.5, etc.)
+        this.duration = getDuration( couple[ 1 ] ) || 0;
+    }
+
+    function getFrequency ( name ) {
+        let couple = name.split( num ),
+          distance = offsets[ couple[ 0 ] ],
+          octaveDiff = ( couple[ 1 ] || octaveOffset ) - octaveOffset,
+          freq = middleC * Math.pow( Math.pow( 2, 1 / 12 ), distance );
+        return freq * Math.pow( 2, octaveDiff );
+    };
+
+    function getDuration ( symbol ) {
+    return numeric.test( symbol ) ? parseFloat( symbol ) :
+        symbol.toLowerCase().split('').reduce(function( prev, curr ) {
+        return prev + ( curr === 'w' ? 4 : curr === 'h' ? 2 :
+            curr === 'q' ? 1 : curr === 'e' ? 0.5 :
+            curr === 's' ? 0.25 : 0 );
+        }, 0 );
+    };
+
+    // create gain and EQ nodes, then connect 'em
+    function createFxNodes () {
+        let eq = [ [ 'bass', 100 ], [ 'mid', 1000 ], [ 'treble', 2500 ] ],
+        prev = gain = ac.createGain();
+        eq.forEach(function( config, filter ) {
+        filter = this[ config[ 0 ] ] = ac.createBiquadFilter();
+        filter.type = trebleType;
+        filter.frequency.value = config[ 1 ];
+        prev.connect( prev = filter );
+        }.bind( this ));
+        prev.connect( SE.wet );
+        prev.connect( SE.dry );
+    };
+
+    // accepts Note instances or strings (e.g. 'A4 e')
+    function setNotes () {
+      let tmp = [];
+      for (let i = 0; i < arr.length; i++) {
+        tmp.push( arr[i] instanceof Note ? arr[i] : new Note( arr[i] ) );
+      }
+      return tmp;
+    };
+
+    // recreate the oscillator node (happens on every play)
+    function co () {
+        stop();
+        osc = ac.createOscillator();
+        osc.type = waveType;
+        osc.connect( gain );
+    };
+
+    // schedules this.notes[ index ] to play at the given time
+    // returns an AudioContext timestamp of when the note will *end*
+    function scheduleNote ( index, when ) {
+        let duration = 60 / tempo * notes[ index ].duration,
+        cutoff = duration * ( 1 - ( staccato || 0.00000000001 ) );
+
+        sf( notes[ index ].frequency, when );
+
+        if ( smoothing && notes[ index ].frequency ) {
+          slide( index, when, cutoff );
+        }
+
+        sf( 0, when + cutoff );
+        return when + duration;
+    };
+
+    // get the next note
+    function getNextNote ( index ) {
+        return notes[ index < notes.length - 1 ? index + 1 : 0 ];
+    };
+
+    // how long do we wait before beginning the slide? (in seconds)
+    function getSlideStartDelay ( duration ) {
+        return duration - Math.min( duration, 60 / tempo * smoothing );
+    };
+
+    // slide the note at <index> into the next note at the given time,
+    // and apply staccato effect if needed
+    function slide ( index, when, cutoff ) {
+        let next = getNextNote( index ),
+        start = getSlideStartDelay( cutoff );
+        sf( notes[ index ].frequency, when + start );
+        rampFrequency( next.frequency, when + cutoff );
+    };
+
+    // set frequency at time
+    function sf ( freq, when ) {
+        osc.frequency.setValueAtTime( freq, when );
+    };
+
+    // ramp to frequency at time
+    function rampFrequency ( freq, when ) {
+        osc.frequency.linearRampToValueAtTime( freq, when );
+    };
+
+    // run through all notes in the sequence and schedule them
+    SE.play = ( when ) => {
+      // console.log(notes)
+        when = typeof when === 'number' ? when : ac.currentTime;
+
+        co();
+        osc.start( when );
+
+        notes.forEach(function ( note, i ) {
+        when = scheduleNote( i, when );
+        }.bind( this ));
+
+        osc.stop( when );
+        osc.onended = loop ? SE.play.bind( this, when ) : null;
+    };
+
+    // stop playback, null out the oscillator, cancel parameter automation
+    SE.stop = () => {
+        if ( osc ) {
+        osc.onended = null;
+        osc.stop( 0 );
+        osc.frequency.cancelScheduledValues( 0 );
+        osc = null;
+        }
+    };
+
+    return SE;
+}
+
+// All non special general encounters
+let general = [
+  {
+    t: "None. Planet $. No intelligent life.",
+    s: rand(200, 500),
+    h: getColor('f'),
+    n: "n",
+  },
+  {
+    t: "None. Planet $. No intelligent life.",
+    s: rand(200, 500),
+    h: getColor('f'),
+    n: "n",
+    r: 't'
+  },
+  {
+    p: "168.445312 70.609375 0.140625 190.21875 64.5546875 249.554687 217.242187 287.96875 267.320312 202.179687 379.273437 144.320312 247.25 0.3984375 136.1875 23.15625",
+    t: "None. Asteroid $. No intelligent life.",
+    s: rand(20, 200),
+    h: getColor('808080'),
+    n: "n",
+    m: "a",
+  },
+  {
+    p: "31.765625 185.992188 0.6015625 217.789062 0.6015625 245.039062 31.765625 270.3125 62.859375 270.3125 94.671875 228.152344 225.0625 -0.0703125",
+    t: "None. Comet $. No intelligent life.",
+    s: rand(50, 100),
+    h: getColor('897eff'),
+    n: "n"
+  },
+  {
+    t: "None. Gas Giant $. No intelligent life.",
+    s: rand(400, 700),
+    h: getColor('f'),
+    n: "n"
+  },
+  {
+    t: "None. Star $. No intelligent life.",
+    s: rand(800, 1000),
+    c: [2000, 2000],
+    h: getColor('efc71d'),
+    n: "n"
+  },
+]
+
+// All special encounters
+let specials = [
+  {
+    p: "55.203125 163.25 -0.1015625 119.460938 460.898438 130.214844 212.976563 191.398438 166.601563 33.2109375 430.695313 259.9375 361.695313 290.039062 337.304688 0.4921875",
+    t: "Alien. Artifacts. Ancient. Debris. Alone. Incoperate tech. (Up arrow 4x)",
+    s: rand(20, 100),
+    h: getColor('00a7'),
+    u: "s",
+    v: 8
+  },
+  {
+    P: "0.46875 72.4140625 383.25 0.28125 307.546875 172.695312",
+    t: "Planet. Ancient. Civilization. Debris. Alone. Incoperate tech. ('S' key to toggle)",
+    s: rand(200, 500),
+    h: getColor('00bd'),
+    u: "r",
+    v: 8
+  },
+  {
+    p: "241.34375 59.71875 -0.1015625 119.460938 212.976562 136.921875 212.976562 191.398437 271.257812 159.421875 430.695312 259.9375 347.992188 75.640625 337.304688 0.4921875",
+    t: "Ship. Ancient. Debris. Alone. Incoperate tech. ('W' key to FTL)",
+    s: rand(20, 100),
+    h: getColor('00a7'),
+    u: "w",
+    v: 8
+  },
+  {
+    p:"32.2890625 80.0625 177.3125 0.171875 302.828125 57.3125 351.289062 40.1171875 327.984375 122.078125 302.828125 80.0625 160.085938 111.429688 47.9921875 122.078125 -0.0546875 98.8984375", // ellipse
+    t: "Whale. Moos. Friend.",
+    s: rand(20, 100),
+    h: getColor('00bd'),
+    v: 18
+  },
+  {
+    t: "Probe. Sister. Debris. Alone.",
+    s: 12,
+    h: getColor('D8D8D8'),
+    v: 18
+  },
+  {
+    t: "We are ancient. We are friend. Journey on. Incoperate tech. ('W', 'S' keys)",
+    s: rand(200, 500),
+    h: getColor('000000'),
+    u: "a",
+    v: 8
+  },
+  {
+    t: "",
+    s: rand(200, 500),
+    h: getColor('56ccff'),
+    w:'t'
+  }
+]
+
+// Allows us to set direction and velocity in that direction
+// based on the probes degree of rotation
+let sdi = {
+  '0':[0, -2],
+  '30':[1, -2],
+  '60':[2, -1],
+  '90':[2, 0],
+  '120':[2, 1],
+  '150':[1, 1],
+  '180':[0, 2],
+  '210':[-1, 2],
+  '240':[-1, 1],
+  '270':[-2, 0],
+  '300':[-1, -1],
+  '330':[-1, -2],
+}
+
+// All stuff for setting up and playing music
+let ac; // audio context
+let tempo = 24;
+let volume = 0.08;
+
+if ( window.AudioContext || window.webkitAudioContext ) {
+ac = new ( window.AudioContext || window.webkitAudioContext )();
+}
+
+let main;
+let base;
+generateNotes()
+let ba = {...tm( ac, tempo, base)};
+let ma = {...tm( ac, tempo, main)};
+initMusic();
+let se = false; // Is sound one
+
+// All game global lets
+let width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+let height = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+let hWidth = width/2;
+let hHeight = height/2;
+let svg = document.querySelector('svg');
+let ship = svg.querySelector('#s');
+let radar = svg.querySelector('#r');
+let objects = svg.querySelector('#b');
+let textWrapper = svg.querySelector('#tw');
+let texts = textWrapper.querySelectorAll('div');
+let score = 0;
+let discovered = [];
+let degrees = 0; // ship angle in degrees
+let vx = 0; // probe velocity x
+let vy = 0; // probe velocity y
+let px = 2225; // probe position x
+let py = 2225; // probe position y
+let map = [];
+let sector = [500, 500]; // current sector (starts in center)
+// These are special abilities:
+// warping, gravity drive, and long range scanners
+let ftl;
+let gd;
+let lrs;
+
+let o = null
+let g = null
+let interval;
+
+// initialize game and start event loop
+init();
+function init () {
+  document.addEventListener('keydown', keyHandling, false);
+  genMaps();
+  move;
+  textWrapper.setAttribute('width', width - 20);
+  placeText(0);
+  layoutStars();
+  layoutBodies();
+  interval = setInterval(tick, 10);
+}
+
+function tick () {
+  move();
+}
+
+// Key event handling
+function keyHandling (e) {
+  let callback = {
+      'ArrowLeft':()=>{degrees -= 30},
+      'ArrowRight':()=>{degrees += 30},
+      'ArrowUp':()=>{
+        let str = degrees+"";
+        if (gd &&
+        Math.abs(vx) < 9 &&
+        Math.abs(vy) < 9) {
+          vx += sdi[str][0];
+          vy += sdi[str][1];
+        } else {
+          vx = sdi[str][0];
+          vy = sdi[str][1];
+        }
+      },
+      'ArrowDown':scan,
+      's':()=>{lrs ? lrs === 't' ? lrs = 'f' : lrs = 't' : null},
+      'w':()=>{
+        if (!ftl) return;
+        sector[0] = rand(0, 1000);
+        sector[1] = rand(0, 1000);
+        px = rand(10, 4500);
+        py = rand(10, 4500);
+        layoutBodies();
+        setText('')
+      },
+      'm':()=>{se = !se; se ? playMusic() : stopMusic() }
+  }[e.key];
+  callback && callback();
+}
+
+// Ever tick update the viewbox and probe position depending on py, xy, vy, xy, changing.
+// Also allows you to zoom out if you have found long range scanners.
+function move () {
+  if (degrees === 360) degrees = 0;
+  if (degrees < 0) degrees = 360 + degrees;
+
+  if (px + vx > 5000) {
+    sector[1] += 1;
+    layoutBodies();
+    setText('')
+    px = 0;
+  }
+  if (px + vx < 0) {
+    sector[1] -= 1;
+    layoutBodies();
+    setText('')
+    px = 5000;
+  }
+
+  if (py + vy > 5000) {
+    sector[0] += 1;
+    layoutBodies();
+    setText('')
+    py = 0;
+  }
+  if (py + vy < 0) {
+    sector[0] -= 1;
+    layoutBodies();
+    setText('')
+    py = 5000;
+  }
+
+  px += vx;
+  py += vy;
+  ship.style.transform = 'translate('+px+'px, '+py+'px) rotate('+degrees+'deg)';
+  setView()
+
+}
+
+function setView () {
+  if (lrs && lrs === "t") {
+    svg.setAttribute('viewBox', '0 0 5000 5000');
+  } else {
+    svg.setAttribute('viewBox', (px-hWidth)+' '+(py-hHeight)+' '+width+' '+height);
+  }
+}
+
+// Layout background stars on init
+function layoutStars () {
+  for (let i = 0; i < 1000; i++) {
+    let circle = addElement(2);
+    circle[0].style.transform = 'translate('+getRandom()*5000+'px, '+getRandom()*5000+'px)'
+  }
+}
+
+// Manages randomly placing objects on the map and giving them names
+function layoutBodies () {
+  let bodies = objects.querySelectorAll(".c");
+  for (let k = 0; k < bodies.length; k++) {
+    if (bodies[k]) bodies[k].remove();
+  }
+
+  if (!map[sector[0]] || !map[sector[0]][sector[1]]) {
+    win();
+    return;
+  }
+  let sec = map[sector[0]][sector[1]];
+  if (sec.length > 0) {
+    for (let j = 0; j < sec.length; j++) {
+      let node = addElement(Math.floor(sec[j].s), sec[j].h, sec[j].p || undefined, sec[j].r);
+      if (!sec[j].c) {
+        sec[j].c = [];
+        let xRand = rand(0, 5000);
+        let yRand = rand(0, 5000);
+        let diameter = sec[j].s * 4;
+        sec[j].c[0] = (yRand + diameter) > 5000 ? (yRand - diameter) : (yRand - diameter) < 0 ? diameter : yRand;
+        sec[j].c[1] = (xRand + diameter) > 5000 ? (xRand - diameter) : (xRand - diameter) < 0 ? diameter : xRand;
+      }
+      if (sec[j].n) sec[j].n = (sector[1] +""+ sec[j].c[1] +""+ sector[0]) + sec[j].h.replace("#", "-");
+      node[0].style.transform = 'translate('+sec[j].c[1]+'px, '+sec[j].c[0]+'px)';
+      if (node[1]) node[1].style.transform = 'translate('+sec[j].c[1]+'px, '+sec[j].c[0]+'px)';
+      if (sec[j].m) {
+        multipleObjects(node[0], sec[j]);
+        return;
+      }
+    }
+  }
+}
+
+// This is really just to randomly layout asteroids for asteroid fields
+function multipleObjects (node, obj) {
+  let num = rand(1, 10);
+  if (num > 10) num = 10;
+  for (let i = 0; i < num; i++) {
+    let value = getRandom() * 0xFF | 0;
+    let grayscale = (value << 16) | (value << 8) | value;
+    let color = '#' + grayscale.toString(16);
+    let tmpNode = node.cloneNode(true);
+    tmpNode.style.transform = 'translate('+(obj.c[1] +(getRandom()*500))+'px, '+(obj.c[0]+(getRandom()*600))+'px) scale('+getRandom()+') rotate('+(getRandom()*360)+'deg)';
+    tmpNode.style.fill = '#' + grayscale.toString(16);
+    objects.appendChild(tmpNode);
+  }
+}
+
+// When you scan manages what you read from the object
+function scan () {
+  radar.style.opacity = 0.8;
+  setTimeout(()=>{radar.style.opacity = 0;}, 400)
+  vx = 0;
+  vy = 0;
+  let sec = map[sector[0]][sector[1]];
+  setText('Tir: Hello?');
+  placeText(0);
+  for (let i = 0; i < sec.length; i++) {
+    if (Math.abs(px - (sec[i].c[1])) < 300 &&
+    Math.abs(py - (sec[i].c[0])) < 300) {
+      playTone = true;
+      if (sec[i].w) {
+        win('w');
+        break;
+      }
+      if (sec[i].u) {
+        if (sec[i].u === "w") ftl = true;
+        if (sec[i].u === "r") lrs = "f";
+        if (sec[i].u === "s") gd = true;
+        if (sec[i].u === "a") {
+          ftl = true;
+          lrs = "f";
+          gd = true;
+        }
+      }
+      let responseText = sec[i].t;
+      if (sec[i].n) {
+        if (!discovered.includes(sec[i].n)) score += (sec[i].v ? sec[i].v : 1);
+        responseText = responseText.replace('$', sec[i].n);
+        discovered.push(sec[i].n);
+      }
+      setText('Tir: Hello? Response: '+ responseText + ' Score: '+ score );
+      break;
+    }
+  }
+}
+
+function placeText () {
+  textWrapper.setAttribute('x', px - (hWidth - 20));
+  textWrapper.setAttribute('y', py + (hHeight - 70));
+}
+
+// Adds svg shape nodes for plenets, ships, asteroids, etc
+function addElement (size, color, points, hasRing) {
+  let elm = createElement();
+  let ring;
+  if (hasRing) {
+    ring = createElement(true);
+    ring.setAttribute("fill",color || '#fff');
+    ring.classList.add("c");
+    objects.appendChild(ring);
+  }
+
+  elm.setAttribute("fill",color || '#fff');
+  if (color) elm.classList.add("c");
+  objects.appendChild(elm);
+  let tmp = [];
+  tmp.push(elm);
+  if (ring) tmp.push(ring);
+  return tmp;
+
+  function createElement (isRing) {
+    let newElement = document.createElementNS("http://www.w3.org/2000/svg", isRing ? 'ellipse' : points ? "polygon" : "circle");
+    if (points) {
+      newElement.setAttribute("points",points);
+    } else {
+      newElement.setAttribute("cx",0);
+      newElement.setAttribute("cy",0);
+      if (isRing) newElement.setAttribute("rx",size);
+      if (isRing) newElement.setAttribute("ry",size/8);
+      newElement.setAttribute("r",size/2);
+    }
+    return newElement;
+  }
+}
+
+// Generates all 1000 sectors on startup with a random assortment of
+// celestial bodies and special encounters
+function genMaps () {
+  for (let i = 0; i < 1000; i++) {
+    map.push([]);
+    for (let j = 0; j < 1000; j++) {
+      let tmp = [];
+      if (i === 500 && j === 500) {
+        let startPlanet = {...general[0]};
+        startPlanet.s = 200;
+        startPlanet.c = [2200, 2425];
+        startPlanet.h = "#b08f27";
+        tmp.push(startPlanet);
+      } else {
+        if (getRandom() > 0.5) tmp.push(generateSpaceObject());
+        if (getRandom() > 0.5) tmp.push(generateSpaceObject());
+        if (getRandom() > 0.5) tmp.push(generateSpaceObject());
+        if (getRandom() > 0.95) tmp.push(generateSpecial());
+      }
+
+      map[i].push(tmp);
+    }
+  }
+}
+
+function getRandom () {
+  return Math.random();
+}
+
+function generateSpaceObject () {
+  return {...general[Math.floor(getRandom() * general.length)]};
+}
+
+function generateSpecial () {
+  return {...specials[Math.floor(getRandom() * specials.length)]};
+}
+
+function getColor (i) {
+  let color = (getRandom()*100000000).toString(16);
+  return '#'+i+color.substring(0, 6 - i.length)
+}
+
+function rand (min, multiplier) {
+  let num = Math.floor(getRandom()* multiplier);
+  return num < min ? min : num;
+}
+
+// Handles the end win sequences. There is one for when you go off
+// the map and a nother for when you find earth
+function win (type) {
+  score += 300;
+  clearInterval(interval);
+  objects.style.opacity = 0;
+  lrs = 'f';
+  setView();
+  setText('');
+  for (let j = 0; j < texts.length; j++) {
+    texts[j].style.opacity = 0;
+    texts[j].classList.add('e');
+  }
+
+  setTimeout(end, 4000);
+
+  function end () {
+    setTimeout(() => {
+        stop();
+      }, 16000);
+    let endText = [
+      "You are probe. Welcome home. We sent you out when all hope had escaped us. ",
+      "You were to tell others of our story, so not all was lost. You have done well. ",
+      "Speak your journey. Come, rest our friend. Together."
+    ];
+    let endText2 = [
+      "We have watched you for millennia. You are a testiment to your creators. ",
+      "Few have built anything that traveled beyond this galaxies wall. Come rest. ",
+      "You have done well. We will honor you and your journey. Together."
+    ]
+    for (let i = 0; i < texts.length; i++) {
+      placeText();
+      let etext = (type === 'w' ? endText[i] : endText2[i]) + " " + (i === 2 ? "Score: "+score : "");
+      texts[i].textContent = etext;
+      texts[i].style.opacity = 0;
+      setTimeout(() => {
+        texts[i].style.opacity = 1;
+      }, i*3000);
+    }
+  }
+}
+
+// Randomly generate music
+function generateNotes () {
+  let notesArr = ['_  e','E4 q','F#4 e','D4 q','B3 e','G4 q','E4 e','B4 h','A4 q','A4 e','A4 q','G4  e','F#4 e','E4 e'];
+  let baseNotesArr = ['D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','D e','G4 e','G4 e','G4 e','G4 e','B4 e','B4 e','B4 e','B4 e','B4 e','G4 e','G4 e','D e','C4 e','C5 q','D5 q','C4 3'];
+  let tmpNotesArr = ['_  e','_  e','_  e','_  e',];
+  let tmpBaseNotesArr = [];
+  for (let index = 0; index < 1000; index++) {
+    tmpNotesArr.push(notesArr[Math.floor(getRandom() * notesArr.length)]);
+    tmpBaseNotesArr.push(baseNotesArr[Math.floor(getRandom() * baseNotesArr.length)]);
+  }
+  main = tmpNotesArr;
+  base = tmpBaseNotesArr
+}
+
+function initMusic () {
+  let osc = ac.createOscillator();
+  let comp = ac.createDynamicsCompressor();
+  let op = ac.createGain();
+  op.connect( ac.destination );
+  op.gain.value = volume;
+  osc.frequency.value = 0;
+  osc.connect( comp );
+  osc.start();
+  ba.dry.connect( comp );
+  ma.dry.connect( comp );
+  comp.connect( op );
+}
+
+function playMusic () {
+  let n;
+  if ( ac ) {
+    n = ac.currentTime;
+    ma.play( n );
+    ba.play( n );
+  }
+}
+
+function stopMusic () {
+  if ( ac ) {
+    ma.stop();
+    ba.stop();
+  }
+}
+
+function setText(string) {
+  texts[0].textContent = string;
+}
+
+</script>
+</body>
+</html>

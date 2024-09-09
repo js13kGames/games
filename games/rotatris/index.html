@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ROTATris</title>
+    <link rel="stylesheet" href="style.min.css" />
+    <meta name="viewport" content="width=496, user-scalable=no"/>
+    <meta name="charset" content="utf-8"/>
+    <meta property="og:url"   content="http://kirilloid.ru/rotatris/" />
+    <meta property="og:image" content="http://kirilloid.ru/rotatris/rotatris-160x160.png" />
+    <meta property="og:type"  content="website" />
+    <meta property="og:title" content="ROTATris" />
+</head>
+<body>
+    <div id="intro"></div>
+    <div id="menu" class="center">
+        <div id="menuView" class="menuActive"></div>
+        <div id="menuLeft" class="menuActive"></div>
+        <div id="menuRight" class="menuActive"></div>
+    </div>
+    <table id="records" class="center hidden">
+        <tr><td>#</td><td>name</td><td class="score">score</td></tr>
+    </table>
+    <div id="social" class="hidden">
+        <a href="https://twitter.com/share" class="twitter-share-button" id="tweet">Tweet</a>
+        <div class="fb-like" data-href="http://kirilloid.ru/rotatris/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+        <g:plusone data-size="medium"></g:plusone>
+    </div>
+    <div id="playfield" class="hidden">
+        <div id="info">
+            next <div id="next"></div>
+            <div id="stats">
+                <span id="level"></span><br>
+                <span id="points"></span>
+            </div>
+        </div>
+        <div id="game" class="center">
+            <div id="matrix"></div>
+            <div id="figure"></div>
+        </div>
+        <div id="controls">
+            <div id="controls-left">
+                <button data-code="rotate">&#8630;</button>
+                <button data-code="LEFT">&#8676;</button>
+                <button data-code="left">&larr;</button>
+            </div>
+
+            <div id="controls-right">
+                <button data-code="right">&rarr;</button>
+                <button data-code="RIGHT">&#8677;</button>
+                <button data-code="corotate">&#8631;</button>
+            </div>
+        </div>
+        <div id="pauseHint" class="center">
+        </div>
+    </div>
+    <div id="gameOver" class="center hidden"></div>
+    <div id="anyKey" class="center hidden">press <kbd>Any</kbd> key to continue</div>
+    <div id="gameInfo" class="center">
+        <div id="dialog" class="hidden">
+            <p id="dialogText"></p>
+            <button id="dialogButtonOk"></button>
+            <button id="dialogButtonCancel"></button>
+        </div>
+        <div id="about" class="hidden">
+            <h2>About</h2>
+            <p>Game created for <a href="http://js13kgames.com/">js13k competition</a></p>
+            <p>Source code available on <a href="https://github.com/kirilloid/rotatris/">github</a></p>
+        </div>
+        <div id="keySheet" class="hidden">
+            <h2>Controls</h2>
+            <dl>
+                <dt><kbd>P</kbd></dt>
+                <dd>pause / continue playing</dd>
+                <dt><kbd>&rarr;</kbd></dt>
+                <dd>move right</dd>
+                <dt><kbd>&larr;</kbd></dt>
+                <dd>move left</dd>
+                <dt><kbd>&uarr;</kbd></dt>
+                <dd>rotate (counter-clockwise)</dd>
+                <dt><kbd>Space</kbd> or <kbd class="enter"></kbd></dt>
+                <dd>drop</dd>
+                <dt><kbd>&darr;</kbd> (<em>holding</em>)</dt>
+                <dd>"soft" drop</dd>
+                <dt><kbd class="shift"></kbd> + <kbd>&rarr;</kbd></dt>
+                <dd>shift to the right edge</dd>
+                <dt><kbd class="shift"></kbd> + <kbd>&larr;</kbd></dt>
+                <dd>shift to the left edge</dd>
+                <dt><kbd class="ctrl"></kbd> + <kbd>&rarr;</kbd></dt>
+                <dd>rotate (counter-clockwise)</dd>
+                <dt><kbd class="ctrl"></kbd> + <kbd>&larr;</kbd></dt>
+                <dd>rotate (clockwise)</dd>
+            </dl>
+        </div>
+        <div id="scoringSheet" class="hidden">
+            <h2>Scoring</h2>
+            <ul>
+                <li>everything is multiplied by (level + 1)</li>
+                <li>1 point for every figure landed</li>
+                <li>1 point for every 5 cells' distance in <a href="http://tetrisconcept.net/wiki/Drop" target="_blank">soft drop</a></li>
+                <li>1 point for every 3 cells' distance in <a href="http://tetrisconcept.net/wiki/Drop" target="_blank">hard drop</a></li>
+                <li>2 extra points for hard drop of distance 15 cells or more</li>
+                <li>40 points for collapsing one layer</li>
+                <li>100 points for collapsing two layers</li>
+                <li>300 points for collapsing three layers</li>
+                <li>1200 points for collapsing four layers</li>
+                <li>for sequential collapses, scores are multiplied by the number of the wave squared</li>
+            </ul>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <div id="fb-root"></div>
+</body>
+</html>

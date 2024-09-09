@@ -1,0 +1,109 @@
+* {
+    margin: 0; 
+    padding: 0;
+	background-color:black;
+}
+
+a{
+    text-decoration: none;
+}
+
+li{
+    margin-left:2em;
+}
+
+.night{
+    display: block; 
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    z-index: -2;
+background: #00156b; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMjYlIiBzdG9wLWNvbG9yPSIjMDAxNTZiIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNjUlIiBzdG9wLWNvbG9yPSIjMDEwMzA3IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-radial-gradient(center, ellipse cover,  #00156b 26%, #010307 65%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(26%,#00156b), color-stop(65%,#010307)); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  #00156b 26%,#010307 65%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  #00156b 26%,#010307 65%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  #00156b 26%,#010307 65%); /* IE10+ */
+background: radial-gradient(ellipse at center,  #00156b 26%,#010307 65%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00156b', endColorstr='#010307',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+
+}
+.transparent {
+	background-color:rgba(0,0,0,0.5);
+	
+}
+.borderline{
+	line-height: 1.6;
+	alpha:0.8;
+	border: solid 3px white;
+	border-radius: 10px;
+	background-color:rgba(0,0,0,0.5);
+	color: white;
+	font-family: Arial;
+	font-size: 14px;
+	color: white;
+	font-weight: bold;
+	margin: .5em;
+	padding: .5em;
+	
+}
+span{
+	float:left;
+	
+}
+table{
+	min-width: 200px;	
+	
+}
+#ui {
+	alpha:0.8;
+	position: absolute;
+	top: 0;
+	left:0;
+	height:100%;
+    width: 15%;
+	padding:.5em;
+}
+
+button {
+	color: white;
+	font-size: 2em;
+	
+}
+
+button:hover {
+	cursor: pointer;
+	background-color:#ccc;
+}
+
+#menu{
+	
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 2s linear;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+
+#build_menu button{
+	min-width: 64px;
+	border-radius: 3px;
+	background-color:rgba(0,0,0,0.5);
+	border: solid 3px white;
+	border-radius: 10px;
+}
+
+#alert_text{
+	min-height: 100px;
+	height: 100px;
+}
+

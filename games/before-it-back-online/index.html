@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Js13kGames - Before it Back OnLine</title>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
+  <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+  <script src="rotation-ctrl.js"></script>
+  <style>
+    body {
+      font-family: "Liberation Sans", Arial, sans-serif;
+    }
+    #browserBG {
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border: 35px solid #08E;
+      border-left: 105px solid #08E;
+      border-right: 105px solid #08E;
+      transition: 2s;
+    }
+    .game-on #browserBG {
+      border: 0 solid #08E;
+    }
+    #browser {
+      position: absolute;
+      top: 30px;
+      bottom: 30px;
+      left: 100px;
+      right: 100px;
+      border: 6px solid #CCC;
+      border-radius: 9px 9px 5px 5px;
+      box-shadow: 5px 5px 20px rgba(0,0,0,.6);
+      z-index: 10;
+      transition: 2s;
+    }
+    .game-on #browser {
+      top: -6px;
+      bottom: -6px;
+      left: -6px;
+      right: -6px;
+    }
+    #browserHeader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 0px 8px 5px;
+      background: #CCC;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: 1.5s 1.5s;
+    }
+    .post-game #browserHeader {
+      transition: 2s;
+    }
+    .game-on #browserHeader {
+      top: -100px;
+    }
+    #browserHeader::before {
+      content: "\21BA";
+      display: inline-block;
+      color: #666;
+      border: 1px solid #999;
+      border-radius: 20px;
+      padding: 5px;
+      width: 17px;
+      text-align: center;
+      font-size: 22px;
+      line-height: 17px;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    #browserHeader::after {
+      content: "\D7";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #A33;
+      background: #D88;
+      border: 1px solid #B66;
+      border-radius: 20px;
+      padding: 5px;
+      width: 8px;
+      line-height: 8px;
+      text-align: center;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    #browserURL {
+      display: inline-block;
+      background: #FFF;
+      border: 1px solid #777;
+      border-radius: 20px;
+      padding: 5px 10px;
+      width: 75%;
+      vertical-align: middle;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #browserMsg {
+      position: absolute;
+      top: 5px;
+      right: 20px;
+      font-size: 8vw;
+      text-align: right;
+      font-weight: bold;
+      text-shadow: -1px -1px 4px #FFF, 1px 1px 4px #FFF;
+      transition: 5s;
+    }
+    .game-on #browserMsg {
+      opacity: 0;
+    }
+    #browserMsg small {
+      display: block;
+      font-size: 3.5vw;
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body class="game-off pre-game">
+
+<a-scene id="scene" vr-mode-ui="enabled: false" background="color: #FFF">
+
+  <a-assets>
+    <canvas id="cSky"></canvas>
+    <canvas id="cFloor"></canvas>
+    <canvas id="cCactus"></canvas>
+  </a-assets>
+
+  <a-camera id="cam" far="15" position="0 3 10" rotation-ctrl wasd-controls="enabled: false" look-controls="enabled: true" active rotation="0 0 0">
+    <a-entity id="camContent" visible="false">
+
+      <a-entity id="lifeBar"
+        line__length="start: 0, 0, 0; end: 3, 0, 0; color: #800"
+        line__pct="start: 0, 0, 0; end: 3, 0, 0; color: #F00"
+        position="-11 7 -10"
+      ></a-entity>
+
+      <a-text id="odometerI" value="0" font="exo2bold" width="20" color="#FFF" anchor="right" align="right" position="-10.1 6.5 -10"></a-text>
+      <a-text id="odometerD" value=".00" font="exo2bold" width="14" color="#FFF" anchor="left" align="left" position="-10.16 6.37 -10"></a-text>
+      <a-text id="odometerUnd" value="km" font="exo2bold" width="20" color="#FFF" anchor="left" align="left" position="-9.25 6.5 -10"></a-text>
+
+      <a-box position="0 -.1 -.05" width=".12" height=".1" depth=".1" color="#A04"></a-box>
+      <a-box width=".025" height=".025" depth=".025" color="#A04"
+             position="-.033 -.06 -.092" rotation="-30 55 55"></a-box>
+      <a-box width=".025" height=".025" depth=".025" color="#A04"
+             position="+.033 -.06 -.092" rotation="-30 55 55"></a-box>
+
+    </a-entity>
+  </a-camera>
+
+  <a-sky id="sky" src="#cSky" radius="5000" rotation="0 0 90" material="fog: false"
+    animation__rotation="property: rotation.z; to: 450; dur: 240000; loop: true; easing: linear;
+                         startEvents: start; pauseEvents: pause"
+  >
+    <a-light id="ambientLight" type="ambient" color="#FFF" intensity="0"></a-light>
+    <a-light id="sunLight" type="directional" color="#FFF" intensity=0 x=".5" position="0 -6000 0"></a-light>
+    <a-light id="moonLight" type="directional" color="#48F" intensity=0 x=".4" position="0 6000 0"></a-light>
+  </a-sky>
+
+  <a-entity id="dino" position="0 0 0" color="#C00"></a-entity>
+
+  <a-entity id="florLine" line="start: -20,   0, 0; end: 20,   0, 0; color: #000"></a-entity>
+
+  <a-entity id="floor" position="5000 0 0"
+    animation="property: position.x; to: 0; dur: 900000; loop: true; easing: linear;
+               startEvents: start; pauseEvents: pause"
+  >
+    <a-plane id="floorPlane" position="0 0 0" rotation="-90 0 0" width="10200" height="10200"
+             material="src:#cFloor; repeat: 900 900" opacity="0"></a-plane>
+  </a-entity>
+
+</a-scene>
+
+<div id="browserBG"></div>
+<div id="browser">
+  <div id="browserHeader">
+    <div id="browserURL">http://js13kgames.com/entries/dino</div>
+  </div>
+  <p id="browserMsg">You are off-line!</p>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

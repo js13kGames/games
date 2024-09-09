@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head lang="en"><meta charset="UTF-8"><title></title><style type="text/css">body {
+            background-color: #C1C3C5;
+
+        }
+
+        #gameCanvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+            width: 416px;
+            height: 416px;
+            position: absolute;
+            top: 106px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        #svgGameBoy {
+            padding: 0;
+            margin: auto;
+            display: block;
+            width: 610px;
+            height: 962px;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+
+        }
+        #svgContainer {
+            margin: auto;
+            width: 700px;
+            height: 1000px;
+            min-width: 600px;
+        }</style></head><body><div id="svgContainer"><svg id="svgGameBoy"><path d="M1,13.9998743 C1,6.82024197 6.81522418,1 14.0000343,1 L597.757601,1 C604.937322,1 610.73363,6.81574907 610.70396,14.0037378 L608.849774,463.210228 C608.82013,470.391994 605.993117,481.304205 602.162616,487.386982 C602.162616,487.386982 579.950895,535.615724 523.329151,535.615711 C497.551146,535.615706 14.0018663,535.615711 14.0018663,535.615711 C6.8211338,535.615711 1,529.793933 1,522.615837 L1,13.9998743 Z" id="Rectangle-6" stroke="#606C78" fill="#606C78"></path><rect id="pad1" fill="#050708" x="106" y="686" width="48" height="142" rx="5"></rect><rect id="pad2" fill="#050708" x="60" y="732" width="142" height="48" rx="5"></rect><rect id="start" fill="#606C78" x="300" y="932" width="70" height="16" rx="4" transform="rotate(-28 300 932)"></rect><rect id="pause" fill="#606C78" x="200" y="932" width="70" height="16" rx="4" transform="rotate(-28 200 932)"></rect><circle id="buttonA" fill="#963C77" cx="415" cy="800" r="32"></circle><circle id="buttonB" fill="#963C77" cx="515" cy="740" r="32"></circle></svg><canvas id="gameCanvas" width="416" height="416"></canvas></div><script src="font.js"></script><script src="Levels.js"></script><script src="Sprite.js"></script><script src="TiledBackground.js"></script><script src="Hero.js"></script><script src="Wall.js"></script><script src="Egg.js"></script><script src="Door.js"></script><script src="Chest.js"></script><script src="Rock.js"></script><script src="Sword.js"></script><script src="Knight.js"></script><script src="music.js"></script><script src="main.js"></script></body></html>

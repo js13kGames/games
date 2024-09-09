@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filepurge</title>
+</head>
+<body>
+    <p>You are a disk cleanup software. Get rid of all the blinking unnecessary files. DON'T kill the perfectly average,
+    system critical files.<br>X to shoot your cleaning rm command, Z and C to angle.</p>
+    <p><b>HIGH SCORE:</b> <span id="score">0</span></p>
+    <canvas id="c" width="800" height="600"></canvas>
+    <canvas id="buffer" width="256" height="128" style="display:none;"></canvas>
+</body>
+<style>
+    html, body {
+        margin: 0;
+        min-height: 100vh;
+        background-color: rgb(29, 0, 0);[]
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column;
+        color: whitesmoke;
+        font-family: 'Fira Mono', 'Lucida Console', monospace;
+        text-align: center;
+    }
+
+    #c {
+        width: 800px;
+        height: 600px;
+    }
+
+    canvas {
+        image-rendering: optimizeSpeed;             /* Older versions of FF          */
+        image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+        image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+        image-rendering: pixelated;                 /* Awesome future-browsers       */
+        -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+    }
+</style>
+
+<script src="./dist.js"></script>
+</html>

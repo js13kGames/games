@@ -1,0 +1,1 @@
+body,canvas,div,html{margin:0;padding:0}body{font-family:Poppins,sans-serif;background-color:#696950}h1{text-align:center}div#main{width:100%;min-width:200px;max-width:600px;max-height:480px;margin:0 auto}canvas#main_game{display:block;margin:0 auto;width:100%;min-width:200px;height:auto;outline:0;-webkit-tap-highlight-color:rgba(255,255,255,0)}

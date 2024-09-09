@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Lost in Deep Space</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<script src="rooms.js"></script>
+<script src="scale.js"></script>
+<script>
+var days_per_tick = 0.1;
+var air_per_room = 50000;
+
+var start_rooms = [
+  water, empty, hydroponic, empty,
+  empty, oxygen, empty, hydroponic,
+  empty, empty, oxygen, empty,
+  hydroponic, empty, empty, empty
+];
+
+var total_air = start_rooms.length*air_per_room;
+var min_oxygen = total_air*15/100;
+var good_oxygen = total_air*23.5/100;
+var good_co2 = total_air*0.04/100;
+var bad_co2 = total_air*0.1/100;
+var max_co2 = total_air*0.4/100;
+
+var start_ship = {
+  crew: 10,
+  oxygen: good_oxygen-min_oxygen, // litres
+  co2: good_co2, // litres
+  clean_water: 100, // litres
+  waste_water: 100, // litres
+  food: 100, // kilograms
+  days: 0
+};
+
+var crew = {
+  eating: {
+    up: {
+      waste_water: 2
+    },
+    down: {
+      food: 2
+    }
+  },
+  drinking: {
+    up: {
+      waste_water: 2
+    },
+    down: {
+      clean_water: 2
+    }
+  },
+  breathing: {
+    up: {
+      co2: 550
+    },
+    down: {
+      oxygen: 550
+    }
+  }
+};
+
+var ship = {};
+var rooms = [];
+var starving = 0;
+var parching = 0;
+
+function init() {
+  for(var i = 0; i < start_rooms.length; ++i) {
+    rooms[i] = start_rooms[i];
+  }
+  for(var i in start_ship) {
+    ship[i] = start_ship[i];
+  }
+  starving = 0;
+  parching = 0;
+  var ul = document.getElementById("log");
+  while(ul.firstElementChild) {
+    ul.firstElementChild.remove();
+  }
+  log("We were on a routine trade mission when an unexplained malfunction " +
+    "sent our ship off course in an unknown direction. We appear to be in " +
+    "deep space. We have no idea where we are, and not enough fuel to turn " + 
+    "around. But the survival instinct is strong, we will live as long as " +
+    "we can on what we have.");
+}
+
+function createRoom(elem, ix) {
+  var list = elem.appendChild(document.createElement("dl"));
+  list.appendChild(document.createElement("dt")).textContent = "type";
+  var select = list.appendChild(document.createElement("dd")).appendChild(document.createElement("select"));
+  for(var i = 0; i < room_types.length; ++i) {
+    var option = select.appendChild(document.createElement("option"))
+    option.setAttribute("value", i);
+    option.textContent = room_types[i].name;
+    if(rooms[ix].name == room_types[i].name) {
+      option.setAttribute("selected", "selected");
+    }
+  }
+  select.onchange= function() {
+    rooms[ix] = room_types[select.value];
+  }
+}
+
+var fmt = Intl.NumberFormat("en-US", {
+  minimumIntegerDigits: 3,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2});
+
+function display_stats() {
+  for(var stat in ship) {
+    if(stat == "oxygen") {
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format((ship[stat] + min_oxygen)*100/total_air) + "%";
+    } else if(stat == "co2") {
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format(ship[stat]*1000000/total_air) + "ppm";
+    } else {
+      var unit = "";
+      if(stat == "food") { unit = "kg"; }
+      if(stat == "clean_water" || stat == "waste_water") { unit = "L"; }
+      document.getElementById("stat_" + stat).textContent =
+          fmt.format(ship[stat]) + unit;
+    }
+  }
+}
+
+function log(msg) {
+  var log = document.getElementById("log");
+  var li = document.createElement("li");
+  li.textContent = "Day " + Math.floor(ship.days) + ": " + msg;
+  log.insertBefore(li, log.firstChild);
+}
+
+function plog(priority, msg) {
+  if(Math.random() < priority/40) {
+    log(msg);
+  }
+}
+
+function capn_scale(scale, priority, msg) {
+  if(scale < 0.9999) {
+    plog(priority, msg);
+  }
+}
+
+function die(msg) {
+  if(ship.crew > 1) {
+    log(msg);
+  } else {
+    log("Our struggles are at an end. I can't go on any longer.");
+    document.getElementById("start").textContent = "start over";
+    window.clearInterval(updater);
+    updater = false;
+    paused = false;
+  }
+  --ship.crew;
+}
+
+function update_crew(scale) {
+  if(scale.food && scale.food < 0.9999) {
+    starving += (1 - scale.food)*days_per_tick;
+    if(starving > 5 && Math.random() < starving/30) {
+      die("We are one less, and desperate for food. I fear we can't go on much longer. May our lost crew member rest in peace.");
+    }
+  } else {
+    starving = 0;
+  }
+  if(scale.clean_water && scale.clean_water < 0.9999) {
+    parching += (1 - scale.clean_water)*days_per_tick;
+    if(parching > 2 && Math.random() < parching/3) {
+      --ship.crew;
+      log("We are one less, and desperate for clean water. I fear we can't go on much longer. May our lost crew member rest in peace.");
+    }
+  } else {
+    parching = 0;
+  }
+  if(scale.oxygen < 1) {
+    plog(9, "It's getting hard to breathe, we need more oxygen.");
+    if(Math.random() > scale.oxygen) {
+      die("We are one less, dying because we can't breathe. May our lost crew member rest in peace.");
+    }
+  }
+  if(ship.co2 > bad_co2) {
+    plog(9, "The air has too much co2. It is hard to breathe.");
+    if(Math.random() < (ship.co2 - bad_co2)/(max_co2 - bad_co2)) {
+      die("We are one less, dying because we can't breathe. May our lost crew member rest in peace.");
+    }
+  }
+}
+
+function run_step() {
+  var scale = calc_scale();
+  var sum = sum_things(scale);
+  accum(ship, sum.up);
+  dccum(ship, sum.down);
+  var delta = {};
+  accum(delta, sum.up);
+  dccum(delta, sum.down);
+  ship.days += days_per_tick;
+  capn_scale(scale.food, 3,
+    "We don't have enough food, hopefully we can grow more in time.");
+  capn_scale(scale.co2, 1,
+    "Our plants are not growing fast. It looks like they don't have enough co2.");
+  capn_scale(scale.oxygen, 40,
+    "The crew is feeling tired and dizzy. Our oxygen is running low.");
+  capn_scale(scale.clean_water, 7,
+    "Everyone is thirsty, we're lacking clean water.");
+  update_crew(scale);
+  display_stats();
+}
+
+window.onload = function () {
+  init();
+  var width = Math.ceil(Math.sqrt(rooms.length));
+  var row;
+  for(var i = 0; i < rooms.length; ++i) {
+    if(i % width == 0) {
+      row = document.getElementById("ship").appendChild(document.createElement("tr"));
+    }
+    var col = row.appendChild(document.createElement("td"));
+    col.setAttribute("id", "room" + i);
+    createRoom(col, i);
+  }
+  var stats = document.getElementById("stats");
+  for(var stat in ship) {
+    stats.appendChild(document.createElement("dt")).textContent = stat.replace('_', ' ');
+    var data = stats.appendChild(document.createElement("dd"));
+    data.setAttribute("id", "stat_" + stat);
+  }
+  display_stats();
+};
+
+var updater;
+var paused = false;
+
+function start() {
+  if(updater) {
+    window.clearInterval(updater);
+    updater = false;
+    paused = true;
+    document.getElementById("start").textContent = "resume";
+  } else {
+    if(!paused) {
+      init();
+    }
+    updater = window.setInterval(run_step, 1000);
+    paused = true;
+    document.getElementById("start").textContent = "pause";
+  }
+}
+</script>
+<style>
+</style>
+<body>
+<header>
+<h1>Lost in Deep Space</h1>
+<button id="start" onclick="start()">start</button>
+</header>
+<main>
+<section>
+<dl id="stats" class="horizontal">
+</dl>
+</section>
+<section>
+  <table id="ship">
+  </table>
+  <ul id="room_info" class="vertical">
+  </ul>
+</section>
+<section>
+<h1>Captain's Log</h1>
+<ul id="log">
+</ul>
+</section>
+</main>
+</body>
+</html>

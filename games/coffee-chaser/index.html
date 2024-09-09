@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Coffee Chaser</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            canvas{
+                width: 640px;
+                height:480px;
+                image-rendering: pixelated !important;
+                text-align: center;
+                margin: 0 auto;
+            }
+            *{
+                text-align: center;
+                margin: 0 auto;
+            }
+        </style>
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <canvas id="gameCanvas" width="640" height="480"></canvas>
+        <script>
+            "use strict";            
+            (function(){
+                window.game.init();
+            })();
+        </script>
+    </body>
+</html>

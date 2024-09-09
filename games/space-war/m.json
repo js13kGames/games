@@ -1,0 +1,10 @@
+{
+  "short_name": "Space War",
+  "name": "Space War",
+  "icons": [{ "src": "icon.png", "type": "image/png", "sizes": "144x144" }],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#1e1e26",
+  "background_color": "#1e1e26",
+  "orientation": "portrait"
+}

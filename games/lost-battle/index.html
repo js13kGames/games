@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border: 1px solid red;
+    background-color: black;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+var right = false;
+var boardHeight = window.innerHeight-25;
+var boardWidth = window.innerWidth-25;
+var release = false;
+var player_move=0;
+var ball_move=0;
+var score1 = 0;
+var score2 = 0;
+function startGame() {
+    Score1 = new component("30px", "Consolas", "#ff0000", boardWidth-200, 40, "text");
+    Score2 = new component("30px", "Consolas", "#ff0000", boardWidth-200, boardHeight-30, "text");
+    Result = new component("60px", "Consolas", "#ff0000", boardWidth/2-150, boardHeight/2, "text");
+    player1 = new component(200, 15, "blue", window.innerWidth/2-100, 0);
+    player2 = new component(200, 15, "blue", window.innerWidth/2-100, boardHeight-15);
+    ball = new component(15, 15, "red", player2.x+player2.width/2, player2.y-16);
+    myGameArea.start();
+    //document.getElementById('text').innerHTML = player2.y +" "+ (ball.y+ball.height);
+    Result.text="";
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = boardWidth;
+        this.context = this.canvas.getContext("2d");
+        this.canvas.height = boardHeight;
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+
+function component(width, height, color, x, y, type) {
+    this.type = type;
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;    
+    this.update = function(){
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) ||
+               (mytop > otherbottom) ||
+               (myright < otherleft) ||
+               (myleft > otherright)) {
+           crash = false;
+        }
+        return crash;
+    }
+}
+
+function updateGameArea() {
+    myGameArea.clear();
+    //document.getElementById('text').innerHTML=ball.x;
+    //ball.x += 1;
+    //ball.y += 1;
+    if(player_move===0){
+        player1.speedX = 0;
+        player1.speedY = 0;
+        player_move=1;
+    }
+    if(ball_move==0 && release==true){
+        min = -10;
+        max = 10;
+        dir = Math.floor(Math.random()*(max-min+1)+min);
+        ball.speedX = dir;
+        ball.speedY = -10;
+        ball_move=1;
+    }
+    if(ball_move==0 && release==false){
+        ball.speedX = 0;
+        ball.speedY = 0;
+    }
+    player2.speedX = 0;
+    player2.speedY = 0;
+
+    if(player1.x>ball.x+ball.width/2 && release==true){
+        //player1.speedX = -8;
+        right = false;
+    }
+    else if(player1.x+player1.width<ball.x+ball.width/2 && release==true){
+        //player1.speedX = 8;
+        right = true;
+    }
+
+    if(player1.x <= 0){
+        right = true;
+    }
+    else if(player1.x + player1.width >= boardWidth){
+        right = false;
+    }
+    if(!right){
+        player1.speedX = -8.5;
+    }  
+    else if(right){
+        player1.speedX = 8.5;
+    }
+    if(release==false){
+        ball.x = player2.x+player2.width/2;
+        ball.y = player2.y-16;
+        player1.speedX = 0;
+    }
+    if(ball.crashWith(player2)){
+        min = 1;
+        max = 10;
+        dir = Math.floor(Math.random()*(max-min+1)+min);
+        if(ball.speedX<0){
+            ball.speedX = -dir;
+        }
+        else{
+            ball.speedX = dir;
+        }
+        ball.speedY = -ball.speedY;           
+    }
+    if(ball.crashWith(player1)){
+        min = 1;
+        max = 10;
+        dir = Math.floor(Math.random()*(max-min+1)+min);
+        if(ball.speedX<0){
+            ball.speedX = -dir;
+        }
+        else{
+            ball.speedX = dir;
+        }
+        ball.speedY = -ball.speedY;           
+    }
+
+    if(ball.x <= 0 || ball.x + ball.width >= boardWidth){
+        ball.speedX = -ball.speedX;
+    }
+
+    if (myGameArea.key && myGameArea.key == 37) {
+        if(player2.x > 0){
+            player2.speedX = -10;} 
+    }
+    if (myGameArea.key && myGameArea.key == 39) {
+        if(player2.x + player2.width < window.innerWidth-25){
+            player2.speedX = 10; }
+    }
+    if(myGameArea.key && myGameArea.key == 13){
+        release = true;
+    }
+    if(ball.y+ball.height < 0){
+        release = false;
+        score2+=1;
+    }
+    if(ball.y > boardHeight){
+        release = false;
+        score1+=1;
+    }
+    if(score1 == 3){
+        myGameArea.stop();
+        Result.text = "YOU LOSE";
+    }
+    if(score2 == 3){
+        myGameArea.stop();
+        Result.text = "YOU WIN";
+    }
+    //if (myGameArea.key && myGameArea.key == 38) {ball.speedY = -10; }
+    //if (myGameArea.key && myGameArea.key == 40) {ball.speedY = 1; }
+    Score1.text = "SCORE: "+score1;
+    Score2.text = "SCORE: "+score2;
+    Score1.update();
+    Score2.update();
+    Result.update();
+    ball.newPos();    
+    ball.update();
+    player1.newPos();
+    player2.newPos();
+    player1.update();
+    player2.update();
+}
+
+</script>
+<p id="text"></p>
+</body>
+</html>

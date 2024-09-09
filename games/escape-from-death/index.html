@@ -1,0 +1,700 @@
+<!doctype html>
+<html> 
+<head>
+    <title>Escape from death</title>
+    <meta charset='utf-8'>
+	<style>
+	    body {
+background: #000000;
+
+#wrapper {
+	width:600px;
+	margin:0 auto;
+}
+
+canvas {
+	cursor:none;
+}
+
+raiting {
+
+}
+	</style>
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="root"><canvas id='game' width='600' height='600'>Элемент не поддерживается</canvas></div>
+</div>
+	
+        <script src="https://js13kgames.com/src/near-api-js.js" type="text/javascript"></script>
+        <script>
+        
+            
+            
+                
+let contract;
+let account;
+let wallet;
+let near;
+let nearApi;
+
+const accountContract = 'dev-1663063108095-18567660337802';
+                
+        
+   (async () =>
+   {
+            
+            // ### NEAR JS  
+await initNEAR();
+
+const signIn = () => {
+  wallet.requestSignIn(
+    accountContract, // contract requesting access
+  )
+}
+
+const signOut = () => {
+  wallet.signOut()
+
+  window.location.reload()
+};
+
+
+
+
+
+const getRanking = async () =>
+{
+    return await contract.get_greeting();
+};
+
+const saveResult = async (score) =>
+{
+    
+    let res  = await getRanking(); // 1|name|res
+    
+    
+    if(!res) {
+        console.log('error');
+        return;
+    }
+    
+    
+    
+    
+    
+    // outside vars
+let namePlayer = wallet.getAccountId(), counter = score;
+
+
+
+/*let res = '1|name|210|2|name2|156';*/
+
+
+let info = res.split('|');
+
+let parts = [];
+let results = [];
+
+
+for(let i = 0; i < info.length; i += 3)
+    {
+        parts.push(info[i+1]);
+        results.push(parseInt(info[i+2]));
+    }
+
+
+        parts.push(namePlayer);
+        results.push(counter);
+
+
+
+
+console.log(parts, results);
+multisort(results, [parts]);
+parts.reverse();
+results.reverse();
+console.log(parts, results);
+
+parts = parts.slice(0, 10);
+results = results.slice(0, 10);
+
+
+
+let newRanking = "";
+
+for(let i = 0; i < results.length; i++)
+    newRanking += `${i + 1}|${parts[i]}|${results[i]}|`;
+
+if(newRanking.length > 0) newRanking = newRanking.substr(0, newRanking.length - 1);
+
+
+console.log(newRanking);
+
+
+    
+    const result = await contract.set_greeting({
+    message: newRanking,
+  });
+
+
+
+
+		            alert("Your result: " + counter);
+		        
+		            window.location.reload();
+
+
+
+
+
+
+
+
+
+
+
+
+
+function multisort(sortBy,otherArrays){
+  var keys=[],i,tmpKeys;
+  sortBy.sort(function(a,b){
+    var ret=(a>b)?1:(a<b)?-1:0;
+    // storing the return values to be used for the other arrays
+    keys.push(ret);
+    return ret;
+  });
+  for(i=0;i<otherArrays.length;i++){
+    // copy the stored retun values
+    tmpKeys=keys.concat([]);
+    otherArrays[i].sort(function(){
+      // return the saved values based on sortBy array's sort
+      return tmpKeys.splice(0,1);
+    });
+  }
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+};
+
+
+
+
+async function initNEAR() {
+  nearAPI = window.nearApi
+
+  /**
+   * USER KEYSTORE
+   */
+  const { keyStores, connect, WalletConnection } = nearAPI
+  const keyStore = new keyStores.BrowserLocalStorageKeyStore()
+  const config = {
+    networkId: 'testnet',
+    keyStore, // optional if not signing transactions
+    nodeUrl: 'https://rpc.testnet.near.org',
+    walletUrl: 'https://wallet.testnet.near.org',
+    helperUrl: 'https://helper.testnet.near.org',
+    explorerUrl: 'https://explorer.testnet.near.org',
+  }
+
+  near = await connect(config)
+
+  wallet = new WalletConnection(near);
+}
+            
+            
+            
+            
+            
+            
+            
+            
+        
+        
+        
+        
+        
+var canvas 	= document.getElementById( 'game' ); 
+var context = canvas.getContext('2d');
+
+
+
+// ### main page
+
+const generateButton = (x, y, width, height, text) => {
+
+	let button = document.createElement('button');
+
+	document.body.prepend(button);
+
+	button.style.position = "absolute";
+	button.style.left = x + 'px';
+	button.style.top = y + 'px';
+	button.innerHTML = text;
+	button.style.width = width + 'px';
+	button.style.height = height + 'px';
+	button.style.zIndex = 5;
+	
+	return button;
+
+};
+const addText = (button, textSpan, id) =>
+            {
+                            
+                let wrapper = document.createElement('div');            
+                let text = document.createElement('span');
+                root.append(wrapper);
+                wrapper.append(text);
+                
+                text.style.cssText = `
+                    font-family: "Lucida Console", Monaco, monospace;
+                    letter-spacing: 0px;
+                    word-spacing: -2px;
+                    color: #000000;
+                    text-decoration: none;
+                    font-style: normal;
+                    font-variant: normal;
+                    text-transform: uppercase;`;
+                    
+                text.innerHTML = textSpan;  
+                text.id = id;
+                text.style.fontSize = parseInt(button.style.height) / 2  + 'px';
+                text.style.color = 'white';
+                        
+                wrapper.style.left = parseInt(button.style.left) - parseInt(getComputedStyle(wrapper).width) / 5 + 'px';
+                wrapper.style.top = parseInt(button.style.top) - parseInt(button.style.height) / 2  + 'px';
+                wrapper.style.position = 'absolute';
+                wrapper.style.zIndex = 5;
+                
+                return true;
+            }
+
+let wBut = innerWidth * 0.1;
+let hBut = wBut / 2.5;
+
+let buttonStart;
+(buttonStart = generateButton(innerWidth / 2 - wBut / 2, innerHeight * 0.40 - hBut / 2, wBut, hBut, "PLAY")).onclick = start;
+
+
+
+
+
+// ### game page
+const s = () => {
+
+
+	var spanCounter;
+
+	(function () {
+
+		// counter 
+		spanCounter = document.createElement('span');
+		document.body.appendChild(spanCounter);
+		spanCounter.style.position = "absolute";
+		spanCounter.style.color = 'white';
+		spanCounter.style.fontSize = `${innerHeight * 0.05}px`;
+		spanCounter.style.left = innerWidth / 2 - innerWidth * 0.055 + 'px';
+		spanCounter.style.top = innerHeight * 0.93 + 'px';
+		spanCounter.style.zIndex = 5;
+
+
+	})();
+
+
+
+	var i, ship, Timer;
+	var aster = [];
+	var fire = [];
+	var expl = [];
+	var counter = 0;
+	
+	let coffins = [];
+	let timeLifeCOffin = 5;
+	let isFinished = false;
+
+	//загрузка ресурсов
+	asterimg = '\uD83D\uDC7B';
+
+	fireimg = '\uD83D\uDD25';
+
+	shipimg = '\uD83E\uDDDC\u200D\u2642\uFE0F';
+
+	explimg = '\uD83D\uDCA5';
+
+
+
+	web = '\uD83D\uDD78\uFE0F';
+
+	coffin = '\u26B0\uFE0F';
+
+
+
+	//совместимость с браузерами
+	var requestAnimFrame = (function () {
+		return window.requestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.oRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			function (callback) {
+				window.setTimeout(callback, 1000 / 20);
+			};
+	})();
+
+	//старт игры
+	{
+
+		spanCounter.innerHTML = `\uD83C\uDFC6SCORE: ${0}`;
+		init();
+		game();
+	}
+
+
+	//начальные установки
+	function init() {
+		canvas.addEventListener("mousemove", function (event) {
+			ship.x = event.offsetX - 25;
+			ship.y = event.offsetY - 13;
+		});
+
+		Timer = 0;
+		ship = { x: 300, y: 300, animx: 0, animy: 0, scale: 40 };
+	}
+
+	//основной игровой цикл
+	function game() {
+		update();
+		render();
+		
+		if(isFinished)
+		    return;
+		
+		requestAnimFrame(game);
+	}
+	
+	
+	
+	
+	
+
+	//функция обновления состояния игры
+	function update() {
+		Timer++;
+		
+		
+		
+		// спавн гробов
+		if (Timer % 50 == 0) {
+			coffins.push({
+			    lifeTime: 100,
+				scale: 70,
+				x: Math.random() * 550,
+				y: Math.random() * 550,
+			});
+
+		}
+		
+		
+		
+		// iters per coffins
+		let newCoffins = [];
+		for(let i = 0; i < coffins.length; i++)
+		{
+		    
+		    coffins[i].lifeTime--;
+		    
+		    
+		    // проверим столкновение
+		    if(coffins[i].lifeTime < 85 && Math.abs((ship.x + ship.scale) - (coffins[i].x + coffins[i].scale)) < 50 && Math.abs(ship.y - coffins[i].y) < 25)
+		    {
+		        isFinished = true;
+		        
+		        if(wallet.isSignedIn()) saveResult(counter);
+		        else{
+		            alert("Your result: " + counter);
+		             
+		        
+		            window.location.reload();
+		        }
+		        
+		        return;
+		    }
+		    
+		    
+		    if(coffins[i].lifeTime > 0)
+		        newCoffins.push(coffins[i]);
+		    
+		}
+		coffins = newCoffins;
+		
+		
+		
+
+		//спавн астероидов
+		if (Timer % 10 == 0) {
+			aster.push({
+				angle: 0,
+				dxangle: Math.random() * 0.2 - 0.1,
+				del: 0,
+				x: Math.random() * 550,
+				y: -50,
+				dx: Math.random() * 2 - 1,
+				dy: Math.random() * 2 + 1
+			});
+
+		}
+		//выстрел
+		if (Timer % 30 == 0) {
+			fire.push({ x: ship.x + 10, y: ship.y, dx: 0, dy: -10.2 });
+			fire.push({ x: ship.x + 10, y: ship.y, dx: 0.5, dy: -10 });
+			fire.push({ x: ship.x + 10, y: ship.y, dx: -0.5, dy: -10.2 });
+		}
+
+		//движение астероидов
+		for (i in aster) {
+			aster[i].x = aster[i].x + aster[i].dx;
+			aster[i].y = aster[i].y + aster[i].dy;
+			aster[i].angle = aster[i].angle + aster[i].dxangle;
+
+			//граничные условия (коллайдер со стенками)
+			if (aster[i].x <= 0 || aster[i].x >= 550) aster[i].dx = -aster[i].dx;
+			if (aster[i].y >= 650) aster.splice(i, 1);
+
+			//проверим каждый астероид на столкновение с каждой пулей
+			for (j in fire) {
+
+				if (Math.abs(aster[i].x + 25 - fire[j].x - 15) < 50 && Math.abs(aster[i].y - fire[j].y) < 25) {
+					//произошло столкновение
+
+					counter++;
+					spanCounter.innerHTML = `\uD83C\uDFC6SCORE: ${counter}`;
+
+					//спавн взрыва
+					expl.push({ x: aster[i].x - 25, y: aster[i].y - 25, scale: 1 });
+
+					//помечаем астероид на удаление
+					aster[i].del = 1;
+					fire.splice(j, 1); break;
+				}
+			}
+			//удаляем астероиды
+			if (aster[i].del == 1) aster.splice(i, 1);
+		}
+
+		//двигаем пули
+		for (i in fire) {
+			fire[i].x = fire[i].x + fire[i].dx;
+			fire[i].y = fire[i].y + fire[i].dy;
+
+			if (fire[i].y < -30) fire.splice(i, 10);
+		}
+
+		//Анимация взрывов
+		let newExpl = [];
+		for (let i = 0; i < expl.length; i++) {
+			expl[i].scale += 0.07;
+			
+			
+			if(expl[i].scale <= 2)
+			    newExpl.push(expl[i]);
+		}
+		expl = newExpl;
+		
+
+		//анимация щита
+		ship.animx = ship.animx + 1;
+		if (ship.animx > 4) { ship.animy++; ship.animx = 0 }
+		if (ship.animy > 3) {
+			ship.animx = 0; ship.animy = 0;
+		}
+	}
+
+	function render() {
+		//очистка холста (не обязательно)
+		context.clearRect(0, 0, 600, 600);
+		
+		//рисуем фон
+		context.save();
+		context.scale(2, 2);
+		context.scale(1, 1);
+		context.restore();
+		context.font = "480px Arial";
+		context.fillText(web, 20, 390, 600, 600);
+		
+		
+		
+		//рисуем пули
+		for (i in coffins){
+			context.font = `${coffins[i].scale}px Arial`;
+			context.fillText(coffin, coffins[i].x, coffins[i].y); }
+		
+		
+		//рисуем пули
+		for (i in fire){
+			context.font = "20px Arial";
+			context.fillText(fireimg, fire[i].x, fire[i].y); }
+			
+			
+		//рисуем корабль
+		context.font = "80px Arial";
+		context.fillText(shipimg, ship.x, ship.y);
+		
+		
+		
+		//рисуем астероиды
+		for (i in aster) {
+			//вращение астероидов
+			context.save();
+			context.translate(aster[i].x + 25, aster[i].y + 25);
+			context.rotate(aster[i].angle);
+
+
+			//  ***rendering emolji on canvas***
+			context.font = "80px Arial";
+			context.fillText(asterimg, -25, -25);
+
+
+
+
+
+
+			context.restore();
+		}
+		//рисуем взрывы
+		for (let i = 0; i < expl.length; i++)
+		{
+			context.font = `${expl[i].scale * 20}px Arial`;
+			context.fillText(explimg, /*128 * Math.floor(expl[i].animx), 128 * Math.floor(expl[i].animy), 128, 128, */expl[i].x, expl[i].y /*,100, 100*/);
+		}
+
+	}
+
+
+
+
+	function Div(innerText) {
+		return innerText;
+    }
+
+
+};
+
+const t = async () => {
+
+	let dataPlayers = await getRanking();
+	
+	let info = [];
+	info = dataPlayers.split('|');
+
+	let table = document.createElement('table');
+	root.append(table);
+
+	table.style.position = "absolute";
+	table.style.color = "white";
+	table.style.fontSize = innerHeight * 0.03 + 'px';
+	table.style.zIndex = 5;
+	table.style.right = innerWidth * 0.05 + 'px';
+	table.style.top = innerHeight * 0.05 + 'px';
+
+	let innerHtmlCode = "";
+
+
+	let keys = Object.keys(dataPlayers);
+
+	for (let i = 0; i < info.length; i+=3)
+		innerHtmlCode += `<tr> <td> ${info[i]} </td> <td> | </td>   <td>${info[i+1]}</td>   <td> | </td>   <td>${info[i+2]}</td>    </tr>`;
+
+	table.innerHTML = innerHtmlCode;
+};
+
+function start() { buttonStart.remove(); document.getElementById('nameWallet')?.remove(); document.querySelector('button')?.remove(); t(); s() }
+        
+        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            // # AUTHORIZATION
+            {
+                
+
+  if (wallet.isSignedIn()) {
+    const acct = wallet.getAccountId()
+
+    console.log('IS SIGNED IN!', acct);
+
+    account = await near.account(wallet._authData.accountId)
+    const response = await account.state()
+
+    console.log('STATE', response)
+
+    contract = new nearAPI.Contract(
+      account, // the account object that is connecting
+      accountContract,
+      {
+      // name of contract you're connecting to
+        viewMethods: ['get_greeting'], // view methods do not change state but usually return a value
+        changeMethods: ['set_greeting'], // change methods modify state
+        sender: account, // account object to initialize and sign transactions.
+      },
+    );
+    
+             
+                
+                
+                (but = generateButton( innerWidth / 2 - wBut / 2, innerHeight * 0.60 - hBut / 2, wBut, hBut, "SIGN OUT" )).onclick = signOut;
+                
+                
+                addText(but, acct, "nameWallet");
+    
+    
+  }
+  else
+       generateButton( innerWidth / 2 - wBut / 2, innerHeight * 0.60 - hBut / 2, wBut, hBut, "SIGN IN" ).onclick = signIn;
+            
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            // ### OTHER
+            
+            function randInt(min, max) { // min and max included
+                return Math.floor(Math.random() * (max - min + 1) + min)
+            }
+            
+            
+   })();
+        </script>
+</body>
+</html>

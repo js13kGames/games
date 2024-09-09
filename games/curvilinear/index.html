@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+	<script src="TinyMusic.min.js"></script>
+</head>
+<body>
+	<script src="audio.js"></script>
+	<script src="main.js"></script>
+	<a-scene>
+		<a-assets>
+			<canvas id="floor-canvas" crossorigin="anonymous" width="16" height="16"></canvas>
+		</a-assets>
+		
+		<a-entity id="swirl-center" position="0 1.6 0" swirl-spawner="amount: 12"></a-entity>
+		
+		<a-entity light="type: ambient; color: #FFFFFF"></a-entity>
+		
+		<a-entity geometry="primitive: plane; width: 32; height: 32"
+		rotation="-90 45 0"
+        material="src: #floor-canvas; repeat: 16 16" draw-canvas="floor-canvas"></a-entity>
+		<a-sky radius=8 material="src:#floor-canvas"></a-sky>
+		
+		<a-entity id="coin" position="0 1.8 -1.1" rotation="90 0 0"
+		geometry="primitive: cylinder; height: 0.02; radius: 0.12"
+		material="color: gold"
+		spin coin-collect>
+			<a-entity rotation="90 0 0" geometry="primitive: box; width: 0.05; height: 0.15; depth: 0.03;"
+			material="color: orange"></a-entity>
+		</a-entity>
+		
+		<a-entity id="menu" position="0 2 -0.95"
+		text="value: Curvilinear; color: orange; width: 4; align: center"></a-entity>
+		<a-entity id="restart" position="0 1.4 -0.95" geometry="primitive: plane; width: 0.3; height: 0.2" material="color: #AAAAFF" restart-game
+		text="value: Start; color: #339933; width: 2; align: center"></a-entity>
+		
+		<a-camera wasd-controls-enabled="false">
+			<a-entity cursor
+            position="0 0 -0.9"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: #33cc33; shader: flat">
+			</a-entity>
+			<a-text id="score" value="Score: 0\nHigh Score: 0" color="#339933" width=2 align="center" position="0 -0.45 -1"></a-entity>
+		</a-camera>
+	</a-scene>
+</body>
+</html>

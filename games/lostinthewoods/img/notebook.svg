@@ -1,0 +1,54 @@
+<svg id="svg21012" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="48" width="48" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 48 48">
+<g id="layer1" transform="translate(8.5 -972.4)">
+<rect id="rect21831" height="48" width="48" y="972.4" x="-8.5"/>
+<g id="g21833">
+<g id="g21566" transform="translate(.3744 -.4226)">
+<g id="g21699">
+<rect id="rect21564" height="34" width="25" y="979.8" x="3.626" fill="#853"/>
+<rect id="rect21562" height="32" width="24" y="980.8" x="3.626" fill="#ddddb4"/>
+</g>
+<g>
+<rect id="rect21722" height="1" width="20" y="983.8" x="5.626"/>
+<rect id="rect21724" height="1" width="20" y="987.8" x="5.626"/>
+<rect id="rect21726" height="1" width="20" y="995.8" x="5.626"/>
+<rect id="rect21728" height="1" width="20" y="999.8" x="5.626"/>
+<rect id="rect21730" height="1" width="20" y="991.8" x="5.626"/>
+<rect id="rect21734" height="1" width="20" y="1008" x="5.626"/>
+<rect id="rect21953" height="1" width="20" y="1004" x="5.626"/>
+</g>
+</g>
+<g fill="#646464">
+<g id="g21582" transform="translate(0,-1)">
+<rect id="rect21570" height="1" width="1" y="981.4" x="3"/>
+<rect id="rect21572" height="1" width="1" y="982.4" x="4"/>
+<path id="rect21576" d="m2 983.4h1v1h-1zm0-1h1v1h-1z"/>
+<rect id="rect21578" height="1" width="1" y="984.4" x="3"/>
+</g>
+<g id="g21601" transform="translate(0,6)">
+<rect id="rect21603" height="1" width="1" y="981.4" x="3"/>
+<rect id="rect21605" height="1" width="1" y="982.4" x="4"/>
+<path id="rect21609" d="m2 983.4h1v1h-1zm0-1h1v1h-1z"/>
+<rect id="rect21611" height="1" width="1" y="984.4" x="3"/>
+</g>
+<g id="g21613" transform="translate(0,13)">
+<rect id="rect21615" height="1" width="1" y="981.4" x="3"/>
+<rect id="rect21617" height="1" width="1" y="982.4" x="4"/>
+<path id="rect21621" d="m2 983.4h1v1h-1zm0-1h1v1h-1z"/>
+<rect id="rect21623" height="1" width="1" y="984.4" x="3"/>
+</g>
+<g id="g21625" transform="translate(0,20)">
+<rect id="rect21627" height="1" width="1" y="981.4" x="3"/>
+<rect id="rect21629" height="1" width="1" y="982.4" x="4"/>
+<path id="rect21633" d="m2 983.4h1v1h-1zm0-1h1v1h-1z"/>
+<rect id="rect21635" height="1" width="1" y="984.4" x="3"/>
+</g>
+<g id="g21649" transform="translate(0,27)">
+<rect id="rect21651" height="1" width="1" y="981.4" x="3"/>
+<rect id="rect21653" height="1" width="1" y="982.4" x="4"/>
+<path id="rect21657" d="m2 983.4h1v1h-1zm0-1h1v1h-1z"/>
+<rect id="rect21659" height="1" width="1" y="984.4" x="3"/>
+</g>
+</g>
+</g>
+</g>
+</svg>

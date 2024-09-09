@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Shuttle Power Dash</title>
+<meta charset="UTF-8">
+<style>
+    html {
+        background: #2C3B4D;
+        color: white;
+        font-family: sans-serif;
+        overflow: hidden;
+    }
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    #container {
+        background: #131D2D;
+    }
+
+    button {
+        background: #7AA396;
+        color: rgb(11, 28, 37);
+    }
+
+    button, input {
+        font-size: 24px;
+        line-height: 1.2em;
+        text-align: center;
+        margin-bottom: 2rem;
+        width: 30rem;
+        display: block;
+        margin: 2rem auto;
+    }
+
+    #players, #code {
+        color: #789;
+        margin-top: 1rem;
+    }
+
+    #game {
+        left: 160px;
+        margin: 0 auto;
+        width: 100%;
+        height: 600px;
+        position: relative;
+        text-align: center;
+    }
+
+        #game svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50000px; 
+            height: 100%;
+        }
+
+    #intro, #game-overlay {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        margin-top: 200px;
+
+    }
+
+    #sidebar {
+        position: absolute;
+        overflow: hidden;
+        background: rgba(19, 29, 45, 0.95);
+        width: 150px;
+        height: 600px;
+        top: 0;
+        color: #A1DFE3;
+    }
+
+        #code {
+            font-size: 12px;
+        }
+
+        .player-info {
+            margin-bottom: 3rem;
+            font-size: 8px;
+        }
+
+        .pi-oxy {
+            background: #A1DFE3;
+            height: 4px;
+            border-radius: 3px;
+            margin: 4px 0;
+            transition: width 200ms ease-in-out;
+            -webkit-transition: width 200ms ease-in-out;
+        }
+
+        .pi-name {
+            float: left;
+        }
+
+        .pi-glitches {
+            float: right;
+        }
+
+    #gameplay {
+        width: 50000px;
+        margin: 0 auto;
+        position: relative;
+        font-size: 8px;
+    }
+
+        #gameplay * {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .mine, .player {
+            white-space: nowrap; 
+            transform: translate(-50%,-50%) scaleY(1.4) !important;
+        }
+
+        .mine.wirable {
+            padding: 1em;
+            border: 2px solid white;
+            border-radius: 50px;
+        }
+
+        .mine.powered {
+            border-color: #DCF0BE;
+            color: #DCF0BE !important;
+            background: rgba(140, 255, 150, 0.2);
+            background: rgba(40, 200, 0, 0.2);
+            background: #173f24;
+            -webkit-box-shadow: 0 0 30px rgba(90, 180, 80, 0.75), inset 0 0 30px rgba(90, 180, 80, 0.75);
+            -moz-box-shadow: 0 0 30px rgba(90, 180, 80, 0.75), inset 0 0 30px rgba(90, 180, 80, 0.75);
+            box-shadow: 0 0 30px rgba(90, 180, 80, 0.75), inset 0 0 30px rgba(90, 180, 80, 0.75);
+        }
+
+
+
+    /* `crunch this could really be optimized */
+    .font, button, input, .mine, .player, #game-msg, #footer > * {
+        text-transform: uppercase;
+        transform: scaleY(1.4);
+        letter-spacing: 0.05em;
+        font-weight: bold;
+    }
+
+    .bounce {
+        -webkit-transition: font-size 300ms cubic-bezier(0.5,1.8,0,1);
+        -moz-transition: font-size 300ms cubic-bezier(0.5,1.8,0,1);
+        transition: font-size 300ms cubic-bezier(0.5,1.8,0,1);
+        -webkit-transition: font-size 300ms cubic-bezier(0.5,1.4,0.6,1);
+        -moz-transition: font-size 300ms cubic-bezier(0.5,1.4,0.6,1);
+        transition: font-size 300ms cubic-bezier(0.5,1.4,0.6,1);
+    }
+
+    #game-overlay {
+        background: rgba(19, 29, 45, 0.95);
+        height: 600px;
+        margin: 0;
+        opacity: 0;
+        transition: 1s opacity ease-out;
+        text-align: center;
+        pointer-events: none;
+    }
+
+        #game-msg {
+            margin-top: 200px;
+            line-height: 3em;
+        }
+
+    #footer {
+        background: #2C3B4D;
+        border-top: 2px solid #95B6AC;
+        transform: scale(1);
+    }
+
+        h1, h2 {
+            color: #789;
+            margin: 10px 2px;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div id='game'>
+        <svg id='wires' xmlns="http://www.w3.org/2000/svg"></svg>
+        <div id='gameplay' style='display:none;'>
+            <div id='player'></div>
+        </div>
+    </div>
+    <div id='sidebar'>
+        <div id='code' class='font'></div>
+        <div id='players'></div>
+    </div>
+    <div id='intro'>
+        <button id='game-new'>New game</button>
+        <button id='game-join'>Join game</button>
+        <input id='input-code' placeholder='game code' style='display:none;'>
+        <input id='input-name' placeholder='what will you be called?' style='display:none;'>
+        <button id='start' style='display:none;'>Start</button>
+        <div id="error"></div>
+    </div>
+    <div id='game-overlay'>
+        <h2 id='game-msg'> </h2>
+    </div>
+    <div id='footer' >
+        <h1>Shuttle Power Dash</h1>
+        <h2>Mary Bush : JS13k game jam : 2016</h2>
+    </div>
+</div>
+
+<div id='player-sidebar-template' class="player-info font" style='display:none'>
+    <div class='pi-oxy' id='pi-oxy-$name'></div>
+    <div class='pi-name' id='pi-name-$name'>@$name</div>
+    <div class='pi-glitches' id='pi-glitches-$name'>Glitches: 0</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/shared.js"></script>
+<script src="/client.js"></script>
+
+
+</body>
+</html>

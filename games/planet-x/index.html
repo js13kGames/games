@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>planet-x:offline</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+<body class="noselect">
+<div id='container'>
+	<div id='main-panel'>
+		<div id='messages'>
+      <div id="message-container"></div>
+    </div>
+		<div id='actions' class="hideit hidden">
+			<h1>Control Room</h1>
+			<div id='control' >
+				<div id='restart-reactor' class='btn active' data-legend="something">reactor (offline)</div>
+				<div id='restart-extractor' class='btn hidden'>extractor (offline)</div>
+				<div id='droid-factory' class='btn hidden'>factory (offline)</div>
+
+			</div>
+			<div id='work'>
+				<div id='work-reactor' class='btn hidden'>work reactor</div>
+				<div id='work-extractor' class='btn hidden'>extract metals</div>
+				<div id='work-droid' class='btn hidden'>build droid</div>			
+			</div>
+			<div id='droids'>
+				<div id='droid-reactor' class='btn hidden'>droid (reactor)</div>
+				<div id='droid-extractor' class='btn hidden'>droid (extractor)</div>	
+			</div>
+		</div>
+		<div id='explorer' class="hideit hidden">
+			<h1>Explorer</h1>
+			<div id='upgrades'>
+				<div id='upgrade-battery' class='btn hidden'>battery I</div>
+				<div id='upgrade-shield' class='btn hidden'>shield I</div>	
+				<div id='upgrade-weapon' class='btn hidden'>weapon</div>	
+			</div>
+			<div id='build'>
+				<div id='build-explorer' class='btn active'>build</div>
+				<div id='deploy' class='btn hidden'>deploy</div>
+				<div id='build-torpedos' class='btn hidden'>torpedos</div>
+			</div>	
+			<div id='load'>
+				<div id='load-energy' class='btn hidden'>energy</div>
+				<div id='load-droids' class='btn hidden'>droids</div>
+				<div id='load-torpedos' class='btn hidden'>torpedos</div>
+			</div>	
+		</div>
+    <div id="planet" class="planet hidden">
+  		<h1>Planet-X</h1>
+      <div id="beacon1" class="beacon">offline</div><div id="beacon2" class="beacon">offline</div><div id="beacon3" class="beacon">offline</div>
+  		<div id='planet-x' class="fade">  
+      </div>
+    </div>
+	</div>
+	<div id='side-panel'>
+		<div id='resources' class="hideit hidden">
+			<h1>resources</h1>
+			<div id='resource-energy'>energy:</div>
+			<div id='resource-metals'>metals:</div>
+			<div id='resource-rare'>rare metals:</div>
+			<div id='resource-droids'>available droids:</div>
+		</div>
+		<div id='explorer-resources' class="hidden">
+			<h1>explorer onboard</h1>
+			<div id='explorer-energy'>energy: 0</div>
+			<div id='explorer-droids'>droids: 0</div>
+			<div id='explorer-metals'>torpedos: 0</div>
+      <div id="explorer-cargo">cargo: 0</div>
+		</div>
+	</div>
+</div>
+
+<script src='events.js'></script>
+<script src='map.js'></script>
+<script src='main.js'></script>
+</body>
+</html>

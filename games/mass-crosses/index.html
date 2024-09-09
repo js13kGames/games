@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>js13kGames-NEAR &mdash; Mass Crosses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta property="og:title" content="JS13kGame - Mass Crosses" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="description" content="Decentralized mass-replaceable tic-tac-toe." />
+  <meta property="og:description" content="Decentralized mass-replaceable tic-tac-toe." />
+  <link rel="canonical" href="https://js13kgames.com/entries/mass-crosses">
+  <meta property="og:url" content="https://js13kgames.com/entries/mass-crosses" />
+  <meta property="og:image" content="https://js13kgames.com/games/mass-crosses/__big.jpg" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@js13kgames" />
+  <meta name="twitter:creator" content="@aurium" />
+  <link rel="stylesheet" href="global.css?cache=#BUILD#">
+</head>
+<body>
+  <article id="signed-out-flow" style="display: none">
+    <h1>Welcome to js13kGames-NEAR &mdash; Mass Crosses!</h1>
+    <p>
+      To make use of the NEAR blockchain, you need to sign in. The button
+      below will sign you in using NEAR Wallet.
+    </p>
+    <p>
+      This app runs in "development" mode, so it connects
+      to a test network ("testnet") wallet. This works just like the main
+      network ("mainnet") wallet, but for free – they're just for testing!
+    </p>
+    <p>
+      Go ahead and click the button below to try it out:
+    </p>
+    <p style="text-align: center; margin-top: 2.5em">
+      <button id="sign-in-button">Sign in</button>
+    </p>
+  </article>
+
+  <div id="signed-in-flow" style="display: none">
+    <header>
+      <button class="link" id="sign-out-button">Sign out</button>
+      <div id="hello-user">Hello <span data-behavior="account-id"></span>!</div>
+      <h1>js13kGames-NEAR &mdash; Mass Crosses!</h1>
+    </header>
+    <main>
+      <gameset></gameset>
+    </main>
+  </div>
+
+  <script src="./index.js" type="module"></script>
+</body>
+</html>

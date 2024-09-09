@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#5e3231" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="manifest" href="./m.json" />
+    <link rel="icon" type="image/png" href="./icon.png" />
+    <title>Archery Master</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="wh">
+    <div id="root" class="jc wh"></div>
+    <script src="./bundle.js"></script>
+    <script>
+      'serviceWorker' in navigator
+        ? navigator.serviceWorker
+            .register('./sw.js')
+            .then(function () {
+              console.log('Succes');
+            })
+            .catch(function () {
+              console.log('Failed');
+            })
+        : console.log('Not found');
+    </script>
+  </body>
+</html>

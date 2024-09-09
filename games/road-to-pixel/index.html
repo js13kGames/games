@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Road To Pixel</title>
+		<style>
+			body {
+				background: #efefef;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+			.wrapper {
+			  background-color: white;
+			  padding: 1em;
+			  display:inline-block;
+			  border-radius: 5px;
+			  box-shadow: 0px 0px 50px rgba(0,0,0,0.1)
+			}
+			.demo {
+			  border: 1px solid #ddd;
+			  display: inline-block;
+			  padding: 0;
+			  position: relative;
+			}
+			.textLayout {
+			  position: absolute;
+			  bottom: 25%;
+			  left: 25%;
+			  height: 50%;
+			  width: 50%;
+			  backdrop-filter: brightness(150%) saturate(150%) blur(15px);
+			}
+			
+		</style>
+  </head>
+  
+		<div class="wrapper">
+		<div class="demo">
+		<div class="Layout">
+		<canvas id="canvas"></canvas>
+		<script src="char.js"></script>
+		<script src="script.js"></script>
+		</div>
+		</div>
+		</div>
+		
+</html>

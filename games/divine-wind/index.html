@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://js13kgames.com/webxr-src/2023/babylon.js"></script>
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+            #screenText {
+                position: absolute;
+                margin: auto;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                text-align: center;
+                font-size: 60px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="renderCanvas"></canvas>
+        <script src="src/enums.js"></script>
+        <script src="src/constants.js"></script>
+        <script src="src/utils.js"></script>
+        <script src="src/maze_utils.js"></script>
+        <script src="src/maze_conceptual/maze_components/MazeCell.js"></script>
+        <script src="src/maze_conceptual/maze_components/MazeCoordinates.js"></script>
+        <script src="src/maze_conceptual/Maze.js"></script>
+        <script src="src/maze_conceptual/maze_generation.js"></script>
+        <script src="src/maze_conceptual/solve_maze.js"></script>
+        
+        <script src="src/maze_graphical/MazeRotationLayer.js"></script>
+        <script src="src/maze_graphical/draw_maze.js"></script>
+        <script src="src/maze_graphical/GraphicalMaze.js"></script>
+        <script src="src/maze_graphical/MazePather.js"></script>
+
+        <script src="src/enemy/MongolShip.js"></script>
+        <script src="src/enemy/ShipManager.js"></script>
+
+        <script src="src/main.js"></script>
+        <div id="screenText">The Mongols approach...</div>
+    </body>
+</html>

@@ -1,0 +1,279 @@
+body{
+  font-family:sans-serif;
+}
+
+#disc,#edit{
+  background:lightblue;
+}
+
+canvas{
+  max-width:100%;
+  max-height:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  display:none;
+}
+
+#levels,#help,#speed,#menu,#size,#number{
+  position:absolute;
+  top:0;
+  left:0;
+  height:100vw;
+  width:100vw;
+  max-height:100vh;
+  max-width:100vh;
+  overflow:auto;
+  display:none;
+}
+
+#levels{
+  display:block;
+  background:#b71;
+}
+
+#levels>div[id]{
+  width:20%;
+  height:20%;
+  position:relative;
+  float:left;
+  counter-increment:num;
+  cursor:pointer;
+  background:lightblue;
+  border-radius:5px;
+}
+
+#levels>div[id]:before{
+  content:counter(num);
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  text-align:center;
+  font-size:15vh;
+  line-height:15vh;
+  box-sizing:border-box;
+}
+
+#levels>div[id]:after{
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:5vh;
+  line-height:4vh;
+  font-size:4vh;
+  text-align:center;
+}
+
+#levels>div[id][class]{
+  background:darkblue;
+}
+
+.s1:after{
+  content:">";
+}
+.s2:after{
+  content:">>";
+}
+.s3:after{
+  content:">>>";
+}
+
+#help{
+  display:none;
+  background:silver;
+  overflow:auto;
+}
+#helpClose{
+  position:absolute;
+  top:5px;
+  left:5px;
+  cursor:pointer;
+  z-index:2;
+}
+#helpIcon{
+  position:absolute;
+  top:0;
+  right:-16%;
+  width:5vh;
+  height:5vh;
+  line-height:5vh;
+  font-size:5vh;
+  cursor:pointer;
+}
+#help>.row{
+  width:70%;
+  padding-left:30%;
+  position:relative;
+  margin-bottom:10px;
+  min-height:100px;
+}
+#help img{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:25%;
+  max-height:100%;
+  left:1%;
+  top:0;
+  position:absolute;
+}
+#speed{
+  display:none;
+  background:silver;
+}
+#speed label{
+  width:25%;
+  margin-top:40%;
+  height:60%;
+  text-align:center;
+  dispaly:block;
+  font-size:5vh;
+  float:left;
+}
+#speed  button{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:10px;
+}
+
+.header{
+  width:75%;
+  margin:0 auto;
+  position:relative;
+  text-align:center;
+  clear:both;
+  float:none;
+  height:15vh;
+}
+
+.header div{
+  float:left;
+  width:calc(100% / 7);
+  position:absolute;
+  line-height:15vh;
+  font-size:10vh;
+  color:lightblue;
+  animation:10s infinite linear alternate;
+}
+
+#h1{
+  left:calc(100%/7*0);
+  animation-name:h1;
+}
+#h2{
+  left:calc(100%/7*1);
+  animation-name:h2;
+}
+#h3{
+  left:calc(100%/7*2);
+  animation-name:h3;
+}
+#h4{
+  left:calc(100%/7*3);
+}
+#h5{
+  left:calc(100%/7*4);
+  animation-name:h5;
+}
+#h6{
+  left:calc(100%/7*5);
+  animation-name:h6;
+}
+#h7{
+  left:calc(100%/7*6);
+  animation-name:h7;
+}
+@keyframes h1{
+    30%{left:calc(100%/7*0);}
+    70%{left:calc(100%/7*6);}
+    100%{left:calc(100%/7*6);}
+}
+@keyframes h2{
+    30%{left:calc(100%/7*1);}
+    70%{left:calc(100%/7*5);}
+    100%{left:calc(100%/7*5);}
+}
+@keyframes h3{
+    30%{left:calc(100%/7*2);}
+    70%{left:calc(100%/7*4);}
+    100%{left:calc(100%/7*4);}
+}
+@keyframes h5{
+    30%{left:calc(100%/7*4);}
+    70%{left:calc(100%/7*2);}
+    100%{left:calc(100%/7*2);}
+}
+@keyframes h6{
+    30%{left:calc(100%/7*5);}
+    70%{left:calc(100%/7*1);}
+    100%{left:calc(100%/7*1);}
+}
+@keyframes h7{
+    30%{left:calc(100%/7*6);}
+    70%{left:calc(100%/7*0);}
+    100%{left:calc(100%/7*0);}
+}
+
+#editIcon{
+  position:absolute;
+  top:0;
+  left:-16%;
+  width:5vh;
+  height:5vh;
+  line-height:5vh;
+  font-size:5vh;
+  cursor:pointer;
+  display:none;
+}
+#number{
+  background:silver;
+}
+#number select{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+}
+#number  button{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:10px;
+}
+
+#menu{
+  background:silver;
+}
+
+#menu canvas{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:23%;
+  margin:1%;
+  position:relative;
+  float:left;
+  cursor:pointer;
+}
+
+#size{
+  background:silver;
+}
+#size label{
+  width:33.333%;
+  height:33.33%;
+  text-align:center;
+  dispaly:block;
+  font-size:5vh;
+  float:left;
+}
+#size  button{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:10px;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<title>Only One</title>
+		<style>
+			html, body { height: 100%; }
+			body {
+				margin: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #222;
+			}
+			canvas {
+				display: block;
+				cursor: none;
+				image-rendering: -webkit-optimize-contrast;
+				image-rendering: crisp-edges;
+				image-rendering: pixelated;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas width="640" height="640"></canvas>
+		<script src="game.min.js"></script>
+	</body>
+</html>

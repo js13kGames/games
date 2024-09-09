@@ -1,0 +1,42 @@
+<body>
+	<link rel="stylesheet" href="style.css">
+	<div id="space" class="space3d"></div>
+	<div class="ui" id="ui">
+		<h1>Remember</h1>
+		<small>for js13kgames 2016</small>
+		<small>by @chinchang157</small>
+		<div id="timer" class="timer">0</div>
+		<button onclick="start()">Play</button>
+	</div>
+	<div class="scanlines"></div>
+	<canvas id="c"></canvas>
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+	  <defs>
+
+
+	    <filter id="squiggly-0">
+	      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="0"/>
+	      <feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="6" />
+	    </filter>
+	    <filter id="squiggly-1">
+	      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="1"/>
+	<feDisplacementMap in="SourceGraphic" in2="noise" scale="8" />
+	    </filter>
+
+	    <filter id="squiggly-2">
+	      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="2"/>
+	<feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+	    </filter>
+	    <filter id="squiggly-3">
+	      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="3"/>
+	<feDisplacementMap in="SourceGraphic" in2="noise" scale="8" />
+	    </filter>
+
+	    <filter id="squiggly-4">
+	      <feTurbulence id="turbulence" baseFrequency="0.02" numOctaves="3" result="noise" seed="4"/>
+	<feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+	    </filter>
+	  </defs>
+	</svg>
+	<script src="game.js"></script>
+</body>

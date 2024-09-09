@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<div class="a"style="font-family:Verdana">
+WASD/Arrow keys to move, click mouse to shoot.
+Shoot the packets to corrupt them and deal damage to the computers.
+If you let the packets get to the end, the computers will shoot you.</div>
+<button class="a"style="width:100px;height:75px;border:0"onclick="start()">Start</button>
+<canvas id="c"></canvas>
+<script>
+var canvas=document.getElementById("c");canvas.style.display="block",canvas.style.width="100vw",canvas.style.height="100vh";document.body.style.margin="0";var ctx=canvas.getContext("2d");var x=window.innerWidth/2,y=window.innerHeight/2,speed=2;var root2=Math.sqrt(2);var left,up,right,down;var difficulty="e";var shots=[];var servers=[];var packets=[];var clients=[];var corrupt=!0,kill=!1,destruction=!1;var gun="c";var server=new Image();server.src="server.svg";var stage=1;var cooldown=!1;var startTime=Date.now();var time;var mainText;var maxHealth=20;var health=maxHealth;var interval;var over=!1;function draw(){ctx.lineWidth=4;var scale=10;ctx.beginPath();ctx.moveTo(x+scale*(1),y+scale*(1+root2));ctx.lineTo(x+scale*(1),y-scale*(1+root2));ctx.lineTo(x+scale*(1+root2),y-scale*(1));ctx.lineTo(x-scale*(1+root2),y-scale*(1));ctx.lineTo(x-scale*(1),y-scale*(1+root2));ctx.lineTo(x-scale*(1),y+scale*(1+root2));ctx.lineTo(x-scale*(1+root2),y+scale*(1));ctx.lineTo(x+scale*(1+root2),y+scale*(1));ctx.closePath();ctx.stroke();var healthRatio=health/maxHealth;ctx.beginPath();ctx.rect(window.innerWidth/2-50,10,healthRatio*100,30);ctx.fillStyle="#00ff00";ctx.fill();ctx.fillStyle="#000000";switch(gun){case "c":drawCorrupt(x+scale,y+scale,scale);break;case "k":drawKill(x+scale,y+scale,scale);break;case "d":drawDestruction(x+scale,y+scale,scale);break}}
+function focusout(){for(var i=0;i<servers.length;i++){clearInterval(servers[i].interval)}}
+window.addEventListener("blur",focusout);function focusin(){for(var i=0;i<servers.length;i++){servers[i].startSending()}}
+window.addEventListener("focus",focusin);function resize(){canvas.width=window.innerWidth,canvas.height=window.innerHeight}
+resize();window.addEventListener("resize",resize);function start(){var hide=document.getElementsByClassName("a");for(var i=0;i<hide.length;i++){hide[i].style.display="none"}
+var num;switch(difficulty){case "e":num=5;break;case "m":num=10;break;case "h":num=15;break}
+for(var i=0;i<num;i++){var cX=window.innerWidth-100;var cY=getRandomInt(0,canvas.height);var sX=10;var sY=getRandomInt(0,canvas.height);var client=new Client(cX,cY);var server=new Server(sX,sY,client)}
+animate()}
+function startStage2(){stage=2;kill=!0;mainText="Press 2 for hitting servers";setTimeout(function(){mainText=""},3000)}
+function startStage3(){stage=3;destruction=!0;mainText="Press 3 for a big damage dealer";setTimeout(function(){mainText=""},3000)}
+function writeText(text){ctx.font="30px Verdana";var size=ctx.measureText(text);ctx.fillStyle="rgba(1, 1, 1, 0.7)";ctx.fillText(text,window.innerWidth/2-size.width/2,50);ctx.fillStyle="black"}
+function clear(){ctx.clearRect(0,0,canvas.width,canvas.height)}
+function move(){if(up){y-=speed};if(left){x-=speed};if(right){x+=speed};if(down){y+=speed}}
+function win(){over=!0;ctx.font="48px Verdana";ctx.fillText("You won!",50,50)}
+function lose(){over=!0;ctx.font="48px Verdana";ctx.fillText("You lost. :(",50,50)}
+function animate(){time=Date.now()-startTime;if(clients.length==0){win()}
+move();clear();draw();for(var i=0;i<shots.length;i++){shots[i].move();shots[i].draw();shots[i].checkCollisions()}
+for(var i=0;i<servers.length;i++){servers[i].draw()}
+for(var i=0;i<clients.length;i++){clients[i].draw();if(clients[i].zapping){clients[i].zap()}}
+for(var i=0;i<packets.length;i++){packets[i].move();packets[i].draw();packets[i].checkDestination()}
+if(stage==1&&time>20000){startStage2()}
+if(stage==2&&time>40000){startStage3()}
+if(mainText){writeText(mainText)}
+if(!over){requestAnimationFrame(animate)}}
+document.addEventListener("keydown",function(e){switch(e.key){case "w":case "ArrowUp":up=!0;break;case "a":case "ArrowLeft":left=!0;break;case "d":case "ArrowRight":right=!0;break;case "s":case "ArrowDown":down=!0;break;case "1":if(corrupt){gun="c"};break;case "2":if(kill){gun="k"};break;case "3":if(destruction){gun="d"};break}});document.addEventListener("keyup",function(e){switch(e.key){case "w":case "ArrowUp":up=!1;break;case "a":case "ArrowLeft":left=!1;break;case "d":case "ArrowRight":right=!1;break;case "s":case "ArrowDown":down=!1;break}});canvas.addEventListener("mousedown",function(e){if(!cooldown){var theta=Math.atan2(e.offsetY-y,e.offsetX-x);var newX=Math.cos(theta);var newY=Math.sin(theta);new Shot(x,y,newX,newY);cooldown=!0;var amount;switch(gun){case "c":amount=1000;break;case "k":amount=1500;break;case "d":amount=2000;break}
+setTimeout(function(){cooldown=!1},amount)}});function Shot(x,y,dirX,dirY){this.x=x;this.y=y;this.radius=8;this.dirX=dirX;this.dirY=dirY;this.type=gun;switch(this.type){case "c":this.speed=8;this.damage=0;break;case "k":this.speed=4;this.damage=2;break;case "d":this.speed=2;this.damage=4;break}
+shots.push(this);this.move=function(){this.x+=this.dirX*this.speed;this.y+=this.dirY*this.speed};this.draw=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);ctx.stroke();ctx.closePath();switch(this.type){case "c":drawCorrupt(this.x+this.radius,this.y+this.radius,this.radius);break;case "k":drawKill(this.x+this.radius,this.y+this.radius,this.radius);break;case "d":drawDestruction(this.x+this.radius,this.y+this.radius,this.radius);break}};this.delete=function(){var index=shots.indexOf(this);shots.splice(index,1)};this.checkCollisions=function(){for(var i=0;i<packets.length;i++){if(circleRectCollision(this,packets[i])){switch(this.type){case "c":packets[i].getRandomData(!1);packets[i].changed=!0;this.delete();return;case "k":case "d":packets[i].health-=this.damage;if(packets[i].health<1){packets[i].delete()}
+if(this.type=="k"){this.delete()}
+return}}}
+for(var i=0;i<servers.length;i++){if(circleRectCollision(this,servers[i])){servers[i].health-=this.damage;if(servers[i].health<1){servers[i].delete()}
+this.delete()}}
+for(var i=0;i<clients.length;i++){if(circleRectCollision(this,clients[i])){clients[i].health-=this.damage;if(clients[i].health<1){clients[i].delete()}
+if(this.type!="d"){this.delete()}}}}}
+function circleRectCollision(c,r){var distX=Math.abs(c.x-r.x-r.width/2);var distY=Math.abs(c.y-r.y-r.height/2);if(distX>(r.width/2+c.radius)){return!1}
+if(distY>(r.height/2+c.radius)){return!1}
+if(distX<=(r.width/2)){return!0}
+if(distY<=(r.height/2)){return!0}
+var dx=distX-r.width/2;var dy=distY-r.height/2;return(dx*dx+dy*dy<=(c.radius*c.radius))}
+function Server(x,y,client){this.x=x;this.y=y;this.client=client;this.width=50;this.height=80;this.health=10;this.waitTime=10000;var self=this;this.startSending=function(){setTimeout(function(){self.sendPacket();self.interval=setInterval(function(){self.sendPacket()},self.waitTime)},getRandomInt(0,6000))};this.startSending();servers.push(this);this.draw=function(){ctx.drawImage(server,this.x,this.y,this.width,this.height)};this.sendPacket=function(data){if(!clients.includes(this.client)){if(clients.length==0){win()}else{this.client=clients[getRandomInt(0,clients.length)]}}
+var theta=Math.atan2(this.client.y-this.y,this.client.x-this.x);var newX=Math.cos(theta);var newY=Math.sin(theta);new Packet(this.x,this.y,newX,newY,this.client,this,this.data)}}
+function drawCorrupt(x,y,scale){ctx.lineWidth=2;x-=scale*3/2;y-=scale;ctx.beginPath();ctx.arc(x,y,scale/2,0,Math.PI);ctx.stroke();ctx.beginPath();ctx.arc(x+scale,y,scale/2,Math.PI,0);ctx.stroke()}
+function drawKill(x,y,scale){ctx.lineWidth=2;x-=scale*3/2;y-=scale;ctx.beginPath();ctx.stroke()}
+function drawDestruction(x,y){}
+function Packet(x,y,dirX,dirY,destClient,server,data){this.x=x;this.y=y;this.width=90;this.height=25;this.speed=1.5;this.health=2;this.damage=10;this.dirX=dirX;this.dirY=dirY;this.destClient=destClient;this.server=server;this.pause=!1;this.changed=!1;packets.push(this);if(stage==1){this.getRandomData=function(good){if(good){do{this.data=Math.floor(Math.random()*256).toString(2)}while(!checkEvenParity(this.data));}else{this.data=Math.floor(Math.random()*256).toString(2)}
+while(this.data.length<8){this.data="0"+this.data}}}else{this.getRandomData=function(good){if(good){this.data=Math.floor(Math.random()*9999999).toString(10);var num=0;for(i of this.data){num+=parseInt(i)}
+this.data+=num%10}else{this.data=Math.floor(Math.random()*99999999).toString(10)}
+while(this.data.length<8){this.data="0"+this.data}}}
+if(data){this.data=data}else{this.getRandomData(!0)}
+this.origData=this.data;this.draw=function(){ctx.lineWidth=2;ctx.beginPath();ctx.rect(this.x,this.y,this.width,this.height);ctx.stroke();if(this.changed){var temp=ctx.fillStyle;ctx.fillStyle="#AAAAFF";ctx.fill();ctx.fillStyle=temp}
+ctx.font="16px Verdana";ctx.fillText(this.data,this.x+5,this.y+17)};this.delete=function(){var index=packets.indexOf(this);packets.splice(index,1)};this.move=function(){if(!this.pause){this.x+=this.dirX*this.speed;this.y+=this.dirY*this.speed}};this.checkDestination=function(){if(!clients.includes(this.destClient)){this.delete()}
+if(Math.hypot(this.destClient.x-this.x,this.destClient.y-this.y)<this.speed*2){if(this.data==this.origData){var temp=this.destClient
+temp.zapping=!0;health-=1;if(health<1){lose()}
+setTimeout(function(){temp.zapping=!1},500)}else{if(checkEvenParity(this.data)){var cli=this.destClient;cli.health-=this.damage}else{this.destClient.status="f";this.server.sendPacket(this.origData)}}
+this.delete()}}}
+function checkEvenParity(data){var count=0;for(var i of data){if(i=="1"){count++}}
+if(count%2==0){return!0}
+return!1}
+function checkChecksum(data){}
+function Client(xPos,yPos){this.x=xPos;this.y=yPos;this.width=90;this.height=50;this.maxHealth=40;this.health=this.maxHealth;this.zapping=!1;this.status="w";clients.push(this);this.draw=function(){ctx.beginPath();ctx.rect(this.x,this.y,this.width,this.height);ctx.lineWidth=6;ctx.moveTo(this.x+this.width/2,this.y+this.height);ctx.lineTo(this.x+this.width/2,this.y+this.height+10);ctx.moveTo(this.x+this.width/2-20,this.y+this.height+10);ctx.lineTo(this.x+this.width/2+20,this.y+this.height+10);ctx.stroke();var hp=(this.width-6)*this.health/this.maxHealth
+ctx.beginPath();ctx.rect(this.x+3,this.y+3,hp,this.height-6);var temp=ctx.fillStyle;ctx.fillStyle="red";ctx.fill();ctx.fillStyle=temp;ctx.beginPath();ctx.arc(Math.sin(time/50)*20+this.x+this.width/2,Math.cos(time/50)*20+this.y+this.height/2,5,0,Math.PI*2);ctx.fill()};this.zap=function(){ctx.strokeStyle="#fffb96";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(x,y);ctx.stroke();ctx.strokeStyle="#000000";ctx.lineWidth=2}
+this.delete=function(){var index=clients.indexOf(this);clients.splice(index,1)};this.changeStatus=function(status){switch(status){case "f":setTimeout(function(){this.delete()},3000);break;case "g":setTimeout(function(){},3000);break;case "b":setTimeout(function(){this.status="w"},3000);break}
+this.status=status}}
+function getRandomInt(min,max){min=Math.ceil(min);max=Math.floor(max);return Math.floor(Math.random()*(max-min))+min}
+</script>
+</html>

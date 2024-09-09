@@ -1,0 +1,204 @@
+body {
+  font-family: "Courier New", Courier, monospace;
+  margin: 0% 0%;
+  text-align: center;
+  align-content: center;
+  align-items: center;
+  background-color: #F2E6A7;
+}
+
+h1 {
+  font-family: "Courier New", Courier, monospace;
+  text-transform: uppercase;
+  font-size: 4.5em;
+  color: #3849A6;
+  margin-top: .5em;
+  margin-bottom: .1em;
+}
+
+h3 {
+  margin-top: 0;
+    font-size: 1.5rem;
+}
+
+button {
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+    
+}
+
+#instructions {
+  width: 55%;
+  margin-left: 20%;
+  text-align  : left;
+}
+
+#instructbutton {
+    font-family: "Courier New", Courier, monospace;
+    padding: .5em;
+    font-size: 1em;
+    background-color: #6BBF78;
+}
+
+.header {
+    display: inline-flex;
+    width: 55%;
+    border: 3px solid black;
+    color: #F26938;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.headerbuttons {
+  padding: 1em 2.5em .5em 2em;
+}
+
+.header-left {
+  padding: 3em;
+}
+
+.scorebox {
+    color: #3849A6;
+    font-size: 1.5rem;
+    padding: 1em 1em .5em 2em;
+    border-left: 3px solid black;  
+}
+
+.is-black {
+    color: black;
+}
+
+.hideme {
+  display:none;
+  font-size: .05em;
+}
+
+
+
+
+table {
+  background-color: #3849A6;
+  padding: 0.5rem;
+  border-spacing: 1rem 0.3rem;
+  font-size: 1.5rem;
+  margin-left:auto;
+  margin-right:auto;
+  width: 55.4%;
+}
+td {
+  border: 4px solid #3849A6;
+  background-color: white;
+  text-align: center;
+  width: 3rem;
+  height: 2rem;
+}
+
+.sumbox {
+  color: black;
+  font-weight: 800;
+  background-color:  #6BBF78;
+}
+
+#row1sum, #col1sum, #row3sum, #col3sum {
+  background-color: #a6d8ae;
+}
+
+.zerobox {
+  background-color: #F2E6A7;
+  color: #F2E6A7;
+}
+
+.heatlev1 {
+  background: url(./face1.svg) bottom center no-repeat;
+  color: black; 
+  font-weight: 600; 
+}
+
+.heatlev2 {
+  background: url(./face2.svg) bottom center no-repeat;
+  color: rgba(234, 240, 246, 0.8); 
+  font-weight: 700; 
+}
+
+.heatlev3 {
+  background:url(./face3.svg) bottom center no-repeat;
+  color: rgba(234, 240, 246, 0.8); 
+  font-weight: 700; 
+}
+
+.erupted {
+  animation: pulse 4s;
+  background-color: #F2E6A7;
+  color: #F2E6A7;
+  font-size: 0.5rem;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: red;
+    color: yellow;
+    border: 3px solid yellow;
+  }
+  100% {
+    background-color: #F2E6A7;
+    color: #F2E6A7;
+    font-size: 0.6rem;
+  }
+}
+
+.erasedbox {
+  animation: erase 4s;
+  background-color: #F2E6A7;
+  color: #F2E6A7;
+}
+
+.pickednum {
+  background-color: #c8dbc2;
+  color: #c8dbc2;
+}
+
+@keyframes erase {
+  0% {
+    background-color: pink;
+  }
+  100% {
+    background-color: #F2E6A7;
+  }
+}
+
+@keyframes flash {
+  0% {
+    background-color: red;
+    color: yellow;
+  }
+  100% {
+    background-color: 0;
+    color: #F26938;
+  }
+}
+
+.changernum {
+  color: #F2E6A7;
+  background-color: #F26938;
+  font-size: 2.5rem;
+  padding: 0.25em 0.5rem;
+/*  border-radius: 25px;*/
+}
+
+.submit {
+  color: #F2E6A7;
+  background-color: #F26938;
+  font-size: 1.5rem;
+  padding: 0.25em 0.5rem;
+/*  border-radius: 25px;*/
+}
+
+.warning {
+  color: red;
+}
+
+.bonus {
+  color: #F26938;
+  animation: flash 3s;
+}

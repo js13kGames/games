@@ -1,0 +1,487 @@
+<html>
+
+<style>
+html,body {
+    background-color: #202020;
+    text-align: center;
+    padding-top: 20px;
+    cursor: default;
+    overflow: hidden;
+        color: #cfcfcf;
+    text-shadow: 1px 1px 1px #2C2B3D;
+}
+a {
+    text-decoration: none;
+    color: #8080ff;
+}
+#z {
+    position: absolute;
+    left:0px;
+    top: 0px;
+    z-index: 0;
+    box-shadow: 1px 2px 12px 2px #000000;
+}
+#y {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+    pointer-events: none;
+}
+#hpbar {
+    position: relative;
+    left: 5px;
+    top: 5px;
+    width: 180px;
+    height: 20px;
+    background-color: #af5050;
+    box-shadow: 1px 2px 6px 1px #402020;
+}
+#portalbar {
+    position: relative;
+    left: 5px;
+    top: 20px;
+    width: 180px;
+    height: 20px;
+    background-color: #50af50;
+    box-shadow: 1px 2px 6px 1px #204020;
+}
+#score {
+    position: relative;
+    left: 180px;
+    top: -35px;
+    padding: 10px;
+    display: inline-block;
+    background-color: rgba(20,20,20,0.5);
+}
+#gameover {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    width: 640px;
+    height: 480px;
+    display: none;
+}
+</style>
+
+<body>
+
+<script type="glsl" id="a">
+
+
+    precision mediump float;
+    
+    //shaders compressed with shader minifier 
+    //shader_minifier shader --format none --preserve-externals
+
+
+    //game map frag shader
+
+    varying vec2 uv;
+    uniform vec4 other;
+    
+
+    float dirtNoise() {
+       vec2 fuv = floor(uv*vec2(320.,200.));
+       vec2 cosuv = cos(fuv*.3242 + cos(fuv*32.234)*fract(fuv.yx*4.345)*8.32454);
+       return (cosuv.x+cosuv.y);
+    }
+
+    #define EPSILON .01
+    #define cmpDist(i) if (db < d+EPSILON) {d = db; id = i;}
+    #define colconv .39215
+
+
+    vec3 DIRT_COLOR = vec3(1.25, .87, .45);
+    vec3 GRASS_COLOR = vec3(0., 1.27, .14)*1.5;
+    vec3 SAND_COLOR = vec3(2.19,2.11,1.09)*.7;
+
+
+    void main(void) {
+        
+        float td = uv.y + ( cos(.64 + uv.x*.0634)*3.0 +cos(.466+uv.x*.03723)*1.4 + cos(.23 + uv.x*.01452 * cos(.51 + uv.x*.03377))*.3 + cos(uv.x*.64523)*.05 + cos(uv.x*4.253)*.02 );
+        float tsd = abs(uv.y + ( (cos(uv.x*.1831))*2. + cos(uv.x*.62523)*.05 + cos(uv.x*4.153)*.02 ) + 0. )-.4;
+
+        float d = max(0.,max(-tsd,td));
+        int id = 0;
+
+
+        const vec2 BLOCK_REPEAT = vec2(3.);
+        
+        vec2 fuv = floor(uv/BLOCK_REPEAT);
+        vec2 ruv = mod(abs(min(uv,vec2(999999.,0.))),BLOCK_REPEAT)-BLOCK_REPEAT/2.;
+        
+        vec2 a = cos(fuv.yx+cos(fuv.xy*2.345)), b = sin(fuv.yx);
+        vec2 pa = ruv - a, ba = b - a;
+        float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
+        float db = length( pa - ba*h ) - .025;
+        cmpDist(1);
+
+        if (d > EPSILON) {
+            if (tsd < EPSILON && td < EPSILON) {
+                //dirt background
+                gl_FragColor = vec4( DIRT_COLOR*(colconv-0.1+cos(dirtNoise()*12.3245)*.03), 1.);
+                return;
+            }
+
+            //nothing do background
+            vec3 SKY_BLUE = vec3(0.1, 0.94, 2.25)*colconv;
+            
+            vec3 skyc = mix(SKY_BLUE, DIRT_COLOR*colconv, clamp(1.-td*2.,0.,1.));
+
+            gl_FragColor = vec4(skyc,1.);
+            return;
+        }
+
+
+        vec3 c;
+
+        if (id == 0) {
+            float cuv = dirtNoise();
+            c = mix(DIRT_COLOR*(colconv + cos(cuv*12.3245)*.07),
+                    SAND_COLOR*(colconv+cuv*.01),
+                    clamp((td+.12+cuv*.02)*10.,0.,1.));
+        } else {
+            c = vec3(.3+cos(length(floor(uv*16.)))*.1);
+        }
+
+        gl_FragColor = vec4(c,1.);
+    }
+</script>
+
+<script type="glsl" id="b">
+    precision mediump float;
+    
+
+
+    //player frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 other;/*  x = animation time     y = side      z = animation id  */
+
+    #define EPSILON .01
+    #define cmpDist(i) if (db < EPSILON) {d = db; id = i;}
+    #define colconv .39215
+
+    void main(void) {
+
+        vec2 limbAnimPos;
+        if (other.z == 0.0) {
+           limbAnimPos = vec2(.1,0.);
+        } else {
+           limbAnimPos = vec2(cos(other.x),0.);
+        }
+
+        vec2 headPos = vec2(.1*other.y,.4);
+
+        //front limbs
+        float d = min(  length(uv-vec2( limbAnimPos.x*.2 , 0. ))-0.08, //arm
+                   length(uv-vec2( limbAnimPos.x*.2 , -.6 ))-0.1  ); //leg
+        int id = 0;
+
+        //body
+        float db = length(max(abs(uv-vec2(0.,-.15))-vec2(.14,.35), 0.))-.1;
+        cmpDist(1);
+        
+
+        //hair
+        db = length(uv-vec2(0.,.1)-headPos)-(0.35+cos(atan(uv.y,uv.x*other.y)*16.)*.05);
+        cmpDist(2);
+
+
+        //back limbs
+        db = min( length(uv-headPos)-0.3, //head
+                      min(length(uv-vec2( -limbAnimPos.x*.2+.1*other.y , 0. ))-0.08, //arm
+                            length(uv-vec2( -limbAnimPos.x*.2+.1*other.y, -.6 ))-0.1) ); //leg
+        cmpDist(0);
+
+
+        if (d > EPSILON) {
+            gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+            return;
+        }
+
+
+        vec3 SKIN_COLOR = vec3(2.49,1.93,1.54)*colconv;
+        vec3 SHIRT_COLOR = vec3(2.54,2.46,1.10)*colconv;
+        vec3 HAIR_COLOR = vec3(.8,.83,.88);
+
+        vec3 c;
+        if (id == 0) {
+            c = mix(
+                   mix(SKIN_COLOR, HAIR_COLOR, clamp(uv.y*2.-abs(d)*7.,0.,1.)),
+                   vec3(.2,.8,.2),
+                    clamp(1.-(length(uv-headPos-vec2(0.2*other.y,0.))-.06)*80.,0.,1.) ) ;
+        }
+        if (id == 1) {
+            c = SHIRT_COLOR;
+        }
+        if (id == 2) {
+            c = HAIR_COLOR;
+        }
+
+        gl_FragColor = vec4(c* (1.-max(0.,-uv.x)*1.4),1.0);
+    
+    }
+
+</script>
+
+<script type="glsl" id="c">
+
+    precision mediump float;
+    
+
+
+    //lighting pass shader
+
+    varying vec2 uv;
+    uniform vec4 other,camera;
+
+    #define EPSILON .01
+
+    float df(in vec2 p) {
+        float td = p.y + ( cos(.64 + p.x*.0634)*3.0 +cos(.466+p.x*.03723)*1.4 + cos(.23 + p.x*.01452 * cos(.51 + p.x*.03377))*.3 + cos(p.x*.64523)*.05 + cos(p.x*4.253)*.02 );
+        float tsd = abs(p.y + ( (cos(p.x*.1831))*2. + cos(p.x*.62523)*.05 + cos(p.x*4.153)*.02 ) + 0. )-.4;
+
+        return max(-tsd,td);
+    }
+
+    void main(void) {
+
+        vec2 lightDir = normalize(vec2(.2,1.));
+        
+        vec2 wuv = uv+other.xy;
+        
+        const float shadowReach = 2.;
+        
+        float sum = 0.,s = 0.01,d;
+        for (int i = 0; i < 64; i++) {
+            d = df(wuv+lightDir*s);
+            if (d < EPSILON) {
+                d = max(EPSILON, abs(d));
+                sum += d;
+                if (sum > 1./shadowReach) break;
+            }
+
+            s += d;
+            //sum += max(0.,.1-d)*10.;
+        }
+
+        sum = pow(max(0.,1.-sum*shadowReach),2.);
+
+
+        const vec3 lightColor = vec3(1.,1.,1.);
+        const float ambient = .16;
+
+
+        gl_FragColor = vec4( lightColor*((1.-ambient)*sum + ambient) ,    1. );
+    
+    }
+
+</script>
+
+
+<script type="glsl" id="d">
+    precision mediump float;
+    
+    //turret frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 transform;
+
+    #define EPSILON .01
+
+    void main(void) {
+
+
+        //front limbs
+        float d = min( length(max(abs(uv-vec2(0.,-.5))-vec2(.1+max(0.,-(uv.y)),.1), 0.))-.1,
+                  min( length(max(abs( mod(min(abs(uv-vec2(0.,-.15)),.4),vec2(.2,0.))-vec2(.1,0.) )-vec2(.05,.15), 0.)),
+                       length(uv-vec2(0.,.2))-.4 )); 
+
+        if (d > EPSILON) {
+            gl_FragColor = vec4(0.);
+            return;
+        }
+
+        vec3 c = mix( vec3(.8, .1, .1),
+                      vec3(.45),
+                      clamp( length(uv - vec2(0.,.2) + normalize(transform.xy*vec2(1.,sign(transform.w)))*.25 )*5.-.1, 0., 1. ) );
+
+        gl_FragColor = vec4(c,1.0);
+    
+    }
+
+</script>
+
+<script type="glsl" id="e">
+    precision mediump float;
+    
+    //plasma frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 other;
+    uniform vec4 camera;
+
+    void main(void) {
+        
+        float res = 1.;
+        for (int i = 0; i < 3; i++) {
+            res += cos(uv.y*12.345 - other.x*4. + cos(res*12.234)*.2 + cos(uv.x*32.2345 + cos(uv.y*17.234)) ) + cos(uv.x*12.345);
+        }
+
+        vec3 c = mix(other.yzw,
+                     other.yzw*.5+.2,
+                     cos(res+cos(uv.y*24.3214)*.1+cos(uv.x*6.324+other.x*4.)+other.x)*.5+.5);
+
+        gl_FragColor = mix(vec4(c,1.),
+                           vec4(0.),
+                           clamp( ( length(uv + cos(other.x+uv.yx*4.34+uv.xy*res)*.1 )*max(0., 10.-length(camera.zw)*2.) - length(camera.zw)*3.0 ) , 0., 1.) );
+    }
+
+</script>
+
+
+<script type="glsl" id="f">
+    precision mediump float;
+    
+    //explosion frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 other;
+    uniform vec4 camera;
+
+    void main(void) {
+        
+        float res = 1.;
+        for (int i = 0; i < 3; i++) {
+            res += cos(uv.y*4.345 + other.x*12. + cos(res*12.234)*.2 + cos(uv.x*16.2345 + cos(uv.y*6.234)) ) + cos(uv.x*4.345);
+        }
+
+        vec3 c = mix(other.yzw,
+                     other.yzw*.5+.2,
+                     cos(res+cos(uv.y*24.3214)*.1+cos(uv.x*6.324+other.x*4.)+other.x)*.5+.5);
+
+
+       vec4 oc = mix(vec4(1.),
+                 vec4(0.),
+                 clamp(abs(((6.-pow(other.x,2.)*6.)-length((uv-vec2(0.,-.2))*vec2(4.,32.)))*(2.-other.x)), 0., 1.) );
+    
+        gl_FragColor = mix(vec4(c,1.),
+                           oc,
+                           clamp( (length(uv + cos(other.x+uv.yx/4.34+uv.xy*res)*.1 )*4.- 
+                            ( (.2+abs(uv.y*3. + max(0.,uv.y*.5*other.x)))) + max(0.,other.x-.5) + max(0.,uv.y*(other.x-.5)) ) , 0., 1.) );
+    }
+
+</script>
+
+
+<script type="glsl" id="g">
+    precision mediump float;
+    
+    //circle frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 other;
+
+    void main(void) {
+        
+        gl_FragColor = mix(vec4(other.xyz,1.),
+                           vec4(0.),
+                           clamp(length(uv)*5.-2.,0.,1.));
+        
+    }
+
+</script>
+
+<script type="glsl" id="h">
+    precision mediump float;
+    
+    //rocket bot frag shader
+
+    varying vec2 uv;
+
+    uniform vec4 transform,other;
+
+    #define EPSILON .01
+
+    void main(void) {
+
+        float wd = length(uv-vec2(.0,-.5))-.35;
+        float d = min( wd ,
+                  min( length(max(abs( mod(min(abs(uv-vec2(0.,-.15)),.4),vec2(.2,0.))-vec2(.1,0.) )-vec2(.05,.15), 0.)),
+                       length(uv-vec2(0.,.2))-.4 )); 
+
+        if (d > EPSILON) {
+            gl_FragColor = vec4(0.);
+            return;
+        }
+
+        vec2 eyePos = vec2(0.,.2) - normalize(transform.xy*vec2(1.,sign(transform.w)))*.25;
+        vec3 c = mix( vec3(.8, .1, .1)*(length(uv-eyePos)*4.),
+                    vec3(mix(.45, .15, (cos(other.x+floor(atan(uv.y+.5,uv.x)*8.))*.5+.5)*max(0.,1.-wd*10.) )),
+                      clamp( length(uv - eyePos)*10.-.1, 0., 1. ) );
+
+        gl_FragColor = vec4(c,1.0);
+    
+    }
+
+</script>
+
+
+
+<script>
+(function(){function z(a,b){return a<b?a:b}function D(a,b){return a>b?a:b}function m(a,b){return fa(a*a+b*b)}function r(a,b){var K=b+(3*n(.64+.0634*a)+1.4*n(.466+.03723*a)+.3*n(.23+.01452*a*n(.51+.03377*a))+.05*n(.64523*a)+.02*n(4.253*a)),c=h(a)%3-1.5,e=h(z(b,0))%3-1.5,d=S(a/3),k=S(b/3),f=n(k+n(2.345*d)),l=n(d+n(2.345*k)),k=T(k),d=T(d),c=c-f,e=e-l,f=k-f,l=d-l,k=(c*f+e*l)/(f*f+l*l),k=0>k?0:1<k?1:k;return z(m(c-f*k,e-l*k)-.025,D(-(h(b+(2*n(.1831*a)+.05*n(.62523*a)+.02*n(4.153*a))+0)-.4),K))}function ga(a){return c.getShaderParameter(a,
+c.COMPILE_STATUS)?!0:(alert("Shader error, check the console for a detailed error!"),console.log(c.getShaderInfoLog(a)),!1)}function ha(){this.b=this.v=null}function L(a,b,K,c){var e=r(a,b),f=d.l(a,b),k=null;f<e&&(e=f,k=d);for(var h=q.length;h--;)q[h]!=c&&(f=q[h].l(a,b),f<e&&(e=f,k=q[h]));K.b=e;K.v=k}function U(){this.b=0;this.v=null}function ia(a,b,K,c,e,d,f){var h=new ha;L(a,b,h);for(var l=h.b;l<e;){if(h.b<d)return f.Set(a,b,h.v,l),!0;L(a+K*l,b+c*l,h);l+=h.b}return!1}function g(a,b,c){this.y=this.x=
+0;this.g=a;this.f=a/2;this.Y=b;this.da=2*c;this.ea=10*this.g;this.B=this.o=this.i=this.velocityY=this.velocityX=0;this.C=-2.9;this.O=h(this.B);this.P=h(this.C);this.D=this.V=null;this.dq=new ha}function F(a,b,c,d){g.call(this,.04,.9,.98);this.x=a;this.y=b;this.velocityX=3*c;this.velocityY=3*d;this.scale=.15;this.F=2*this.scale;this.U=this.T=this.c=0;this.S=!1;this.L();this.D=this.A;p.push(this)}function E(){g.call(this,.04,.4,.02);this.R=this.s=0;this.ba=1;this.H=0;this.w=5;this.a=100;N.style.width=
+1.8*this.a+"px";this.G=!1;this.$=this.Z=0;this.V=this.ca}function A(a,b){this.x=a;this.y=b;this.ha=this.ga=.125;this.a=25;this.I=0;q.push(this);p.push(this)}function x(a,b){g.call(this,.04,.4,.1);this.x=a;this.y=b;this.a=75;this.status=this.s=0;this.J=.5;p.push(this);q.push(this)}function u(a,b,c,d){g.call(this,.1,1,0);this.x=a;this.y=b;this.velocityX=c;this.velocityY=d;this.L();this.D=this.A;this.c=0;this.aa=!1;p.push(this);q.push(this)}function G(a,b,c,d){g.call(this,.01,1,0);this.x=a;this.y=b;
+this.velocityX=1*c;this.velocityY=1*d;this.L();this.D=this.A;this.c=0;p.push(this)}function H(a,b){this.x=a;this.y=b;this.scale=.25;this.time=1;p.push(this)}function V(){W=Date.now();M+=f=z(1,(W-X)/1E3);X=W;O=M%1E3;d.h();for(var a=p.length;a--;)p[a].h();for(a=B.length;a--;){var b=p.indexOf(B[a]);-1<b&&p.splice(b,1)}B.length=0;for(a=I.length;a--;)b=q.indexOf(I[a]),-1<b&&q.splice(b,1),b=p.indexOf(I[a]),-1<b&&p.splice(b,1);I.length=0;setTimeout(V,8)}function v(a,b,d,f,e,h,k,g,l){c.uniform4f(ja[a],b,
+d,f,e);c.uniform4f(ka[a],h,k,g,l);c.enableVertexAttribArray(P[a]);c.vertexAttribPointer(P[a],2,c.FLOAT,!1,0,0);c.drawArrays(c.TRIANGLE_STRIP,0,4);c.disableVertexAttribArray(P[a])}function Y(){requestAnimationFrame(Y);c.blendFunc(c.SRC_ALPHA,c.ONE_MINUS_SRC_ALPHA);c.useProgram(w[0]);c.uniform4f(y[0],0,0,0,O);v(0,0,0,1,1,d.x,d.y,1,1);c.useProgram(w[1]);c.uniform4f(y[1],d.s,d.ba,d.R,0);v(1,0,.14,.125,.3,0,0,1,1);for(var a=p.length;a--;)p[a].u();c.blendFunc(c.DST_COLOR,c.ONE_MINUS_SRC_ALPHA);c.useProgram(w[2]);
+c.uniform4f(y[2],d.x,d.y,0,O);v(2,0,0,1,1,0,0,1,1)}function Z(){window.innerWidth||window.innerHeight?(aa.style.left=t.style.left=window.innerWidth/2-320,aa.style.top=t.style.top=window.innerHeight/2-480/1.75):setTimeout(Z,25)}var t,aa,c,la,w=[],P=[],ka=[],ja=[],y=[],ba,ma,C=[],J=0,ca,N,Q,d,q=[],p=[],B=[],I=[],fa,h,T,n,S,da,R;U.prototype.Set=function(a,b,c,d){this.v=c;this.b=d};g.prototype.L=function(){this.C=this.B=0;this.O=h(this.B);this.P=h(this.C)};g.prototype.W=function(){this.D&&this.D(this.dq.v);
+this.K()};g.prototype.K=function(){var a=r(this.x+.001,this.y)-r(this.x-.001,this.y),b=r(this.x,this.y+.001)-r(this.x,this.y-.001),c=m(a,b),a=a/c,b=b/c,d=m(this.velocityX,this.velocityY);this.V&&this.V(a,b,d);var e=D(0,this.velocityX/d*-a+this.velocityY/d*-b),c=1-this.Y+this.Y*e,d=(this.da*e+this.ea*(1-e))*d;this.velocityX=this.velocityX*c+a*d;this.velocityY=this.velocityY*c+b*d};g.prototype.N=function(){var a=this.velocityX*f,b=this.velocityY*f,c=m(a,b);if(c>this.f){var a=a/c,b=b/c,d=this.f,e=this.f;
+L(this.x+a*e,this.y+b*e,this.dq,this);for(var g=0;4>g;g++){if(this.dq.b<this.g){e-=d;break}d=this.dq.b;e+=this.dq.b>this.f?this.dq.b:this.f;if(e>c){e=z(e,c);L(this.x+a*e,this.y+b*e,this.dq,this);this.dq.b<this.g&&(e-=d);break}L(this.x+a*e,this.y+b*e,this.dq,this)}this.x+=a*e;this.y+=b*e;this.dq.b<this.g&&this.W()}else c=this.x+a,a=this.y+b,L(c,a,this.dq,this),this.dq.b<this.g?this.W():(this.x=c,this.y=a);this.i<this.O&&(this.velocityX+=this.B*f);this.o<this.P&&(this.velocityY+=this.C*f);this.i=h(this.velocityX);
+this.o=h(this.velocityY)};g.prototype.X=function(){var a=this.velocityX*f,b=this.velocityY*f,c=m(a,b);if(c>this.f){for(var a=a/c,b=b/c,d=this.f,e=this.f,g=r(this.x+a*e,this.y+b*e),k=0;4>k;k++){if(g<this.g){e-=d;break}d=g;e+=g>this.f?g:this.f;if(e>c){e=z(e,c);g=r(this.x+a*e,this.y+b*e);g<this.g&&(e-=d);break}g=r(this.x+a*e,this.y+b*e)}this.x+=a*e;this.y+=b*e;g<this.g&&this.K()}else c=this.x+a,a=this.y+b,r(c,a)<this.g?this.K():(this.x=c,this.y=a);this.i<this.O&&(this.velocityX+=this.B*f);this.o<this.P&&
+(this.velocityY+=this.C*f);this.i=h(this.velocityX);this.o=h(this.velocityY)};F.prototype=Object.create(g.prototype);F.prototype.A=function(a){this.T=d.x;this.U=d.y;this.S=!0;d.x=this.x;d.y=this.y;a&&a!=d&&a.M(this.T,this.U)};F.prototype.h=function(){this.S?(this.scale-=f,this.F=2*this.scale,.01>this.scale&&B.push(this)):(this.c+=(this.i+this.o)*f,5<this.c&&B.push(this),this.N())};F.prototype.u=function(){c.useProgram(w[4]);c.uniform4f(y[4],O,0,1,0);v(4,this.x-d.x,this.y-d.y,this.scale,this.scale,
+0,0,this.F,this.F);this.S&&v(4,this.T-d.x,this.U-d.y,this.scale,this.scale,0,0,this.F,this.F)};F.prototype.constructor=F;E.prototype=Object.create(g.prototype);E.prototype.l=function(a,b){return m(D(h(this.x-a)-.04,0),D(h(this.y+.14-b)-.15,0))};E.prototype.ca=function(a,b){.5<b&&(this.G=!0)};E.prototype.j=function(a){this.a-=a;if(1>this.a){V=Y=null;a=document.getElementById("gameover");var b=parseFloat(window.localStorage.fa),c=J/M,d="";if(!b||c>b)window.localStorage.fa=b=c,d="You got a new high score!";
+a.innerHTML="Game over!<br>You scored "+J+" points over "+M.toFixed(2)+" seconds totalling to<br>"+c.toFixed(4)+" points per second!<br><br>"+d+"<br>High score: "+b.toFixed(4)+" points per second<br><br>Refresh the page to play again!";a.style.display="inline-block";t.style.display=N.style.display=Q.style.display=ca.style.display="none"}N.style.width=1.8*this.a+"px"};E.prototype.h=function(){this.G=!1;this.X();this.G&&(this.Z=this.x,this.$=this.y);if(this.G||.2>m(this.Z-this.x,this.$-this.y))if(C[38]||
+C[32])this.velocityY=1.5;this.H-=f;if(0>this.H){5>this.w&&(this.w++,Q.style.width=36*this.w+"px");100>this.a&&(this.a++,N.style.width=1.8*this.a+"px");ca.innerHTML="Score: "+J+"<br>Time: "+M.toFixed(2);if(q.length<z(25,J/2)+4){for(var a=d.x+10*R()-5,b=d.y+5,c=0;32>c&&!(.2<r(a,b));c++)b-=.2;.5<R()?(c=new U,b=ia(a,b,0,-1,25,.2,c)?b-(c.b-.08):b-25,new A(a,b)):new x(a,b)}this.H=1}this.s=(this.s+10*f)%1E3;.5>this.i?this.R=0:(this.R=1,this.ba=0<this.velocityX?1:-1);C[37]||C[65]?-1.5<this.velocityX&&(this.velocityX-=
+15*f):(C[39]||C[68])&&1.5>this.velocityX&&(this.velocityX+=15*f)};E.prototype.constructor=E;A.prototype.l=function(a,b){return m(this.x-a,this.y-b)-.08};A.prototype.j=function(a){this.a-=a;1>this.a&&this.m()};A.prototype.m=function(){J++;this.a=0;new H(this.x,this.y);I.push(this)};A.prototype.M=function(a,b){this.x=a;this.y=b;0<this.a&&this.m()};A.prototype.u=function(){c.useProgram(w[3]);v(3,this.x-d.x,this.y-d.y,this.ga,this.ha,0,0,1,1)};A.prototype.h=function(){this.I-=f;if(0>this.I){var a=d.x-
+this.x,b=d.y+.125-this.y,c=m(a,b),a=a/c,b=b/c;new G(this.x+.12*a,this.y+.12*b,a,b);this.I=2}};A.prototype.constructor=A;x.prototype=Object.create(g.prototype);x.prototype.l=function(a,b){return m(D(h(this.x-a)-.04,0),D(h(this.y+.2-b)-.15,0))};x.prototype.j=function(a){this.a-=a;1>this.a&&this.m()};x.prototype.m=function(){J+=3;this.a=0;new H(this.x,this.y);I.push(this)};x.prototype.M=function(a,b){this.x=a;this.y=b};x.prototype.h=function(){this.X();this.s=(this.s+this.velocityX*f)%1E3;this.J-=f;
+if(!(0<this.J))switch(this.J=.5,this.status){case 0:var a=d.x-this.x,b=d.y-this.y,c=m(a,b),a=a/c,b=b/c,c=z(.15/h(a),.35/h(b)),g=new U;ia(this.x+a*c,this.y+b*c,a,b,15,.01,g)?this.status=g.v==d?1:2:this.status=2;break;case 1:a=d.x-this.x;b=d.y-.1-this.y;c=m(a,b);a/=c;b/=c;c=z(.2/h(a),.5/h(b));new u(this.x+a*c,this.y+.2+b*c,a,b);this.status=0;break;case 2:1<h(d.y-this.y)?(this.velocityY=1,this.velocityX=1.5*da(r(this.x+.001,this.y)-r(this.x-.001,this.y))):this.velocityX=1.5*da(d.x-this.x),this.velocityX||
+(this.velocityX=0),this.status=0}};x.prototype.u=function(){c.useProgram(w[7]);c.uniform4f(y[7],this.s,0,0,0);v(7,this.x-d.x,this.y+.18-d.y,.2,.35,0,0,1,1)};x.prototype.constructor=x;u.prototype=Object.create(g.prototype);u.prototype.l=function(a,b){return m(this.x-a,this.y-b)-.1};u.prototype.j=function(){this.m()};u.prototype.m=function(){if(!this.aa){this.aa=!0;var a=d.l(this.x,this.y);.5>a&&d.j(40*D(0,.25-a));for(a=q.length;a--;){var b=q[a].l(this.x,this.y);.5>b&&q[a].j(40*D(0,.25-b))}new H(this.x,
+this.y);I.push(this)}};u.prototype.M=function(a,b){this.x=a;this.y=b};u.prototype.A=function(a){null!=a&&a.j(10);this.m()};u.prototype.h=function(){this.c+=(this.i+this.o)*f;15<this.c&&B.push(this);this.N()};u.prototype.u=function(){c.useProgram(w[6]);c.uniform4f(y[6],.6,.6,.6,0);v(6,this.x-d.x,this.y-d.y,.125,.125,0,0,1,1);c.useProgram(w[4]);c.uniform4f(y[4],O,.8,.6,.4);v(4,this.x-d.x-.1*this.velocityX,this.y-d.y-.1*this.velocityY,.125,.125,0,0,1,1)};u.prototype.constructor=u;G.prototype=Object.create(g.prototype);
+G.prototype.A=function(a){null!=a&&a.j(5);B.push(this)};G.prototype.h=function(){this.c+=(this.i+this.o)*f;5<this.c&&B.push(this);this.N()};G.prototype.u=function(){c.useProgram(w[6]);c.uniform4f(y[6],.3,.2,.2,0);v(6,this.x-d.x,this.y-d.y,.03,.03,0,0,1,1)};G.prototype.constructor=G;H.prototype.h=function(){this.time-=f;.01>this.time&&B.push(this)};H.prototype.u=function(){c.useProgram(w[5]);c.uniform4f(y[5],this.time,0,0,0);v(5,this.x-d.x,this.y-d.y,this.scale,2*this.scale,0,0,1,1)};H.prototype.constructor=
+H;var W,X,f,M=0,O,ea;window.onload=function(){aa=document.getElementById("y");t=document.getElementById("z");t.width=640;t.height=480;t.focus();(c=t.getContext("webgl"))||alert("WebGL not supported");var a=new Float32Array([1,1,-1,1,1,-1,-1,-1]);la=c.createBuffer();c.bindBuffer(c.ARRAY_BUFFER,la);c.bufferData(c.ARRAY_BUFFER,a,c.STATIC_DRAW);a=c.createShader(c.VERTEX_SHADER);c.shaderSource(a,"precision mediump float; varying vec2 uv; attribute vec2 vertex; uniform vec2 rotation; uniform vec4 transform; uniform vec4 camera; void main(void) {uv=vertex*camera.zw+camera.xy;gl_Position=vec4(vertex*transform.zw+transform.xy,0.,1.);}");
+c.compileShader(a);ga(a);for(var b=0;8>b;b++){var f=c.createShader(c.FRAGMENT_SHADER);c.shaderSource(f,document.getElementById(String.fromCharCode(b+97)).innerHTML);c.compileShader(f);if(!ga(f))return;var g=c.createProgram();c.attachShader(g,a);c.attachShader(g,f);c.linkProgram(g);w[b]=g;P[b]=c.getAttribLocation(g,"vertex");ka[b]=c.getUniformLocation(g,"camera");ja[b]=c.getUniformLocation(g,"transform");y[b]=c.getUniformLocation(g,"other")}c.disable(c.DEPTH_TEST);c.enable(c.BLEND);N=document.getElementById("hpbar");
+Q=document.getElementById("portalbar");ca=document.getElementById("score");fa=Math.sqrt;h=Math.abs;T=Math.sin;n=Math.cos;S=Math.floor;da=Math.sign;R=Math.random;d=new E;for(b=0;256>b;b++)C[b]=!1;ea=!1;window.addEventListener("mouseup",function(){ea||(ea=!0,d.x=50*R()-25,d.y=10,d.velocityY=-10,document.getElementById("intro").style.display="none",t.addEventListener("mousemove",function(a){ba=(a.clientX-t.offsetLeft)/640*2-1;ma=1-(a.clientY-t.offsetTop)/480*2}),window.addEventListener("keydown",function(a){C[a.keyCode]=
+!0}),window.addEventListener("keyup",function(a){C[a.keyCode]=!1}),t.addEventListener("mousedown",function(){if(0!==d.w){d.w--;Q.style.width=36*d.w+"px";var a=ma-.24,b=m(ba,a),c=ba/b,a=a/b,b=z(.1/h(c),.3/h(a));new F(d.x+c*b,d.y+a*b+.24,c,a)}}),X=Date.now(),V(),Y())});window.addEventListener("resize",Z);Z()}})();</script>
+
+<div id="x">
+
+<canvas id="z"></canvas>
+<div id="y">
+<div id="hpbar"></div>
+<div id="portalbar"></div>
+<div id="score"></div>
+
+<div id="gameover"></div>
+<div id="intro" style="position: relative; display: inline-block; margin: 15px; left: -35px; top: -55px; width: 640px; height: 480px; background-color: rgba(40,40,40,0.75);"><br>
+        <span style="font-size: 32px;"><u><b>Disposition</u></b></span>
+        <br><br>How to play:
+        <br>- Walk around with WASD/Arrow keys
+        <br>- Aim with your mouse cursor
+        <br>- Click to shoot a portal
+        <br>- Kill robots
+        <br><br>Click anywhere to begin<br><br><br>
+
+        <br><br>A 13kb game by <a href="https://twitter.com/EthanShulman">Ethan Shulman</a> for the Js13k competition. </div>
+
+</div>
+
+</div>
+</body></html>

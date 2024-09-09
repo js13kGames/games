@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" id="myViewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+<div class="game-playground">
+    <div class="high-score shadow">
+        High Score
+    </div>
+    <div id="card-dest-container" style="display: block;">
+        <div class="how-to-play-container">
+            <div class="how-to-play">
+                <div class="game-title">
+                    Sum-It-Up
+                </div>
+                <div class="instruction">
+                    <ol class="instruction-list">
+                        <li>Tap / Click on any of the <b>4 Slots</b> available above to insert a card there from the <b>Deck</b>
+                            available below.
+                        </li>
+                        <li>Click on <b>Discard</b> to discard a card from the deck. Maximum <b>2</b> cards can be discarded.</li>
+                        <li>You can place maximum of <b>8 cards</b> in a slot</li>
+                        <li>Chain cards in slot to increase score multiplier. e.g. (64 + 32 + 32) will give you 2x
+                            multiplier on score and so on.
+                        </li>
+                        <li>Cards can not be transferred between slots.</li>
+                        <li><b>Sum-It-Up</b> to get the highest score.</li>
+                    </ol>
+                </div>
+                <div class="button play-button">Play</div>
+            </div>
+        </div>
+        <div class="alert-box-container">
+          <div class="alert-box">
+            <div class="red-cross">
+              X
+            </div>
+            <div class="alert-message">
+              This slot is filled.
+            </div>
+            <div class="ok-button">
+              OK
+            </div>
+          </div>
+        </div>
+        <div class="score-container">
+            <div class="highest-score" style="text-align: left;">
+                &#9819; <span id="high-score">0</span>
+            </div>
+            <div class="current-score">
+                <span id="score"></span>
+            </div>
+
+            <div class="reload" style="text-align: right;">
+                <div id="reload">
+                    <div class="dummy">
+                        &#8635;
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin: 10px auto; display: flex; padding-left: 18px;">
+            <div class="card slot" data-index="1">
+                <div class='slot-inner'>
+                    <div class='hand hand-art'></div>
+                </div>
+            </div>
+            <div class="card slot" data-index="2">
+                <div class='slot-inner'>
+                    <div class='hand hand-art'></div>
+                </div>
+            </div>
+            <div class="card slot" data-index="3">
+                <div class='slot-inner'>
+                    <div class='hand hand-art'></div>
+                </div>
+            </div>
+            <div class="card slot" data-index="4">
+                <div class='slot-inner'>
+                    <div class='hand hand-art'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="card-src-container">
+        <div id="discard">
+            <div class="slot-1">
+                X
+            </div>
+            <div class="discard-text">
+                Discard (<span class="discard-count">0</span>/2)
+            </div>
+            <div class="slot-2">
+                X
+            </div>
+        </div>
+        <div class="button instruction-toggle">How to Play</div>
+    </div>
+</div>
+<script src="game.min.js"></script>
+</body>
+</html>

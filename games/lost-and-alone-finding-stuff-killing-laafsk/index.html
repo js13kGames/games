@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>LAAFSK</title>
+  </head>
+  <style>
+    body {
+      color: #f7fef3;
+      background: black;
+    }
+
+    .wrapper {
+      margin: 0 auto;
+      width: 800px;
+      height: 600px;
+    }
+
+    .gameWrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin-top: 100px;
+    }
+
+    .gameCanvas {
+    
+      width: 100%;
+      height: 100%;
+
+      display: block;
+
+      background-image: linear-gradient(to bottom, #f5f5f5 50%, #000000 50%), linear-gradient(to right, #cbc5c5 50%, #f4f3f3 50%);
+      background-size: 4px 4px, 4px 4px;
+
+    }
+
+    .layerEffect {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 30px 50px black;
+    }
+
+    p {
+      font-family: Roboto;
+      font-weight: 900;
+      margin-left: 44px;
+      margin-bottom: 0px;
+      margin-top: 4px;
+    }
+  </style>
+  <body>
+  <div class='wrapper'>
+    <div class='gameWrapper'>
+    <canvas class='gameCanvas'></canvas>
+    <div class='layerEffect'></div>
+  </div>
+    <p>Find the things you should find.</p>
+      <p>Survive until help finds you.</p> 
+      <p>Controls: arrows and space.</p>
+  </div>
+  </body>
+  <script type='module' src='./src/index.js'></script>
+</html>

@@ -1,0 +1,1 @@
+function Viewfinder(b,a,c,d,e){this.x=b||0;this.y=a||0;this.w=c||1;this.h=d||1;this.fill=e||"#AAAAAA"}Viewfinder.prototype.draw=function(b,a){"undefined"!==typeof a&&(b.strokeStyle=this.fill,context.beginPath(),context.arc(a.x,a.y,this.w,0,2*Math.PI,!0),context.closePath(),context.stroke())};

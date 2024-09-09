@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jump Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas">
+    </canvas>
+    <div id="space" >
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+    </div>
+    <nav>
+        <ul>
+            <li><a data-title="Try your best!" id="jogar-btn" onclick="beginGame()">PLAY</a></li>
+            <li><a data-title="why you wanna click here, i just wanna make U happy =/" id="midia-btn" onclick="sike()">QUIT</a></li>
+        </ul>
+    </nav>
+    <nav id="retry">
+        <ul>
+            <li class="timefinish"></li>
+            <li><a data-title="Ah shit, here we go again." onclick="beginGame()">RETRY</a></li>
+        </ul>
+    </nav>
+    <div class="text"></div>
+    <div class="cronometer"></div>
+    <div class="lifebar"></div>
+
+</body>
+<script  src="script.js"></script>
+</html>

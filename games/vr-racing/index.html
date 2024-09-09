@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+</head>
+
+<body>
+    <div class="which">
+        <a-scene>
+            <a-camera>
+                <a-cursor color="orange" position="4.59 1.6 -2"></a-camera>
+            <a-link href="vr.html">
+                <a-cylinder id="boxo" height=0.1 radius=5 position="0 10 -16.5" rotation="90 0 0" color="red"></a-box>
+            </a-link>
+            <a-text id="score" scale="4 4 4" value="" position="-10 3 -20" width="14" color="black"></a-text>
+            <a-text id="play_again" scale="4 4 4" value="Move the cursor to the red disk to play again" position="-20 0 -20" width="13" color="black"></a-text>
+            <a-text id="start" scale="4 4 4" value="Move the cursor to the red disk to start the game" position="-20 0 -20" width="13" color="black"></a-text>
+            <a-text scale="3 3 3" value="Note that you might have to turn 90 degrees to your left to be in the correct orientation to play" position="-20 -5 -20" width="13" color="black"></a-text>
+            <script>
+            var box = document.querySelector('boxo');
+            box.addEventListener('mouseenter', function() { $('#which').load('vr.html'); });
+            </script>
+        </a-scene>
+    </div>
+</body>
+<script>
+play_again = localStorage.getItem('play_again');
+if(play_again==1){
+	document.getElementById('start').setAttribute('visible',false);
+	document.getElementById('score').setAttribute('value',"Your score was "+localStorage.getItem('score_vr_race'));
+	console.log(localStorage.getItem('score_vr_race'));
+	localStorage.setItem("play_again", 0);
+	localStorage.setItem("score_vr_race",0);
+}
+else{
+	document.getElementById('play_again').setAttribute('visible',false);
+	localStorage.setItem("play_again", 0);
+}
+</script>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href= "style.css">
+  </head>
+
+  <body>
+    <div class="game">
+      <div id="terminal-div">
+        <textarea id="terminal-window" disabled="true" ></textarea>
+        <div id="terminal-cli"><span>>>></span><input type="text" maxlength="30" id="terminal-input"></div>
+      </div>
+      <div id="canvas-div">
+        <canvas id="screen" width="600", height="640"></canvas>
+      </div>
+    </div>
+    <div class = "instructions">
+      <p>
+        Crawl through the network while enemies try to shutdown your connection.<br>
+        Use the arrow keys to move the character.<br>
+        Press the Escape key to set focus on the terminal input.<br>
+        Type in the 'help' command to list all available commands.<br>
+        Use the 'install' and 'uninstall' command to equip or unequip programs.<br>
+        With scripts, type in the name of the script to execute its effect. <br>
+        'Version' is the level of your character. You may increase it by defeating enemies. <br>
+        'Latency' is your hp, do not let it reach 400!
+      </p>
+    </div>
+
+    <script type="text/javascript" src= "script.js"></script>
+  </body>
+</html>

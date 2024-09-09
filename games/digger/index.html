@@ -1,0 +1,32 @@
+<html><head><title>Digger</title><style type="text/css">body, html {
+				margin: 0;
+				background-color: black
+			}
+			.hidden {
+				visibility: hidden;
+			}
+			#game-container {
+				width: 320px;
+				margin: 0 auto;
+				margin-top: 30px;
+				border: 1px solid white;
+				cursor: none;
+			}
+			#dialog-container {
+				display: none;
+				font-family: Arial, sans-serif;
+				font-size: 15px;
+				position: relative;
+				text-align: center;
+				top: 200px;
+				height: 0px;
+				color: white;
+			}
+			#dialog {
+				font-size: 32px;
+				padding: 10px;
+				background-color: #FC2000;
+				border: 2px solid white;
+				border-radius: 4px;
+				box-shadow: 0px 6px 20px -3px rgba(0,0,0,0.75);
+			}</style></head><body><div id="game-container"><div id="dialog-container"><span id="dialog"></span><p>Press space to restart</p></div><canvas id="game" width="320" height="576"></canvas></div><img id="sprite" class="hidden" src="sprite.png"></body><script type="text/javascript" src="digger.js"></script></html>

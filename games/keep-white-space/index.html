@@ -1,0 +1,34 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<title>Keep white space</title>
+		<style>
+			html, body {
+				overflow: hidden;
+			}
+			body {
+				margin: 0;
+				background-color: black;
+			}
+			#gamepanel {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			canvas {
+				position: absolute;
+			}
+			* {
+				touch-action: manipulation;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="gamepanel"></div>
+		<script src="main.js"></script>
+	</body>
+</html>

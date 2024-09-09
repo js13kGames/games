@@ -1,0 +1,185 @@
+<html>
+
+<head>
+	<title>Master Plan - js13k 2018 entry by gtanczyk</title>
+
+	<style>
+#game-intro{z-index:5;position:absolute;text-align:center;height:100%;width:100%;display:none}#game-intro.visible li,#game-intro.visible p{font-size:20px}#game-intro.visible button{font-size:40px}#game-intro.visible{display:block;text-align:left;width:800px;margin-left:50%;left:-400px;padding:10 20;background:#9cc;box-shadow:-1px -7px 20px 2px #00000075}#game-intro .field-unit[data-unit-type]:before{display:none!important}#game-intro .field-unit{width:32px;height:32px;position:relative;display:inline-block}#game-intro ul li{list-style:none}#game-hud{position:fixed;z-index:2;pointer-events:none;width:100%;height:100%;display:none;font-family:monospace}#battle-result:empty{display:none}#battle-result:not(:empty) div{width:404px;height:300px;color:red;left:50%;top:50%;margin:-150px -150px;text-align:center;position:absolute;font-size:30px;background:rgba(0,0,0,.25)}#battle-result:not(:empty){width:100%;height:100%;display:block;background:rgba(0,0,0,.3);position:fixed}#battle-result span.result{color:#000;font-weight:700;animation:blinker 1s linear infinite}@keyframes blinker{50%{opacity:0}}#battle-result span.winner{position:absolute;top:80px;left:0;right:0;font-weight:700}#battle-result span.loser{position:absolute;top:120px;left:0;right:0}#battle-result span.continue{color:#fff;position:absolute;font-size:15px;bottom:5px;left:5px}#battle-result span{display:block}#battle-stats{position:absolute;background:rgba(0,0,0,.25);padding:20px}#battle-time:before{content:'Timer: ' attr(data-time);display:block;font-size:30px;margin-bottom:10px;color:#fff}#battle-balance:before{display:block;content:"Who is winning?";font-size:30px;width:300px;color:#fff}#battle-balance-left{display:inline-block;height:30px;width:50%;background:red;float:left}#battle-balance-right{display:inline-block;height:30px;width:50%;background:#0fde0f;float:right}#battle-balance-left,#battle-balance-right{overflow:hidden;text-overflow:hidden}#battle-balance-left[data-winning=true],#battle-balance-right[data-winning=true]{border:1px solid #ff0;box-sizing:border-box}#battle-balance-left[data-username]:before,#battle-balance-right[data-username]:before{display:block;content:attr(data-username);margin-left:3px}#battle-balance-left[data-winning=true]:before,#battle-balance-right[data-winning=true]:before{display:block;content:"Winning!";margin-left:3px}#game-designer:not(.visible){display:none}#game-designer{width:800px;margin:0 auto;padding:10 20;background:#9cc;box-shadow:-1px -7px 20px 2px #00000075}#battle-versus:not(:empty){font-weight:700;background:rgba(0,0,0,.8);padding:10px 20px;color:#fff}#game-designer h2,#game-designer h3,#game-designer p{margin-top:5px;margin-bottom:0}#designer-field{background:#00c800;border:2px solid rgba(0,100,0);position:relative;transform:scale(.5);transform-origin:top left;margin-bottom:-400px}#designer-field:not(.select)~.designer-unit-option{pointer-events:none;opacity:.5}#designer-actions,#designer-commands,#designer-formation,#designer-unit-type{display:inline-block}#designer-actions{float:right;background:rgba(0,0,0,.25);padding:10px}#designer-field.drag{cursor:move}#designer-field.drag .field-unit{pointer-events:none}.field-unit{background:rgba(255,0,0,.5);position:absolute}.field-unit.drag{opacity:.5}.field-unit.select{border:1px solid orange}.field-unit:not(.select):not(.drag){cursor:pointer}.field-unit[data-command]:after{display:block;content:attr(data-command);position:absolute;color:#fff;background:rgba(0,0,0,.25);padding:2px}.field-unit[data-unit-type]:before{content:attr(data-unit-type);display:block;position:absolute;color:#fff;background:rgba(0,0,0,.25);margin-top:-20px;padding:2px}html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{padding:0;margin:0;font-size:16px;background:radial-gradient(ellipse at center,#30c530 0,#30c530 64%,#138c13 100%)}body button,body input{font-size:16px}body>canvas{width:100%;height:100%;position:absolute;pointer-events:none}canvas#layer-default{background:radial-gradient(ellipse at center,#30c530 0,#30c530 64%,#138c13 100%);z-index:1}canvas#layer-water{z-index:0}body>img{display:none;visibility:hidden}
+</style>
+
+	<script>
+(function(){var f;function k(a,b){function c(){}c.prototype=b.prototype;a.prototype=new c;a.prototype.constructor=a}function aa(a){a=a||"layer-default";var b=ba[a];return b?b:ba[a]=new ca(a)}function ca(a){this.A=document.createElement("canvas");this.A.id=a;this.D=this.A.getContext("2d");window.addEventListener("resize",this.wa.bind(this));this.wa();document.body.appendChild(this.A)}var ba={};f=ca.prototype;f.Z=function(){document.body.removeChild(this.A)};f.P=function(){return this.A.width};f.U=function(){return this.A.height};
+f.fillStyle=function(a){this.D.fillStyle=a;return this};f.fillRect=function(a,b,c,d){this.D.fillRect(a,b,c,d);return this};f.arc=function(a,b,c){this.D.beginPath();this.D.arc(a,b,c,0,2*Math.PI);this.D.stroke();return this};f.drawImage=function(a,b,c){this.D.drawImage(a,b,c);return this};f.scale=function(a){this.D.scale(a,a);return this};f.translate=function(a,b){this.D.translate(a,b);return this};f.rotate=function(a){this.D.rotate(a);return this};f.save=function(){this.D.save();return this};
+f.restore=function(){this.D.restore();return this};f.D=function(){return this.D};f.wa=function(){this.A.width=window.innerWidth;this.A.height=window.innerHeight;this.D=this.A.getContext("2d")};function da(){return m(null,"RgYEBAMEAgIGBAQIBAICBgQEDQQCAgYEBBIEAwIGBAQXBAMCBgQEHAQCAgYEBCEEAgIGBAQmBAICBhABEgoBAgYQARcMAQI=")}window.addEventListener("keydown",function(a){37==a.keyCode&&r(ea);38==a.keyCode&&r(ha);39==a.keyCode&&r(ia);40==a.keyCode&&r(ja);27==a.keyCode&&r(ka);r(la,a.keyCode)});
+window.addEventListener("keyup",function(a){37==a.keyCode&&r(ma);38==a.keyCode&&r(na);39==a.keyCode&&r(oa);40==a.keyCode&&r(pa);r(qa,a)});window.addEventListener("mousedown",function(a){r(ra,a)});window.addEventListener("mouseup",function(a){r(sa,a)});window.addEventListener("mousemove",function(a){r(za,a)});window.addEventListener("click",function(a){r(t,a)});var v=0,Aa=v++,Ba=v++,Ca=v++,Da=v++,Ea=v++,Fa=v++,Ga=v++,Ha=v++,Ia=v++;v++;v++;
+var ka=v++,ra=v++,sa=v++,za=v++,t=v++,la=v++,qa=v++,ea=v++,ia=v++,ha=v++,ja=v++,ma=v++,oa=v++,na=v++,pa=v++;v++;var Ja=v++,Ka=v++,La=(new Date).getTime();function Ma(){var a=(new Date).getTime();r(Ca,a-La);La=a;requestAnimationFrame(Ma)}requestAnimationFrame(Ma);document.onreadystatechange=function(){r(Da,document.readyState)};document.addEventListener("visibilitychange",function(){document.hidden?r(Ea):r(Fa)});window.addEventListener("hashchange",function(){r(Aa,document.location.hash)});
+window.addEventListener("resize",function(){r(Ia)});function Na(){this.A=function(a){for(var b=0;24>b;b++)this[String.fromCharCode(97+b)]=a[b]||0;.01>this.c&&(this.c=.01);a=this.b+this.c+this.e;.18>a&&(a=.18/a,this.b*=a,this.c*=a,this.e*=a)}}
+var Oa=new function(){this.A=new Na;var a,b,c,d,e,h,n,w,q,l,x,V;this.C=function(){var a=this.A;d=100/(a.f*a.f+.001);e=100/(a.g*a.g+.001);h=1-a.h*a.h*a.h*.01;n=-a.i*a.i*a.i*1E-6;a.a||(x=.5-a.n/2,V=5E-5*-a.o);w=1+a.l*a.l*(0<a.l?-.9:10);q=0;l=1==a.m?0:(1-a.m)*(1-a.m)*2E4+32};this.M=function(){this.C();var d=this.A;a=d.b*d.b*1E5;b=d.c*d.c*1E5;c=d.e*d.e*1E5+12;return 3*((a+b+c)/3|0)};this.I=function(Cb,Ua){var g=this.A,Va=1!=g.s||g.v,F=g.v*g.v*.1,Wa=1+3E-4*g.w,B=g.s*g.s*g.s*.1,Db=1+1E-4*g.t,Eb=1!=g.s,
+Fb=g.x*g.x,Gb=g.g,Xa=g.q||g.r,Hb=g.r*g.r*g.r*.2,ta=g.q*g.q*(0>g.q?-1020:1020),Ya=g.p?((1-g.p)*(1-g.p)*2E4|0)+32:0,Ib=g.d,Za=g.j/2,Jb=g.k*g.k*.01,ua=g.a,va=a,Kb=1/a,Lb=1/b,Mb=1/c,g=5/(1+g.u*g.u*20)*(.01+B);.8<g&&(g=.8);for(var g=1-g,wa=!1,$a=0,W=0,X=0,fa=0,M=0,Y,N=0,u,C=0,G,xa=0,p,ab=0,D,ya=0,ga=Array(1024),Z=Array(32),z=ga.length;z--;)ga[z]=0;for(z=Z.length;z--;)Z[z]=2*Math.random()-1;for(z=0;z<Ua;z++){if(wa)return z;Ya&&++ab>=Ya&&(ab=0,this.C());l&&++q>=l&&(l=0,d*=w);h+=n;d*=h;d>e&&(d=e,0<Gb&&(wa=
+!0));u=d;0<Za&&(ya+=Jb,u*=1+Math.sin(ya)*Za);u|=0;8>u&&(u=8);ua||(x+=V,0>x?x=0:.5<x&&(x=.5));if(++W>va)switch(W=0,++$a){case 1:va=b;break;case 2:va=c}switch($a){case 0:X=W*Kb;break;case 1:X=1+2*(1-W*Lb)*Ib;break;case 2:X=1-W*Mb;break;case 3:X=0,wa=!0}Xa&&(ta+=Hb,G=ta|0,0>G?G=-G:1023<G&&(G=1023));Va&&Wa&&(F*=Wa,1E-5>F?F=1E-5:.1<F&&(F=.1));D=0;for(var Nb=8;Nb--;){C++;if(C>=u&&(C%=u,3==ua))for(Y=Z.length;Y--;)Z[Y]=2*Math.random()-1;switch(ua){case 0:p=C/u<x?.5:-.5;break;case 1:p=1-C/u*2;break;case 2:p=
+C/u;p=6.28318531*(.5<p?p-1:p);p=1.27323954*p+.405284735*p*p*(0>p?1:-1);p=.225*((0>p?-1:1)*p*p-p)+p;break;case 3:p=Z[Math.abs(32*C/u|0)]}Va&&(Y=N,B*=Db,0>B?B=0:.1<B&&(B=.1),Eb?(M+=(p-N)*B,M*=g):(N=p,M=0),N+=M,fa+=N-Y,p=fa*=1-F);Xa&&(ga[xa%1024]=p,p+=ga[(xa-G+1024)%1024],xa++);D+=p}D=.125*D*X*Fb;Cb[z]=1<=D?32767:-1>=D?-32768:32767*D|0}return Ua}};
+window.jsfxr=function(a){Oa.A.A(a);var b=Oa.M();a=new Uint8Array(4*((b+1)/2|0)+44);var b=2*Oa.I(new Uint16Array(a.buffer,44),b),c=new Uint32Array(a.buffer,0,44);c[0]=1179011410;c[1]=b+36;c[2]=1163280727;c[3]=544501094;c[4]=16;c[5]=65537;c[6]=44100;c[7]=88200;c[8]=1048578;c[9]=1635017060;c[10]=b;for(var b=b+44,c=0,d="data:audio/wav;base64,";c<b;c+=3)var e=a[c]<<16|a[c+1]<<8|a[c+2],d=d+("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[e>>18]+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[e>>
+12&63]+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[e>>6&63]+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[e&63]);return d};function Pa(){this.ja={}}Pa.prototype.add=function(a,b,c){this.ja[a]=[];c.forEach(function(c,e){this.ja[a].push({la:0,count:b,Ea:[]});for(var h=0;h<b;h++){var n=new Audio;n.src=jsfxr(c);this.ja[a][e].Ea.push(n)}},this)};
+Pa.prototype.play=function(a){a=this.ja[a];a=1<a.length?a[Math.floor(Math.random()*a.length)]:a[0];a.Ea[a.la].play();a.la<a.count-1?a.la++:a.la=0};var y=new Pa;y.add("arrow",10,[[0,.13,.12,.21,.28,.7097,.11,.4399,,,,.2845,.6608,,,,,,1,,,,,.32]]);y.add("hitarrow",10,[[2,,.0664,,.1176,.7984,,-.5791,,,,,,,,,,,1,,,.0922,,.47]]);y.add("damage",10,[[3,,.0421,,.1467,.7815,,-.4846,,,,,,.4464,,,,,1,,,.2247,,.47]]);function Qa(a){return a}
+function Ra(a){timeout=setTimeout(function(){Sa===a&&(r(Ba),timeout=null)},1E3);return a}
+var Sa=Qa(function(a,b){if(a==Da&&"complete"==b){var c=document.createElement("style");document.head.appendChild(c);var d=c.sheet;["warrior","archer","tank","artillery"].forEach(function(a,b){d.insertRule(".field-unit[data-unit-type="+a+"] {\n                    background: url("+document.getElementById("asset-soldier-"+a).src+");\n                }",b)});if(0===location.hash.indexOf("#vs="))try{return new Ta(null,m(null,location.hash.substr(4)))}catch(e){alert("Blue print invalid!")}return bb()}});
+function r(a,b){var c=Sa(a,b);c&&c!==Sa&&(Sa=c)}setInterval(function(){return r(Ga)},100);setInterval(function(){return r(Ha)},1E3);function A(a){return document.body.querySelectorAll(a)[0]}var cb=Math.pow(2,-16);function db(a){return Math.sqrt(a[0]*a[0]+a[1]*a[1])}function E(a,b){return Math.sqrt(Math.pow(a[0]-b[0],2)+Math.pow(a[1]-b[1],2))}function eb(a,b,c){var d=a[0]-b[0];a=a[1]-b[1];return Math.abs(d)>c||Math.abs(a)>c?!1:Math.sqrt(Math.pow(d,2)+Math.pow(a,2))<c}
+function fb(a){return H(a,1/db(a))}function gb(a,b){return Math.atan2(b[1]-a[1],b[0]-a[0])}function I(a,b){return[a[0]-b[0],a[1]-b[1]]}function hb(a,b){return[a[0]+b[0],a[1]+b[1]]}function H(a,b){return[a[0]*b,a[1]*b]}function ib(a,b){var c=db(a);b=Math.atan2(a[1],a[0])+b;return[Math.cos(b)*c,Math.sin(b)*c]}
+function jb(a){this.L=a;this.M=A("#game-hud");this.ma=A("#battle-time");this.I=A("#battle-result");this.A=A("#battle-balance-left");this.C=A("#battle-balance-right");this.M.style.display="block"}jb.prototype.Z=function(){this.M.style.display="none";this.I.innerHTML=""};function kb(a){var b=lb(a);a=Object.keys(lb(a));return b[a[0]]/(b[a[0]]+b[a[1]])}function mb(a,b,c){a.A.dataset.username=b||"";a.C.dataset.username=c||""}
+jb.prototype.V=function(a){var b=60-a.getTime()/1E3<<0;this.ma.dataset.time=(10>b?"0":"")+b+":"+(1E3-a.getTime()%1E3<<0);a=kb(a);this.A.style.width=100*a+"%";this.A.dataset.winning=a>2/3;this.C.style.width=100*(1-a)+"%";this.C.dataset.winning=a<1/3};
+function nb(a,b){var c=kb(b);if(c>1/3&&c<2/3)a.I.innerHTML='<div style="color: white">\n            <span class="result">DRAW!</span>\n            <span class="continue">Click to continue</span>\n        </div>';else{var d=c>1/3?"#ff0000":"#00ff00";a.I.innerHTML='<div style="color: '+d+'">\n            <span class="result" style="background: '+d+'">'+(c>2/3?"Victory":"Defeat")+'!</span>\n            <span class="winner">'+(c>2/3?a.A.dataset.username:a.C.dataset.username)+' wins!</span>\n            <span class="loser">'+
+(c>2/3?a.C.dataset.username:a.A.dataset.username)+' defeated!</span>\n            <span class="continue">Click to continue</span>\n        </div>';return d}}function ob(a){var b=aa("layer-default");b.D.clearRect(0,0,b.P(),b.U());b.save().translate(b.P()/2,b.U()/2);b.arc(0,0,a.ra);J(a,"Soldier",function(a){return 0===a.G}).forEach(pb);J(a,"Soldier",function(a){return 0<a.G}).forEach(pb);J(a,"Arrow").forEach(pb);J(a,"Explosion").forEach(pb);b.restore()}
+function pb(a){var b=aa();b.save().fillStyle("red").translate(a.B[0],a.Aa()).rotate(a.ca());a.V(b);b.restore()}function qb(){this.A=[];this.C={Soldier:[],Arrow:[],Explosion:[]};this.I=[];this.ra=1200;this.M=0;this.I.push({left:K,right:K,ta:this.La.bind(this)});this.I.push({left:K,right:rb,ta:this.Ka.bind(this)})}f=qb.prototype;f.Z=function(){};f.getTime=function(){return this.M};f.na=function(){for(var a=0;a<arguments.length;a++){var b=arguments[a];this.A.push(b);this.C[b.ba()].push(b)}};
+function J(a,b,c){return a.C[b].filter(function(a){return!c||c(a)})}f.update=function(a){var b=Math.min(a,10);this.A.forEach(function(a){a.update(b/100)},this);a-=b;this.M+=b;sb(this);this.ra=Math.max(1200*(1-this.getTime()/6E4),400);return a};
+function sb(a){var b=J(a,"Arrow",function(a){return 10>a.ea-E(a.sa,a.B)});J(a,"Soldier").forEach(function(a,d){var e=this;0>=a.G||(J(this,"Soldier").forEach(function(b,n){d<=n||0>=b.G||a===b||eb(a.B,b.B,a.P())&&tb(e,a,b)}),b.forEach(function(b){b&&eb(a.B,b.B,"arrow"===b.type?ub:128)&&tb(e,a,b)}),eb(a.B,[0,0],this.ra)||L(a,H(fb(a.B),-1)))},a);b.forEach(function(b){a.A.splice(a.A.indexOf(b),1);a.C.Arrow.splice(a.C.Arrow.indexOf(b),1);"ball"===b.type&&a.na(new vb(b.B,a.getTime(),a))})}
+function tb(a,b,c){a.I.forEach(function(a){b instanceof a.left&&c instanceof a.right&&a.ta(b,c);c instanceof a.left&&b instanceof a.right&&a.ta(c,b)})}f.La=function(a,b){var c=E(a.B,b.B);0===c?(c=H([Math.random()-Math.random(),Math.random()-Math.random()],1/Number.A),L(a,c),L(b,H(c,-1))):(c=H(fb(I(a.B,b.B)),a.P()-c),L(a,H(c,1/a.weight*b.weight)),L(b,H(c,-1*a.weight/b.weight)))};
+f.Ka=function(a,b){var c=E(b.B,a.B);"arrow"===b.type?b.da(a,c):"ball"===b.type&&O(a,"ballhit",150)&&(b.da(a,c),L(a,H(H(fb(I(a.B,b.B)),a.P()-c),-.5/a.weight*(1-c/128))))};function lb(a){return J(a,"Soldier",function(a){return 0<a.G}).reduce(function(a,c){return a[c.color]=(a[c.color]||0)+1,a},{"#ff0000":0,"#00ff00":0})}
+function wb(a,b,c,d,e,h,n){this.C=a;this.A=document.createElement("div");xb(this,d,e);this.A.className="field-unit";this.A.qa=this;this.C.appendChild(this.A);this.type=h;this.A.dataset.unitType=h;this.setPosition(b,c);yb(this,n)}function xb(a,b,c){a.sizeCol=b;a.sizeRow=c;a.A.style.width=32*a.sizeCol+"px";a.A.style.height=32*a.sizeRow+"px"}function yb(a,b){a.command=b;a.A.dataset.command=b}
+wb.prototype.setPosition=function(a,b){this.col=Math.max(0,Math.min(a,50-this.sizeCol));this.row=Math.max(0,Math.min(b,25-this.sizeRow));this.A.style.left=32*this.col+"px";this.A.style.top=32*this.row+"px"};wb.prototype.select=function(){this.A.classList.add("select");this.C.classList.add("select")};
+var zb={archer:1,warrior:2,tank:3,artillery:4,1:"archer",2:"warrior",3:"tank",4:"artillery"},Ab={"wait-advance":1,advance:2,"advance-wait":3,"flank-left":4,"flank-right":5,1:"wait-advance",2:"advance",3:"advance-wait",4:"flank-left",5:"flank-right"};
+function Bb(a){function b(a,b,c){a=a*Math.PI-Math.PI/2;var e=[300*Math.cos(a),300*Math.sin(a)];c=new Ob(e,c);for(var l=0;l<c.J.length;l++){var x=new Pb(c,c.J[l],c.F[l]),V=hb(x.J,e);d.na(new K(V[0],V[1],a+Math.PI,x,d,b,c.type[l]))}}var c=m("test-battle-string"),d=new qb;b(1,"#ff0000",a);b(0,"#00ff00",c);var e=new jb(d);mb(e,a.K,c.K||"Computer");return Ra(function(b){ob(d);e.V(d);if(b==Ba)return new Qb(d,e,a,c)})}
+function Qb(a,b,c,d){var e={},h=(e[Ja]={"#ff0000":0,"#00ff00":0},e[Ka]={"#ff0000":0,"#00ff00":0},e),n=JSON.parse(JSON.stringify(h));return function(e,q){if(e==Ca){for(var l=Math.min(q,1E3);0<l;)l=a.update(l);ob(a)}e===Ga&&b.V(a);if(e===Ha&&(l=kb(a),6E4<a.getTime()||0===l||1===l))return new Rb(a,b,c,d);if(e===Ja||e===Ka)h[e][q.ia.color]+=q.ya,n[e][q.ia.color]++}}
+function Rb(a,b,c,d){var e=nb(b,a);return function(h){ob(a);if(h===t){h="layer-default";var n=ba[h];n&&(n.Z(),delete ba[h]);b.Z();if("#ff0000"!==e||d.K)return new Ta(c,d);h=JSON.parse(JSON.stringify(c));delete h.K;return new Ta(c,h)}}}
+function P(a,b){b=b||"battle-string";var c=(a.K||"").split("").map(function(a){return a.charCodeAt(0)}),d=a.map(function(a){return[a.sizeCol,a.sizeRow,a.col,a.row,zb[a.type],Ab[a.command]]}).reduce(function(a,b){return a.concat([b.length],b)},[]);a=new Uint8Array([d.length].concat(d.concat(c)));c=new TextDecoder("utf8");c=btoa(c.decode(a));document.getElementById(b).value=c;try{localStorage[b]=c}catch(e){}A("#sharelink").value="http://gtanczyk.warsztat.io/masterplan/index.html#vs="+c}
+function m(a,b){for(var c=(new TextEncoder("utf8")).encode(atob(b||document.getElementById(a||"battle-string").value)),d=[],e=c[0],h=1;h<=e;){var n=c[h],w=c.slice(h+1,h+n+1);d.push({sizeCol:w[0],sizeRow:w[1],col:w[2],row:w[3],type:zb[w[4]],command:Ab[w[5]]});h+=n+1}c=Array.from(c.slice(e+1));d.K=(c.map(function(a){return String.fromCharCode(a)}).join("").match(/(\w)+/g)||[]).join("");return d}
+function Ta(a,b){function c(){var a=w.map(function(a){return{sizeCol:a.sizeCol,sizeRow:a.sizeRow,col:a.col,row:a.row,type:a.type,command:a.command}});a.K=localStorage.username;return a}var d;try{d=localStorage["battle-string"]}catch(e){}!a&&d?(a=m(null,d),A("#username").value=a.K):a||(a=da(),A("#username").value=a.K="Bonaparte"+(1E3*Math.random()<<0));var h=document.getElementById("game-designer");h.classList.add("visible");var n=document.getElementById("designer-field");n.style.width="1600px";n.style.height=
+"800px";n.innerHTML="";var w=a.map(function(a){return new wb(n,a.col,a.row,a.sizeCol,a.sizeRow,a.type,a.command)}),q,l;P(a);P(b||da(),"test-battle-string");b&&b.K&&(A("#battle-versus").innerHTML='Opened a link from <a href="https://twitter.com/'+(b.K+'">'+b.K)+'</a>, and you will battle their masterplan! <button id="vs-reset">Click to reset</button><br/><br/>\n        <button id="button-test-battle">Play the battle</button>');return function(a,b){a===ra&&b.target.classList.contains("field-unit")&&
+(q=b.target.qa);if(a===sa&&q){var d=q;d.C.classList.remove("drag");d.A.classList.remove("drag");q=null}a===za&&q&&b.target.qa===q&&(d=q,d.C.classList.add("drag"),d.A.classList.add("drag"));a===za&&q&&b.target===n&&(q.setPosition(b.offsetX/32<<0,b.offsetY/32<<0),P(c()));if(a===ra&&"button-test-battle"===b.target.id)return h.classList.remove("visible"),Bb(c());a===sa&&l&&n.contains(b.target)&&(d=l,d.A.classList.remove("select"),d.C.classList.remove("select"),l=null);a===sa&&b.target.classList.contains("field-unit")&&
+(l=b.target.qa,l.select());a===t&&b.target.classList.contains("formation-button")&&l&&(d=b.target.dataset.formation.split("x"),xb(l,d[0],d[1]),P(c()));if(a===t&&b.target.dataset.unitType&&l){var d=l,e=b.target.dataset.unitType;d.type=e;d.A.dataset.unitType=e;P(c())}a===t&&b.target.dataset.command&&l&&(yb(l,b.target.dataset.command),P(c()));a===t&&"tweet"===b.target.id&&window.open("https://twitter.com/home?status="+encodeURIComponent("#masterplan_js13k "+A("#sharelink").value));a===t&&"email"===b.target.id&&
+(location.href="mailto:"+document.querySelector("[type=email").value+"?subject=Check my MasterPlan&body="+A("#sharelink").value);if(a===t&&"battle-string-load"===b.target.id)return new Ta(m());a===t&&"vs-reset"===b.target.id&&(location.hash="",location.reload());a===qa&&"username"===b.target.id&&(localStorage.username=b.target.value,P(c()))}}
+function bb(){var a=A("#game-intro");a.classList.add("visible");var b="Protect your archers.;Tanks in first line.;Send warriors later.;Don't spread too thin;Kill archers quickly.;Warriors are good for flanking.;Support warriors with archers.;Archers are effective against stationary opponents.;All units are most vulnerable when hit from behind.;Surround enemy tanks.".split(";");A("#hint").innerHTML="<b>Hint:</b> "+b[Math.random()*b.length<<0];return Qa(function(b,d){if(b===t&&"BUTTON"===d.target.tagName)return a.classList.remove("visible"),
+new Ta})}function Q(){}Q.prototype.start=function(a){this.startTime=a};Q.prototype.$=function(){};Q.prototype.Ba=function(){return this.done};function R(a){this.A=a}k(R,Q);R.prototype.Ba=function(a){return 0<=this.startTime&&a-this.startTime>this.A};R.prototype.$=function(a){a.Y=0*a.T};function S(){}k(S,Q);S.prototype.C=function(a){return a.F.J};S.prototype.$=function(a){var b=this.C(a),c=gb(a.B,b);50<E(a.B,b)?(a.Y=1*a.T,a.ka=c):(a.Y=0*a.T,this.done=!0)};function Sb(a){this.A=a}k(Sb,S);
+Sb.prototype.C=function(a){return hb(ib([200,100*Math.sign(Math.cos(this.A))],this.A),a.F.J)};function Tb(a){Sb.apply(this,arguments)}k(Tb,Sb);Tb.prototype.C=function(a){return hb(ib([200,-100*Math.sign(Math.cos(this.A))],this.A),a.F.J)};function T(){}k(T,Q);T.prototype.$=function(a){Ub(a,800)||(this.done=!0)};
+function Ob(a,b){var c=this,d=gb(a,[0,0]);this.type=[];this.J=[];this.F=[];this.N={};b.forEach(function(a){for(var b=a.sizeCol*a.sizeRow,e=[32*a.col,32*a.row],q=0;q<b;q++)switch(c.J.push(hb([q%a.sizeCol*32,32*(q/a.sizeCol<<0)],e)),c.type.push(a.type),a.command){case "advance-wait":c.F.push([new S,new R(1E4),new T]);break;case "advance":c.F.push([new S,new T]);break;case "wait-advance":c.F.push([new R(1E4),new T]);break;case "flank-left":c.F.push([new Sb(d),new T]);break;case "flank-right":c.F.push([new Tb(d),
+new T])}});var e=[this.J.reduce(function(a,b){return Math.max(b[0],a)},0)/2,0];this.J=this.J.map(function(a){return ib(I(a,e),d+Math.PI/2)})}function Pb(a,b,c){this.Da=a;this.J=b;this.F=c;this.A=null;this.N=a.N}function Vb(a,b,c){a.N[b.S]||(a.N[b.S]=[]);if(5>a.N[b.S].length)return!0;var d=E(c.B,b.B);if(a.N[b.S].filter(function(a){return E(a.B,b.B)>d}).length===a.N[b.S].length)return!0}Pb.prototype.claim=function(a,b){if(!Vb(this,a,b))return!1;this.N[a.S].push(b);return!0};
+function U(a,b,c,d,e){this.B=[a,b];this.direction=e;this.ma=c;this.M=d}f=U.prototype;f.za=function(){};f.update=function(){};f.V=function(a){a.save().translate(-this.P()/2,-this.U()/2).fillRect(0,0,this.P(),this.U()).restore()};f.Aa=function(){return this.B[1]};f.ca=function(){return this.direction};f.P=function(){return this.ma};f.U=function(){return this.M};f.B=function(){return this.B};f.ba=function(){return"Object"};var Wb={arrow:[10,1],ball:[10,10]};
+function rb(a,b,c,d,e){U.call(this,a[0],a[1],Wb[e][0],Wb[e][1],gb(a,b));this.L=c;this.sa=a;this.ea=E(a,b);this.C=d;this.type=e;this.Ha=fb(I(b,a))}k(rb,U);f=rb.prototype;f.update=function(a){a=H(this.Ha,20*a);this.B[0]+=a[0];this.B[1]+=a[1];a=Math.sin(E(this.sa,this.B)/this.ea*Math.PI);this.A=this.direction-Math.PI/3*(1-a);this.I=this.B[1]-a*this.ea/10;E(this.sa,this.B)>this.ea&&(a=this.L,a.A.splice(a.A.indexOf(this),1))};f.Aa=function(){return this.I};f.ca=function(){return this.A};
+f.da=function(a,b){var c;c="ball"===this.type?this.aa(this)/Math.pow(b,.25):this.aa(this)*(O(a,"defence",a.pa)?Xb(a,this,a.ga):1);a.R=Math.max(a.R-c,0);r(Ka,{ia:a,ya:c});y.play("hitarrow")};f.aa=function(){return this.C};f.ba=function(){return"Arrow"};function vb(a,b,c){U.call(this,a[0],a[1],128,128,0);this.A=b;this.L=c}k(vb,U);vb.prototype.V=function(a){var b=this.L.getTime()-this.A;100>b&&a.save().arc(0,0,128*Math.min(b/100,1)).restore()};vb.prototype.ba=function(){return"Explosion"};
+var ub=32/3,Yb=0;
+function K(a,b,c,d,e,h,n){c+=(Math.random()-Math.random())/1E3;U.call(this,a,b,32,32,c);this.S=Yb++;this.F=d;this.L=e;this.type=n;this.va=0;this.Y=1;this.O=[0,0];this.ka=c;this.Ia=A("#asset-soldier-"+this.type);this.Ja=A("#asset-soldier-"+this.type+"-dead");this.color=h;this.R=this.G=100;this.pa=1500;this.T=this.weight=1;"warrior"===this.type?(this.ha=600,this.W=42,this.ga=30,this.X=50,this.fa=45,this.T=3,this.Ca=this.xa=!0):"tank"===this.type?(this.ha=600,this.W=46.2,this.X=this.ga=90,this.fa=20,
+this.G=this.R=200,this.pa=300,this.weight=3,this.xa=!1,this.Ca=!0):"archer"===this.type?(this.ha=500,this.W=300,this.ua=45,this.ga=25,this.Ga=1E3,this.fa=this.X=10,this.Fa="arrow"):"artillery"===this.type&&(this.ha=500,this.W=1500,this.weight=10,this.T=.1,this.ua=100,this.ga=1,this.Ga=1E4,this.fa=this.X=1,this.Fa="ball");this.oa={}}K.prototype=Object.create(U.prototype);f=K.prototype;
+f.V=function(a){a.save().translate(-this.P()/2,-this.U()/2).drawImage(0<this.G?this.Ia:this.Ja,0,0);if(0<this.G){if(100>this.G){var b=this.G<<0;a.D.fillStyle="white";a.D.A="11px serif";a.D.fillText(b,10-a.D.measureText(b).width/2,0)}a.fillStyle(this.color).fillRect(0,10,10,5*this.G/100)}a.restore()};function O(a,b,c){if(!a.oa[b]||a.L.getTime()>a.oa[b])return a.oa[b]=a.L.getTime()+c,!0}f.za=function(){return this.Y};
+f.update=function(a){if(0<this.G){if(!Ub(this,this.ha)){var b=this.F,c=this.L.getTime();(!b.A||b.A.Ba(c))&&0<b.F.length&&(b.A=b.F.splice(0,1)[0],b.A.start(c));b.A||(b.A=new R);b.A.$(this)}}else this.H&&Zb(this,null);this.va=this.za()*a+this.va*(1-a);this.B[0]=this.B[0]+this.O[0]*a;this.B[1]=this.B[1]+this.O[1]*a;this.direction=Math.atan2(Math.sin(this.ca())*(1-a)+Math.sin(this.ka)*a,Math.cos(this.ca())*(1-a)+Math.cos(this.ka)*a);0<this.G&&L(this,H([Math.cos(this.direction),Math.sin(this.direction)],
+this.va*(1-Math.random())*a/2));this.O=I(this.O,H(this.O,.1*a));db(this.O)<cb&&(this.O=[0,0]);this.G=this.R};function $b(a,b){var c=J(a.L,"Soldier",function(c){return c.F.Da!==a.F.Da&&0<c.G&&eb(c.B,a.B,b)&&Vb(a.F,c,a)});if(0<c.length)return c.reduce("artillery"===a.type?function(b,c){return E(c.B,a.B)>E(b.B,a.B)?c:b}:function(b,c){return E(c.B,a.B)<E(b.B,a.B)?c:b},c[0])}
+function Ub(a,b){a.H&&(0>=a.H.G||E(a.H.B,a.B)>b)&&Zb(a,null);!a.H&&O(a,"seek-"+b,1E3)&&Zb(a,$b(a,b));if(a.H){var c=a.H.B,d=E(a.B,c);a.ka=gb(a.B,c);c=0;a.xa&&50<d&&600>d&&!O(a,"charge",10)&&(c+=1);a.Y=(a.Ca||d>a.W?1+c:0)*a.T;a.ua&&d<a.W&&160<d&&O(a,"arrow",a.Ga)&&(a.L.na(new rb(a.B,a.H.B,a.L,a.ua,a.Fa)),y.play("arrow"),"artillery"===a.type&&(a.R=Math.max(a.R-50,0)));42>d&&O(a,"sword",250)&&a.H.da(a);return!0}}function L(a,b){a.O=hb(a.O,b)}
+function Xb(a,b,c){b=I(b.B,a.B);a=[Math.cos(a.direction),Math.sin(a.direction)];return Math.min(Math.abs(Math.atan2(b[0]*a[1]-b[1]*a[0],b[0]*a[0]+b[1]*a[1]))/Math.PI/c,.3)}f.aa=function(a){return(1-Xb(this,a,this.X))*this.fa};f.da=function(a){var b=(O(this,"defence",this.pa)?Xb(this,a,this.X):1)*a.aa(this);this.R=Math.max(this.R-b,0);r(Ja,{ia:this,ya:b});Zb(this,a);y.play("damage")};f.ba=function(){return"Soldier"};
+function Zb(a,b){if(a.H){var c=a.F,d=a.H,e=c.N[d.S].indexOf(a);0<=e&&c.N[d.S].splice(e,1);a.H=null}b&&a.F.claim(b,a)&&(a.H=b)};}).call(window);
+
+</script>
+</head>
+
+<body>
+	<!-- assets -->
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkDEigyAtVVggAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAB4SURBVFjD7VfLDsAgCIOF///l7rSTizp5aJZyMxFtoMUqsjnUmQ/vudfuChBAVKDDh7MroAsMD73bgqSKhb1UAQHIQ0J8II2yBRktqBzXzboSgL4NLcsgFklIAJUyRI/hv/aEIw847RHNWfLjXS8ow4xXrOzTUhI3cssYNHqG9WQAAAAASUVORK5CYII=" id="asset-soldier-warrior">
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkDEig5lQeMCgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAC/SURBVFjD7ZZtCoAwCIbd6kxdyvN4ql2qPzEqhvg1JpEQBavpfPRNgKch8Ia3K8QK45gEwZE3gAqLbVemkwY4XJmQIOCcoBfHcgSSite8r/axMYvHdW/CzZohgCY5eWjfv33VjNwjGYvrS5rmcBzLERSjmHgVsH9fB/KqkWQ3kuKUVk/28kvxbNnGEYJIDSFvDUBQpbP7pNABjeSSUR/w1br9uSichw6jaRBoAyCDQOX/GYX39mem4lmT1W+5EJz4zihIINpFJwAAAABJRU5ErkJggg==" id="asset-soldier-warrior-dead">
+
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkDEigk9gHg0wAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACySURBVFjD1VZbDsAgCLPE+1+5+13cIqI8Nn7JpNAW1lpx4PB7brzLe16SG34AloLiqADAjAJUir/mJQHYVOjdeZS0uqw7WXcU2DLnUjH2SACm4hEAzJtVkjzOKABURKlORw461vheoqNvcMxFsTFSAzDm4bkJYaAJnraZFaeHJU9vAKMWx+zA8LRrOEwCFs49bPipGLk3a0HaT0PrdHkSu79k+FrH2/egXAPyF8FV0JcTF5HDMyNBbtWDAAAAAElFTkSuQmCC" id="asset-soldier-archer">
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkDEigo/7es+AAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAC/SURBVFjD7ZZtCoAwCIbd6kxdyvN4ql2qPzEqhvg1JpEQBavpfPRNgKch8Ia3K8QK45gEwZE3gAqLbVemkwY4XJmQIOCcoBfHcgSSite8r/axMYvHdW/CzZohgCY5eWjfv33VjNwjGYvrS5rmcBzLERSjmHgVsH9fB/KqkWQ3kuKUVk/28kvxbNnGEYJIDSFvDUBQpbP7pNABjeSSUR/w1br9uSichw6jaRBoAyCDQOX/GYX39mem4lmT1W+5EJz4zihIINpFJwAAAABJRU5ErkJggg==" id="asset-soldier-archer-dead">
+
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkJDBsdJGpj9QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACjSURBVFjD7VbREoAgCHMe///L6zW9wgLErpOnNLkNnACKzfjwHEYHallsHgLwRP6LDISYOHx5SjW71LNEqXT2K0AAiMcgCUDQMDJEyFkitOiMuw5sAqsJoP+WRHBerWVB9E3f2CLcBMTxjLRGkzITsgOEZZaoL9iaACJSikHkWnYw+idKsbAAa4Oru4wyyK/Zqy/Fll4HosBvrw8WJ2cXRPmSHSqNI0GjWZKJAAAAAElFTkSuQmCC" id="asset-soldier-tank">
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkJDB0Hj1I9CQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAADvSURBVFjDxVZBDsMwCCPZPtVn8RJ/a8/apZ0mLUtsBkukqpFKY2MIYMYtF+xYWzMzayI4BJJgCHQR3AWFKCVugkeP8/HzfdkckzOON1spBEocQdhDIeCLQyLfweaAB28DCDBXFcCXPSszdStWOQAxJ2QSLaH4zEj4QD0ohSiDxLSgqZUwnURFCCQSrQjY2GvZisGXJNom74eVsMp7ah6oBseguL0IbPH8ItU2xN2ViSgCzDYtmBl6QYwllTKScNR86NWVCTZ5hP/IASQBI0ogW4kQgSgJj/77aztGdgj+Ho4ueFgxNdm9qs1mL69S4QlnbztJQYeCiQAAAABJRU5ErkJggg==" id="asset-soldier-tank-dead">
+
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfiCQwTIjRI+GJcAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAGtJREFUCNdjYCAHJICIG0DMeAJIMD8BEux/QMQPIMH/gYHxg/wDBiYP+wMMrCH1DAwsT/4B5f4CVbD8/9/AwBr+yYGByf/VAgbG//8VGBjk9z9gYNinDmTVaC1gYLAQcmBgEOBvYGDgYGAAAKEvGyWBDTuGAAAAAElFTkSuQmCC" id="asset-soldier-artillery">
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gkMExcBvHpkyQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAACoSURBVFjD7ZVLDsAgCETF9Nqs5uLd2gUyKP2k4SVNjU0FhxFbK4qiKIofoMH5C3JjAiOwPvSXVXpMAVONY2FxLAQ1/zuc4DDGaXQnuJJyY3hCJhRy9578IEqIaAJtx1yGmoh4YLfmyiTYiUXg1dGp/fTUdOfIgDXTZOc6S0ISmgyIvtEsD0hCfbGY7PJdoE4AEHNplxEI46Z1Th3eaiysxDjdAxEjfo8TBO0sl43evjkAAAAASUVORK5CYII=" id="asset-soldier-artillery-dead">
+
+	<!-- intro -->
+	<div id="game-intro">
+		<h1>MasterPlan</h1>
+		<p>MasterPlan is a <u>offline multiplayer</u> strategy game. It&apos;s battle gameplay is inspired by <a href="https://en.wikipedia.org/wiki/Legion_Gold">Legion Gold (2002)</a></p>
+		<h2>How to play?</h2>
+		<ol>
+			<li>Create your master plan</li>
+			<li>Play Battle</li>
+			<li>Share with other player to compete</li>
+		</ol>
+		<p>Available units:</p>
+		<ul>
+			<li><div class="field-unit" data-unit-type="warrior"> </div> - Warrior: Fast, Fragile, Deadly</li>
+			<li><div class="field-unit" data-unit-type="archer"> </div> - Archer: Kills from distance, dies fast.</li>
+			<li><div class="field-unit" data-unit-type="tank"> </div> - Tank: Powerful, and slow.</li>
+			<li><div class="field-unit" data-unit-type="artillery"> </div> - Artillery: 2 shots, stationary.</li>
+		</ul>
+		<br>
+		<center><button>Click here to play</button></center>
+		<div id="hint" style="margin-top: 50px; text-align: center"></div>
+	</div>
+	<!-- HUD -->
+	<div id="game-hud">
+		<div id="battle-stats">
+			<div id="battle-time"> </div>
+			<div id="battle-balance"> 
+					<div id="battle-balance-left"> </div>
+					<div id="battle-balance-right"> </div>
+				</div>
+			</div>
+		<div id="battle-result"></div>
+	</div>
+	<!-- Designer -->
+	<div id="game-designer">
+		<div id="battle-versus"></div>
+		<h1>Create Master Plan</h1>
+		<div class="designer-area" style="padding-bottom: 10px; border-bottom: 5px solid black;">
+			<div id="designer-field">
+			</div>			
+			<div style="background: rgba(0, 0, 0, 0.1); padding: 2px 3px">
+				<span style="float: right"><input id="battle-string"> <button id="battle-string-load">Load plan</button></span> Select unit to change formation, type or commands. Drag to move.
+				<div style="clear: both"> </div> 
+			</div>
+			<div id="designer-formation" class="designer-unit-option">
+				<h3>Formation</h3>
+				<button class="formation-button" data-formation="4x4">4x4</button>
+				<button class="formation-button" data-formation="16x1">16x1</button>
+				<button class="formation-button" data-formation="1x16">1x16</button>
+				<button class="formation-button" data-formation="8x2">8x2</button>
+				<button class="formation-button" data-formation="2x8">2x8</button>
+			</div>
+			<div id="designer-actions">			
+				<h3>Battle!</h3>
+				<button id="button-test-battle">Play</button>
+				vs
+				<input id="test-battle-string"><br>				
+			</div>
+			<div id="designer-commands" class="designer-unit-option">
+				<h3>Commands</h3>
+				<button data-command="wait-advance">Wait&amp;Advance</button>
+				<button data-command="advance">Advance</button>
+				<button data-command="advance-wait">Advance&amp;Wait</button>
+				<button data-command="flank-left">Flank Left</button>
+				<button data-command="flank-right">Flank Right</button>
+			</div>
+			<div id="designer-unit-type" class="designer-unit-option">
+				<h3>Unit Type</h3>
+				<button data-unit-type="warrior">Warriors</button>
+				<button data-unit-type="tank">Tanks</button>
+				<button data-unit-type="archer">Archers</button>
+				<button data-unit-type="cavalry" disabled>Cavalry (WIP)</button>
+				<button data-unit-type="artillery">Artillery</button>
+			</div>
+		</div>
+		<div id="designer-share" style="margin-top: 20px">
+			<div>
+				<h2>Share</h2>
+				<p>What&apos;s your name/twitter username? <input id="username" placeholder="Bonaparte"></p>
+				<p><b>Share link: </b><input id="sharelink" style="width: 500px"></p>
+				<ul>
+					<li>Twitter: <button id="tweet">Share on Twitter</button></li>
+					<li>Email: <input placeholder="example@email.com" type="email"> <button id="email">Send email</button></li>
+				</ul>
+			</div>			
+			<div>
+				<h3>HOWTO multiplayer</h3><a name="multiplayer"> </a>
+				<p>It&apos;s simple, and you can do it while being offline!</p>
+				<ol>
+					<li>Copy your share link to clipboard</li>
+					<li>Send to a friend, or tweet to <a href="https://twitter.com/hashtag/masterplan_js13k?f=tweets&amp;vertical=default">#masterplan_js13k</a></li>
+					<li>Open share link from other player</li>
+					<li>Play the battle</li>
+					<li>Improve your blueprint</li>
+					<li>Repeat!</li>
+				
+			</ol></div>
+		</div>
+	</div>
+</body>
+
+</html>

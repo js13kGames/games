@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body{
+				background-color:#2c3e50;
+			}
+			#canvas{
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				box-shadow: 0px 0px 10px 2px #7f8c8d;
+			}
+			#instructions{
+				width: 512px;
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				color:#ecf0f1;
+				font-size:19px;
+				font-family:calibri;
+			}
+			#credits{
+				width: 512px;
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+				color:#ecf0f1;
+				font-size:14px;
+				font-family:calibri;
+			}
+			a{
+				color:#ecf0f1;
+			}
+		</style>
+		<script src='assets/scripts/class.js'></script>
+		<script src='assets/scripts/jsfxr.js'></script>
+		<script src='assets/scripts/reversed_gravity_ninja.js'></script>
+	</head>
+	<body>
+		<canvas id='canvas'></canvas>
+		<p id='instructions'>
+			<strong>CONTROLS:</strong><br>
+			A or D to move. W or S to change gravity.
+		</p>
+		<p id='credits'>
+			Reverse Gravity Ninja. Created by <a href='http://www.marcguinea.com'>Marc Guinea</a> for js13kgames 2015. <br>Inspired by Gravity Duck
+		</p>
+	</body>
+</html>

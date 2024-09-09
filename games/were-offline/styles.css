@@ -1,0 +1,18 @@
+body {
+	background: #202020;
+}
+
+#canvasBg {
+	position: relative;
+	
+/*	background: #333; */
+}
+
+#canvasStory {
+}
+
+#challenge {
+	position: absolute;
+	left: 15px;
+	top: 50px;
+}

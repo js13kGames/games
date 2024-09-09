@@ -1,0 +1,17 @@
+{
+  "background_color": "#000",
+  "description": "Actual Game for JS13K2022",
+  "icons": [],
+  "lang": "en-US",
+  "name": "It Comes in Threes",
+  "orientation": "any",
+  "related_applications": [
+    {
+      "platform": "web"
+    }
+  ],
+  "scope": "/",
+  "short_name": "It Comes in Threes",
+  "start_url": ".",
+  "theme_color": "#000"
+}

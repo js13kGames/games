@@ -1,0 +1,832 @@
+<html>
+<head>
+<title>Lost Sanity</title>
+<style>
+canvas {	
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+},
+html {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}, 
+
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	
+	font-family: Consolas, monaco, monospace;
+	font-weight: normal;
+	text-align: left;
+	
+	cursor: default;
+	
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	border: 0;
+	overflow: hidden; /*  Disable scrollbars */
+	display: block;  /* No floating content on sides */
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+body {
+	background: #181818;
+}
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	width: 100%;
+	height: 100vh;
+}
+#menu.main {
+  //background-image: url('imgs/menu-bg.png');
+}
+#main {
+  display: none;
+  height: 60%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+#main h1 {
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+.button {
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #AA2666;
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  background-color: #FB1886;
+  background-image: -webkit-linear-gradient(bottom, #FB1886 0%, #B30D5D 100%);
+  background-image:         linear-gradient(to bottom, #FB1886 0%, #B30D5D 100%);
+  border-radius: 5px;
+}
+.button:hover {
+  background-color: #B30D5D;
+  background-image: -webkit-linear-gradient(bottom, #B30D5D 0%, #FB1886 100%);
+  background-image:         linear-gradient(to bottom, #B30D5D 0%, #FB1886 100%);
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div id="menu" class="main">
+      <div id="main">
+        <h1>Kandi Runner</h1>
+        <ul>
+          <li><a href="#" class="button play">Start Game</a></li>
+          <li><a href="#" class="button credits">Credits</a></li>
+        </ul>
+      </div>
+    </div>
+<canvas id="canvas"  style="border:1px solid #000000;">
+<p>You're browser does not support the required functionality to play this game.</p>
+</canvas>
+</div>
+
+<script src="jsfxr.min.js"></script>
+<script>
+var main = document.getElementById('main');
+/**
+ * Hide element
+ */
+function hide(el) {
+  el.style.display = 'hide';
+}
+/**
+ * Show element
+ */
+function show(el) {
+  el.style.display = 'block';
+} 
+/**
+ * Show the main menu after loading all assets
+ */
+function mainMenu() {
+  show(main);
+}
+
+/**
+ * Click handlers for the different menu screens
+ */
+document.querySelectorAll('.play')[0].addEventListener('click', function() {
+  hide(main);
+  startGame();
+});
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+ctx.font = '30px Arial';
+
+
+var HEIGHT = canvas.height = window.innerHeight;
+var WIDTH = canvas.width = window.innerWidth;
+var timeWhenGameStarted = Date.now();	//return time in ms
+
+var frameCount = 0;
+var score = 0;
+var coin = 0;
+var paused = false;
+var player;
+var planet;
+var shipList = {}; // sub-object WarShip
+var upgradeList = {};
+var bulletList = {};
+var Timer = 0; // counts second
+
+var Sound = {};
+{ // Sound Scope
+Sound.playerS = jsfxr([2,,0.18,,,0.75,,-0.48,,0.32,0.41,0.02,,,-1,,0.58,,0.79,,1,,,0.25]);
+Sound.player = new Audio();
+Sound.player.src = Sound.playerS;
+Sound.fireS = jsfxr([0,,0.1812,,0.1349,0.4524,,0.2365,,,,,,0.0819,,,,,1,,,,,0.5]);
+Sound.fire = new Audio();
+Sound.fire.src = Sound.fireS;
+Sound.fireRS = jsfxr([3,0.0091,0.5358,0.3266,0.4567,0.4399,0.0505,0.009,0.4293,0.0123,0.803,-0.4633,0.0428,0.0262,0.6966,0.8996,0.3956,0.032,0.2701,-0.1372,0.0348,0.0311,-0.0076,0.5]);
+Sound.fireR = new Audio();
+Sound.fireR.src = Sound.fireRS;
+Sound.fireTS = jsfxr([0,,0.0353,,0.2744,0.6011,,-0.4109,,,,,,,,,,,1,,,0.0566,,0.5]);
+Sound.fireT = new Audio();
+Sound.fireT.src = Sound.fireTS;
+Sound.fireES = jsfxr([1,,0.18,0.25,0.38,0.53,0.1,-0.4,-0.02,0.79,0.66,0.02,,,-1,,0.58,,0.79,,1,0.61,,0.25]);
+Sound.fireE = new Audio();
+Sound.fireE.src = Sound.fireES;
+Sound.BG = new Audio();
+Sound.hit = new Audio();
+Sound.hit1 = new Audio();
+Sound.hit2 = new Audio();
+Sound.deathS = jsfxr([3,,0.2092,0.4915,0.3525,0.4154,,-0.322,,,,,,,,,0.5946,-0.0566,1,,,,,0.5]);
+Sound.death = new Audio();
+Sound.death.src = Sound.deathS;
+Sound.deathES = jsfxr([3,,0.2558,0.3362,0.3398,0.1153,,-0.3867,,,,,,,,,,,1,,,,,0.5]);
+Sound.deathE = new Audio();
+Sound.deathE.src = Sound.deathES;
+}
+
+var Menu = {
+	// Properties
+	menu: document.querySelector("#menu"), 
+	menuHeading: document.querySelector("#menuHead"),
+	// Define the upgrades here
+	btnNames: [ "FEC", "MTU" ],
+	// Methods
+	toggle: function(){
+			if (!this.open()) {
+			//document.querySelector("#mainMenu").className = "hidden";
+			if (menuType === "main" || typeof menuType === "undefined") {
+				this.menuHeading.innerHTML = "Nexus overload";
+				if (!Network.tutorial && document.querySelector("#tutButton").classList.contains("hidden")) {
+					
+				}				
+			}
+			}
+	},
+	open: function(){
+		if (this.menu.classList.contains("show")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+};
+
+
+Planet = function(){
+	var self = Actor('planet','myPlanet',WIDTH/2,HEIGHT/2,30,5,20,20,'blue',10,1);
+	self.updatePosition = function(){}
+	var super_update = self.update;
+	self.update = function(){
+		super_update();
+		if(self.hp <= 0){
+			var timeSurvived = Date.now() - timeWhenGameStarted;			
+			startNewGame();
+		}
+	}
+}
+
+SpaceShip = function(){
+	var self = Actor('ship','myId',500,40,30,5,20,20,'blue',10,1);	
+	return self;
+}
+
+Player = function(){
+	var self = Actor('player','myId',50,40,30,5,20,20,'green',10,1);
+	
+	self.updatePosition = function(){
+		if(self.pressingRight)
+			self.x += 10;
+		if(self.pressingLeft)
+			self.x -= 10;	
+		if(self.pressingDown)
+			self.y += 10;	
+		if(self.pressingUp)
+			self.y -= 10;	
+		
+		//ispositionvalid
+		if(self.x < self.width/2)
+			self.x = self.width/2;
+		if(self.x > WIDTH-self.width/2)
+			self.x = WIDTH - self.width/2;
+		if(self.y < self.height/2)
+			self.y = self.height/2;
+		if(self.y > HEIGHT - self.height/2)
+			self.y = HEIGHT - self.height/2;
+			
+		// Fire sound
+		//Sound.fireE.play();
+	}
+	var super_update = self.update;
+	self.update = function(){
+		super_update();
+		if(self.hp <= 0){
+			var timeSurvived = Date.now() - timeWhenGameStarted;		
+			console.log("You lost! You survived for " + timeSurvived + " ms.");		
+			startNewGame();
+		}
+	}
+	
+	self.pressingDown = false;
+	self.pressingUp = false;
+	self.pressingLeft = false;
+	self.pressingRight = false;
+	return self;
+	
+}
+Player.xp = 1;
+Player.timer = 0;
+
+Entity = function(type,id,x,y,spdX,spdY,width,height,color){
+	var self = {
+		type:type,
+		id:id,
+		x:x,
+		y:y,
+		spdX:spdX,
+		spdY:spdY,
+		width:width,
+		height:height,
+		color:color,
+	};
+	self.update = function(){
+		self.updatePosition();
+		self.draw();
+	}
+	self.draw = function(){
+		ctx.save();
+		ctx.fillStyle = self.color;
+		ctx.fillRect(self.x-self.width/2,self.y-self.height/2,self.width,self.height);
+		ctx.restore();
+	}
+	self.getDistance = function(entity2){	//return distance (number)
+		var vx = self.x - entity2.x;
+		var vy = self.y - entity2.y;
+		return Math.sqrt(vx*vx+vy*vy);
+	}
+
+	self.testCollision = function(entity2){	//return if colliding (true/false)
+		var rect1 = {
+			x:self.x-self.width/2,
+			y:self.y-self.height/2,
+			width:self.width,
+			height:self.height,
+		}
+		var rect2 = {
+			x:entity2.x-entity2.width/2,
+			y:entity2.y-entity2.height/2,
+			width:entity2.width,
+			height:entity2.height,
+		}
+		return testCollisionRectRect(rect1,rect2);
+		
+	}
+	self.updatePosition = function(){
+		<!-- if(self.type == "shipo"){ -->
+			<!-- self.x += self.spdX + 50; -->
+			<!-- self.y += self.spdY + 2; -->
+			<!-- console.log("shipo"); -->
+		<!-- }else{ -->
+			self.x += self.spdX;
+			self.y += self.spdY;
+		<!-- } -->
+				
+		if(self.x < 0 || self.x > WIDTH){
+			//self.spdX = -self.spdX;
+		}
+		if(self.y < 0 || self.y > HEIGHT){
+			//self.spdY = -self.spdY;
+		}
+	}
+	
+	return self;
+}
+
+Actor = function(type,id,x,y,spdX,spdY,width,height,color,hp,atkSpd){
+	var self = Entity(type,id,x,y,spdX,spdY,width,height,color);
+	
+	if(self.type == "shipo"){spdX = 20;spdY = 20;} // speed increase
+	
+	self.hp = hp;
+	self.hpMax = hp;
+	self.atkSpd = atkSpd;
+	self.attackCounter = 0;
+	self.aimAngle = 0;
+	
+	var super_update = self.update;
+	self.update = function(){
+		super_update();
+		self.attackCounter += self.atkSpd;
+		if(self.hp <= 0){
+			self.onDeath();
+		}
+	}
+	self.onDeath = function(){};
+	
+	var super_draw = self.draw; 
+	self.draw = function(){
+		super_draw();
+		var x = self.x - player.x + WIDTH/2;
+		var y = self.y - player.y + HEIGHT/2 - self.height/2 - 20;		
+		ctx.save();
+		ctx.fillStyle = 'red';
+		var width = 100*self.hp/self.hpMax;
+		if(width < 0)
+			width = 0;
+		ctx.fillRect(self.x-25,self.y-25,width/2,5);
+		
+		ctx.strokeStyle = 'white';
+		ctx.strokeRect(self.x-25,self.y-25,100/2,5);
+		
+		ctx.restore();		
+	}
+	
+	self.onDeath = function(){
+		self.toRemove = true;
+	}	
+	
+	self.performAttack = function(){
+		if(self.attackCounter > 25){	//every 1 sec
+			self.attackCounter = 0;
+			generateBullet(self);
+			if(self.type === "enemy")
+			Sound.player.play(); // Enemy shoot sound
+			if(self.type === "player")
+			Sound.fireT.play(); // player shoot sound
+		}
+	}
+	
+	self.performSpecialAttack = function(){
+		if(self.attackCounter > 50){	//every 1 sec
+			self.attackCounter = 0;
+			/*
+			for(var i = 0 ; i < 360; i++){
+				generateBullet(self,i);
+			}
+			*/
+			generateBullet(self,self.aimAngle - 5);
+			generateBullet(self,self.aimAngle);
+			generateBullet(self,self.aimAngle + 5);
+		}
+		if(coin >= 5){
+			coin = coin - 5;
+			generateBullet(self,self.aimAngle - 5);
+			generateBullet(self,self.aimAngle);
+			generateBullet(self,self.aimAngle + 5);
+			Sound.fireR.play();
+		}
+		if(coin >= 6){
+			coin = coin - 6;
+			generateBullet(self,self.aimAngle - 5);
+			generateBullet(self,self.aimAngle);
+			generateBullet(self,self.aimAngle + 5);
+			generateBullet(self,self.aimAngle + 10);
+		}
+		if(coin >= 7){
+			coin =  coin - 7;
+			generateBullet(self,self.aimAngle - 10);
+			generateBullet(self,self.aimAngle - 5);
+			generateBullet(self,self.aimAngle);
+			generateBullet(self,self.aimAngle + 5);
+			generateBullet(self,self.aimAngle + 10);
+		}
+	}
+	
+	return self;
+}
+
+//#####
+Enemy = function(etype,id,x,y,spdX,spdY,width,height){
+	var Ehp = 10;
+	if(etype != null){
+		if(etype == 1){
+			Ehp = 20;
+			if(Player.xp > 100){Ehp=50;}
+			if(Player.xp > 500){Ehp=100;}
+			if(Player.xp > 1000){Ehp=150;}
+			var self = Actor('ship',id,x,y,spdX,spdY,width,height,'blue',20,1);
+		}
+		if(etype == 2){
+			Ehp = 2;
+			if(Player.xp > 100){Ehp=5;}
+			if(Player.xp > 500){Ehp=10;}
+			if(Player.xp > 1000){Ehp=20;}
+			var self = Actor('shipo',id,x,y,spdX,spdY,width,height,'orange',2,1);
+		}
+	}else{
+		Ehp = 5;
+		if(Player.xp > 100){Ehp=10;}
+		if(Player.xp > 500){Ehp=50;}
+		if(Player.xp > 1000){Ehp=100;}
+		var self = Actor('enemy',id,x,y,spdX,spdY,width,height,'red',5,1);
+	}
+	Enemy.list[id] = self;
+	
+	var super_update = self.update;	
+	self.update = function(){
+		super_update();
+		self.updateAim();
+	}	
+	self.updateAim = function(){
+		var diffX = player.x - self.x;
+		var diffY = player.y - self.y;
+		
+		self.aimAngle = Math.atan2(diffY,diffX) / Math.PI * 180
+	}
+	
+	self.updatePosition = function(){
+		var diffX = player.x - self.x;
+		var diffY = player.y - self.y;
+		
+		if(diffX > 0)
+			self.x += 0.5;
+		else
+			self.x -= 0.5;
+			
+		if(diffY > 0)
+			self.y += 0.5;
+		else
+			self.y -= 0.5;
+	}
+	
+}
+
+Enemy.list = {};
+
+Enemy.update = function(){
+	if(frameCount % 100 === 0)	//every 4 sec
+		Enemy.randomlyGenerate();
+	for(var key in Enemy.list){
+		Enemy.list[key].update();
+	}
+	for(var key in Enemy.list){
+		if(Enemy.list[key].toRemove)			
+			delete Enemy.list[key];
+	}
+}
+
+Enemy.randomlyGenerate = function(etype){
+	//Math.random() returns a number between 0 and 1
+	var etype = etype;
+	var x = Math.random()*WIDTH;
+	var y = Math.random()*HEIGHT;
+	var height = 15;//10 + Math.random()*30;	//between 10 and 40
+	var width = 15;//10 + Math.random()*30;
+	var id = Math.random();
+	var spdX = 0;//5 + Math.random() * 5;
+	var spdY = 0;//5 + Math.random() * 5;
+	if(etype != undefined){
+		
+	}
+	if(Math.random() < 0.5)
+		Enemy(etype,id,x,y,spdX,spdY,width,height);
+	else
+		Enemy(etype,id,x,y,spdX,spdY,width,height);
+	
+}
+
+//#####
+Upgrade = function (id,x,y,spdX,spdY,width,height,category,color){
+	var self = Entity('upgrade',id,x,y,spdX,spdY,width,height,color);
+	
+	var super_update = self.update;
+		
+	self.category = category;
+	upgradeList[id] = self;
+}
+
+randomlyGenerateUpgrade = function(){
+	//Math.random() returns a number between 0 and 1
+	var x = Math.random()*WIDTH;
+	var y = Math.random()*HEIGHT;
+	var height = 10;
+	var width = 10;
+	var id = Math.random();
+	var spdX = 0;
+	var spdY = 0;
+	var a = Math.random();
+	if(a<0.4){
+		var category = 'score';
+		var color = 'orange';
+	} else if(a>0.7)
+	{
+		var category = 'atkSpd';
+		var color = 'purple';
+	} else //if(Math.random()<0.5)
+	{
+		var category = 'health';
+		var color = 'green';
+	}
+	
+	Upgrade(id,x,y,spdX,spdY,width,height,category,color);
+}
+
+//#####
+Bullet = function (id,x,y,spdX,spdY,width,height,combatType){
+	var self = Entity('bullet',id,x,y,spdX,spdY,width,height,'white');	
+	self.timer = 0;
+	self.combatType = combatType;
+	bulletList[id] = self;
+}
+
+generateBullet = function(actor,aimOverwrite){
+	//Math.random() returns a number between 0 and 1
+	var x = actor.x;
+	var y = actor.y;
+	var height = 5;
+	var width = 5;
+	var id = Math.random();
+	
+	var angle;
+	if(aimOverwrite !== undefined)
+		angle = aimOverwrite;
+	else angle = actor.aimAngle;
+	
+	var spdX = Math.cos(angle/180*Math.PI)*15;
+	var spdY = Math.sin(angle/180*Math.PI)*15;
+	Bullet(id,x,y,spdX,spdY,width,height,actor.type);
+}
+
+testCollisionRectRect = function(rect1,rect2){
+	return rect1.x <= rect2.x+rect2.width 
+		&& rect2.x <= rect1.x+rect1.width
+		&& rect1.y <= rect2.y + rect2.height
+		&& rect2.y <= rect1.y + rect1.height;
+}
+
+
+// Mouse Click
+OMClick = function(mouse) {
+	var mouseX = mouse.clientX - document.getElementById('canvas').getBoundingClientRect().left;
+	var mouseY = mouse.clientY - document.getElementById('canvas').getBoundingClientRect().top;
+	
+	mouseX -= player.x;
+	mouseY -= player.y;
+	
+	player.aimAngle = Math.atan2(mouseY,mouseX) / Math.PI * 180;
+}
+//#####
+document.onclick = function(mouse){
+	OMClick(mouse);
+	player.performAttack();	
+}
+
+document.oncontextmenu = function(mouse){
+	OMClick(mouse);
+	player.performSpecialAttack();
+	mouse.preventDefault();
+}
+
+document.onmousemove = function(mouse){
+	OMClick(mouse);
+}
+
+document.onkeydown = function(event){
+	if(event.keyCode === 68)	//d
+		player.pressingRight = true;
+	else if(event.keyCode === 83)	//s
+		player.pressingDown = true;
+	else if(event.keyCode === 65) //a
+		player.pressingLeft = true;
+	else if(event.keyCode === 87) // w
+		player.pressingUp = true;
+	else if(event.keyCode === 80) //p
+		paused = !paused;
+}
+
+document.onkeyup = function(event){
+	if(event.keyCode === 68)	//d
+		player.pressingRight = false;
+	else if(event.keyCode === 83)	//s
+		player.pressingDown = false;
+	else if(event.keyCode === 65) //a
+		player.pressingLeft = false;
+	else if(event.keyCode === 87) // w
+		player.pressingUp = false;
+}
+
+var pHXP = Player.xp;
+update = function(){
+	if(paused){
+		ctx.save();
+		ctx.fillStyle = "white";
+		ctx.fillText('Paused',WIDTH/2-50,HEIGHT/2);
+		ctx.restore();
+		return;
+	}
+	
+	ctx.clearRect(0,0,WIDTH,HEIGHT);
+	frameCount++;
+	score++;
+	if(player.hpMax < player.hp)player.hp = player.hpMax;
+	//player.atkSpd += 3;
+	
+	if(frameCount % 25 === 0){	//every 1 sec		
+		Timer += 1;
+		var tt = Player.timer;
+		var tf = Player.timer;
+		//var x = Player.xp;
+		if(Player.timer == 60){Player.timer=0;}else{Player.timer += 1;}		
+		if(tt == 50){tt=0;Enemy.randomlyGenerate(1);}
+		if(tf == 10){tf=0;Enemy.randomlyGenerate(2);}
+		if(tf == 20){tf=0;Enemy.randomlyGenerate();}
+		// xp based calculation		
+		if(Player.xp < 1000){
+			if(pHXP >= 100){pHXP=0;player.hpMax += 10;player.hp = player.hpMax;}
+			else{pHXP++;console.log(pHXP);}
+		}else{
+			if(Player.xp > 1000){player.hpMax = 200;player.hp = player.hpMax;}
+			if(Player.xp > 5000){player.hpMax = 300;player.hp = player.hpMax;}
+			if(Player.xp > 10000){player.hpMax = 500;player.hp = player.hpMax;}
+		}
+	}
+		
+
+	if(frameCount % 75 === 0)	//every 3 sec
+		randomlyGenerateUpgrade();
+	
+	if(frameCount % 100 === 0){ // every 4 sec
+		ennum = 0;
+		for(var key in Enemy.list){
+			ennum++;			
+		}
+		if(ennum <= 0){ // number of enemy is less than spawn enemy
+			Enemy.randomlyGenerate();
+		}
+	}
+	
+	for(var key in bulletList){
+		var b = bulletList[key];
+		b.update();
+		
+		var toRemove = false;
+		b.timer++;
+		if(b.timer > 75){
+			toRemove = true;
+		}
+		
+		if(b.combatType === 'player'){	//bullet was shot by player
+			for(var key2 in Enemy.list){
+				if(b.testCollision(Enemy.list[key2])){
+					Player.xp += 1;
+					Enemy.list[key2].hp -= 1;
+					toRemove = true;
+					coin += 1;
+					if(Enemy.list[key2].hp <= 0){
+						if(Enemy.list[key2].type == 'enemy')
+							Player.xp += 4;
+						if(Enemy.list[key2].type == 'shipo')
+							Player.xp += 10;
+						if(Enemy.list[key2].type == 'ship')
+							Player.xp += 100;
+						delete Enemy.list[key2];
+					}
+				}
+			}
+		} else if(b.combatType === 'enemy'){
+			if(b.testCollision(player)){
+				toRemove = true;
+				player.hp -= 1;
+			}
+		} else if(b.combatType === 'shipo'){ // orange enemy like zombie
+			if(b.testCollision(player)){
+				toRemove = true;
+				player.hp -= 1;
+			}
+		} else if(b.combatType === 'ship'){ // blue enemy
+			if(b.testCollision(player)){
+				toRemove = true;
+				player.hp -= 5; // damage points
+			}
+		}
+		
+		if(toRemove){
+			delete bulletList[key];
+		}
+	}
+	
+	for(var key in upgradeList){
+		upgradeList[key].update();
+		var isColliding = player.testCollision(upgradeList[key]);
+		if(isColliding){
+			if(upgradeList[key].category === 'score')
+				score += 1000;
+			if(upgradeList[key].category === 'atkSpd')
+				score += 100;//player.atkSpd += 3;
+			if(upgradeList[key].category === 'health')
+				if(player.hpMax > player.hp)player.hp += 5;			
+			delete upgradeList[key];
+		}
+	}
+	
+	for(var key in Enemy.list){
+		Enemy.list[key].update();
+		if(Enemy.list[key].type == "shipo"){
+			//Enemy.list[key].performAttack();
+			var isColliding = Enemy.list[key].testCollision(player);
+			if(isColliding){
+				if(frameCount % 100 === 25) // one second
+				player.hp -= 1;
+			}
+		}
+		if(Enemy.list[key].type == "ship"){
+			if(Math.random() > 0.8)
+				Enemy.list[key].performAttack();
+		}
+		if(Enemy.list[key].type == "enemy"){
+			if(Math.random() < 0.4)
+				Enemy.list[key].performAttack();
+		}
+	}
+	
+	if(Enemy.hp <= 0){
+		Sound.Edeath.play();
+	}
+	if(player.hp <= 0){
+		var timeSurvived = Date.now() - timeWhenGameStarted;		
+		console.log("You lost! You survived for " + timeSurvived + " ms.");		
+		Sound.death.play();
+		startNewGame();
+	}
+	
+	player.update();
+	ctx.save();
+	ctx.font = "12px Arial";
+	ctx.fillStyle = "blue";
+	ctx.fillText(" HP:"+player.hp,player.x-15,player.y-10);
+	ctx.restore();
+	ctx.save();
+	ctx.font = "20px Arial";
+	ctx.fillStyle = "white";
+	ctx.fillText('Score: ' + score,200,30);
+	ctx.fillText('Coins: ' + coin,100,30);
+	ctx.fillText('XP: ' + Player.xp,WIDTH-500,30);
+	ctx.fillText('Time(MS): ' + Timer,WIDTH-300,30);
+	//ctx.fillText('Time(P): ' + Player.timer,WIDTH-400,30);
+	ctx.restore();
+}
+
+startNewGame = function(){
+	player.hp = 10;
+	timeWhenGameStarted = Date.now();
+	frameCount = 0;
+	score = 0;
+	coin = 0;
+	Player.xp = 1;
+	Timer = 0;
+	
+	Player.timer = 0;
+	Enemy.list = {};
+	upgradeList = {};
+	bulletList = {};
+	Enemy.randomlyGenerate();
+	Enemy.randomlyGenerate();
+	Enemy.randomlyGenerate();
+	Enemy.randomlyGenerate(1);
+	Enemy.randomlyGenerate(2);
+	
+}
+
+panet = Planet();
+player = Player();
+startNewGame();
+
+Start = function(){setInterval(update,40);}
+Start();
+</script>
+</body>
+</html>

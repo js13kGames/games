@@ -1,0 +1,178 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">  
+		<meta content='maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<title>Raider of the Lost Gems</title>
+	</head>
+	<body>
+
+		<div class="hit-bar"><span class="hit-points"></span></div>
+		<div class="game">
+			<div class="randomizer"></div>
+
+			<div class="actor"><div class="rotator">^</div></div>		
+		</div>
+		<div class="console"></div>
+		<div class="console2"></div>
+		<div class="console1"></div>
+		<div class="console3"></div>
+		
+		<div class="mobile left"></div>
+		<div class="mobile right"></div>
+	</body>
+</html>
+<style>
+
+	@keyframes color-change {
+		0% { background-color: 0C2915; }
+		40% { background-color: 0C2629; }
+		90% { background-color: 0C0F29; }
+		100% { background-color: 0C2915; }
+	}
+	@font-face {
+		font-family: "Hexagon";
+		src: url("Hexagon.ttf");
+	}
+	
+	.mobile {
+		position: absolute;
+		width: 40%;
+		height : 100%;
+	}
+	
+	.left {
+		left: 0%;
+	}
+	
+	.right {
+		right: 0%;
+	}
+
+	body {
+		overflow: hidden;
+		text-align: center;
+		background-color: #003B4F;
+		  -webkit-user-select: none;  /* Chrome all / Safari all */
+		  -moz-user-select: none;     /* Firefox all */
+		  -ms-user-select: none;      /* IE 10+ */
+		  user-select: none;          /* Likely future */   
+	}
+	
+	.console {
+		position: fixed;
+		top: 15px;
+		right: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .2);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 15pt;
+		color: grey;
+	}
+	.console2 {
+		position: fixed;
+		top: 15px;
+		left: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .5);
+		z-index: 99;
+		visibility: visible;
+		font-family: "Consolas";
+		font-size: 20pt;
+	}
+	
+	.console1 {
+		position: fixed;
+		bottom: 15px;
+		right: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .2);
+		z-index: 99;
+		visibility: hidden;
+		font-family: "Consolas";
+		font-size: 15pt;
+		color: grey;
+	}
+	
+	.console3 {
+		position: fixed;
+		bottom: 250px;
+		right: 15px;
+		padding: 20px;
+		background: rgba(255, 255, 255, .5);
+		z-index: 99;
+		visibility: hidden;
+		font-family: "Consolas";
+		font-size: 20pt;
+	}
+	
+	.hit-bar {
+		position: fixed;
+		bottom: 15px;
+		left: 15px;
+		width: 50px;
+		height: 300px;
+		background: rgba(150, 200, 100, .7);
+		z-index: 99;
+		font-family: "Consolas";
+		font-size: 20pt;
+	}
+
+	.random-element {
+		position: absolute;
+		color: #C9A957;
+		background: rgba(255, 255, 255, 0.15);
+		font-family: "lucida console";
+		font-size: 20pt;
+		height: 10px;
+		width: 10px;
+	}
+	
+	.sample-element {
+		position: relative;
+		color: #C9A957;
+		background: rgba(255, 255, 255, 0.15);
+		font-family: "lucida console";
+		font-size: 20pt;
+		height: 40px;
+		width: 80px;
+	}
+	
+	.arrow {
+		position: absolute;
+		color: yellow;
+	}
+	
+	.actor {
+		position: absolute;
+		left: 1%;
+		top: 96%;
+		width: 20px;
+		height: 20px;
+		font-size: 10pt;
+		color: #6316B2;
+		background: rgba(255, 255, 255, .15);
+		font-family: Consolas;
+		letter-spacing: .003pt;
+	}
+	
+	.game {
+		position: absolute;
+		background-color: #000A29;
+		left: 13%;
+		top: 13%;
+		width: 1500px;
+		height:750px;
+		transform: scale(4); //comment out to god view
+		animation: color-change 15s infinite;
+	}
+	
+	
+	
+</style>
+
+<script>
+function go(){for(var t=0;100>t;t++)39==t&&1==map[t]&&(angle-=2),37==t&&1==map[t]&&(angle+=2),40==t&&1==map[t],38==t&&1==map[t]&&(x_translation-=x_velocity,y_translation-=y_velocity);/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)&&(document.querySelector(".left").addEventListener("touchstart",function(t){touchleft=!0},!1),document.querySelector(".left").addEventListener("touchend",function(t){touchleft=!1},!1),document.querySelector(".right").addEventListener("touchstart",function(t){touchright=!0},!1),document.querySelector(".right").addEventListener("touchend",function(t){touchright=!1},!1),1==touchright&&(angle-=2),1==touchleft&&(angle+=2),x_translation-=x_velocity,y_translation-=y_velocity),speedCoefficient=.01*hit_points,x_velocity=speedCoefficient*Math.cos((90-angle)/(180/Math.PI)),y_velocity=speedCoefficient*Math.cos(angle/(180/Math.PI)),document.querySelector(".actor .rotator").style.transform="rotate("+-1*angle+"deg)",document.querySelector(".actor").style.transform="translate("+x_translation+"px, "+y_translation+"px)",document.querySelector(".game").style.transformOrigin=1.3*(x_translation-75)+"px "+1.3*(y_translation+680)+"px",document.querySelector(".hit-bar").innerHTML=Math.round(hit_points),document.querySelector(".hit-bar").style.height=3*hit_points,document.querySelector(".hit-bar").style.background="rgba(200,"+parseInt(2*hit_points)+", 100, .5)",100>hit_points&&(hit_points+=.005),0>=hit_points&&(document.querySelector(".console2").innerHTML="Aw snap!<br />you died.",freeze_controls=!0,map[39]=!0,window.setInterval(function(){window.location.reload()},3e3)),1==rando[98].neutral&&1==rando[99].neutral&&1==rando[100].neutral&&(document.querySelector(".console").innerHTML="Nice!<br /><span class='sample-element' style='color: red'>.</span> | <span class='sample-element' style='color: green'>.</span> | <span class='sample-element' style='color: blue'>.</span><br />all gems are safe.",freeze_controls=!0,map[37]=!0,window.setInterval(function(){window.location.reload()},3e3))}function mapKeyDown(t){0==freeze_controls&&(map[t.keyCode]=!0)}function mapKeyUp(t){map[t.keyCode]=!1}function shuffle(t){for(var e,n,o=t.length;o>0;)n=Math.floor(Math.random()*o),o--,e=t[o],t[o]=t[n],t[n]=e;return t}function random_letters(t){this.ctr=t,this.top=combinations[t][0],this.left=combinations[t][1],this.width=25,this.height=25,this.x_translate=0,this.y_translate=0,this.content="*",this.id="el"+t,this["class"]="random-element";var e=document.createElement("span");e.setAttribute("class","random-element"),e.setAttribute("id",this.id),e.setAttribute("style","width: "+this.width+"px; height: "+this.height+"px; position: absolute; top: "+this.top+"px; left: "+this.left+"px; color: "+this.color+";");var n=document.createTextNode(this.content);e.appendChild(n);var o=document.querySelector(".randomizer");document.querySelector(".game").insertBefore(e,o)}function random_debris(t){this.neutral=!1,this.ctr=t,this.top=combinations[t][0],this.left=combinations[t][1],this.width=25,this.height=25,this.x_translate=0,this.y_translate=0,this.content=".",this.id="el"+t,this["class"]="random-debris",98==this.ctr&&(this.color="red",this.bgColor="rgba(255, 255, 255, 0.30)"),99==this.ctr&&(this.color="green",this.bgColor="rgba(255, 255, 255, 0.30)"),100==this.ctr&&(this.color="blue",this.bgColor="rgba(255, 255, 255, 0.30)");var e=document.createElement("span");e.setAttribute("class","random-element"),e.setAttribute("id",this.id),e.setAttribute("style","width: "+this.width+"px; height: "+this.height+"px; position: absolute; top: "+this.top+"px; left: "+this.left+"px; color: "+this.color+"; background-color: "+this.bgColor+";");var n=document.createTextNode(this.content);e.appendChild(n);var o=document.querySelector(".randomizer");document.querySelector(".game").insertBefore(e,o)}function detectColission(t){function e(){document.querySelector(".console").innerHTML="Ouch! that hurt"}for(var n=0;50>=n;n++){var o=document.querySelector(".game").getBoundingClientRect().left,r=document.querySelector(".game").getBoundingClientRect().right,a=document.querySelector(".game").getBoundingClientRect().top,i=document.querySelector(".game").getBoundingClientRect().bottom,l=document.querySelector(".actor").getBoundingClientRect().top,s=document.querySelector(".actor").getBoundingClientRect().bottom,c=document.querySelector(".actor").getBoundingClientRect().left,d=document.querySelector(".actor").getBoundingClientRect().right,u=document.querySelector("#el"+n),h=u.getBoundingClientRect().top,y=u.getBoundingClientRect().bottom,m=u.getBoundingClientRect().left,g=u.getBoundingClientRect().right;o>=c&&(x_translation+=.05),Math.abs(c-o)<=15&&Math.abs(s-i)<=15&&(x_translation+=.05,y_translation+=-.05),d>=r&&(x_translation+=-.05),Math.abs(d-r)<=15&&Math.abs(s-i)<=15&&(x_translation+=.05,y_translation+=.05),a>=l&&(y_translation+=.05),Math.abs(d-r)<=15&&Math.abs(l-a)<=15&&(x_translation+=.05,y_translation+=.05),Math.abs(c-o)<=15&&Math.abs(l-a)<=15&&(x_translation+=.05,y_translation+=.05),s>=i&&(y_translation+=-.05),g>c&&d>g&&(l>h&&y>s||l>h&&y>l||y>s&&s>h)&&(x_translation+=.5,hit_points-=.05,e()),y>l&&s>y&&(c>m&&g>d||c>m&&g>c||m>c&&d>m)&&(y_translation+=.5,hit_points-=.05,e()),s>h&&y>s&&(c>m&&g>d||c>m&&g>c||m>c&&d>m)&&(y_translation+=-.5,hit_points-=.05,e()),d>m&&g>d&&(l>h&&y>s||l>h&&y>l||y>s&&s>h)&&(x_translation+=-.5,hit_points-=.05,e())}}function attract_debris(t,e){function n(){document.querySelector(".console").innerHTML="Try to avoid anything yellow-ish."}for(var o=71;97>=o;o++){var r=document.querySelector("#el"+o),a=r.getBoundingClientRect().top,i=r.getBoundingClientRect().left,l=document.querySelector(".actor"),s=l.getBoundingClientRect().top,c=l.getBoundingClientRect().left;e>c-i&&c-i>0&&e>s-a&&s-a>0?(rando[o].x_translate+=t,rando[o].y_translate+=t):e>i-c&&i-c>0&&e>a-s&&a-s>0?(rando[o].x_translate-=t,rando[o].y_translate-=t):e>c-i&&c-i>0&&e>a-s&&a-s>0?(rando[o].x_translate+=t,rando[o].y_translate-=t):e>i-c&&i-c>0&&e>s-a&&s-a>0?(rando[o].x_translate-=t,rando[o].y_translate+=t):(0!=rando[o].x_translate&&(rando[o].x_translate>0&&(rando[o].x_translate-=t),rando[o].x_translate<0&&(rando[o].x_translate+=t)),0!=rando[o].y_translate&&(rando[o].y_translate>0&&(rando[o].y_translate-=t),rando[o].y_translate<0&&(rando[o].y_translate+=t))),1==rando[98].neutral&&1==rando[99].neutral&&1==rando[100].neutral&&(0!=rando[o].x_translate&&(rando[o].x_translate>0&&(rando[o].x_translate-=t),rando[o].x_translate<0&&(rando[o].x_translate+=t)),0!=rando[o].y_translate&&(rando[o].y_translate>0&&(rando[o].y_translate-=t),rando[o].y_translate<0&&(rando[o].y_translate+=t))),Math.abs(i-c)<=50&&Math.abs(a-s)<=50&&hit_points>0&&(hit_points-=.01,n()),r.style.transform="translate("+rando[o].x_translate+"px, "+rando[o].y_translate+"px)"}}function repel_debris(t,e){for(var n=98;100>=n;n++){var o=document.querySelector(".actor").getBoundingClientRect().top,r=(document.querySelector(".actor").getBoundingClientRect().bottom,document.querySelector(".actor").getBoundingClientRect().left),a=(document.querySelector(".actor").getBoundingClientRect().right,document.querySelector("#el"+n)),i=a.getBoundingClientRect().top,l=a.getBoundingClientRect().left;a.getBoundingClientRect().right,a.getBoundingClientRect().bottom,document.querySelector(".game").getBoundingClientRect().left,document.querySelector(".game").getBoundingClientRect().right,document.querySelector(".game").getBoundingClientRect().top,document.querySelector(".game").getBoundingClientRect().bottom;98==n?t=.3:99==n?t=.4:100==n&&(t=.5),0==rando[n].neutral&&(e>r-l&&r-l>0&&e>o-i&&o-i>0?(rando[n].x_translate-=t,rando[n].y_translate-=t):e>l-r&&l-r>0&&e>i-o&&i-o>0?(rando[n].x_translate+=t,rando[n].y_translate+=t):e>r-l&&r-l>0&&e>i-o&&i-o>0?(rando[n].x_translate-=t,rando[n].y_translate+=t):e>l-r&&l-r>0&&e>o-i&&o-i>0?(rando[n].x_translate+=t,rando[n].y_translate-=t):(0!=rando[n].x_translate&&(rando[n].x_translate>0&&(rando[n].x_translate-=t),rando[n].x_translate<0&&(rando[n].x_translate+=t)),0!=rando[n].y_translate&&(rando[n].y_translate>0&&(rando[n].y_translate-=t),rando[n].y_translate<0&&(rando[n].y_translate+=t)))),0==rando[n].neutral&&(3*e>r-l&&r-l>0&&2*e>o-i&&o-i>0||3*e>l-r&&l-r>0&&2*e>i-o&&i-o>0||3*e>r-l&&r-l>0&&2*e>i-o&&i-o>0||3*e>l-r&&l-r>0&&2*e>o-i&&o-i>0)&&(document.querySelector(".console3").style.visibility="visible",document.querySelector(".console3").innerHTML="<span style='color:"+rando[n].color+"'>"+rando[n].color+"</span> gem spotted",window.setTimeout(function(){document.querySelector(".console3").style.visibility="hidden"},2e3)),a.style.transform="translate("+rando[n].x_translate+"px, "+rando[n].y_translate+"px)",Math.abs(l-r)<=40&&Math.abs(i-o)<=40&&0==rando[n].neutral&&(document.querySelector(".console2").innerHTML+="<span style='color:"+rando[n].color+"'>"+rando[n].color+"</span> gem retrieved <br />",a.style.color="black",rando[n].neutral=!0)}}function game(){window.setInterval(function(){go(),detectColission(document.querySelector(".actor")),attract_debris(.5,250),repel_debris(.5,250)},10)}var angle=0,x_velocity=0,y_velocity=0,x_translation=0,y_translation=0,map={},freeze_controls=!1,current_el=0,speedCoefficient=1,caught=!1,hit_points=100,touchleft=!1,touchright=!1;window.addEventListener("keyup",mapKeyUp,!1),window.addEventListener("keydown",mapKeyDown,!1),window.addEventListener("keydown",function(t){[32,37,38,39,40].indexOf(t.keyCode)>-1&&t.preventDefault()},!1),window.addEventListener("touchmove",function(t){t.preventDefault()},!1);var posX=[],valX=0,combinations=[];for(ctr=0;7500>=valX;ctr++)posX[ctr]=valX,valX+=75;var aw=0;for(ctra=1;ctra<=9;ctra++)for(ctrb=2;ctrb<=19;ctrb++)combinations[aw]=[posX[ctra],posX[ctrb]],aw++;shuffle(combinations);for(var rando=[],ctr=0;50>=ctr;ctr++)rando[ctr]=new random_letters(ctr);for(var ctr=71;100>=ctr;ctr++)rando[ctr]=new random_debris(ctr);window.addEventListener("load",function(){document.querySelector(".console2").innerHTML="Oh no! the 3 Primary Gems have been stolen",window.setTimeout(function(){document.querySelector(".console2").innerHTML="You, the <span style='color: maroon'>Raider of</span>  <span style='color: green'>the Lost</span> <span style='color: blue'>Gems</span>, </br> have been assigned to retrieve them."},5e3),window.setTimeout(function(){/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)?document.querySelector(".console").innerHTML="controls<br />forward: automatic on mobile <br/> turn left/right: touch left/right side of screen":document.querySelector(".console").innerHTML="controls<br />forward: up key<br />turn left/right: left/right key",game()},15e3),window.setTimeout(function(){document.querySelector(".console2").innerHTML="these gem thieves hold the gems <span class='sample-element' style='color: red'>.</span> | <span class='sample-element' style='color: green'>.</span> | <span class='sample-element' style='color: blue'>.</span><br />your task is to find and catch them."},1e4),window.setTimeout(function(){document.querySelector(".console2").innerHTML=""},15e3),window.setTimeout(function(){window.setInterval(function(){document.querySelector(".console1").style.visibility="visible",document.querySelector(".console1").innerHTML="To retrieve a gem, you simply chase the thief.",window.setTimeout(function(){document.querySelector(".console1").innerHTML="but it gets tricky sometimes."},5e3),window.setTimeout(function(){document.querySelector(".console1").innerHTML="you cannot go beyond the boundaries."},1e4),window.setTimeout(function(){document.querySelector(".console1").innerHTML="but thieves can go beyond the boundaries."},15e3),window.setTimeout(function(){document.querySelector(".console1").innerHTML="thieves return to their original places."},2e4),window.setTimeout(function(){document.querySelector(".console1").innerHTML="the yellows can hurt your health. avoid them."},25e3)},3e4)},5e3)},!1);
+</script>

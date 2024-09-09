@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html><html>
+    <head>
+        <style>
+            *{
+                position:fixed
+            }
+
+            body{
+                background:#036
+
+            }
+
+            div{
+                transform:scale(2);
+                left:25%
+
+            }
+
+            #w,#a,#e,#f,#m{
+                position:fixed;
+                cursor:pointer
+
+            }
+
+            #d,#wi,#fi{
+                margin:93px 0 0 105px
+
+            }
+
+            #w{
+                margin-left:119px
+
+            }
+
+            #a{
+                margin-top:110px
+
+            }
+
+            #e{
+                margin:116px 240px 0
+
+            }
+
+            #f{
+                margin:228px 0 0 119px
+
+            }
+
+            #m{
+                margin:146px 0 0 110px
+
+            }
+
+            b{
+                position:relative
+
+            }
+
+            p{
+                font:9px Georgia;
+                margin-left:-100px;
+                background:#fff;
+                font-weight:bold
+
+            }
+
+        </style>
+
+    </head>
+    
+    <body>
+        <div>
+            <img id="b"src="b.png"/>
+            <img id="w"src="w.png"onclick="wc()"/>
+            <img id="a"src="a.png"onclick="ac()"/>
+            <img id="e"src="e.png"onclick="ec()"/>
+            <img id="f"src="f.png"onclick="fc()"/>
+            <img id="fi"src="fi.png"/>
+            <img id="d"src="d.png"/>
+            <img id="m"src="m.png"/>
+            <img id="wi"src="wi.png"/>
+            <p>Mandala Horse <b>enjoys</b> <b>meditation...</b> <b></b></p>
+
+        </div>
+<script>
+    function rI(n, e) { return Math.floor(Math.random() * (e - n + 1) + n) }
+    function wc() { f = 0, w = 1, wt = rI(x, y) }
+    function ac() { e = 0, a = 1, at = rI(x, y) }
+    function ec() { a = 0, e = 1, et = rI(x, y) }
+    function fc() { w = 0, f = 1, ft = rI(x, y) }
+    function u() {
+        w ? (r += 180, 360 == r && (r = 0),
+        p[2].innerHTML = "in the rain",
+        i[8].hidden = !1,
+        i[8].style.transform = "rotate(" + r + "deg)", wn++) : (i[8].hidden = !0, wn = 0),
+        a ? (
+            p[1].innerHTML = "meditation", an++
+        ) : an = 0,
+            e ? (p[1].innerHTML = "galloping",
+            en++, ri = rI(90, 94),
+            i[6].style.marginTop = ri + "px",
+            i[7].style.marginTop = ri + 54 + "px"
+        ) : (
+            i[6].style.marginTop = "92px",
+            en = 0
+        ),
+
+        f ? (
+            p[2].innerHTML = "in the sunshine",
+            fi.hidden = !1, fn++
+        ) : (
+            fi.hidden = !0, fn = 0
+        ),
+        h = wn > wt ? 1 : an > at ? 1 : en > et ? 1 : fn > ft ? 1 : 0,
+        1 != h ? (
+            p[0].innerHTML = "enjoys",
+            i[7].style.transform = "rotate(0deg)"
+        ) : (
+            p[0].innerHTML = "doesn't enjoy",
+            i[7].style.transform = "rotate(180deg)"
+        ),
+        setTimeout(function () { u() }, 60)
+    }
+
+    var w, a, e, f,
+        h = r = wn = an = en = fn = wt = at = et = ft = ri = 0,
+        x = 100, y = 300,
+        d = document,
+        i = d.getElementsByTagName("img"), p = d.getElementsByTagName("b");
+    u();
+
+</script></body></html>

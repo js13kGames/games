@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="501.177px" height="776.47px" viewBox="0 0 501.177 776.47" enable-background="new 0 0 501.177 776.47"
+	 xml:space="preserve">
+<style>.l{stroke: #FFFEFE; stroke-width:5; stroke-miterlimit:10}</style>
+<polygon stroke="#000000" stroke-width="5" stroke-miterlimit="10" points="4.706,64.706 47.059,5.882 501.177,10.588 
+	501.177,707.059 452.94,776.47 4.706,776.47 "/>
+<rect x="4.706" y="64.706" fill="#282829" stroke="#000000" stroke-miterlimit="10" width="448.235" height="711.764"/>
+<rect x="76.47" y="157.647" fill="none" stroke="#EFEFEF" stroke-width="5" stroke-miterlimit="10" width="189.412" height="96.471"/>
+<line class="l" x1="104.412" y1="205.882" x2="237.94" y2="205.882"/>
+<line class="l" x1="4.706" y1="325.882" x2="452.94" y2="325.882"/>
+<line class="l" x1="4.706" y1="643.53" x2="452.94" y2="643.53"/>
+<line class="l" x1="452.94" y1="776.47" x2="452.94" y2="64.706"/>
+<line class="l" x1="4.706" y1="64.706" x2="452.94" y2="64.706"/>
+<line class="l" x1="4.706" y1="776.47" x2="4.706" y2="64.706"/>
+<line class="l" x1="4.706" y1="776.47" x2="452.94" y2="776.47"/>
+<line class="l" x1="47.059" y1="5.882" x2="4.706" y2="64.706"/>
+<line class="l" x1="501.177" y1="10.588" x2="452.94" y2="64.706"/>
+<line class="l" x1="501.177" y1="707.059" x2="501.177" y2="10.588"/>
+<line class="l" x1="452.94" y1="776.47" x2="501.177" y2="707.059"/>
+<line class="l" x1="47.059" y1="5.882" x2="501.177" y2="5.882"/>
+</svg>

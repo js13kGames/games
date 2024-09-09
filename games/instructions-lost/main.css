@@ -1,0 +1,62 @@
+html{
+	overflow:hidden;
+	cursor: default;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	font-weight: bold;
+}
+body{
+	background: #712929;
+	margin:0;
+}
+div{
+	position:absolute;
+	color:#fff;
+}
+#main{
+	position:relative;
+	margin:auto;
+}
+.ui{
+	width:110%;
+	height:6%;
+	left:-5%;
+	background:rgba(0,0,0,.2);
+}
+.credits{
+	text-align:right;
+	margin-right:2%;
+}
+#head{
+	top:-10%;
+}
+#foot{
+	top:105%;
+}
+#next{
+	width:10%;
+	height:80%;
+	right:.5%;
+	top:10%;
+	border-radius:999px;
+	color: #fff;
+	text-align: center;
+	line-height: 97%;
+}
+#lamp{
+	background:hsla(0,0%,0%,.2);
+	border-radius:50%;
+	border: solid 10px #fff;
+	cursor: pointer;
+}
+.leaf{
+	background:#000;
+	border: solid 0 #fff;
+	cursor: pointer;
+}
+.spot{
+	border-radius:50%;
+}
+#bugscount{
+	width:10%;
+	margin-left:1%;
+}

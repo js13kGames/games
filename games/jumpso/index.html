@@ -1,0 +1,17 @@
+<html><head><link rel="shortcut icon" href="#"/><style>html, body {
+         margin: 0;
+         padding: 0;
+         background: #1D2B53;
+         image-rendering: pixelated;
+     }
+     #app {
+         display: flex;
+         justify-content: center;
+         height: 100%;
+         width: 100%;
+     }
+     canvas {
+         align-self: center;
+         width: min(calc(100vw - 8px), calc(100vh * (16/9) - 8px));
+         aspect-ratio: 16/9;
+     }</style><script defer="defer" src="index.bundle.js"></script></head><body><div id="app"></div><script>document.addEventListener('DOMContentLoaded',()=>{Space.default(document.getElementById('app'))});</script></body></html>

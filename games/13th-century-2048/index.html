@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3x3 2048 Game</title>
+    <style>
+        #board {
+            width: 60vw;
+            height: 60vw;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            background-color: #eee;
+            position: relative;
+            user-select: none;
+        }
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .tile {
+            width: calc(60vw / 3);
+            height: calc(60vw / 3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            transition: transform 0.2s ease-out;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+        .tile[data-value='2'] { font-size: 4vw;background-color: #f2b179; background-image: url('1.svg');}
+        .tile[data-value='4'] { font-size: 4vw;background-color: #f59563; background-image: url('2.svg');}
+        .tile[data-value='8'] { font-size: 4vw;background-color: #f67c5f; background-image: url('3.svg');}
+        .tile[data-value='16'] { font-size: 4vw;background-color: #f65e3b; background-image: url('4.svg');}
+        .tile[data-value='32'] { font-size: 4vw;background-color: #edcf72; background-image: url('5.svg');}
+        .tile[data-value='64'] { font-size: 4vw;background-color: #edcc61; background-image: url('6.svg');}
+        .tile[data-value='128'] { font-size: 4vw;background-color: #9c0; background-image: url('7.svg');}
+        .tile[data-value='256'] { font-size: 4vw;background-color: #33b5e5; background-image: url('8.svg');}
+        .tile[data-value='512'] { font-size: 4vw;background-color: #09c; background-image: url('9.svg');}
+        .tile[data-value='1024'] { font-size: 4vw;background-color: #a6c; background-image: url('10.svg');}
+        .tile[data-value='2048'] { font-size: 4vw;background-color: #93c; background-image: url('11.svg');}
+        .tile[data-value='-2'] { font-size: 4vw;background-color: #515beb; background-image: url('12.svg'); color: #c6caf8;}
+    </style>
+</head>
+<body>
+
+<div id="board"></div>
+
+<script>
+    let board = document.getElementById('board');
+    let tiles = Array(3).fill(null).map(() => Array(3).fill(null));
+    initGame();
+    function initGame() {
+        addRandomTile();
+        addRandomTile();
+        render();
+    }
+    function render() {
+        board.innerHTML = '';
+        for(let i = 0; i < 3; i++) {
+            for(let j = 0; j < 3; j++) {
+                if (tiles[i][j]) {
+                    let tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.setAttribute('data-value', tiles[i][j]);
+                    tile.textContent = tiles[i][j];
+                    let size = board.getBoundingClientRect().width / 3;
+                    tile.style.width = `${size}px`;
+                    tile.style.height = `${size}px`;
+                    tile.style.transform = `translate(${j * size}px, ${i * size}px)`;
+                    board.appendChild(tile);
+                    if (!tile.previousValue) {
+                        tile.style.transition = 'none';
+                        tile.style.transform = `translate(${j * size}px, ${i * size}px) scale(0.5)`;
+                        requestAnimationFrame(() => {
+                            tile.style.transition = "transform 0.2s ease-out, background 0.3s";
+                            tile.style.transform = `translate(${j * size}px, ${i * size}px) scale(1)`;
+                        });
+                    }
+                }
+            }
+        }
+    }
+    function addRandomTile() {
+        let emptyTiles = [];
+        for(let i = 0; i < 3; i++) {
+            for(let j = 0; j < 3; j++) {
+                if (!tiles[i][j]) {
+                    emptyTiles.push([i, j]);
+                }
+            }
+        }
+        if (emptyTiles.length) {
+            let [i, j] = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+            let divideProbability = 0.15; // 15% chance
+            if (Math.random() < divideProbability) {
+                tiles[i][j] = -2;
+            } else {
+                tiles[i][j] = (Math.random() < 0.85) ? 2 : 4;
+            }
+        }
+    }
+
+    function moveLeft() {
+    let moved = false;
+    for (let i = 0; i < 3; i++) {
+        let compactedRow = tiles[i].filter(tile => tile);
+        let newRow = Array(3).fill(null);
+        let pointer = 0;
+        for (let j = 0; j < compactedRow.length; j++) {
+            if (compactedRow[j] === compactedRow[j + 1] && compactedRow[j] > 0) {
+                newRow[pointer] = compactedRow[j] * 2;
+                j++;
+                moved = true;
+            } else if(compactedRow[j] === -2 && compactedRow[j + 1] > 0){
+                newRow[pointer] = compactedRow[j+1] / 2;
+                if (newRow[pointer] === 1) newRow[pointer] = null;
+                j++;
+                moved = true;
+            } else if(compactedRow[j] > 0 && compactedRow[j + 1] === -2){
+                newRow[pointer] = compactedRow[j] / 2;
+                if (newRow[pointer] === 1) newRow[pointer] = null;
+                j++;
+                moved = true;
+            } else {
+                newRow[pointer] = compactedRow[j];
+            }
+            pointer++;
+        }
+        if (!moved) {
+            moved = JSON.stringify(newRow) !== JSON.stringify(tiles[i]);
+        }
+        tiles[i] = newRow;
+    }
+    return moved;
+}
+function rotateMatrix(matrix) {
+    let newMatrix = matrix[0].map((col, i) => matrix.map(row => row[i]));
+    newMatrix.reverse();
+    return newMatrix;
+}
+function moveRight() {
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    let moved = moveLeft();
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    return moved;
+}
+function moveUp() {
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    let moved = moveLeft();
+    tiles = rotateMatrix(tiles);
+    return moved;
+}
+function moveDown() {
+    tiles = rotateMatrix(tiles);
+    let moved = moveLeft();
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    tiles = rotateMatrix(tiles);
+    return moved;
+}
+let startX, startY;
+board.addEventListener('mousedown', function(event) {
+    startX = event.clientX;
+    startY = event.clientY;
+});
+board.addEventListener('mouseup', function(event) {
+    let deltaX = event.clientX - startX;
+    let deltaY = event.clientY - startY;
+    let absDeltaX = Math.abs(deltaX);
+    let absDeltaY = Math.abs(deltaY);
+
+    if (Math.max(absDeltaX, absDeltaY) > 10) {
+        let moved = false;
+        if (absDeltaX > absDeltaY) {
+            if (deltaX > 0) {
+                moved = moveRight();
+            } else {
+                moved = moveLeft();
+            }
+        } else {
+            if (deltaY < 0) {
+                moved = moveDown();
+            } else {
+                moved = moveUp();
+            }
+        }
+        if (moved) {
+            addRandomTile();
+            render();
+            checkGameOver();
+            checkWin();
+        }
+    }
+});
+function checkGameOver() {
+    let movesAvailable = [moveLeft, moveRight, moveUp, moveDown].some(move => {
+        let tilesCopy = JSON.parse(JSON.stringify(tiles));
+        let moved = move();
+        tiles = tilesCopy;
+        return moved;
+    });
+    
+    if (!movesAvailable) {
+        alert('Game Over!');
+        initGame();
+    }
+}
+function checkWin() {
+    for(let row of tiles) {
+        for(let tile of row) {
+            if (tile === 2048) {
+                alert('Congratulations! You won!');
+                initGame();
+                return;
+            }
+        }
+    }
+}
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            render();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="author" content="Darshan Rane">
+<meta name="description" content="Chasing Lights, a puzzle game">
+<meta name="keywords" content="chasing lights, puzzle game, phonegap game, chase, lights, games">
+<title>Chasing Lights</title>
+<style>
+	*{ 
+    	margin:0; 
+    }
+	html, 
+    body { 
+		font-family:Verdana, Geneva, sans-serif;
+		font-size:11px;
+		width:100%;
+    	height: 100%; 
+		color:#FFFFFF;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+		-webkit-tap-highlight-color: transparent;
+    }
+    a, a:visited, a:active, a:hover
+	{
+		text-decoration:none;
+		color:#ffc602;
+		margin:20px;
+		font-size:12px;
+	}
+	#wrapper {
+    	min-height:100%;
+    	height:auto !important;
+    	height:100%;
+    	margin:0 auto;
+		background-color:#662e91;
+    }
+	.hexoff:before {
+		content: " ";
+		width: 0; height: 0;
+		border-bottom: 7px solid #ffffff;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+		position: absolute;
+		top: -7px;
+		left:0px;
+	}
+	.hexoff {
+		margin-top: 25px;
+		width: 30px;
+		height: 20px;
+		background-color: #ffffff;
+		position: relative;
+		cursor:pointer;
+	}
+	.hexoff:after {
+		content: "";
+		width: 0;
+		position: absolute;
+		bottom: -7px;
+		left:0px;
+		border-top: 7px solid #ffffff;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+	}
+	.hexon:before {
+		content: " ";
+		width: 0; height: 0;
+		border-bottom: 7px solid #ffc602;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+		position: absolute;
+		top: -7px;
+		left:0px;
+	}
+	.hexon {
+		margin-top: 25px;
+		width: 30px;
+		height: 20px;
+		background-color: #ffc602;
+		position: relative;
+		cursor:pointer;
+	}
+	.hexon:after {
+		content: "";
+		width: 0;
+		position: absolute;
+		bottom: -7px;
+		left:0px;
+		border-top: 7px solid #ffc602;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+	}
+	#header
+	{
+		max-width:800px;
+		width:100%;
+		height:30px;
+		margin:0 auto;
+		padding-top:5px;
+		padding-bottom:10px;
+	}
+	#footer
+	{
+		margin:0 auto;
+		position:absolute;
+		bottom:10px;
+		left:10%;
+		right:10%;
+		text-align:center;
+	}
+	#logo
+	{
+		width:100%;
+		text-align:center;
+		color:#ffc602;
+		font-size:16px;
+		font-weight:bold;
+		cursor:pointer;
+	}
+	#board
+	{
+		width:100%;
+		padding-top:20px;
+	}
+	#score
+	{
+		width:48%;
+		float:left;
+		text-align:right;
+	}
+	#clicks
+	{
+		width:48%;
+		float:right;
+		text-align:left;
+	}
+	.gameselect
+	{
+		padding-top:40px;
+		text-align:center;
+		max-width:800px;
+		width:100%;
+		margin:0 auto;
+	}
+	.lvlno
+	{
+		font-size:12px;
+		color:#ffc602;
+		padding:10px;
+		cursor:pointer;
+	}
+</style>
+<script language="javascript">
+	var logo,gameselect,board;
+	var no,w,h,s,c,b,total;
+	var clicks = innerh = innerw = lvl = lit = 0;
+	var imgwh = 40;
+	function init()
+	{	
+		innerw = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+		innerh = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+		
+		if(innerw < innerh - 100)
+			lvl = Math.floor(innerw/40) - 1;
+		else	
+			lvl = Math.floor((innerh-100)/40) - 1;
+		
+		c = document.getElementById('clicks');
+		s = document.getElementById('score');
+		b = document.getElementById('board');
+		
+		gameselect = document.getElementById("gameselect");
+		game = document.getElementById("game");
+		
+		logo = document.getElementById("logo");
+		logo.onclick = restart;
+		
+		for(var l = 2; l < lvl + 1; l++)
+		{
+			var level = document.createElement('div');
+			level.id = l;
+			level.className = 'lvlno'
+			level.innerHTML = 'Level ' + String(l - 2);
+			gameselect.appendChild(level);
+			level.onclick = startGame;
+		}
+	}	
+	function startGame(e)
+	{
+		if (!e) e = event;
+	   	var level = e.target ? e.target : e.srcElement;
+		gameselect.style.display = "none";
+		game.style.display = "block";
+		w = h = no = level.id;
+		total= w * h;		
+		build();
+		b.style.display = 'block';
+		s.innerHTML = "chased : 0";
+		c.innerHTML = "clicked : 0";		
+	}	
+	function build()
+	{
+	   	var ldiv = document.getElementById('lights');
+	   	ldiv.style.width= (imgwh * w)+'px';
+	   	ldiv.style.height= (imgwh * h)+'px';
+		ldiv.style.margin = '0 auto';
+		
+		board= new Array(no);
+		for (var j= 0; j < no; j++)
+		{
+			board[j]= new Array(no);
+			for (var i= 0; i < no; i++)
+			{
+				var hex = gethex(i*imgwh,j*imgwh, 1, false, i+'.'+j);
+				ldiv.appendChild(hex);
+				board[j][i]= 0;
+			}
+		}
+		lit = 0;		
+		ldiv.style.paddingTop = (innerh/2 - (imgwh * h)/2) - 30 + 'px';
+		ldiv.style.paddingLeft = '5px';
+	}	
+	function gethex(x, y, color, lit, id)
+	{
+		var hex = document.createElement('div');
+		hex.id = id;
+		hex.height = hex.width = imgwh;
+		hex.style.position= 'absolute';
+		hex.style.marginLeft = x + 'px'; 
+		hex.style.marginTop = y + 'px';
+		hex.className = 'hexoff'
+		hex.onclick = clickhex;
+		return hex;
+	}
+	function clickhex(e)
+	{ 	
+	   	if (!e) e = event;
+	   	var hex= e.target ? e.target : e.srcElement;
+	   	var dot = hex.id.indexOf('.');
+	   	var i= hex.id.substr(0, dot) - 0;
+	   	var j= hex.id.substr(dot+1) - 0;
+	   	board[j][i]= 1 - board[j][i];
+	   	toggle(i,j);
+	   	if (i > 0) toggle(i-1,j);
+	   	if (i < w-1) toggle(i+1,j);
+	   	if (j > 0) toggle(i,j-1);
+	   	if (j < h-1) toggle(i,j+1);		
+		if(lit == total)
+		{
+			alert("You Chased Them!!!");
+			restart();
+		}
+		else
+		{
+			clicks++;
+			s.innerHTML = "chased : " + String(lit);
+			c.innerHTML = "clicked : " + String(clicks);
+		}
+	}
+	function toggle(i,j)
+	{
+	   var hex = document.getElementById(i+'.'+j);
+	   if (hex.className.indexOf('off') >= 0)
+	   {	++lit; hex.className = 'hexon';	}
+	   else
+   	   {	lit--; hex.className = 'hexoff';	}
+	}	
+	function restart()
+	{
+		clicks = 0;
+		lit = 0;
+		var light = document.getElementById('lights');
+		light.innerHTML = c.innerHTML = s.innerHTML = '';
+		b.style.display = 'none';
+		gameselect.style.display = "block";
+		game.style.display = "none";
+	}
+</script>
+</head>
+<body onLoad="init();">
+<div id="wrapper">
+	<div id="header">
+	    <div id="logo">Chasing Lights</div>
+        <div id="board">
+        	<div id="score"></div>
+            <div id="clicks"></div>
+        </div>
+    </div>
+    <div id="gameselect" class="gameselect">
+    </div>
+    <div id="game" class="game">
+        <div id="lights"></div>
+    </div>
+    <div id="footer">
+    	Turn all Yellow. Click to toggle. Each click toggle adjacent lights.
+    </div> 
+</div>
+</body>
+</html>

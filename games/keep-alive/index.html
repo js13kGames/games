@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>keep-Alive</title>
+    <style>
+        html,body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            color: white;
+            background-color: rgb(0,0,0);
+            text-align: center;
+            font-family: monospace, Helvetica, Arial;
+        }
+
+        #keep-alive {
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            position: relative;
+        }
+
+        #keep-alive #menu {
+            height: 100%;
+        }
+
+        #keep-alive-canvas {
+            display: none;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            pointer-events: none;
+        }
+
+        #keep-alive .start {
+            padding: 20px;
+            text-transform: uppercase;
+            margin: 30px auto;
+        }
+
+        #keep-alive .instructions {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0px;
+            font-size: 45px;
+            padding: 25px;
+            text-transform: uppercase;
+            transition: 0.3s ease 0.1s;
+            text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        p {
+            font-size: 20px;
+            margin: 0px;
+        }
+
+        strong {
+            text-transform: uppercase;
+        }
+
+        button {
+            width: 125px;
+            border: 2px solid rgba(211, 211, 211, 0.3);
+            background: rgba(211, 211, 211, 0.2);
+            color: white;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.25s ease;
+            display: block;
+            margin: 5px auto;
+        }
+
+        button:hover {
+            background: rgba(211, 211, 211, 0.4);
+        }
+
+        body .positioned {
+            display : none;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left:50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        body .info {
+            display: none;
+            position: absolute;
+            top:0;
+            right:0;
+            left: 0;
+        }
+
+        body .info .scoreContainer {
+            float: right;
+            padding: 20px;
+        }
+        body .info .lifeContainer {
+            float: left;
+            padding: 20px;
+        }
+
+        body .owner {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="keep-alive">
+        <div id="menu">
+            <div>
+                <h1>Keep Alive</h1>
+                <button class="start" onclick="start(1)">Play</button>
+                <p><strong>Jump To:</strong></p>
+                <button onclick="start(1)">Level 1</button>
+                <button onclick="start(2)">Level 2</button>
+                <button onclick="start(3)">Level 3</button>
+
+                <div class="instructions">
+                    <p>
+                        <strong>Controls: </strong>
+                        <small>Press Left/Right Arrow keys to rotate device nodes.</small>
+                    </p>
+                    <p>
+                        <strong>What to do? </strong>
+                        <small>Protect the router from hitting the obstacles to keep the connection alive. Note that nodes pass unharmed through obstacles with the same color as them.</small>
+                    </p>
+                </div>
+                <div class="owner">by @surbhi-mahajan</div>
+            </div>
+        </div>
+        <canvas id="keep-alive-canvas"></canvas>
+        <h1 class="positioned" id="1_levelText">
+            <div>1st LEVEL COMPLETED </div>
+            <div> Your Score is: <span id="1_level_score"></span></div>
+        </h1>
+        <h1 class="positioned" id="2_levelText">
+            <div>2nd  LEVEL COMPLETED </div>
+            <div> Your Score is: <span id="2_level_score"></span></div>
+        </h1>
+        <h1 class="positioned" id="endGameText">
+            <div> Your Score is: <span id="3_level_score"></span></div>
+            <div>Congratulation!!</div>
+            <div>You Completed all levels</div>
+        </h1>
+        <div class="info">
+            <div class="lifeContainer">LIFE: <span id="life"></span></div>
+            <div class="scoreContainer">SCORE: <span id="score"></span></div>
+        </div>
+        <div class="positioned gameOver">
+            <h1>GAME OVER!!</h1>
+            <button onclick="restart()">RESTART</button>
+        </div>
+    </div>
+</body>
+<script>
+    //https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+    Number.prototype.mod = function(n) {
+        return ((this%n)+n)%n;
+    };
+</script>
+<script src="index.min.js"></script>
+</html>

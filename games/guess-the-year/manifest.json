@@ -1,0 +1,9 @@
+{
+  "short_name": "Guess the year",
+  "name": "Guess the year - 13th century",
+  "icons": [],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#09162a"
+}

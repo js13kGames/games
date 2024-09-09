@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#gameCanvas {
+  top: 50%;
+  left: 50%;
+  display: block;
+  margin: auto;
+  background-color: #f0f0f0;
+  background-image: url("./asset/map.png");
+  background-size: cover;
+}
+
+#levelUpCanvas {
+  top: 50%;
+  left: 50%;
+  display: none;
+  margin: auto;
+  background-color: #f0f0f0;
+}
+#startCanvas{
+  top: 50%;
+  left: 50%;
+  display: none;
+  background-color: #f0f0f0;
+  margin: auto;
+}
+#muteButton {
+  position: absolute;
+  top: 600px;
+  right: 50%;
+  z-index: 1; /* 캔버스 위에 위치하도록 설정 */
+}

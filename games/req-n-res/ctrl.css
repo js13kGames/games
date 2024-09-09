@@ -1,0 +1,106 @@
+* {
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	touch-action: manipulation;
+}
+
+body {
+	background: #e5e1de;
+}
+
+#cover {
+	padding: 30px;
+	background: #b7b3b4;
+	width: 300px;
+	border-radius: 20px 20px;
+	margin: 0 auto;
+}
+
+#ctrl {
+	position: relative;
+	height: 150px;
+	top: 20px;
+	width: 360px;
+	margin: 0 auto;
+}
+
+#ctrl div {
+	position: absolute;
+	text-align: center;
+}
+
+#ArrowUp, #ArrowLeft, #ArrowRight, #ArrowDown {
+	width: 50px;
+	height: 50px;
+	border-radius: 10px 10px 0 0;
+	font-size: 30px;
+	background: #2a2a2c;
+	color: gray;
+}
+
+#ArrowUp {
+	left: 50px;
+}
+
+#ArrowLeft {
+	top: 50px;
+	transform: rotate(270deg);
+}
+#ArrowRight {
+	left:100px;
+	top: 50px;
+	transform: rotate(90deg);
+}
+#ArrowDown {
+	left: 50px;
+	top: 100px;
+	transform: rotate(180deg);
+}
+#ArrowCenter {
+	width: 50px;
+	height: 50px;
+	left: 50px;
+	top: 50px;
+	background: #2a2a2c;
+}
+#ArrowCenter div {
+	width: 30px;
+	height: 30px;
+	left: 10px;
+	top: 10px;
+	border-radius: 15px 15px;
+	background: radial-gradient(circle at 0 0, #666, black);
+}
+
+#ctrl #a, #ctrl #b {
+	width: 66px;
+	height: 66px;
+	border-radius: 33px 33px;
+	line-height: 66px;
+	background: #992161;
+}
+#b {
+	left:210px;
+	top: 45px;
+}
+#a {
+	left:295px;
+	top: 10px;
+}
+#ctrl #labelA, #ctrl #labelB {
+	color: #454490;
+	font-family: sans-serif;
+	font-size: 20px;
+	transform: rotate(-25deg);
+	font-weight: bold;
+}
+#labelB {
+	left:260px;
+	top: 115px;
+}
+#labelA {
+	left:345px;
+	top: 80px;
+}

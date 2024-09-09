@@ -1,0 +1,223 @@
+html,body{
+  margin:0;
+        width:100%;
+        height:auto;
+        font-family: 'Arial', Helvetica, sans-serif;
+}
+
+canvas{
+  display:block;
+        background: transparent;
+        position: absolute;
+        left: 0;
+        top: 0;
+}
+    .score{
+        position: absolute;
+        right:2%;
+        top:10px;
+        color:#fff;
+        font-size:18px;
+        z-index:999;
+    }
+
+    .level{
+        position: absolute;
+        right:40%;
+        top:10px;
+        color:#fff;
+        font-size:18px;
+        z-index:999;
+    }
+
+    .health{
+        position: absolute;
+        left:75px;
+        top:15px;
+        height:10px;
+        width:15%;
+        background:rgba(255,255,255,0.2);
+        z-index:999;
+        color:#fff;
+    }
+
+    .health > div{
+        height:10px;
+        background:rgb(102, 204, 255);
+        width:100%;
+        box-shadow:0 0 9px 0px rgb(102, 204, 255);
+    }
+    .health > span{
+            position: absolute;
+            left: -62px;
+            top: -6px;
+    }
+
+    .bg-active{
+
+    }
+
+    #toggleBgMusic {
+      padding:0 4px;;
+      position: absolute;
+      right:25%;
+      margin-top:4px;
+      z-index:100000;
+      text-align:center;
+      vertical-align: middle;
+      font-size: 20px;
+      border:2px solid #ccc;
+      color: #fff;
+      background-color: transparent;
+    }
+
+    .activeBtn{
+      color: #000 !important;
+      background-color: #fff !important;
+    }
+
+    #container{
+        position:absolute;
+        width:50%;
+        height:50%;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        background:rgba(255,255,255,0.6);
+        margin:auto auto;
+        text-align:center;
+        padding: 20px;
+        padding-top:1%;
+        z-index:99999;
+        display: none;
+    }
+
+    #gamestart button,#gameover button,#levelcomplet button{
+        display: inline-block;
+padding: 0px 9px;
+margin-right: 4px;
+border-radius: 3px;
+border: solid 1px #c0c0c0;
+background: #e9e9e9;
+box-shadow: inset 0px 1px 0px rgba(255,255,255, .8), 0px 1px 3px rgba(0,0,0, .1);
+font-size: .875em;
+font-weight: bold;
+text-decoration: none;
+color: #717171;
+text-shadow: 0px 1px 0px rgba(255,255,255, 1);
+        margin-bottom:5px;
+    }
+
+#gamestart button:hover,#gameover button:hover,#levelcomplet button:hover{
+    background: #fefefe;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEFEFE), to(#f0f0f0));
+    background: -moz-linear-gradient(0% 0% 270deg,#FEFEFE, #f0f0f0);
+    cursor: pointer;
+}
+        #gamestart p{
+            font-size:18px;
+        }
+
+        #gameover,#levelcomplet{
+            display:none;
+        }
+        #gameover p,#levelcomplet p{
+           font-size:18px;
+        }
+        header{
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:40px;
+            background-color: #000;
+            z-index:9999;
+						display: none;
+        }
+        .levelno{
+            display:inline-block;
+        }
+
+
+
+
+.btn {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px; /*optional*/
+    color: #aaa;
+    font-size: .875em;
+}
+
+.pagination {
+    background: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.page {
+    display: inline-block;
+    padding: 0px 9px;
+    margin-right: 4px;
+    border-radius: 3px;
+    border: solid 1px #c0c0c0;
+    background: #e9e9e9;
+    box-shadow: inset 0px 1px 0px rgba(255,255,255, .8), 0px 1px 3px rgba(0,0,0, .1);
+    font-size: .875em;
+    font-weight: bold;
+    text-decoration: none;
+    color: #717171;
+    text-shadow: 0px 1px 0px rgba(255,255,255, 1);
+    font: 14px/24px sans-serif;
+}
+
+.page:hover, .page.gradient:hover {
+    background: #fefefe;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEFEFE), to(#f0f0f0));
+    background: -moz-linear-gradient(0% 0% 270deg,#FEFEFE, #f0f0f0);
+    cursor: pointer;
+}
+
+.page.active {
+    border: none;
+    background: #616161;
+    box-shadow: inset 0px 0px 8px rgba(0,0,0, .5), 0px 1px 0px rgba(255,255,255, .8);
+    color: #f0f0f0;
+    text-shadow: 0px 0px 3px rgba(0,0,0, .5);
+}
+
+.page.gradient {
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e9e9e9));
+    background: -moz-linear-gradient(0% 0% 270deg,#f8f8f8, #e9e9e9);
+}
+
+.pagination.dark {
+    background: #414449;
+    color: #feffff;
+}
+
+.page.dark {
+    border: solid 1px #32373b;
+    background: #3e4347;
+    box-shadow: inset 0px 1px 1px rgba(255,255,255, .1), 0px 1px 3px rgba(0,0,0, .1);
+    color: #feffff;
+    text-shadow: 0px 1px 0px rgba(0,0,0, .5);
+}
+
+.page.dark:hover, .page.dark.gradient:hover {
+    background: #3d4f5d;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#547085), to(#3d4f5d));
+    background: -moz-linear-gradient(0% 0% 270deg,#547085, #3d4f5d);
+}
+
+.page.dark.active {
+    border: none;
+    background: #2f3237;
+    box-shadow: inset 0px 0px 8px rgba(0,0,0, .5), 0px 1px 0px rgba(255,255,255, .1);
+}
+
+.page.dark.gradient {
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#565b5f), to(#3e4347));
+    background: -moz-linear-gradient(0% 0% 270deg,#565b5f, #3e4347);
+}

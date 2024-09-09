@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Little element game</title>
+  </head>
+  <body>
+    <table style="border:1px solid #000000; background: linear-gradient(to bottom right, #97FF97 , #8A8AFF);">
+      <tr>
+        <td colspan="3" align="center"><h1>Little element game</h1></td>
+      </tr>
+      <tr>
+        <td><p id="countdown"></p></td>
+        <td align="center"><h3 id="success"></h3></td>
+        <td><p id="points"></p></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="right">
+          <canvas id="testCanvas" width="660" height="360" style="float:left;">   
+          </canvas>
+        </td>
+        <td style="vertical-align: top;">
+          <table>
+            <tr>
+              <td>
+                <table style="float:left;">
+                  <tr>
+                    <td style="border: 1px solid black; background-color:#FF4500;" border="1" ></td>
+                    <td>Fire: Burns earth. Can only be put next to air or fire</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black; background-color:#0000FF;"></td>
+                    <td>Water: Floods earth and puts out fire. Can only be put next to air or water</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black; background-color: #08BDEB"></td>
+                    <td>Air: Can be put next to any block</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black; background-color: #2FC418"></td>
+                    <td>Earth: No special skill. Can only be put next to air or earth</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black; background-color: #D2D2D2"></td>
+                    <td>Optional: Can be left empty or filled</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black; background-color: #FFFFFF"></td>
+                    <td>Blank: Must be left empty</td>
+                  </tr>
+                  <tr>
+                    <td><b>a,s,d</b></td>
+                    <td>Rotate block</td>
+                  </tr>
+				  <tr>
+					<td><b>Mouse</b></td>
+					<td>Move block</td>
+				  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select id="ChangeLevelLst" size="10" width="200">
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button id="ChangeLevelBtn" type="button">Select level</button>
+              </td>
+            </tr>
+            </table
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <b id="feedback"></b>
+            <button id="NextLevelBtn" type="button" style="visibility:hidden">Next level!!</button>
+          </td>
+          <td>	
+            <button id="RestartLevelBtn" type="button">Restart level</button>
+          </td>
+        </tr>
+      </table>
+
+
+      <!-- Used scripts below -->
+      <script src="maps.json"></script>
+      <script src="grapheng.js"></script>
+      <script src="mapmodel.js"></script>
+      <script src="mapcontroller.js"></script>
+      <script src="main.js"></script>
+    </body>
+  </html>

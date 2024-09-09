@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="Viewport"
+  content="width=device-width;initial-scale=1.0" />
+	<title>Touconect</title>
+	<link rel="stylesheet" href="touconect.css" media="screen" title="no title">
+</head>
+<body>
+ <header>
+ <div class="score">
+     Score : <span id="score">0</span>
+ </div>
+  			 <button id="toggleBgMusic" class="activeBtn">♬</button>
+ <div class="level">
+     Level : <span id="level">1</span>
+ </div>
+
+<div class="health">
+     <span>Energy :</span>
+    <div id="health"></div>
+ </div>
+</header>
+ <div id="container">
+     <div id="gameover">
+        <h1>
+            GAME OVER <br>
+            You Scored : <span id="afterscore">0</span>
+         </h1>
+
+         <button id="play_again" class="btn page">
+             Play again
+         </button>
+     </div>
+		 <div id="levelcomplet">
+        <h1>
+            Congratulations !! <br>
+            You have completed the level.
+         </h1>
+
+         <button id="play_continue" class="btn page">
+             Continue
+         </button>
+     </div>
+     <div id="gamestart">
+         <p>The game is simple just connect all the orbs floating around without intersecting to complet a level.
+            Intersecting in connections will cause loss of health.The faster you connect
+            all orbs the maximum score you get out of 1000 in each level.
+         </p>
+         <button id="play" class="btn page">
+             Start Game
+         </button>
+
+     </div>
+      <div id="level_selection" class="pagination dark">
+				<a herf="#" class="levelno page dark gradien active">1</a><a herf="#" class="levelno page dark gradien ">2</a><a herf="#" class="levelno page dark gradien ">3</a><a herf="#" class="levelno page dark gradien ">4</a><a herf="#" class="levelno page dark gradien ">5</a><a herf="#" class="levelno page dark gradien ">6</a><a herf="#" class="levelno page dark gradien ">7</a><a herf="#" class="levelno page dark gradien ">8</a><a herf="#" class="levelno page dark gradien ">9</a><a herf="#" class="levelno page dark gradien ">10</a><a herf="#" class="levelno page dark gradien ">11</a><a herf="#" class="levelno page dark gradien ">12</a><a herf="#" class="levelno page dark gradien ">13</a><a herf="#" class="levelno page dark gradien ">14</a><a herf="#" class="levelno page dark gradien ">15</a><a herf="#" class="levelno page dark gradien ">16</a><a herf="#" class="levelno page dark gradien ">17</a><a herf="#" class="levelno page dark gradien ">18</a><a herf="#" class="levelno page dark gradien ">19</a><a herf="#" class="levelno page dark gradien ">20</a><a herf="#" class="levelno page dark gradien ">21</a><a herf="#" class="levelno page dark gradien ">22</a><a herf="#" class="levelno page dark gradien ">23</a><a herf="#" class="levelno page dark gradien ">24</a><a herf="#" class="levelno page dark gradien ">25</a><a herf="#" class="levelno page dark gradien ">26</a><a herf="#" class="levelno page dark gradien ">27</a><a herf="#" class="levelno page dark gradien ">28</a><a herf="#" class="levelno page dark gradien ">29</a><a herf="#" class="levelno page dark gradien ">30</a>
+			</div>
+ </div>
+
+  <script src="sonantx.js"></script>
+  <script src="touconect.js"></script>
+</body>
+</html>

@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Red Billion</title>
+
+		<style>
+			html {
+				box-sizing: border-box;
+			}
+
+			*, *:before, *:after {
+				box-sizing: inherit;
+			}
+
+			html, body {
+				width: 100%;
+				height: 100%;
+
+				margin: 0;
+				border: 0;
+				padding: 0;
+
+				position: absolute;
+				overflow: hidden;
+
+				font-family: sans-serif;
+				color: white;
+			}
+
+			.main-canvas {
+				position: absolute;
+				background-color: red;
+			}
+
+			.main-menu {
+				width: 100%;
+				margin: 0 auto;
+				position: absolute;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.main-menu-title {
+				margin: 22px 0px;
+			}
+
+			.main-menu-play {
+				margin: 0px 0px 11px 0px;
+			}
+
+			.level-end-menu, .dead-menu, .help-menu {
+				width: 100%;
+				border: 0;
+				margin: 0;
+				padding: 0;
+				padding-top: 24px;
+				position: absolute;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.le-title, .dead-title {
+				text-transform: uppercase;
+			}
+
+			.le-wrapper, .dead-wrapper, .help-wrapper {
+				border: 4px solid white;
+				margin: 0;
+				padding: 24px;
+
+				background-color: rgba(0, 0, 0, 0.4);
+
+				display: flex;
+				flex-direction: column;
+			}
+
+			.dead-wrapper {
+				align-items: center;
+			}
+
+			.le-split {
+				display: flex;
+				flex-direction: row;
+			}
+
+			.score-split {
+				display: flex;
+				flex-direction: row;
+			}
+
+			.fragment-text, .level-score-box, .total-score-box {
+				border: 1px solid white;
+				padding: 12px;
+			}
+
+			.level-score, .total-score {
+				font-weight: bold;
+			}
+
+			.score-spacer {
+				width: 12px;
+			}
+
+			.le-canvas {
+				margin-right: 24px;
+				border: 1px solid white;
+				background-color: black;
+			}
+
+			.le-buttons {
+				margin-top: 24px;
+
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+			}
+
+			.le-buttons-spacer {
+				width: 16px;
+			}
+
+			.fragment-text {
+				margin: 0 0 12px 0;
+
+				white-space: pre-line;
+				font-family: monospace;
+			}
+
+			.dead-button-spacer {
+				height: 12px;
+			}
+
+			.continue-button, .retry-button, .complete-button {
+				font-weight: bold;
+			}
+
+			.help-description {
+				margin: 0 0 24px 0;
+			}
+
+			.help-description-part {
+				font-weight: bold;
+			}
+
+			.help-description-part, .help-instructions-part {
+				margin: 4px 0px;
+			}
+
+			.help-instructions {
+				margin: 0 0 24px 0;
+			}
+
+			.turn-speed-wrapper {
+				margin: 0 0 24px 0;
+
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.turn-speed-input {
+				max-width: 100px;
+				text-align: right;
+			}
+
+			.dlink {
+				color: inherit;
+				text-decoration: inherit;
+			}
+
+			.dlink:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+
+	<!-- Setting tabindex allows us to focus the element using JS -->
+	<body tabindex="-1">
+		<canvas class="main-canvas">Canvas not supported</canvas>
+
+		<div class="main-menu">
+			<h1 class="main-menu-title">Red Billion</h1>
+
+			<button class="main-menu-play">Continue</button>
+		</div>
+
+		<div class="help-menu">
+			<div class="help-wrapper">
+				<div class="help-description">
+					<p class="help-description-part">The recipe shattered.</p>
+					<p class="help-description-part">404 Fragments.</p>
+					<p class="help-description-part">Recover the recipe.</p>
+				</div>
+
+				<div class="help-instructions">
+					<p class="help-instructions-part">TANK CONTROLS.</p>
+					<p class="help-instructions-part">DO DRIFTING.</p>
+					<p class="help-instructions-part">Going faster earns more points.</p>
+					<p class="help-instructions-part">Turn with A and D.</p>
+					<p class="help-instructions-part">Space or W to accelerate.</p>
+					<p class="help-instructions-part">Decrease/increase volume with 1 and 2.</p>
+					<p class="help-instructions-part">Version: 0.6.0</p>
+					<p class="help-instructions-part">
+						<span>Author: </span>
+						<a href="https://github.com/Costava" target="_blank" class="dlink">Costava</a>
+					</p>
+					<p class="help-instructions-part">
+						<a href="https://github.com/Costava/red-billion" target="_blank" class="dlink">
+							<span>View source on GitHub</span>
+						</a>
+					</p>
+				</div>
+
+				<div class="turn-speed-wrapper">
+					<span>Turn sensitivity:</span>
+					<input class="turn-speed-input" type="number"
+					       min="1" max="99999999" value="500"></input>
+				</div>
+
+				<button class="help-menu-go">GO</button>
+			</div>
+		</div>
+
+		<div class="level-end-menu">
+			<div class="le-wrapper">
+				<h1 class="le-title">
+					<span>Oracle </span>
+					<span class="oracle-number">X</span>
+					<span> reveals Fragments </span>
+					<span class="fragment-low">-2</span>
+					<span> through </span>
+					<span class="fragment-high">-1</span>
+				</h1>
+
+				<div class="le-split">
+					<canvas class="le-canvas" width=256 height=256>Canvas not supported</canvas>
+
+					<div class="le-column">
+						<p class="fragment-text">Lorem ipsum dolor sit amet</p>
+
+						<div class="score-split">
+							<div class="level-score-box">
+								<span>Level score: </span>
+								<span class="level-score">00000</span>
+							</div>
+							<div class="score-spacer"></div>
+							<div class="total-score-box">
+								<span>Total score: </span>
+								<span class="total-score">00000</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="le-buttons">
+					<div class="le-normal-buttons">
+						<button class="continue-button">I will continue</button>
+
+						<span class="le-buttons-spacer"></span>
+						<button class="quit-button">I quit</button>
+					</div>
+
+					<div class="le-final-buttons">
+						<button class="complete-button">
+							<span>Recovery successful. Suspend thought indefinitely.</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dead-menu">
+			<div class="dead-wrapper">
+				<h1 class="dead-title">
+					<span>The collision with the wall between yourself and the world was fatal</span>
+				</h1>
+
+				<div class="dead-button-wrapper">
+					<button class="retry-button">I will go back</button>
+				</div>
+				<span class="dead-button-spacer"></span>
+				<div class="dead-button-wrapper">
+					<button class="dead-button">I am dead</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			console.log("Script is executing")
+
+			// Class for managing an event listener
+			class Hook {
+				/**
+				 * @param {DOM element} target
+				 * @param {string} eventType
+				 * @param {function} work - what to do when hear event
+				 */
+				constructor(target, eventType, work) {
+					this.target = target
+					this.eventType = eventType
+					this.work = work
+
+					this.active = false
+				}
+
+				start() {
+					if (!this.active) {
+						this.target.addEventListener(this.eventType, this.work)
+						this.active = true
+					}
+				}
+
+				stop() {
+					if (this.active) {
+						this.target.removeEventListener(this.eventType, this.work)
+						this.active = false
+					}
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			// Keyboard Monitor
+			// Track what keys are down
+			class KbMon {
+				constructor() {
+					this.down = {}
+
+					this.downHook = new Hook(window, 'keydown', (e) => {
+						this.down[e.key] = true
+					})
+
+					this.upHook = new Hook(window, 'keyup', (e) => {
+						this.down[e.key] = false
+					})
+				}
+
+				start() {
+					this.downHook.start()
+					this.upHook.start()
+				}
+
+				stop() {
+					this.downHook.stop()
+					this.upHook.stop()
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			class Vec3 {
+				constructor(x, y, z) {
+					this.x = x
+					this.y = y
+					this.z = z
+				}
+
+				cross(vec) {
+					return new Vec3(
+						this.y * vec.z - this.z * vec.y,
+						this.z * vec.x - this.x * vec.z,
+						this.x * vec.y - this.y * vec.x)
+				}
+
+				magSquared() {
+					return this.x * this.x + this.y * this.y + this.z * this.z
+				}
+
+				mag() {
+					return Math.sqrt(this.magSquared())
+				}
+
+				xy() {
+					return new Vec2(this.x, this.y)
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			class Vec2 {
+				constructor(x, y) {
+					this.x = x
+					this.y = y
+				}
+
+				copy() {
+					return new Vec2(this.x, this.y)
+				}
+
+				/* 2-dimensional cross product definition from
+				   https://stackoverflow.com/questions/563198/
+				   how-do-you-detect-where-two-line-segments-intersect/565282#565282 */
+				cross(vec) {
+					return this.x * vec.y - this.y * vec.x
+				}
+
+				dot(vec) {
+					return this.x * vec.x + this.y * vec.y
+				}
+
+				toVec3(z) {
+					return new Vec3(this.x, this.y, z)
+				}
+
+				static fromRads(rads) {
+					return new Vec2(
+						Math.cos(rads),
+						Math.sin(rads)
+					)
+				}
+
+				add(vec) {
+					this.x += vec.x
+					this.y += vec.y
+					return this
+				}
+
+				sub(vec) {
+					this.x -= vec.x
+					this.y -= vec.y
+					return this
+				}
+
+				scale(num) {
+					this.x *= num
+					this.y *= num
+					return this
+				}
+
+				magSquared() {
+					return this.x * this.x + this.y * this.y
+				}
+
+				mag() {
+					return Math.sqrt(this.magSquared())
+				}
+
+				distanceTo(vec) {
+					return vec.copy().sub(this).mag()
+				}
+
+				normalize() {
+					let mag = this.mag()
+					this.x /= mag
+					this.y /= mag
+					return this
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			// A line segment between two given points a and b
+			class LineSegment {
+				/**
+				 * @param {Vec2} aPosition
+				 * @param {Vec2} bPosition
+				 */
+				constructor(aPosition, bPosition) {
+					this.aPos = aPosition
+					this.bPos = bPosition
+					this.diff = this.bPos.copy().sub(this.aPos)
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			class Ray {
+				/**
+				 * @param {Vec2} inPos
+				 * @param {Vec2} inDir
+				 */
+				constructor(inPos, inDir) {
+					this.pos = inPos
+					this.dir = inDir
+				}
+
+				/* Based on https://stackoverflow.com/questions/14307158/
+				how-do-you-check-for-intersection-between-a-line-segment-and-a-line-ray-emanatin*/
+				/**
+				 * @returns {object}
+				 * - @property {boolean} intersects
+				 * - @property {Vec2} intersection - does not exist if `intersects` is false
+				 * - @property {number} t - distance to intersection (if ray dir is unit length)
+				 */
+				intersectsLineSegment(lineSegment) {
+					let aSubPos = lineSegment.aPos.copy().sub(this.pos)
+					let dirCrossDiff = this.dir.cross(lineSegment.diff)
+
+					let t = (aSubPos.cross(lineSegment.diff)) / dirCrossDiff
+
+					if (t < 0.0) {
+						return {
+							intersects: false
+						}
+					}
+
+					let u = aSubPos.cross(this.dir) / dirCrossDiff
+
+					if (u < 0.0 || u > 1.0) {
+						return {
+							intersects: false
+						}
+					}
+
+					return {
+						intersects: true,
+						intersection: lineSegment.aPos.copy().add(lineSegment.diff.copy().scale(u)),
+						t: t
+					}
+				}
+
+				castAtWalls(walls) {
+					let hitInfo = null
+
+					for (let s = 0; s < walls.length; s += 1) {
+						let wall = walls[s]
+						let result = this.intersectsLineSegment(wall.lineSegment)
+						if (result.intersects) {
+							if (hitInfo == null || result.t < hitInfo.result.t) {
+								hitInfo = {
+									result: result,
+									wall: wall
+								}
+							}
+						}
+					}
+
+					return hitInfo
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			// Wall color functions
+			// Return a canvas color based on info
+
+			function wAlpha(info) {
+				return 'rgb(' +
+					`${info.hitResult.intersection.x * 21.0 % 255}, ` +
+					`${info.hitResult.intersection.y * 21.0 % 255}, ` +
+					`${info.hitResult.intersection.x + info.hitResult.intersection.y % 255})`
+			}
+
+			function wRed(info) {
+				return 'rgb(255,0,0)'
+			}
+
+			class Wall {
+				constructor(lineSegment, colorFunc) {
+					this.lineSegment = lineSegment
+					this.getColor = colorFunc
+				}
+			}
+
+			let ecmStateLength = document.querySelector('.le-canvas').width;
+
+			class Level {
+				constructor(config) {
+					this.walls = []
+
+					config.wallData.forEach(function(data) {
+						let ls = new LineSegment(
+							new Vec2(data[0], data[1]),
+							new Vec2(data[2], data[3])
+						)
+
+						this.walls.push(new Wall(ls, data[4]))
+					}.bind(this))
+
+					this.winPoint = config.winPoint
+					this.winRadius = config.winRadius
+
+					this.oracleRule = config.oracleRule
+					this.fragmentLow = config.fragmentLow
+					this.fragmentHigh = config.fragmentHigh
+					this.fragmentText = config.fragmentText
+
+					this.ecmConfig = config.ecmConfig
+					this.ecmLookup = Ecm.getLookup(this.oracleRule)
+
+					this.reset()
+				}
+
+				// For resetting the object
+				// Able to quit to main menu and play level again
+				//  without refreshing page
+				reset() {
+					this.ecmState = Ecm.getInitialState(
+						ecmStateLength,
+						this.ecmLookup,
+						this.ecmConfig
+					)
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			function randomInt(min, max) {
+				return Math.floor(Math.random() * (max - min + 1)) + min
+			}
+
+			function randomBool() {
+				if (Math.random() < 0.5) return true
+
+				return false
+			}
+
+			class Ecm {
+				/**
+				 * @param {number} rule - in range [0, 255]
+				 */
+				static getLookup(rule) {
+					if (rule < 0 || rule > 255) {
+						console.log(
+							`WARNING: Impossible rule given: ${rule}. Using random rule instead`)
+
+						rule = randomInt(0, 255)
+					}
+
+					let lookup = []
+
+					for (let i = 0; i < 8; i += 1) {
+						let cellVal = rule & 1
+
+						if (cellVal == 1) {
+							lookup.push(true)
+						}
+						else {
+							lookup.push(false)
+						}
+
+						rule = rule >> 1
+					}
+
+					return lookup
+				}
+
+				static getInitialState(length, lookup, config) {
+					let ecmState = []
+
+					if (config.init == EcmInitEnum.SINGLE_CENTER) {
+						for (let i = 0; i < length; i += 1) {
+							ecmState.push(false)
+						}
+
+						ecmState[Math.floor(ecmState.length)] = true
+					}
+					else if (config.init == EcmInitEnum.RANDOM) {
+						for (let i = 0; i < length; i += 1) {
+							ecmState.push(randomBool())
+						}
+					}
+					else {
+						console.log("WARNING: Unrecognized init value on ecm config:",
+							config.init)
+
+						for (let i = 0; i < length; i += 1) {
+							ecmState.push(randomBool())
+						}
+					}
+
+					return ecmState
+				}
+
+				static getNewState(state, lookup, config) {
+					let newState = []
+
+					for (let i = 0; i < state.length; i += 1) {
+						let left = false
+
+						if (i == 0 && config.wrap) {
+							left = state[state.length - 1]
+						}
+						else if (left > 0) {
+							left = state[i - 1]
+						}
+
+						let center = state[i]
+						let right = false
+
+						if (i == state.length - 1 && config.wrap) {
+							right = state[0]
+						}
+						else if (i < state.length - 1) {
+							right = state[i + 1]
+						}
+
+						let index = 0;
+						if (left) index |= 0b100
+						if (center) index |= 0b010
+						if (right) index |= 0b001
+
+						newState.push(lookup[index])
+					}
+
+					return newState
+				}
+			}
+
+			////////////////////////////////////////////////////////////
+
+			function showMainMenu() {
+				document.querySelector('.main-menu').style.marginTop = '0'
+				document.querySelector('.main-menu-play').disabled = false
+			}
+
+			function hideMainMenu() {
+				document.querySelector('.main-menu').style.marginTop = '-100%'
+				document.querySelector('.main-menu-play').disabled = true
+			}
+
+			function showHelpMenu() {
+				document.querySelector('.help-menu').style.marginTop = '0'
+			}
+
+			function hideHelpMenu() {
+				document.querySelector('.help-menu').style.marginTop = '-100%'
+			}
+
+			function showLevelEndMenu() {
+				document.querySelector('.level-end-menu').style.marginTop = '0'
+				document.querySelector('.oracle-number').innerHTML = currentLevel.oracleRule
+				document.querySelector('.fragment-low').innerHTML = currentLevel.fragmentLow
+				document.querySelector('.fragment-high').innerHTML = currentLevel.fragmentHigh
+				document.querySelector('.fragment-text').innerHTML = currentLevel.fragmentText
+
+				document.querySelector('.level-score').innerHTML = score
+				document.querySelector('.total-score').innerHTML = totalScore
+
+				if (currentLevel == levels[levels.length - 1]) {
+					showFinalLeButtons()
+				}
+				else {
+					showNormalLeButtons()
+				}
+			}
+
+			function showNormalLeButtons() {
+				document.querySelector('.le-normal-buttons').style.display = 'inherit'
+				document.querySelector('.le-final-buttons').style.display = 'none'
+			}
+
+			function showFinalLeButtons() {
+				document.querySelector('.le-normal-buttons').style.display = 'none'
+				document.querySelector('.le-final-buttons').style.display = 'inherit'
+			}
+
+			function hideLevelEndMenu() {
+				document.querySelector('.level-end-menu').style.marginTop = '-100%'
+			}
+
+			function showDeadMenu() {
+				document.querySelector('.dead-menu').style.marginTop = '0'
+			}
+
+			function hideDeadMenu() {
+				document.querySelector('.dead-menu').style.marginTop = '-100%'
+			}
+
+			function hideAllMenus() {
+				document.body.focus()
+
+				hideMainMenu()
+				hideHelpMenu()
+				hideLevelEndMenu()
+				hideDeadMenu()
+			}
+
+			////////////////////////////////////////////////////////////
+
+			function startLevel(level) {
+				currentLevel = level
+
+				playerPos = new Vec2(0.0, 0.0)
+				playerVel = new Vec2(0.0, 0.0)
+				playerDir = Math.PI / 2.0
+
+				gameState = GameStateEnum.PLAYING
+
+				score = 0
+				closestToGoal = playerPos.distanceTo(currentLevel.winPoint)
+
+				startMotorSound()
+			}
+
+			////////////////////////////////////////////////////////////
+
+			const GameStateEnum = Object.freeze({
+				NOT_PLAYING: 0,
+				PLAYING: 100,
+				DEAD: 200,
+				LEVEL_END_REACHED: 300,
+				COMPLETE: 400
+			})
+
+			const EcmInitEnum = Object.freeze({
+				SINGLE_CENTER: 100,
+				RANDOM: 200
+			})
+
+			////////////////////////////////////////////////////////////
+
+			let canvas = document.querySelector(".main-canvas")
+			let ctx = canvas.getContext('2d')
+
+			let kbMon = new KbMon()
+			kbMon.start()
+
+			let frameNumber = 0
+
+			let playerPos
+			let playerVel
+			let playerDir
+			let turnSpeed = 0.0005
+
+			let hfov = Math.PI / 180.0 * 90.0
+			// At zero distance, a wall is this many times taller than the canvas
+			let wallMaxHeight = 1.3
+			// Walls are too small to be seen at this distance
+			let wallZeroDistance = 500.0
+
+			function startMotorSound() {
+				motorGainNode.connect(audioContext.destination);
+			}
+
+			function stopMotorSound() {
+				motorGainNode.disconnect(audioContext.destination);
+			}
+
+			// freq in hertz
+			function setMotorFreq(freq) {
+				oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+			}
+
+			let zeroMotorFreq = 130
+			let hzPerSpeed = 120
+			const audioContext = new AudioContext()
+			let oscillator = audioContext.createOscillator()
+			oscillator.type = 'sine'
+			setMotorFreq(zeroMotorFreq)
+
+			const motorGainNode = audioContext.createGain()
+			oscillator.connect(motorGainNode)
+			motorGainNode.gain.value = 0.120
+
+			let oscillatorStarted = false
+
+			let ecmConfig = {
+				init: EcmInitEnum.SINGLE_CENTER,
+				wrap: true
+			}
+
+			let ecmLookup = Ecm.getLookup(randomInt(0, 255))
+			let ecmState = Ecm.getInitialState(canvas.width, ecmLookup, ecmConfig)
+			let ecmRow = 0
+
+			let levels = []
+
+			// 6   wrap SINGLE_CENTER: fixed white line sierpinski
+			// 6   wrap RANDOM: fixed black triangle field
+			// 9   wrap RANDOM: updating triangle field, semi-stable areas, slowly down-scrolling ***
+			// 18  wrap RANDOM: updating diagonal lines
+			// 22  wrap RANDOM: triangles shifting downwards
+			// 22  wrap SINGLE_CENTER: like 89 but black
+			// 25  wrap RANDOM: stabilizes to cool pattern that slowly shifts down ***
+			// 25  wrap SINGLE_CENTER: cool sierpinski then to updating tri field ****
+			// 54  wrap RANDOM: down-scrolling tri field **
+			// 54  wrap SINGLE_CENTER: black tri patterns into random tri fields
+			// 57  wrap SINGLE_CENTER: sierpinski but more uniform than 73 *****
+			// 73  wrap SINGLE_CENTER: sierpinski ***
+			// 74  wrap RANDOM: diag lines ***
+			// 89  wrap SINGLE_CENTER: sierpinski to tri field
+			// 105 wrap SINGLE_CENTER: like 89 but cool patterns *****
+			// 107 wrap RANDOM: alright rain **
+			// 113 wrap RANDOM: rain
+			// 113 wrap SINGLE_CENTER: two bolts of rain
+			// 118 wrap SINGLE_CENTER: black sierpinski that devolves to updating triangle field ****
+			// 154 wrap RANDOM: like 18 but whiter
+			// 154 wrap SINGLE_CENTER: cool updating patterns of diagonals ****
+			// 214 wrap RANDOM: updating black tri field
+			// 230 wrap RANDOM: stabilizes to good tri field ***
+
+			// points is a series of consecutive points where lines/walls should be
+			//  between them
+			// This function returns a "wallData" array expected by a Level
+			//  using the given points
+			function expandLongLine(points) {
+				let wallData = []
+
+				for (let i = 0; i < points.length - 1; ++i) {
+					let a = points[i]
+					let b = points[i + 1]
+
+					wallData.push([
+						a[0], a[1], b[0], b[1], b[2]
+					])
+				}
+
+				return wallData
+			}
+
+			// First level
+			levels.push(new Level({
+				wallData: expandLongLine([
+					[-20, 0],
+					[-20, 2400, wAlpha]
+				]).concat(expandLongLine([
+					[20, 0],
+					[20, 1000, wAlpha],
+					[-3, 1900, wAlpha],
+					[20, 2400, wAlpha],
+				])).concat([
+					// [x1, y1, x2, y2, getColorFunction]
+					[-6.0, 700.0, 6.0, 700.0, wRed]
+				]),
+				winPoint: new Vec2(0.0, 2500.0),
+				winRadius: 100.0,
+				oracleRule: 57,
+				ecmConfig: {
+					init: EcmInitEnum.SINGLE_CENTER,
+					wrap: true
+				},
+				fragmentLow: 1,
+				fragmentHigh: 92,
+				fragmentText: `Ingredients:
+					Two eggs
+					One cup flour
+					One cup milk
+					One teaspoon baking soda
+					One teaspoon salt`
+			}))
+
+			// Second level
+			levels.push(new Level({
+				wallData: expandLongLine([
+					[-15.0, 0.0],
+					[-15.0, 200.0, wAlpha],
+					[-30.0, 400.0, wAlpha],
+					[-45, 600, wAlpha],
+					[-75, 800, wAlpha],
+					[-125, 1000, wAlpha],
+					[-185, 1100, wAlpha],
+					[-305, 1300, wAlpha],
+					[-405, 1500, wAlpha],
+					[-445, 1600, wAlpha],
+					[-465, 1700, wAlpha],
+					[-465, 1800, wAlpha],
+					[-445, 2000, wAlpha],
+					[-425, 2100, wAlpha],
+					[-395, 2200, wAlpha],
+					[-355, 2300, wAlpha],
+					[-305, 2400, wAlpha],
+					[-245, 2500, wAlpha],
+					[-175, 2600, wAlpha],
+					[-125, 2700, wAlpha],
+					[-90, 2800, wAlpha],
+					[-80, 2900, wAlpha],
+					[-80, 3300, wAlpha]
+				]).concat(expandLongLine([
+					[15.0, 0.0],
+					[15.0, 200.0, wAlpha],
+					[0.0, 400, wAlpha],
+					[-15, 600, wAlpha],
+					[-45, 800, wAlpha],
+					[-95, 1000, wAlpha],
+					[-155, 1100, wAlpha],
+					[-275, 1300, wAlpha],
+					[-375, 1500, wAlpha],
+					[-415, 1600, wAlpha],
+					[-435, 1700, wAlpha],
+					[-435, 1800, wAlpha],
+					[-415, 2000, wAlpha],
+					[-395, 2100, wAlpha],
+					[-365, 2200, wAlpha],
+					[-325, 2300, wAlpha],
+					[-275, 2400, wAlpha],
+					[-215, 2500, wAlpha],
+					[-145, 2600, wAlpha],
+					[-95, 2700, wAlpha],
+					[-60, 2800, wAlpha],
+					[-50, 2900, wAlpha],
+					[-50, 3300, wAlpha]
+				])),
+				winPoint: new Vec2(-65, 3400.0),
+				winRadius: 100.0,
+				oracleRule: 154,
+				ecmConfig: {
+					init: EcmInitEnum.SINGLE_CENTER,
+					wrap: true
+				},
+				fragmentLow: 93,
+				fragmentHigh: 245,
+				fragmentText: `One tablespoon vegetable oil
+
+				Directions:
+				Wear smile on face
+				Mix ingredients well in bowl
+				Cook in pan on stove top
+				Turn off lights and unlock front door`
+			}))
+
+			// Third/final level
+			levels.push(new Level({
+				wallData: expandLongLine([
+					[-15, 0],
+					[-15, 300, wAlpha],
+					[-70, 600, wAlpha],
+					[40, 1100, wAlpha],
+					[-70, 1600, wAlpha],
+					[40, 2100, wAlpha],
+					[-15, 2500, wAlpha],
+					[-15, 4000, wAlpha],
+					[110, 4400, wAlpha],
+					[140, 4700, wAlpha],
+					[153, 5400, wAlpha]
+				]).concat(expandLongLine([
+					[15, 0],
+					[15, 300, wAlpha],
+					[-40, 600, wAlpha],
+					[70, 1100, wAlpha],
+					[-40, 1600, wAlpha],
+					[70, 2100, wAlpha],
+					[15, 2500, wAlpha],
+					[15, 4000, wAlpha],
+					[140, 4400, wAlpha],
+					[170, 4700, wAlpha],
+					[157, 5400, wAlpha]
+				])).concat([// Individual walls
+					[-4, 2800, 4, 2800, wRed],
+
+					[-15, 3100, -6, 3100, wRed],
+					[6, 3100, 15, 3100, wRed],
+
+					[-15, 3400, 5, 3400, wRed],
+					[-5, 3700, 15, 3700, wRed],
+
+					[110, 4400, 120, 4400, wRed],
+					[130, 4400, 140, 4400, wRed]
+				]),
+				winPoint: new Vec2(155, 5500),
+				winRadius: 100.0,
+				oracleRule: 9,
+				ecmConfig: {
+					init: EcmInitEnum.RANDOM,
+					wrap: true
+				},
+				fragmentLow: 246,
+				fragmentHigh: 404,
+				fragmentText: `Optionally, add chocolate chips
+					Top with syrup, yogurt, or whipped cream
+					Consume while looking out window
+					Kill and eat cloud
+					Makes one to two servings
+					Have day`
+			}))
+
+			let currentLevel = levels[0]
+			let gameState = GameStateEnum.NOT_PLAYING
+			let score = 0
+			let totalScore = 0
+			let closestToGoal = Number.POSITIVE_INFINITY
+
+			hideAllMenus()
+			showMainMenu()
+
+			let oldTime = new Date().getTime()
+			let loop = () => {
+				const newTime = new Date().getTime()
+				const dt = newTime - oldTime
+				// Maybe this line should go at end of loop
+				oldTime = newTime
+
+				if (gameState == GameStateEnum.PLAYING) {
+					let numRays = canvas.width
+
+					if (kbMon.down['1']) {
+						const newVal = motorGainNode.gain.value - 0.005
+
+						if (newVal > 0) {
+							motorGainNode.gain.value = newVal
+						}
+					}
+
+					if (kbMon.down['2']) {
+						const newVal = motorGainNode.gain.value + 0.005
+
+						// ~3.4 is the max
+						/* Source: https://developer.mozilla.org/en-US/docs/
+							Web/API/Web_Audio_API/Using_Web_Audio_API */
+						if (newVal < 3.4) {
+							motorGainNode.gain.value = newVal
+						}
+					}
+
+					if (kbMon.down['a']) {
+						playerDir += turnSpeed * dt
+					}
+
+					if (kbMon.down['d']) {
+						playerDir -= turnSpeed * dt
+					}
+
+					let playerDirVec = Vec2.fromRads(playerDir)
+
+					if (kbMon.down[' '] || kbMon.down['w']) {
+						playerVel.add(playerDirVec.copy().scale(0.002 * dt))
+					}
+
+					let freq = zeroMotorFreq + playerVel.mag() * hzPerSpeed
+					setMotorFreq(freq + randomInt(-15, 15))
+
+					playerVel.scale(0.9882)
+					let oldPlayerPos = playerPos.copy()
+					playerPos.add(playerVel)
+
+					let movementVec = playerPos.copy().sub(oldPlayerPos)
+					let movementDistance = movementVec.mag()
+
+					if (movementDistance > 0.0) {
+						let movementVecUnit = movementVec.copy().normalize()
+						let movementRay = new Ray(oldPlayerPos, movementVecUnit)
+
+						let movementHitInfo = movementRay.castAtWalls(currentLevel.walls)
+
+						if (movementHitInfo != null && movementHitInfo.result.t < movementDistance) {
+							// Collided with a wall
+							gameState = GameStateEnum.DEAD
+
+							playerVel.x = 0.0
+							playerVel.y = 0.0
+							playerPos = oldPlayerPos
+
+							stopMotorSound()
+							showDeadMenu()
+						}
+					}
+
+					// If not dead
+					if (gameState == GameStateEnum.PLAYING) {
+						// Add to score if have gotten closer to goal
+						const distanceToGoal = playerPos.distanceTo(currentLevel.winPoint)
+
+						if (distanceToGoal < closestToGoal) {
+							const diff = closestToGoal - distanceToGoal
+
+							// Arbitrary way to increase influence of speed on score
+							const num = playerVel.mag() + 1
+							score += Math.floor(diff * num * num)
+
+							closestToGoal = distanceToGoal
+						}
+
+						if (distanceToGoal < currentLevel.winRadius) {
+							gameState = GameStateEnum.LEVEL_END_REACHED
+
+							totalScore += score
+
+							stopMotorSound()
+							showLevelEndMenu()
+						}
+					}
+
+					// console.log("playerPos:", playerPos)
+					// console.log("playerDir:", playerDir)
+
+					// Clear canvas
+					let floorHalfHeight = Math.floor(canvas.height / 2.0)
+					ctx.save()
+					ctx.fillStyle = 'rgb(20, 20, 30)'
+					ctx.fillRect(
+						0,
+						0,
+						canvas.width,
+						floorHalfHeight)
+					ctx.fillStyle = 'black'
+					ctx.fillRect(
+						0,
+						floorHalfHeight,
+						canvas.width,
+						canvas.height - floorHalfHeight)
+					ctx.restore()
+
+					let radIncrement = hfov / numRays
+					let leftDir = playerDir + (hfov / 2.0)
+					let wallSegmentWidth = canvas.width / numRays
+					for (let i = 0; i < numRays; i += 1) {
+						let dir = leftDir - (radIncrement / 2.0) - radIncrement * i
+
+						let ray = new Ray(playerPos, Vec2.fromRads(dir))
+
+						// console.log("ray.pos:", ray.pos)
+						// console.log("ray.dir:", ray.dir)
+
+						// Check for closest line segment collision
+						let hitInfo = ray.castAtWalls(currentLevel.walls)
+
+						if (hitInfo != null) {
+							// console.log("INTERSECTS")
+							let distToPlayer = hitInfo.result.intersection.distanceTo(playerPos)
+
+							// console.log("distToPlayer:", distToPlayer, "t:", hit.t)
+
+							if (distToPlayer < wallZeroDistance) {
+								let fullHeightProportion = (wallZeroDistance - distToPlayer)
+									/ wallZeroDistance
+
+								fullHeightProportion *= fullHeightProportion
+								fullHeightProportion *= fullHeightProportion
+
+								let wallHeight = fullHeightProportion * wallMaxHeight * canvas.height
+
+								let comp = Math.floor(fullHeightProportion * 255)
+
+								ctx.save()
+								ctx.fillStyle = hitInfo.wall.getColor({
+									hitResult: hitInfo.result,
+									playerPos: playerPos,
+									playerVel: playerVel
+								})
+								// No longer necessary to extend both sides of walls by 1
+								//  because the resolution is set to the current canvas width
+								ctx.fillRect(
+									i * wallSegmentWidth,
+									(canvas.height / 2) - (wallHeight / 2),
+									wallSegmentWidth,
+									wallHeight
+								)
+								ctx.restore()
+							}
+						}
+					}
+				}
+				else if (gameState == GameStateEnum.LEVEL_END_REACHED) {
+					let leCanvas = document.querySelector('.le-canvas')
+					let leCtx = leCanvas.getContext('2d')
+
+					leCtx.save()
+					for (let y = 0; y < leCanvas.height; y += 1) {
+						for (let x = 0; x < leCanvas.width; x += 1) {
+							if (currentLevel.ecmState[x]) {
+								leCtx.fillStyle = 'white'
+							}
+							else {
+								leCtx.fillStyle = 'black'
+							}
+
+							leCtx.fillRect(x, y, 1, 1)
+						}
+
+						currentLevel.ecmState = Ecm.getNewState(
+							currentLevel.ecmState,
+							currentLevel.ecmLookup,
+							currentLevel.ecmConfig
+						)
+					}
+					leCtx.restore()
+
+					// // Be careful to not create a billion manual dialogs
+					// if (frameNumber < 100) {
+					// 	saveFrame(leCanvas, frameNumber)
+					// 	frameNumber += 1
+					// }
+				}
+				else if (gameState == GameStateEnum.COMPLETE) {
+					if (ecmState.length < canvas.width) {
+						for (let i = 0; i < canvas.width - ecmState.length; ++i) {
+							ecmState.push(randomBool())
+						}
+					}
+					else if (ecmState.length > canvas.width) {
+						for (let i = 0; i < ecmState.length - canvas.width; ++i) {
+							ecmState.pop()
+						}
+					}
+
+					// ctx.save()
+					for (let i = 0; i < 14; ++i) {
+						for (let x = 0; x < canvas.width; x += 1) {
+							if (ecmState[x]) {
+								let color = (Math.random() < 0.0002)
+									? 'white'
+									: `rgb(
+										${170 + randomInt(-40, 85)},
+										${30 + randomInt(-20, 50)},
+										${40 + randomInt(-30, 50)})`
+								ctx.fillStyle = color
+							}
+							else {
+								let val = 10 + randomInt(-10, 20)
+								ctx.fillStyle = `rgb(
+									${val},
+									${val},
+									${val}
+								)`
+							}
+
+							ctx.fillRect(x, ecmRow, 1, 1)
+						}
+
+						ecmState = Ecm.getNewState(
+							ecmState,
+							ecmLookup,
+							ecmConfig
+						)
+
+						ecmRow += 1
+
+						if (ecmRow >= canvas.height) {
+							ecmRow = 0
+
+							ecmLookup = Ecm.getLookup(randomInt(0, 255))
+							ecmConfig.wrap = randomBool()
+
+							// Randomize some cells
+							for (let c = 0; c < 40; ++c) {
+								let index = randomInt(0, ecmState.length - 1)
+								ecmState[index] = randomBool()
+							}
+						}
+					}
+					// Performance of restore is poor in Chromium 84.0.4147.135
+					// ctx.restore()
+				}
+
+				window.requestAnimationFrame(loop)
+			}
+
+			loop()
+
+			// Add hook to handle when window/viewport resizes
+			let handleResize = () => {
+				console.log("Handling window resize")
+				canvas.width = document.body.offsetWidth
+				canvas.height = document.body.offsetHeight
+			}
+
+			let handleResizeHook = new Hook(window, 'resize', handleResize)
+			handleResize() // Initial run
+			handleResizeHook.start()
+
+			// Add hook to handle when turn speed UI is changed
+			let turnSpeedInputNum = Number(document.querySelector('.turn-speed-input').value)
+			let handleTurnSpeedInputChange = () => {
+				console.log("Handle turn speed input change")
+
+				let turnSpeedInput = document.querySelector('.turn-speed-input')
+				let value = turnSpeedInput.value;
+				let number = Number(value)
+
+				if (number >= 1 && number <= 99999999) {
+					turnSpeedInputNum = number
+					turnSpeed = number / 1000000
+				}
+				else {
+					turnSpeedInput.value = turnSpeedInputNum
+				}
+			}
+			handleTurnSpeedInputChange()
+			document.querySelector('.turn-speed-input')
+				.addEventListener('change', handleTurnSpeedInputChange)
+
+			document.querySelector('.main-menu-play').addEventListener('click', (e) => {
+				// We can start the oscillator now that there has been interaction on the page
+				if (!oscillatorStarted) {
+					oscillatorStarted = true
+					oscillator.start();
+				}
+
+				hideAllMenus()
+				showHelpMenu()
+			})
+
+			document.querySelector('.help-menu-go').addEventListener('click', (e) => {
+				hideAllMenus()
+				document.body.focus()
+
+				levels.forEach((level) => {
+					level.reset()
+				})
+
+				totalScore = 0
+				// Start first level
+				startLevel(levels[0])
+			})
+
+			document.querySelector('.retry-button').addEventListener('click', (e) => {
+				hideAllMenus()
+				startLevel(currentLevel)
+			})
+
+			document.querySelector('.dead-button').addEventListener('click', (e) => {
+				gameState = GameStateEnum.NOT_PLAYING
+				hideAllMenus()
+				showMainMenu()
+			})
+
+			document.querySelector('.continue-button').addEventListener('click', (e) => {
+				currentLevel = levels[levels.indexOf(currentLevel) + 1]
+				hideAllMenus()
+				startLevel(currentLevel)
+			})
+
+			document.querySelector('.quit-button').addEventListener('click', (e) => {
+				gameState = GameStateEnum.NOT_PLAYING
+				hideAllMenus()
+				showMainMenu()
+			})
+
+			document.querySelector('.complete-button').addEventListener('click', (e) => {
+				hideAllMenus()
+				gameState = GameStateEnum.COMPLETE
+			})
+
+			/* http://stackoverflow.com/questions/10673122/
+				how-to-save-canvas-as-an-image-with-canvas-todataurl */
+			// Thank you to Stack Overflow users user1874941 and gillyb for their answers
+			//
+			// Firefox:
+			// First, set a specific downloads folder in Preferences.
+			// Save ONE frame and choose "Always" on the dialog (should only need to do this once)
+			//  (This setting on the dialog cannot be set from the Preferences page)
+			// Then start actually saving frames
+			// This avoids getting hundreds of dialogs that all require manual clicking
+			//
+			// Not tested on Chromium
+			//
+			// Edit the padStart call if you will be saving more than 99999 frames
+			function saveFrame(canvas, frameNumber) {
+				frameNumber = String(frameNumber).padStart(5, '0')
+
+				let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
+
+				let a = document.createElement('a')
+				a.href = image
+				a.download = 'frame' + frameNumber + '.png'
+
+				document.body.appendChild(a)
+				a.click()
+				// The behavior depends on your browser settings:
+				//  1. You may get a save dialog
+				//  2. Image may be automatically saved to designated downloads folder
+			}
+		</script>
+	</body>
+</html>

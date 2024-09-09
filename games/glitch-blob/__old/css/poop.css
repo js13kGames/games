@@ -1,0 +1,61 @@
+.poop {
+    width: 15px;
+    height: 24px;
+    z-index: 2;
+    cursor: pointer;
+    border-radius: 100%;
+
+}
+
+.poop.silver {
+    background-color: silver;
+    border: 1px solid rgba(0,0,0,0.4);
+}
+
+.poop.gold {
+    background-color: yellow;
+    border: 1px solid rgba(0,0,0,0.4);
+}
+
+.poop.raw-anti-glitch {
+    background-color: #555;
+    height: 15px;
+}
+
+.poop.raw-anti-glitch:after {
+    background-color: orange;
+    transform: skew(50deg, 50deg);
+}
+
+.poop.pure-anti-glitch {
+    background-color: #fff;
+    z-index: 1001;
+    width: 20px;
+    height: 20px;
+}
+
+.poop.pure-anti-glitch:before,
+.poop.pure-anti-glitch:after {
+    background-color: orange;
+    width: 105%;
+    height: 105%;
+    left: 0;
+    top: 0;
+    transform: skew(50deg, 50deg);
+    pointer-events: auto;
+}
+
+.poop.pure-anti-glitch:after {
+    transform: skew(-50deg, -50deg);
+}
+
+
+
+.poop:before {
+    width: 205%;
+    height: 205%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+}

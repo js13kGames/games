@@ -1,0 +1,26 @@
+/* Alert Box css */
+/* 200214 - added fullscreen translucent background*/
+
+html, body {height: 100%;width:100%;} /* trick used to ensure dialog box is fullscreen*/
+body {min-height: 100%;}
+
+#alertboxcontainer {position:absolute;top:0px;left:0px;z-index:200;
+                    background-color: rgba(0,0,0,0.5);          
+                   }
+#aboxtitle {color:#ffffff;background-color:#444444;margin:2px;font-size:12pt;
+            text-align:center;font-weight:bold;border-radius: 10px 10px 10px 10px;}
+#alertbox {position:absolute;top:0px;left:0px;
+           border:solid 2px;border-color:#888888 #222222 #222222 #888888;
+           display:none;height:285px;width:330px;color:#000000;background-color:#444444;text-align:center;
+           border-radius: 20px 20px 20px 20px;}
+
+#alertboxtext {height:220px;margin:0px 5px 10px 5px;padding:3px;overflow:auto;font-size:10pt;font-weight:bold;
+               background-color:#1360c0;color:#FFD68C;border:solid 1px #000000;}
+#alertbutton {font-weight:bold;font-size:8pt;padding:1px 15px 1px 15px;
+              text-decoration:none;color:#ffa500;background-color:#8b0000;
+              border-left:2px solid red;border-right:2px solid black;border-top:2px solid red;
+              border-bottom:2px solid black;
+              border-radius: 10px 10px 10px 10px;
+              }
+
+#alertbutton:hover {color:#ffffff;box-shadow:rgba(255, 180, 2, 0.8) 0px 0px 3px 3px;}

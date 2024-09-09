@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Chess</title>
+<meta charset="UTF-8">
+<style>
+    * {
+        font-family: monospace;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .c,span {
+        line-height: 40px;
+        font-size: 40px;
+        cursor: pointer;
+    }
+    .c {
+        height: 40px;
+        width: 40px;
+        border: solid 0.5px;
+        margin: -0.5px;
+        display: inline-block;
+        text-align: center;
+    }
+    p:nth-of-type(odd) .c:nth-of-type(even), p:nth-of-type(even) .c:nth-of-type(odd) {
+        background-color: grey;
+    }
+    .c.s {
+        background-color: lightcoral !important;
+    }
+    .f {
+        background-color: lightseagreen !important;
+    }
+
+    #m,#p{
+        position: absolute;
+        top: 50vh;
+        left: 25vw;
+        transform: translate(-50%,-50%);
+    }
+    #p{
+        left: 75vw;
+        width: 50vw;
+        height: 100vh;
+        border-left: 1px solid;
+        padding: 50px;
+    }
+    #i{
+        position: fixed;
+        left:0;
+        top:0;
+        width: 100vw;
+        height:100vh;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    input {
+        margin-left: 1em;
+        text-align: center;
+    }
+    #clk {
+        position: absolute;
+        font-size: 10px;
+        margin-top: -3em;
+        margin-left: 2.5em;
+    }
+    .h {
+        visibility: hidden;
+    }
+</style>
+<meta name="monetization" content="$ilp.uphold.com/37A8LMgYUFFF">
+</head>
+<body>
+
+<div id="m"></div><div id="p"></div>
+<div id="i"></div>
+<div id="clk"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/shared.js"></script>
+<script src="/client.js"></script>
+
+</body>
+</html>

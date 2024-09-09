@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+	<head>
+		<title>9CG</title>
+		<link type="image/x-icon" rel="icon" href="">
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			/*canvas{
+				width: 700px;
+				height: 400px;
+				margin: 50px auto;
+				display: block;
+			}*/
+			#favico{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="game" width="700" height="400"></canvas>
+		<canvas id="favico" width="16" height="16"></canvas>
+		<script type="text/javascript" src="script.min.js"></script>
+		<script type="text/javascript">
+			var linkFav = document.querySelector("link"),
+				favIco = document.getElementById("favico"),
+				ctx2 = favIco.getContext("2d"),
+				turn = 0,
+				y;
+				
+			function handleColor2(num){
+				switch(num){
+					case 0:
+						return ctx2.fillStyle = "transparent"; break;
+					case 1:
+						return ctx2.fillStyle = "#87dcec"; break;
+					case 2:
+						return ctx2.fillStyle = "#72d856"; break;
+					case 3:
+						return ctx2.fillStyle = "#f7e818"; break;
+					case 4:
+						return ctx2.fillStyle = "#f75149"; break;
+					case 5:
+						return ctx2.fillStyle = "#303030"; break;
+					case 6:
+						return ctx2.fillStyle = "#fff1da"; break;
+					case 7:
+						return ctx2.fillStyle = "#75430a"; break;
+					case 8:
+						return ctx2.fillStyle = (rand(0,4) ? "#0e7259" : "#217017"); break;
+				}
+			}
+			
+			setInterval(function(){
+				ctx2.clearRect(0, 0, 16, 16);
+				if(!turn){
+					y = 2;
+					for(var i = 0; i < sprites.hero.right.length; i++){
+						for(var j = 0; j < sprites.hero.right[i].length; j++){
+							handleColor2(sprites.hero.right[i][j]);
+							ctx2.fillRect(j + 3, i + y, 1, 1);
+						}
+					}
+					turn = 1;
+				}else{
+					y = 5;
+					for(var i = 0; i < sprites.hero.crouch.right.length; i++){
+						for(var j = 0; j < sprites.hero.crouch.right[i].length; j++){
+							handleColor2(sprites.hero.crouch.right[i][j]);
+							ctx2.fillRect(j + 3, i + y, 1, 1);
+						}
+					}
+					turn = 0;
+				}
+				linkFav.href = favIco.toDataURL();
+			}, 750);
+		</script>
+	</body>
+</html>

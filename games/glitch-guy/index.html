@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Glitch Guy</title>
+	<style>
+	* {margin: 0; padding: 0}
+	body {
+		font-family: 'GraphicPixel';
+		-webkit-user-select: none;
+		-moz-user-select: -moz-none;
+		-ms-user-select: none;
+		user-select: none;
+		text-align: center;
+		background-color: black;
+	}
+	canvas {
+		image-rendering: optimizeSpeed;
+		image-rendering: -moz-crisp-edges;
+		image-rendering: -webkit-optimize-contrast;
+		image-rendering: optimize-contrast;
+		image-rendering: pixelated;
+		-ms-interpolation-mode: nearest-neighbor;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="g" width="800" height="480" style="border: 1px solid" oncontextmenu="return false;">
+	<script type="text/javascript" src="app.js"></script>
+	
+</body>
+</html>

@@ -1,0 +1,41 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    width: 700px;
+    background: url('topImg.png') no-repeat;
+    height: 400px;
+}
+
+#ruleBox {
+    margin: 0 auto;
+    width: 700px;
+}
+#ruleBox p:first-child {
+    margin-top: 1em;
+}
+
+#ruleBox p {
+    margin: 0;
+}
+
+#endScreen {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: #ccc;
+    display: block;
+}
+
+#endScreen h2{
+    width: 90%;
+    margin: 10em auto;
+    text-align: center;
+}

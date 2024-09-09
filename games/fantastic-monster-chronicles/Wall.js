@@ -1,0 +1,1 @@
+var Wall=function(t,i,h,l,s,e,o){this.ctx=t,this.image=i,this.tileId=h,this.width=l,this.height=s,this.x=e,this.y=o};Wall.prototype=new Sprite,Wall.prototype.constructor=Wall;

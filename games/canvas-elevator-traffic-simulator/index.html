@@ -1,0 +1,314 @@
+<meta name=viewport content=width=device-width>
+<div>
+<span>
+Elevator design may seem like a trivial task for low rise buildings; but as the building height increase, elevator efficiency becomes critical. In this game you will design the elevator system for several buildings in increasing height order.<br>
+Click on any empty spot in a shaft to add a car, which is automatically selected upon creation. Click on each floor to toggle accessibility. If you created multiple cars, you can select other cars by clicking on them. Clicking on a selected car removes it.
+<br>
+Once you are done, click Run to see how well your design does and wait for it to complete. If your score is positive, you will advance to the next building. The game tries to fit your screen but you can use browser zoom in or out for better view.
+</span>
+<br>
+<button onclick=init(this)>Play</button>
+</div>
+<canvas />
+<script>
+document.body.style.margin=0;
+var cvs=document.getElementsByTagName('canvas')[0];
+var ctx=cvs.getContext('2d');
+var beep=function(ptc){
+	new Audio('data:audio/wav;base64,'+'UklGRl0EAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTkEAACA'+new Array(~~(720/ptc)).join(new Array(ptc).join('/')+new Array(ptc).join('A'))).play();
+};
+/*	txt
+	udf	clear
+	bool	car
+	num	man
+	str	button
+*/
+var draw=function(x,y,txt,red){
+	ctx.save();
+	ctx.fillStyle='tan';
+	ctx.textAlign='center';
+	ctx.translate(x*26,y*38);
+	ctx.strokeStyle=red?'red':'blue';
+	switch(typeof txt){
+	case 'string':
+		ctx.lineWidth=16;
+		ctx.lineJoin='round';
+		ctx.strokeRect(9,17,8,0);
+		ctx.fillText(txt,13,21);
+	break;
+	case 'number':
+		ctx.beginPath();
+		ctx.arc(6,15,4,Math.PI*1,Math.PI*1.5);
+		ctx.arc(20,15,4,Math.PI*1.5,0);
+		ctx.arc(22,23,2,0,Math.PI);
+		ctx.arc(19,17,1,0,Math.PI,true);
+		ctx.arc(16,34,2,0,Math.PI);
+		ctx.arc(13,25,1,0,Math.PI,true);
+		ctx.arc(10,34,2,0,Math.PI);
+		ctx.arc(7,17,1,0,Math.PI,true);
+		ctx.arc(4,23,2,0,Math.PI);
+		ctx.moveTo(13,6);
+		ctx.arc(13,6,4,0,Math.PI*2);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle=ctx.strokeStyle;
+		ctx.fillText(txt,13,21);
+	break;
+	case 'boolean':
+		ctx.strokeRect(1,1,24,36);
+	break;
+	default:
+		ctx.clearRect(0,0,26,38);
+	};
+	ctx.restore();
+};
+var run;
+var redr=function(z,now){
+	ctx.save();
+	ctx.strokeStyle='cyan';
+	ctx.clearRect(0,0,cvs.width,cvs.height);
+	for(var q=0;q<=z.top;q++){
+		var grd=ctx.createLinearGradient(0,q*38,0,q*38+38);
+		grd.addColorStop(0,'teal');
+		grd.addColorStop(.5,'cyan');
+		grd.addColorStop(1,'teal');
+		ctx.fillStyle=grd;
+		ctx.fillRect(26*3+13,q*38,13,19);
+		ctx.fillRect(26*3,q*38+19,13,19);
+	}
+	for(var q=0;q<=z.top;q++)
+		ctx.strokeRect(0,q*38,26*10,0);
+	for(var q=15;q<=36;q++)
+		ctx.clearRect(q*7,1,3,38*z.top-1);
+	for(var q=4;q<=10;q++)
+		ctx.strokeRect(q*26,0,0,38*z.top);
+	ctx.restore();
+	var mid=function(j,k){
+		return j[k]+((j[k+0]-j[k])*(now-j.t)/(j.t0-j.t)||0);
+	};
+	var stk=function(q){return q.x==q.x0&&(q.x>3||!q.t)}
+	for(var q=0;q<z.man.length;q++){
+		var k=0;
+		if(stk(z.man[q]))for(var j=0;j<z.man.length;j++)
+			if(z.man[q].x==z.man[j].x&&z.man[q].y==z.man[j].y)
+				if(stk(z.man[j]))k++;
+		draw(
+			mid(z.man[q],'x'),
+			z.top-mid(z.man[q],'y')-1,
+			k>1?k:z.man[q].z[z.man[q].z.length-1],
+			k>1
+		);
+	};
+	for(var q=0;q<z.car.length;q++)
+		draw(z.car[q].x,z.top-mid(z.car[q],'y')-1,true,!q&&!run);
+};
+var lvl=0,bld=[
+];
+var init=function(dom){
+	bld[lvl]={};
+	bld[lvl].cnt=0;
+	bld[lvl].scr=0;
+	bld[lvl].man=[];
+	bld[lvl].car=[];
+	bld[lvl].top=5<<lvl;
+	dom.parentNode.style.display='none';
+	cvs.width=26*10;
+	cvs.height=38*bld[lvl].top;
+	cvs.style.background='teal';
+	cvs.style.height=document.body.clientHeight-1;
+	redr(bld[lvl]);
+};
+cvs.onclick=function(evn,x,y,z){
+	if(run)return;
+	z=bld[lvl];
+	y=z.top-Math.floor(cvs.height*evn.offsetY/cvs.scrollHeight/38)-1;
+	x=Math.floor(cvs.width*evn.offsetX/cvs.scrollWidth/26);
+	if(x>3){
+		var car,prv=1;
+		for(var q=0;q<z.car.length;q++)
+			if(z.car[q].x==x&&z.car[q].y==y)
+				car=z.car.splice(prv=q,1)[0];
+		if(prv)z.car.unshift(car||{u:1,x:x,y:y,z:[]});	// new car
+	}else if(x==2&&z.car[0])z.car[0].z[y]=!z.car[0].z[y];
+	redr(z);
+	if(z.car[0])for(var q=0;q<z.top;q++)
+		draw(2,z.top-q-1,''+q,z.car[0].z[q]);
+	draw(0,0,'Run');
+	if(x||y!=z.top-1)return;
+	run=true;
+	z.hlt=Date.now()+99999;
+	var tck;
+	(function rept(now){
+		now=Date.now();
+		redr(z,now);
+		if(run)setTimeout(rept,40);
+		for(var j=z.man.length;j--;){
+			var k=z.man[j];
+			if(k.t0<now+40){	// +40 to prevent overshoot
+				delete k.t;
+				delete k.t0;
+				if(k.x0!=undefined)k.x=k.x0;
+				if(k.y0!=undefined)k.y=k.y0;
+			};
+			if(k.t)continue;
+			if(k.y==k.z[0]){	// reached destination
+				if(k.x<4&&k.z[1]!=undefined)k.z.shift();
+				if(k.x>-1){
+					k.y0=k.y;
+					k.x0=k.x>3?3:k.x-1;
+					k.t0=now+1000*(k.x>3?2:1);
+					k.t=now;
+				}else{
+					z.cnt++;
+					z.scr-=now-k.u;
+					z.man.splice(j,1);
+					if(z.hlt<now)run=z.man.length;
+					if(!run)return ovr(z);
+				};
+				continue;
+			};
+			if(k.x>3)continue;	// not in the waiting queue
+			for(var q=0;q<z.car.length;q++){
+				if(z.car[q].t)continue;
+				if(z.car[q].y!=k.y)continue;
+				if(z.car[q].x==k.x)continue;
+				if(z.car[q].z[k.z[0]])continue;
+				var w=0;
+				for(var v=0;v<z.man.length;v++)
+					if(
+						z.man[v].y==z.car[q].y&&
+						(z.man[v].x==z.car[q].x||
+						z.man[v].x0==z.car[q].x)
+					)w++;
+				if(w>5)continue;
+				k.y0=k.y;
+				k.x0=z.car[q].x;
+				k.t0=now+3000;
+				k.t=now;
+				continue;
+			};
+			if(k.t)continue;	// moving
+			xit(now,k,z);
+			var dst=2;
+			for(var q=0;q<z.man.length;q++){
+				if(z.man[q].y!=k.y)continue;
+				if(!z.man[q].x0)continue;
+				if(z.man[q].x0>dst)continue;
+				if(dst>1)dst=z.man[q].x0-1;
+			};
+			if(k.x<dst){
+				k.y0=k.y;
+				k.x0=dst;
+				k.t0=now+3000;
+				k.t=now;
+				continue;
+			};
+		};
+		for(var j=0;j<z.car.length;j++){
+			var k=z.car[j];
+			if(k.t0<now+40){	// +40 to prevent overshoot
+				beep(8);
+				delete k.t;
+				delete k.t0;
+				if(k.y0!=undefined)k.y=k.y0;
+				continue;	// give pax chance to board/part
+			};
+			if(k.t)continue;
+			var dst=fnd(z,k);
+			if(dst===undefined)continue;	// not moving
+			k.y0=dst;
+			k.t0=now+2000+1000*Math.abs(dst-k.y);
+			k.t=now;		// also move everyone in the car
+			for(var q=0;q<z.man.length;q++){
+				var w=z.man[q];
+				if(w.y==k.y&&w.x==k.x){
+					w.x0=w.x;
+					w.y0=dst;
+					w.t0=k.t0;
+					w.t=now;
+				};
+			};
+		};
+		if(Math.floor(now/400)==tck)return;
+		tck=Math.floor(now/400);
+		for(var j=0;j<z.car.length;j++)
+			if(z.car[j].t){beep(248);break}
+		if(z.hlt<now||tck%8)return;
+		var q={
+			z:[Math.floor(z.top*2/(2-Math.random()))-z.top],
+			y:Math.floor(z.top*2/(2-Math.random()))-z.top,
+			x:-1,
+			u:now,
+		};
+		z.man.unshift(q);
+	})();
+};
+var fnd=function(z,y,x){
+	var min=-1,max=z.top,yld;
+	for(var j=0;j<z.car.length;j++){
+		var q=z.car[j];
+		if(q==y||q.x!=y.x)continue;
+		if(!q.z[y.y])yld=q.y>y.y?-1:1;
+		if(y.y>q.y)min=Math.max(min,q.y);
+		if(y.y<q.y)max=Math.min(max,q.y);
+		if(y.y>q.y0)min=Math.max(min,q.y0);
+		if(y.y<q.y0)max=Math.min(max,q.y0);
+	};
+	if(0>y.y||y.y>=z.top)yld=undefined;
+	for(var k=0;k<z.man.length;k++){
+		var q=z.man[k];
+		if(q.y!=y.y)continue;		// not this floor
+		if(q.x0==q.x)continue;		// not moving
+		if(q.x0==y.x)return;		// loading
+		if(q.x==y.x)return;		// unloading
+	};
+	for(var j=y.y+y.u;min<j&&j<max;j+=y.u){
+		if(y.z[j])continue;
+		for(var k=0;k<z.man.length;k++){
+			var q=z.man[k];
+			if(q.x==y.x&&q.y==y.y&&q.z[0]==j)return j;
+			if(y.z[q.z[0]])continue;	// not going there
+			if(q.y==j&&q.x<4&&!q.t)return j;
+		};
+	};
+	if(!x){y.u=-y.u;return fnd(z,y,true)};
+	if(yld)return y.y+yld;
+};
+var xit=function(now,q,z){
+	var j=[],k=[];
+	for(var w=0;w<z.car.length;w++){
+		if(!z.car[w].z[q.z]&&!z.car[w].z[q.y])return;
+		if(!z.car[w].z[q.z])for(var v=0;v<z.top;v++)
+			j[v]=j[v]||!z.car[w].z[v];
+		if(!z.car[w].z[q.y])for(var v=0;v<z.top;v++)
+			k[v]=k[v]||!z.car[w].z[v];
+	}
+	for(var v=0;v<z.top;v++){
+		var w=q.z[0]-q.y;
+		w=(z.top+q.z[0]-v*Math.abs(w)/w)%z.top;
+		if(j[w]&&k[w]){q.z.unshift(w);return}
+	}
+	if(q.x!=3){
+		q.y0=q.y;
+		q.x0=3;
+		q.t0=now+2000;
+		q.t=now;
+	}else{
+		q.y0=q.y>q.z[0]?q.y-1:q.y+1;
+		q.x0=3;
+		q.t0=now+5000;
+		q.t=now;
+	};
+};
+var ovr=function(q,x,y,z){
+	for(x=0,y=0,z=[];x<q.car.length;x++)if(!z[q.car[x].x])z[q.car[x].x]=++y;
+	var dom=document.getElementsByTagName('span')[0];
+	var scr=(30<<lvl)+Math.round(y*q.scr/999/q.cnt);
+	dom.innerHTML='Sorry, you failed. Your score is '+scr+', try again.';
+	dom.parentNode.style.display='';
+	cvs.style.height=0;
+	if(scr<=0)return;
+	dom.innerHTML='Congratulation, you advanced to the next level. Your score is '+scr+'.';
+	lvl++;
+};
+</script>

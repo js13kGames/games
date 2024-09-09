@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Offline Race</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="shortcut icon" href="about:blank">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+
+  <body>
+    <svg id="game"></svg>
+  </body>
+
+  <script src="/utils.js"></script>
+
+  <script>
+    loadScripts(['/socket.io/socket.io.js','/shared.js','/game.min.js'],[],
+                  () => {G = new Game()});
+
+  </script>
+
+</html>

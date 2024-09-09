@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=no, width=device-width" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>PAPERTRON</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script id="vert" type="text/plain">
+attribute vec3 aNorm, aPos, aColor;
+uniform mat4 uModel, uCam;
+uniform mat3 uNorm;
+varying vec3 vColor, vLight;
+void main() {
+gl_Position = uCam * uModel * vec4(aPos, 1.0);
+vec3 direction = vec3(-0.1, 0.2, 0.6);
+vec3 ambient = vec3(0.8, 0.8, 0.8);
+vec3 color = vec3(0.9, 0.9, 1.0);
+vec4 norm = vec4(uNorm * aNorm, 1.0);
+float directional = max(dot(norm.xyz, direction), 0.0);
+vLight = ambient + (color * directional);
+vColor = aColor;
+}
+</script>
+<script id="frag" type="text/plain">
+precision mediump float;
+varying vec3 vColor, vLight;
+void main() {
+gl_FragColor = vec4(vColor * vLight, 1.0);
+}
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="jsfxr.js"></script>
+<script src="game.js"></script>
+<script src="client.js"></script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="count"><div></div></div>
+<div id="chat">
+<input name="text" maxlength="50" placeholder="Chat">
+<div class="room"></div>
+<div class="texts"></div>
+</div>
+<div id="game">
+<div>
+<h1></h1>
+<button id="start">ready</button>
+<button id="leave">leave</button>
+</div>
+</div>
+<div class="bl">
+<div>
+<h2>Game list</h2>
+<ul></ul>
+<button id="join">join</button>
+</div>
+</div>
+<div class="br">
+<div>
+<h2>New game</h2>
+<input name="game" placeholder="Game name" maxlength="17">
+<select name="map"><option>breakout</option><option selected>crossroad</option><option>whirlwind</option></select>
+<select name="bots"><option>no bots</option><option>1 bot</option><option>2 bots</option><option selected>3 bots</option></select>
+<select name="mode"><option selected>normal</option><option>reverse</option></select>
+<button id="create">create</button>
+</div>
+</div>
+<div class="bt">
+<div>
+<h1>PAPERTRON</h1>
+</div>
+</div>
+<form action="#open" class="bb">
+<div>
+<input name="nick" placeholder="your name" maxlength="10">
+<button type="submit">open</button>
+</div>
+</form>
+<div id="sfx" class="off">♫</div>
+<div id="note" class="hide"></div>
+</body>
+</html>

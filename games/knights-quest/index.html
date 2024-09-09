@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Knights Quest</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+
+    <link href="index.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="sign-in-form" id="sign-in-form">
+      <h1>Knights Quest</h1>
+
+      <div class="section">
+        <p>You are the knight <input id="username-input" type="text" placeholder="Enter Name" />.</p>
+
+        <p>
+          You wake up at a your camp site and something is amiss. The legendary helm "Skullsavington" gifted to you by
+          the elves of Galandrathrill; missing! The mythril armor "Gutscontainathryl" forged for you by the dwarves of
+          Mount Rawrthrak; absent! The blessed sword "Barbsmasher" conjured and blessed by the goddess Arathnia herself;
+          gone! Without your legendary gear, you are naught but a plump lubberwort; about as imposing as housecat that
+          clearly spent a few too many hours napping by the fireplace rather than catching mice.
+        </p>
+
+        <p>
+          Clearly your legendary gear didn't sprout legs and run off on its own. The local tales of bandits and
+          barbarians, that you so flippantly dismissed, appear to be more truth than legend. "Look upon my legendary
+          vestaments!" you proclaimed to the kind villager, warning you of the very fate you are now facing. "I am the
+          very vision of power, beauty, and majesty! At the mere sight of me any foe will tremble in their boots and
+          scurry off from whenst they came." Strong words for dew-beater who's true appearance strongly resembles a
+          lumpy sack of potatoes propped up on two tree trunks when not clad with your mythic, figure-enhancing gear.
+        </p>
+
+        <p>
+          Clearly you must find your missing gear, for the sake of the safety of the world!.. And your fragile ego. You
+          survey your campsite, finding naught but a rusty old sword, probably abandoned by it's previous owner after
+          claiming the blessed sword "Barbsmasher". Seeing as it's your only option, you pick up the rusty old sword and
+          take off in search of the grubby skelpie-limmer who stole your hard-earned legendary gear!
+        </p>
+      </div>
+
+      <div class="section">
+        <h2>How to Play</h2>
+
+        <p>Your objective is to level up, reclaim your legendary gear, and to lay waste to the thieves who stole it!</p>
+
+        <p>You will move automatically.</p>
+
+        <p>
+          You can change direction by pointing your mouse cursor, or dragging on your touch screen in the direction you
+          would like to face.
+        </p>
+
+        <p>
+          You can "boost" your speed for a short amount of time by clicking and holding the left mouse button, or by
+          double-tapping and holding on your touch screen.
+        </p>
+      </div>
+
+      <button id="start-button" type="button">Begin your adventure!</button>
+    </div>
+    <div class="statistics">
+      <span id="stats--fps"></span>
+      <span id="stats--player-x"></span>
+      <span id="stats--player-y"></span>
+      <span id="stats--mouseangle"></span>
+      <span class="statistics__statistic--server" id="stats--current-s"></span>
+      <span class="statistics__statistic--server" id="stats--delta-s"></span>
+      <span class="statistics__statistic--server" id="stats--elapsed-s"></span>
+      <span class="statistics__statistic--server" id="stats--last-s"></span>
+      <span class="statistics__statistic--server" id="stats--sleep-s"></span>
+      <span class="statistics__statistic--server" id="stats--current-c"></span>
+      <span class="statistics__statistic--server" id="stats--delta-c"></span>
+      <span class="statistics__statistic--server" id="stats--elapsed-c"></span>
+      <span class="statistics__statistic--server" id="stats--last-c"></span>
+      <span class="statistics__statistic--server" id="stats--sleep-c"></span>
+    </div>
+    <div id="game-over">
+      <h1>R.I.P.</h1>
+      <h2>You have died</h2>
+      <button onclick="location.reload()">Try Again?</button>
+    </div>
+    <div id="root"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/client.js"></script>
+  </body>
+</html>

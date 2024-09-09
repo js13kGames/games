@@ -1,0 +1,1 @@
+cc=()=>aa.value?void(localStorage.setItem('name',aa.value),ab=io({upgrade:!1,transports:['websocket']}),bo()):void alert('Please enter your name.'),cd=async()=>{const a=await bp(ab,'ce');az(a),ag('an',{})},cf=async a=>{if(13==a.keyCode){const a=ci.value;ci.value='',await bp(ab,'cj',{ch:a})}},ck=async()=>{await bp(ab,'cl',cm),cm=[]};

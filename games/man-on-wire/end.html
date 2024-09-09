@@ -1,0 +1,26 @@
+﻿<div class=eye id=left>
+<h1 id=h1l></h1>
+<h3 id=h2l></h3>
+<h2 onclick="location='game.html#retry'">Retry ?</h2>
+</div>
+
+<div class=eye id=right>
+<h1 id=h1r></h1>
+<h3 id=h2r></h3>
+<h2 onclick="location='game.html#retry'">Retry ?</h2>
+</div>
+
+<style>
+* { background: #000; color: #fff; text-align: center; font-family: arial; }
+.eye { width: 49vw; height: 100vh; position: fixed }
+#left { left: 0 }
+#right { right: 0 }
+h1 { line-height: 25vh; font-size: 20vmin; margin: 10vmin 0 0; }
+h3 { line-height: 8vh; font-size: 5vmin; }
+h2 { line-height: 8vh; font-size: 10vmin; }
+</style>
+
+<script>
+h1l.innerHTML = h1r.innerHTML = location.hash.slice(1);
+h2l.innerHTML = h2r.innerHTML = location.hash.slice(1) == "FALL" ? "Tilt your head to stay balanced" : "";
+</script>

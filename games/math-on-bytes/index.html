@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Math on Bytes</title>
+
+
+
+</head>
+<style>
+    * {
+        color: #fff;
+        font-family: sans-serif;
+    }
+
+    .container {
+        margin: 0 auto;
+        max-width: 1280px;
+        width: 90%;
+    }
+
+    @media only screen and (min-width: 601px) {
+        .container {
+            width: 85%;
+        }
+    }
+
+    @media only screen and (min-width: 993px) {
+        .container {
+            width: 70%;
+        }
+    }
+
+    .row {
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+
+    .col .row {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+
+    .row .col {
+        float: left;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        padding: 0 0.75rem;
+        min-height: 1px;
+    }
+
+    .row .col[class*="push-"],
+    .row .col[class*="pull-"] {
+        position: relative;
+    }
+
+    .row .col.s4 {
+        width: 33.3333333333%;
+        margin-left: auto;
+        left: auto;
+        right: auto;
+    }
+
+    .row .col.s12 {
+        width: 100%;
+        margin-left: auto;
+        left: auto;
+        right: auto;
+    }
+
+
+    .center,
+    .center-align {
+        text-align: center;
+    }
+
+    .progress {
+        position: relative;
+        height: 4px;
+        display: block;
+        width: 100%;
+        background-color: #acece6;
+        border-radius: 2px;
+        margin: 0.5rem 0 1rem 0;
+        overflow: hidden;
+    }
+
+    .progress .determinate {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background-color: #26a69a;
+        -webkit-transition: width .3s linear;
+        transition: width .3s linear;
+    }
+
+
+
+
+    /* Mat end */
+
+    body {
+        padding-top: 20px;
+        background: #1f1f1f;
+        max-height: 100vh;
+        max-width: 100vw;
+    }
+
+    #airplane-cont {
+        padding-top: 10px;
+        height: 40px;
+        vertical-align: middle;
+    }
+
+    .airplane-img {
+        margin-bottom: -5px;
+        height: 20px;
+    }
+
+    /* Question Container */
+    #question-cont {
+        justify-content: center;
+        text-align: center;
+
+        border: 2px solid #27ffa5;
+        border-radius: 15px;
+
+    }
+
+    .option-cont {
+        border: 1px solid #ffe606;
+        border-radius: 10px 0px 10px 0px;
+        margin: 10px;
+        padding: 5px 20px;
+        min-width: 50px;
+
+        text-align: center;
+        justify-items: center;
+        display: inline-block;
+    }
+
+    #progress-bar-cont {
+
+        margin-top: 100px;
+        height: 15px;
+        background: #fff;
+
+        border-radius: 10px;
+    }
+
+    #progress-bar {
+        width: 50%;
+        background: linear-gradient(135deg, #09ff00, #eeff00, #f00);
+        border-radius: 10px;
+
+    }
+
+    #level {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+
+    .modal {
+        min-height: 80vh;
+
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    h1 a,
+    h2 a,
+    h3 a,
+    h4 a,
+    h5 a,
+    h6 a {
+        font-weight: inherit;
+    }
+
+    h1 {
+        font-size: 4.2rem;
+        line-height: 110%;
+        margin: 2.8rem 0 1.68rem 0;
+    }
+
+    h2 {
+        font-size: 3.56rem;
+        line-height: 110%;
+        margin: 2.3733333333rem 0 1.424rem 0;
+    }
+
+    h3 {
+        font-size: 2.92rem;
+        line-height: 110%;
+        margin: 1.9466666667rem 0 1.168rem 0;
+    }
+
+    h4 {
+        font-size: 2.28rem;
+        line-height: 110%;
+        margin: 1.52rem 0 0.912rem 0;
+    }
+
+    h5 {
+        font-size: 1.64rem;
+        line-height: 110%;
+        margin: 1.0933333333rem 0 0.656rem 0;
+    }
+
+    h6 {
+        font-size: 1.15rem;
+        line-height: 110%;
+        margin: 0.7666666667rem 0 0.46rem 0;
+    }
+
+
+    .modal {
+        display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        background-color: #fafafa;
+        padding: 0;
+        max-height: 70%;
+        width: 55%;
+        margin: auto;
+        overflow-y: auto;
+        border-radius: 2px;
+        will-change: top, opacity;
+    }
+
+    .modal:focus {
+        outline: none;
+    }
+
+    @media only screen and (max-width: 992px) {
+        .modal {
+            width: 80%;
+        }
+    }
+
+    .modal h1,
+    .modal h2,
+    .modal h3,
+    .modal h4 {
+        margin-top: 0;
+    }
+
+    .modal .modal-content {
+        padding: 24px;
+    }
+
+    .modal .modal-close {
+        cursor: pointer;
+    }
+
+    .modal .modal-footer {
+        border-radius: 0 0 2px 2px;
+        background-color: #fafafa;
+        padding: 4px 6px;
+        height: 56px;
+        width: 100%;
+        text-align: right;
+    }
+
+    .modal .modal-footer .btn,
+    .modal .modal-footer .btn-large,
+    .modal .modal-footer .btn-small,
+    .modal .modal-footer .btn-flat {
+        margin: 6px 0;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        z-index: 999;
+        top: -25%;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 125%;
+        width: 100%;
+        background: #000;
+        display: none;
+        will-change: opacity;
+    }
+
+    .modal.modal-fixed-footer {
+        padding: 0;
+        height: 70%;
+    }
+
+    .modal.modal-fixed-footer .modal-content {
+        position: absolute;
+        height: calc(100% - 56px);
+        max-height: 100%;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .modal.modal-fixed-footer .modal-footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        position: absolute;
+        bottom: 0;
+    }
+
+    .modal.bottom-sheet {
+        top: auto;
+        bottom: -100%;
+        margin: 0;
+        width: 100%;
+        max-height: 45%;
+        border-radius: 0;
+        will-change: bottom, opacity;
+    }
+
+    .brown {
+        background-color: #795548 !important;
+    }
+
+    .switch,
+    .switch * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .switch label {
+        cursor: pointer;
+    }
+
+    .switch label input[type=checkbox] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .switch label input[type=checkbox]:checked+.lever {
+        background-color: #84c7c1;
+    }
+
+    .switch label input[type=checkbox]:checked+.lever:before,
+    .switch label input[type=checkbox]:checked+.lever:after {
+        left: 18px;
+    }
+
+    .switch label input[type=checkbox]:checked+.lever:after {
+        background-color: #26a69a;
+    }
+
+    .switch label .lever {
+        content: "";
+        display: inline-block;
+        position: relative;
+        width: 36px;
+        height: 14px;
+        background-color: rgba(0, 0, 0, 0.38);
+        border-radius: 15px;
+        margin-right: 10px;
+        -webkit-transition: background 0.3s ease;
+        transition: background 0.3s ease;
+        vertical-align: middle;
+        margin: 0 16px;
+    }
+
+    .switch label .lever:before,
+    .switch label .lever:after {
+        content: "";
+        position: absolute;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        left: 0;
+        top: -3px;
+        -webkit-transition: left 0.3s ease, background .3s ease, -webkit-box-shadow 0.1s ease, -webkit-transform .1s ease;
+        transition: left 0.3s ease, background .3s ease, -webkit-box-shadow 0.1s ease, -webkit-transform .1s ease;
+        transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease, transform .1s ease;
+        transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease, transform .1s ease, -webkit-box-shadow 0.1s ease, -webkit-transform .1s ease;
+    }
+
+    .switch label .lever:before {
+        background-color: rgba(38, 166, 154, 0.15);
+    }
+
+    .switch label .lever:after {
+        background-color: #F1F1F1;
+        -webkit-box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    }
+
+    input[type=checkbox]:checked:not(:disabled)~.lever:active::before,
+    input[type=checkbox]:checked:not(:disabled).tabbed:focus~.lever::before {
+        -webkit-transform: scale(2.4);
+        transform: scale(2.4);
+        background-color: rgba(38, 166, 154, 0.15);
+    }
+
+    input[type=checkbox]:not(:disabled)~.lever:active:before,
+    input[type=checkbox]:not(:disabled).tabbed:focus~.lever::before {
+        -webkit-transform: scale(2.4);
+        transform: scale(2.4);
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .switch input[type=checkbox][disabled]+.lever {
+        cursor: default;
+        background-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .switch label input[type=checkbox][disabled]+.lever:after,
+    .switch label input[type=checkbox][disabled]:checked+.lever:after {
+        background-color: #949494;
+    }
+
+
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [type="checkbox"] {
+        /* checkbox aspect */
+    }
+
+    [type="checkbox"]+span:not(.lever) {
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        display: inline-block;
+        height: 25px;
+        line-height: 25px;
+        font-size: 1rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    [type="checkbox"]+span:not(.lever):before,
+    [type="checkbox"]:not(.filled-in)+span:not(.lever):after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 18px;
+        height: 18px;
+        z-index: 0;
+        border: 2px solid #5a5a5a;
+        border-radius: 1px;
+        margin-top: 3px;
+        -webkit-transition: .2s;
+        transition: .2s;
+    }
+
+    [type="checkbox"]:not(.filled-in)+span:not(.lever):after {
+        border: 0;
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+
+    [type="checkbox"]:not(:checked):disabled+span:not(.lever):before {
+        border: none;
+        background-color: rgba(0, 0, 0, 0.42);
+    }
+
+    [type="checkbox"].tabbed:focus+span:not(.lever):after {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        border: 0;
+        border-radius: 50%;
+        -webkit-box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [type="checkbox"]:checked+span:not(.lever):before {
+        top: -4px;
+        left: -5px;
+        width: 12px;
+        height: 22px;
+        border-top: 2px solid transparent;
+        border-left: 2px solid transparent;
+        border-right: 2px solid #26a69a;
+        border-bottom: 2px solid #26a69a;
+        -webkit-transform: rotate(40deg);
+        transform: rotate(40deg);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform-origin: 100% 100%;
+        transform-origin: 100% 100%;
+    }
+
+    [type="checkbox"]:checked:disabled+span:before {
+        border-right: 2px solid rgba(0, 0, 0, 0.42);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.42);
+    }
+
+    /* Indeterminate checkbox */
+    [type="checkbox"]:indeterminate+span:not(.lever):before {
+        top: -11px;
+        left: -12px;
+        width: 10px;
+        height: 22px;
+        border-top: none;
+        border-left: none;
+        border-right: 2px solid #26a69a;
+        border-bottom: none;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform-origin: 100% 100%;
+        transform-origin: 100% 100%;
+    }
+
+    [type="checkbox"]:indeterminate:disabled+span:not(.lever):before {
+        border-right: 2px solid rgba(0, 0, 0, 0.42);
+        background-color: transparent;
+    }
+
+    [type="checkbox"].filled-in+span:not(.lever):after {
+        border-radius: 2px;
+    }
+
+    [type="checkbox"].filled-in+span:not(.lever):before,
+    [type="checkbox"].filled-in+span:not(.lever):after {
+        content: '';
+        left: 0;
+        position: absolute;
+        /* .1s delay is for check animation */
+        -webkit-transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
+        transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
+        z-index: 1;
+    }
+
+    [type="checkbox"].filled-in:not(:checked)+span:not(.lever):before {
+        width: 0;
+        height: 0;
+        border: 3px solid transparent;
+        left: 6px;
+        top: 10px;
+        -webkit-transform: rotateZ(37deg);
+        transform: rotateZ(37deg);
+        -webkit-transform-origin: 100% 100%;
+        transform-origin: 100% 100%;
+    }
+
+    [type="checkbox"].filled-in:not(:checked)+span:not(.lever):after {
+        height: 20px;
+        width: 20px;
+        background-color: transparent;
+        border: 2px solid #5a5a5a;
+        top: 0px;
+        z-index: 0;
+    }
+
+    [type="checkbox"].filled-in:checked+span:not(.lever):before {
+        top: 0;
+        left: 1px;
+        width: 8px;
+        height: 13px;
+        border-top: 2px solid transparent;
+        border-left: 2px solid transparent;
+        border-right: 2px solid #fff;
+        border-bottom: 2px solid #fff;
+        -webkit-transform: rotateZ(37deg);
+        transform: rotateZ(37deg);
+        -webkit-transform-origin: 100% 100%;
+        transform-origin: 100% 100%;
+    }
+
+    [type="checkbox"].filled-in:checked+span:not(.lever):after {
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #26a69a;
+        background-color: #26a69a;
+        z-index: 0;
+    }
+
+    [type="checkbox"].filled-in.tabbed:focus+span:not(.lever):after {
+        border-radius: 2px;
+        border-color: #5a5a5a;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [type="checkbox"].filled-in.tabbed:checked:focus+span:not(.lever):after {
+        border-radius: 2px;
+        background-color: #26a69a;
+        border-color: #26a69a;
+    }
+
+    [type="checkbox"].filled-in:disabled:not(:checked)+span:not(.lever):before {
+        background-color: transparent;
+        border: 2px solid transparent;
+    }
+
+    [type="checkbox"].filled-in:disabled:not(:checked)+span:not(.lever):after {
+        border-color: transparent;
+        background-color: #949494;
+    }
+
+    [type="checkbox"].filled-in:disabled:checked+span:not(.lever):before {
+        background-color: transparent;
+    }
+
+    [type="checkbox"].filled-in:disabled:checked+span:not(.lever):after {
+        background-color: #949494;
+        border-color: #949494;
+    }
+
+
+    .modal .modal-footer {
+        border-radius: 0 0 2px 2px;
+        background-color: #fafafa;
+        padding: 4px 6px;
+        height: 56px;
+        width: 100%;
+        text-align: right;
+    }
+
+    .modal .modal-footer .btn,
+    .modal .modal-footer .btn-large,
+    .modal .modal-footer .btn-small,
+    .modal .modal-footer .btn-flat {
+        margin: 6px 0;
+    }
+
+    .modal.modal-fixed-footer .modal-footer {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        position: absolute;
+        bottom: 0;
+    }
+
+    .modal .modal-close {
+        cursor: pointer;
+    }
+
+    .waves-effect {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        vertical-align: middle;
+        z-index: 1;
+        -webkit-transition: .3s ease-out;
+        transition: .3s ease-out;
+    }
+
+    .waves-effect.waves-green .waves-ripple {
+        background-color: rgba(76, 175, 80, 0.7);
+    }
+
+    .btn,
+    .btn-large,
+    .btn-small,
+    .btn-flat {
+        border: none;
+        border-radius: 2px;
+        display: inline-block;
+        height: 36px;
+        line-height: 36px;
+        padding: 0 16px;
+        text-transform: uppercase;
+        vertical-align: middle;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    .modal-main {
+        top: 0;
+        left: 0;
+        margin-left: 10vw;
+        margin-top: 2vh;
+        position: absolute;
+        width: 80vw;
+        min-height: 80vh;
+        max-height: 80vh;
+        overflow-y: scroll;
+        background: #fff;
+
+    }
+
+    .modal-holder {
+        margin: 20px 5px;
+    }
+</style>
+
+<body>
+
+
+    <div class="container">
+        <div class="row">
+            <!-- Score -->
+            <div class="col center s12">
+                <div class="row">
+                    <div class="col s4 center">
+                        <h5 style="color:#00e1ff" id="score"> 🍺 : 0</h5>
+                    </div>
+                    <div class="col s4 center">
+                        <h5 style="color:#ffae00" id="level"> 📈 x1</h5>
+                    </div>
+                    <div class="col s4 center ">
+                        <h5 style="color:#ff834a" id="life"> ❤ x5</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Score End -->
+            <!-- Question -->
+            <div class="col  s12 center ">
+                <div id="question-cont">
+                    <h1 id="question">
+                        99 + 99
+                    </h1>
+
+                </div>
+
+            </div>
+            <!-- Question End -->
+
+
+
+        </div>
+        <!-- Progress Bar -->
+        <div class="progress" id="progress-bar-cont">
+            <div class="determinate " id="progress-bar"></div>
+        </div>
+        <div class="row center">
+            <h6 id="requiredScore">Required 🍺 to complete level : 5</h6>
+        </div>
+
+        <!-- Options -->
+        <div class="col center">
+            <div class=" center ">
+                <div class=" option-cont" onclick="optionA();">
+                    <h5 id="option-A">4</h5>
+                </div>
+                <div class=" option-cont" onclick="optionB();">
+                    <h5 id="option-B">4</h5>
+                </div>
+                <div class="option-cont" onclick="optionC();">
+                    <h5 id="option-C">4</h5>
+                </div>
+                <div class="option-cont" onclick="optionD();">
+                    <h5 id="option-D">4</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="modal-main brown" id="modalMain">
+        <div class="center modal-holder">
+            <h5>Math in Bytes</h5>
+
+            <p id="offline-status"></p>
+
+            <div id="airplane-cont" class=" center">
+
+                <div class="center" id="airplave-toggle">
+                    <div class="switch ">
+                        <label>
+                            <img class="airplane-img" src="./assets/turn-airplane-mode-off.svg" />
+                            <input class="valign" type="checkbox">
+                            <span class="lever"></span>
+                            <img class="airplane-img" src="./assets/airplane-mode-on-symbol.svg" />
+
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="center">
+                <a id="startBtn" onclick="startBtnModal();levelCurrentTime=0;levelTime = 30;generate();" style="background:rgb(0, 134, 151);"
+                    class="modal-close waves-effect waves-green btn ">
+                    START</a>
+            </div>
+            <div style="justify-content: center"></div>
+            <h5>Instructions</h5>
+            Brain storm your math skills by answering basic arithmetic questions as fast as you can. For each correct answer you get one
+            🍺 & for every wrong answer you loose one ❤(life). <br><br> Each level requires a minimum number
+            of 🍺 , to get eligible for next level. And passing each level earn you an extra ❤ <br><br> Are you ready !!!
+            So fire those neurons and rock and roll 😊
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+<script>
+    let questionElm = document.getElementById("question");
+    let optionAElm = document.getElementById("option-A");
+    let optionBElm = document.getElementById("option-B");
+    let optionCElm = document.getElementById("option-C");
+    let optionDElm = document.getElementById("option-D");
+    //Event Elms
+    let scoreElm = document.getElementById("score");
+    let levelElm = document.getElementById("level");
+    let lifeElm = document.getElementById("life");
+
+    let requiredScoreElm = document.getElementById("requiredScore");
+    // Progress
+    let progressBarElm = document.getElementById("progress-bar");
+    let offlineElm = document.getElementById("offline-status");
+    let modalElm = document.getElementById('modalMain');
+
+    const startBtnModal = () => {
+        modalElm.style.visibility = "hidden";
+    }
+    const networkSatus = () => {
+        if (navigator.onLine)
+            offlineElm.innerHTML =
+                "You are currently ONLINE , please toggle the switch below.";
+        else offlineElm.innerHTML = "No need to toggle you are already OFFLINE";
+    };
+    networkSatus();
+
+    // Global Vars
+    let totalScore = 0;
+    let life = 5;
+    let score = 0;
+    let operandA, operandB;
+    let levelTime = 9999;
+    let levelCurrentTime = 0;
+    let level = 0;
+    let currentProgress;
+    let requiredScoreforLevel = 5;
+    const generateOperand = () => {
+        operandA = Math.ceil(Math.random() * 20);
+        operandB = Math.ceil(Math.random() * 20);
+    };
+
+    let ans = 0;
+
+    const initialise = () => {
+        totalScore = 0;
+        life = 5;
+        score = 0;
+        operandA, operandB;
+        levelTime = 30;
+        levelCurrentTime = 0;
+        level = 1;
+        currentProgress;
+        requiredScoreforLevel = 5;
+        scoreElm.innerHTML = "🍺 : 0";
+        levelElm.innerHTML = "📈 x1";
+        lifeElm.innerHTML = "❤ x5";
+        requiredScoreElm.innerHTML = "Required 🍺 to complete level : 5";
+    };
+    //Start
+
+    // Num Generate
+
+    const addFxn = (a, b) => {
+        ans = a + b;
+        updateQuestion(a, "+", b);
+    };
+
+    const subFxn = (a, b) => {
+        ans = a - b;
+        updateQuestion(a, "-", b);
+    };
+    const mulFxn = (a, b) => {
+        ans = a * b;
+        updateQuestion(a, "x", b);
+    };
+    const divFxn = (a, b) => {
+        ans = a / b;
+        updateQuestion(a, "/", b);
+    };
+
+    const updateQuestion = (a, operator, b) => {
+        let questionString = a + " " + operator + " " + b;
+        questionElm.innerHTML = questionString;
+    };
+
+    //Chage Question
+    const generate = () => {
+
+        generateOperand();
+        a = operandA;
+        b = operandB;
+        let mathFunctionNumber = Math.ceil(Math.random() * 4);
+
+        if (mathFunctionNumber == 1) addFxn(a, b);
+        else if (mathFunctionNumber == 2) subFxn(a, b);
+        else if (mathFunctionNumber == 3) mulFxn(a, b);
+        else if (mathFunctionNumber == 4) divFxn(a, b);
+        //Generate Options
+        generateOption();
+
+    };
+    const generateOption = () => {
+        optionAElm.innerHTML = Math.ceil(Math.random() * ans) * 2;
+        optionBElm.innerHTML = Math.ceil(Math.random() * ans) * 2;
+        optionCElm.innerHTML = Math.ceil(Math.random() * ans) * 2;
+        optionDElm.innerHTML = Math.ceil(Math.random() * ans) * 2;
+
+        let optionElmArr = [optionAElm, optionBElm, optionCElm, optionDElm];
+        let randonAnsInsrt = Math.floor(Math.random() * 4);
+        if (ans.toString().length > 3) ans = ans.toFixed(1);
+
+        optionElmArr[randonAnsInsrt].innerHTML = ans;
+    };
+
+    //Check Ans
+    const checkOption = option => {
+
+        if (option == ans) {
+            incrementScore();
+        } else {
+            decrementLife();
+            window.navigator.vibrate(100);
+        }
+        generate(operandA, operandB);
+    };
+
+    // Options
+    const optionA = () => {
+        checkOption(parseFloat(optionAElm.innerHTML));
+    };
+
+    const optionB = () => {
+        checkOption(parseFloat(optionBElm.innerHTML));
+    };
+
+    const optionC = () => {
+        checkOption(parseFloat(optionCElm.innerHTML));
+    };
+
+    const optionD = () => {
+        checkOption(parseFloat(optionDElm.innerHTML));
+    };
+
+
+    const levelChange = () => {
+        level++;
+        life++;
+        requiredScoreforLevel += 5;
+        levelCurrentTime = 0;
+        score = 0;
+        scoreElm.innerHTML = "🍺 : 0";
+        levelElm.innerHTML = "📈 x" + level;
+        requiredScoreElm.innerHTML =
+            "Required 🍺 to complete level : " + requiredScoreforLevel;
+    };
+    const checkLife = () => {
+        if (life < 0) gameOver();
+    };
+    const gameOver = () => {
+        clearInterval(gameLoop);
+        alert("Total Score = " + totalScore);
+        let confirmResp = confirm("Play Again ?");
+        if (confirmResp == true) restartGame();
+        else {
+            alert("Thank you for playing :D");
+            window.location = "http://github.com/pranshuchittora";
+        }
+    };
+
+    const restartGame = () => {
+        window.navigator.vibrate(1000);
+        initialise();
+
+    };
+
+    const timeup = () => {
+        if (score >= requiredScoreforLevel) {
+            levelChange();
+        } else gameOver();
+    };
+
+    //Events
+    const incrementScore = () => {
+        score++;
+        totalScore++;
+        scoreElm.innerHTML = "🍺 : " + score;
+    };
+    const decrementLife = () => {
+        life--;
+        lifeElm.innerHTML = "❤ x" + life;
+    };
+
+    const updateProgressBar = () => {
+        currentProgress = (levelCurrentTime / levelTime) * 100;
+        progressBarElm.style.width = currentProgress + "%";
+
+    };
+
+    async function time() {
+        if (levelCurrentTime <= levelTime) {
+            levelCurrentTime += 0.1;
+            updateProgressBar();
+        } else {
+            levelCurrentTime = 0;
+            progressBarElm.style.width = "0%";
+            timeup();
+        }
+        checkLife();
+    }
+
+    const gameLoop = () => {
+        setInterval(time, 100)
+    }
+    gameLoop();
+
+</script>
+
+</html>

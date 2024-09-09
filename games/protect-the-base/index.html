@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <title> Protect The Base</title>
+    </head>
+    <body id="disable_scroll">
+        <canvas id="background" height="570" width="568"></canvas>
+        <h1 id="title">Protect The Base</h1>
+        <p id="baseStatus">Base Health</p>
+        <p id="health">10</p>
+        <div id="gold">
+            <canvas id="drawGold" width="25" height="25"></canvas>
+            <p id="goldAmount">0</p>
+        </div>
+        <p id="backtrack">0</p>
+        <div id="creepBox">
+            <div>
+                <p id="creepHpBar"></p>
+                <p id="hit"></p>
+            </div>
+            <p id="creepHp">13</p>
+            <canvas id="drawCreep" width="24" height="36"></canvas>
+        </div>
+        <canvas id="drawHero" width="25"  height="25"></canvas>
+        <div>
+            <canvas id="wall" width="560"></canvas>
+            <p id="base"></p>
+        </div>
+    </body>
+    <script src="wall.js"></script>
+    <script src="characters.js"></script>
+    <script src="index.js"></script>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="#"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cooler - A JS13K Entry - MIT 2024</title>
+    <style>
+      * { padding: 0; margin: 0 }
+      html, body { background: gold; width: 100vw; height: 100vh; }
+      body, #app { display: flex; justify-content: center; align-items: center; }
+      #app canvas {
+        box-shadow: 0px 0px 3px 8px orange;
+        position: relative;
+        width: min(100vw, calc(100vh * 16/9));
+        cursor: pointer;
+        background-color: transparent;
+        image-rendering:pixelated;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>Revenge of the Necromancer</title>
+<style>html,body{font-family:Sans-Serif;background-color:black;color:white;margin:0;padding:0}#container{position:relative}#container canvas,.overlay{position:absolute}a,a:visited{color:lightskyblue}</style>
+</head>
+<body>
+<div style="width:800px;margin:auto;padding:10px">
+<div style="display:none">
+<img id="glow" src="images/glow.png" />
+<img id="water" src="images/water.png" />
+<img id="sand" src="images/sand.png" />
+<img id="grass" src="images/grass.png" />
+<img id="dirt" src="images/dirt.png" />
+<img id="stone" src="images/stone.png" />
+<img id="wood" src="images/wood.png" />
+<img id="necromancer" src="images/necromancer.png" />
+<img id="slime" src="images/slime.png" />
+<img id="skeleton" src="images/skeleton.png" />
+<img id="goblin" src="images/goblin.png" />
+<img id="demon" src="images/demon.png" />
+<img id="soldier" src="images/soldier.png" />
+<img id="knight" src="images/knight.png" />
+<img id="king" src="images/king.png" />
+<img id="mana_crystals" src="images/mana_crystals.png" />
+</div>
+<div style="user-select:none">
+<div id="container">
+<canvas id="game_canvas" width="700" height="700" style="image-rendering:pixelated"></canvas>
+<div class="overlay" id="gameover_overlay" style="width:700px;height:700px;background-color:rgba(0,0,0,0.5);display:none">
+<table style="width:100%;height:100%;text-align:center">
+<tr>
+<td style="vertical-align:middle">
+<div style="font-size:3.5em;margin-bottom:20px">
+<b>Game Over</b>
+</div>
+<div style="font-size:1.5em">
+Click to play again
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="overlay" id="victory_overlay" style="width:700px;height:700px;background-color:rgba(0,0,0,0.5);display:none">
+<table style="width:100%;height:100%;text-align:center">
+<tr>
+<td style="vertical-align:middle">
+<div style="font-size:3.5em;margin-bottom:20px">
+<b>Victory</b>
+</div>
+<div style="font-size:1.5em">
+You have defeated the evil king!
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="overlay" id="start_overlay" style="width:700px;height:700px;background-color:rgba(30,30,30)">
+<table style="width:100%;height:100%;text-align:center">
+<tr>
+<td style="vertical-align:middle">
+<div>
+<img src="images/necromancer.png" width="200" height="200" style="image-rendering:pixelated;margin-top:-135px;margin-right:-30px" />
+</div>
+<div style="font-size:3.5em;margin-top:20px;margin-bottom:20px">
+<b>Revenge of the Necromancer</b>
+</div>
+<div style="font-size:1.5em">
+Click to play
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div style="padding-top:702px">
+<table style="width:700px;user-select:none">
+<tr>
+<td style="white-space:nowrap">
+<span>HP: </span> <span id="current_hp"></span> &#47; 250
+</td>
+<td style="width:100%;padding-left:3px;padding-right:5px">
+<div style="border:3px solid #0f0;width:100%;display:inline-block">
+<div id="hp_bar" style="background-color:#0f0;width:100%;color:transparent">
+-
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<span>MP: </span> <span id="current_mp"></span> &#47; 1000 <br />
+</td>
+<td style="width:100%;padding-left:3px;padding-right:5px">
+<div style="border:3px solid cyan;width:100%;display:inline-block">
+<div id="mp_bar" style="background-color:cyan;width:0;color:transparent">
+-
+</div>
+</div>
+</td>
+</tr>
+</table>
+<table>
+<tr>
+<td>
+Slimes:
+</td>
+<td>
+<span id="slime_count"></span> &#47; <span id="slime_limit"></span>
+</td>
+<td>
+(1 MP cost, press "1" key)
+</td>
+</tr>
+<tr>
+<td>
+Skeletons:
+</td>
+<td>
+<span id="skeleton_count"></span> &#47; <span id="skeleton_limit"></span>
+</td>
+<td>
+(5 MP cost, press "2" key)
+</td>
+</tr>
+<tr>
+<td>
+Goblins:
+</td>
+<td>
+<span id="goblin_count"></span> &#47; <span id="goblin_limit"></span>
+</td>
+<td>
+(10 MP cost, press "3" key)
+</td>
+</tr>
+<tr>
+<td>
+Demons:
+</td>
+<td>
+<span id="demon_count"></span> &#47; <span id="demon_limit"></span>
+<td>
+(30 MP cost, press "4" key)
+</td>
+</tr>
+</table>
+<hr />
+<div>
+Controls:
+WASD or arrow keys to move. Click to shoot. 1 through 4 keys to summon shadows. <br />
+About "Revenge of the Necromancer": You are a necromancer, and your goal is to defeat the evil king!
+Monsters destroyed can be summoned as shadows up to a certain number using mana. Replenish mana near
+mana
+crystal mines.
+Made for the <a href="https://js13kgames.com/" target="_blank">2022 js13kGames competition</a> by
+<a href="https://twitter.com/zoan37/" target="_blank">@zoan37</a>.
+Pixel art from <a href="https://opengameart.org/content/roguedb32-plus-add-on-tiles" target="_blank">OpenGameArt.org</a>.
+</div>
+</div>
+</canvas>
+</div>
+<script>/*<![CDATA[*/"use strict";let zzfx,zzfxV,zzfxX;zzfxV=.3,zzfx=((e=1,o=.05,t=220,n=0,r=0,a=.1,l=0,f=1,y=0,i=0,d=0,h=0,s=0,c=0,u=0,m=0,p=0,x=1,M=0,g=0)=>{let v,k,z=Math,I=44100,w=2*z.PI,E=y*=500*w/I/I,B=t*=(1-o+2*o*z.random(o=[]))*w/I,b=0,_=0,O=0,L=1,T=0,X=0,C=0;for(i*=500*w/I**3,u*=w/I,d*=w/I,h*=I,s=I*s|0,k=(n=I*n+9)+(M*=I)+(r*=I)+(a*=I)+(p*=I)|0;O<k;o[O++]=C)++X%(100*m|0)||(C=l?1<l?2<l?3<l?z.sin((b%w)**3):z.max(z.min(z.tan(b),1),-1):1-(2*b/w%2+2)%2:1-4*z.abs(z.round(b/w)-b/w):z.sin(b),C=(s?1-g+g*z.sin(w*O/s):1)*(0<C?1:-1)*z.abs(C)**f*e*zzfxV*(O<n?O/n:O<n+M?1-(O-n)/M*(1-x):O<n+M+r?x:O<k-p?(k-O-p)/a*x:0),C=p?C/2+(p>O?0:(O<k-p?1:(k-O)/p)*o[O-p|0]/2):C),b+=(v=(t+=y+=i)*z.cos(u*_++))-v*c*(1-1e9*(z.sin(O)+1)%2),L&&++L>h&&(t+=d,B+=d,L=0),!s||++T%s||(t=B,y=E,L=L||1);return(e=zzfxX.createBuffer(1,k,I)).getChannelData(0).set(o),(t=zzfxX.createBufferSource()).buffer=e,t.connect(zzfxX.destination),t.start(),t}),zzfxX=new(window.AudioContext||webkitAudioContext);var x=-100,y=0,velX=0,velY=0;const speed=300;var zone=1,isGameStarted=!1;window.onload=function(){var e=[];document.body.addEventListener("keydown",function(o){e[o.keyCode]=!0,38!=o.keyCode&&40!=o.keyCode||o.preventDefault()}),document.body.addEventListener("keyup",function(o){e[o.keyCode]=!1}),document.body.addEventListener("keydown",function(e){if(p)return;const o=e.keyCode;49==o&&N("slime");50==o&&N("skeleton");51==o&&N("goblin");52==o&&N("demon")}),window.addEventListener("mousemove",function(e){},!1),window.addEventListener("mousedown",function(e){if(!isGameStarted)return isGameStarted=!0,te(),V(),J(),j(),D(),void(document.getElementById("start_overlay").style.display="none");if(p)return void te();var a=(l=o,f=e,i=l.getBoundingClientRect(),{x:(f.clientX-i.left)/(i.right-i.left)*l.width,y:(f.clientY-i.top)/(i.bottom-i.top)*l.height});var l,f,i;z||(w=Math.floor(x+t/2),E=Math.floor(y+n/2-r),k={x:w,y:E},z={x:a.x+Math.floor(x),y:a.y+Math.floor(y)},g=!0)},!1);var o=document.getElementById("game_canvas"),t=o.width,n=o.height;const r=32,a=25,l=5;var f=!1,i=[],d={},h=[],s=[],c=[],u={},m={},p=!1,M=!1,g=!1;const v=1e3;var k=null,z=null;const I=25;var w=0,E=0;const B=250,b=1e3;var _=250,O=0;const L=200,T=4,X=100,C=50,H=150;var P=o.getContext("2d");P.imageSmoothingEnabled=!1,window.requestAnimationFrame(function o(c){Me=(c-ge)/1e3;ge=c;ve=Math.round(1/Me);if(Me>0){e[38]||e[87]?velY>-speed&&(velY=-speed):e[40]||e[83]?velY<speed&&(velY=speed):velY=0,e[39]||e[68]?velX<speed&&(velX=speed,f=!1):e[37]||e[65]?velX>-speed&&(velX=-speed,f=!0):velX=0;var u=velX*Me,m=velY*Me;p||(x+=u,y+=m),function(e){if(!isGameStarted)return;P.resetTransform(),P.clearRect(0,0,t,n);const o=Math.floor(1.5*r),c=Math.floor(-1.5*r);1==zone?(x<Math.floor(-10.5*r)&&(x=Math.floor(-10.5*r)),x>Math.floor(26.5*r)&&(y>o||y<c?x=Math.floor(26.5*r):(zone=2,oe())),y<Math.floor(-10.5*r)&&(y=Math.floor(-10.5*r)),y>Math.floor(13.5*r)&&(y=Math.floor(13.5*r))):2==zone?(x<=Math.floor(26.5*r)&&(zone=1,oe()),x>=Math.floor(29.5*r)&&(zone=3,oe()),y>o&&(y=o),y<c&&(y=c)):3==zone?(x<Math.floor(29.5*r)&&(y>o||y<c?x=Math.floor(29.5*r):(zone=2,oe())),x>Math.floor(66.5*r)&&(y>o||y<c?x=Math.floor(66.5*r):(zone=4,oe())),y<Math.floor(-10.5*r)&&(y=Math.floor(-10.5*r)),y>Math.floor(13.5*r)&&(y=Math.floor(13.5*r))):4==zone?(x<=Math.floor(66.5*r)&&(zone=3,oe()),x>=Math.floor(69.5*r)&&(zone=5,oe()),y>o&&(y=o),y<c&&(y=c)):5==zone?(x<Math.floor(69.5*r)&&(y>o||y<c?x=Math.floor(69.5*r):(zone=4,oe())),x>Math.floor(106.5*r)&&(y>o||y<c?x=Math.floor(106.5*r):(zone=6,oe())),y<Math.floor(-10.5*r)&&(y=Math.floor(-10.5*r)),y>Math.floor(13.5*r)&&(y=Math.floor(13.5*r))):6==zone?(x<=Math.floor(106.5*r)&&(zone=5,oe()),x>=Math.floor(109.5*r)&&(zone=7,oe()),y>o&&(y=o),y<c&&(y=c)):7==zone&&(x<Math.floor(109.5*r)&&(y>o||y<c?x=Math.floor(109.5*r):(zone=6,oe())),x>Math.floor(146.5*r)&&(x=Math.floor(146.5*r)),y<Math.floor(-10.5*r)&&(y=Math.floor(-10.5*r)),y>Math.floor(13.5*r)&&(y=Math.floor(13.5*r)));P.translate(Math.floor(-x),Math.floor(-y));for(var u=document.getElementById("water"),m=-12;m<175;m++)for(var M=-12;M<37;M++)xe(u,m*r,M*r,r,r);for(var B=document.getElementById("grass"),m=0;m<1.5*a;m++)for(var M=0;M<a;M++)xe(B,m*r,M*r,r,r);for(var b=document.getElementById("sand"),m=0;m<1.5*a;m++)for(var M=0;M<a;M++)xe(b,m*r+40*r,M*r,r,r);for(var _=document.getElementById("dirt"),m=0;m<1.5*a;m++)for(var M=0;M<a;M++)xe(_,m*r+40*r+40*r,M*r,r,r);for(var O=document.getElementById("stone"),m=0;m<1.5*a;m++)for(var M=0;M<a;M++)xe(O,m*r+40*r+40*r+40*r,M*r,r,r);pe(0),pe(1),pe(2);for(var L=document.getElementById("slime"),T=document.getElementById("skeleton"),F=document.getElementById("goblin"),Y=document.getElementById("demon"),G=(document.getElementById("alien"),document.getElementById("soldier")),q=document.getElementById("knight"),V=document.getElementById("king"),R=document.getElementById("glow"),j=document.getElementById("mana_crystals"),m=0;m<i.length;m++){var J=i[m];P.drawImage(j,J.x-r/2,J.y-r/2,r,r)}P.save();for(var m=0;m<h.length;m++){var K=h[m];if(!K.dead){var N=ce(m),Q={x:Math.floor(x+N.x*r*1.3+t/2),y:Math.floor(y+N.y*r*1.3+t/2)};if(K.drawn)if(K.opponents.length>0){var Z=ue(K,K.opponents[0],X,e);me(K,K.opponents[0])>C&&(K.x=Z.x,K.y=Z.y)}else{var Z=ue(K,Q,H,e);K.x=Z.x,K.y=Z.y,me(K,Q)<=5&&(K.x=Q.x,K.y=Q.y)}else K.x=Q.x,K.y=Q.y,K.drawn=!0;P.drawImage(R,K.x-r,K.y-r,2*r,2*r),"slime"==K.type?ye(L,K.x-r/2,K.y-r/2):"skeleton"==K.type?ye(T,K.x-r/2,K.y-r/2):"goblin"==K.type?ye(F,K.x-r/2,K.y-r/2):"demon"==K.type&&ye(Y,K.x-r/2,K.y-r/2)}}P.restore();for(var ee=0,m=0;m<s.length;m++){var te=s[m];if(!te.dead){if(te.trackPlayer&&ee<l){var ne={x:x+t/2,y:y+n/2},Z=ue(te,ne,X,e);Z.x>te.x?te.isFlipped=!1:te.isFlipped=!0,me(te,ne)>C&&(te.x=Z.x,te.y=Z.y),ee++}else if(te.opponents.length>0){var Z=ue(te,te.opponents[0],X,e);Z.x>te.x?te.isFlipped=!1:te.isFlipped=!0,me(te,te.opponents[0])>C&&(te.x=Z.x,te.y=Z.y)}else if(te.randomDest){var Z=ue(te,te.randomDest,50,e);if(Z.x>te.x?te.isFlipped=!1:te.isFlipped=!0,te.x=Z.x,te.y=Z.y,me(te,te.randomDest)<15){var re=W(te);re=U(re,te.zone),te.randomDest=re}}else{var re=W(te);re=U(re,te.zone),te.randomDest=re}"slime"==te.type?fe(te,L,te.x-r/2,te.y-r/2):"skeleton"==te.type?fe(te,T,te.x-r/2,te.y-r/2):"goblin"==te.type?fe(te,F,te.x-r/2,te.y-r/2):"demon"==te.type?fe(te,Y,te.x-r/2,te.y-r/2):"soldier"==te.type?fe(te,G,te.x-r/2,te.y-r/2):"knight"==te.type?fe(te,q,te.x-r/2,te.y-r/2):"king"==te.type&&fe(te,V,te.x-r/2,te.y-r/2)}}var ae=document.getElementById("necromancer");if(!p){if(f?ie(ae,Math.floor(x+t/2-r/2),Math.floor(y+n/2-r/2)):P.drawImage(ae,Math.floor(x+t/2-r/2),Math.floor(y+n/2-r/2),r,r),g){if(z){var le=he({x:w,y:E},z),se=le.x*v*e,Me=le.y*v*e;E+=Me;var ge=de({x:(w+=se)-k.x,y:E-k.y}),ve=de({x:z.x-k.x,y:z.y-k.y});if(ge>=ve){k=null,z=null,g=!1,zzfx(...[2.01,0,470,.02,.09,.06,1,1.05,,.4,,,,,,,.23,.65,.02,.29]);for(var m=0;m<s.length;m++){var te=s[m];me({x:te.x,y:te.y},{x:w,y:E})<1.5*I&&(te.hp-=50,te.hp<=0&&(te.dead||$(te),te.dead=!0))}}}P.fillStyle="#fbf236",P.beginPath(),P.arc(w,E,I,0,2*Math.PI),P.fill()}!function(e){for(const o in d)S(o,e),A(o,e);for(const e in d){var o=d[e];o.done&&delete d[e]}0==Object.keys(d).length&&D()}(e)}}(Me)}window.requestAnimationFrame(o)});var F=1;function Y(e){var o=Z(e,()=>(function(){var e=1e4*Math.sin(F++);return e-Math.floor(e)})());i.push({x:o.x,y:o.y})}function D(){for(var e=0;e<i.length;e++){var o=i[e];if(e in d);else{var a={x:o.x,y:o.y},l={x:x,y:y};me(a,{x:x+t/2,y:y+n/2})<8*r&&(d[e]={x:o.x,y:o.y,source:a,dest:l})}}}function S(e,o){var r=d[e];r.dest={x:Math.floor(x+t/2),y:Math.floor(y+n/2)};var a=he({x:r.x,y:r.y},r.dest),l=a.x*L*o,f=a.y*L*o;r.x+=l,r.y+=f,de({x:r.x-r.source.x,y:r.y-r.source.y})>=de({x:r.dest.x-r.source.x,y:r.dest.y-r.source.y})&&(d[e].done=!0,le(10))}function A(e,o){var t=d[e];P.fillStyle="#60c0eb",P.beginPath(),P.arc(t.x,t.y,12,0,2*Math.PI),P.fill()}function G(e,o){c.push({shadow:e,enemy:o})}function q(){for(var e=s.length;e--;)s[e].dead&&s.splice(e,1)}function V(){try{!function(){for(var e=h.length;e--;)h[e].dead&&(re(h[e].type,-1),h.splice(e,1))}(),q(),function(){for(var e=c.length;e--;)c[e].done&&c.splice(e,1)}();for(var e=0;e<s.length;e++)for(var o=0;o<h.length;o++){var a=s[e],l=h[o];a.dead||l.dead||!l.drawn||(null==a.targetOpponent&&l.opponents.length<T?(a.opponents.push(l),l.opponents.push(a),a.targetOpponent=l,a.trackPlayer=!1,null==l.targetOpponent&&(l.targetOpponent=a),G(l,a)):null==l.targetOpponent&&a.opponents.length<T&&(a.opponents.push(l),l.opponents.push(a),l.targetOpponent=a,null==a.targetOpponent&&(a.targetOpponent=l,a.trackPlayer=!1),G(l,a)))}for(e=0;e<s.length;e++){if(null==(a=s[e]).targetOpponent)me(a,{x:x+t/2,y:y+n/2})<6*r&&(a.trackPlayer=!0)}}catch(e){console.error(e)}setTimeout(V,500)}function R(e,o){var t=e.indexOf(o);return t>-1&&e.splice(t,1),e}function j(){ne(3),setTimeout(j,1e3)}function J(){!function(e){for(let o=e.length-1;o>0;o--){const t=Math.floor(Math.random()*(o+1));[e[o],e[t]]=[e[t],e[o]]}}(c);for(var e=0;e<c.length;e++){var o=c[e];if(!o.done){var r=o.shadow;me(r,f=o.enemy)<=C&&(f.targetOpponent==r&&(r.hp-=f.attack),r.targetOpponent==f&&(f.hp-=r.attack),console.log("shadow hp: "+r.hp),console.log("enemy hp: "+f.hp),r.hp<=0&&(r.dead=!0,o.done=!0),f.hp<=0&&(f.dead||$(f),f.dead=!0,o.done=!0),o.done&&(R(r.opponents,f),R(f.opponents,r),r.opponents.length>0?r.targetOpponent=r.opponents[0]:r.targetOpponent=null,f.opponents.length>0?f.targetOpponent=f.opponents[0]:f.targetOpponent=null))}}var a=0;for(e=0;e<s.length;e++){var f;if((f=s[e]).trackPlayer&&a<l)me(f,{x:x+t/2,y:y+n/2})<=C&&ne(-f.attack),a++}setTimeout(J,1e3)}function K(e){var o=0,t=0,n=0,r=0;return"slime"==e?(t=1,o=10,n=5,r=1):"skeleton"==e?(t=2,o=50,n=10,r=3):"goblin"==e?(t=3,o=100,n=30,r=5):"demon"==e?(t=4,o=400,n=60,r=5):"soldier"==e?(o=100,n=30,r=7):"knight"==e?(o=200,n=40,r=7):"king"==e&&(o=2500,n=100,r=7),{hp:o,attack:n,rank:t,zone:r}}function N(e){if(!(u[e]>=m[e])&&function(e){var o=0;return"slime"==e?o=1:"skeleton"==e?o=5:"goblin"==e?o=10:"demon"==e&&(o=30),!(o>O||(le(-o),0))}(e)){var o=K(e),t=o.hp,n=o.rank,r=o.attack;h.push({type:e,x:0,y:0,opponents:[],hp:t,attack:r,rank:n,timestmap:Date.now()}),re(e,1),h.sort((e,o)=>e.rank<o.rank?1:e.rank>o.rank?-1:e.rank==o.rank?e.rank-o.rank:void 0)}}function Q(e,o,t){return t||(t=(()=>Math.random())),Math.floor(t()*(o-e+1)+e)}function U(e,o){var a=e.x,l=e.y;if(1==o)a<Math.floor(-10.5*r)+t/2&&(a=Math.floor(-10.5*r)+t/2),a>Math.floor(26.5*r)+t/2&&(a=Math.floor(26.5*r)+t/2),l<Math.floor(-10.5*r)+n/2&&(l=Math.floor(-10.5*r)+n/2),l>Math.floor(13.5*r)+n/2&&(l=Math.floor(13.5*r)+n/2);else if(3==o){const e=Math.floor(29.5*r),o=Math.floor(66.5*r);a<e+t/2&&(a=e+t/2),a>o+t/2&&(a=o+t/2),l<Math.floor(-10.5*r)+n/2&&(l=Math.floor(-10.5*r)+n/2),l>Math.floor(13.5*r)+n/2&&(l=Math.floor(13.5*r)+n/2)}else if(5==o){const e=Math.floor(69.5*r),o=Math.floor(106.5*r);a<e+t/2&&(a=e+t/2),a>o+t/2&&(a=o+t/2),l<Math.floor(-10.5*r)+n/2&&(l=Math.floor(-10.5*r)+n/2),l>Math.floor(13.5*r)+n/2&&(l=Math.floor(13.5*r)+n/2)}else if(7==o){const e=Math.floor(109.5*r),o=Math.floor(146.5*r);a<e+t/2&&(a=e+t/2),a>o+t/2&&(a=o+t/2),l<Math.floor(-10.5*r)+n/2&&(l=Math.floor(-10.5*r)+n/2),l>Math.floor(13.5*r)+n/2&&(l=Math.floor(13.5*r)+n/2)}return{x:a,y:l}}function W(e){var o=3*r*(Math.random()-.5)*2,t=3*r*(Math.random()-.5)*2;return{x:e.x+o,y:e.y+t}}function Z(e,o){var a=0,l=0;if(1==e){const e=Math.floor(-10.5*r),f=Math.floor(26.5*r),y=Math.floor(-10.5*r),i=Math.floor(13.5*r);a=Q(e,f,o)+t/2,l=Q(y,i,o)+n/2}else if(3==e){const e=Math.floor(29.5*r),f=Math.floor(66.5*r),y=Math.floor(-10.5*r),i=Math.floor(13.5*r);a=Q(e,f,o)+t/2,l=Q(y,i,o)+n/2}else if(5==e){const e=Math.floor(69.5*r),f=Math.floor(106.5*r),y=Math.floor(-10.5*r),i=Math.floor(13.5*r);a=Q(e,f,o)+t/2,l=Q(y,i,o)+n/2}else if(7==e){const e=Math.floor(109.5*r),f=Math.floor(146.5*r),y=Math.floor(-10.5*r),i=Math.floor(13.5*r);a=Q(e,f,o)+t/2,l=Q(y,i,o)+n/2}return{x:a,y:l}}function $(e){"king"==e.type&&(M=!0,document.getElementById("victory_overlay").style.display="block"),ae(e.type,1)}function ee(e,o){var t=K(e),n=t.hp,r=t.attack,a=Z(o=t.zone),l=a.x,f=a.y;s.push({type:e,x:l,y:f,opponents:[],hp:n,attack:r,zone:o})}function oe(){for(var e=0;e<s.length;e++){s[e].dead=!0}if(q(),i=[],d={},1==zone){for(e=0;e<50;e++)ee("slime",1);for(e=0;e<10;e++)Y(1)}else if(3==zone){for(e=0;e<50;e++)ee("skeleton",3);for(e=0;e<8;e++)Y(3)}else if(5==zone){for(e=0;e<30;e++)ee("goblin",5);for(e=0;e<10;e++)ee("demon",5);for(e=0;e<5;e++)Y(5)}else if(7==zone){if(M)return;for(e=0;e<50;e++)ee("soldier",7);for(e=0;e<50;e++)ee("knight",7);for(e=0;e<1;e++)ee("king",7)}}function te(){!function(){x=-100,y=0,velX=0,velY=0,zone=1,f=!1,i=[],d={},h=[],s=[],c=[],u={},m={},p=!1,M=!1,g=!1,k=null,z=null,w=0,E=0,_=250,O=0;for(var e=["slime","skeleton","goblin","demon"],o=0;o<e.length;o++){var t=e[o];re(t,0),ae(t,0)}ne(0),le(0)}(),oe(),document.getElementById("gameover_overlay").style.display="none"}function ne(e){_+=e,console.log("change player hp: "+_),_>B&&(_=B),_<0&&(_=0),_<=0&&(M||(p=!0,document.getElementById("gameover_overlay").style.display="block")),document.getElementById("current_hp").innerHTML=_;var o=Math.round(100*_/B);document.getElementById("hp_bar").style.width=o+"%"}function re(e,o){u[e]?u[e]+=o:u[e]=o,"slime"==e?document.getElementById("slime_count").innerHTML=u[e]:"skeleton"==e?document.getElementById("skeleton_count").innerHTML=u[e]:"goblin"==e?document.getElementById("goblin_count").innerHTML=u[e]:"demon"==e&&(document.getElementById("demon_count").innerHTML=u[e])}function ae(e,o){m[e]?m[e]+=o:m[e]=o;var t=m[e];"slime"==e?t>100&&(m[e]=100):"skeleton"==e?t>100&&(m[e]=100):"goblin"==e?t>100&&(m[e]=100):"demon"==e&&t>100&&(m[e]=100),"slime"==e?document.getElementById("slime_limit").innerHTML=m[e]:"skeleton"==e?document.getElementById("skeleton_limit").innerHTML=m[e]:"goblin"==e?document.getElementById("goblin_limit").innerHTML=m[e]:"demon"==e&&(document.getElementById("demon_limit").innerHTML=m[e])}function le(e){(O+=e)>b&&(O=b),O<0&&(O=0),console.log("change player mp: "+O),document.getElementById("current_mp").innerHTML=O;var o=Math.round(100*O/b);document.getElementById("mp_bar").style.width=o+"%"}function fe(e,o,t,n){e.isFlipped?ie(o,t,n):P.drawImage(o,t,n,r,r)}function ye(e,o,t){f?ie(e,o,t):P.drawImage(e,o,t,r,r)}function ie(e,o,t){P.save(),P.translate(o,t),P.scale(-1,1),P.drawImage(e,0,0,-1*r,r),P.restore()}function de(e){return Math.sqrt(e.x*e.x+e.y*e.y)}function he(e,o){var t=o.x-e.x,n=o.y-e.y,r=de({x:t,y:n});return{x:t/r,y:n/r}}te();var se={};function ce(e){if(se[e])return se[e];for(var o=3;o<50;o+=2)if(e<Math.pow(o,2)-1){for(var t=-Math.floor(o/2),n=Math.floor(o/2),r=Math.pow(o,2)-Math.pow(o-2,2),a=Math.floor(r/4),l=2*a,f=3*a,y=e-Math.pow(o-2,2)+1,i=0;i<y;i++)i<a?t++:i<l?n--:i<f?t--:n++;var d={x:t,y:-n};return se[e]=d,d}return null}function ue(e,o,t,n){if(e.x==o.x&&e.y==o.y)return{x:e.x,y:e.y};var r=he({x:e.x,y:e.y},{x:o.x,y:o.y}),a=r.x*t*n,l=r.y*t*n;return{x:e.x+a,y:e.y+l}}function me(e,o){return de({x:e.x-o.x,y:e.y-o.y})}function pe(e){const o=40*r*e;var t=document.getElementById("wood");P.drawImage(t,o+40*r-2*r,Math.floor(a/2)*r-3*r,r,r),P.drawImage(t,o+40*r-1*r,Math.floor(a/2)*r-3*r,r,r),P.drawImage(t,o+40*r-2*r,Math.floor(a/2)*r-2*r,r,r),P.drawImage(t,o+40*r-1*r,Math.floor(a/2)*r-2*r,r,r),P.drawImage(t,o+40*r-2*r,Math.floor(a/2)*r-r,r,r),P.drawImage(t,o+40*r-1*r,Math.floor(a/2)*r-r,r,r),P.drawImage(t,o+40*r-2*r,Math.floor(a/2)*r,r,r),P.drawImage(t,o+40*r-1*r,Math.floor(a/2)*r,r,r)}function xe(e,o,r,a,l){o<x-200||o>x+t+200||r<y-200||r>y+n+200||P.drawImage(e,o,r,a,l)}let Me,ge,ve};/*]]>*/</script>
+</body>
+</html>

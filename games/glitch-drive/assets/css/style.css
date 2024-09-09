@@ -1,0 +1,296 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+body,
+html {
+    height: 100%;
+}
+body {
+    background: #333333;
+    color: #000000;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    font-family: 'Open Sans', Verdana, Geneva, sans-serif;
+}
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+.cars {
+    position: absolute;
+    height: 100%;
+    width: 320px;
+    top: 0;
+    display: none;
+}
+.street {
+    background: #7a7a7a url(data:image/png;base64,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);
+    height: 100%;
+    width: 320px;
+    margin: 0 auto;
+    box-shadow: 0 1px 16px rgba(111, 35, 51, 0.4) inset;
+}
+.street:after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 100%;
+    background: #c2a99d;
+    left: 0;
+    margin-top: -100px;
+    margin-left: 320px;
+    border-left: 3px solid #72625a;
+    z-index: 1;
+}
+.street:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    margin-left: -12px;
+    background: #c2a99d;
+    z-index: 1;
+    border-right: 3px solid #72625a;
+}
+.streetStripe {
+    background: #d4d4d4;
+    height: 100px;
+    width: 8px;
+    position: relative;
+    top: 550px;
+    left: 160px;
+    border-radius: 2px;
+}
+.car {
+    width: 100px;
+    height: 170px;
+    background: #b6bec3;
+    position: absolute;
+    zoom: 0.5;
+    -moz-border-radius-top-left: 40px 30px;
+    -webkit-border-top-left-radius: 40px 30px;
+    border-top-left-radius: 40px 30px;
+    -moz-border-radius-top-right: 40px 30px;
+    -webkit-border-top-right-radius: 40px 30px;
+    border-top-right-radius: 40px 30px;
+    -moz-border-radius-bottom-right: 20px 30px;
+    -webkit-border-bottom-right-radius: 20px 30px;
+    border-bottom-right-radius: 20px 30px;
+    -moz-border-radius-bottom-left: 20px 30px;
+    -webkit-border-bottom-left-radius: 20px 30px;
+    border-bottom-left-radius: 20px 30px;
+}
+.car:after {
+    left: -10px;
+    -moz-border-radius: 100% 0 0 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 100% 0 0 3px;
+}
+.car:before {
+    right: -10px;
+    -moz-border-radius: 0 100% 3px 0;
+    -webkit-border-radius: 3px;
+    border-radius: 0 100% 3px 0;
+}
+.car:after,
+.car:before {
+    content: "";
+    width: 15px;
+    height: 15px;
+    background-color: inherit;
+    top: 50px;
+    position: absolute;
+}
+.car .carFront {
+    border-bottom: 35px solid #495d65;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    top: 30px;
+    height: 0;
+    width: 60px;
+    left: 10px;
+    position: absolute;
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+}
+.car .carFront:after,
+.car .carFront:before {
+    content: "";
+    width: 20px;
+    height: 10px;
+    background-color: #faff99;
+    position: absolute;
+    top: 45px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+.car .carFront:after {
+    -moz-transform: rotate(35deg);
+    -ms-transform: rotate(35deg);
+    -webkit-transform: rotate(35deg);
+    transform: rotate(35deg);
+    left: -15px;
+}
+.car .carFront:before {
+    -moz-transform: rotate(-35deg);
+    -ms-transform: rotate(-35deg);
+    -webkit-transform: rotate(-35deg);
+    transform: rotate(-35deg);
+    right: -15px;
+}
+.car .carWindow:before,
+.car .carWindow:after {
+    content: "";
+    display: block;
+    border-right: 10px solid #495d65;
+    border-bottom: 30px solid transparent;
+    border-top: 40px solid transparent;
+    height: 40px;
+    width: 10px;
+    position: absolute;
+    top: 30px;
+}
+.car .carWindow:before {
+    right: 8px;
+}
+.car .carWindow:after {
+    left: 8px;
+    -moz-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+}
+.car .carBack {
+    content: "";
+    border-bottom: 25px solid #495d65;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    bottom: 30px;
+    width: 60px;
+    left: 10px;
+    position: absolute;
+}
+.car .carBack:before,
+.car .carBack:after {
+    content: "";
+    width: 20px;
+    height: 8px;
+    background-color: #D92626;
+    position: absolute;
+    bottom: -50px;
+}
+.car .carBack:before {
+    left: -14px;
+    -moz-border-radius-bottom-left: 30px 20px;
+    -webkit-border-bottom-left-radius: 30px 20px;
+    border-bottom-left-radius: 30px 20px;
+}
+.car .carBack:after {
+    right: -14px;
+    -moz-border-radius-bottom-right: 30px 20px;
+    -webkit-border-bottom-right-radius: 30px 20px;
+    border-bottom-right-radius: 30px 20px;
+}
+.carHero {
+    background-color: #19d1ff;
+    position: absolute;
+    z-index: 3;
+}
+#totalKmsTxt {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #cccccc;
+}
+#carsPassedTxt {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    color: #cccccc;
+}
+#glitchTxt {
+    position: absolute;
+    top: 60px;
+    left: 40px;
+    color: #ff0000;
+    -webkit-animation: scalingTxt 3s infinite;
+    animation: scalingTxt 3s infinite;
+}
+@-webkit-keyframes scalingTxt {
+    0% {
+        -webkit-transform: scale(1.0);
+    }
+    50% {
+        -webkit-transform: scale(1.5);
+    }
+    100% {
+        -webkit-transform: scale(1.0);
+    }
+}
+@keyframes scalingTxt {
+    0% {
+        -webkit-transform: scale(1.0);
+    }
+    50% {
+        -webkit-transform: scale(1.5);
+    }
+    100% {
+        -webkit-transform: scale(1.0);
+    }
+}
+.blast {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 80px solid #ff0000;
+    margin-left: -30px;
+    margin-top: -20px;
+    -webkit-animation: scaling 0.3s;
+    animation: scaling 0.3s;
+}
+.blast:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-top: 80px solid #ff0000;
+    margin: 30px 0 0 -50px;
+}
+@-webkit-keyframes scaling {
+    from {
+        -webkit-transform: scale(1.0);
+    }
+    to {
+        -webkit-transform: scale(2.5);
+    }
+    @keyframes scaling {
+        from {
+            -webkit-transform: scale(1.0);
+        }
+        to {
+            -webkit-transform: scale(2.5);
+        }
+        .entryScreen {
+            position: absolute;
+            height: 100%;
+            width: 200px;
+            top: 0;
+            font-size: 12px;
+        }

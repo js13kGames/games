@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>A King's Journey: Chapter 3: Trapped & Poisoned</title>
+    <style>
+    	* { 
+			padding: 0; 
+			margin: 0; 
+			background: #000; 
+		}
+		canvas {
+		  background: #000; 
+		  display: block; 
+		  margin: 0 auto;
+		
+		  image-rendering: optimizeSpeed;             /* Older versions of FF          */
+		  image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+		  image-rendering: -webkit-optimize-contrast; /* Safari                        */
+		  image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+		  image-rendering: pixelated;                 /* Awesome future-browsers       */
+		  -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+		}
+    </style>
+	
+	<script src="js/build.min.js"></script>
+</head>
+<body>
+
+<canvas id="myCanvas" width="704" height="704"></canvas>
+<script>
+	start();
+</script>
+
+</body>
+</html>

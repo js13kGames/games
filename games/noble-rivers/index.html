@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=0.75">
+<meta charset="utf8">
+<style>
+
+   body {
+      font-family: sans-serif;
+      background: #343;
+      color: white;
+      overflow: hidden;
+      height: 100vh;
+      margin: 0;
+   }
+   * {
+      box-sizing: border-box;
+   }
+   button {
+      color: white;
+      font-size: 16px;
+      background: linear-gradient(to bottom, #a39467, #8f8051);
+      border-radius: 4px;
+      margin: 4px;
+      padding: 8px;
+      border: 1px solid rgb(0 0 0 / 0.3);
+      box-shadow: inset 1px 1px 3px rgb(0 0 0 / 0.9);
+      text-shadow: 1px 1px rgb(0 0 0 / 0.3);
+   }
+   button.active {
+      box-shadow: inset 1px 1px 2px 3px rgb(0 0 0 / 0.9);
+   }
+
+   .app {
+      position: relative;
+      height: 90vh;
+      overflow: scroll;
+   }
+   .tile, .unit {
+      position: absolute;
+   }
+   .unit {
+      width: 40px;
+      height: 40px;
+
+      background: linear-gradient(to bottom, rgb(221 238 204 / 0.8), rgb(221 238 187 / 0.8));
+      /* border: 1px solid black; */
+      border-radius: 30%;
+      margin-left: 30px;
+      margin-top: 30px;
+      opacity: 0.4;
+      box-shadow: 0px 0px 4px 10px rgb(255 255 0 / 0.0), 1px 1px 2px rgb(0 0 0 / 0.4);
+   }
+   .unit.has-item {
+      border: 2px solid white;
+      box-shadow: 0px 0px 4px 10px rgb(255 255 0 / 0.2), 1px 1px 2px rgb(0 0 0 / 0.4);
+   }
+
+   .unit.has-item:before {
+      content: '*';
+   }
+
+   .tile {
+      font-size: 12px;
+      width: 100px;
+      height: 100px;
+      /* box-shadow: inset -1px -1px 2px rgb(255 255 255 / 0.1); */
+
+
+   }
+   .grass {
+      background: linear-gradient(to bottom, #91d279, #88d06d);
+      /* background: linear-gradient(to bottom, #8dcd96, #8dcd96);
+      background: linear-gradient(to bottom, #80c58a, #80c58a); */
+   }
+   .forest {
+      background: radial-gradient(rgb(64, 138, 64), rgb(57, 125, 57), rgb(69, 111, 69));
+   }
+   .water, .bridge {
+      /* background-image: linear-gradient(to bottom, #aaccff, #88bbff); */
+      background: linear-gradient(to bottom, #83aadd 0%, #afc2ec 20%, #83aadd 80%, #afc2ec 90%, #83aadd 100%);
+      background-position: 0 0 ;
+      /* animation: 2s infinite alternate a; */
+   }
+   .bridge:after {
+      content: '';
+      position: absolute;
+      background: repeating-linear-gradient(#a35934 0, #ba704b 3px, #bb7f61 4px);
+      width: 80px;
+      height: 80px;
+      left: 10px;
+      top: 10px;
+      border-radius: 10%;
+   }
+   @keyframes a {
+      0% {
+         background-position: 0 0;
+      }
+      100% {
+         background-position: 0 30px;
+      }
+   }
+   .mountain {
+      background-image: radial-gradient(#ede, #ccc 40%, #b2adad);
+   }
+
+   /* .tile.has-item .token {
+
+   } */
+   .token {
+      width: 20%;
+      height: 20%;
+      left: 35%;
+      top: 50%;
+      opacity: 0;
+      transition: all 0.2s;
+      position: absolute;
+      z-index: 200;
+      text-align: center;
+      border-radius: 50%;
+      box-shadow: 0px 0px 1px 2px rgb(0 0 0 / 0.0);
+      position: absolute;
+   }
+   .tile.has-item .token {
+      width: 50%;
+      height: 50%;
+      left: 10%;
+      top: 10%;
+      opacity: 1;
+      border: 1px solid rgb(0 0 0 / 0.4);
+      box-shadow: 2px 2px 3px 4px rgb(0 0 0 / 0.3);
+   }
+   .token.wood, .unit.has-wood:before {
+      background: linear-gradient(to bottom, #bb7744, #995533);
+   }
+   .token.gold, .unit.has-gold:before {
+      background: linear-gradient(to bottom, #ffff00, #ccaa33);
+   }
+   .token.food, .unit.has-food:before {
+      background: linear-gradient(to bottom, #fa9, #e56);
+   }
+   .token.metal, .unit.has-metal:before {
+      background: linear-gradient(to bottom, #ccd, #888);
+   }
+   .token.food:before {
+      content: 'food';
+   }
+   .token.wood:before {
+      content: 'wood';
+   }
+   .token.gold:before {
+      content: 'gold';
+   }
+   .token.metal:before {
+      content: 'metal';
+   }
+   .tile .building {
+      background: #aaa;
+      position: absolute;
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+      left: 4px;
+      top: 4px;
+      border-radius: 4px;
+      box-shadow: 1px 1px 1px 2px rgb(0 0 0 / 0.4);
+   }
+
+   .tile.farm .building {
+      background: linear-gradient(to bottom, #dedea0, #e86);
+   }
+
+   .tile.woodcutter .building {
+      background: linear-gradient(to bottom, #ca6, #aa4);
+   }
+
+   .tile.mine .building {
+      background: linear-gradient(to bottom, #cce, #889);
+   }
+
+   .tile.barracks .building {
+      background: linear-gradient(to bottom, #ada, #88a);
+   }
+   .tile.market .building {
+      background: linear-gradient(to bottom, #dddd33 0%, #cbaa17 40%, #e763b7 100%);
+   }
+   .tile.treasury .building {
+      background: linear-gradient(to bottom, #dddd33, #bebe1f);
+   }
+   .token {
+      animation: 0.8s infinite alternate token-animation;
+   }
+
+   .tile.has-building .product-progress {
+      position: absolute;
+      height: 1.5em;
+      font-size: 15px;
+      color: white;
+      width: 80%;
+      left: 10%;
+      bottom: 5px;
+      background: rgb(255 255 255 / 0.8);
+   }
+
+   .unit {
+      animation: 1.2s infinite alternate blink;
+   }
+
+   @keyframes blink {
+      0% {
+         opacity: 0.9;
+         rotate: -2deg;
+      }
+      100% {
+         rotate: 2deg;
+         opacity: 1.0;
+      }
+   }
+   @keyframes token-animation {
+      0% {
+         transform: rotate(-2deg);
+         opacity: 1;
+         filter: brightness(1.0);
+      }
+      50% {
+         /* opacity: 0.9; */
+         filter: brightness(1.25);
+      }
+      100% {
+         transform: rotate(2deg);
+         filter: brightness(1.0);
+         opacity: 1;
+      }
+   }
+
+   .tile .building:before, .tile[class*="construction"]:before {
+      background: rgb(0 0 0 / 0.66);
+      font-size: 1.2em;
+      padding: 4px;
+      border-radius: 4px;
+      color: white;
+      margin-left: -25%;
+   }
+   .token:before {
+      font-size: 1.45em;
+      top: 10px;
+      position: relative;
+      color: rgb(0 0 0 / 0.7);
+   }
+
+
+   .tile.woodcutter .building:before, .tile.construction-woodcutter:before {
+      content: 'woodcutter';
+   }
+
+   .tile.farm .building:before, .tile.construction-farm:before  {
+      content: 'farm';
+   }
+
+   .tile.mine .building:before, .tile.construction-mine:before  {
+      content: 'mine';
+   }
+
+   .tile.barracks .building:before, .tile.construction-barracks:before  {
+      content: 'barracks';
+   }
+
+   .tile.market .building:before, .tile.construction-market:before  {
+      content: 'market';
+   }
+
+   .tile.treasury .building:before, .tile.construction-treasury:before  {
+      content: 'treasury';
+   }
+
+   .tile.owner-none {
+      /* filter: grayscale(20%) brightness(80%); */
+      border: 1px solid rgb(0 0 0 / 0.03);
+      box-shadow: none;
+   }
+
+   .tile.owner-player {
+      box-shadow: inset -1px -1px 2px rgb(0 0 200 / 0.3),
+               inset -2px -2px 2px rgb(0 0 255 / 0.2);
+      border: 3px solid rgb(0 0 255 / 0.2);
+   }
+   .tile.owner-cpu {
+      /* filter: brightness(80%) saturate(120%) hue-rotate(40deg); */
+      /* border: 2px solid rgb(255 100 100 / 0.18); */
+      border: 3px solid rgb(255 0 0 / 0.3);
+      box-shadow: inset -1px -1px 2px rgb(255 200 200 / 0.4),
+               inset -2px -2px 2px rgb(255 0 0 / 0.5);
+   }
+
+   .unit {
+      animation-delay: -0.1s;
+      transition-delay: -0.1s;
+      transition: all 0.6s;
+      border: 1px solid rgb(255 255 255 / 0.3);
+   }
+
+   .unit.cpu {
+      background: #aaf;
+   }
+
+   .unit.soldier {
+      background: linear-gradient(rgb(170 221 170 / 0.7), rgb(153 170 187 / 0.7));
+   }
+
+   .unit.peasant {
+      background: linear-gradient(rgb(170 170 119 / 0.7), rgb(136 102 51 / 0.7));
+   }
+
+   .unit:before {
+      position: absolute;
+      top: -20px;
+   }
+
+   .unit.soldier:before {
+      content: 'soldier';
+   }
+
+   .unit.peasant:before {
+      content: 'peasant';
+   }
+
+   .gui-legend {
+      position:relative;
+   }
+
+   .gui-detail {
+      height: 2em;
+   }
+
+   .gui-detail .type {
+      font-size: 16px;
+      color: #aac;
+   }
+
+   #house, #unit {
+      display: none;
+   }
+
+   .gui {
+      position: fixed;
+      height: 150px;
+      width: 100%;
+      bottom: 0;
+      background: linear-gradient(to bottom, #8f8051, #a39467);
+      border-top: 2px solid rgb(0 0 0 / 0.2);
+   }
+
+   .messages {
+      position: fixed;
+      left: 20px;
+      top: 50px;
+      width: 40em;
+      font-size: 16px;
+      font-family:sans-serif;
+      padding: 0px;
+      background: rgb(0 0 0 / 0.3);
+   }
+
+   .tile.highlight:before {
+      content: '!';
+      font-weight: bold;
+      font-size: 20px;
+      font-family: 'Times New Roman', serif;
+      position: absolute;
+      z-index: 1000;
+      background: black;
+      padding: 8px;
+      border-radius: 50%;
+      color: white;
+      right: 10px;
+      top: 10px;
+      animation: 0.5s infinite alternate tile-highlight;
+   }
+
+   @keyframes tile-highlight {
+      0% {
+         box-shadow: 0 0 2px 3px rgb(255 150 50);
+      }
+      100% {
+         box-shadow: 0 0 3px 6px rgb(255 150 50);
+      }
+   }
+
+   .tile.visited {
+      filter: brightness(1.05) saturate(90%);;
+   }
+   .tile.visited-twice {
+      filter: brightness(1.11) saturate(80%);;
+   }
+   .tile.visited-many {
+      filter: brightness(1.15) saturate(70%);
+
+   }
+
+   .tile[class*="construction"] {
+      background: #ddd;
+      border: 2px dotted #995533;
+   }
+
+   .gui-treasury, .gui-owners {
+      background: linear-gradient(to bottom, #8f8051, #a39467);
+      padding: 10px;
+      height: 2em;
+      border-bottom-right-radius: 30%;
+      border-bottom: 2px solid rgb(0 0 0 / 0.2);
+      border-right: 2px solid rgb(0 0 0 / 0.2);
+   }
+
+   .gui-treasury {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 140px;
+   }
+
+   .gui-owners {
+      position: fixed;
+      top: 0;
+      left: 160px;
+      width: 350px;
+      height: 2em;
+      border-left: 2px solid rgb(0 0 0 / 0.2);
+   }
+
+</style>
+</head>
+<body>
+   <div id="house" class="building">
+      <svg viewBox="0 0 30 25" stroke="rgb(0 0 0 / 0.3)">
+         <polygon points="0 15, 30 15, 15 0" fill="rgb(100 70 30)"/>
+         <rect width="20" height="10" x="5" y="15" fill="rgb(100 70 30)"/>
+         <rect width="4" height="8" x="13" y="17" fill="black"/>
+      </svg>
+   </div>
+   <div id="unit">
+      <svg stroke="black" viewBox="0 0 20 20" stroke="rgb(0 0 0 / 0.3)">
+         <circle cx="10" cy="4" r="2" />
+         <path d="M 10 4 l 0 8 l -5 6 l 5 -6 l 5 6 l -5 -6 l 0 -4 l -5 -1 l 5 1 l 5 -1 l -5 1" />
+      </svg>
+   </div>
+
+   <div class="app" id="app"></div>
+
+   <div class="messages"></div>
+   <div class="gui">
+      <!-- <div>Legend:</div>
+      <div class="gui-legend">
+         
+      </div> -->
+   
+      <div class="gui-detail">
+         <div class="type"></div>
+      </div>
+   
+      <div class="gui-menu"></div>   
+   </div>
+
+
+   <script src="data.js"></script>
+   <script src="utils.js"></script>
+   <script src="gui.js"></script>
+   <script src="index.js"></script>
+</body>

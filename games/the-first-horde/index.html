@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>The First Horde - js13k 2023</title>
+    <link rel="stylesheet" href="build.css"/>
+  </head>
+  <body>
+    <canvas id="game" width="800" height="600"></canvas>
+    <div id = "touchControls">
+      <div class = "touchButton" id = "touchUp" onpointerup="hordeGlobal.touchEnd()" onpointerdown="hordeGlobal.touch('ArrowUp')">Up</div>
+      <div class = "touchButton" id = "touchLeft" onpointerup="hordeGlobal.touchEnd()" onpointerdown="hordeGlobal.touch('ArrowLeft')">Left</div>
+      <div class = "touchButton" id = "touchRight" onpointerup="hordeGlobal.touchEnd()" onpointerdown="hordeGlobal.touch('ArrowRight')">Right</div>
+      <div class = "touchButton" id = "touchDown" onpointerup="hordeGlobal.touchEnd()" onpointerdown="hordeGlobal.touch('ArrowDown')">Down</div>
+      <div class = "touchButton" id = "touchEnter" onpointerup="hordeGlobal.touchEnter()">Enter</div>
+    </div>
+    <script src="build.js"></script>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+      <title>super best... whatever</title>
+      <style type="text/css">
+        canvas {
+          position: absolute;
+          top:0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          margin: auto;
+          border:4px solid #000000;
+        }
+      </style>
+      <script type="text/javascript" src="pf.js"></script>
+      <script type="text/javascript" src="gs-min.js"></script>
+  </head>
+<body>
+  <canvas id="game" width=1058 height=598></canvas>
+</body>
+</html>
+<script>
+
+var cnv = document.getElementById("game")
+var ctx = cnv.getContext("2d")
+CanvasRenderingContext2D.imageSmoothingEnabled = false
+document.addEventListener("keydown", keyDownHandler, false)
+document.addEventListener("keyup", keyUpHandler, false)
+
+var rp = false
+var lp = false
+var up = false
+var dp = false
+var ap = false
+var wa = false
+var mc = 0
+
+function keyDownHandler(e) {
+  if(e.keyCode == 39)
+    rp = true
+  if(e.keyCode == 37)
+    lp = true
+  if (e.keyCode == 38)
+    up = true;
+  if (e.keyCode == 40)
+    dp = true
+  if (e.keyCode == 65 && gs == -1) {
+    gs = 0
+    clearInterval(sm)
+    initlvl()
+  } else if (e.keyCode == 65 && gs == 1) {
+    placechs()
+    gs = 2
+  } else if (e.keyCode == 65 && gs == 3) {
+    sm = setInterval(upd, 20)
+    gs = 4;
+    wa = false
+  } else if (e.keyCode == 65 && gs == 4 && !ap) {
+    ap = true
+    wa = true
+  } else if (e.keyCode == 65 && gs == 5)
+    initlvl()
+  else if (e.keyCode == 65 && gs == 6) {
+    gs = -1
+    mainsc()
+  }
+}
+function keyUpHandler(e) {
+  if(e.keyCode == 39)
+    rp = false
+  if(e.keyCode == 37)
+    lp = false
+  if(e.keyCode == 38)
+    up = false
+  if (e.keyCode == 40)
+    dp = false
+  if (e.keyCode == 65 && gs == 4) {
+    ap = false
+    wa = false
+  }
+}
+
+</script>

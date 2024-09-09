@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Lido Space | js13kgames-2021 - SPACE</title>
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="stylesheet" href="./main.css" />
+</head>
+<body>
+  <main>
+    <section id="scene-title" tabindex="0" style="display: none;">
+      <h1>Lido Space</h1>
+      <p>What do you want to do?</p>
+      <div>
+        <a href="#scene-user-form">Play a game</a>
+        <a href="#scene-settings">Settings</a>
+        <a href="#scene-credits">Credits</a>
+      </div>
+    </section>
+    <section id="scene-user-form" tabindex="0" style="display: none;">
+      <form id="user-form" method="POST" action="./">
+        <label>
+          <span>How shall others call you?</span>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            aria-describedby="privacy-name"
+            pattern="[a-zA-Z0-9-_]+"
+            required
+            />
+        </label>
+        <p id="privacy-name" class="description">
+          Allowed input are all Latin characters, digits, hypen and underscore.
+          This information will be stored on the server (hosted in Europe) and
+          be visible to other players.
+        </p>
+        <div>
+          <button type="submit">Continue to select party</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="scene-match-form" tabindex="0" style="display: none;">
+      <form id="match-form" method="POST" action="./">
+<div>
+          <p>
+            Do you want to start a new game or join one?
+          <p>
+        </div>
+
+        <div>
+          <input
+            type="radio"
+            id="mode-new"
+            name="mode"
+            value="new"
+            aria-describedby="description-mode-new"
+            />
+          <label for="mode-new">Open a new session</label>
+
+          <input
+            type="radio"
+            id="mode-join"
+            name="mode"
+            value="join"
+            aria-describedby="description-mode-join"
+            />
+          <label for="mode-join">Join a game</label>
+
+          <p id="description-mode-new" class="description">
+            Opening a new session will imply, that you might have to wait for
+            other players to join that session.
+          </p>
+          <p id="description-mode-join" class="description">
+            Joining a game will assign you to a currently running one.
+          </p>
+
+          <div id="matches-mode-join" class="matches">
+            <ol></ol>
+            <div class="nothing">Currently no matches running.</div>
+          </div>
+        </div>
+        <div>
+          <button type="submit">Continue the game</button>
+        </div>
+      </form>
+    </section>
+    <section id="scene-game" tabindex="0" style="display: none;">
+      <div id="users">
+        <div id="role">unknown</div>
+        <div id="opponent-list">?</div>
+      </div>
+      <svg
+        viewBox="0 0 320 200"
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+        height="200"
+        width="320"
+        >
+        <polyline id="host" />
+        <g id="opponents">
+          <circle r="4" cx="-2" cy="-2" />
+          <polygon points="" />
+
+          <circle r="4" cx="-2" cy="-2" />
+          <polygon points="" />
+
+          <circle r="4" cx="-2" cy="-2" />
+          <polygon points="" />
+        </g>
+
+        <div id="space-key" data-view="HOST">
+          <form method="POST" action="./">
+            <input type="hidden" name="key" value="SPACE" />
+            <button type="submit">SPACE</button>
+          </form>
+        </div>
+
+        <div id="arrow-keys" data-view="OPPONENT">
+          <form method="POST" action="./">
+            <input type="hidden" name="key" value="TOP" />
+            <button type="submit">⬆️</button>
+          </form>
+          <form method="POST" action="./">
+            <input type="hidden" name="key" value="LEFT" />
+            <button type="submit">⬅️</button>
+          </form>
+          <form method="POST" action="./">
+            <input type="hidden" name="key" value="BOTTOM" />
+            <button type="submit">⬇️</button>
+          </form>
+          <form method="POST" action="./">
+            <input type="hidden" name="key" value="RIGHT" />
+            <button type="submit">➡️</button>
+          </form>
+        </div>
+      </svg>
+    </section>
+
+    <section id="scene-fin" tabindex="0" style="display: none;">
+      <h2>Game over</h2>
+      <p>Good game, <span id="highscore-name">stranger</span>!</p>
+      <table id="highscore"></table>
+      <p>
+        <a id="tweet" target="_blank"></a>
+        <button type="button" onclick="location.reload()">
+          Back to start
+        </button>
+      </p>
+    </section>
+
+    <section id="scene-settings" tabindex="0" style="display: none;">
+      <h2>Settings</h2>
+      <label>
+        Volume
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.3"
+          onchange="(function(e){window.zzfxV=parseFloat(e.value)})(this)"
+          />
+      </label>
+      <p><a href="#scene-title">Back to start</a></p>
+    </section>
+
+    <section id="scene-credits" tabindex="0" style="display: none;">
+      <h2>Credits</h2>
+      <p>
+        This game was inspired by
+        <a href="https://en.wikipedia.org/wiki/Qix" target="_blank">Qix</a>.
+      </p>
+      <p>
+        <a href="https://killedbyapixel.github.io/ZzFX/" target="_blank">ZzFX</a>
+        is used for sound effects.
+      </p>
+      <p>
+        Resources are bundled using
+        <a href="https://rollupjs.org/" target="_blank">Rollup</a>
+        and
+        <a href="https://clean-css.github.io/" target="_blank">clean-css</a>.
+      </p>
+      <p>
+        Find the source code at
+        <a href="https://jaenis.ch/hobbies/coding/repos/ryuno-ki/js13kgames-2021/src/branch/lido-space" target="_blank">
+          my Gitea instance
+        </a>
+        or
+        <a href="https://github.com/Ryuno-Ki/js13kgames-2021/tree/lido-space" target="_blank">
+          on GitHub
+        </a>.
+      </p>
+      <p><a href="#scene-title">Back to start</a></p>
+    </section>
+  </main>
+  <aside>
+    <p>
+      Current state: <span id="socketState">Loading</span>.
+      <span data-view="HOST">Press <kbd>Space</kbd> to update the view.</span>
+      <span data-view="OPPONENT">Press arrow keys to update the view.</span>
+    </p>
+  </aside>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./ZzFXMicro.min.js"></script>
+  <script src="./shared.js"></script>
+  <script src="./client.js"></script>
+  <script>window.zzfx=zzfx;window.lido.app();</script>
+</body>
+</html>

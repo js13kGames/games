@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Tetris Monochrome</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#acbeac" />
+    <meta name="description" content="Tetris monochrome" />
+    <style type="text/css">
+		@font-face {
+			font-family: "Tetris";
+			src:  url("./fonts/Tetris.ttf.woff") format("woff"),
+			url("./fonts/Tetris.ttf.svg#Tetris") format("svg"),
+			url("./fonts/Tetris.ttf.eot"),
+			url("./fonts/Tetris.eot?#iefix") format("embedded-opentype"); 
+			font-weight: normal;
+			font-style: normal;
+		}
+		
+        html,
+        body,
+        canvas {
+            position: absolute;
+            background: "#acbeac";
+            left: 0;
+            top: 0;
+            margin: auto;
+            overscroll-behavior: contain;
+        }
+    </style>
+</head>
+
+<body scroll="no" style="margin: 0">
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="./game.min.js"></script>
+</body>
+
+</html>

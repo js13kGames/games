@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Perditus</title>
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+            <div class="grid" id="page">
+                  <div class="title" id="title">
+                        <h1>Perditus</h1>
+                        <p>Latin (adj): broke, debilitated, lost, done for, ruined</p>
+                        <p>- Oxford Latin Dictionary, 1982</p>
+                  </div>
+
+                  <div class="stats" id="stats">
+                        <div class="stat">Strength <span id="stat-strength" class="stat-value"></span></div>
+                        <div class="stat">Health <span id="stat-health" class="stat-value"></span></div>
+                        <div class="stat">Energy <span id="stat-energy" class="stat-value"></span></div>
+                        <div class="stat">Food <span id="stat-food" class="stat-value"></span></div>
+                  </div>
+                  
+                  <div class="content" id="display">
+                        <img id="trees" src="img/trees.png" />
+                        <img id="lost" src="img/player.png" />
+                  </div>
+
+                  <div class="dialogs" id="dialogs">
+                        <div id="attack" class="hidden">
+                              <div id="attack-description"></div>
+                              <button id="fight">Fight</button>
+                              <button id="run">Run away</button>
+                        </div>
+                  </div>
+
+                  <div class="log" id="log"></div>
+            </div>
+
+            <script src="js/Event.js"></script>
+            <script src="js/Lost.js"></script>
+            <script src="js/UI.js"></script>
+            <script src="js/Game.js"></script>
+      </body>
+</html>

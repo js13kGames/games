@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>4 elements tower defense</title>
+<link rel="stylesheet" href="game.css"/>
+<style type="text/css" id="cjs"></style>
+</head>
+<body>
+<div id="message">Welcome four elements tower defense. Your enemy will send ever increasing waves of enemies against you.
+Build towers to defend your base. Build collectors to gather more of each resource. Everytime an enemy gets to the end 
+a building loses hitpoints and will eventually be destroyed. If all buildings are destroyed then there is nothing to stand between you and
+the enemy and you will lose. Notice that different towers affect enemies differently. (For best results play in landscape orientation)</div>
+<div id="start">Start Game</div>
+<div id="gameCon">
+<div id="base">
+  <!-- <div id="fort">
+    <div id="options">
+      <div id="build"></div>
+      <div id="attack"></div>
+    </div>
+  </div> -->
+</div>
+<canvas id="can"></canvas>
+<div id="lost">You have survied <span id="sec"></span> seconds. <a href="">Try Again?</a></div>
+<div id="ctrl">
+  <div id="resDis">
+    <div id="aDis">0</div>
+    <div id="eDis">0</div><br><br>
+    <div id="fDis">0</div>
+    <div id="wDis">0</div>
+  </div>
+  <div id="build">
+    <div id="aT" class="buildIcon atbg"></div>
+    <div id="eT" class="buildIcon etbg"></div>
+    <div id="fT" class="buildIcon ftbg"></div>
+    <div id="wT" class="buildIcon wtbg"></div>
+    <div id="aC" class="buildIcon acbg"></div>
+    <div id="eC" class="buildIcon ecbg"></div>
+    <div id="fC" class="buildIcon fcbg"></div>
+    <div id="wC" class="buildIcon wcbg"></div>
+  </div>
+  <div id="cost"></div>
+</div>
+</div>
+<script type="text/javascript" src="game.js"></script>
+<script type="text/javascript" src="svg.js"></script>
+</body>
+</html>

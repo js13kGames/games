@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="52px" height="60px" viewBox="0 0 260 300">
+    <path d="M22,87 130,275 238,87z" fill="none" stroke="#ccc" stroke-width="24" id="t"/>
+    <use xlink:href="#t" transform="matrix(1,0,0,-1,0,300)"/>
+</svg>

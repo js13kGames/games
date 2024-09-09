@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+<title>Starship SORADES 13K &ndash; A HTML5 Arcade Game by Thiemo M&auml;ttig</title>
+<style>
+*{color:#EEE;font-family:Consolas,monospace}
+html,body{background:#111;height:100%;margin:0;overflow:hidden;padding:0;text-align:center;width:100%}
+a:hover{background:#FFF;color:#000;text-decoration:none}
+#container,canvas{display:block;margin:auto;max-width:100%}
+canvas{background:#000}
+#desc{background:#10161C;background-image:-webkit-linear-gradient(#000 -8px,#10161C 16px);background-image:-moz-linear-gradient(#000 -8px,#10161C 16px);background-image:-o-linear-gradient(#000 -8px,#10161C 16px);background-image:linear-gradient(#000 -8px,#10161C 16px);border:1px solid #234563;border-radius:0 0 .4em .4em;border-top-style:none;margin:0 auto;max-width:990px;padding:.6em 16px;text-shadow:0 1px 2px #000}
+.note{font-size:smaller;margin:0 0 1.5em}
+svg{height:24px;width:24px;vertical-align:top}
+#tweet{background:#10161C;background-color:rgba(18,24,31,.9);border:1px solid #234563;border-radius:.4em;bottom:3em;box-shadow:0 0 1em #000;box-sizing:border-box;left:50%;line-height:1.6em;margin:0 0 0 -20em;padding:1.5em 0;position:absolute;width:40em}
+form{margin:0;padding:0}
+input{background:#1A2A39;background-color:rgba(50,100,145,.2);border:1px solid #234563;font-size:100%;width:37em}
+@media all and (min-height:784px){#container{padding-top:8px}}
+@media all and (min-height:800px){#container{padding-top:16px}}
+@media all and (min-height:832px){#container{padding-top:32px}}
+@media all and (min-height:896px){#container{padding-top:64px}}
+@media all and (min-height:1024px){#container{padding-top:128px}}
+@media all and (min-width:1176px){
+#container{width:1176px}
+canvas{float:right;margin-left:16px}
+#desc{background-image:-webkit-linear-gradient(left,#10161C 136px,#000 160px);background-image:-moz-linear-gradient(left,#10161C 136px,#000 160px);background-image:-o-linear-gradient(left,#10161C 136px,#000 160px);background-image:linear-gradient(left,#10161C 136px,#000 160px);border-radius:.4em;border-top-style:solid;margin:0;padding-top:1.5em;text-align:right}
+.note,a.logo{display:block}
+a.logo:hover{background:none}
+svg{height:64px;margin:0 86px -32px -32px;width:64px}
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+<canvas width="1024" height="768" id="c">This arcade space shooter requires a modern HTML5 enabled web browser and JavaScript enabled. It was made for the <a href="http://js13kgames.com/">js13kGames</a> competition in 2012.</canvas>
+<p id="desc">
+<a href="http://maettig.com/code/canvas/starship-sorades-13k/" rel="bookmark" title="Permalink to this game">SORADES&nbsp;13K</a>
+is a <a href="http://www.gramambo.de/index.php?option=com_content&view=article&id=4&Itemid=5#Spiele">Gramambo game</a>
+by <a href="http://maettig.com/">Thiemo M&auml;ttig</a> <span class="note">(<a href="https://twitter.com/maettig">@maettig</a>).</span>
+<span class="note">SFX by <a href="http://www.sven-gramatke.de/">Sven Gramatke</a>.</span>
+<span class="note">Press X to fire, <a href="#" onclick="return toggleFullscreen()">F for fullscreen</a>.</span>
+<span class="note">Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/de/">CC-BY-SA-3.0-DE</a>.</span>
+<span class="note">Contains <a href="https://github.com/mneubrand/jsfxr">jsfxr</a> by <a href="https://twitter.com/markusneubrand">Markus Neubrand</a>,
+based on <a href="http://code.google.com/p/as3sfxr/">as3sfxr</a> (<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>) by <a href="http://tomvian.com/">Thomas Vian</a>,
+based on <a href="http://www.drpetter.se/project_sfxr.html">sfxr</a> (<a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>) by <a href="http://www.drpetter.se/">Tomas Pettersson</a>.</span>
+<a href="http://www.gramambo.de/" class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><g fill="#08F" stroke="#000"><path d="M7 3s1 1 0 2L5 7S4 8 3 7L1 5S0 4 1 3l2-2s1-1 2 0z" stroke-width=".3"/><path d="M4 4h.5c1 0 1 1.6 0 1.6h-.9c-1.5 0-1.5-3.2 0-3.2h1.9"/></g></svg></a>
+</p>
+</div>
+
+<p id="tweet">
+<a href="https://twitter.com/share?text=I+played+SORADES+13K.&url=http://maettig.com/code/canvas/starship-sorades-13k/&via=maettig" target="twitter">Click here to tweet your score</a><br>
+or blog it:<br>
+<input value="I played SORADES 13K: http://maettig.com/code/canvas/starship-sorades-13k/">
+</p>
+
+<script src="starship-sorades-13k.js"></script>

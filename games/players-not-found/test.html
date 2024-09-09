@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Hide</title>
+<meta charset="UTF-8">
+</head>
+<body>
+<canvas width="32" height="32"></canvas>
+
+<script>
+    var c = document.getElementsByTagName("canvas")[0];
+    var ctx = c.getContext("2d");
+    var imgD = ctx.getImageData(0,0,32,32);
+    var data = imgD.data;
+
+    for (var i = 0; i < data.length; i += 4) {
+        data[i] = Math.floor(Math.random()*255);
+        data[i+1] = Math.floor(Math.random()*255);
+        data[i+2] = Math.floor(Math.random()*255);
+        // data[i+3] = 255;
+    }
+
+    ctx.putImageData(imgD, 0, 0);
+
+</script>
+
+</body>
+</html>

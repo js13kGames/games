@@ -1,0 +1,144 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Geometriko — a game by indies4indies</title>
+<meta name=viewport content="width=device-width">
+<style>html{user-select:none;cursor:default;font-size:16px;height:100%;text-shadow:2px 2px 4px black;font-family:serif;color:#000;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:-moz-none;-moz-user-select:none;-ms-user-select:none;}
+table{margin:1em auto 0;font-size:4em;padding:1em;font-family:sans-serif;table-layout:fixed;width:24em;border:1px solid black;}
+table,input{background:#aaa;background:-moz-linear-gradient(top,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-webkit-gradient(linear,left bottom,left top,color-stop(0%,rgba(0,0,0,.32)),color-stop(100%,rgba(0,0,0,0)));background:-webkit-linear-gradient(top,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-o-linear-gradient(top,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-ms-linear-gradient(top,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:linear-gradient(to top,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);}
+td{border:1px solid black;width:2.5em;height:2.5em}
+td:not(.h):not(.n){height:2.5em;width:2.5em;border:1px solid black;text-align:center;}
+td:not(.h):not(.n),b,body{background:#aaa;background:-moz-linear-gradient(bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,rgba(0,0,0,.32)),color-stop(100%,rgba(0,0,0,0)));background:-webkit-linear-gradient(bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-o-linear-gradient(bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:-ms-linear-gradient(bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);background:linear-gradient(to bottom,rgba(0,0,0,.32) 0%,rgba(0,0,0,0) 100%);}
+td:not(.h):not(.n):hover,b:hover{background:#ddd;background:-moz-linear-gradient(bottom,rgba(255,255,255,.32) 0%, rgba(0,0,0,0) 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,rgba(255,255,255,.32)),color-stop(100%,rgba(0,0,0,0)));background:-webkit-linear-gradient(bottom,rgba(255,255,255,.32) 0%,rgba(0,0,0,0) 100%);background:-o-linear-gradient(bottom,rgba(255,255,255,.32) 0%,rgba(0,0,0,0) 100%);background:-ms-linear-gradient(bottom,rgba(255,255,255,.32) 0%,rgba(0,0,0,0) 100%);background:linear-gradient(to bottom,rgba(255,255,255,.32) 0%,rgba(0,0,0,0) 100%);}
+.A.h div{margin-right:1em}
+.B.h div{margin-left:1em}
+.n,.h{border:0}
+.n{width:2em;}
+.h{width:3.5em;}
+.n:first-child{text-align:right}
+td div{color:white;text-align:center;overflow:hidden}
+td:not(.n):not(.A):not(.B),td.h{cursor:pointer}
+.n div{width:2em;border:0}
+.h div{opacity:.9}
+td:not(.A):not(.B):not(.n):hover{border:1px solid white}
+td{background-size:100% 100%}
+.A,.B{color:white;background-size:100% 100%}
+.A div,.B div{width:2.4em;line-height:2.4em;height:2.4em}
+td.A div{background-color:darkblue;background-image:url(C.svg),url(A.svg)}
+td.B div{background-color:#b22;background-image:url(C.svg),url(B.svg)}
+body.A{background-image:url(A.svg)}
+body.B{background-image:url(B.svg)}
+td.A div{border:.08em solid darkblue}
+td.B div{border:.08em solid #b22}
+.A .h.B div,.B .h.A div{opacity:.4}
+.A .h.A:hover div,.B .h.B:hover div{border:.08em solid white;}
+.h.c div{border:.08em solid gold}
+.c:hover div{border:.08em solid yellow!important}
+td.A svg{width:2em;height:2em;margin:.2em .1em .2em .3em;-webkit-transform:perspective(8em) rotateY(20deg);-moz-transform:perspective(8em) rotateY(20deg);-ms-transform:perspective(8em) rotateY(20deg);-o-transform:perspective(8em) rotateY(20deg);transform:perspective(8em) rotateY(20deg);}
+td.B svg{width:2em;height:2em;margin:.2em .3em .2em .1em;-webkit-transform:perspective(8em) rotateY(-20deg);-moz-transform:perspective(8em) rotateY(-20deg);-ms-transform:perspective(8em) rotateY(-20deg);-o-transform:perspective(8em) rotateY(-20deg);transform:perspective(8em) rotateY(-20deg);}
+.A .h.A:hover svg{-webkit-transform:perspective(6em) rotateY(40deg) rotateZ(-10deg) rotateX(10deg);-moz-transform:perspective(6em) rotateY(40deg) rotateZ(-10deg) rotateX(10deg);-ms-transform:perspective(6em) rotateY(40deg) rotateZ(-10deg) rotateX(10deg);-o-transform:perspective(6em) rotateY(40deg) rotateZ(-10deg) rotateX(10deg);transform:perspective(3em) rotateY(40deg) rotateZ(-10deg) rotateX(10deg);}
+.B .h.B:hover svg{-webkit-transform:perspective(6em) rotateY(-40deg) rotateZ(10deg) rotateX(10deg);-moz-transform:perspective(6em) rotateY(-40deg) rotateZ(10deg) rotateX(10deg);-ms-transform:perspective(6em) rotateY(-40deg) rotateZ(10deg) rotateX(10deg);-o-transform:perspective(6em) rotateY(-40deg) rotateZ(10deg) rotateX(10deg);transform:perspective(3em) rotateY(-40deg) rotateZ(10deg) rotateX(10deg);}
+.o{opacity:0}
+.i{opacity:1}
+*{-webkit-transition:.4s;-moz-transition:.4s;-ms-transition:.4s;-o-transition:.4s;transition:.4s}
+body{-webkit-transition:background 0;-moz-transition:background 0;-ms-transition:background 0;-o-transition:background 0;transition:background 0}
+table,td,td div{-webkit-border-radius:.2em;-khtml-border-radius:.2em;-moz-border-radius:.2em;-ms-border-radius:.2em;-o-border-radius:.2em;border-radius:.2em}
+#M,#C,#H{position:absolute;width:100%;top:16em;overflow:hidden;font-size:1.2em}
+#M,#C{text-align:center}
+#M{left:0;right:0}
+#C{left:-100%;right:0}
+#H{width:50%;margin:0 auto;left:-100%}
+.H #H{left:25%}
+.C #C{left:0}
+.H #M,.C #M{left:-100%}
+.A #M,.B #M{display:none}
+.A h1,.B h1{font-size:2em;line-height:1;}
+h1{overflow:hidden;font-size:7em;height:1.5em;text-align:center;}
+h1 img{display:block;margin:0 auto;width:12.5em;height:1.5em}
+select{background:#ddd}
+b,select{font-size:1em;font-weight:normal;display:block;line-height:2;width:15em;margin:1em auto;border:1px solid black;box-shadow:2px 2px 4px black,0 0 0 black inset;cursor:pointer;text-align:center;-webkit-border-radius:8em;-khtml-border-radius:8em;-moz-border-radius:8em;-ms-border-radius:8em;-o-border-radius:8em;border-radius:8em;}
+input{font-size:1em;font-weight:normal;line-height:1;width:3em;margin:1em auto;border:1px solid black;box-shadow:1px 1px 2px black inset;text-align:center;background:white}
+b:hover{box-shadow:0 0 0 black,2px 2px 4px black inset;border:1px solid gold;}
+p,h2{margin-top:1em;line-height:1.2}
+a{color:black;text-decoration:none;font-weight:bold;font-size:1.3em;text-shadow:none;box-shadow:1px 1px 2px black;background:white;font-family:sans-serif;padding:1px 3px;}
+a span{color:#00c7b0}
+a:hover{color:black;text-decoration:none;font-weight:bold;font-size:1.3em;text-shadow:none;box-shadow:2px 2px 4px black;background:white;font-family:sans-serif;padding:1px 3px;}
+#X{position:absolute;top:0;right:0;width:10em;text-align:right}
+#L{position:absolute;bottom:1em;right:1em}
+#X b{width:8em}
+#X p,#X span{margin-right:1em}
+body:not(.A):not(.B) table,body:not(.A):not(.B) #X{display:none}</style>
+<style id=d3></style>
+<h1><img src=L.svg alt=Geometriko>Geometriko</h1>
+<div id=M>
+<b title="Help/Credits" onclick="d.body.className='H'">Help/Credits</b>
+<b title="Your journey begins…" onclick="e.C = 1;e.L = 1;e.V(0,1,0,0,0,0,0,0);e.s();">Normal Quest</b>
+<b title="Oh noes! The AI has gone mad, and it's even trying to cheat!" onclick="e.C = 2;e.L = 1;e.V(0,1,0,0,0,1,0,0);d.body.className = 'A';e.s();">Unlucky Quest</b>
+<b title="It's your lucky day!" onclick="e.C = 3;e.L = 1;e.V(0,4,2,2,2,0,0,0);d.body.className = 'B';e.s();">Lucky Quest</b>
+<b title="Two–players Hotseat" onclick="e.C = 0;e.L = 0;e.V(0,0,0,0,0,0,0,0);e.s();">Two–players Hotseat</b>
+<b title="Custom Match" onclick="e.V(0,3,0,0,0,0,0,0);d.body.className='C'">Custom Battle</b>
+</div>
+<div id=C>
+<h2>Blue player</h2>
+<select>
+<option selected>Human</option>
+<option>Random AI</option>
+<option>GeometrikAI – lvl 1</option>
+<option>GeometrikAI – lvl 2</option>
+<option>GeometrikAI – lvl 3</option>
+<option>GeometrikAI – lvl 4</option>
+<option>GeometrikAI – lvl 5</option>
+<option>GeometrikAI – lvl 6</option>
+</select>
+<p>Starting tiles<br>
+<input disabled value=∞>
+<input>
+<input>
+<input>
+<h2>Red player</h2>
+<select>
+<option>Human</option>
+<option>Random AI</option>
+<option>GeometrikAI – lvl 1</option>
+<option selected>GeometrikAI – lvl 2</option>
+<option>GeometrikAI – lvl 3</option>
+<option>GeometrikAI – lvl 4</option>
+<option>GeometrikAI – lvl 5</option>
+<option>GeometrikAI – lvl 6</option>
+</select>
+<p>Starting tiles<br>
+<input disabled value=∞>
+<input>
+<input>
+<input>
+<b title=Play onclick="e.C = 0;e.L = 0;e.s()">Play</b>
+<b title="Main Menu" onclick="d.body.className=''">Back</b>
+</div>
+<div id=H>
+<p>Welcome to a little game demo by <a href=//www.indies4indies.com/ target=_blank>indies<span>4</span>indies</a>.
+<p>GEOMETRIKO is a twisted mix of Tic–tac–toe and Reversi, featuring three single player modes and a two–player hotseat mode.
+<h2>How to play</h2>
+<p>GEOMETRIKO is a turn–based game played on a 4x4 grid, and features four different tiles, aka Tiers, arranged in ascending order.
+<p>Each player starts with an infinite number of Tier–1 tiles.
+<p>Every time a player makes a three–of–a–kind he performs a Trip on the board; once a Trip is made it is removed from the board and the player is awarded an upgraded Tier.
+<p>Making a four–of–a–kind, a Quad, gives the player two upgraded Tiers.
+<p>If a higher Tier is put next to a lesser one, the lesser one switches side.
+<h2>Victory conditions</h2>
+<p>A player can win a match either by filling the entire board with more of his own tiles than his opponent’s, or by achieving a Trip/Quad of Tier–4 tiles.
+<p><br><br>We do hope you’ll enjoy playing it! Have fun!
+<p>—The <a href=//www.indies4indies.com/ target=_blank>i<span>4</span>i</a> team.
+<b title="Main Menu" onclick="d.body.className=''">Ok</b>
+</div>
+<div id=X>
+<b title="Restart this match" onclick="d.body.className = ''; e.s();">Give up</b>
+<b title="Main manu" onclick="d.body.className=''">Main Menu</b>
+<p></p>
+<span><input type=checkbox checked onclick=e.d3()>3D</span>
+</div>
+<a id=L href=//www.indies4indies.com/ target=_blank>indies<span>4</span>indies</a>
+<table>
+<tr><td><td><td><td><td><td><td><td>
+<tr><td><td><td><td><td><td><td><td>
+<tr><td><td><td><td><td><td><td><td>
+<tr><td><td><td><td><td><td><td><td>
+</table>
+<script>'use strict';var d=document,w=window,$=function(b){return"#"===b.charAt(0)?d.getElementById(b.substring(1)):"."===b.charAt(0)?d.getElementsByClassName(b.substring(1)):d.getElementsByTagName(b)},e={d3:function(){""===$("#d3").innerHTML?$("#d3").innerHTML=".A table{-webkit-transform:perspective(30em) rotateY(4deg);-moz-transform:perspective(30em) rotateY(4deg);-ms-transform:perspective(30em) rotateY(4deg);-o-transform:perspective(30em) rotateY(4deg);transform:perspective(30em) rotateY(4deg);}.B table{-webkit-transform:perspective(30em) rotateY(-4deg);-moz-transform:perspective(30em) rotateY(-4deg);-ms-transform:perspective(30em) rotateY(-4deg);-o-transform:perspective(30em) rotateY(-4deg);transform:perspective(30em) rotateY(-4deg);}": $("#d3").innerHTML=""},alert:function(b){w.alert(b)},C:0,L:1,f:"",r:"",h:"",p:"",t:"",z:[4,4],a:{b:!1,t:600,l:6,p:999999999,m:function(b,h,a,g,k,v){!0===a&&(a=1);!1===a&&(a=0);var n=1===a?e.a.p:-e.a.p,y=[-1,-1,-1,a],s,p,t,l,x,z,A;x=[];z=[];var m=[],q=0;if(1>g)return[y];for(t=0;4>t;t+=1)if(0!==h[t][a])for(p=0;4>p;p+=1)for(s=0;4>s;s+=1)if(0===b[p][s]){m[q]=[];m[q][2]=[];m[q][3]=[];for(l=0;4>l;l+=1)for(m[q][2][l]=[],x=0;4>x;x+=1)m[q][2][l][x]=b[l][x];for(l=0;5>l;l+=1)m[q][3][l]=[],m[q][3][l][0]=h[l][0], m[q][3][l][1]=h[l][1];m[q][2][p][s]=4*a+t+1;z=m[q][2][p][s];0<t&&(m[q][3][t][a]-=1);for(l=Math.max(0,p-1);l<Math.min(4,p+2);l+=1)for(x=Math.max(0,s-1);x<Math.min(4,s+2);x+=1)A=m[q][2][l][x],0<A&&(A-1)%4<(z-1)%4&&(m[q][2][l][x]=4<z?A%4+4:A%4);m[q][2]=e.v(m[q][2],m[q][3]);m[q][1]=e.a.s(m[q][2],m[q][3]);m[q][0]=[t,s,p,a];q+=1}m.sort(function(b,g){var h=b[1][0],k=g[1][0];if(0===a){if(h>k)return-1;if(h<k)return 1}if(h<k)return-1;if(h>k)return 1;if(0===a){h=b[1][1];k=g[1][1];if(h>k)return-1;if(h<k)return 1}h= b[1][2];k=g[1][2];return h<k?-1:h>k?1:Math.floor(3*Math.random())-1});l=0;a:for(;l<m.length;l+=1){t=m[l][0][0];s=m[l][0][1];p=m[l][0][2];a=m[l][0][3];b=m[l][1][0];x=m[l][2];z=m[l][3];b===(a?-e.a.p:e.a.p)&&(y=[t,s,p,a],n=b);1!==g&&(b=e.a.m(x,z,!a,g-1,k,v),b=b[1]);if(0===a){if(k=Math.max(k,b),v<=k){y=[t,s,p,a];n=k;break a}}else if(v=Math.min(v,b),v<=k){y=[t,s,p,a];n=v;break a}1===a?b<n&&(n=b,y=[t,s,p,a]):b>n&&(n=b,y=[t,s,p,a])}return[y,n]},s:function(b,h,a){a=[0,0];var g,k,v=0,n=0;if(0<h[4][0])return e.a.p; if(0<h[4][1])return-e.a.p;for(g=0;4>g;g+=1)for(k=0;4>k;k+=1)0<b[g][k]?5>b[g][k]?(a[0]+=Math.pow(3,b[g][k]-1),n+=1):(a[1]+=Math.pow(3,b[g][k]-5),n-=1):v+=1;for(g=1;4>g;g+=1)a[0]+=Math.min(h[g][0],4)*Math.pow(3.2,g),a[1]+=Math.min(h[g][1],4)*Math.pow(3.2,g);return 0===v?0===n?0:0<n?e.a.p:-e.a.p:[a[0]-a[1],a[0],a[1]]},r:function(){return Math.floor(4*Math.random())},c:function(b,h,a,g){0===e.a.t?e.a.C(b,h,a):setTimeout(function(){e.a.C(b,h,a)},100)},C:function(b,h,a){var g="A"===e.p?0:1;e.a.b=!1;$("tr")[b].children[1+ 5*g].click();$("tr")[a].children[2+h].click();return e},_:function(b){e.a.b=!0;setTimeout(function(){var h="A"===e.p?e.a.m(e.f,e.r,0,b,-e.a.p,e.a.p):e.a.m(e.f,e.r,1,b,-e.a.p,e.a.p),h=e.a.m(e.f,e.r,"A"===e.p?0:1,b,-e.a.p,e.a.p);if(void 0===h||void 0===h[0]||-1===h[0][0])e.a[1]();else h=h[0],e.a.c(h[0],h[1],h[2])},e.a.t)},0:function(){return e},1:function(){var b=e.a.r,h=-1,a=-1,g=-1,k=(new Date).getTime();for(e.a.b=!0;-1===h||0===e.r[h]["A"===e.p?0:1];)h=b();for(;-1===a||0!==e.f[g][a];)a=b(),g=b(); setTimeout(function(){e.a.c(h,a,g,k)},e.a.t)},2:function(){e.a._(1)},3:function(){e.a._(2)},4:function(){e.a._(3)},5:function(){e.a._(4)},6:function(){e.a._(5)},7:function(){e.a._(6)},8:function(){e.a._(7)},9:function(){e.a._(8)},10:function(){e.a._(9)}},d:function(){var b=$("tr"),h,a,g,k;for(g=0;g<b.length;g+=1)for(h=b[g].children,k=0;k<h.length;k+=1)0===k&&(h[k].className="n",a=e.r[g][0]),1===k&&(a=e.h[g][0],h[k].className="A h"),1<k&&6>k&&(a=e.f[g][k-2],h[k].className=0===a?"":4<a?"B":"A",a=0=== a?"":4<a?e.h[a-5][1]:e.h[a-1][0],h[k].x=k-2),6===k&&(a=e.h[g][1],h[k].className="B h"),7===k&&(a=e.r[g][1],h[k].className="n"),h[k].y=g,h[k].innerHTML=0===a?"":a,h[k].onclick=h[k].click=e.c;return e},u:function(){var b=d.body,h=b.className;"A"===h?b.className="B":"B"===h?b.className="A":Math.floor(2*Math.random())?(b.className="B",e.S="Red"):(b.className="A",e.S="Blue");e.p=b.className;"A"===e.p?$("td")[1].click():$("td")[6].click();e.a[e.z["A"===e.p?0:1]]()},l:function(){0<$(".c").length&&($(".c")[0].className= e.p+" h")},g:function(b,h){var a=0,g=0,k;if(h[4][0]||h[4][1])return!0;for(a=0;a<b.length;a+=1)for(k=b[a],g=0;g<k.length;g+=1)if(0===k[g])return!1;return!0},o:function(b,h){var a,g,k,v=e.f[b][h],n;for(a=Math.max(0,b-1);a<Math.min(4,b+2);a+=1)for(g=Math.max(0,h-1);g<Math.min(4,h+2);g+=1)k=$("tr")[a].children[g+2],n=e.f[a][g],0<n&&(n-1)%4<(v-1)%4&&(4<v?(e.f[a][g]=n%4+4,k.innerHTML=e.h[(n-1)%4][1]):(e.f[a][g]=n%4,k.innerHTML=e.h[(n-1)%4][0]),k.className=e.p);return e},m:function(b,h){4<b?h[b-4][1]+=1: h[b][0]+=1},v:function(b,h){var a,g,k=[];for(a=0;a<b.length;a+=1)k[a]=b[a].slice(0);for(a=0;a<b.length;a+=1)for(g=0;g<b[a].length;g+=1)0<b[a][g]&&(b[a][g+2]&&b[a][g]===b[a][g+1]&&b[a][g]===b[a][g+2]&&(k[a][g]=k[a][g+1]=k[a][g+2]=0,e.m(b[a][g],h)),b[a+2]&&b[a][g]===b[a+1][g+1]&&b[a][g]===b[a+2][g+2]&&(k[a][g]=k[a+1][g+1]=k[a+2][g+2]=0,e.m(b[a][g],h)),b[a+2]&&b[a][g]===b[a+1][g]&&b[a][g]===b[a+2][g]&&(k[a][g]=k[a+1][g]=k[a+2][g]=0,e.m(b[a][g],h)),b[a+2]&&b[a][g]===b[a+1][g-1]&&b[a][g]===b[a+2][g-2]&& (k[a][g]=k[a+1][g-1]=k[a+2][g-2]=0,e.m(b[a][g],h)));return k},w:function(){var b=$(".A").length-4,h=$(".B").length-4,a=0;"A"===e.p?b-=1:h-=1;a=0<e.r[4][0]?1:0<e.r[4][1]?2:b>h?1:b<h?2:3;if(1===a){0<e.L&&0<e.C&&(e.L+=1);if(5<e.L&&0<e.C)return 1===e.C&&e.alert("Congratulations!\nYou have completed the Normal Quest!"),2===e.C&&e.alert("Congratulations!\nYou have completed the Unlucky Quest!"),3===e.C&&e.alert("Congratulations!\nYou have completed the Lucky Quest!"),e.L=0,e.C=0,d.body.className="",e;1=== e.C&&(3>e.L?e.V(0,1,0,0,0,0,0,0):e.V(0,e.L-1,0,0,0,0,0,0));2===e.C&&(2===e.L&&e.V(0,1,0,0,0,1,1,0),3===e.L&&e.V(0,1,0,0,0,2,1,0),4===e.L&&e.V(0,1,0,0,0,2,1,1),5===e.L&&e.V(0,1,0,0,0,2,2,2));3===e.C&&(2===e.L&&e.V(0,4,2,1,1,0,0,0),3===e.L&&e.V(0,4,2,1,0,0,0,0),4===e.L&&e.V(0,4,1,1,0,0,0,0),5===e.L&&e.V(0,4,1,0,0,0,0,0));e.alert(e.S+" started, Blue wins!")}2===a&&e.alert(e.S+" started, Red wins!");3===a&&e.alert(e.S+" started, It's a draw!");e.s()},R:function(){var b=d.body,h=$("html")[0];b.style.fontSize= Math.min(h.clientWidth/120,h.clientHeight/80)+"px"},s:function(){!0===$("input")[8].checked&&e.d3();var b=0,h=$("#X").getElementsByTagName("p")[0],a=[["M75,18.4L8.5,133.6h133L75,18.4z M75,41.5l46.7,80.9H28.3 L75,41.5z","75,61.6 44.5,114.3 105.5,114.3","A"],["M75,8.4L8.4,75l2.3,2.3L75,141.6l63.9-63.9l2.7-2.7L75,8.4z M75,124.3L25.7,75L75,25.7l46.8,46.8l2.5,2.5L75,124.3z","75,39.8 45.9,68.9 39.8,75 75,110.2 110.2,75 104.4,69.2","B"],["M75,12.7L9.5,60.3l25,77h80.9l25-77L75,12.7z M106.8,126.8H43.2 L23.5,66.3L75,28.8l51.5,37.4L106.8,126.8z", "75,46.2 38.3,72.9 52.3,116.1 97.7,116.1 111.7,72.9","C"],["M109.6,15H40.4L5.7,75l34.6,60h69.3l34.6-60L109.6,15z M102.3,122.2H47.7L20.5,75l27.3-47.2h54.5L129.5,75L102.3,122.2z","95.4,39.6 54.6,39.6 34.1,75 54.6,110.4 95.4,110.4 115.9,75","D"]];for(e.h=[["",""],["",""],["",""],["",""]];4>b;b+=1)e.h[b][0]=e.h[b][1]='<div><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 150 150"><path fill="#fff" stroke="#222" stroke-miterlimit="10" d="'+a[b][0]+'"></path><polygon fill="#fff" stroke="#222" stroke-miterlimit="10" points="'+ a[b][1]+'"></polygon></svg>'+a[b][2]+"</div>";e.s2();d.body.className=2===e.C?"A":3===e.C?"B":"";e.p="";1===e.C&&(h.innerHTML="Normal Quest<br>Level "+e.L);2===e.C&&(h.innerHTML="Unlucky Quest<br>Level "+e.L);3===e.C&&(h.innerHTML="Lucky Quest<br>Level "+e.L);e.d().u()},s2:function(){var b=$("select"),h=b[0].selectedIndex,b=b[1].selectedIndex,a=$("input");e.f=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];e.r=[["\u221e","\u221e"],[parseInt(a[1].value)||0,parseInt(a[5].value)||0],[parseInt(a[2].value)|| 0,parseInt(a[6].value)||0],[parseInt(a[3].value)||0,parseInt(a[7].value)||0],[0,0]];e.z[0]=h;e.z[1]=b},V:function(b,h,a,g,k,v,n,y){var s=$("select"),p=$("input");s[0].selectedIndex=b;s[1].selectedIndex=h;p[1].value=a;p[2].value=g;p[3].value=k;p[5].value=v;p[6].value=n;p[7].value=y;return k},c:function(){var b;if("n"!==this.className&&!e.a.b)if(-1!=this.className.search("h"))e.l(),"A"===e.p&&(this.previousSibling.innerHTML===e.r[0][0]||0<this.previousSibling.innerHTML)?(e.t=this.innerHTML,e.n=this.previousSibling, this.className+=" c"):"B"===e.p&&(this.nextSibling.innerHTML===e.r[0][0]||0<this.nextSibling.innerHTML)?(e.t=this.innerHTML,e.n=this.nextSibling,this.className+=" c"):(e.t="",e.n=!1);else if(""!==e.t&&""===this.innerHTML){this.innerHTML=e.t;this.className=e.p;e.l();e.n.innerHTML!==e.r[0][0]&&(e.n.innerHTML-=1,e.r[e.n.y]["A"===e.p?0:1]-=1);"0"===e.n.innerHTML&&(e.n.innerHTML="");for(b=0;b<e.h.length;b+=1)e.t.slice(-7)===e.h[b]["A"===e.p?0:1].slice(-7)&&(e.f[this.y][this.x]="A"===e.p?b+1:b+5);e.t=""; e.f=e.o(this.y,this.x).v(e.f,e.r);e.d();e.g(e.f,e.r)?e.w():e.u()}}},C=d.createElement("canvas"),c=C.getContext("2d"),u=$("title")[0].innerHTML,r=[],f=d.createElement("link");w.onresize=e.R;e.R();C.width=C.height=32;c.font="bold 24px sans-serif";c.textAlign="left";for(var i=0;i<c.measureText(u).width/8+6;++i)c.clearRect(0,0,32,32),c.arc(16,16,16,0,2*Math.PI,!1),c.fillStyle="#00f",c.fill(),c.fillStyle="red",c.fillText(u,-8*i+32,26),r[i]=C.toDataURL("image/png");f.rel="icon"; setInterval(function(){i>=r.length&&(i=0);f.href=r[i++];d.head.appendChild(f)},200);</script>

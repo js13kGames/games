@@ -1,0 +1,38 @@
+body {
+	margin: 0;
+}
+#game {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	font-family: "Times New Roman";
+	font-size: 40pt;
+	color: #15F;
+	background-color: #ABC;
+	text-align: center;
+}
+#game .screen {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+#game #introScreen {
+	display: block;
+}
+#play {
+	color: #555;
+	font-family: Arial;
+	font-weight: bold;
+	cursor: pointer;
+}
+#play:hover {
+	font-size: 50pt;
+}
+#game #gameScreen {
+	display: none;
+}
+#gameCanvas {
+	background-color: #999;
+}

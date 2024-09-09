@@ -1,0 +1,1 @@
+var Events=(function(){var b={},c=function(f,e,h){if(b[f]){var j=b[f],g=j.length-1;for(g;g>=0;g-=1){j[g].apply(h||this,e||[])}}},a=function(e,f){if(!b[e]){b[e]=[]}b[e].push(f);return[e,f]},d=function(g,h){var f=g[0],e=b[f].length-1;if(b[f]){for(e;e>=0;e-=1){if(b[f][e]===g[1]){b[f].splice(b[f][e],1);if(h){delete b[f]}}}}};return{publish:c,subscribe:a,unsubscribe:d}}());

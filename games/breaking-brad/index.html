@@ -1,0 +1,185 @@
+<html>
+<head>
+	<title>Breaking Brad</title>
+	<style>
+		body {
+			background: #183106;
+			margin: auto;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			position: absolute;
+			font-family: verdana;
+			color: #c6c9b1;
+			font-size: 20pt;
+		}
+		#canvas {
+		    padding-left: 0;
+		    padding-right: 0;
+		    margin-left: auto;
+		    margin-right: auto;
+		    margin-top: 50px;
+		    display: block;
+		    width: 900px;
+		    position: relative;
+		}
+		#submitButton {
+			display: none;
+			height: 65;
+			width: 65;
+			position: absolute;
+			left: 570;
+			bottom: 5;
+			font-size: 16px;
+			border: 1px;
+			border-style: solid;
+			border-color: #DEDEDE;
+			color: #DEDEDE;
+			background: #4fac75; /* Old browsers */
+			background: -moz-linear-gradient(-45deg,  #4fac75 0%, #2b7d46 44%, #0b3109 84%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4fac75), color-stop(44%,#2b7d46), color-stop(84%,#0b3109)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* IE10+ */
+			background: linear-gradient(135deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4fac75', endColorstr='#0b3109',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+		}
+		#emptyButton {
+			display: none;
+			height: 65;
+			width: 65;
+			position: absolute;
+			left: 635;
+			bottom: 70;
+			font-size: 16px;
+			border-style: solid;
+			border-color: #DEDEDE;
+			color: #DEDEDE;
+			background: #4fac75; /* Old browsers */
+			background: -moz-linear-gradient(-45deg,  #4fac75 0%, #2b7d46 44%, #0b3109 84%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4fac75), color-stop(44%,#2b7d46), color-stop(84%,#0b3109)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* IE10+ */
+			background: linear-gradient(135deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4fac75', endColorstr='#0b3109',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+		}
+
+		#startUI {
+			display: none;
+			position: absolute;
+			left: 450;
+			bottom: 0;
+			color: #fff;
+			font-size: 60px;
+		}
+
+		#startUI h2 {
+			color: #fff;
+			position: relative;
+			left: -410;
+			bottom: 240;
+			margin: -20px;
+		}
+		#startUI h3 {
+			color: #fff;
+			font-size: 150px;
+			position: relative;
+			left: -410;
+			bottom: 270;
+			margin: 0;
+		}
+		#startUI .credit {
+			color: #fff;
+			font-size: 20px;
+			position: absolute;
+			bottom: 340;
+			left: 100;
+		}
+		#startUI .instructions {
+			color: #c6c9b1;
+			font-size: 20px;
+			position: absolute;
+			bottom: 70;
+			left: -440;
+		}
+		#startUI .credit p {
+			margin: 0;
+		}
+		#startButton {
+			height: 105;
+			width: 105;
+			position: absolute;
+			left: -105;
+			bottom: -15;
+			font-size: 60px;
+			border-style: solid;
+			border-color: #DEDEDE;
+			color: #DEDEDE;
+			background: #4fac75; /* Old browsers */
+			background: -moz-linear-gradient(-45deg,  #4fac75 0%, #2b7d46 44%, #0b3109 84%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4fac75), color-stop(44%,#2b7d46), color-stop(84%,#0b3109)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* IE10+ */
+			background: linear-gradient(135deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4fac75', endColorstr='#0b3109',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+		}
+		#endUI {
+			display: none;
+			position: absolute;
+			left: 450;
+			bottom: 0;
+			color: #fff;
+			font-size: 60px;
+		}
+		#menuButton {
+			height: 105;
+			width: 105;
+			position: absolute;
+			left: -105;
+			bottom: -15;
+			font-size: 60px;
+			border-style: solid;
+			border-color: #DEDEDE;
+			color: #DEDEDE;
+			background: #4fac75; /* Old browsers */
+			background: -moz-linear-gradient(-45deg,  #4fac75 0%, #2b7d46 44%, #0b3109 84%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#4fac75), color-stop(44%,#2b7d46), color-stop(84%,#0b3109)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(-45deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* IE10+ */
+			background: linear-gradient(135deg,  #4fac75 0%,#2b7d46 44%,#0b3109 84%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4fac75', endColorstr='#0b3109',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+		}
+		#gui {
+		  bottom: 0;
+		  left: 0;
+		  position: absolute;
+		  width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="canvas">
+	    <canvas id="gameCanvas" width="900" height="600"></canvas>
+	    <menu id="gui">
+			<button id="submitButton" onclick="progressionManager.testTask()" type="submit" disabled>Submit</button>
+			<button id="emptyButton" onclick="container.flush()" type="submit" disabled>Empty Flask</button>
+			<div id="startUI">
+				<h2>Br<span style="color: #c6c9b1">eaking</span></h2>
+				<h3 style="padding-left: 88px">Br<span style="color:#c6c9b1">ad</span></h3>
+				<span class="credit">
+					<p>Ma<span style="color: #c6c9b1">de in @Lazer</span></p>
+					<p style="padding-left: 29px" />Na<span style="color: #c6c9b1">med by @macaskill</span></p>
+				</span>
+				<button id="startButton" onclick="loadMode('main')" type="submit" disabled>St</button>art
+			</div>
+			<div id ="endUI">
+				<button id="menuButton" onclick="loadMode('menu')" type="submit" disabled>Me</button>nu
+			</div>
+  		</menu>
+	</div>
+	<script src="main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>fuTris -- a js13kGames entry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <h1>fuTris</h1>
+    <p>A <a href="http://js13kgames.com/">js13kGames 2014</a> entry (<a href="http://github.com/f0086/js13kgames-2014">source</a>)
+    by <a href="https://aaron-mueller.de/">Aaron Fischer</a>.</p>
+    <canvas id="fuTris"></canvas>
+    <p>Use the arrow keys to move (<span>←</span>, <span>→</span>, rotate
+    (<span>↑</span>) and drop (<span>↓</span>) stones. Press <span>P</span> for
+    pause the game. If you messed up, restart with <span>R</span>. Vim-users
+    will also find a way to play :)</p>
+    <audio src="assets/rotate.wav" id="rotate-sound" autostart="false"></audio>
+    <audio src="assets/drop.wav" id="drop-sound" autostart="false"></audio>
+    <audio src="assets/move.wav" id="move-sound" autostart="false"></audio>
+    <audio src="assets/point.wav" id="point-sound" autostart="false"></audio>
+    <script src="fuTris.js"></script>
+  </body>
+</html>

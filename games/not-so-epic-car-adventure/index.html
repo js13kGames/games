@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>NOT SO EPIC CAR ADVENTURE</title>
+    <style>
+      #canvas {
+        margin: 10px auto 0;
+        display: block;
+        image-rendering: optimizeSpeed;           
+        image-rendering: -moz-crisp-edges;         
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: -o-crisp-edges;            
+        image-rendering: pixelated;               
+        -ms-interpolation-mode: nearest-neighbor;   
+      }
+    </style>
+  </head>
+  <body>
+    
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <div style="width: 800px; margin: 0 auto; height: 500px; position: relative; top: -500px;"> 
+      <div id="r" onselectstart="return false" style="width: 400px; height: 500px; float: right;"> </div>
+      <div id="l" onselectstart="return false" style="width: 400px; height: 500px; float: left;"> </div>
+    </div>
+    <script src="jsfxr.min.js"></script>
+    <script src="build.js"></script>
+  </body>
+</html>

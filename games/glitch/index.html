@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Glitch</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			background-color: black;
+		}
+		html, body {
+			height: 100%;
+			width: 100%;
+		}
+		canvas {
+			display: block;
+			cursor: crosshair;
+		}
+		audio {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<!-- <audio src="../GAMING/audio1.mp3" autoplay></audio> -->
+	<canvas id="glitch"></canvas>
+	<script type="text/javascript">
+		var canvas = document.getElementById('glitch');
+		var context = canvas.getContext('2d');
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		var SECTION = 1;
+
+		var player = new Player();
+		var border = new Border();
+		var obs = [];
+		var bar = new Bar();
+		var pressCkeck = false;
+		var connRadius = 200;
+
+		var messages = 
+		[
+			"detected: bubble_16: ~glitch;",
+			". . . mission",
+			"terminate: running program with glitch -",
+			"to save( computer.user.you );",
+			". . . controls",
+			"User has no way to sovle this fatal glitch but to kill it using another glitch;",
+			"initialize: GGC ( Green Glitch Code ) algorithm! . . . done!",
+			"move the Green Glitch Code bubble to avoid contact with the red glitch bubbles;",
+			"  command: ( 1 or 2 or 3 or 4 )...",
+			"        ...action: glitch through your glitching ports;",
+			"        ...specs: ascii:49,50,51,52 - hex:31,32,33,34;",
+			"  command: ( space-bar )...",
+			"        ...action: glitch through special port:( current_cursor_position );",
+			"        ...specs: ascii:32 - hex:20;",
+			"user.you.life depends on this;",
+			"but !forget(toEnjoy);",
+			":)",
+		]
+
+		generateObs(50);
+		setInterval(world,30);
+		for (var i = 0; i < obs.length; i++) {
+			obs[i].x = randomBetween(0,canvas.width);
+			obs[i].y = randomBetween(0,canvas.height);
+		}
+
+
+		window.addEventListener("click", function(e){
+			SECTION++;
+			if (SECTION == 3) SECTION = 1;
+
+			if (SECTION == 2) {
+				obs = [];
+				player = new Player();
+				border = new Border();
+				bar = new Bar();
+				generateObs(50);
+			}
+		});
+
+		window.addEventListener("keypress", function(e){
+			if (e.keyCode >= 49 && e.keyCode <= 49+(player.hands).length-1
+				&& !pressCkeck && !player.isMorphing) {
+				player.morphTo(e.keyCode-49);
+				pressCkeck = true;
+			}
+			else if (e.keyCode == 32) player.glitchToSH();
+			// console.log(e.keyCode);
+		});
+
+		window.addEventListener("mousemove", function(e){
+			(player.sHand).x = e.pageX;
+			(player.sHand).y = e.pageY;
+		});
+
+		function generateObs(count) {
+			for (var i = 0; i < count; i++) obs.push(new Obstacle());
+		}
+
+		function clearCanvas() {
+			context.fillStyle = "#0a0a0a";
+			context.fillRect(0,0,canvas.width,canvas.height);
+		}
+
+		function randomBetween(min,max) {
+			return Math.floor((Math.random()*(max - min)+min));
+		}
+
+		function getHypothenuse(x1,y1,x2,y2) {
+  			var x = Math.abs(x1-x2);
+  			var y = Math.abs(y1-y2);
+  			return Math.sqrt((x*x)+(y*y));
+		}
+
+		function drawConnection() {
+			for (var i = 0; i < obs.length; i++) {
+				for (var j = i+1; j < obs.length; j++) {
+					if (getHypothenuse(
+					obs[i].x,obs[i].y,
+					obs[j].x,obs[j].y) <= connRadius) {
+						context.strokeStyle = "rgba(255,55,55,"
+					+Math.abs((getHypothenuse(
+					obs[i].x,obs[i].y,
+					obs[j].x,obs[j].y))
+					-connRadius)*(1/connRadius)+
+					")";
+						context.beginPath();
+						context.moveTo(obs[i].x,obs[i].y);
+						context.lineTo(obs[j].x,obs[j].y);
+						context.stroke();
+					}
+				}
+			}
+		}
+
+		function world() {
+			clearCanvas();
+			if (SECTION == 1) {
+				drawConnection();
+				for (var i = 0; i < obs.length; i++) obs[i].update().draw();
+				drawLogo();
+				drawInstructions();
+				drawClickText("START process ~:>");
+			}
+			else if (SECTION == 2) {
+				if (pressCkeck) pressCkeck = false;
+				player.update().draw();
+				drawConnection();
+				for (var i = 0; i < obs.length; i++) obs[i].update().draw();
+				bar.update().draw();
+				border.update().draw();
+				drawClickText("EXIT && terminate~Device:_User_cleaning");
+			}
+		}
+
+		function drawLogo() {
+			var x = canvas.width/2;
+			var y = canvas.height/2;
+
+			context.lineWidth = 5;
+			context.lineCap = "round";
+			context.shadowBlur = 30;
+
+			context.beginPath();
+			context.strokeStyle = "#0f0";
+			context.shadowColor = '#0f0';
+			context.moveTo(x-100-10, y+10);
+			context.lineTo(x-150+10, y+10);
+			context.lineTo(x-150+10, y+40);
+			context.lineTo(x-100-10, y+40);
+			context.lineTo(x-100-10, y+10);
+			context.lineTo(x-100-10, y+60);
+			context.lineTo(x-150+10, y+60);
+			context.moveTo(x-100-10, y+40);
+			context.lineTo(x-150, y+40);
+			context.lineTo(x-150, y-10);
+			context.lineTo(x-100-10, y-10);
+			context.stroke();
+
+			context.beginPath();
+			context.strokeStyle = "#0f0";
+			context.shadowColor = '#0f0';
+			context.moveTo(x-50-10, y+40);
+			context.lineTo(x-100, y+40);
+			context.lineTo(x-100, y-10);
+			context.moveTo(x-90, y+40);
+			context.lineTo(x-90, y-10);
+			context.stroke();
+
+			context.beginPath();
+			context.strokeStyle = "#f00";
+			context.shadowColor = '#f00';
+			context.moveTo(x-50, y+40);
+			context.lineTo(x-50+40, y+40);
+			context.lineTo(x-50+20, y+40);
+			context.lineTo(x-50+20, y+25);
+			context.moveTo(x-50+20, y+15);
+			context.lineTo(x-50+15, y+15);
+			context.lineTo(x-50+15, y+5);
+			context.lineTo(x-50+25, y+5);
+			context.lineTo(x-50+25, y+15);
+			context.lineTo(x-50+20, y+15);
+			context.moveTo(x-50+20, y+5);
+			context.lineTo(x-50+20, y-10);
+			context.lineTo(x-50+40, y-10);
+			context.lineTo(x-50, y-10);
+			context.stroke();
+
+			context.beginPath();
+			context.strokeStyle = "#f00";
+			context.shadowColor = '#f00';
+			context.moveTo(x+20, y+40);
+			context.lineTo(x+20, y-10);
+			context.lineTo(x+40, y-10);
+			context.lineTo(x, y-10);
+			context.moveTo(x+20, y+15);
+			context.lineTo(x+40, y+15);
+			context.lineTo(x+0, y+15);
+			context.stroke();
+
+			context.beginPath();
+			context.strokeStyle = "#f00";
+			context.shadowColor = '#f00';
+			context.moveTo(x+85, y-10);
+			context.lineTo(x+50, y-10);
+			context.lineTo(x+50, y+40);
+			context.lineTo(x+85, y+40);
+			context.lineTo(x+60, y+40);
+			context.lineTo(x+60, y+15);
+			context.lineTo(x+85, y+15);
+			context.lineTo(x+80, y+15);
+			context.stroke();
+
+			context.beginPath();
+			context.strokeStyle = "#f00";
+			context.shadowColor = '#f00';
+			context.moveTo(x+50+50, y+40);
+			context.lineTo(x+50+50, y-10);
+			context.lineTo(x+50+50, y+15);
+			context.lineTo(x+50+85, y+15);
+			context.lineTo(x+50+85, y-10);
+			context.lineTo(x+50+85, y+40);
+			context.moveTo(x+50+75, y+15);
+			context.lineTo(x+50+75, y+40);
+			context.stroke();
+
+			context.lineWidth = 1;
+			context.shadowBlur = 0;
+		}
+
+		function drawClickText(message) {
+			context.fillStyle = "#0f0";
+			context.font = "10px Arial";
+			context.fillText("console:> Click To "+message,
+				0+20,canvas.height-20);
+		}
+
+		function drawInstructions() {
+			context.fillStyle = "#0f0";
+			context.font = "12px Arial";
+			for (var i = 0; i < messages.length; i++) {
+				context.fillText("console:> "+messages[i],0+20,20*(i+1));
+			}
+		}
+
+		function Player() {
+			this.x = canvas.width/2; 
+			this.y = canvas.height/2;
+
+			this.handGap = 50;
+			this.radius = 23;
+			this.iR = this.radius;
+
+			this.isMorphing = false;
+			this.morphIndex = -1;
+
+			this.generateHands = function() {
+				this.hands = [];
+				for (var i = 0; i < 4; i++) {
+					(this.hands).push(new Hand(this.handGap*(i+1),i+1));
+				}
+			}; this.generateHands();
+			this.sHand = new SpecialHand(this.radius);
+
+			this.morphTo = function(i) {
+				if ((this.hands)[i].x - this.radius > border.xgap &&
+					(this.hands)[i].y - this.radius > border.ygap &&
+					(this.hands)[i].x + this.radius < canvas.width-border.xgap &&
+					(this.hands)[i].y + this.radius < canvas.height-border.ygap &&
+					!(this.hands)[i].isLoading) {
+
+					this.morphIndex = i;
+					this.isMorphing = true;
+				}
+			}
+
+			this.glitchTo = function(i) {
+				(this.hands)[i].used(this.x,this.y);
+				this.x = (this.hands)[i].swp_x;
+				this.y = (this.hands)[i].swp_y;
+				// this.hands[i].isTested = true;
+			}
+
+			this.glitchToSH = function(i) {
+				if (!this.sHand.isLoading) {
+					this.x = this.sHand.x;
+					this.y = this.sHand.y;
+					this.sHand.angle = 270-360;
+					this.sHand.isLoading = true;
+					// this.sHand.isTested = true;
+				}
+			}
+
+			this.update = function() {
+				if (this.isMorphing) {
+					this.radius-=3;
+					(this.hands)[this.morphIndex].radius+=3;
+					if (this.radius <= (this.hands)[this.morphIndex].iR) {
+						this.glitchTo(this.morphIndex);
+						this.isMorphing = false;
+						this.radius = this.iR;
+						(this.hands)[this.morphIndex].radius = 
+							(this.hands)[this.morphIndex].iR;
+						this.morphIndex = -1;
+					}
+				}
+				this.sHand.update();
+				for (var i = 0; i < (this.hands).length; i++)
+					(this.hands)[i].update(this);
+				return this;
+			}
+
+			this.draw = function() {
+				for (var i = 0; i < (this.hands).length; i++)
+					(this.hands)[i].draw();	
+				
+				context.shadowBlur = 20;
+				context.shadowColor = "#0f0";
+				context.strokeStyle = "#000";
+				context.beginPath();
+				context.arc(this.x,this.y,this.iR,Math.PI*2,false);
+				context.stroke();
+				context.shadowBlur = 0;
+
+				context.strokeStyle = "#0f0";
+				if (this.sHand.isLoading) context.strokeStyle = "#111";
+				context.beginPath();
+				context.moveTo(this.x,this.y);
+				context.lineTo(this.sHand.x,this.sHand.y);
+				context.stroke();
+
+				context.fillStyle = "#0f0";
+				context.beginPath();
+				context.arc(this.x,this.y,this.radius,Math.PI*2,false);
+				context.fill();
+
+				(this.sHand).draw();
+			}
+		}
+
+		function Hand(len,i) {
+			this.angle = randomBetween(0,360);
+			this.speed = randomBetween(-2,2);
+			if (this.speed == 0) this.speed = 1;
+			this.op = 1;
+			this.isLoading = false;
+			this.isOut = false;
+			this.regen = 0.01;
+			this.radius = 0;
+			this.iR = this.radius;
+
+			this.message = i;
+			this.isTested = false;
+
+			this.swp_x;this.swp_y;
+
+			this.checkPos = function() {
+				if (this.x - (this.p).radius < border.xgap ||
+					this.y - (this.p).radius < border.ygap ||
+					this.x + (this.p).radius > canvas.width-border.xgap ||
+					this.y + (this.p).radius > canvas.height-border.ygap) {
+					this.isOut = true;
+				}
+				else this.isOut = false;
+			}
+
+			this.used = function(x,y) {
+				this.swp_x = this.x;
+				this.swp_y = this.y;
+				this.angle -= 180;
+				this.x=x;
+				this.y=y;
+				this.op = 0;
+				this.isLoading = true;
+				this.speed = randomBetween(-2,2);
+				if (this.speed == 0) this.speed = 1;
+			}
+
+			this.update = function(p) {
+				this.p = p;
+				this.checkPos();
+
+				this.x = (this.p).x;
+				this.y = (this.p).y;
+				var dx = Math.cos(this.angle * (Math.PI/180)) * len;
+				var dy = Math.sin(this.angle * (Math.PI/180)) * len;
+				this.x += dx;
+				this.y += dy;
+
+				if (!(this.p).isMorphing) this.angle += this.speed;
+
+				if (this.angle >= 360) {
+					this.angle = 360 - this.angle;
+				}
+
+				if (this.isLoading) {
+					this.op+=this.regen;
+				}
+				if (this.op >= 1) {
+					this.isLoading = false;
+				}
+
+				return this;
+			}
+
+			this.draw = function() {
+				context.shadowBlur = 20;
+				context.shadowColor = "#0f0";
+				context.strokeStyle = "rgba(0,255,0,"+this.op/3+")";
+				context.fillStyle = "rgba(0,255,0,"+this.op+")";
+				
+				context.beginPath();
+				context.moveTo((this.p).x,(this.p).y);
+				context.lineTo(this.x,this.y);
+				context.stroke();
+
+				if (!this.isLoading && !this.isOut) {
+					context.fillStyle = "rgba(0,0,0,1)";
+					context.beginPath();
+					context.arc(this.x,this.y,(this.p).radius,Math.PI*2,false);
+					context.arc(this.x,this.y,this.radius,Math.PI*2,false);
+					context.fill();
+					context.strokeStyle = "rgba(0,255,0,1)";
+					context.beginPath();
+					context.arc(this.x,this.y,(this.p).iR,Math.PI*2,false);
+					context.stroke();
+				}
+
+				context.fillStyle = "rgba(0,255,0,"+this.op+")";
+				context.beginPath();
+				context.arc(this.x,this.y,this.radius,Math.PI*2,false);
+				context.fill();
+
+				if (!this.isTested) {
+					context.fillStyle = "#fff";
+					context.font = "10px Arial";
+					context.fillText(this.message,this.x-2.5,this.y+3);
+				}
+				context.shadowBlur = 0;
+			}
+		}
+
+		function SpecialHand(r) {
+			this.x; this.y; this.radius = r;
+			this.regen = 3;
+			this.angle = 270-1;
+			this.isLoading = false;
+			this.message = "space";
+			this.update = function() {
+				if (this.isLoading) {
+					this.message = parseFloat(((this.angle+90)/360)*100).toFixed(2)+"%";
+					this.angle+=this.regen;
+				}
+				if (this.angle >= 270-1) {
+					this.message = "space";
+					this.angle = 270-1;
+					this.isLoading = false;
+				}
+			}
+			this.draw = function() {
+				context.shadowBlur = 20;
+				context.fillStyle = "#000";
+				context.beginPath();
+				context.arc(this.x,this.y,this.radius,270*(Math.PI/180),this.angle*(Math.PI/180));
+				context.fill();
+				context.shadowBlur = 0;
+
+				context.fillStyle = "#fff";
+				context.font = "10px Arial";
+				context.fillText(this.message,this.x-13,this.y-25);
+			}
+		}
+
+		function Border() {
+			this.xgap = -5;
+			this.ygap = -5;
+			this.color = "#090";
+
+			this.update = function() {
+				return this;
+			}
+
+			this.draw = function() {
+				context.strokeStyle = this.color;
+				context.strokeRect(this.xgap,this.ygap,
+					canvas.width-this.xgap*2,canvas.height-this.ygap*2);
+			}
+		}
+
+		function Obstacle() {
+			this.init = function() {
+				var type = randomBetween(0,2);
+				if (type == 0) {
+					this.x = 0;
+					this.y = randomBetween(0,canvas.height);
+				}
+				else if (type == 1) {
+					this.x = canvas.width;
+					this.y = randomBetween(0,canvas.height);
+				}
+				// else if (type == 2) {
+				// 	this.x = randomBetween(0,canvas.width);
+				// 	this.y = 0;
+				// }
+				// else if (type == 3) {
+				// 	this.x = randomBetween(0,canvas.width);
+				// 	this.y = canvas.height;
+				// }
+				this.angle = Math.atan2(this.y-player.y,this.x-player.x) * 180 / Math.PI;
+				this.minangle = this.angle - randomBetween(40,50);
+				this.maxangle = this.angle + randomBetween(40,50);
+
+				this.radius = randomBetween(20,25);
+				this.speed = randomBetween(3,5);
+				this.isRightSwing = true;
+				if (randomBetween(0,2) == 0) {this.isRightSwing = false}
+			}; this.init();
+
+			this.control = function(){
+				if 		(this.y-this.radius > canvas.height)	this.init();
+				else if (this.y+this.radius < 0) 				this.init();
+				else if (this.x-this.radius > canvas.width) 	this.init();
+				else if (this.x+this.radius < 0) 				this.init();
+			}
+
+			this.move = function() {
+				if (this.isRightSwing) {
+					this.angle--;
+					if (this.angle <= this.minangle) {this.isRightSwing = false;}
+				}
+				else if (!this.isRightSwing) {
+					this.angle++;
+					if (this.angle >= this.maxangle) {this.isRightSwing = true;}
+				}
+
+				var dx = Math.cos(this.angle * (Math.PI / 180)) * this.speed;
+		        var dy = Math.sin(this.angle * (Math.PI / 180)) * this.speed;
+
+		        this.x -= dx;
+		        this.y -= dy;
+			}
+
+			this.update = function() {
+				this.control();
+				this.move();
+				if (getHypothenuse(this.x,this.y,player.x,player.y) < 
+					this.radius+player.radius) {
+					bar.deduct();
+				}
+				return this;
+			}
+
+			this.draw = function() {
+				context.shadowBlur = 20;
+				context.shadowColor = "#f00";
+				context.fillStyle = "rgba(0,0,0,1)";
+				context.beginPath();
+				context.arc(this.x,this.y,this.radius,Math.PI*2,false);
+				context.fill();
+				context.shadowBlur = 0;
+			}
+		}
+
+		function Bar() {
+			this.w = canvas.width/2; 
+			this.h = 5;
+			this.x = canvas.width/2 - this.w/2;
+			this.y = 40;
+			this.progress = 0;
+			this.speed = 0.5;
+			this.error = false;
+			this.message;
+			var bugVal = randomBetween(0,100);
+
+			this.deduct = function() {
+				if (this.progress > 0) this.progress*=(98/100);
+				this.error = true;
+			}
+
+			this.setProcessMessage = function() {
+				this.message = "PROCESS... Analyzing red~BubbleBugx"+bugVal+" ...";
+				border.color = "#090";
+			}
+
+			this.setErrorMessage = function() {
+				this.message = "ERROR... access to inst!:bug~BubbleBugx denied! "+bugVal;
+				border.color = "#900";
+			}
+
+			this.update = function() {
+				if (this.progress < this.w) this.progress+=this.speed;
+				if (randomBetween(0,10) == 1) bugVal = randomBetween(-100,1000);
+				if (this.progress >= this.w) SECTION = 1;
+				return this;
+			}
+
+			this.draw = function() {
+				context.strokeStyle = "#aaa";
+				context.fillStyle = "#0f0";
+				if (randomBetween(0,10)==1) this.setProcessMessage();
+				if (this.error) {
+					context.fillStyle = "#f00";
+					context.strokeStyle = "#f00";
+					this.setErrorMessage();
+				}
+				context.strokeRect(this.x,this.y,this.w,this.h);
+				context.fillRect(this.x,this.y,this.progress,this.h);
+
+				context.font = "10px Arial";
+				context.fillText(this.message,this.x,this.y-this.h);
+
+				var percentage = parseFloat(((this.progress/this.w)*100)).toFixed(5)+" %";
+				context.font = "10px Arial";
+				context.fillText(percentage,this.x+this.w-context.measureText(percentage).width,this.y-this.h);
+
+				this.error = false;
+			}
+		}
+	</script>
+</body>
+</html>

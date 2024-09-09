@@ -1,0 +1,214 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Logic Shooter</title></head><style>html, body{
+        height: 100%;
+        display: block;
+        background-color: black;
+        font-family: sans-serif;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    #not-found {
+        display: block;
+        color: white;
+        width: auto;
+        height: 100%;
+        font-size: 40px;
+        text-align: center;
+        margin: auto;
+
+    }
+
+    @keyframes blink {
+       50% {
+           opacity: 0;
+       }
+       80% {
+           opacity: .5;
+       }
+    }
+
+
+    #start-game {
+        animation: blink 2s linear infinite;
+    }
+
+    .top {
+        width: 800px;
+        height: 60px;
+        border: 5px solid white;
+        border-bottom: none;
+        background-color: rgb(163, 157, 157);
+        padding-left: 0;
+        padding-right: 0;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        display: inline-flex;
+        align-items: center;
+
+        font-family: Arial;
+        font-size: 25px;
+        font-weight: bold;
+
+    }
+
+    .energy-bar {
+        position: relative;
+        width: 300px;
+        height: 40px;
+        /* margin-right: 70px; */
+        border: 3px solid #000
+    }
+
+    .energy-bar-fill{
+        height: 100%;
+        background: #59ea63;
+        transition: width 0s;
+    }
+
+    .energy-bar-value {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #countdown {
+        position: relative;
+        width: 200px;
+        height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 40px;
+        color: #fff;
+
+        text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
+        /* text-shadow: 0 0 40px #000; */
+        /* margin-right: 70px; */
+        border: none
+    }
+    .life-bar {
+        position: relative;
+        width: 300px;
+        height: 40px;
+        border: 3px solid #000
+    }
+
+    .life-bar-fill{
+        height: 100%;
+        background: #c03b3b;
+        transition: width 0s;
+    }
+
+    .life-bar-value {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #gameScreen {
+        border: 5px solid white;
+        border-top: none;
+        border-bottom: none;
+        background-color: rgb(163, 157, 157);
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .bottom {
+        width: 800px;
+        height: 200px;
+        border: 5px solid white;
+        /* border-top: none; */
+        background-color: rgb(163, 157, 157);
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .InputButtonContainer {
+        display: flex;
+        width: 60%;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    .RotateButtonContainer {
+        display: flex;
+        width: 40%;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    .RotateButtonContainer button {
+        list-style: none;
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 0, 0, 1);
+        border: solid 7px rgb(77, 17, 17);
+        margin: 0 10px;
+        border-radius: 50%;
+        outline: none;
+    }
+
+    /* .RotateButtonContainer button:hover {
+        background: rgb(128, 16, 16);
+    } */
+
+    .RotateButtonContainer button div {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 7px solid #fff;
+
+    }
+
+    #right-arrow div {
+        transform: translate(17px, -13px) rotate(-45deg);
+        border-left: none;
+        border-top: none;
+    }
+
+    #right-arrow div:before {
+        content: '';
+        position: absolute;
+        width: 38px;
+        height: 7px;
+        background: #fff;
+        transform-origin: right;
+        transform: rotate(45deg) translate(-6px, 30px);
+    }
+
+    #left-arrow div {
+        transform: translate(8px, -15px) rotate(-225deg);
+        border-left: none;
+        border-top: none;
+    }
+
+    #left-arrow div:before {
+        content: '';
+        position: absolute;
+        width: 38px;
+        height: 7px;
+        background: #fff;
+        transform-origin: right;
+        transform: rotate(45deg) translate(-6px, 31px);
+    }</style><body><div id="not-found"><h1>404</h1><h4>Page Not Found</h4><p>Oops... There is a system issue</p><div id="solve-problem"><p id="asking">Do you wanna try to solve it?</p><h3 id="start-game">Press any key to start</h3></div></div><div class="top"><div class="energy-bar"><div class="energy-bar-value"></div><div class="energy-bar-fill"></div></div><p id="countdown"></p><div class="life-bar"><div class="life-bar-value"></div><div class="life-bar-fill"></div></div></div><canvas id="gameScreen" width="800" height="800"><button>Hola</button></canvas><div class="bottom"><div class="InputButtonContainer"></div><div class="RotateButtonContainer"><button id="left-arrow"><div></div></button> <button id="right-arrow"><div></div></button></div></div><script src="home.js"></script></body></html>

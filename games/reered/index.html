@@ -1,0 +1,403 @@
+<!doctype html>
+<html>
+<head>
+	<title>RE*ER*ED by Tanner</title>
+	<meta charset="utf-8" />
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<style type="text/css">
+		html, body {
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			background: #111;
+			overflow: hidden;
+		}
+
+		#view, #gameover, #menu {
+			width: 100%;
+			height: 100%;
+		}
+
+		#gameover, #menu {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			color: #ED217C;
+			font-size: 4rem;
+			font-family: monospace;
+			text-align: center;
+			text-transform: uppercase;
+		}
+
+		a, a:hover {
+			color: #777;
+			text-decoration: none;
+		}
+
+		#by {
+			color: #777;
+			font-size: 2rem;
+			padding: 10px !important;
+		}
+
+		#render {
+			display: block;
+		}
+
+		#menu div, #gameover div {
+			padding: 20px 10px;
+		}
+
+		#menu button, #gameover button {
+			height: 128px;
+			margin: 10px;
+			display: block;
+			width: auto;
+		}
+
+		#controls {
+			height: 128px;
+			display: flex;
+			flex-direction: row;
+			font-size: 4rem;
+			padding: 10px;
+		}
+
+		#controls div {
+			width: 10px;
+			flex-shrink: 0;
+		}
+
+		button {
+			width: 100%;
+			background: #181818;
+			color: #1B998B;
+			font-size: 1em;
+			font-family: monospace;
+			outline: none;
+			border: 0;
+			transition: all 0.1s;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: #000;
+		}
+
+		button:active {
+			box-shadow: 0 20px 0 -10px #111 inset;
+		}
+	</style>
+	<script type="text/javascript">
+		var resizing = false;
+		var letters = "QWERTYUIOPASDFGHJKLZXCVBNM";
+		var words = "abstract arguments boolean break byte case catch char class const continue debugger default delete do double else enum eval export extends false final finally float for function goto if implements import in instanceof int interface let long native new null package private protected public return short static super switch synchronized this throw throws transient true try typeof var void volatile while with yield Array Date eval function hasOwnProperty Infinity isFinite isNaN isPrototypeOf length Math NaN name Number Object prototype String toString undefined valueOf alert all anchor anchors area assign blur button checkbox clearInterval clearTimeout clientInformation close closed confirm constructor crypto decodeURI decodeURIComponent defaultStatus document element elements embed embeds encodeURI encodeURIComponent escape event fileUpload focus form forms frame innerHeight innerWidth layer layers link location mimeTypes navigate navigator frames frameRate hidden history image images offscreenBuffering open opener option outerHeight outerWidth packages pageXOffset pageYOffset parent parseFloat parseInt password pkcs11 plugin prompt propertyIsEnum radio reset screenX screenY scroll secure select self setInterval setTimeout status submit taint text textarea top unescape untaint window".toUpperCase();
+		var list = words.split(" ");
+
+		var currentWord = list[Math.floor(Math.random()*list.length)];
+		var lives = 3;
+		var score = 123;
+		var timeLeft = 1.5; // seconds
+		var timeMax = 1.5;
+
+		var currentPosition = 0;
+		var progress = [];
+		var one; //left
+		var two; //right
+
+		var scene = 1; // menu, game, over
+
+		var particles = []; //{x,y,v,h,correct,lifespan}
+
+		function renderWord() {
+			var size = 42
+			var y = canvas.height / 2 + size / 2;
+			var x = canvas.width / 2;
+
+			ctx.font = "bold "+size+"px monospace";
+
+			var word = currentWord.toUpperCase();
+			for(i in word) {
+				if(progress[i] == true) {
+					ctx.fillStyle = "gold";
+				} else {
+					ctx.fillStyle = "#333";
+				}
+				ctx.fillText(word[i],x+i*30-word.length*15,y);
+				ctx.save();
+				if(progress[i] == true) {
+					ctx.fillStyle = "green";
+				}
+				if(progress[i] == false) {
+					ctx.fillStyle = "red";
+				}
+				if(progress[i] == null) {
+					ctx.fillStyle = "transparent";
+				}
+				if(i == currentPosition) {
+					ctx.fillStyle = "#777";
+				}
+				ctx.fillRect(x+i*30-word.length*15, y+10, 25, 5);
+				ctx.restore();
+			}
+		}
+
+		function renderLives () {
+			for(var i = 0; i < 3; i++) {
+				ctx.save();
+				ctx.fillStyle = "#222";
+				ctx.fillRect(i*40+10, 20, 30, 10);
+				ctx.restore();
+			}
+
+			for(var i = 0; i < lives; i++) {
+				ctx.save();
+				ctx.fillStyle = "#1B998B";
+				ctx.fillRect(i*40+10, 20, 30, 10);
+				ctx.restore();
+			}
+		}
+
+		function renderTimer () {
+			ctx.save();
+			ctx.font = "bold 18px monospace";
+			var max = (canvas.width-150-ctx.measureText(score).width);
+			ctx.fillStyle = "#222";
+			ctx.fillRect(130, 20, max, 10);
+			ctx.fillStyle = "#FFFD82";
+			ctx.fillRect(130, 20, max*timeLeft/timeMax, 10);
+			ctx.restore();
+		}
+
+		function renderScore () {
+			ctx.save();
+			ctx.font = "bold 18px monospace";
+			ctx.fillStyle = "#FF9B71";
+			ctx.textAlign = "right";
+			ctx.fillText(score, canvas.width - 10, 30);
+			ctx.restore();
+		}
+
+		function gameover() {
+			scene = 2;
+			overView.style.display = "flex";
+			gameView.style.display = "none";
+			score_text.textContent = score;
+		}
+
+		function startgame() {
+			scene = 1;
+			menuView.style.display = "none";
+			gameView.style.display = "block";
+			overView.style.display = "none";
+
+			selectword();
+			lastTime = Date.now();
+			lives = 3;
+			timeLeft = timeMax;
+			score = 0;
+		}
+
+		function selectword() {
+			progress = [];
+			currentWord = list[Math.floor(Math.random()*list.length)];
+			currentPosition = currentWord.length - 1;
+			setButtons();
+			canvas.textContent = currentWord;
+		}
+
+		function hurt() {
+			lives--;
+			if(lives == 0) {
+				gameover();
+			}
+		}
+
+		function nextLetter() {
+			if(progress[currentPosition] == null) {
+				progress[currentPosition] = false;
+			}
+			currentPosition--;
+			if(currentPosition < 0) {
+				selectword();
+			}
+			setButtons();
+			timeLeft = timeMax;
+		}
+
+		function correct() {
+			progress[currentPosition] = true;
+			score += Math.floor(timeLeft*100/timeMax);
+
+			var y = canvas.height / 2 + 42 / 2;
+			var x = canvas.width / 2;
+			var word = currentWord.toUpperCase();
+			for(var j = 0; j < word.length + 3; j++) {
+				spawnParticle(x+currentPosition*30-word.length*15, y, true)
+			}
+
+			nextLetter();
+		}
+
+		function mistake() {
+			progress[currentPosition] = false;
+			var y = canvas.height / 2 + 42 / 2;
+			var x = canvas.width / 2;
+			var word = currentWord.toUpperCase();
+			for(var j = 0; j < word.length + 3; j++) {
+				spawnParticle(x+currentPosition*30-word.length*15, y, false)
+			}
+			hurt();
+			nextLetter();
+		}
+
+		function button_one() {
+			if(one == currentWord[currentPosition]) {
+				correct()
+			} else {
+				mistake()
+			}
+		}
+
+		function button_two() {
+			if(two == currentWord[currentPosition]) {
+				correct()
+			} else {
+				mistake()
+			}
+		}
+
+		function setButtons () {
+			if(Math.floor(Math.random()*2) == 1) {
+				two = currentWord[currentPosition].toUpperCase();
+				one = letters[Math.floor(Math.random()*letters.length)];
+			} else {
+				one = currentWord[currentPosition];
+				two = letters[Math.floor(Math.random()*letters.length)].toUpperCase();
+			}
+			oneb.textContent = one;
+			twob.textContent = two;
+		}
+
+		var lastTime = Date.now();
+		var delta = 0;
+
+		var spawnParticle = function(x, y, correct) {
+			var p = {
+				x: x+10,
+				y: y,
+				v: Math.floor(Math.random()*10)-5,
+				h: Math.floor(Math.random()*10)-5,
+				correct: correct,
+				lifespan: 1
+			};
+			particles.push(p);
+		}
+
+		var updateParticles = function(delta) {
+			for(var i in particles) {
+				var p = particles[i];
+				p.x += p.h*delta/100;
+				p.y += p.v*delta/100;
+				p.lifespan -= delta/1000;
+				if(p.lifespan <= 0) {
+					particles.splice(i, 1);
+				} else {
+					particles[i] = p;
+				}
+			}
+		}
+
+		var renderParticles = function() {
+			for(var i in particles) {
+				var p = particles[i];
+				ctx.save();
+				if(p.correct) {
+					ctx.fillStyle="rgba(0,255,0,"+p.lifespan+")";
+				} else {
+					ctx.fillStyle="rgba(255,0,0,"+p.lifespan+")";
+				}
+
+		    ctx.beginPath();
+				ctx.arc(p.x, p.y,10,0,2*Math.PI);
+				ctx.fill();
+
+				ctx.restore();
+			}
+		}
+
+		var update = function () {
+			if(scene == 1) {
+				delta = Date.now() - lastTime;
+				lastTime = Date.now();
+				timeLeft -= delta/1000;
+				if(timeLeft <= 0) {
+					hurt();
+					nextLetter();
+				}
+
+				updateParticles(delta);
+
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				renderLives();
+				renderTimer();
+				renderScore();
+				renderParticles();
+				renderWord();
+			}
+			requestAnimationFrame(update);
+		}
+
+		var resize = function () {
+			resizing = false;
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight - controls.offsetHeight;
+			canvas.offsetHeight = canvas.height;
+		}
+
+		window.onload = function() {
+			canvas = document.getElementById('render');
+			controls = document.getElementById('controls');
+			gameView = document.getElementById('view');
+			overView = document.getElementById('gameover');
+			menuView = document.getElementById('menu');
+			oneb = document.getElementById('one');
+			twob = document.getElementById('two');
+			score_text = document.getElementById('score');
+			ctx = canvas.getContext('2d');
+			setTimeout(resize, 0);
+			update();
+		};
+
+		window.onresize = window.onorientationchange = function() {
+			if(!resizing) {
+				setTimeout(resize, 0);
+				setTimeout(resize, 1000);
+				resizing = true;
+			}
+		};
+	</script>
+</head>
+<body>
+	<div id="menu">
+		<div>
+			<img src="logo.png" alt="RE*ER*ED">
+			<div id="by">by <a href="http://twitter.com/tannernetwork" target="_blank">Tanner</a></div>
+		</div>
+		<button onclick="startgame()">PLAY</button>
+	</div>
+	<div id="view">
+		<canvas id="render" width="100%" height="100%"></canvas>
+		<div id="controls">
+			<button id="one" onclick="button_one()"></button>
+			<div></div>
+			<button id="two" onclick="button_two()"></button>
+		</div>
+	</div>
+	<div id="gameover">
+		<div>The party is over!</div>
+		<div>Score: <span id="score"></span></div>
+		<button onclick="startgame()">PLAY</button>
+	</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+html, body {
+  background-color:#3f3f3f;
+  color:#000000;
+
+  max-width:640px;
+  max-height:720px;
+  margin: auto;
+}
+
+canvas
+{
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  background-color:#3f3f3f;
+}
+
+#gamepad {
+  position:fixed;
+  bottom:0px;
+}
+
+@media only screen and (max-width: 700px)
+{
+  body{
+    left:0px;
+    margin:0;
+    overflow-x: hidden;
+  }
+}
+/*Firefox is an arsehole*/
+@-moz-document url-prefix() {
+  #gamepad{position:relative}
+}

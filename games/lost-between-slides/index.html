@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+var redGamePiece, blueGamePiece, yellowGamePiece,orangeGamePiece,pinkGamePiece,blackGamePiece,flag1,flag2,flag3,flag4,flag5,myGamePiece,mylife,myscore,mygame;
+var life=5;
+var score=0,sheight=(screen.height)*(0.75),swidth=(screen.width)*.95;
+
+function startGame() {
+    redGamePiece = new component(80,5 , "red", swidth*0.45, 10);
+    yellowGamePiece = new component(80, 5, "yellow", swidth*0.65, 60);    
+    blueGamePiece = new component(80,5, "blue", swidth*0.85, 110);
+    orangeGamePiece = new component(80,5, "orange", swidth*0.25, 160);
+    pinkGamePiece = new component(80, 5, "pink", swidth*0.35, 210);
+    blackGamePiece = new component(80, 10, "black", ((swidth)/2-40), (sheight-10));
+    myGamePiece = new component(20, 20, "brown", ((swidth)/2-10), (sheight-30));
+    mylife = new component("30px", "Consolas", "black", 280, 40, "text");
+    myscore = new component("30px", "Consolas", "black", 390, 40, "text");
+    mygame = new component("60px", "Consolas", "red", (swidth)/2-150, (sheight/2)-20, "text");
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = swidth;
+        this.canvas.height = sheight;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 15);
+        window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        //myGameArea.clear();
+        mygame.text="GAMEOVER";
+        mygame.update();
+        clearInterval(this.interval);        
+    },
+    win : function() {
+    mygame.text="YOU WIN!!!";
+        mygame.update();
+        clearInterval(this.interval);        
+    }   
+}
+
+function component(width, height, color, x, y,type) {
+    this.type=type;
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.speedX=0;
+    this.speedY=0;
+    this.update = function(){
+        ctx = myGameArea.context;
+         if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        }
+        else
+        {ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);}
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+}
+
+function updateGameArea() {
+    myGameArea.clear();
+    if(redGamePiece.x>(swidth-80) || flag1==1)
+    {redGamePiece.x-=5;flag1=1;
+    if(redGamePiece.x<0)
+    flag1=2;}
+    else
+    redGamePiece.x+=5;
+    if(yellowGamePiece.x<0 || flag2==1)
+    {yellowGamePiece.x+=5;flag2=1;
+    if(yellowGamePiece.x>(swidth-80))
+    flag2=2;}
+    else
+    yellowGamePiece.x-=5;
+    if(blueGamePiece.x>(swidth-80) || flag3==1)
+    {blueGamePiece.x-=5;flag3=1;
+    if(blueGamePiece.x<0)
+    flag3=2;}
+    else
+    blueGamePiece.x+=5;
+    if(orangeGamePiece.x<0 || flag4==1)
+    {orangeGamePiece.x+=5;flag4=1;
+    if(orangeGamePiece.x>(swidth-80))
+    flag4=2;}
+    else
+    orangeGamePiece.x-=5;
+    if(pinkGamePiece.x>(swidth-80) || flag5==1)
+    {pinkGamePiece.x-=5;flag5=1;
+    if(pinkGamePiece.x<0)
+    flag5=2;}
+    else
+    pinkGamePiece.x+=5;
+    blackGamePiece.speedX=0;
+    blackGamePiece.speedX=0;    
+    
+    if (myGameArea.key && myGameArea.key == 37) {
+    if(blackGamePiece.x<0)
+    blackGamePiece.speedX=0;
+    else
+    blackGamePiece.speedX = -9; }
+    
+    if (myGameArea.key && myGameArea.key == 39) {
+    if(blackGamePiece.x>(swidth-80))
+    blackGamePiece.speedX=0;
+    else
+    blackGamePiece.speedX = +9; }
+    
+    if(myGameArea.key && myGameArea.key == 13)
+    {myGamePiece.speedX=-4;
+    myGamePiece.speedY=-5;
+    }
+    
+    if(myGamePiece.x<0)
+    {
+    myGamePiece.speedX=-myGamePiece.speedX;
+    if(myGamePiece.speedY<0.01)
+     myGamePiece.speedY=-5;
+    }
+    
+    if(myGamePiece.x>(swidth-20))
+    {
+    myGamePiece.speedX=-myGamePiece.speedX;
+    if(myGamePiece.speedY<0.01)
+     myGamePiece.speedY=-5;
+    }
+    
+    if(myGamePiece.y<0)
+    {
+    if(myGamePiece.speedX<0.01)
+     myGamePiece.speedX=-3;
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    if(myGamePiece.y>(sheight-30) && myGamePiece.x>(blackGamePiece.x-20) && myGamePiece.x<(blackGamePiece.x+80))
+    {
+    //if(myGamePiece.x<(blackGamePiece.x-20) || myGamePiece.x>(blackGamePiece.x+80))
+    /*blackGamePiece.y=470;
+    blackGamePiece.x=274;
+    myGamePiece.y=450;
+    myGamePiece.x=304;*/
+    //else
+    if(myGamePiece.x<(blackGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(blackGamePiece.x))/80)*(-5);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(blackGamePiece.x))/80)*(5);
+    myGamePiece.speedY=-myGamePiece.speedY;
+    
+    }
+    
+    if(myGamePiece.y>(sheight-20) && (myGamePiece.x<(blackGamePiece.x-20) || myGamePiece.x>(blackGamePiece.x+80)))
+    {blackGamePiece.y=sheight-10;
+    blackGamePiece.x=(swidth/2)-40;
+    myGamePiece.y=sheight-30;
+    myGamePiece.x=(swidth/2)-10
+    myGamePiece.speedX=0;
+    myGamePiece.speedY=0;
+    life-=1;
+    if(life==0)
+    {myGameArea.clear();
+    myGameArea.stop();
+    }
+    }
+    
+    if(myGamePiece.y>=(redGamePiece.y-20) && myGamePiece.y<=(redGamePiece.y+5) && myGamePiece.x>(redGamePiece.x-20) && myGamePiece.x<(redGamePiece.x+80))
+    {
+    if(myGamePiece.x<redGamePiece.x)
+    myGamePiece.speedX=(((myGamePiece.x)-(redGamePiece.x))/80)*(5);
+    else if(myGamePiece.x<(redGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(redGamePiece.x))/80)*(-5);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(redGamePiece.x))/80)*(5);    
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    if(myGamePiece.y>=(yellowGamePiece.y-20) && myGamePiece.y<=(yellowGamePiece.y+5) && myGamePiece.x>(yellowGamePiece.x-20) && myGamePiece.x<(yellowGamePiece.x+80))
+    {
+    if(myGamePiece.x<yellowGamePiece.x)
+    myGamePiece.speedX=(((myGamePiece.x)-(yellowGamePiece.x))/80)*(5);
+    else if(myGamePiece.x<(yellowGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(yellowGamePiece.x))/80)*(-5);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(yellowGamePiece.x))/80)*(3);
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    if(myGamePiece.y>=(orangeGamePiece.y-20) && myGamePiece.y<=(orangeGamePiece.y+5) && myGamePiece.x>(orangeGamePiece.x-20) && myGamePiece.x<(orangeGamePiece.x+80))
+    {
+    if(myGamePiece.x<orangeGamePiece.x)
+    myGamePiece.speedX=(((myGamePiece.x)-(orangeGamePiece.x))/80)*(3);
+    else if(myGamePiece.x<(orangeGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(orangeGamePiece.x))/80)*(-3);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(orangeGamePiece.x))/80)*(3);
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    if(myGamePiece.y>=(blueGamePiece.y-20) && myGamePiece.y<=(blueGamePiece.y+5) && myGamePiece.x>(blueGamePiece.x-20) && myGamePiece.x<(blueGamePiece.x+80))
+    {
+    if(myGamePiece.x<blueGamePiece.x)
+    myGamePiece.speedX=(((myGamePiece.x)-(blueGamePiece.x))/80)*(3);
+    else if(myGamePiece.x<(blueGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(blueGamePiece.x))/80)*(-3);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(blueGamePiece.x))/80)*(3);
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    if(myGamePiece.y>=(pinkGamePiece.y-20) && myGamePiece.y<=(pinkGamePiece.y+5) && myGamePiece.x>(pinkGamePiece.x-20) && myGamePiece.x<(pinkGamePiece.x+80))
+    {
+    if(myGamePiece.x<pinkGamePiece.x)
+    myGamePiece.speedX=(((myGamePiece.x)-(pinkGamePiece.x))/80)*(3);
+    else if(myGamePiece.x<(pinkGamePiece.x+40))
+    myGamePiece.speedX=(((myGamePiece.x)-(pinkGamePiece.x))/80)*(-3);
+    else
+    myGamePiece.speedX=(((myGamePiece.x)-(pinkGamePiece.x))/80)*(3);
+    myGamePiece.speedY=-myGamePiece.speedY;
+    }
+    
+    yellowGamePiece.y+=0.02;        
+    blueGamePiece.y+=0.02;
+    orangeGamePiece.y+=0.02;
+    redGamePiece.y+=0.02;
+    pinkGamePiece.y+=0.02;
+    
+    if(myGamePiece.y<(redGamePiece.y-20))
+    score+=10;
+    else if(myGamePiece.y<(yellowGamePiece.y-20))
+    score+=8;
+    else if(myGamePiece.y<(blueGamePiece.y-20))
+    score+=6;
+    else if(myGamePiece.y<(orangeGamePiece.y-20))
+    score+=4;
+    else if(myGamePiece.y<(pinkGamePiece.y-20))
+    score+=2;
+          
+    if(pinkGamePiece.y>=(sheight-15))
+    {myGameArea.stop();
+    //mygame.text="GAMEOVER";
+    }
+    if(score>22000)
+    myGameArea.win();
+    
+    mylife.text="LIFE: " + life;
+    myscore.text="SCORE: "+ score;
+    //mylife.update();
+    
+    blackGamePiece.newPos();
+    myGamePiece.newPos();
+    redGamePiece.newPos();
+    yellowGamePiece.newPos();
+    orangeGamePiece.newPos();
+    pinkGamePiece.newPos();
+    blueGamePiece.newPos();
+    //myGameArea.clear();
+    redGamePiece.update();
+    yellowGamePiece.update();        
+    blueGamePiece.update();
+    orangeGamePiece.update();
+    blackGamePiece.update();
+    pinkGamePiece.update();
+    myGamePiece.update();
+    mylife.update();
+    myscore.update();
+}
+</script>
+<ul>
+<li>Initially press enter to throw ball. After that use left arrow key to navigate left and similarly right arrow key.</li>
+<li>Make More than 22,000 points before the pink slide reach you.</li>
+<li>The higher you go , more the point you gain.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <filter id="filter">
+        <feTurbulence baseFrequency=".01" numOctaves="2"/>
+        <feComponentTransfer>
+            <feFuncA type="gamma" amplitude="-.8" exponent=".2" offset="1.3"/>
+        </feComponentTransfer>
+        <feColorMatrix values="0 0 0 1 0
+                               0 0 0 1 0
+                               0 0 0 1 0
+                               0 0 0 0 1"/>
+        <feBlend in="SourceGraphic" mode="color"/>
+    </filter>
+    <rect width="100%" height="100%" fill="aqua" filter="url(#filter)"/>
+</svg>

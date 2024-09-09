@@ -1,0 +1,68 @@
+<html>
+<head>
+  <meta charset="utf8">
+
+  <title>A moment lost in time.</title>
+  <style>
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    html, body {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      background: #111;
+      font-family: Lato, Roboto, "Open Sans", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 200;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 64pt;
+
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    .ui {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      z-index: 1;
+    }
+
+    .action {
+      cursor: pointer;
+    }
+
+    .pad {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1rem;
+      max-width: 1280px;
+      max-height: 720px;
+    }
+
+    .box {
+      padding: .5rem;
+      transition: color 1s;
+    }
+
+    a {
+      color: inherit;
+      transition: color 1s;
+      text-decoration: none;
+    }
+
+    a:hover, .box:hover {
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="game.min.js"></script>
+</body>

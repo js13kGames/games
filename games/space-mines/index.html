@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html> 
+<link type='text/css' rel='stylesheet' href="css/main.css" />
+<script type="text/javascript" src="js/player.js"></script>
+<script type="text/javascript" src="js/level.js"></script>
+<script type="text/javascript" src="js/game_class.js"></script>
+<script type="text/javascript" src="js/simulation.js"></script>
+
+<script>
+if (!window.requestAnimationFrame) {
+  window.requestAnimationFrame = (window.webkitRequestAnimationFrame ||
+                                  window.mozRequestAnimationFrame ||
+                                  window.msRequestAnimationFrame ||
+                                  window.oRequestAnimationFrame ||
+                                  function (callback) {
+                                    return window.setTimeout(callback, 1000/30);
+                                  });
+}
+window.utils = {};
+
+utils.captureMouse = function (element) {
+    var mouse = {x: 0, y: 0, clicked: false, radius: 5};
+    element.addEventListener('mousemove', 
+	function (event) {
+            var x, y;
+            if (event.pageX || event.pageY) {
+                x = event.pageX;
+                y = event.pageY;
+            } else {
+                x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+            x -= element.offsetLeft;
+            y -= element.offsetTop;
+            mouse.x = x;
+            mouse.y = y;
+        }, false);
+    element.addEventListener('mousedown', 
+	function (event) {
+            event.preventDefault();
+            mouse.clicked = true;
+        }, false);
+    element.addEventListener('mouseup', 
+	function (event) {
+            mouse.clicked = false;
+        }, false);
+    return mouse;
+};
+utils.Lerp = function(A, B, t){
+    return (A * t) + ((1 - t) * B);
+};
+
+var Timer = function() {
+	this.date = new Date();
+}
+			
+Timer.prototype.update = function() {
+	var d = new Date();
+	this.date = d;
+}
+	
+Timer.prototype.getSeconds = function() {
+	return Math.round(this.date.getTime() / 1000);
+}
+</script>
+
+<body style="width:95%;">   
+    
+	<div id="titlescreen" width="90%" height="100%" class="borderline transparent" style="width:33%;font-size:44px;position:absolute;top:20%;left:33%;text-align:center;">
+	<div>SPACE MINES</div>
+	<p style="font-size:32px;color:white;">By <a  style="font-size:32px;color:white;" href="https://twitter.com/Lazyeels" target="_blank">@Lazyeels</a></p>
+	<br>
+		<div id="instructions" class="borderline transparent" style="text-align:left;">
+	    <ul>About:
+		<hr>
+        You're a space engineer employed to set up remote mining colonies on asteroids for <b>MineCorp</b>. 
+		</ul>
+		</div>
+
+		<div id="instructions" class="borderline transparent" style="text-align:left;">
+	    <ul>CONTROLS:
+		<hr>
+		<br>
+        <li>W - Jump
+		<li>A - Left
+		<li>D - Right</li>
+		<li>-/+ Zoom In/Out</li> 
+		<li>SPACEBAR (or Left MOUSE BUTTON) - Action</li>
+		</ul>
+		</div>
+		<div class="borderline transparent" style="text-align:center;" onClick="Game.playGame(this)">PLAY</div>
+    
+	</div>
+	
+    <canvas id="canvas" class="night" width="640" height="580"></canvas>
+	<div id="ui" style="width:25%;" class="transparent">
+	<div class="borderline">
+	<div><span>COLONY:&nbsp</span><span id="world-id"></span><br></div>
+	<hr>
+	<div>
+	    <p style="display:inline; padding-right: 5px;">Day:</p><p style="display:inline;padding-right: 5px;" id="day"></p>
+	    <p style="display:inline; padding-right: 5px;">Year:</p><p id="year" style="display:inline;"></p>
+	</div>
+    <hr>
+	<div class="borderline">	    
+	    <table>
+	    <tr><td>Funds: </td><td><span id="profit">£0</span></td></tr>
+		</table>
+	</div>
+
+	<div class="borderline">	    
+	    <table>
+		<tr><td></td><td></td></tr>
+	    <tr><td>Power: </td><td><span id="power_supply">0</span></td></tr>	    
+		<tr><td>Food: </td><td><span id="food_supply">0</span></td></tr>
+		<tr><td>Oxygen: </td><td><span id="oxygen_supply">0</span></td></tr>
+		<tr><td>Water: </td><td><span id="water_supply">0</span></td></tr>
+		</table>
+	</div>
+	<div class="borderline">
+	    <table>
+	    <tr><td>Mine(s): </td><td><span id="mine_total">0</span></td></tr>
+	    <tr><td>Ore per mine: </td><td><span id="ore_per_mine">0</span></td></tr>
+		<tr><td>Ore store: </td><td><span id="store">0</span></td></tr>
+		</table>
+	</div>
+	<div class="borderline">
+	    <table>
+	    <tr><td>Population: </td><td><span id="population">1</span></td></tr>
+	    
+	    <tr><td>Happiness: </td><td><span id="satisfaction">0%</span></td></tr>
+		</table>
+	</div>
+	<div class="borderline">
+	    <div><p>Messages:</p></div>
+		<hr>
+        <div id="alert_text">No messages</div>
+    </div>
+	
+    
+	</div>
+	<div onClick="Game.showStarMap()"><span id="get-lift"  class="borderline" style="padding:10px;">Star map</span></div>
+	</div>
+	
+	<div style="position:relative;">
+	
+	<div id="build_menu" class="borderline">
+	    <div><p>BUILD MENU:</p></div>
+		<hr>
+	    <button name="mine" onmouseover="Game.level.showDescription(0)" onClick="Game.level.setBuildingType(0)" alt="Mine">🏢</button>
+		<button name="power" onmouseover="Game.level.showDescription(1)" onClick="Game.level.setBuildingType(1)" alt="Power">🏭</button>
+	    <button name="food" onmouseover="Game.level.showDescription(2)" onClick="Game.level.setBuildingType(2)" alt="Food">🏪</button>
+		<button name="oxygen" onmouseover="Game.level.showDescription(3)" onClick="Game.level.setBuildingType(3)" alt="Oxygen">⚗️</button>
+		<button name="water" onmouseover="Game.level.showDescription(4)" onClick="Game.level.setBuildingType(4)" alt="Water">🚰</button>
+		<button name="house" onmouseover="Game.level.showDescription(5)" onClick="Game.level.setBuildingType(5)" alt="House">🏬</button>
+		<button name="factory" onmouseover="Game.level.showDescription(6)" onClick="Game.level.setBuildingType(6)" alt="Factory">🏗</button>
+		<button name="delete" onClick="Game.level.deleteBuilding()" alt="delete">🗑️</button>
+	</div>
+
+	
+    </div>
+	<div id="menu" style="position:absolute;top:10px;right:10px;display:none;" class="borderline"></div>
+</body> 
+<script>
+Game = new Game(fps);
+var gamedata = {}
+var timer = new Timer();
+var startTime = timer.getSeconds();
+var fpsCount = 0;
+var fps = fpsCount;
+// Test for keyup and keydown events and run corresponding function in Game Class.
+document.onkeydown = function(e){
+//    e.preventDefault();
+    Game.keydown(e);
+};
+document.onkeyup = function(e){
+    Game.keyup(e);
+};
+//window.addEventListener('resize', Game.resize, false);
+// Start the game loop
+var draw = function(timeStamp){
+    window.requestAnimationFrame(draw, Game.canvas);
+	timer.update();
+	if (timeStamp !== timer.getSeconds()) {
+		fps = fpsCount;
+		fpsCount = 0;
+	} else {
+		fpsCount++;
+	}
+    Game.update();
+    Game.draw(timer);
+};
+draw(startTime);
+console.log('🐿')
+console.log('🏬')
+console.log('🏛')
+</script>
+</html> 

@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width, initial-scale=1"><title>Backspace It</title><style>
+    html {
+      min-height: 100%;
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .app {
+      width: 384px;
+      margin: 0 auto;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 25%);
+    }
+
+    .info-item {
+      display: inline-block;
+      border: 1px solid #000;
+      border-right: 0;
+    }
+
+    .info-item:last-child {
+      border-right: 1px solid #000;
+    }
+
+    .info-item-title,
+    .info-item-value {
+      display: block;
+      text-align: center;
+    }
+
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .controlButton {
+      min-height: 48px;
+      min-width: 48px;
+    }
+  </style></head><body><div class=app><h1 class=title>Backspace It</h1><div id=info><ul class=info-list><li class=info-item><span class=info-item-title>Level:</span> <span class=info-item-value id=display-level>1</span></li><li class=info-item><span class=info-item-title>Lucky string:</span> <span class=info-item-value id=display-luckystring></span></li><li class=info-item><span class=info-item-title>Score:</span> <span class=info-item-value id=display-score>0</span></li><li class=info-item><span class=info-item-title>Best:</span> <span class=info-item-value id=display-bestscore>0</span></li></ul></div><canvas class=canvas id=canvas width=384 height=384></canvas><div class=controls id=controls><button class=controlButton id=esc-button>esc</button> <button class=controlButton id=backspace-button>&larr; Backspace</button></div></div><script src=script.min.js></script></body></html>

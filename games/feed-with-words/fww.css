@@ -1,0 +1,266 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #EEF;
+	user-select: none;
+}
+#header {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(#B68, #FAC, #B68);
+    padding: 1px 5px;
+    box-shadow: 0px 2px 2px #555;
+}
+#header p {
+    display: inline-block;
+    width: 50%;
+}
+#name {
+    font-size: 1.7em;
+    font-family: cursive, Times;
+    font-weight: 900;
+    color: blue;
+    text-shadow: 1px 1px 0px darkblue, 4px 4px 2px black;
+}
+#result {
+    font-size: 1.1em;
+    font-family: Times, helvetica;
+    font-weight: 700;
+    font-style: italic;
+    color: #12A;
+    text-shadow: 1px 1px 0px darkblue;
+}
+#firstpage {
+    background: radial-gradient(#FEF, #EDE, #838);
+    padding: 5%;
+    position: relative;
+    z-index: 1;
+}
+#paper {
+	border: 1px groove grey;
+	padding: 2%;
+	box-shadow: 3px 3px 2px grey;
+}
+#stgame {
+    margin: auto;
+    padding: 2%;
+    width: 50%;
+    height: 30px;
+    font-size: 1.2em;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+    background: linear-gradient(deepSkyBlue, blue);
+    box-shadow: 3px 3px 2px darkblue;
+	cursor: pointer;
+}
+#stgame:active {
+    background: linear-gradient(blue, deepSkyBlue);
+}
+#playground {
+    display: none;
+}
+#quests {
+    list-style-type: circle;
+    margin-left: -20px;
+    margin-right: 1%;
+}
+#quests li {    
+    box-shadow: 0px 1px 2px black;
+    border: 1px inset red;
+}
+#quests li span {
+    display: inline-block;
+    padding: 1% 2%;
+}
+/* 61% + 31% + 4*2% = 100%*/
+li .q {
+    width: 66%;
+    font-family: Times;
+    font-style: italic;
+    font-size: 1em;
+    background: radial-gradient(#B9A, #DBC, #FDE);
+}
+li .a {
+    width: 26%;
+    text-align: right;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 0.95em;
+    background: radial-gradient(#DAB, #CAB, #ECD);
+}
+#letters {
+    background-color: #CCD;
+    border-radius: 10%;
+    display: inline-block;
+    width: 59%;
+    margin-left: 1%;
+}
+#letters span {
+    display: inline-block;
+    width: 22%;
+    border-radius: 40%;
+    border: 2px inset grey;
+    box-shadow: 2px 3px 2px black;
+    margin: 4%;
+    padding: 2.5% 0%;
+    text-align: center;
+	font-size: 0.9em;
+    font-weight: 900;
+    text-shadow: 1px 1px white, -1px -1px white, 1px -1px white, -1px 1px white;
+	cursor: pointer;
+}
+#letters span:active {
+    box-shadow: 0px 0px 0px white;
+}
+#drago {
+    background-color: #DCC;
+    display: inline-block;
+    border-radius: 5%;
+    width: 37%;
+    padding: 2px;
+}
+#whatsin {
+    background-color: white;
+    width: 100%;
+    height: 40px;
+    font-size: 1.35em;
+}
+.act {
+    display: inline-block;
+    width: 46.5%;
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: 900;
+	cursor: pointer;
+}
+#del {
+    background: linear-gradient(#F55, #B11);
+    border: 2px inset red;
+}
+#del:active {
+    background: linear-gradient(#B11, #F55);
+}
+#corr {
+    background: linear-gradient(#1F1, #1B1);
+    border: 2px inset lime;
+}
+#corr:active {
+    background: linear-gradient(#1B1, #1F1);
+}
+#pot {
+    background-color: white;
+    border: 2px inset grey;
+    border-top: 2px solid #DCC;
+    width: 50%;
+    height: 140px;
+    margin: auto;
+    margin-top: 10%;
+    border-radius: 30%;
+	text-align: center;
+	font-size: 1.3em;
+	text-shadow: 2px 2px 2px white;
+	padding-top: 10%;
+	cursor: pointer;
+}
+#pot:active {
+	border: 2px outset grey;
+	background-color: black;
+}
+/***************************EXPERIMENT**************************/
+#youwon {
+    position: absolute;
+    top: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: darkblue;
+}
+#next {
+    background: linear-gradient(#EEE, #999);
+    position: absolute;
+    top: 40%;
+    right: 0%;
+    padding: 2%;
+    border-radius: 20%;
+    font-weight: 900;
+	cursor: pointer;
+}
+#next:active {
+    background: linear-gradient(#999, #EEE);
+}
+    #pika {
+        background-color:midNightBlue;
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        position:absolute;
+        top:19%;
+        left:45%;
+        box-shadow:2px 2px 5px yellow,-2px 2px 5px yellow,2px -2px 5px yellow,-2px -2px 5px yellow;
+        animation:ngriu 2s infinite;
+    }
+    @keyframes ngrihu {
+        0%{top:90%;}
+        50%{top:19%;opacity:0.9; width:13px; height:13px;}
+        80% {width:7px; height:7px;}
+        100%{opacity:0.1; width:1px; height:1px;}
+    }
+    .fishek {
+        width:10px;
+        height:10px;
+        border-radius:50%;
+        position:absolute;
+        animation:pls 1.5s infinite;
+    }
+    @keyframes plas {
+        0% {top:20%; left:47%;}
+        50%{opacity:0.8;}
+        100% {opacity:0.3;}
+    }
+    #v {
+        top:-10%;
+        left:47%;
+    }
+    #vl {
+        top:-1%;
+        left:16%;
+    }
+    #l {
+        top:20%;
+        left:5%;
+    }
+    #jl {
+        top:41%;
+        left:16%;
+    }
+    #j {
+        top:50%;
+        left:47%;
+    }
+    #jp {
+        top:41%;
+        left:77%;
+    }
+    #p {
+        top:20%;
+        left:88%;
+    }
+    #vp {
+        top:-1%;
+        left:77%;
+    }
+    .winner {
+        font-weight: 900;
+        color: white;
+        text-shadow: 2px 2px 10px yellow;
+        text-align: center;
+        position: absolute;
+        top: 70%;
+        left: 35%;
+        animation: winner 4s infinite;
+    }
+    @keyframes winner {
+        50%{transform: rotateY(180deg);}
+        100%{transform: rotateY(360deg);}
+    }

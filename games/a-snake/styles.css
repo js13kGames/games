@@ -1,0 +1,115 @@
+body {
+  font-family: "Courier", monospace;
+}
+
+.hud-text {
+  position: fixed;
+  z-index: 300;
+  font-size: 24px;
+}
+
+.textOutput {
+  left: 15px;
+  top: 15px;
+}
+
+.scoreOutput {
+  right: 15px;
+  top: 15px;
+}
+
+.score-animation {
+  animation: score-animation 1s;
+}
+
+@keyframes score-animation {
+  0% {
+    font-size: 52px;
+  }
+  100% {
+    font-size: 24px;
+  }
+}
+
+.startScreen {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(200, 200, 200, 0.8);
+  color: black;
+  text-align: center;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.startScreen-container .load {
+  opacity: 1;
+}
+
+.startScreen-container {
+  margin: 0 auto;
+  width: 450px;
+  margin-top: 100px;
+}
+
+.startScreen__instructions {
+  font-size: 15px;
+  margin-top: 200px;
+  transition: all 4s ease-in 2s;
+  opacity: 0;
+}
+
+.startScreen__button {
+  width: 120px;
+  height: 50px;
+  font-size: 28px;
+  margin-top: 70px;
+  cursor: pointer;
+  font-family: "Courier", monospace;
+  transition: all 1s ease-in;
+  opacity: 0;
+  animation: 1.5s linear 0s infinite alternate pulse;
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0px 0px 20px #00ff13;
+  }
+  to {
+    box-shadow: 0px 0px 0px #40aa47;
+  }
+}
+
+.startScreen__text {
+  font-size: 62px;
+  overflow: hidden;
+  border-right: .15em solid transparent;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .1em;
+  animation: typing 3.5s steps(40, end), blink-caret .75s step-end 4;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: #00ff13;
+  }
+  50% {
+    border-color: transparent;
+  }
+}

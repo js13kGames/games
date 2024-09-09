@@ -1,0 +1,438 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<script>
+    var inProgress = false;
+    var startTime;
+    var endTime;
+
+    var offColour = "#202020";
+    var goodColour = "whitesmoke";
+    var badColour = "#202020";
+
+    var hasWon = false;
+
+    var timeSinceTouchEnd = null;
+    const deadTimeAfterTouchEnd = 75.0;
+
+    function Clamp(value, min, max)
+    {
+        return Math.min(max, Math.max(value, min))
+    }
+
+    function SetAllColor(color)
+    {
+        var elements = document.getElementsByClassName("tick_element");
+        var numElements = elements.length;
+        for (var eIdx = 0; eIdx < numElements; ++eIdx)
+        {
+            elements[eIdx].style.backgroundColor = color;
+        }
+    }
+
+    function UpdateColoursBasedOnTime(elapsedTime, isEnd)
+    {
+        var targetElapsedTime = 404;
+        var offFromTarget = Math.abs(targetElapsedTime - elapsedTime);
+        hasWon = isEnd && (offFromTarget < 2);
+
+        var elements = document.getElementsByClassName("tick_element");
+        var numElements = elements.length;
+
+        var offValue = offFromTarget * 0.01;
+        var indexBad = Clamp(Math.round(offValue * numElements), 0, numElements);
+
+        for (var eIdx = 0; eIdx < numElements; ++eIdx)
+        {
+            var color = (hasWon ? goodColour : ((eIdx < indexBad) ? badColour : goodColour));
+            elements[eIdx].style.backgroundColor = color;
+        }
+
+        if (isEnd && hasWon)
+        {
+            document.getElementById("time_div").innerHTML = "404ms";
+        }
+        else
+        {
+            document.getElementById("time_div").innerHTML = Math.round(elapsedTime).toFixed(0) + "ms";
+        }
+    }
+
+    function HandleMouseDown()
+    {
+        if (!inProgress && !hasWon)
+        {
+            const currentTime = window.performance.now();
+            const timeElapsedSinceTouchEnd = currentTime - timeSinceTouchEnd;
+            if (timeElapsedSinceTouchEnd > deadTimeAfterTouchEnd)
+            {
+                startTime = currentTime;
+                inProgress = true;
+            }
+        }
+    }
+
+    function HandleMouseUp()
+    {
+        if (inProgress && !hasWon)
+        {
+            endTime = window.performance.now();
+            inProgress = false;
+
+            var elapsedTime = (endTime - startTime);
+            UpdateColoursBasedOnTime(elapsedTime, true);
+
+            timeSinceTouchEnd = endTime;
+        }
+    }
+
+    function Update()
+    {
+        if (hasWon)
+        {
+            UpdateEnding();
+        }
+        else
+        {
+            UpdateNormal();
+        }
+    }
+
+    function UpdateNormal()
+    {
+        if (!inProgress)
+        {
+            return;
+        }
+
+        var currentTime = window.performance.now();
+        var elapsedTime = (currentTime - startTime);
+        UpdateColoursBasedOnTime(elapsedTime, false);
+    }
+
+    const EndingStage = Object.freeze(
+        {
+            "Start": 0,
+            "CreateEndingLetters":1,
+            "ShowEndingLetters":2,
+            "FinalWaitEndingLetters":3,
+            "CreateBlackHole":4,
+            "GrowBlackHole":5,
+            "CreateParticles":6,
+            "FadeOut":7,
+            "End":8
+        });
+    var endingStage = EndingStage.Start;
+
+    const endingTotalMessage = "TIME.NOT.FOUND...";
+    var endingCurrentMessage = "";
+    const letterStartPause = 1.0;
+    const letterTimeOut = 0.5;
+    const letterEndPause = 2.0;
+    var letterStartTime = null;
+    var letterEndTime = null;
+    var endingLettersDiv = null;
+
+    var blackHole = null;
+    var blackHoleW = 0;
+    var blackHoleH = 0;
+    var blackHoleStartTime = null;
+    const maxBlackHoleW = 4000;
+    const maxBlackHoleH = 2000;
+    const blackHoleGrowPause = 1.4;
+    const blackHoleWRate = 3.0;
+    const blackHoleHRate = blackHoleWRate * maxBlackHoleH / maxBlackHoleW;
+
+    var stopMakingParticles = false;
+    var prevParticleTimeS = null;
+    var particles = [];
+    var particleAccumulatedTime = 0;
+    var numParticlesPerSecond = 200;
+    const numParticlesRatePerSecond = 10;
+    const particleMaxSize = 20;
+    const particleMinSize = 4;
+    const particleMinSeparation = 1.02;
+    const particleMaxSeparation = 1.1;
+    const particleMinSpeed = 400;
+    const particleMaxSpeed = 2000;
+    const timeToMakeParticlesS = 10;
+
+    function UpdateEndingLetters()
+    {
+        var externalDiv = document.getElementById("external_div");
+        var externalDivBoundingBox = externalDiv.getBoundingClientRect();
+
+        endingLettersDiv.style.width = externalDivBoundingBox.width;
+        endingLettersDiv.style.height = externalDivBoundingBox.height;
+        endingLettersDiv.style.position = "absolute";
+        endingLettersDiv.style.left = externalDivBoundingBox.left;
+        endingLettersDiv.style.top = externalDivBoundingBox.top;
+
+        endingLettersDiv.innerHTML = endingCurrentMessage;
+    }
+
+    function UpdateBlackHole()
+    {
+        const windowW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const windowH = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+
+        blackHole.style.width = blackHoleW;
+        blackHole.style.height = blackHoleH;
+        blackHole.style.position = "absolute";
+        blackHole.style.left = windowW * 0.5 - blackHoleW * 0.5;
+        blackHole.style.top = windowH * 0.5 - blackHoleH * 0.5;
+    }
+
+    function CreateParticles(dt)
+    {
+        if (stopMakingParticles)
+        {
+            return;
+        }
+        
+        numParticlesPerSecond = Math.max(0, numParticlesPerSecond - numParticlesRatePerSecond * dt);
+        var numParticlesToCreate = Math.floor((dt + particleAccumulatedTime) * numParticlesPerSecond);
+        accumulatedTime = (dt + particleAccumulatedTime) - numParticlesToCreate / numParticlesPerSecond;
+
+        if (numParticlesPerSecond <= 0)
+        {
+            stopMakingParticles = true;
+            return;
+        }
+
+        const windowW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const windowH = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+        var centerTop = windowH * 0.5;
+        var centerLeft = windowW * 0.5;
+
+        var windowRadius = Math.sqrt((centerLeft * centerLeft) + (centerTop * centerTop));
+        var particleMinRadius = windowRadius * particleMinSeparation;
+        var particleMaxRadius = windowRadius * particleMaxSeparation;
+
+        for (var pIdx = 0; pIdx < numParticlesToCreate; ++pIdx)
+        {
+            var template = document.createElement("template");
+            template.innerHTML = '<div class="particle"></div>';
+            var particle = template.content.firstChild;
+
+            var size = Math.round(particleMinSize + Math.random() * (particleMaxSize - particleMinSize));
+            var sizeT = size + 'px';
+            particle.style.width = sizeT;
+            particle.style.height = sizeT;
+
+            var particleRadius = particleMinRadius + Math.random() * (particleMaxRadius - particleMinRadius);
+            var particleAngle = Math.random() * Math.PI * 2;
+            var particleCosAngle = Math.cos(particleAngle);
+            var particleSinAngle = Math.sin(particleAngle);
+            var left = centerLeft + particleRadius * particleCosAngle;
+            var top = centerTop + particleRadius * particleSinAngle;
+            particle.style.position = "absolute";
+            particle.style.top = top;
+            particle.style.left = left;
+
+            particle.game_cos = particleCosAngle;
+            particle.game_sin = particleSinAngle;
+            particle.game_radius = particleRadius;
+            particle.game_speed = particleMinSpeed + Math.random(particleMaxSpeed - particleMinSpeed);
+            particle.game_size = sizeT;
+
+            document.body.appendChild(particle);
+
+            particles.push(particle);
+        }
+    }
+
+    function UpdateParticles(dt)
+    {
+        const windowW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const windowH = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+        var centerTop = windowH * 0.5;
+        var centerLeft = windowW * 0.5;
+
+        var particlesToRemove = [];
+
+        for (var pIdx in particles)
+        {
+            var p = particles[pIdx];
+
+            var newRadius = Math.max(0, p.game_radius - p.game_speed * dt);
+            p.game_radius = newRadius;
+
+            p.style.width = p.game_size;
+            p.style.height = p.game_size;
+
+            var left = Math.round(centerLeft + newRadius * p.game_cos) + 'px';
+            var top = Math.round(centerTop + newRadius * p.game_sin) + 'px';
+            p.style.position = "absolute";
+            p.style.top = top;
+            p.style.left = left;
+
+            if (newRadius < 0.01)
+            {
+                document.body.removeChild(p);
+                particlesToRemove.push(p);
+            }
+        }
+
+        particles = particles.filter( function( el ) {
+            return !particlesToRemove.includes( el );
+        });
+    }
+
+    function UpdateEnding()
+    {
+        switch (endingStage)
+        {
+            case EndingStage.Start:
+            {
+                endingStage = EndingStage.CreateEndingLetters;
+                break;
+            }
+
+            case EndingStage.CreateEndingLetters:
+            {
+                document.body.innerHTML += '<div id="ending_letters"></div>';
+                endingLettersDiv = document.getElementById("ending_letters");
+
+                letterStartTime = window.performance.now() * 1e-3;
+                UpdateEndingLetters();
+
+                endingStage = EndingStage.ShowEndingLetters
+                break;
+            }
+
+            case EndingStage.ShowEndingLetters:
+            {
+                var elapsedTimeS = ((window.performance.now() * 1E-3) - letterStartTime);
+                var timeToConsiderS = Math.max(0, elapsedTimeS - letterStartPause);
+
+                var numLettersToShow = timeToConsiderS / letterTimeOut;
+                var numLetters = endingTotalMessage.length;
+
+                var shouldMoveOn = numLettersToShow > numLetters;
+
+                endingCurrentMessage = (shouldMoveOn ? endingTotalMessage : endingTotalMessage.substring(0, numLettersToShow));
+                UpdateEndingLetters();
+
+                if (shouldMoveOn)
+                {
+                    letterEndTime = window.performance.now() * 1E-3;
+                    endingStage = EndingStage.FinalWaitEndingLetters;
+                }
+
+                break;
+            }
+
+            case EndingStage.FinalWaitEndingLetters:
+            {
+                var elapsedTimeS = ((window.performance.now() * 1E-3) - letterStartTime);
+                if (elapsedTimeS > letterEndPause)
+                {
+                    endingStage = EndingStage.CreateBlackHole;
+                }
+                break;
+            }
+
+            case EndingStage.CreateBlackHole:
+            {
+                document.body.innerHTML += '<div id="black_hole"></div>';
+                blackHole = document.getElementById("black_hole");
+
+                UpdateBlackHole();
+                UpdateEndingLetters();
+
+                endingStage = EndingStage.GrowBlackHole;
+                blackHoleStartTime = window.performance.now() * 1E-3;
+                prevParticleTimeS = blackHoleStartTime;
+
+                break;
+            }
+
+            case EndingStage.GrowBlackHole:
+            {
+                var currParticleTimeS = (window.performance.now() * 1E-3);
+                var elapsedTimeSinceLastTimeS = currParticleTimeS - prevParticleTimeS;
+                prevParticleTimeS = currParticleTimeS;
+
+                CreateParticles(elapsedTimeSinceLastTimeS);
+                UpdateParticles(elapsedTimeSinceLastTimeS);
+                UpdateEndingLetters();
+
+                var elapsedTimeS = ((window.performance.now() * 1E-3) - blackHoleStartTime);
+                if (elapsedTimeS > blackHoleGrowPause)
+                {
+                    blackHoleW += blackHoleWRate;
+                    blackHoleH += blackHoleHRate;
+
+                    blackHoleW = Math.min(maxBlackHoleW, blackHoleW);
+                    blackHoleH = Math.min(maxBlackHoleH, blackHoleH);
+
+                    UpdateBlackHole();
+
+                    if ((blackHoleW >= maxBlackHoleW) && (blackHoleH >= maxBlackHoleH))
+                    {
+                        endingStage = EndingStage.End;
+                    }
+                }
+
+                break;
+            }
+
+            case EndingStage.End:
+            {
+                document.body.innerHTML = '';
+                break;
+            }
+        }
+    }
+
+    function HandleLoad()
+    {
+        HandleResize();
+
+        timeSinceTouchEnd = window.performance.now();
+
+        document.body.removeEventListener('touchstart', HandleMouseDown, false);
+        document.body.removeEventListener('touchend', HandleMouseUp, false);
+
+        document.body.addEventListener("touchstart", HandleMouseDown, false);
+        document.body.addEventListener("touchend", HandleMouseUp, false);
+    }
+
+    function HandleResize()
+    {
+        var tickHolder = document.getElementById("external_div");
+        tickHolder.innerHTML = "";
+
+        var numTicks = Math.round(document.body.clientWidth / 10.0);
+        for (var tIdx = 0; tIdx < numTicks; ++tIdx)
+        {
+            tickHolder.innerHTML += '<div class="tick_element"></div>';
+        }
+
+        var timeDOM = document.getElementById("time_div");
+        timeDOM.innerHTML = "";
+    }
+
+    setInterval(Update, 10);
+</script>
+<style>
+    body { background-color: #202020; font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+    #game { height: 100%; margin: auto; display: flex; flex-direction: column; justify-content: center;}
+    #external_div { width: auto; height: 100px; margin: 0px; padding: 15px 15px 5px 15px; background-color: whitesmoke; display: flex; align-items: center; justify-content: center; }
+    #time_div { width: auto; height: 40px; background-color: whitesmoke; display: flex; align-items: center; justify-content: center; }
+    .tick_element { width: 5px; height: 100px; background-color: #202020; color: whitesmoke; margin: auto; vertical-align: middle; }
+    #ending_letters { background-color: whitesmoke; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold;}
+    #black_hole { background-color: #202020; border: whitesmoke solid 2px; border-radius: 50%; }
+    .particle { background-color: whitesmoke; }
+</style>
+</head>
+
+<body onmousedown="HandleMouseDown()" onmouseup="HandleMouseUp()" onresize="HandleResize()" onload="HandleLoad()">
+    <div id="game">
+        <div id="external_div"></div>
+        <div id="time_div"></div>
+    </div>
+</body>
+</html>

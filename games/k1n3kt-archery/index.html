@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title></title>
+<style type="text/css">
+canvas {}
+#cvCanvas {
+height: 97vh;
+image-rendering: pixelated;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) scaleX(-1);
+}
+#cameraSelectContainer {
+font-size: 2em;
+position: absolute;
+top: 50%;
+left: 30%;
+transform: translate(-20%, -50%);
+background: burlywood;
+padding: 30px;
+}
+body {
+font-family: "Open Sans", sans-serif;
+text-align: justify;
+text-justify: inter-word;
+}
+select, button {
+height: 42px;
+font-size: 20px;
+}
+button {
+letter-spacing: 2px;
+text-decoration: none;
+text-transform: uppercase;
+color: #000;
+cursor: pointer;
+border: 3px solid;
+padding: 0.25em 0.5em;
+box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+position: relative;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+}
+button:active {
+box-shadow: 0px 0px 0px 0px;
+top: 5px;
+left: 5px;
+}
+@media (min-width: 768px) {
+button {
+padding: 0.25em 0.75em;
+}
+}
+body {
+background: repeating-linear-gradient(
+45deg,
+#004a00,
+#004a00 5%,
+#004f00 5%,
+#004f00 10%
+);
+background-size: 100px 100px;
+}
+</style>
+<script type="text/javascript">
+function matrixMultiply(a,b){
+var btrans = transposeMatrix(b);
+var result = [];
+for(var i=0; i < a.length; i++){
+var row = [];
+for(var j=0; j < btrans.length; j++){
+var value = internalProduct(a[i],btrans[j]);
+row.push(value)
+}
+result.push(row);
+}
+return result;
+}
+function matrixScalarMultiply(m,s){
+var result = [];
+for(var i=0; i < m.length; i++){
+var row = [];
+for(var j=0; j < m[0].length; j++){
+row.push(s * m[i][j]);
+}
+result.push(row);
+}
+return result;
+}
+function internalProduct(u,v){
+if (u.length != v.length) throw "SizesDoNotMatch";
+var sum = 0;
+for(var i=0; i < u.length; i++){
+sum += u[i]*v[i];
+}
+return sum;
+}
+function transposeMatrix(m){
+var t = [];
+for(var i=0; i < m[0].length; i++){
+var row = [];
+for(var j=0; j < m.length; j++){
+row.push(m[j][i]);
+}
+t.push(row);
+}
+return t;
+}
+function minorMatrix(m, k, l){
+var reduced = [];
+for(var i=0; i < m.length; i++){
+if(i==k) continue;
+var row = [];
+for(var j=0; j < m.length; j++){
+if(j==l) continue;
+row.push(m[i][j])
+}
+reduced.push(row);
+}
+return reduced;
+}
+/*
+Recursive implementation using laplace expansion
+http://www.webcitation.org/61AGedZlm
+*/
+function determinant(m){
+var size = m.length;
+if(size == 1) return m[0][0];
+if(size == 2) return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+var det = 0;
+for(var i=0; i < size; i++){
+var minor = minorMatrix(m,0,i);
+var signal = (i%2 > 0) ? -1 : 1;
+det += signal * m[0][i]* determinant(minor);
+}
+return det;
+}
+/*
+http://en.wikipedia.org/wiki/Cofactor_(linear_algebra)
+*/
+function cofactor(m, k, l){
+minor = minorMatrix(m, k, l);
+return determinant(minor);
+}
+/*
+http://en.wikipedia.org/wiki/Cofactor_(linear_algebra)#Matrix_of_cofactors
+*/
+function cofactorMatrix(m){
+var cofactors = [];
+for(var i = 0; i < m.length; i++){
+var row = [];
+for(var j = 0; j < m.length; j++){
+var cofactorval = cofactor(m,i,j)*Math.pow(-1,i+j)
+row.push(cofactorval);
+}
+cofactors.push(row);
+}
+return cofactors;
+}
+/*
+Used the adjoint method
+http://www.webcitation.org/61BTRqAoZ
+*/
+function inverseMatrix(m){
+var det = determinant(m);
+if (det == 0) throw "SingularMatrix";
+var deti = 1 / det;
+var cof = cofactorMatrix(m);
+var adj = transposeMatrix(cof);
+var result = matrixScalarMultiply(adj,deti);
+return result;
+}
+/*
+performs operation element by element between to matrices
+*/
+function dotOp(func,m,n){
+var result = [];
+for(var i = 0; i < m.length; i++){
+var row = [];
+for(var j = 0; j < m[0].length; j++){
+row.push(func(m[i][j], n[i][j]));
+}
+result.push(row);
+}
+return result;
+}
+function generateMatrix(nlines, ncols, func){
+var m = [];
+for(var i = 0; i < nlines; i++){
+var row = [];
+for(var j = 0; j < ncols; j++){
+row.push(func(i,j));
+}
+m.push(row);
+}
+return m;
+}
+function zeros(nlines,ncols){
+return generateMatrix(nlines,ncols, function(i,j){return 0;});
+}
+function ones(nlines,ncols){
+return generateMatrix(nlines,ncols, function(i,j){return 1;});
+}
+function identity(size){
+return generateMatrix(size, size, function(i,j){ if(i===j) return 1; return 0; });
+}let zzfx,zzfxV,zzfxX
+zzfxV=.3    // volume
+zzfx=       // play sound
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=
+0,B=0,M=Math,R=44100,d=2*M.PI,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,g
+=0,H=0,a=0,n=1,I=0,J=0,f=0,x,h)=>{e=R*e+9;m*=R;r*=R;t*=R;c*=R;y*=500*d/R**3;A*=d
+/R;v*=d/R;z*=R;l=R*l|0;for(h=e+m+r+t+c|0;a<h;k[a++]=f)++J%(100*F|0)||(f=q?1<q?2<
+q?3<q?M.sin((g%d)**3):M.max(M.min(M.tan(g),1),-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.
+round(g/d)-g/d):M.sin(g),f=(l?1-B+B*M.sin(d*a/l):1)*(0<f?1:-1)*M.abs(f)**D*zzfxV
+*p*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/2+(c>a?0:
+(a<h-c?1:(h-a)/c)*k[a-c|0]/2):f),x=(b+=u+=y)*M.cos(A*H++),g+=x-x*E*(1-1E9*(M.sin
+(a)+1)%2),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n||=1);p=zzfxX.
+createBuffer(1,h,R);p.getChannelData(0).set(k);b=zzfxX.createBufferSource();b.
+buffer=p;b.connect(zzfxX.destination);b.start();return b};zzfxX=new AudioContext;
+let seedRand = (a, b, c, d) => {
+return function() {
+a |= 0; b |= 0; c |= 0; d |= 0; 
+var t = (a + b | 0) + d | 0;
+d = d + 1 | 0;
+a = b ^ b >>> 9;
+b = c + (c << 3) | 0;
+c = c << 21 | c >>> 11;
+c = c + t | 0;
+return (t >>> 0) / 4294967296;
+}
+}
+function intersection(x1, y1, x2, y2, x3, y3, x4, y4) {
+let px = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
+let py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
+return [px, py]
+}
+function randomInteger(min, max) {
+return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function rotateMat(a, theta) {
+let cx = Math.floor(a[0].length/2)
+let cy = Math.floor(a.length/2)
+let r = [
+[Math.cos(theta),-Math.sin(theta)],
+[Math.sin(theta),Math.cos(theta)]
+]
+return a.map((row, i) => {
+return row.map((col, j) => {
+let res = matrixMultiply([[j-cx, i-cy]], r)
+let x2 = Math.ceil(res[0][0]+cx)
+let y2 = Math.ceil(res[0][1]+cy)
+x2 = Math.max(0, x2)
+x2 = Math.min(a[0].length-1, x2)
+y2 = Math.max(0, y2)
+y2 = Math.min(a.length-1, y2)
+return a[y2][x2]
+})
+})    
+}
+let getFlatlc = (arr, l, c, w) => arr[l * w + c];
+let setFlatlc = (arr, l, c, w, v) => arr[l * w + c] = v;
+let setFlatlcRgba = (arr, l, c, w, r, g, b, a) => {
+c = Math.ceil(c)
+l = Math.ceil(l)
+if (a === 0) return
+arr[l * w + c + 0] = r;
+arr[l * w + c + 1] = g;
+arr[l * w + c + 2] = b;
+arr[l * w + c + 3] = a;
+}
+let colorPallete = {
+' ': [0,0,0,0],
+0: [0,0,0,0],
+1: [0,0,0,255],
+'r': [255,0,0, 255],
+'y': [255,204,0, 255],
+'o': [255,170,86, 255],
+'b': [0,0,0,255],
+'w': [255,255,255,255],
+'g': [0, 255, 0, 255],
+'s': [219, 206, 213, 255],
+'m': [114, 77, 36, 255],
+'q': [114, 77, 36, 255],
+'x': [20, 20, 20, 10],
+'d': [105, 105, 105, 255]
+}
+let monstersSprites = [
+"     r       ",
+"     rr      ",
+"  wwwwr      ",
+"  bwbwr      ",
+" oowww      w",
+"  rrwwwwwwww ",
+"   wwwwwwwwww",
+"   wwwwwwwww ",
+"    wwwwwww  ",
+"    xwwwww   ",
+"   xxyxxyx   ",
+"  xxyyxyyxx  ",
+"   xxxxxxx   "
+].map(x => x.split(""))
+let monstersSpritesRev = monstersSprites.map(a => [...a].reverse())
+let monstersSprites2 = [
+"     r       ",
+"     rr      ",
+"  wwwwr      ",
+"  bwbwr      ",
+" oowww      w",
+"  rrwwwwwwww ",
+"   wwwwwwwwww",
+"   wwwwwwwww ",
+"    wwwwwww  ",
+"    xwwwww   ",
+"   xyyxxyx   ",
+"  xxxxxyyxx  ",
+"   xxxxxxx   "
+].map(x => x.split(""))
+let monstersSprites2Rev = monstersSprites2.map(a => [...a].reverse())
+let monstersSprites3 = [
+"     r       ",
+"     rr      ",
+"  wwwwr      ",
+"  bwbwr      ",
+" oowww      w",
+"  rrwwwwwwww ",
+"   wwwwwwwwww",
+"   wwwwwwwww ",
+"    wwwwwww  ",
+"    xwwwww   ",
+"   xxyxyyx   ",
+"  xxyyxxxxx  ",
+"   xxxxxxx   "
+].map(x => x.split(""))
+let monstersSprites3Rev = monstersSprites3.map(a => [...a].reverse())
+let arrowsSprite = [
+"      r r       ",
+"       rrr      ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",
+"       m        ",                
+"       m        ",
+"       m        ",
+"       m        ",
+"      ss        ",
+"       s        ",
+].map(x => x.split(""))
+let monsters = new Array(10).fill().map(_ => {
+return {
+type: 'monster',
+sprite: monstersSprites,
+life: 0,
+x: 0,
+y: 0,
+t: 0,
+theta: 0,
+speed: 0
+}
+})
+let arrows = new Array(1000).fill().map(_ => {
+return {
+type: 'arrow',
+x: 0,
+y: 0,
+speed: 1,
+theta: 0,
+life: 0,
+sprite: arrowsSprite
+}
+})
+function nms(image) {
+let nmsSize = 3;
+let nmsHalfSize = Math.floor(nmsSize/2);
+let w;
+let h2;
+let w2;
+let data;
+let isImageData = image.constructor === ImageData;
+if (isImageData) {
+data = image.data;
+w = image.width;
+h2 = image.height-nmsSize;
+w2 = image.width-nmsSize;
+} else {
+data = image;
+w = 1;
+h2 = data.length-nmsSize;
+w2 = data[0].length-nmsSize;
+}
+for (let i = 0; i <= h2; i++) {
+for (let j = 0; j <= w2; j++) {
+let max = 0
+for (let k = nmsSize - 1; k >= 0; k--) {
+for (let l = nmsSize - 1; l >= 0; l--) {
+let val = isImageData ? getFlatlc(data, i+k, (j+l)*4, w*4) : data[i+k][j+l]
+val = val || 0
+if (val > max) max = val
+}
+}
+let val = isImageData ? getFlatlc(data, i+nmsHalfSize, (j+nmsHalfSize)*4, w*4) : data[i+nmsHalfSize][j+nmsHalfSize]
+if (val !== max) {
+if (isImageData) {
+setFlatlc(data, i+nmsHalfSize, (j+nmsHalfSize)*4,   w*4, 0)
+setFlatlc(data, i+nmsHalfSize, (j+nmsHalfSize)*4+1, w*4, 0)
+setFlatlc(data, i+nmsHalfSize, (j+nmsHalfSize)*4+2, w*4, 0)
+} else {
+data[i+nmsHalfSize][j+nmsHalfSize] = 0
+}
+}
+}
+}
+}
+function houghLines(imageData) {
+const data = imageData.data;
+const width = imageData.width;
+const height = imageData.height;            
+let img = [];
+for (let y = 0; y < height; y++) {
+const row = [];
+for (let x = 0; x < width; x++) {
+const index = (y * width + x) * 4; // Each pixel consists of 4 values: RGBA
+const redValue = data[index] ? 1 : 0; // Extract the first channel (red channel) value
+row.push(redValue);
+}
+img.push(row);
+}
+let H = img.length
+let W = img[0].length
+let parameterSpacePMax = Math.ceil(Math.sqrt(img.length*img.length+img[0].length*img[0].length))*2
+let poffset = Math.ceil(parameterSpacePMax/2)
+let precision = 45 // faster
+let parameterSpace = new Array(parameterSpacePMax).fill(0).map(_ => new Array(precision).fill(0))
+img.forEach((row, y) => {
+row.forEach((val, x) => {
+if (val) {
+parameterSpace[0].forEach((_, thetaStep) => {
+let theta = (Math.PI/parameterSpace[0].length)*thetaStep
+let p = Math.round(x*Math.cos(theta)+y*Math.sin(theta))+poffset
+parameterSpace[p][thetaStep] += 1
+})
+}
+})
+})
+nms(parameterSpace)
+let lines = []
+for (let i = 0; i < parameterSpace.length; i++) {
+for (let j = 0; j < parameterSpace[0].length; j++) {
+if (parameterSpace[i][j]) {
+let theta = (Math.PI/parameterSpace[0].length)*j
+lines.push({x: j, y: i, theta: theta, p: i - poffset, score: parameterSpace[i][j]})
+}
+}
+}
+lines = lines.sort((a, b) => b["score"] - a["score"])
+let lineImg = new Array(H).fill(0).map(_ => new Array(W).fill(0))
+return lines
+}
+function applyGaussianBlur(imageData) {
+const data = imageData.data;
+const width = imageData.width;
+const height = imageData.height;
+const tempData = new Uint8ClampedArray(data.length);
+for (let y = 0; y < height; y++) {
+for (let x = 0; x < width; x++) {
+let r = 0;
+let g = 0;
+let b = 0;
+let a = 0;
+for (let j = -1; j <= 1; j++) {
+for (let i = -1; i <= 1; i++) {
+const index = ((y + j) * width + (x + i)) * 4;
+const weight = 1 / 9; // 3x3 box blur
+r += data[index] * weight;
+g += data[index + 1] * weight;
+b += data[index + 2] * weight;
+a += data[index + 3] * weight;
+}
+}
+const index = (y * width + x) * 4;
+tempData[index] = r;
+tempData[index + 1] = g;
+tempData[index + 2] = b;
+tempData[index + 3] = a;
+}
+}
+for (let i = 0; i < data.length; i++) {
+data[i] = tempData[i];
+}
+}
+function applyOtsuThreshold(imageData) {
+const data = imageData.data;
+const threshold = otsuThreshold(data);
+for (let i = 0; i < data.length; i += 4) {
+const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+const value = avg > threshold ? 255 : 0;
+data[i] = value;
+data[i + 1] = value;
+data[i + 2] = value;
+}
+}
+function otsuThreshold(data) {
+const histogram = Array.from({ length: 256 }, () => 0);
+for (let i = 0; i < data.length; i += 4) {
+const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+histogram[Math.floor(avg)]++;
+}
+let sum = 0;
+for (let i = 1; i < 256; i++) {
+sum += i * histogram[i];
+}
+let sumB = 0;
+let wB = 0;
+let wF = 0;
+let mB;
+let mF;
+let max = 0.0;
+let threshold = 0; // Declare the threshold variable here
+for (let i = 0; i < 256; i++) {
+wB += histogram[i];
+if (wB === 0) continue;
+wF = data.length / 4 - wB;
+if (wF === 0) break;
+sumB += i * histogram[i];
+mB = sumB / wB;
+mF = (sum - sumB) / wF;
+between = wB * wF * Math.pow(mB - mF, 2);
+if (between >= max) {
+max = between;
+threshold = i;
+}
+}
+return threshold;
+}
+function applyEdgeDetection(imageData) {
+const data = imageData.data;
+const width = imageData.width;
+const height = imageData.height;
+const sobelX = [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+const sobelY = [-1, -2, -1, 0, 0, 0, 1, 2, 1];
+const tempData = new Uint8ClampedArray(data.length);
+for (let y = 1; y < height - 1; y++) {
+for (let x = 1; x < width - 1; x++) {
+let sumX = 0;
+let sumY = 0;
+for (let j = -1; j <= 1; j++) {
+for (let i = -1; i <= 1; i++) {
+const index = ((y + j) * width + (x + i)) * 4;
+const weightX = sobelX[(j + 1) * 3 + (i + 1)];
+const weightY = sobelY[(j + 1) * 3 + (i + 1)];
+sumX += data[index] * weightX;
+sumY += data[index] * weightY;
+}
+}
+const index = (y * width + x) * 4;
+const magnitude = Math.sqrt(sumX * sumX + sumY * sumY);
+tempData[index] = magnitude;
+tempData[index + 1] = magnitude;
+tempData[index + 2] = magnitude;
+tempData[index + 3] = 255; // Alpha channel
+}
+}
+for (let i = 0; i < data.length; i++) {
+data[i] = tempData[i];
+}
+}var letters = {
+'A': [
+[0,1,0],
+[1,0,1],
+[1,0,1],
+[1,1,1],
+[1,0,1]
+],
+'B': [
+[1,1,0],
+[1,0,1],
+[1,1,1],
+[1,0,1],
+[1,1]
+],
+'C': [
+[1,1,1],
+[1,0,0],
+[1,0,0],
+[1,0,0],
+[1,1,1]
+],
+'D': [
+[1,1,0],
+[1,0,1],
+[1,0,1],
+[1,0,1],
+[1,1,0]
+],
+'E': [
+[1,1,1],
+[1,0,0],
+[1,1,1],
+[1,0,0],
+[1,1,1]
+],
+'F': [
+[1,1,1],
+[1,0,0],
+[1,1,0],
+[1,0,0],
+[1,0,0]
+],
+'G': [
+[0,1,1,0],
+[1,0,0,0],
+[1,0,1,1],
+[1,0,0,1],
+[0,1,1,0]
+],
+'H': [
+[1,0,1],
+[1,0,1],
+[1,1,1],
+[1,0,1],
+[1,0,1]
+],
+'I': [
+[1,1,1],
+[0,1,0],
+[0,1,0],
+[0,1,0],
+[1,1,1]
+],
+'J': [
+[1,1,1],
+[0,0,1],
+[0,0,1],
+[1,0,1],
+[1,1,1]
+],
+'K': [
+[1,0,0,1],
+[1,0,1,0],
+[1,1,0,0],
+[1,0,1,0],
+[1,0,0,1]
+],
+'L': [
+[1,0,0],
+[1,0,0],
+[1,0,0],
+[1,0,0],
+[1,1,1]
+],
+'M': [
+[1,1,1,1,1],
+[1,0,1,0,1],
+[1,0,1,0,1],
+[1,0,0,0,1],
+[1,0,0,0,1]
+],
+'/': [
+[0,0,0,0,1],
+[0,0,0,1,0],
+[0,0,1,0,0],
+[0,1,0,0,0],
+[1,0,0,0,0]
+],
+'N': [
+[1,0,0,1],
+[1,1,0,1],
+[1,0,1,1],
+[1,0,0,1],
+[1,0,0,1]
+],
+'O': [
+[1,1,1],
+[1,0,1],
+[1,0,1],
+[1,0,1],
+[1,1,1]
+],
+'P': [
+[1,1,1],
+[1,0,1],
+[1,1,1],
+[1,0,0],
+[1,0,0]
+],
+'Q': [
+[0,1,1,0],
+[1,0,0,1],
+[1,0,0,1],
+[1,0,1,1],
+[1,1,1,1]
+],
+'R': [
+[1,1,0],
+[1,0,1],
+[1,0,1],
+[1,1,0],
+[1,0,1]
+],
+'S': [
+[1,1,1],
+[1,0,0],
+[1,1,1],
+[0,0,1],
+[1,1,1]
+],
+'T': [
+[1,1,1],
+[0,1,0],
+[0,1,0],
+[0,1,0],
+[0,1,0]
+],
+'U': [
+[1,0,1],
+[1,0,1],
+[1,0,1],
+[1,0,1],
+[1,1,1]
+],
+'V': [
+[1,0,0,0,1],
+[1,0,0,0,1],
+[0,1,0,1,0],
+[0,1,0,1,0],
+[0,0,1,0,0]
+],
+'W': [
+[1,0,0,0,1],
+[1,0,0,0,1],
+[1,0,0,0,1],
+[1,0,1,0,1],
+[1,1,1,1,1]
+],
+'X': [
+[1,0,0,0,1],
+[0,1,0,1,0],
+[0,0,1,0,0],
+[0,1,0,1,0],
+[1,0,0,0,1]
+],
+'Y': [
+[1,0,1],
+[1,0,1],
+[0,1,0],
+[0,1,0],
+[0,1,0]
+],
+'Z': [
+[1,1,1,1,1],
+[0,0,0,1,0],
+[0,0,1,0,0],
+[0,1,0,0,0],
+[1,1,1,1,1]
+],
+'0': [
+[1,1,1],
+[1,0,1],
+[1,0,1],
+[1,0,1],
+[1,1,1]
+],
+'1': [
+[0,1],
+[0,1],
+[0,1],
+[0,1],
+[0,1]
+],
+'2': [
+[1,1,1],
+[0,0,1],
+[1,1,1],
+[1,0,0],
+[1,1,1]
+],
+'3':[
+[1,1,1],
+[0,0,1],
+[1,1,1],
+[0,0,1],
+[1,1,1]
+],
+'4':[
+[1,0,1],
+[1,0,1],
+[1,1,1],
+[0,0,1],
+[0,0,1]
+],
+'5':[
+[1,1,1],
+[1,0,0],
+[1,1,1],
+[0,0,1],
+[1,1,1]
+],
+'6':[
+[1,1,1],
+[1,0,0],
+[1,1,1],
+[1,0,1],
+[1,1,1]
+],
+'7':[
+[1,1,1],
+[0,0,1],
+[0,0,1],
+[0,0,1],
+[0,0,1]
+],
+'8':[
+[1,1,1],
+[1,0,1],
+[1,1,1],
+[1,0,1],
+[1,1,1]
+],
+'9':[
+[1,1,1],
+[1,0,1],
+[1,1,1],
+[0,0,1],
+[1,1,1]
+],
+'!': [
+[0,1,0],
+[0,1,0],
+[0,1,0],
+[0,0,0],
+[0,1,0]
+],
+' ': [
+[0,0,0],
+[0,0,0],
+[0,0,0],
+[0,0,0],
+[0,0,0]
+],
+':': [
+[0,0,0],
+[0,1,0],
+[0,0,0],
+[0,1,0],
+[0,0,0]
+]
+};
+Object.keys(letters).forEach(k => letters[k].forEach(x => x.reverse()))
+</script>
+</head>
+<body>
+<div style="z-index: 2;" id="cameraSelectContainer">
+<p>k<b>1</b>n<b>3k</b>t archery 🏹</p>
+<p><b>This archery simulator game uses the webcam 📷 to detect lines on image and create a medieval virtual bow.</b></p>
+<p><b>How to play:</b></p>
+<p>1. Hold a pen or something similar close to camera and rotate it to aim your virtual bow 🖊️🤏</p>
+<p>2. Hold and release spacebar to shoot a arrow and scare the chicken 🐔 and avoid it cross the road</p>
+<p>3. If it doesn't work well, try playing in a brighter environment with fewer objects that can trick the game.</p>
+<label for="cameraSelect">SELECT CAMERA:</label>
+<select id="cameraSelect"></select><button id="startButton">Start game</button>
+</div>
+<canvas id="cvCanvas" width="150" height="150"></canvas>
+<div class="bg-grass" style="z-index: 1;"></div>
+<script type="text/javascript">
+let entities = arrows.concat(monsters)
+let bowAngle;
+let stream;
+let gs = {
+pts: 0,
+time: 0,
+time0: 0,
+showHighScore: false,
+maxTime: 60
+}
+let newGame = () => {
+msgsTxt.splice(0)
+gs.pts = 0
+gs.time0 = Math.floor(performance.now()/1000)
+gs.showHighScore = false
+}
+let msgsTxt = []
+let buildTxtEntities = (x, y, txt) => {
+let textSpc = 0
+return txt.split("").reverse().map(l => {
+let sprite = letters[l.toUpperCase()]
+let o = {
+sprite: sprite,
+life: 1,
+x: x+textSpc,
+y: y,
+speed: 0,
+theta: 0
+}
+textSpc += sprite[0].length + 1
+return o
+})
+}
+async function getCameraStream(constraints) {
+try {
+stream = await navigator.mediaDevices.getUserMedia(constraints);
+return stream;
+} catch (err) {
+console.error("Error accessing webcam: ", err);
+}
+}
+async function populateCameraList() {
+const cameraSelect = document.getElementById("cameraSelect");
+const devices = await navigator.mediaDevices.enumerateDevices();
+for (const device of devices) {
+if (device.kind === "videoinput") {
+const option = document.createElement("option");
+option.value = device.deviceId;
+option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+cameraSelect.appendChild(option);
+}
+}
+}
+function startWebcam() {
+newGame()
+const cameraSelect = document.getElementById("cameraSelect");
+const deviceId = cameraSelect.value;
+const constraints = { video: { deviceId: { exact: deviceId } } };
+const canvas = document.getElementById("cvCanvas");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
+getCameraStream(constraints).then(() => {
+document.getElementById('cameraSelectContainer').remove()
+let keysState = {
+"space": null
+}
+let bowTension = 0
+let arrowStringX = 0
+let arrowStringY = 0
+window.addEventListener("keypress", (e) => {
+if (e.code === "Enter") {
+newGame()
+} else if (e.code === "Space") {
+keysState.space = true
+} else e.preventDefault()
+})
+window.addEventListener("keyup", (e) => {
+if (e.code === "Space") {
+if (keysState.space && bowTension > 10) {
+let arrow = arrows
+.filter(a => !a.life)[0]
+if (arrow && bowAngle !== undefined) {
+let xcorrection = (arrowsSprite[0].length*Math.cos(bowAngle+Math.PI))
+arrow.x = arrowStringX - arrowsSprite[0].length/2 + xcorrection
+arrow.y = arrowStringY-arrowsSprite.length-3
+arrow.theta = bowAngle
+arrow.sprite = rotateMat(arrowsSprite, bowAngle+Math.PI/2)
+arrow.life = 1
+arrow.speed = (bowTension*bowTension)/40
+}
+if (arrow.speed > 15) {
+monsters.filter(monster => monster.life > 0).forEach(entity => entity.speed += randomInteger(0, 1))
+zzfx(...[1.9,,178,.02,.14,.16,,.8,-6.7,-0.2,,,,,,,.22,.74,.05,.38]);
+} else {
+zzfx(...[2.07,,97,.02,.08,.09,,.92,-6.7,.2,,,,,,,.22,.74,.04,.38]);
+}
+}
+keysState.space = false
+} else e.preventDefault()
+})
+const video = document.createElement("video");
+video.srcObject = stream;
+video.play();
+function captureFrame() {
+gs.time = Math.floor(performance.now()/1000) - gs.time0
+if (gs.time > gs.maxTime && !gs.showHighScore) {
+gs.showHighScore = true
+msgsTxt.splice(0)
+msgsTxt.splice(msgsTxt.length, 0, ...buildTxtEntities(40, 40, 'time out !'))
+window.setTimeout(() => {
+let lsHighscore = window.localStorage.getItem('highscore')
+if (!lsHighscore || gs.pts > parseFloat(lsHighscore)) {
+window.localStorage.setItem('highscore', gs.pts)
+msgsTxt.splice(msgsTxt.length, 0, ...buildTxtEntities(40, 50, `new high score!`))
+} else {
+msgsTxt.splice(msgsTxt.length, 0, ...buildTxtEntities(40, 50, `actual high score: ${lsHighscore}`))
+}
+msgsTxt.splice(msgsTxt.length, 0, ...buildTxtEntities(40, 60, 'press enter to play again'))
+}, 1500)
+}
+ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+applyGaussianBlur(imageData);
+applyEdgeDetection(imageData);
+nms(imageData)
+applyOtsuThreshold(imageData);
+let psize = 8 
+for (let i = 0; i < imageData.height; i++) {
+for (let j = 0; j < imageData.width; j++) {
+let val = getFlatlc(imageData.data, i, j*4, imageData.width*4);
+if (val) {
+setFlatlc(imageData.data, i, j*4+3,   imageData.width*4, 60)
+}
+if (i<psize || j<psize || i>imageData.height-psize || j>imageData.width-psize) {
+setFlatlc(imageData.data, i, j*4,   imageData.width*4, 0)
+setFlatlc(imageData.data, i, j*4+1, imageData.width*4, 0)
+setFlatlc(imageData.data, i, j*4+2, imageData.width*4, 0)
+}
+}
+}
+if (keysState.space) {
+bowTension = Math.min(bowTension+1, 25)
+if (bowTension === 5) {
+zzfx(...[.25,,138,.05,.17,.14,1,.5,,.3,100,,,,,,,.8,.1,.27]);
+}
+} else {
+bowTension = Math.max(bowTension-10, 0)
+}
+let arcx, arcy, string1y, string2y
+let lines = houghLines(imageData)
+let rnd = seedRand(123)
+for (let i = imageData.height - 1; i >= 0; i--) {
+for (let j = imageData.width - 1; j >= 0; j--) {
+let val = Math.floor(rnd() * (90 - 100 + 1)) + 90;
+if (j < 2 || j > imageData.width-3) {
+setFlatlcRgba(imageData.data, Math.ceil(i), Math.ceil(j)*4+0, imageData.width*4, val, val/2, val/3, 255)
+continue
+}
+if (!getFlatlc(imageData.data, i, j*4, imageData.width*4)) {
+setFlatlcRgba(imageData.data, Math.ceil(i), Math.ceil(j)*4+0, imageData.width*4, 0, val, 0, 255)
+}
+}
+}
+if (lines.length) {
+lines
+.filter(l => l.theta > 0.4 && l.theta < 2.6)
+.slice(0, 2)
+.sort((a, b) => b.p - a.p)
+.slice(0, 1)
+.forEach(line => {
+bowAngle = line.theta
+for (let x = 0; x < imageData.width-1; x+=0.02) {
+let theta = bowAngle
+if (theta === 0) theta += 0.01
+let p = line.p
+let y = Math.ceil((p-x*Math.cos(theta))/Math.sin(theta))
+let x2 = x
+let y2 = y
+if (getFlatlc(imageData.data, y2, Math.ceil(x2)*4, imageData.width*4) !== undefined) {
+setFlatlcRgba(imageData.data, y2, Math.ceil(x2)*4+0, imageData.width*4, 0, 255, 0, 40)
+}
+}
+let p = line.p + bowTension
+let theta = bowAngle
+let x1 = 0
+let y1 = Math.ceil((p-x1*Math.cos(theta))/Math.sin(theta))
+let x2 = canvas.width
+let y2 = Math.ceil((p-x2*Math.cos(theta))/Math.sin(theta))
+string1y = y1
+string2y = y2
+let x3 = canvas.width/2
+let y3 = canvas.height-10
+let x4 = x3 - 10 * Math.cos(bowAngle)
+let y4 = y3 - 10 * Math.sin(bowAngle)
+;[arcx, arcy] = intersection(x1, y1, x2, y2, x3, y3, x4, y4)
+})
+}
+monsters
+.filter(monster => monster.life === 0 && !gs.showHighScore).slice(0, 2)
+.forEach(monster => {
+if (!randomInteger(0, 80)) {
+zzfx(...[2,,464,,.15,.13,,2.81,-15,,,,,,,,.14,.09,.08]);
+monster.life = 1
+monster.x = randomInteger(0, canvas.width - monster.sprite[0].length)
+monster.y = 0
+monster.t = 0
+monster.theta = -Math.PI/2 + randomInteger(-(Math.PI/4)*100, (Math.PI/4)*100)/100
+monster.speed = randomInteger(1, 2)/2
+}
+})
+let textSpc = 0
+let ptsTxtEntities = `${gs.pts} pts`.split("").reverse().map(l => {
+let sprite = letters[l.toUpperCase()]
+let o = {
+sprite: sprite,
+life: 1,
+x: 20+textSpc,
+y: 10
+}
+textSpc += sprite[0].length + 1
+return o
+})
+let ptsTxtEntitiesRed = ptsTxtEntities.map(o => {
+return Object.assign({}, 
+o,
+{
+sprite: o.sprite.map(row => row.map(c => c ? 'd' : c)),
+y: o.y-1,
+})
+})                        
+textSpc = 0
+let timeTxtEntities = `${Math.min(gs.maxTime, gs.time)}`.split("").reverse().map(l => {
+let sprite = letters[l.toUpperCase()]
+let o = {
+sprite: sprite,
+life: 1,
+x: 20+textSpc,
+y: 20
+}
+textSpc += sprite[0].length + 1
+return o
+})
+entities.concat(ptsTxtEntitiesRed, ptsTxtEntities, timeTxtEntities, msgsTxt)
+.filter(entity => entity.life !== 0)
+.forEach(entity => {
+entity.t += 1
+let sprite = entity.sprite
+if (entity.type === 'monster') {
+if (entity.life > 0 && !randomInteger(0, 40)) {
+entity.theta = -Math.PI/2 + randomInteger(-(Math.PI/3)*100, (Math.PI/3)*100)/100
+}
+let isRev = entity.theta > -Math.PI/2 ? true : false
+if (entity.t < 3*(1/entity.speed*4)) {
+sprite = isRev ? monstersSprites2 : monstersSprites2Rev
+} else if (entity.t < 3*(1/entity.speed*8)) {
+sprite = isRev ? monstersSprites3 : monstersSprites3Rev
+} else {
+entity.t = 0
+sprite = isRev ? monstersSprites : monstersSpritesRev
+}
+if (entity.x < 0) entity.theta -= Math.PI/3
+if ((entity.x+sprite[0].length) > canvas.width) entity.theta += Math.PI/3
+}
+sprite.forEach((row, y) => {
+row.forEach((col, x) => {
+let offsetx = entity.x
+let offsety = entity.y
+let rgba = colorPallete[col]
+let x2 = Math.ceil(offsetx+x)
+let y2 = Math.ceil(offsety+y)
+if (x2 < canvas.width && y2 < canvas.height && x2 >= 0 && y2 >= 0) {
+setFlatlcRgba(imageData.data, y2, x2*4, imageData.width*4, ...rgba)
+}
+if (entity.type === 'monster') {
+let redChOnStage = getFlatlc(imageData.data, y2, x2*4, imageData.width*4)
+if (redChOnStage === colorPallete['s'][0] || redChOnStage === colorPallete['m'][0]) {
+entity.theta = Math.abs(entity.theta)
+entity.speed = 10
+entity.life = -1
+zzfx(...[0.4,,entity.y,,.02,.02,1,1.32,-49,,,,,.1,5.3,,,.86,.01]); // Blip 79
+if (!gs.showHighScore) {
+gs.pts += 5;
+}
+}
+}
+})
+})
+if (entity.type === 'monster') {
+if (entity.y > canvas.height || (entity.y+sprite.length-1) < -2) {
+entity.life = 0
+}
+if (entity.life === -1) entity.theta = Math.abs(entity.theta)
+}
+entity.x -= entity.speed * Math.cos(entity.theta)
+entity.y -= entity.speed * Math.sin(entity.theta)
+})
+let radiusX = 10+bowTension
+let radiusY = 40-bowTension
+arrowStringX = arcx + bowTension*Math.cos(bowAngle)
+arrowStringY = arcy + bowTension*Math.sin(bowAngle)
+let xaim = canvas.width/2
+let yaim = canvas.height-10
+for (let i = 0; i < 500; i++) {
+xaim -= 4 * Math.cos(bowAngle)
+yaim -= 4 * Math.sin(bowAngle)
+if (xaim < canvas.width-1 && yaim < canvas.height-1 && xaim >= 0 && yaim >= 0) {
+setFlatlcRgba(imageData.data, Math.ceil(yaim), Math.ceil(xaim)*4+0, imageData.width*4, 254, 0, 0, 255)
+} else break
+}
+ctx.putImageData(imageData, 0, 0);
+;["#c6a141", "#7f6116"].forEach((color, i) => {
+ctx.strokeStyle = color;
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.ellipse(arcx+i, arcy+i, radiusX, radiusY, bowAngle,  Math.PI/2, -Math.PI/2);
+ctx.stroke();
+})
+ctx.strokeStyle = "white"
+;[Math.PI/2, -Math.PI/2].forEach(rad => {
+let bsx = radiusX * Math.cos(rad)
+let bsy = radiusY * Math.sin(rad)
+let bsx2 = bsx * Math.cos(bowAngle) - bsy * Math.sin(bowAngle)
+let bsy2 = bsx * Math.sin(bowAngle) + bsy * Math.cos(bowAngle)
+ctx.lineWidth = 1
+ctx.beginPath()
+ctx.moveTo(bsx2+arcx, bsy2+arcy)
+ctx.lineTo(arrowStringX, arrowStringY)
+ctx.stroke()
+})
+requestAnimationFrame(captureFrame);
+}
+gs.time0 = Math.floor(performance.now()/1000)
+captureFrame();
+});
+}
+document.getElementById("cameraSelect").addEventListener("change", () => {
+const startButton = document.getElementById("startButton");
+startButton.disabled = false;
+});
+document.getElementById("startButton").addEventListener("click", () => {
+const startButton = document.getElementById("startButton");
+startButton.disabled = true;
+startWebcam();
+});
+populateCameraList();
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  background-color: gray;
+}
+
+canvas {
+  height: 100%;
+}
+
+#wrapper {
+  position: absolute;
+}
+
+#app {
+  margin: 0 auto;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

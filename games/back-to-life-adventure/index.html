@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Back to Life</title>
+    <link rel="shortcut icon" id="favicon" />
+    <meta name="viewport" content="user-scalable=no">
+    <meta charset="utf-8"/>
+    <style>
+* {  
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  -o-user-select: none;       /* Opera */
+  user-select: none;          /* Likely future */
+}
+body {
+  background: #0c161d;
+  color: #88776a;
+  font-family: courier new;
+  font-size: 24px;
+  overflow:hidden;
+  scrollbar-width: none;
+  cursor: crosshair;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+span {
+  display: inline-block;
+}
+.drain {
+  background-image: linear-gradient(90deg, rgb(22, 22, 22) 45%, rgba(154, 141, 141, 0.3) 65%);
+  background-size: 19px 50px;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  height: 20px;
+  width: 100px;
+  z-index: 15;
+  top: 350px;;
+  box-shadow: inset rgb(15, 15, 15) 0px 0px 2px 3px;
+}
+.inside .drain {
+  display: none;
+}
+.door {
+  background-image: linear-gradient(#000 75%, #222);
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  height: 158px;
+  width: 100px;
+  z-index: 15;
+  top: 97px;
+  box-shadow: #1f1f1f 0px 0px 3px 4px;
+  perspective: 350px;
+  overflow: hidden;
+  display: none;
+}
+.door .green {
+  background-color: rgba(5, 31, 1, 0.98);
+  box-shadow: inset #001306 0px 0px 3px 4px;
+  background-image: linear-gradient(90deg, transparent 97%, rgba(25, 49, 21, 0.98) 97%);
+}
+.door .red {
+  background-color: rgba(64, 11, 11, 0.98);
+  box-shadow: inset #250307 0px 0px 3px 4px;
+  background-image: linear-gradient(90deg, transparent 97%, rgba(86, 33, 33, 0.98) 97%);
+}
+.door .black {
+  background-color: rgba(0, 0, 0, 0.98);
+  box-shadow: inset #2b2b2b 0px 0px 3px 4px;
+  background-image: linear-gradient(90deg, transparent 97%, rgba(45, 45, 45, 0.98) 97%);
+}
+.inside .door {
+  background-image: linear-gradient(rgba(173, 158, 123, 0.13) 80%, rgba(17, 17, 17, 0.2) 20%);
+  background-color: rgba(255, 255, 255, 0.27);
+}
+.door div {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  transform-origin: right center;
+  width: 100%;
+  height: 100%;
+  z-index: 16;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  background-size: 21px 50px;
+}
+#status {
+	background-color: #fff;
+	color: #000;
+	font-weight: bold;
+	height: 27px;
+}
+#sentence {
+  width: 960px;
+  height: 33px;
+  text-align: center;
+  line-height: 33px;
+  color: white;
+}
+#controls {
+  width: 960px;
+  height: 138px;
+}
+#controls span:hover {
+  color: #ffe9be;
+}
+#controls div {
+  float: left;
+}
+#arrows {
+  width: 42px;
+}
+#arrows span {
+  font-size: 50px;
+  height: 67px;
+  width: 40px;
+  line-height: 78px;
+  text-align: center;
+  background-color: #2d2022;
+  margin: 1px;
+}
+#items {
+  width: 308px;
+  height: 136px;
+  background-color: #2d2022;;
+  margin: 1px;
+  overflow: hidden;
+  position: relative;
+}
+#itemlist {
+  position: absolute;
+  left: 0px;
+  padding: 2px 4px 2px 4px;
+}
+#itemlist span {
+  width: 300px;
+}
+#commands {
+  width: 608px;
+  font-size: 26px;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+#commands span {
+  background-color: #2d2022;
+  width: 150px;
+  margin: 1px;
+  height: 44px;
+  text-align: center;
+  line-height: 44px;
+}
+#wrap {
+  background-color: #000;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 960px;
+  height: 627px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+#screen {
+  position: relative;
+  height: 430px;
+  overflow: hidden;
+  background-color: #333333;
+}
+#screen * {
+  position: absolute;
+}
+#wall {
+  top: 50px;
+  width: 960px;
+  height: 209px;
+  z-index: 5;
+  background-color: rgba(255, 228, 196, 0.18); /* #ffe4c42e;*/
+}
+.bricks {
+  background-image: 
+    linear-gradient(335deg, rgba(80, 80, 80, 0.2) 23px, transparent 23px),
+    linear-gradient(155deg, rgba(88, 88, 88, 0.3) 23px, transparent 23px),
+    linear-gradient(335deg, rgba(80, 80, 80, 0.2) 23px, transparent 23px),
+    linear-gradient(155deg, rgba(88, 88, 88, 0.3) 23px, transparent 23px);
+  background-size: 58px 58px;	
+  background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+}
+.outside #wall {
+  top: -8px;
+  height: 263px;
+}
+#wall.left {
+  left: 100px;
+}
+#wall.leftright {
+  left: 100px;
+  width: 758px;
+}
+#wall.right {
+  width: 860px;
+}
+#curb {
+	width: 960px;
+	height: 30px;
+	background-color: rgba(68, 68, 68, 0.2);
+	bottom: 60px;
+	z-index: 1;
+	box-shadow: #111 0px 10px 25px 0px;
+}
+.inside #curb {
+  display: none;
+}
+#road {
+  width: 1070px;
+  height: 90px;
+  bottom: 0px;
+  z-index: 0;
+}
+.inside #road {
+  display: none;
+}
+#wall {
+  top: 0px;
+  height: 259px;
+  width: 960px;
+  z-index: 0;
+}
+.left.path {
+  left: 0px;
+  width: 0;
+  height: 0;
+  top: 130px;
+  border-top: 125px solid rgba(0, 0, 0, 0.3);
+  border-right: 100px solid transparent;
+}
+.right.path {
+  left: 860px;
+  width: 0;
+  height: 0;
+  top: 130px;
+  border-top: 125px solid rgba(0, 0, 0, 0.3);
+  border-left: 100px solid transparent;
+}
+.path {
+  width: 100px;
+  height: 255px;
+  top: 0px;
+  z-index: 10;
+}
+#mist {
+  box-shadow: rgb(107, 160, 119) 0px 58px 33px -27px inset;
+  height: 70px;
+  width: 960px;
+  z-index: 100;
+}
+.year2025 #mist {
+  box-shadow: rgb(255, 255, 255) 0px 58px 33px -27px inset;
+}
+.year2025 #light_beam {
+  display: none;
+}
+.year2025 #reaper {
+  display: none;
+}
+.year2025 #black_key {
+  display: none;
+}
+.year2025 #time_machine {
+  display: none;
+}
+#sign {
+  left: 120px;
+  top: 59px;
+  z-index: 6;
+  color: #bbb;
+  background-color: #265f28;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  padding: 0 8px 0 8px;
+  font-family: Verdana, sans-serif;
+  font-size: 15px;
+}
+#sign.right {
+  left: 730px;
+}
+#sign.leftright {
+  left: 430px;
+}
+#sides {
+	top: 0px;
+	left: -50px;
+	height: 430px;
+  width: 1060px;
+	border-top-right-radius: 60px;
+	border-top-left-radius: 60px;
+	z-index: 720;
+  pointer-events: none;
+  box-shadow: #000 -100px 0 0px 40px inset, #000 100px 0 0px 40px inset;
+}
+.outside #sides {
+  display: none;
+}
+.bubble {
+	font-size: smaller;
+  padding: 15px;
+  color: #fff;
+  background: #AD9E7B;
+  border-radius: 10px;
+  bottom: 170px;
+}
+.speech:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -22px;
+  left: 9px;
+  width: 0;
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #AD9E7B transparent;
+}
+.sprite {
+  /* Hack for Chrome, so that doors are not drawn on top of other sprites. */
+  transform: rotateY(0deg);
+}
+.actor:after, .ghost:after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0px;
+  width: 50px;
+  height: 10px;
+  background: #000;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+#crossing {
+  bottom: 15px;
+  left: 260px;
+  border-bottom: 28px solid rgba(255,255,255,0.1);
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  height: 0;
+  width: 385px;
+}
+.ghost {
+  opacity: 0.3;
+  transform: rotateY(0deg);
+  display: block;
+}
+.green, .green.key::before, .green.key::after  {
+  background-color: #146b07
+}
+.black, .black.key::before, .black.key::after {
+  background-color: black;
+}
+.key::before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: -2px;
+  left: -4px;
+  border-radius: 4px;
+}
+.key::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  width: 6px;
+  height: 5px;
+  top: 0px;
+  left: 17px;
+}
+#light_beam {
+  content: "";
+  position: absolute;
+  transition: all 0.4s;
+  transform: translateX(-50%) perspective(400px) rotateX(45deg);
+  transform-origin: top center;
+  background: linear-gradient(0deg, transparent, rgba(255, 255, 255, 0.2));
+}
+#msg {
+  z-index: 1500;
+  height: 33px;
+  font-size: 50px;
+  margin-top: -25px;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  animation: blinker 1.5s linear infinite;
+  color: white;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+#time_machine {
+  background-color: #363f5f;
+  border: 2px solid black;
+  border-radius: 100px / 50px;
+  box-shadow: inset #001306 0px -1px 4px 2px, #7a7f5e 0px -3px 7px -1px;
+}
+#reaper {
+  transform: rotate(90deg) rotateY(0deg);
+}
+#reaper::after {
+  left: 28px;
+  width: 22px;
+  height: 148px;
+}
+#backpack {
+  border: 2px solid black;
+  background-color: rgb(20, 30, 20);
+  background-image: linear-gradient(0deg, transparent 60%, #2a332afa 60%);
+}
+    </style>
+  </head>
+  <body>
+    <div id="msg">Click to start</div>
+    <div id="wrap">
+      <div id="status">
+        <span style="width:90px;">&nbsp;Score:</span>
+        <span style="width:210px;" id="score">0 of 150</span>
+        <span style="width:300px;text-align:center;">Back to Life</span>
+        <span style="width:300px;text-align:right;" id="time">        </span>
+      </div>
+      <div id="screen" class="inside">
+        <div id="mist"></div>
+        <div class="drain" style="left:85px;"></div>
+        <div class="drain" style="left:430px;"></div>
+        <div class="drain" style="left:775px;"></div>
+        <div class="door" style="left:243px;"><div></div></div>
+        <div class="door" style="left:620px;"><div></div></div>
+        <div id="sides" class="left right"></div>
+        <div class="left path"></div>
+        <div class="right path"></div>
+        <div id="sign"></div>
+        <div id="wall"></div>
+        <div id="curb"></div>
+        <div id="road"></div>
+        <div id="crossing"></div>
+      </div>
+      <div id="sentence">Walk to</div>
+      <div id="controls">
+	      <div id="commands">
+	        <span>Open</span><span>Pick up</span><span>Use</span><span>Put on</span>
+	        <span>Close</span><span>Look at</span><span>Push</span><span>Take off</span>
+	        <span>Give</span><span>Talk to</span><span>Pull</span><span>Eat</span>
+	      </div>
+	      <div id="arrows">
+          <span id="up">&#8679;</span>
+          <span id="down">&#8681;</span>
+        </div>
+        <div id="items">
+          <div id="itemlist">
+          </div>
+        </div>
+	    </div>
+    </div>
+    <script>let $={Util:{}};$.Util.fillCircle=function(a,b,c,d,f,h){d/=2;a.beginPath();a.arc(b+d,c+d,d,0,f*Math.PI);a.closePath();a.fill();h&&a.stroke()};$.Util.create2dContext=function(a,b){var c=document.createElement("canvas");c.width=a;c.height=b||a;return c.getContext("2d")};
+        $.Util.renderPerson=function(a,b,c,d,f,h,g,m,k){var e=$.Util.create2dContext(a,b+a/10),l=a/5;e.lineWidth=3;e.lineJoin="round";k&&(e.strokeStyle=k);g&&(e.fillStyle=g,$.Util.fillCircle(e,a/2-l/2,0,l,2,!0));k=a-a/5;l-=l/5;e.fillStyle=g;$.Util.fillCircle(e,(a-k)/2,l,k,2,!0);e.fillStyle=f;$.Util.fillCircle(e,(a-k)/2,l,k,g?1:2,!0);l+=k;var p=l+a/10,n=a/2.75;m&&(e.fillStyle=m,e.beginPath(),0!=c&&e.rect(a/2,p,-n,k),1!=c&&e.rect(a/2,p,n,k),e.closePath(),e.fill(),e.stroke());f=l+a+a/1.5;g=a/6;e.fillStyle=h;
+        e.beginPath();e.moveTo(a/2,l);e.lineTo(a/2-g,l);1!=c&&e.lineTo(3,f);e.lineTo(a/2-g,f);e.lineTo(a/2+g,f);0!=c&&e.lineTo(a-3,f);e.lineTo(a/2+g,l);e.lineTo(a/2,l);e.closePath();e.fill();e.stroke();m&&2==c&&(e.fillStyle=m,e.beginPath(),e.rect(a/2-n,p,2*n,k),e.closePath(),e.fill(),e.stroke());b-=f;h=[1,1,.5];c=h[d];d=h[(d+1)%3];e.beginPath();e.moveTo(a/2-g,f);e.lineTo(a/2-g,f+b*c);e.moveTo(a/2+g,f);e.lineTo(a/2+g,f+b*d);e.closePath();e.stroke();return e.canvas};$.Logic={process:function(a,b,c,d){let f=b,h=c.replace(" ","_");switch(a){case "Pull":switch(c){case "reaper":!$.roomData[11]||2>$.roomData[11]?$.ego.moveTo($.reaper.x-50,550,function(){$.reaper.ignore=!1;$.reaper.moveTo($.reaper.x-70,$.reaper.z,function(){$.reaper.ignore=!0});$.ego.moveTo($.reaper.x-120,550);$.roomData[11]=$.roomData[11]?2:1;$.Game.addToScore(15)}):$.ego.say("I think I'll let him be now.",220)}break;case "Push":switch(c){case "reaper":$.ego.say("Maybe I should try pulling.",220)}break;
+        case "Walk to":switch(c){case "door":$.roomData[8]?($.ego.moveTo($.activeDoor.offsetLeft+$.activeDoor.offsetWidth/2,$.ego.z,function(){$.inside||($.activeDoor.children[0].style.transform="rotateY(-120deg)",40==$.Game.room&&$.ego.say("I see myself inside, and have told him to stay inside.",250,function(){$.Game.addToScore(15);$.ego.say("He has agreed. Now no-one will catch The Death.",250,function(){for(let a=0;a<$.Game.objs.length;a++)$.Game.objs[a].remove();$.Game.objs=[];$.wrap.style.cursor="crosshair";
+        $.Game.fadeOut($.wrap);$.Game.gameOver("Well done!!")})}))}),40!=$.Game.room&&$.ego.moveTo($.activeDoor.offsetLeft+$.activeDoor.offsetWidth/2,$.activeDoor.offsetTop)):$.ego.say("The door is closed.",220);break;case "left path":case "right path":$.ego.stop();$.ego.moveTo(d.target.offsetLeft+d.target.offsetWidth/2,$.ego.z);$.ego.moveTo(d.target.offsetLeft+d.target.offsetWidth/2,d.target.offsetTop);break;case "road":$.ego.say("I should use the pedestrian crossing.",220);break;case "crossing":$.Game.userInput=
+        !1;$.ego.stop();$.ego.moveTo(d.pageX/$.scaleX,2*(d.pageY/$.scaleY-27),function(){$.ego.moveTo($.ego.x,1E3)});break;default:$.ego.stop(!0),530<2*(d.pageY/$.scaleY-27)?$.ego.moveTo(d.pageX/$.scaleX,2*(d.pageY/$.scaleY-27)):$.ego.moveTo(d.pageX/$.scaleX,600)}break;case "Look at":switch(c){case "left path":case "right path":$.ego.say("The path makes a 90 degree turn around the corner.",250);break;case "light beam":$.ego.say("A beam of sun light breaks through the mist.",250);break;case "time machine":$.ego.say("It has a solar panel on it.",
+        250);break;case "door":40==$.Game.room?$.ego.say("This black door looks vaguely familiar.",250):$.roomData[8]?$.ego.say("The door is open.",250):$.ego.say("The door is closed.",250);break;case "ghost":$.roomData[12]?$.ego.say("The old reaper told me I'm the reason they're dead.",250):$.ego.say("Why do I feel like I'm the reason they're ghosts?",250,function(){$.ego.say("Why is everyone dead?",200)});break;case "mist":2030==$.Game.year?$.ego.say("The mist is glowing green. It looks poluted.",250):
+        $.ego.say("The mist is white, and clean.",250);break;case "backpack":$.ego.say("Exactly what I need for carrying more things.",300);break;case "touch of death":$.ego.say("The label reads 'Aim, fire, instant death!'",250,function(){$.ego.say("How morbid.",140)});break;case "black key":$.ego.say("It looks vaguely familiar.",250);break;case "me":$.ego.say("I look like the Grim Reaper. Is that who I am?",200);break;case "reaper":$.ego.say("He looks like me but older.",270,function(){$.roomData[12]?$.ego.say("I think he's fully dead now.",
+        270):$.Game.userInput=!0});break;case "sign":$.ego.say("Its a street sign that says '"+$.sign.innerHTML+"'",200);break;case "crossing":$.ego.say("A safe way to cross the street, even for the Reaper.",200);break;default:""!=c&&$.ego.say("It's just a "+c+".",190)}break;case "Eat":$.ego.say("Uh...  No.",130);break;case "Talk to":switch(c){case "reaper":if($.roomData[12])$.ego.say("My spirit... I mean his spirit, has departed now... unfortunately.",300);else{let a=new Ghost(50);a.elem.style.opacity=0;
+        a.add();a.setPosition($.reaper.x,0,530);a.setDirection(Sprite.OUT);a.elem.style.transition="opacity 0.5s";a.elem.style.opacity=.3;a.say("Please, help me!",200,function(){$.ego.say("Who are you?",170,function(){a.say("I am you, from the future.",200,function(){a.say("Five years ago, we got sick. Our kind call it The Death.",300,function(){a.say("Our father always told us to stay indoors when we got The Death.",300,function(){a.say("We should have listened to him!",300,function(){a.say("Instead we went outside, and all the humans caught The Death!",
+        300,function(){a.say("For us, The Death is harmless, like a cold. For them it meant death.",350,function(){$.ego.say("So, you are me?",170,function(){a.say("Yes! And in the far future, we build a time machine to go back...",300,function(){a.say("...and stop ourself from leaving our apartment.",300,function(){a.say("But I failed. I didn't come back far enough, and now I'm dead.",300,function(){$.ego.say("How did you die?",170,function(){a.say("It doesn't matter. Its up to you now, to go back to 2025 and stop us.",
+        350,function(){a.say("If you stop us leaving our room, everyone else will come Back to Life.",300,function(){a.say("I'm fading now. I'll be gone...  forever...  Good luck.",300,function(){a.elem.style.opacity=0;a.elem.style.display="none";$.Game.userInput=!0;$.roomData[12]=!0;$.Game.addToScore(15)})})})})})})})})})})})})})})})})}break;case "me":$.ego.say("Isn't that what I'm doing?",150);break;case "ghost":$.ego.say("Woooooo!!!",150);break;default:$.ego.say("There was no reply.",220)}break;case "Open":switch(c){case "drain":$.ego.say("They won't budge.",
+        230);break;case "door":$.ego.moveTo($.activeDoor.offsetLeft+$.activeDoor.offsetWidth/2,$.ego.z,function(){$.roomData[9]||$.inside?$.roomData[8]?$.ego.say("The door is already open.",230):($.activeDoor.children[0].style.transform=$.inside?"rotateY(180deg)":"rotateY(-45deg)",$.roomData[8]=!0):$.ego.say("The door is locked.",230)});break;default:$.ego.say("It doesn't open.",230)}break;case "Close":switch(c){case "door":$.roomData[8]?$.ego.moveTo($.activeDoor.offsetLeft+$.activeDoor.offsetWidth/2,$.ego.z,
+        function(){$.activeDoor.children[0].style.transform="";$.roomData[8]=!1}):$.ego.say("It is already closed.",220);break;default:$.ego.say("It doesn't close.",220)}break;case "Use":if(b==a)f="Use "+c+" with ";else{let g=b.substring(4,b.indexOf(" with "));if(-1<g.indexOf(" key"))if($.Game.hasItem(g))switch(c){case "door":$.ego.moveTo($.activeDoor.offsetLeft+$.activeDoor.offsetWidth/2,$.ego.z,function(){$.roomData[9]||$.inside?$.ego.say("I don't want to lock it again.",220):{"green key":41,"black key":40}[g]==
+        $.Game.room?"black key"==g&&2030==$.Game.year?$.ego.say("It's the right key, but someone has recently damaged the lock. The key won't go in.",370):($.roomData[9]=!0,$.ego.say("The door is now unlocked.",220),$.Game.addToScore(15)):$.ego.say("It's the wrong key for this door.",220)});break;default:$.ego.say("Nothing happened.",220)}else $.ego.say("I don't have the "+g,220);else if("touch of death"==g)switch(c){case "me":$.ego.say("It doesn't work on me.",200);break;case "reaper":$.ego.say("Strange... It doesn't work on him.",
+        200);break;case "ghost":$.ego.say("They're already dead.",200);break;default:$.ego.say("Nothing happened.",220)}else if("time machine"==g)switch(c){case "light beam":$.ego.moveTo(d.target.offsetLeft+d.target.offsetWidth/2,$.ego.z,function(){$.ego.say("The time machine is charging...",220,function(){$.Game.addToScore(15);$.ego.elem.style.opacity=.5;$.ego.say("Hey! Wait! What is it doing to me?.",220,function(){$.Game.fadeOut($.ego.elem);setTimeout(function(){$.Game.initActors();$.ego.year=2025;$.Game.userInput=
+        !0},500)})})});break;case "mist":$.ego.say("There isn't enough light coming through the mist.",300);break;default:$.ego.say("Nothing happened.",220)}f=a}break;case "Give":b==a?f="Give "+c+" to ":("me"==c?$.ego.say("You lost me at 'Give'",260):$.ego.say("I think it said no.",230),f=a);break;case "Pick up":$.Game.hasItem(c)?$.ego.say("I already have that.",140):$[h]&&$[h].item?$.Game.hasItem("backpack")||"backpack"==c||2>$.items.children.length?$.ego.moveTo($.ego.cx,600,function(){$.ego.moveTo($[h].x,
+        600,function(){$.Game.getItem(c);$[h].remove();$[h].propData[0]=0;$.Game.addToScore(15);"backpack"==c&&($.ego.pack="rgb(20, 30, 20)",$.ego.canvas=$.ego.buildCanvas(),$.ego.say("Nice fit!",150))})}):$.ego.say("My hands are full. I need a bag of some kind.",220):$.ego.say("I can't get that.",220);break;default:$.ego.say("Nothing happened.",220)}return f}};class Obj{constructor(a,b,c){this.y=this.z=this.x=0;this.elem=document.createElement("span");let d=this.elem.style;this.width=a;this.height=b;d.width=this.width+"px";d.height=this.height+"px";this.zIndex=c;this.room=$.Game.room}setPosition(a,b,c){this.x=a;this.z=c;this.y=b;this.elem.style.top=Math.floor(this.z/2)-this.height-Math.floor(this.y)+"px";this.elem.style.left=this.x+"px";this.elem.style.zIndex=this.zIndex?this.zIndex:Math.floor(this.z)}add(){$.screen.appendChild(this.elem)}remove(){try{$.screen.removeChild(this.elem)}catch(a){}}hide(){this.elem.style.display=
+        "none";this.elem.style.opacity=1}show(){this.elem.style.display="block"}touching(a,b){return!1}update(){}hit(a){}};class Sprite extends Obj{constructor(a,b,c,d,f){super(a,b,0);this.moved=!1;this.positions=[];this.radius=a/2;this.colour=c;this.texture=d;this.elem.classList.add("sprite");this.cz=this.cy=this.cx=0;this.maxStep=f;this.step=this.stepInc=this.maxStep/10;this.direction=0;this.directionLast=1;this.heading=null;this.backgroundY=this.backgroundX=0;this.facing=1;this.destX=this.destZ=-1;this.destFn=null;this.dests=[];this.cell=0}touching(a,b){if(!this.ignore&&!a.ignore&&a){let c=this.cx-a.cx,d=this.cy-a.cy,
+        f=Math.abs(this.z-a.z)+15;a=this.radius+a.radius+(b|0);return c*c+d*d+f*f<=a*a}return!1}reset(){let a=this.positions.pop();a&&(this.setPosition(a.x,a.y,a.z),this.positions.pop());this.step=1;return a}setPosition(a,b,c){this.z&&(this.positions.push({x:this.x,y:this.y,z:this.z}),5<this.positions.length&&(this.positions=this.positions.slice(-5)));this.x=a;this.y=b;this.z=c;this.cx=a+this.radius;this.cy=b+this.radius;this.cz=c-this.radius;this.elem.style.top=Math.floor(this.z/2)-this.height-Math.floor(this.y)+
+        "px";this.elem.style.left=this.x+"px";this.elem.style.zIndex=Math.floor(this.z)}setDirection(a){if(a&&a!=this.direction){this.directionLast=this.direction;this.direction=a;for(var b=0;4>=b&&!(a>>b++&1););this.facing=b}this.canvas&&this.canvas.width>this.width&&(this.backgroundX=-((this.facing-1)*this.width),this.elem.style.backgroundPosition=this.backgroundX+"px "+(this.backgroundY+~~(this.cell/10)*this.height)+"px")}move(){this.moved=!1;if(this.direction||null!=this.heading){var a=this.x,b=this.z,
+        c=this.y,d=0;null!=this.heading&&(a+=Math.cos(this.heading)*Math.round(this.step*$.Game.stepFactor),b+=Math.sin(this.heading)*Math.round(this.step*$.Game.stepFactor),$.Game.userInput||this!=$.ego?(0>a&&(d=1),960<a+this.width&&(d=6),667<b&&(d=10)):(680<b&&740>b&&(b=this.direction==Sprite.OUT?740:680),950<b&&(d=7)),530>b&&(this==$.ego?(this==$.ego&&($.Game.userInput=!1),this.elem.style.opacity=1-(530-b)/100):d=480>a?100>a?2:3:860>a?4:5),500>b&&(d=480>a?100>a?2:3:860>a?4:5),(this.step+=this.stepInc)>
+        this.maxStep&&(this.step=this.maxStep));if(d)this.hitEdge(d);else if(a!=this.x||b!=this.z)this.setPosition(a,c,b),this.moved=!0}else this.step=1}update(){this.moved||this.move()}hit(a){this.moved&&this.reset()}hitEdge(a){a&&this.stop()}}Sprite.LEFT=1;Sprite.RIGHT=2;Sprite.IN=4;Sprite.OUT=8;Sprite.DIRS=[Sprite.LEFT,Sprite.RIGHT,Sprite.IN,Sprite.OUT];class Actor extends Sprite{constructor(a,b,c,d,f,h,g,m,k){super(a,b,c,d,f);this.face=h;this.hat=g;this.pack=m;this.outline=k;this.canvas=this.buildCanvas();this.elem.classList.add("actor")}buildCanvas(){let a=$.Util.create2dContext(4*this.width,9*this.width);for(let b=0;3>b;b++)for(let c=0;4>c;c++)a.drawImage($.Util.renderPerson(this.width,3*this.width,c,b,this.face,this.colour,this.hat,this.pack,this.outline),c*this.width,b*this.width*3);this.elem.style.backgroundImage="url("+a.canvas.toDataURL("image/png")+
+        ")";return a.canvas}stop(a){this.destX=this.destZ=-1;this.heading=null;this.cell=0;this.destFn&&(this.destFn(),this.destFn=null);a&&(this.dests=[])}moveTo(a,b,c){this.dests.push({z:b,x:a,fn:c})}say(a,b,c){$.Game.userInput=!1;let d=document.createElement("span");d.className="bubble";d.innerHTML=a;let f;f=800<this.x?-b+40:100>this.x?-10:-(b/2);d.style.width=b+"px";d.style.left=f+"px";let h=this.elem;h.appendChild(d);h.classList.add("speech");setTimeout(function(){h.classList.remove("speech");h.removeChild(d);
+        setTimeout(function(){c?c():$.Game.userInput=!0},500)},a.length/10*1500)}update(){if("none"!=this.elem.style.display){let a;if(-1!=this.destX&&-1!=this.destZ)this.touching({cx:this.destX,cy:this.cy,z:this.destZ,radius:-this.radius},20)?this.stop():(this.heading=Math.atan2(this.destZ-this.z,this.destX-this.cx),this.cell=(this.cell+1)%30);else if(0<this.dests.length){let a=this.dests.shift();this.destZ=a.z;this.destX=a.x;this.destFn=a.fn}null!==this.heading&&(a=2.356<Math.abs(this.heading)?a|Sprite.LEFT:
+        .785>Math.abs(this.heading)?a|Sprite.RIGHT:0<this.heading?a|Sprite.OUT:a|Sprite.IN);this.setDirection(a);null!==this.heading&&this.move()}}hit(a){for(;this.reset()&&this.touching(a););}};class Ego extends Actor{constructor(){super(50,150,"black",.95,5,"black",null,null);this.elem.classList.add("ego");this.elem.id="me";this.nesw=2;this.setDirection(Sprite.OUT)}hitEdge(a){if(a&&(this.destX=this.destZ=-1,this.heading=null,this.cell=0,10>a)){let b=$.Game.rooms[this.room-1][a];if(b){$.Game.userInput=!1;this.hide();this.room=b;switch(a){case 1:this.setPosition(960+this.width,this.y,600);this.setDirection(Sprite.LEFT);this.moveTo(960-this.width-50,600,function(){$.Game.userInput=!0});break;
+        case 2:this.setPosition(885,this.y,500);this.setDirection(Sprite.OUT);this.moveTo(910,600,function(){$.Game.userInput=!0});this.nesw=this.nesw+1&3;break;case 3:this.setPosition(645,this.y,500);this.setDirection(Sprite.OUT);this.moveTo(670,600,function(){$.Game.userInput=!0});break;case 4:this.setPosition(268,this.y,500);this.setDirection(Sprite.OUT);this.moveTo(293,600,function(){$.Game.userInput=!0});break;case 5:this.setPosition(25,this.y,500);this.setDirection(Sprite.OUT);this.moveTo(50,600,function(){$.Game.userInput=
+        !0});this.nesw=this.nesw-1&3;break;case 6:this.setPosition(-(2*this.width),this.y,600);this.setDirection(Sprite.RIGHT);this.moveTo(this.width+50,600,function(){$.Game.userInput=!0});break;case 7:this.setDirection(Sprite.IN),this.moveTo($.ego.x,600,function(){$.Game.userInput=!0}),this.nesw=this.nesw+2&3}this.step=1}}}};class Ghost extends Actor{constructor(a){super(a,3*a,"grey",.95,.5,"grey",null,null,"grey");this.elem.className="ghost";this.chooseDir();this.ignore=!0}update(){super.update();1==$.Game.random(200)&&300<this.x&&600>this.x&&this.chooseDir()}hitEdge(a){super.hitEdge(a);this.chooseDir()}chooseDir(){this.setDirection(Sprite.DIRS[$.Game.random(4)-1]);this.heading=this.dirToHeading(this.direction)}dirToHeading(a){return Math.atan2(((a&8)>>3)-((a&4)>>2),((a&2)>>1)-(a&1))}};$.Game={lastTime:0,delta:0,userInput:!0,lastRandom:481731,rooms:[[25,,2,,,8,,41],[17,3,,,,1,,22],[17,4,,,,,2,21],[17,,5,,,,3,20],[27,,6,,,4,,35],[20,7,,,,5,,31],[20,8,,,,,6],[20,,1,,,,7,25],[41,10,,,,22,,69],[41,11,,,,,9,68],[41,12,,,,,10],[41,,13,,,,11,91],[35,14,,,,12,,28],[35,15,,,,,13],[35,,16,,,,14,34],[43,17,,,,15,,53],[43,18,,,,,16],[43,19,,,,,17,48],[43,,20,,,,18,47],[33,21,,,,19,,4],[33,22,,,,,20,3],[33,,9,,,,21,2],[57,24,,,,28,,89],[57,,25,,,,23,88],[52,,26,,,24,,8],[58,27,,,,25,,],[58,
+        ,28,,,,26],[51,,23,,,27,,13],[74,30,,,,34,,],[74,,31,,,,29],[68,,32,,,30,,6],[75,33,,,,31,,58],[75,,34,,,,32,57],[67,,29,,,33,,15],[59,,36,,,46,,5],[49,37,,,,35,,52],[49,38,,,,,36],[49,39,,,,,37,72],[49,40,,,,,38,71],[49,,41,,95,,39,70,,,"black"],[57,,42,93,,40,,1,,,"green"],[52,43,,,,41,,87],[52,44,,,,,42],[52,45,,94,,,43,77,,!0,"red"],[52,46,,,,,44],[52,,35,,,,45,59],[75,48,,,,52,,19],[75,,49,,,,47,18],[66,,50,,,48,,56],[76,51,,,,49,,64],[76,,52,,,,50,63],[65,,47,,,51,,36],[11,,54,,,56,,16],[3,
+        ,55,,,53,,62],[12,,56,,,54,,73],[2,,53,,,55,,49],[27,58,,,,62,,33],[27,,59,,,,57,32],[20,,60,,,58,,46],[28,61,,,,59,,76],[28,,62,,,,60,75],[19,,57,,,61,,54],[44,64,,,,72,,51],[44,,65,,,,63,50],[34,66,,,,64,,82],[34,67,,,,,65],[34,,68,,,,66,92],[41,69,,,,67,,10],[41,,70,,,,68,9],[33,71,,,,69,,40],[33,72,,,,,70,39],[33,,63,,,,71,38],[60,74,,,,82,,55],[60,75,,,,,73],[60,76,,,,,74,61],[60,,77,,,,75,60],[52,,78,,,76,,44],[61,79,,,,77,,86],[61,80,,,,,78,85],[61,81,,,,,79,84],[61,,82,,,,80,83],[50,,73,,
+        ,81,,65],[13,84,,,,92,,81],[13,85,,,,,83,80],[13,86,,,,,84,79],[13,,87,,,,85,78],[4,,88,,,86,,42],[9,89,,,,87,,24],[9,90,,,,,88,23],[9,91,,,,,89],[9,,92,,,,90,12],[2,,83,,,91,,67],[128,,,,41,,,,,,"green"],[128,,,,44,,,,,!0,"red"]],flags:{},props:[[62,1,"green_key",18,3,455,540,null],[1,2,"light_beam",100,264,613,520,null,900],[46,2,"light_beam",100,264,613,520,null,900],[41,0,"reaper",50,150,710,650,null],[41,1,"time_machine",20,15,680,510,null],[41,1,"black_key",18,3,750,510,null],[93,1,"backpack",
+        30,40,380,530,null]],actors:[],inventory:{},verb:"Walk to",command:"Walk to",thing:"",itemTop:-1,_gameOver:!0,score:0,year:2030,fillScreen:function(){$.scaleX=window.innerWidth/$.wrap.offsetWidth;$.scaleY=window.innerHeight/$.wrap.offsetHeight;$.wrap.style.transform="scale3d("+$.scaleX+", "+$.scaleY+", 1)";$.wrap.style.marginLeft=(window.innerWidth-960)/2+"px";$.screen.style.width=(960<window.innerWidth?window.innerWidth:960)+"px"},start:function(){$.wrap=document.getElementById("wrap");$.screen=
+        document.getElementById("screen");$.wall=document.getElementById("wall");$.doors=document.getElementsByClassName("door");$.drains=document.getElementsByClassName("drain");$.paths=document.getElementsByClassName("path");$.time=document.getElementById("time");$.score=document.getElementById("score");$.items=document.getElementById("itemlist");$.sentence=document.getElementById("sentence");$.controls=document.getElementById("controls");$.sign=document.getElementById("sign");$.crossing=document.getElementById("crossing");
+        $.msg=document.getElementById("msg");this.fillScreen();window.addEventListener("resize",function(){$.Game.fillScreen()});this.wall=this.renderWall();$.screen.style.backgroundImage="url("+this.wall.toDataURL("image/png")+")";document.getElementById("up").addEventListener("click",function(){$.Game.scrollInv(1)});document.getElementById("down").addEventListener("click",function(){$.Game.scrollInv(-1)});for(var a=document.getElementById("commands").children,b=0;b<a.length;b++)a[b].addEventListener("click",
+        function(a){$.Game.command=$.Game.verb=a.target.innerHTML});this.gameOver()},gameOver:function(a){this.userInput=!0;this.fadeOut($.screen);a&&($.msg.innerHTML=a);$.msg.style.display="block";this.fadeIn($.msg);a||(window.onclick=function(a){document.fullscreenEnabled&&document.documentElement.requestFullscreen();$.Game.fadeOut($.msg);setTimeout(function(){$.msg.style.display="none"},200);setTimeout(function(a){$.Game.init();$.Game.loop()},500)})},init:function(){this._gameOver=!1;this.userInput=!0;
+        window.onclick=null;$.screen.onclick=function(a){$.Game.processCommand(a)};if(this.objs)for(var a=0;a<this.objs.length;a++)this.objs[a].remove();this.objs=[];this.room=41;$.ego=new Ego;$.ego.add();$.ego.setPosition(500,0,600);this.setTime(2030);this.addActors(200);this.getItem("touch of death");this.newRoom();this.userInput=!1;$.ego.say("Where am I?",140,function(){$.ego.moveTo(500,600,function(){$.ego.say("Who am I?",140,function(){$.ego.moveTo(500,640,function(){$.ego.say("And why is there a body over there that looks like me?",
+        300,function(){$.Game.userInput=!0})})})})});this.fadeIn($.wrap)},_loop:function(a){$.Game.loop(a)},loop:function(a){if(!this._gameOver){requestAnimationFrame(this._loop);this.updateDelta(a);this.updateObjects();$.reaper.elem.style.zIndex=520;$.sentence.innerHTML=this._gameOver?"Game Over":this.command+" "+this.thing;if($.ego.room!=this.room||$.ego.year!=this.year)this.room=$.ego.room,$.Game.setTime($.ego.year),this.fadeOut($.screen),setTimeout(function(){$.Game.newRoom()},200);$.wrap.style.cursor=
+        $.Game.userInput?"crosshair":"wait"}},updateDelta:function(a){this.delta=a-(this.lastTime?this.lastTime:a-16);this.stepFactor=.06*this.delta;this.lastTime=a},updateObjects:function(){for(var a=-1,b,c=$.ego,d,f=this.objs.length;;){if(c){c.update();for(b=a+1;b<f;b++)(d=this.objs[b])&&c.touching(d)&&(c.hit(d),d.hit(c));c.moved=!1}if(++a<f)c=this.objs[a];else break}},setTime:function(a){$.ego.year=this.year=a;$.time.innerHTML=""+a+" AD"},addToScore:function(a){this.score+=a;$.score.innerHTML=""+this.score+
+        " of 150"},processCommand:function(a){this.userInput&&!this._gameOver&&(this.command=$.Logic.process(this.verb,this.command,this.thing,a),a&&a.stopPropagation(),this.command==this.verb&&(this.command=this.verb="Walk to"))},addActors:function(a){this.initActors();for(let b=0;b<a;b++)this.actors[this.random(92)].push(null);this.actors[41]=[];this.actors[40]=[]},initActors:function(){for(let a=0;92>=a;a++)this.actors[a]=[]},random:function(a){this.lastRandom=1664525*this.lastRandom+1013904223&4294967295;
+        return(this.lastRandom&65535)%a+1},newRoom:function(){for(var a=0;a<this.objs.length;a++)this.objs[a].remove();this.objs=[];$.roomData=this.rooms[this.room-1];$.inside=$.roomData[0]&128;$.screen.className=($.inside?"inside ":"outside ")+"year"+this.year;$.wall.className="";$.inside||$.wall.classList.add("bricks");a="";$.roomData[2]&&(a+="left");$.roomData[5]&&(a+="right");a&&$.wall.classList.add(a);$.sign.className=a;$.paths[0].style.display=$.roomData[2]?"block":"none";$.paths[1].style.display=$.roomData[5]?
+        "block":"none";$.doors[0].style.display=$.roomData[3]?"block":"none";$.doors[1].style.display=$.roomData[4]?"block":"none";$.activeDoor="block"==$.doors[0].style.display?$.doors[0]:$.doors[1];$.activeDoor.children[0].className=$.roomData[10];$.inside?($.activeDoor.children[0].style.transform="rotateY(180deg)",$.activeDoor.style.overflow="visible",$.roomData[8]=!0):($.activeDoor.style.overflow="hidden",$.activeDoor.children[0].style.transform=$.roomData[8]?"rotateY(-45deg)":"rotateY(0deg)");$.crossing.style.display=
+        $.roomData[7]?"block":"none";var b=$.roomData[0]&7;let c=($.roomData[0]&8?" Avenue ":" Street ")+"NESW".charAt($.ego.nesw);$.sign.innerHTML=a?b+this.nth(b)+c:"";$.sign.style.display=a?"block":"none";for(b=0;b<this.props.length;b++)a=this.props[b],a[0]==this.room&&this.addPropToRoom(a);if(93>this.room)for(a=0;a<this.actors[this.room].length;a++)b=this.actors[this.room][a],null==b&&(b=this.actors[this.room][a]=new Ghost(1==this.random(3)?35:48)),b.add(),0==b.x&&b.setPosition(this.random(880)+20,0,this.random(120)+
+        540),this.objs.push(b);a=$.screen.children;for(b=0;b<a.length;b++)this.addObjEventListeners(a[b]);$.Game.fadeIn($.screen);$.ego.show();$.Game.fadeIn($.ego.elem)},nth:function(a){return["st","nd","rd"][((a+90)%100-10)%10-1]||"th"},addPropToRoom:function(a){var b;if(b=a[7])b.add();else{switch(a[1]){case 0:switch(a[2]){case "reaper":b=new Actor(a[3],a[4],"black",.95,10,"black"),b.setDirection(Sprite.LEFT),b.ignore=!0}b.setPosition(a[5],0,a[6]);break;case 1:b=new Obj(a[3],a[4],a[8]);b.item=!0;break;case 2:b=
+        new Obj(a[3],a[4],a[8])}if(-1<a[2].indexOf("_")){let c=a[2].split("_");for(let a=0;a<c.length;a++)b.elem.classList.add(c[a])}$[a[2]]=b;b.elem.id=a[2];b.propData=a;b.add();b.setPosition(a[5],0,a[6]);a[7]=b}this.objs.push(b)},addObjEventListeners:function(a){a.onmouseenter=function(a){$.Game.thing=a.target.id?a.target.id.replace("_"," "):a.target.className};a.onmouseleave=function(a){$.Game.thing=""};a.onclick=function(a){let b=!a.target.className||"door"==a.target.parentElement.className;$.Game.thing=
+        a.target.id?a.target.id.replace("_"," "):b?a.target.parentElement.className:a.target.className;$.Game.processCommand(a)}},getItem:function(a){var b=document.createElement("span");b.innerHTML=a;$.items.appendChild(b);b.addEventListener("mouseenter",function(b){$.Game.thing=a});b.addEventListener("mouseleave",function(a){$.Game.thing=""});b.addEventListener("click",function(b){$.Game.thing=a;$.Game.processCommand(b)});this.inventory[a]=b},hasItem:function(a){return this.inventory.hasOwnProperty(a)},
+        dropItem:function(a){$.items.removeChild(this.inventory[a]);delete this.inventory[a]},scrollInv:function(a){a=this.itemTop+27*a;var b=$.items.children.length;-1>=a&&a>-(27*(b-4))&&(this.itemTop=a,$.items.style.top=this.itemTop+"px")},renderWall:function(){var a=$.Util.create2dContext(960,260);a.fillStyle="hsl(0, 0%, 10%)";a.fillRect(0,0,960,260);for(var b=a.getImageData(0,0,960,260),c=0;c<b.data.length;c+=4){var d=.5*Math.random();.1>d?(d=1-d,b.data[c]=Math.floor(b.data[c]*d),b.data[c+1]=Math.floor(b.data[c+
+        1]*d),b.data[c+2]=Math.floor(b.data[c+2]*d),b.data[c+3]=200):(d=.5+d,b.data[c]=Math.floor(b.data[c]/d),b.data[c+1]=Math.floor(b.data[c+1]/d),b.data[c+2]=Math.floor(b.data[c+2]/d))}a.putImageData(b,0,0);return a.canvas},fadeIn:function(a){a.style.transition="opacity 0.5s";a.style.opacity=1},fadeOut:function(a){a.style.transition="opacity 0.2s";a.style.opacity=0}};window.onload=function(){$.Game.start()};
+        </script>
+  </body>
+</html>

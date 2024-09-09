@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Over and Ugh</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" media="screen" href="src/css/main.css" />
+</head>
+
+<body>
+	<div class="main-div">
+		<h1>OVER AND <i>ugh</i>!</h1>
+		You are monitoring a secret agents service and you have the ability to track agents using your radar. <br>
+		Your goal is to create a report of all agents that went offline during their mission.
+		<ul type="a">
+			<li>Scanning allows you to keep track of your agents. Your radar also has an interval at which it can update the
+				position coordinates so be sure to update
+				your radar judiciously</li>
+			<li>You can scan the area to update your radar only 20 times per round</li>
+			<li>When you no longer have any scans left, enter the names of colours of agents that you think went offline. Hint:
+				There are only 7 main colours in a rainbow</li>
+			<li><b>Scenarios for an agent to go offline are:</b>
+				<ul type="bullet">
+					<li><b>Agent's tracker stops moving for more than a couple of seconds, maybe they are unconscious</b></li>
+					<li><b>Agent's tracker disappears. This could mean they were taken away by guards</b></li>
+					<li><b>Agent's tracker malfunctions. <p>When this happens, the agent's tracker will assume the agent's last online
+								position become grey in colour there may have been a fist fight which broke the tracker</p></b></li>
+				</ul>
+			</li>
+			<li>It is possible that you won't see some changes in the agents' activities because of not updating mindfully</li>
+			<li>Hurry up! Agents have already left the headquarters!</li>
+		</ul>
+		<canvas id="GameWindow" style="border: 1px solid #603ca1" height="600" width="800">You browser does not support
+			canvas!</canvas>
+		<button onclick="run()">Scan Now!</button><br>
+		<textarea id="answer" width="100" placeholder="enter-your-answer-separated-by-hyphens-in-lowercase-and-in-chronological-order"></textarea>
+		<button onclick="submission()">Submit</button>
+		<br><br><br>
+		<script>
+			var canvas = document.getElementById('GameWindow');
+			var ctx = canvas.getContext('2d');
+			ctx.font = "20px Arial";
+
+			function drawRectangle(x, y, deltaX, deltaY, color) {
+				if (canvas.getContext) {
+					ctx.strokeStyle = color;
+					ctx.fillStyle = color;
+					ctx.fillRect(x, y, deltaX, deltaY);
+				}
+			}
+
+			function drawText(x, y, color, align, text) {
+				ctx.fillStyle = color;
+				ctx.textAlign = align;
+				ctx.fillText(text, x, y);
+			}
+
+			function drawCircle(x, y, r, color) {
+				ctx.beginPath();
+				ctx.arc(x, y, r, 0, 2 * Math.PI);
+				ctx.closePath();
+				ctx.fillStyle = color;
+				ctx.fill();
+				ctx.stroke();
+			}
+
+			class Circle {
+				constructor(x, y, r, color) {
+					this.x = x;
+					this.y = y;
+					this.r = r;
+					this.color = color;
+					this.activity = "active";
+				}
+
+				draw() {
+					drawCircle(this.x, this.y, this.r, this.color);
+				}
+			}
+
+			// Game begin
+			function render() {
+				drawRectangle(0, 0, 800, 600, "#000009");
+				agents[1].draw();
+				agents[2].draw();
+				agents[3].draw();
+				agents[4].draw();
+				agents[5].draw();
+				agents[6].draw();
+				agents[7].draw();
+			}
+
+			var agents = [];
+			agents[1] = new Circle(300, 300, 10, "violet");
+			agents[2] = new Circle(600, 100, 11, "indigo");
+			agents[3] = new Circle(300, 400, 12, "blue");
+			agents[4] = new Circle(350, 500, 13, "green");
+			agents[5] = new Circle(670, 200, 14, "yellow");
+			agents[6] = new Circle(530, 530, 15, "orange");
+			agents[7] = new Circle(60, 100, 16, "red");
+
+			var clickCount = 0;
+
+			function run() {
+				clickCount++;
+
+				if (clickCount >= 20) {
+					// Game is over
+					drawRectangle(0, 0, 800, 600, "red");
+					drawText(canvas.width / 2, canvas.height / 2, "blue", "center", "Scans exhausted!");
+					drawText(canvas.width / 2, canvas.height / 2 + 40, "blue", "center",
+						"Write initial colors of all the agents that went offline in the textbox below");
+				}
+
+				switch (clickCount) {
+					case 4:
+						agents[2].activity = "offline";
+						break;
+					case 9:
+						agents[4].activity = "offline";
+						agents[4].color = "grey";
+						break;
+					case 17:
+						agents[6].activity = "offline";
+						agents[6].x = 950;
+						agents[6].y = 600;
+						break;
+					case 18:
+						agents[6].activity = "offline";
+						agents[6].x = 950;
+						agents[6].y = 600;
+						break;
+					case 19:
+						agents[6].x = 950;
+						agents[6].y = 600;
+						break;
+				}
+
+				if (clickCount < 20) {
+					render();
+				}
+			};
+
+			function getNewPosition(agent) {
+				var min = agent.x - 100;
+				var max = agent.x + 100;
+				var random = Math.random() * (+max - +min) + +min;
+				agent.x = random;
+
+				if (agent.x > 700)
+					agent.x = agent.x - 100;
+				if (agent.x < 100)
+					agent.x = agent.x + 100;
+
+				var min = agent.y - 100;
+				var max = agent.y + 100;
+				var random = Math.random() * (+max - +min) + +min;
+				if ((agent.y < 0 && random < 0) || (agent.y > 550 && random > 0)) {
+					agent.y = -random;
+				} else {
+					agent.y = random;
+				}
+
+				if (agent.y > 500)
+					agent.y = agent.y - 100;
+				if (agent.y < 100)
+					agent.y = agent.y + 100;
+
+				return agent;
+			}
+
+			function update() {
+				if (agents[1].activity != "offline") agents[1] = getNewPosition(agents[1]);
+				if (agents[2].activity != "offline") agents[2] = getNewPosition(agents[2]);
+				if (agents[3].activity != "offline") agents[3] = getNewPosition(agents[3]);
+				if (agents[4].activity != "offline") agents[4] = getNewPosition(agents[4]);
+				if (agents[5].activity != "offline") agents[5] = getNewPosition(agents[5]);
+				if (agents[6].activity != "offline") agents[6] = getNewPosition(agents[6]);
+				if (agents[7].activity != "offline") agents[7] = getNewPosition(agents[7]);
+			}
+
+			function submission() {
+				var x = document.getElementById("answer");
+				var answer = x.value;
+				if (answer == "indigo-green-orange") {
+					drawRectangle(0, 0, 800, 600, "yellow");
+					drawText(canvas.width / 2, canvas.height / 2, "red", "center", "You Won! Hit ctrl+R to play again");
+				} else {
+					drawRectangle(0, 0, 800, 600, "black");
+					drawText(canvas.width / 2, canvas.height / 2, "red", "center", "Wrong answer! You lost...hit ctrl+R to play again");
+				}
+
+				console.log("Game over");
+			}
+
+			window.onload = function () {
+				setInterval(update, 1000);
+			}
+
+		</script>
+	</div>
+</body>
+
+</html>

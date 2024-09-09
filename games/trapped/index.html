@@ -1,0 +1,213 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style>
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+canvas {
+	position:absolute;
+}
+		</style>
+	</head>
+	<body>
+		<canvas id="display"></canvas>
+	</body>
+	<script>
+canvas = document.getElementById('display');
+ctx = canvas.getContext("2d");
+score = -1;
+
+x = 0;
+y = 0;
+
+dx = 0;
+dy = 0;
+
+bx = 0;
+by = 0;
+
+trapx = 0;
+trapy = 0;
+
+trapwidth = 0;
+trapheight = 0;
+
+state = 0;
+
+monitor = undefined;
+
+window.onload = window.onresize = function() {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	document.body.addEventListener("touchstart", function (e) {
+		if (e.target == canvas) {
+			e.preventDefault();
+		}
+	}, false);
+	document.body.addEventListener("touchend", function (e) {
+		if (e.target == canvas) {
+			e.preventDefault();
+		}
+	}, false);
+	document.body.addEventListener("touchmove", function (e) {
+		if (e.target == canvas) {
+			e.preventDefault();
+		}
+	}, false);
+
+	titleScreen();
+}
+
+function titleScreen() {
+	ctx.fillStyle = "white";
+	ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+	ctx.fillStyle = "black";
+	ctx.font = "25px Arial"; 
+	ctx.textAlign = "center"; 
+	ctx.fillText("trapped", canvas.width/2, canvas.height/2 - 20); 
+
+	ctx.font = "15px Arial"; 
+	ctx.textAlign = "center"; 
+	ctx.fillText("click to start", canvas.width/2, canvas.height/2 + 20); 
+
+	ctx.font = "15px Arial"; 
+	ctx.textAlign = "center"; 
+	ctx.fillText("how to play:\nkeep your finger inside the box", canvas.width/2, canvas.height/2 + 80); 
+
+	if (score != -1) {
+		ctx.font = "15px Arial"; 
+		ctx.textAlign = "center"; 
+		ctx.fillText("your score was: " + score, canvas.width/2, canvas.height/2 - 100); 
+	}
+
+	state = 0;
+	score = -1;
+	dx = 0;
+	dy = 0;
+	bx = 0;
+	by = 0;
+
+	canvas.onmousedown = function(e) { launch(e); }
+	canvas.onmouseup = function(e) { end(e); }
+	canvas.onmousemove = function(e) { drag(e); }
+
+	canvas.ontouchstart = function(e) { launchTouch(e); }
+	canvas.ontouchmove = function(e) { dragTouch(e); }
+	canvas.ontouchend = function(e) { endTouch(e); }
+}
+
+function generateMouseEvent(e) {
+	var touch = e.touches[0];
+	var mouseEvent = new MouseEvent("mousedown", {
+		clientX: touch.clientX,
+		clientY: touch.clientY
+	});
+
+	return mouseEvent;
+}
+
+function launchTouch(e) {
+	launch(generateMouseEvent(e));
+}
+
+function dragTouch(e) {
+	drag(generateMouseEvent(e));
+}
+
+function endTouch(e) {
+	end();
+}
+
+function launch(e) {
+	state = 1;
+	score = 0;
+
+	x = e.clientX;
+	y = e.clientY;
+
+	trapx = x;
+	trapy = y;
+
+	ctx.fillStyle = "black";
+	ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+	monitor = window.setInterval(loop, 50);
+}
+
+function loop() {
+	if (state == 1) {
+		score++;
+
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+		trapwidth = 80;
+		trapheight = 80;
+
+		dx = 3;
+		dy = 3;
+
+		switchRatio = 0.7;
+
+		level = (score / 1000) + 1;
+		trapwidth /= level;
+		trapheight /= level;
+		dx *= level;
+		dy *= level;
+		switchRatio -= level/100;
+
+		if (Math.random() >= switchRatio) {
+			bx = Math.random() < 0.5 ? -1 : 1;
+			by = Math.random() < 0.5 ? -1 : 1;
+		}
+
+		if (trapx + bx * dx - trapwidth/2 < 0) {
+			bx *= -1;
+		} else if (trapx + bx * dx + trapwidth/2 > window.innerWidth) {
+			bx *= -1;
+		}
+
+		if (trapy + by * dy - trapheight/2 < 0) {
+			by *= -1;
+		} else if (trapy + by * dy + trapheight/2 > window.innerHeight) {
+			by *= -1;
+		}
+
+		trapx += bx * dx;
+		trapy += by * dy;
+
+		ctx.strokeStyle = "white";
+		ctx.strokeRect(trapx - trapwidth/2, trapy - trapheight/2, trapwidth, trapheight);
+
+		if (x > trapx - trapwidth/2 && x < trapx + trapwidth/2 && y > trapy - trapheight/2 && y <trapy + trapheight/2) {
+			// Within
+		} else {
+			end();
+		}
+	} else {
+		window.clearInterval(monitor);
+	}
+}
+
+function end(e) {
+	if (state == 1) {
+		titleScreen();
+	}
+}
+
+function drag(e) {
+	x = e.clientX;
+	y = e.clientY;
+
+	e.preventDefault();
+}
+	</script>
+</html>

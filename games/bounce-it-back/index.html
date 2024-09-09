@@ -1,0 +1,396 @@
+<!DOCTYPE html><html><head><title>Bounce Back</title><style>
+body, html {background-color: #7dd3f5;
+padding: 0;
+margin: 0;
+overflow: hidden;
+height: auto;
+width: 100%;
+min-width: 400px;
+} form {height: 50px;
+width: 100%;
+background-color: #ffac38;
+position: fixed;
+left: 0;
+bottom: 0;
+} .slider1{position: relative;
+top:25%;
+left:7%;
+height: auto;
+width : 10%;
+} .hbar1{position: absolute;
+top:35%;
+left: 23%;
+overflow: hidden;
+width : 10%;
+
+} .slider2{position: absolute;
+top:25%;
+right: 27%;
+height: auto;
+width : 10%;
+} .hbar2{position: absolute;
+top:35%;
+right: 9.5%;
+overflow: hidden;
+width : 10%;
+
+} #hp1
+{position: absolute;
+top:1%;
+left: 35%;
+color:'black';
+display:inline;
+overflow: hidden;
+height: auto;
+width : 8%;
+} #hp2{position: absolute;
+top:1%;
+left: 93%;
+color:'black';
+display:inline;
+overflow: hidden;
+height: auto;
+width : 8%;
+} .modal{background-color: rgba(0,0,0,0.7);
+position:fixed;
+height:100%;
+width:100%;
+} .modal__content{vertical-align:middle;
+background:rgb(255,255,255);
+width:40%;
+min-width:100px;
+margin-top:10%;
+margin-left: 30%; 
+} td {padding: 5px;
+text-align: center;
+font-size: 120%;}
+#play{cursor: pointer;
+background-color: crimson;
+border: 0;
+font-size: 120%;
+padding: 5px;
+} #playAgain{cursor: pointer;
+background-color: crimson;
+border: 0;
+font-size: 120%;
+padding: 5px;}
+</style></head><body><form id="slider_form"><input type="range" min = "9" max = "18" value = "12" class="slider1" id = "speed1"><br><progress id="health1" value="100" max="100" class="hbar1"></progress><p id="hp1">100%</p><input type="range" min = "9" max = "18" value = "12" class="slider2" id = "speed2"><br><progress id="health2" value="100" max="100" class="hbar2"></progress><p id="hp2">100%</p></form><div class="modal" id="modal"><section class="modal__content"><br><center><h2 class="modal__title">GAME CONTROLS</h2> <hr><table><tr><td><u>Player 1</u></td><td><u>Player 2</u></td></tr><tr><td>Cannon Rotation: Q and E</td><td>Cannon Rotation: U and O</td></tr><tr><td>Cannon Movement: A and D</td><td>Cannon Movement: J and L</td></tr><tr><td>Shoot: S</td><td>Shoot: K</td></tr></table>
+    <h3>Control Shoot Speed using Slide Bar</h3>
+<input type="submit" id="play" value="Bounce to Play" onclick="gameBegins(); return false"><br><br></center></section></div><div class="modal" id="overModal" style="display:none">
+<section class="modal__content"><br><center><h2 class="modal__title">GAME OVER</h2> <hr><h3 id="resultGame"></h3><input type="submit" id="playAgain" value="Play Again" onclick="playAgain(); return false"><br><br></center></section></div><canvas id="myCanvas"></canvas>
+<script type="text/javascript">
+var popModal = document.getElementById('modal');
+var overModal = document.getElementById('overModal');
+function gameBegins(){popModal.style.display = "none";
+overModal.style.display = "none";
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);}
+function gameOver(winPlayer){document.removeEventListener("keydown", keyDownHandler);
+document.removeEventListener("keyup", keyUpHandler);
+overModal.style.display = "inline";
+document.getElementById('resultGame').innerHTML = "Player " + winPlayer + " Wins!";}
+function playAgain(){document.location.reload();
+popModal.style.display = "none";
+overModal.style.display = "none";
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);}
+var canvas = document.getElementById("myCanvas");
+var speed1 = document.getElementById("speed1");
+var speed2 = document.getElementById("speed2");
+var hbar1 = document.getElementById("health1");
+var hbar2 = document.getElementById("health2");
+var ctx = canvas.getContext("2d");
+ctx.shadowBlur = 20;
+ctx.shadowColor = "#020202";
+ctx.shadowOffsetX = 10;
+ctx.shadowOffsetY = 10;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var height = canvas.height;
+var width = canvas.width;
+var rightClicked = false;
+var leftClicked = false;
+var chance = -1;
+var gravity = 2;
+var shoot = 0;
+var sa1 = 45;
+var sa2 = 45;
+var spos1 = width/4;
+var spos2 = 3*width/4;
+var collide = 1;
+var flag = 0;
+function keyDownHandler(e) {
+const k = e.key;
+if(k=='s' && chance==-1)
+chance=0;
+else if(k=='k' && chance==-2)
+chance=1;
+if(chance==-1){
+if(k=='q' && sa1>1)
+{sa1-=4;
+}
+else if(k=='e' && sa1<=86)
+{sa1+=4;
+}
+else if(k=='a' && spos1>180)
+{spos1-=5;
+}
+else if(k=='d' && spos1<width/2-180){spos1+=5;
+}}
+if(chance==-2){
+if(k=='o' && sa2>1)
+{sa2-=4;
+}
+else if(k=='u' && sa2<=86)
+{sa2+=4;
+}
+else if(k=='j' && spos2>width/2+180)
+{spos2-=5;
+}
+else if(k=='l' && spos2<width-180){spos2+=5;
+}}}
+function keyUpHandler(e) {
+    if (e.keyCode == 37) {
+        rightClicked = false;}
+    else if (e.keyCode == 39) {
+        leftClicked = false;}}
+function Mountains() {
+    ctx.beginPath();
+    ctx.fillStyle = "#ffffff";
+    ctx.moveTo(0, height * 0.95);
+    ctx.lineTo(0, height * 0.9);
+    ctx.lineTo(width * 0.28, height * 0.45);
+    ctx.lineTo(width * 0.48, height * 0.75);
+    ctx.lineTo(width * 0.75, height * 0.5);
+    ctx.lineTo(width, height * 0.92);
+    ctx.lineTo(width, height * 0.95);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = "#92959b";
+    ctx.moveTo(0, height * 0.95);
+    ctx.lineTo(0, height * 0.9);
+    ctx.lineTo(width * 0.2, height * 0.575);
+    ctx.lineTo(width * 0.3, height * 0.65);
+    ctx.lineTo(width * 0.38, height * 0.6);
+    ctx.lineTo(width * 0.48, height * 0.75);
+    ctx.lineTo(width * 0.57, height * 0.665);
+    ctx.lineTo(width * 0.65, height * 0.7);
+    ctx.lineTo(width * 0.72, height * 0.65);
+    ctx.lineTo(width * 0.79, height * 0.72);
+    ctx.lineTo(width * 0.85, height * 0.665);
+    ctx.lineTo(width, height * 0.92);
+    ctx.lineTo(width, height * 0.95);
+    ctx.closePath();
+    ctx.fill();}
+function Cloud() {
+    this.x = -120;
+    this.x1 = -240;
+    this.altitude = 70;
+    this.update = function() {
+        this.x += 1;
+        this.x1 += 2;
+        if (this.x  - 40 > width) {
+            this.x = -120;}
+        if (this.x1 - 120 > width) {
+            this.x1 = -40;}
+    this.draw();}
+    this.draw = function() {
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x, this.altitude, 40, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x + 40, this.altitude, 20, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x + 80, this.altitude, 30, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x1 - 80, this.altitude + 100, 30, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x1 - 40, this.altitude + 100, 40, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#e3f9f9";
+        ctx.arc(this.x1, this.altitude + 100, 20, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();}}
+var cloud = new Cloud();
+function Ground() {
+ctx.beginPath();
+ctx.fillStyle = "#00ff00";
+ctx.rect(0, height - 60, width, 60);
+ctx.fill();
+ctx.closePath();}
+function Shooter(x, dx) {
+this.radius = 40;
+this.x = x;
+this.y = height - 50;
+this.dx = dx;
+this.draw = function() {
+ctx.beginPath();
+ctx.fillStyle = "#3e573e";
+ctx.arc(this.x, this.y, this.radius, Math.PI, 2 * Math.PI);
+ctx.fill();
+ctx.closePath();}
+this.update = function(d) {
+this.x = d;
+this.draw();}
+this.recoil = function(d){
+this.x+=d;
+this.draw();}}
+var s1 = new Shooter(width / 4, spos1);
+var s2 = new Shooter(3 * width / 4, spos2);
+function Walls(x,y,h,w)
+{this.x = x;
+this.y = y;
+this.h = h;
+this.w = w;
+this.draw = function(){
+ctx.fillStyle = "#842720";
+ctx.fillRect(this.x,this.y,this.w,this.h);}
+this.update = function(){
+this.y -= 1.5;
+if(this.y+this.h<0)
+{this.y = height+100;}
+this.draw();}}
+function Bomb(x, y, v, theta, g) {
+this.radius = 10;
+this.x = x;
+this.y = y;
+this.vx = v * Math.cos(theta*Math.PI/180);
+this.vy = v * Math.sin(theta*Math.PI/180);
+this.gravity = g;
+this.draw = function() {
+ctx.beginPath();
+ctx.fillStyle = "#d15e11";
+ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+ctx.fill();
+ctx.closePath();}
+this.update = function() {
+ctx.shadowBlur = 20;
+ctx.shadowColor = "#020202";
+ctx.shadowOffsetX = 10;
+ctx.shadowOffsetY = 10;
+for(var i=0;i<4;++i)
+{
+    if(((this.x + this.radius >= walls[i].x && this.x + this.radius < walls[i].x + walls[i].w)||(this.x - this.radius <= walls[i].x + walls[i].w && this.x - this.radius> walls[i].x)) && 
+        ((this.y+this.radius>walls[i].y && this.y+this.radius<walls[i].y+walls[i].h) || (this.y-this.radius>walls[i].y && this.y-this.radius<walls[i].y+walls[i].h)))
+
+{this.vx = (-1) * this.vx;
+}
+    }
+if (this.x < 0 || this.x > width) {
+this.vx = (-1) * this.vx;
+}
+else if (this.y < 10) {
+this.vy = (-1) * this.vy;
+}
+else if (this.y > s1.y) {
+if(chance==0) {chance=-2;
+    shoot = 1;}
+else if(chance==1){
+chance=-1;
+shoot = 0;}
+this.y = 0;
+this.x = 0;
+this.vx = 0;
+this.vy = 0;}
+if(chance==0 && shoot==0)
+{   var b = new Bomb(s1.x-2*s1.radius*Math.cos((sa1*Math.PI)/180),s1.y-2*s1.radius*Math.sin((sa1*Math.PI)/180),speed1.value,sa1, gravity);
+    bombs.push(b);
+    bombs.splice(0, 1);
+    console.log(bombs);
+    shoot=-1;
+    s1.recoil(10);
+    collide=1;}
+else if(chance==1 && shoot==1)
+{   var b = new Bomb(s2.x+2*s2.radius*Math.cos((sa2*Math.PI)/180),s2.y-2*s2.radius*Math.sin((sa2*Math.PI)/180),speed2.value,sa2, gravity);
+    bombs.push(b);
+    bombs.splice(0, 1);
+    console.log(bombs);
+    shoot=-1;
+    s2.recoil(-10);
+    collide=1;}
+if(chance==0){
+this.x -= this.vx;
+this.y -= this.vy;
+this.vy -= 0.1;
+this.draw();}
+else if(chance==1){
+this.x += this.vx;
+this.y -= this.vy;
+this.vy -= 0.1;
+this.draw();}}}
+function direction(x1,y1,x2,y2){
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.lineWidth = 20;
+    ctx.strokeStyle = "#3e573e";
+    ctx.stroke();}
+var b = new Bomb(s1.x-2*s1.radius*Math.cos((sa1*Math.PI)/180),s1.y-2*s1.radius*Math.sin((sa1*Math.PI)/180),speed1.value,sa1, gravity);
+var bombs = [];
+bombs.push(b);
+function isCollidingWithShooter(b, c, h) {
+let A = Math.abs(b.x - c.x);
+let B = Math.abs(b.y - c.y);
+let C = b.radius + c.radius+30;
+if (Math.pow(C, 2) > Math.pow(A, 2) + Math.pow(B, 2) && collide == 1) {
+if(chance==0)
+{shoot=1;
+chance=-2;}
+else if(chance==1)
+{shoot=0;
+chance=-1;}
+if(h==0)
+{hbar1.value-=20;
+hp1.innerHTML = hbar1.value + "%";}
+else if(h==1){hbar2.value-=20;
+hp2.innerHTML = hbar2.value + "%";}
+collide=0;}}
+s1.draw();
+s2.draw();
+var walls = [];
+for(var i = 0 ; i<4 ; ++i){var w = new Walls(width/2,30+i*200,90,20);
+walls.push(w);}
+function updateGame() {
+ctx.clearRect(0, 0, width, height);
+cloud.update();
+Mountains();
+s1.update(spos1);
+s2.update(spos2);
+direction(s1.x-2*s1.radius*Math.cos((sa1*Math.PI)/180),s1.y-2*s1.radius*Math.sin((sa1*Math.PI)/180),s1.x,s1.y);
+direction(s2.x+2*s2.radius*Math.cos((sa2*Math.PI)/180),s2.y-2*s2.radius*Math.sin((sa2*Math.PI)/180),s2.x,s2.y);
+s1.update(spos1);
+s2.update(spos2);
+for(var i =0;i<4;++i)
+{walls[i].update();}
+bombs[0].update();
+isCollidingWithShooter(bombs[0], s1,0);
+isCollidingWithShooter(bombs[0], s2,1);
+if(hbar1.value==0){gameOver(2);}
+else if(hbar2.value==0){gameOver(1);}
+ctx.font = "50px Comic Sans MS";
+ctx.strokeStyle = 'black';
+ctx.strokeText("BOUNCE    BACK", window.innerWidth/2 - 230, 100);
+ctx.fillStyle = 'white';
+ctx.fillText("BOUNCE    BACK", window.innerWidth/2 - 230, 100);
+ctx.font = "25px Arial";
+ctx.fillStyle = "black"
+ctx.fillText("Player 1", 40,50);
+ctx.fillText("Player 2", window.innerWidth-150, 50); 
+window.requestAnimationFrame(updateGame);}
+updateGame();
+</script></body></html>

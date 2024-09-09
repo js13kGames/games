@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="level hidden">
+      <canvas></canvas>
+      <article class="score-level">
+        <span class="score-level_total">0</span>
+        <div class="score-level_round hidden">
+          <div class="score-level_indicator">
+            <div class="score-level_indicator-overlay"></div>
+          </div>
+          <span class="score-level_text">0</span>
+          <div class="score-level_indicator">
+            <div class="score-level_indicator-overlay"></div>
+          </div>
+        </div>
+      </article>
+      <article class="options options-hidden"></article>
+    </section>
+    <section class="end hidden">
+      <h2>0</h2>
+      <div class="history"></div>
+      <button data-text="again" class="btn">again</button>
+    </section>
+    <section class="screen screen-start">
+      <p>
+        <span class="verdana"><strong>The teleportation pad is broken,</strong></span> the clones have a hard time getting in
+        and... <span class="verdana white"><em>Greg left.</em></span>
+      </p>
+      <p>
+        Can you handle the teleportation manually until I find Greg?
+      </p>
+      <p>
+        It seems that in every group teleportation, one of the clones is missing. You have to tell the pad which one is it. It's easy since the clones like to wear matching outfits.
+      </p>
+      <p>
+        Also, Greg always brags about his score. Knock it down. That will show
+        him.<span>&#128170&#128513</span>
+      </p>
+      <button class="btn" data-text="start" onclick="startGame()">start</button>
+    </section>
+    <section class="screen screen-special hidden">
+      <p class="verdana bold">
+        <strong>Nice result!</strong>
+      </p>
+      <p>
+        Your performance is much better than that of our previous <em>employees</em>. And you adapted well, <em>you're even wearing the appropriate colors for the job</em>.
+      </p>
+      <p>
+        So, what do you say? Will you be handling the post from now on?
+      </p>
+      <p>
+        Oh, come on &#128513. I'm sure you cannot say no. Isn't that right, <span class="white"><em>Greg</em></span>?
+      </p>
+      <button class="btn" data-text="again">again</button>
+    </section>
+    <script src="main.js"></script>
+  </body>
+</html>

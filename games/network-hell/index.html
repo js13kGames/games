@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset=utf-8>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="main.css" rel="stylesheet"></head>
+
+<body>
+  <div class="s" id="splash">
+    <h1 class="s_l">
+      Network
+      <span class="s_l_s">
+        Hell
+      </span>
+    </h1>
+    <p class="s_m" id="splash-message">
+      Welcome to Network Hell:
+      <br /> <br />Make your way to the end of the maze as fast as possible.
+      <br /> <br />You may pick up objectives on your way.
+      <br /> <br />Finishing the level earlier will yield a score multiplier.
+      <br /> <br />Choose wisely.
+      <br /> <br />
+      <br /> <br /><span class="mobile-only">Lock your screen orientation to portrait for best results.</span>
+    </p>
+    <button class="s_s-b" id="start-button">Start</button>
+  </div>
+
+  <div class="g-a hidden" id="game">
+    <div class="g-a_d">
+      <p class="g-a_d_p">Score: <span id="score">0</span></p>
+      <p class="g-a_d_p g-a_d_p-l">Level <span id="level">0</span></p>
+      <p class="g-a_d_p">Time: <span id="time">0</span></p>
+    </div>
+    <div class="g-a_c-c" id="canvas-container"></div>
+    <button class="g-a_p-b" id="pause-button">Pause <span class="desktop-only">(SpaceBar)</span></span></button>
+  </div>
+<script type="text/javascript" src="a.js"></script></body>
+
+</html>

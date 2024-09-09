@@ -1,0 +1,36 @@
+precision highp float;
+
+€ sampler2D sD;
+€ sampler2D sN;
+€ samplerCube sR;
+
+$ v2 vT;
+$ v3 vL;
+$ v4 vA;
+$ v4 vD;
+$ v3 vN;
+$ v3 vV;
+$ v3 vG;
+$ v3 vB;
+$ float vX;
+
+#ifdef bloom
+void main(void){v4 a=v4(0);v2 b=v2(vT.s,vT.t);for(int c=-4;c<4;c++){for(int d=-3;d<3;d++){a+=texture2D(sD,b+v2(d,c)*0.003)*0.18;}}if(texture2D(sD,b).r<0.4){gl_FragColor=a*a*0.012+texture2D(sD,b);}else{if(texture2D(sD,b).r<0.6){gl_FragColor=a*a*0.009+texture2D(sD,b);}else{gl_FragColor=a*a*0.0075+texture2D(sD,b);}}}
+#endif
+
+#ifdef bumpmap
+float e=0.5;float f=100.0;v4 g=v4(1,1,1,1);float h=0.15;float i=0.3;float j=0.3;void main(){v3 k=vN;v3 l=i*(texture2D(sN,vT.st).rgb-v3(0.5,0.5,0.5));k=k+(l.x*vG+l.y*vB);k=normalize(k);v3 m=normalize(vL);float n=max(0.0,dot(m,k));v3 o=normalize(2.0*n*k-m);float p=dot(o,vV);v4 q=h*g*max(pow(abs(p),f),0.0)*n;v4 r=texture2D(sD,vT.st);v4 s=r*j*n+vA*e+q;gl_FragColor=v4(s.rgb,1);}
+#endif
+
+
+#ifdef fire
+v2 t(v2 u){u=v2(dot(u,v2(127.1,311.7)),dot(u,v2(269.5,183.3)));return -1.0+2.0*fract(sin(u)*43758.5453123);}float v(in v2 u){const float w=0.366025404;const float x=0.211324865;v2 c=floor(u+(u.x+u.y)*w);v2 y=u-c+(c.x+c.y)*x;v2 z=(y.x>y.y)?v2(1.0,0.0):v2(0.0,1.0);v2 A=y-z+x;v2 B=y-1.0+2.0*x;v3 C=max(0.5-v3(dot(y,y),dot(A,A),dot(B,B)),0.0);v3 D=C*C*C*C*v3(dot(y,t(c+0.0)),dot(A,t(c+z)),dot(B,t(c+1.0)));return dot(D,v3(70.0));}float E(v2 F){float s;mat2 G=mat2(1.6,1.2,-1.2,1.6);s=0.5000*v(F);F=G*F;s+=0.2500*v(F);F=G*F;s+=0.1250*v(F);F=G*F;s+=0.0625*v(F);F=G*F;s=0.5+0.5*s;return s;}void main(void){v2 F=vT.st;v2 H=F;float I=floor(H.x+1.0);float J=max(3.0,1.25*I)*vX;H.x=mod(H.x,1.0)-0.5;H.y-=0.25;float D=E(I*H-v2(0,J));float B=1.0-16.0*pow(max(0.,length(H*v2(1.8+H.y*1.5,1.15))-D*max(0.,H.y+0.25)),1.2);float K=D*B*(1.5-pow(1.0*F.y,4.0));K=clamp(K,0.,1.0);v3 L=v3(1.5*K,1.5*K*K*K,K*K*K*K*K*K);float y=B*(1.0-pow(F.y,3.0));gl_FragColor=v4(L,y);}
+#endif
+
+#ifdef unlit
+void main(void){v4 r=texture2D(sD,vT.st);gl_FragColor=v4(r.rgb,r.a);}
+#endif
+
+#ifdef water
+float sh = 50.0;v4 SC = v4(1, 1, 1, 1);float SI = 0.7;float bC = 0.9;float a = 1.0;float mV = 0.01;float mT = 15.0;float rI = 0.3;void main(){v2 c = vT.st;float mT = sin(vX/mT*3.14);c.s += mT*mV;c.t += mT*mV;v3 bm = bC * (texture2D(sN, c).rgb - v3(0.5, 0.5, 0.5));v3 bN = vN + (bm.x * vG + bm.y * vB);bN = normalize(bN);v3 dir = normalize(vL);float bI = max(0.0, dot(dir, bN));v3 r = normalize(2.0 * bI * bN - dir);float dt = dot(r, vV);v4 s = SI * SC * max(pow(abs(dt), sh), 0.0) * bI;v3 r2 = -reflect(vV, bN);v4 rS = textureCube(sR, r2);v4 t = texture2D(sD, vT.st);t.a = 1.0;rS.a = 1.0;v4 f = rI * rS + t * bI + s;gl_FragColor = v4(f.rgb, a);}
+#endif

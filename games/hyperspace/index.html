@@ -1,0 +1,1009 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, 
+    user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<style type="text/css">
+body { margin: 0; padding: 0; background: #333;}
+canvas { display: block; margin: 0 auto; background: #fff; }
+</style>
+</head>
+<body onload="_init()">
+<canvas id="myCanvas"></canvas>
+<script>
+
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+var actx = new AudioContext();
+
+function webAudioTouchUnlock (context)
+{
+    return new Promise(function (resolve, reject)
+    {
+        if (context.state === 'suspended' && 'ontouchstart' in window)
+        {
+            var unlock = function()
+            {
+                context.resume().then(function()
+                {
+                    document.body.removeEventListener('touchstart', unlock);
+                    document.body.removeEventListener('touchend', unlock);
+
+                    resolve(true);
+                }, 
+                function (reason)
+                {
+                    reject(reason);
+                });
+            };
+
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+        }
+        else
+        {
+            resolve(false);
+        }
+    });
+};
+
+webAudioTouchUnlock(actx).then(function (unlocked)
+{
+    if(unlocked)
+    {
+    }
+    else
+    {
+    }
+},
+function(reason)
+{
+    console.error(reason);
+});
+
+/*
+SoundEffect
+-----------
+The `SoundEffect` function let's you generate your sounds and musical notes from scratch
+(Reverb effect requires the `impulseResponse` function that you'll see further ahead in this file)
+To create a custom sound effect, define all the parameters that characterize your sound. Here's how to
+create a laser shooting sound:
+    SoundEffect(
+      1046.5,           //frequency
+      0,                //attack
+      0.3,              //decay
+      "sawtooth",       //waveform
+      1,                //Volume
+      -0.8,             //pan
+      0,                //wait before playing
+      1200,             //pitch bend amount
+      false,            //reverse bend
+      0,                //random pitch range
+      25,               //dissonance
+      3                 //Maximum duration of sound, in seconds
+    );
+Experiment by changing these parameters to see what kinds of effects you can create, and build
+your own library of custom sound effects for games.
+*/
+
+function SoundEffect(
+  frequencyValue,      //The sound's fequency pitch in Hertz
+  attack,              //The time, in seconds, to fade the sound in
+  decay,               //The time, in seconds, to fade the sound out
+  type,                //waveform type: "sine", "triangle", "square", "sawtooth"
+  volumeValue,         //The sound's maximum volume
+  panValue,            //The speaker pan. left: -1, middle: 0, right: 1
+  wait,                //The time, in seconds, to wait before playing the sound
+  pitchBendAmount,     //The number of Hz in which to bend the sound's pitch down
+  reverse,             //If `reverse` is true the pitch will bend up
+  randomValue,         //A range, in Hz, within which to randomize the pitch
+  dissonance,          //A value in Hz. It creates 2 dissonant frequencies above and below the target pitch
+  timeout              //A number, in seconds, which is the maximum duration for sound effects
+) {
+
+  //Set the default values
+  if (frequencyValue === undefined) frequencyValue = 200;
+  if (attack === undefined) attack = 0;
+  if (decay === undefined) decay = 1;
+  if (type === undefined) type = "sine";
+  if (volumeValue === undefined) volumeValue = 1;
+  if (panValue === undefined) panValue = 0;
+  if (wait === undefined) wait = 0;
+  if (pitchBendAmount === undefined) pitchBendAmount = 0;
+  if (reverse === undefined) reverse = false;
+  if (randomValue === undefined) randomValue = 0;
+  if (dissonance === undefined) dissonance = 0;
+  if (timeout === undefined) timeout = undefined;
+
+  //Create an oscillator, gain and pan nodes, and connect them
+  //together to the destination
+  var oscillator, volume, pan;
+  oscillator = actx.createOscillator();
+  volume = actx.createGain();
+  if (!actx.createStereoPanner) {
+    pan = actx.createPanner();
+  } else {
+    pan = actx.createStereoPanner();
+  }
+  oscillator.connect(volume);
+  volume.connect(pan);
+  pan.connect(actx.destination);
+
+  //Set the supplied values
+  volume.gain.value = volumeValue;
+  if (!actx.createStereoPanner) {
+    pan.setPosition(panValue, 0, 1 - Math.abs(panValue));
+  } else {
+    pan.pan.value = panValue; 
+  }
+  oscillator.type = type;
+
+  //Optionally randomize the pitch. If the `randomValue` is greater
+  //than zero, a random pitch is selected that's within the range
+  //specified by `frequencyValue`. The random pitch will be either
+  //above or below the target frequency.
+  var frequency;
+  var randomInt = function(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  };
+  if (randomValue > 0) {
+    frequency = randomInt(
+      frequencyValue - randomValue / 2,
+      frequencyValue + randomValue / 2
+    );
+  } else {
+    frequency = frequencyValue;
+  }
+  oscillator.frequency.value = frequency;
+
+  //Apply effects
+  if (attack > 0) fadeIn(volume);
+  fadeOut(volume);
+  if (pitchBendAmount > 0) pitchBend(oscillator);
+  if (dissonance > 0) addDissonance();
+
+  //Play the sound
+  play(oscillator);
+
+  //The helper functions:
+  
+  function addReverb(volumeNode) {
+    var convolver = actx.createConvolver();
+    convolver.buffer = impulseResponse(reverb[0], reverb[1], reverb[2], actx);
+    volumeNode.connect(convolver);
+    convolver.connect(pan);
+  }
+
+  //The `fadeIn` function
+  function fadeIn(volumeNode) {
+
+    //Set the volume to 0 so that you can fade
+    //in from silence
+    volumeNode.gain.value = 0;
+
+    volumeNode.gain.linearRampToValueAtTime(
+      0, actx.currentTime + wait
+    );
+    volumeNode.gain.linearRampToValueAtTime(
+      volumeValue, actx.currentTime + wait + attack
+    );
+  }
+
+  //The `fadeOut` function
+  function fadeOut(volumeNode) {
+    volumeNode.gain.linearRampToValueAtTime(
+      volumeValue, actx.currentTime + attack + wait
+    );
+    volumeNode.gain.linearRampToValueAtTime(
+      0, actx.currentTime + wait + attack + decay
+    );
+  }
+
+  //The `pitchBend` function
+  function pitchBend(oscillatorNode) {
+    //If `reverse` is true, make the note drop in frequency. Useful for
+    //shooting sounds
+
+    //Get the frequency of the current oscillator
+    var frequency = oscillatorNode.frequency.value;
+
+    //If `reverse` is true, make the sound drop in pitch
+    if (!reverse) {
+      oscillatorNode.frequency.linearRampToValueAtTime(
+        frequency, 
+        actx.currentTime + wait
+      );
+      oscillatorNode.frequency.linearRampToValueAtTime(
+        frequency - pitchBendAmount, 
+        actx.currentTime + wait + attack + decay
+      );
+    }
+
+    //If `reverse` is false, make the note rise in pitch. Useful for
+    //jumping sounds
+    else {
+      oscillatorNode.frequency.linearRampToValueAtTime(
+        frequency, 
+        actx.currentTime + wait
+      );
+      oscillatorNode.frequency.linearRampToValueAtTime(
+        frequency + pitchBendAmount, 
+        actx.currentTime + wait + attack + decay
+      );
+    }
+  }
+
+  //The `addDissonance` function
+  function addDissonance() {
+
+    //Create two more oscillators and gain nodes
+    var d1 = actx.createOscillator(),
+        d2 = actx.createOscillator(),
+        d1Volume = actx.createGain(),
+        d2Volume = actx.createGain();
+
+    //Set the volume to the `volumeValue`
+    d1Volume.gain.value = volumeValue;
+    d2Volume.gain.value = volumeValue;
+
+    //Connect the oscillators to the gain and destination nodes
+    d1.connect(d1Volume);
+    d1Volume.connect(actx.destination);
+    d2.connect(d2Volume);
+    d2Volume.connect(actx.destination);
+
+    //Set the waveform to "sawtooth" for a harsh effect
+    d1.type = "sawtooth";
+    d2.type = "sawtooth";
+
+    //Make the two oscillators play at frequencies above and
+    //below the main sound's frequency. Use whatever value was
+    //supplied by the `dissonance` argument
+    d1.frequency.value = frequency + dissonance;
+    d2.frequency.value = frequency - dissonance;
+
+    //Fade in/out, pitch bend and play the oscillators
+    //to match the main sound
+    if (attack > 0) {
+      fadeIn(d1Volume);
+      fadeIn(d2Volume);
+    }
+    if (decay > 0) {
+      fadeOut(d1Volume);
+      fadeOut(d2Volume);
+    }
+    if (pitchBendAmount > 0) {
+      pitchBend(d1);
+      pitchBend(d2);
+    }
+    play(d1);
+    play(d2);
+  }
+
+  //The `play` function
+  function play(node) {
+    node.start(actx.currentTime + wait);
+
+    //Oscillators have to be stopped otherwise they accumulate in 
+    //memory and tax the CPU. They'll be stopped after a default
+    //timeout of 2 seconds, which should be enough for most sound 
+    //effects. Override this in the `SoundEffect` parameters if you
+    //need a longer sound
+    node.stop(actx.currentTime + wait + 2);
+  }
+}
+
+/*
+API
+
+WIDTH
+HEIGHT
+
+LOOP
+update();
+render();
+
+DRAW
+Rect(left, top, width, height, color);
+Circle(left, top, radius, color);
+Text(text, left, top, size, color);
+Line(xi, yi, xf, yf, width, col);
+
+INTERACTION
+TAPPED
+TAPX
+TAPY
+
+SOUND
+SoundEffect(frequencyValue, attack, decay, type, volumeValue, panValue, wait, pitchBendAmount, reverse, randomValue, dissonance,timeout);
+
+UTILS
+Random(min, max);
+PitchToFrequency(octave, semitone);
+*/
+
+var	WIDTH = 320, 
+    HEIGHT = 480,	
+    _scale = 1,
+    _offset = {top: 0, left: 0},
+    _RATIO = null,
+    _currentWidth = null,
+    _currentHeight =  null,
+    _canvas = null,
+    _ctx = null,
+    _ua = null,
+    _android = null,
+    _ios = null,
+    _now = null,
+    _dt = 0,
+    _last = window.performance.now(),
+    _step = 1/60,
+    TAPX = 0,
+    TAPY = 0,
+    TAPPED = false;
+
+function _init() {
+  _RATIO = WIDTH / HEIGHT;
+  _currentWidth = WIDTH;
+  _currentHeight = HEIGHT;
+  _canvas = document.getElementById('myCanvas');
+  _canvas.width = WIDTH;
+  _canvas.height = HEIGHT;
+  _ctx = _canvas.getContext('2d');
+  _ua = navigator.userAgent.toLowerCase();
+  _android = _ua.indexOf('android') > -1 ? true : false;
+  _ios = ( _ua.indexOf('iphone') > -1 || _ua.indexOf('ipad') > -1  ) ? true : false;
+  window.addEventListener('click', function(e) {
+    e.preventDefault();
+    _set(e);
+  }, false);
+  window.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    _set(e.touches[0]);
+  }, false);
+  window.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, false);
+  window.addEventListener('touchend', function(e) {
+    e.preventDefault();
+  }, false);
+  _resize();
+  window.requestAnimationFrame(_frame);
+};
+
+function _resize() {
+  _canvas = document.getElementById('myCanvas');
+  _currentHeight = window.innerHeight;
+  _currentWidth = _currentHeight * _RATIO;
+  if (_android || _ios) {
+    document.body.style.height = (window.innerHeight + 50) + 'px';
+  }
+  _canvas.style.width = _currentWidth + 'px';
+  _canvas.style.height = _currentHeight + 'px';
+  _scale = _currentWidth / WIDTH;
+  _offset.top = _canvas.offsetTop;
+  _offset.left = _canvas.offsetLeft;
+  window.setTimeout(function() {
+    window.scrollTo(0,1);
+  }, 1);
+};
+
+function _update(dt) {
+  update();
+  TAPPED = false;
+};
+
+function _render(lag) {
+  render(lag);
+};
+
+function _frame() {
+  _now = performance.now();
+  _dt = _dt + Math.min(1, (_now - _last) / 1000);
+  while(_dt > _step) {
+    _dt = _dt - _step;
+    _update();
+  }
+  _render(_dt);
+  _last = _now;
+  window.requestAnimationFrame(_frame);
+};
+
+function Rect(left, top, width, height, color) {
+  _ctx.fillStyle = color;
+  _ctx.fillRect(left, top, width, height);
+};
+
+function Circle(left, top, radius, color) {
+  _ctx.fillStyle = color;
+  _ctx.beginPath();
+  _ctx.arc(left, top, radius, 0,  Math.PI * 2, true);
+  _ctx.closePath();
+  _ctx.fill(); 
+};
+
+function Text(text, left, top, size, color) {
+  _ctx.font = 'bold '+size+'px Monospace';
+  _ctx.fillStyle = color;
+  _ctx.fillText(text, left, top);
+};
+
+function Line(xi, yi, xf, yf, width, col) {
+  _ctx.strokeStyle = col;
+  _ctx.beginPath();
+  _ctx.lineWidth = width;
+  _ctx.moveTo(xi,yi);
+  _ctx.lineTo(xf,yf);
+  _ctx.stroke(); 
+};
+
+function _set (data) {
+  TAPX = (data.pageX - _offset.left) / _scale;
+  TAPY = (data.pageY - _offset.top) / _scale;
+  TAPPED = true;
+}; 
+
+function Random(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+function PitchToFrequency(octave, semitone) {
+	return 440 * Math.pow( 2, (octave-4)+(semitone-9)/12 );
+};
+
+//window.addEventListener('load', _init, false);
+window.addEventListener('resize', _resize, false);
+
+/*
+HYPER CASUAL GAME JS13K 2021.
+*/
+
+var score = 0;
+var hs = 10;
+
+var state = 0;
+
+var s = []; // stars array
+var pa = []; // particles array
+var hsa = []; // hyperspaces array
+
+for (x = 0; x < 10; x += 1) {
+	s.push(new Star());
+}
+
+var enemies = [];
+
+var play = false;
+var go_message = "";
+var go_score;
+
+
+// collision function
+function collides (a, b) {
+  	var distance_squared = ( ((a.getX() - b.getX()) * (a.getX() - b.getX())) + ((a.getY() - b.getY()) * (a.getY() - b.getY())));
+	var radii_squared = (10 + a.r) * (10 + b.r);
+  	if (distance_squared < radii_squared) {
+    	return true;
+  	} else {
+    	return false;
+  	}
+};
+
+function collision (x1,y1,r1,x2,y2,r2) {
+  	var distance_squared = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+	var radii_squared = (r1+r2)*(r1+r2);
+  	if (distance_squared < radii_squared) {
+    	return true;
+  	} else {
+    	return false;
+  	}
+};
+
+function lifeSound() {
+  SoundEffect(587.33, 0, 0.2, "square", 1, 0, 0);
+  SoundEffect(880, 0, 0.2, "square", 1, 0, 0.1);
+  SoundEffect(1174.66, 0, 0.3, "square", 1, 0, 0.2);
+}
+
+function scoreSound() {
+  SoundEffect(
+    1174.66,          //frequency
+    undefined,           //attack
+    0.05,           //decay
+    undefined,  //waveform
+    undefined,           //volume
+    undefined,           //pan
+    undefined,           //wait before playing
+    undefined,           //pitch bend amount
+    undefined,       //reverse
+    undefined,           //random pitch range
+    undefined,          //dissonance
+   	undefined 	 //maximum duration of the sound, in seconds
+  );
+}
+
+function explosionSound() {
+  SoundEffect(
+    16,          //frequency
+    0,           //attack
+    1,           //decay
+    "sawtooth",  //waveform
+    1,           //volume
+    0,           //pan
+    0,           //wait before playing
+    0,           //pitch bend amount
+    false,       //reverse
+    0,           //random pitch range
+    50,          //dissonance
+   	undefined 	 //maximum duration of the sound, in seconds
+  );
+}
+
+function hsSound() {
+  SoundEffect(
+    523.25,       //frequency
+    0.2,         //attack
+    0.2,          //decay
+    "sine",       //waveform
+    1,            //volume
+    0.8,          //pan
+    0,            //wait before playing
+    600,          //pitch bend amount
+    false,         //reverse
+    undefined,          //random pitch range
+    0,	//dissonance
+	undefined 	 //maximum duration of the sound, in seconds
+  );
+}
+
+// timer
+var next = {
+	id : 100,
+  	end : false,
+  	update : function() {
+    	this.id -= 1;
+  		if (this.id < 0) {
+            this.end = true;
+        }
+    },
+  	reset : function() {
+      	var new_id = Random(0, 100-score*2) + 100-score*2;
+		if (new_id>10) {
+			this.id = new_id;
+		} else {
+			this.id = 10;
+		}
+      	this.end = false;
+    }
+};
+
+// player
+var p = {
+	a: Math.PI/2,
+	va: 0.025,
+	up:true,
+	update: function() {
+		this.a += this.va;
+	},
+	render: function() {
+		if (this.up) {
+			Circle(WIDTH/2+90*Math.cos(this.a), HEIGHT/4+90*Math.sin(this.a), 10, 'rgba(0,255,0,1)');
+			Circle(WIDTH/2+90*Math.cos(this.a), 3*HEIGHT/4+90*Math.sin(this.a), 2, 'rgba(0,255,0,1)');
+			Line(WIDTH/2+90*Math.cos(this.a)-5, 3*HEIGHT/4+90*Math.sin(this.a), WIDTH/2+90*Math.cos(this.a)+5, 3*HEIGHT/4+90*Math.sin(this.a), 1, 'rgba(0,255,0,1)');
+			Line(WIDTH/2+90*Math.cos(this.a), 3*HEIGHT/4+90*Math.sin(this.a)-5, WIDTH/2+90*Math.cos(this.a), 3*HEIGHT/4+90*Math.sin(this.a)+5, 1, 'rgba(0,255,0,1)');
+		} else {
+			Circle(WIDTH/2+90*Math.cos(this.a), 3*HEIGHT/4+90*Math.sin(this.a), 10, 'rgba(0,255,0,1)');
+			Circle(WIDTH/2+90*Math.cos(this.a), HEIGHT/4+90*Math.sin(this.a), 2, 'rgba(0,255,0,1)');
+			Line(WIDTH/2+90*Math.cos(this.a)-5, HEIGHT/4+90*Math.sin(this.a), WIDTH/2+90*Math.cos(this.a)+5, HEIGHT/4+90*Math.sin(this.a), 1, 'rgba(0,255,0,1)');
+			Line(WIDTH/2+90*Math.cos(this.a), HEIGHT/4+90*Math.sin(this.a)-5, WIDTH/2+90*Math.cos(this.a), HEIGHT/4+90*Math.sin(this.a)+5, 1, 'rgba(0,255,0,1)');
+		}
+	},
+	getX: function() {
+		return WIDTH/2+90*Math.cos(this.a);
+	},
+	getY: function() {
+		if (this.up) {
+			return HEIGHT/4+90*Math.sin(this.a);
+		} else {
+			return 3*HEIGHT/4+90*Math.sin(this.a);
+		}
+	}
+}
+
+// flash
+var f = {
+	t:3,
+	visible:false,
+	update: function() {
+		if (this.visible) {
+			this.t = this.t-1;
+		}
+		if (this.t<0) {
+			this.visible = false;
+		}
+	},
+	render: function() {
+		if (this.visible) {
+			Rect(0, 0, WIDTH, HEIGHT, 'rgba(255,0,0,0.75)');
+		}
+	}
+};
+
+// ray
+var ray = {
+	t:3,
+	visible:false,
+	update: function() {
+		if (this.visible) {
+			this.t = this.t-1;
+		}
+		if (this.t<0) {
+			this.visible = false;
+		}
+	},
+	render: function() {
+		if (this.visible) {
+			Line(WIDTH/2+90*Math.cos(p.a), HEIGHT/4+90*Math.sin(p.a), WIDTH/2+90*Math.cos(p.a), 3*HEIGHT/4+90*Math.sin(p.a), 3, 'rgba(0,255,0,0.75)');
+		}
+	}
+};
+
+function Star() {
+	this.phase = 0;
+  	this.r = 300;
+	this.R = 1;
+	this.v = 2;
+	this.sx = Math.random()*WIDTH;
+	this.sy = Math.random()*HEIGHT;
+  	this.a = Math.random()*2*Math.PI;
+  	this.remove = false;
+	
+  	this.update = function () {
+		this.r = this.r-this.v*Math.random();
+		if (this.r < 0) {
+			this.remove = true;
+		}
+	};
+		
+		//console.log(this.r)
+	this.getX = function() {
+		//return WIDTH/2+this.r*Math.cos(this.a);
+		return this.sx+this.r*Math.cos(this.a);
+	};
+	this.getY = function() {
+		//return HEIGHT/2+this.r*Math.sin(this.a);
+		return this.sy+this.r*Math.sin(this.a);
+	};
+	this.render = function () {
+		//Circle(WIDTH/2+this.r*Math.cos(this.a), this.y+this.r*Math.sin(this.a), this.R, 'rgba(255,0,0,1)');
+		Circle(this.getX(), this.getY(), this.R, 'white');
+	}
+};
+
+// enemy object
+function Enemy() {
+	this.phase = 0;
+  	this.r = 0;
+	this.R = 0;
+  	this.a = Math.random()*2*Math.PI;
+  	this.va = 0.025;
+	this.s = Math.random() < 0.5;
+	this.up = Math.random() < 0.5;
+	this.y = this.up ? HEIGHT/4 : 3*HEIGHT/4;
+  	this.remove = false;
+	
+  	this.update = function () {
+		if (this.phase==0) {
+			this.r = this.r+1;
+			this.R = 10*this.r/90;
+			if (this.r > 90) {
+				this.phase = 1;
+			}
+		}
+		if (this.phase==1) {
+			this.r= 90;
+			if (this.s) {
+				this.a += this.va;
+			} else {
+				this.a -= this.va;
+			}
+			if ( (this.a > 2*Math.PI) || (this.a < 0) ) {
+				this.phase = 2;
+			}
+		}
+		if (this.phase==2) {
+			this.a = 0;
+			this.r = this.r-1;
+			this.R = 10*this.r/90;
+			if (this.r < 0) {
+				score = score + 1;
+				if (state == 2) {
+					scoreSound();
+				};
+				this.remove = true;
+			}
+		}
+		
+		//console.log(this.r);
+	};
+	this.getX = function() {
+		return WIDTH/2+this.r*Math.cos(this.a);
+	};
+	this.getY = function() {
+		if (this.up) {
+			return HEIGHT/4+this.r*Math.sin(this.a);
+		} else {
+			return 3*HEIGHT/4+this.r*Math.sin(this.a);
+		}
+	};
+	this.render = function () {
+		//Circle(WIDTH/2+this.r*Math.cos(this.a), this.y+this.r*Math.sin(this.a), this.R, 'rgba(255,0,0,1)');
+		Circle(this.getX(), this.getY(), this.R, 'rgba(255,0,0,1)');
+	}
+};
+
+// hyperspace object
+function Hyperspace() {
+	this.phase = 0;
+  	this.r = 0;
+	this.R = 0;
+  	this.a = Math.random()*2*Math.PI;
+  	this.va = 0.025;
+	this.s = false;
+	this.up = Math.random() < 0.5;
+	this.y = this.up ? HEIGHT/4 : 3*HEIGHT/4;
+  	this.remove = false;
+	
+  	this.update = function () {
+		if (this.phase==0) {
+			this.r = this.r+1;
+			this.R = 10*this.r/90;
+			if (this.r > 90) {
+				this.phase = 1;
+			}
+		}
+		if (this.phase==1) {
+			this.r= 90;
+			this.a -= this.va;
+			if (this.a < -2*Math.PI) {
+				this.phase = 2;
+			}
+		}
+		if (this.phase==2) {
+			this.a = 0;
+			this.r = this.r-1;
+			this.R = 10*this.r/90;
+			if (this.r < 0) {
+				//score = score + 1;
+				this.remove = true;
+			}
+		}
+		
+		//console.log(this.r);
+	};
+	this.getX = function() {
+		return WIDTH/2+this.r*Math.cos(this.a);
+	};
+	this.getY = function() {
+		if (this.up) {
+			return HEIGHT/4+this.r*Math.sin(this.a);
+		} else {
+			return 3*HEIGHT/4+this.r*Math.sin(this.a);
+		}
+	};
+	this.render = function () {
+		//Circle(WIDTH/2+this.r*Math.cos(this.a), this.y+this.r*Math.sin(this.a), this.R, 'rgba(255,0,0,1)');
+		Circle(this.getX(), this.getY(), this.R, 'rgba(0,0,255,1)');
+	}
+};
+
+
+// particles
+function Particle (x, y, r, col) {
+  	this.x = x;
+    this.y = y;
+    this.r = r;
+    this.col = col;
+    this.dir = (Math.random() * 2 > 1) ? 1 : -1;
+    this.vx = ~~(Math.random() * 4) * this.dir;
+    this.vy = ~~(Math.random() * 7);
+    this.remove = false;
+    this.update = function() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+        this.vy -= 0.25;
+        if (this.y < 0) {
+            this.remove = true;
+        }
+    };
+    this.render = function() {
+        Circle(this.x, this.y, this.r, this.col);
+    };
+};
+
+
+
+
+// MAIN FUNCTIONS
+
+
+function update() {
+	
+	next.update();
+	
+	//if ((TAPPED)&&((state==0)||(state==1))) {
+	if ((TAPPED)&&(state==0)) {
+		state = 2;
+		play = true;
+		enemies = [];
+		hsa = [];
+		score = 0;
+		p.a = Math.PI/2;
+		p.up = true;
+		hs = 10;
+		TAPPED=false;
+		go_message = "";
+	};
+	
+	p.update();
+	f.update();
+	ray.update();
+	
+	var j;
+	for (j = 0; j < enemies.length; j += 1) { 
+		if (collision (p.getX(),p.getY(),10,enemies[j].getX(),enemies[j].getY(),10)) {
+			f.visible=true;
+			if (state == 2) {explosionSound()};
+			state = 1;
+			var xx;
+			if (pa.length==0) {
+				for (xx = 0; xx < 20; xx +=1 ) {
+					pa.push(new Particle(p.getX(), p.getY(), 10, 'rgba(255,0,0,'+Math.random()*1+')'));
+				};
+			};
+		}
+	}
+	
+	var n;
+	for (n = 0; n < hsa.length; n += 1) { 
+		if (collision (p.getX(),p.getY(),10,hsa[n].getX(),hsa[n].getY(),10)) {
+			if (state==2) {lifeSound()};
+			var xx;
+			if (pa.length==0) {
+				for (xx = 0; xx < 10; xx +=1 ) {
+					pa.push(new Particle(p.getX(), p.getY(), 5, 'rgba(0,0,255,'+Math.random()*1+')'));
+				};
+			};
+			hs = hs+5;
+			hsa.splice(n, 1);
+		}
+	};
+	
+	var i;
+	for (i = 0; i < enemies.length; i += 1) { 
+		enemies[i].update();
+		if (enemies[i].remove) {
+			enemies.splice(i, 1);
+		}
+	}
+	
+	var k;
+	for (k = 0; k < s.length; k += 1) { 
+		s[k].update();
+		if (s[k].remove) {
+			s.splice(k, 1);
+		}
+	};
+	
+	var m;
+	for (m = 0; m < hsa.length; m += 1) { 
+		hsa[m].update();
+		if (hsa[m].remove) {
+			hsa.splice(m, 1);
+		}
+	};
+	
+	var xx;
+	for (xx = 0; xx < pa.length; xx += 1) { 
+		pa[xx].update();
+		if (pa[xx].remove) {
+			pa.splice(xx, 1);
+		}
+	};
+	
+	if (next.end == true) {
+		enemies.push(new Enemy());
+		if ((state == 0) && (Math.random() < 0.7)) {
+			p.up = !p.up;
+			ray.visible = true;
+			hs = hs-1;
+		};
+		if (Math.random() < 0.2) {hsa.push(new Hyperspace())};
+		for (x = 0; x < 10; x += 1) {
+			s.push(new Star());
+		}
+		next.reset();
+	};
+	
+	if ((state==1)&&(pa.length==0)) {
+		enemies = [];
+		state = 0;
+		if (play) {go_score = score};
+		score = 0;
+		p.a = Math.PI/2;
+		p.up = true;
+		hs = 10;
+		go_message = "game over";
+		play = false;
+	};	
+	
+	if ((TAPPED)&&(hs>0)&&(state!=0)&&(state!=1) ) {
+		ray.visible = true;
+		hs = hs-1;
+		p.up = !p.up;
+		hsSound();
+	};
+	
+
+}
+
+function render() {
+
+	
+	//Rect(0, 0, WIDTH, HEIGHT, "#1D2951");
+	Rect(0, 0, WIDTH, HEIGHT, "black");
+	
+
+	
+	Text(score, 40, HEIGHT/2+5, 40, "rgba(0,255,0,1)");
+	Text(hs, 240, HEIGHT/2+5, 40, "blue");
+	//Text(pa.length, 240, HEIGHT/2+50, 20, "yellow");
+	//Text(state, 150, HEIGHT/2, 12, "white");
+	//Text(distance, 150, HEIGHT/2+10, 12, "white");
+	Circle(WIDTH/2,HEIGHT/4,100,"rgba(133,133,133,0.5)");
+	Circle(WIDTH/2,HEIGHT/4,80,"rgba(0,0,0,1)");
+	Circle(WIDTH/2,3*HEIGHT/4,100,"rgba(133,133,133,0.5)");
+	Circle(WIDTH/2,3*HEIGHT/4,80,"black");
+	
+	if ((state == 0)||(state == 1)) {
+      	Text("GO", WIDTH/2-55, HEIGHT/2+30, 100, 'rgba(255, 255, 0,'+Math.abs(Math.cos(0.3*Math.PI*(next.id/40)))+')');
+    }
+	
+	var k;
+    for (k = 0; k < s.length; k += 1) { 
+      	s[k].render();
+    }
+	
+	p.render();
+	f.render();
+	ray.render();
+		
+	var i;
+    for (i = 0; i < enemies.length; i += 1) { 
+      	enemies[i].render();
+    }
+	
+	var m;
+    for (m = 0; m < hsa.length; m += 1) { 
+      	hsa[m].render();
+    }
+	
+	var xx;
+    for (xx = 0; xx < pa.length; xx += 1) { 
+      	pa[xx].render();
+    }
+	
+	if ((go_message!="")&&(go_score!=null)) {
+		Text("GAME OVER", WIDTH/2-120, HEIGHT/4, 50, 'red');
+		//go_score = score
+		Text(go_score, WIDTH/2-16, 3*HEIGHT/4+10, 50, 'rgba(0, 255, 0');
+	};
+
+}
+</script>
+</body>
+</html>

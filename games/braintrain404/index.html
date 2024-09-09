@@ -1,0 +1,379 @@
+<html>	
+<script type="text/javascript">
+
+
+function findInArray(Arr,key){
+	for(var i=0;i<Arr.length;i++){
+		if(Arr[i] == key){
+				return i;
+			}
+	}//end for
+	return false;
+}//end fn
+
+function remFromArray(Arr,key){
+		Arr.splice(findInArray(Arr,key),1);
+		return;
+	}//end fn
+
+function arrayFlush(Arr){
+	while(Arr.length){
+		Arr.pop();
+		}//end while
+	return;
+}//end fn
+	
+function calcSelect(tid,val)	{
+	if(findInArray(arrSelValId,tid)===false){
+			arrSelValId.push(tid);
+			arrSelVal.push(val);
+			clickCnt++;
+			eval("cell_" + tid + ".bgColor='Cyan'");
+			if(clickCnt==3){calcSubmit();}//endif
+	}//endif
+	else{
+		//remove selection
+		//alert("removing" + val);
+		remFromArray(arrSelValId,tid);
+		remFromArray(arrSelVal,val);
+		clickCnt--;
+		eval("cell_" + tid + ".bgColor=''");
+		return;
+	}//end else	
+}//end fn
+
+function calcSubmit(){
+	clearInterval(myvar);
+	var valSum=0;
+	strCalc="";
+	for(var i=0;i<arrSelVal.length;i++){
+		valSum=valSum+arrSelVal[i];
+		strCalc = strCalc +arrSelVal[i];
+		if(i<arrSelVal.length-1){strCalc = strCalc + " + "}//endif
+	}//end for
+	strCalc = strCalc + " = " + valSum;
+	dsp_calc.innerHTML = strCalc;
+	//dsp_calc.bgColor=(valSum==404)?"green":"red";
+	
+	if((valSum==404)){
+		score=(score+start_tm*10);
+		dsp_score.innerHTML = "Score:  <b>" + score +"</b>";
+		dsp_calc.bgColor="green";
+	}//end if
+	else{
+		dsp_calc.bgColor="red";
+		dsp_calc.innerHTML = strCalc + "<br/>404.1 CORRECT ANSWER NOT FOUND!";
+		lives--;
+		dsp_lives.innerHTML=lives;
+	}//end else
+	
+//	setTimeout(function pReload(){location.reload()},1500);  // must do a repaint, not reload!!!
+	if(lives>0){
+		setTimeout(function nnext(){nextRound()},1500);
+		}//end if
+		else{
+		//setTimeout(function nnext(){gameOver()},1500);
+		gameOver();
+		}
+}//end fn
+
+function launchNextLevel(){
+	level=(level<3)?(level+1):level;
+	g_round=1;
+	
+	announceLevel(level);
+		
+	if(level>1){
+			lives++;
+			}
+	dsp_lives.innerHTML=lives;
+	dsp_score.innerHTML="Score:  <b>" + score + "</b>"; 
+	dsp_score.innerHTML="Score:  <b>" + score + "</b>"; 
+	var strTMP="<p><br/>Level "+ level + "</p>";
+	switch(level){
+		case 1:
+			strTMP=strTMP+strChallenge1;
+			break;
+		case 2:
+			strTMP=strTMP+strChallenge2;
+			break;
+		case 3:
+			strTMP=strTMP+strChallenge3;
+			break;
+		default:
+			strTMP=strTMP;
+			break;
+	}////end swicth
+		 
+	buildBoard();
+	dsp_intro.innerHTML=strTMP + strChallengeCombos;
+	dsp_game.innerHTML=strTblGame;
+}//end fn
+
+function buildBoard(){
+possibleCombos=0;
+clickCnt=0;
+
+//here flushes 
+//alert("arrSelVal = " + arrSelVal.toString() + " //// arrSelValId : " + arrSelValId.toString()+ " //// sumArr: " + sumArr.toString());
+arrayFlush(arrSelVal);
+arrayFlush(arrSelValId);
+arrayFlush(sumArr);
+
+
+	// build the first 5 proposed values for sum
+for(var i=0; i<5;i++){
+	sumArr[i]=Math.floor((Math.random()*404));							
+	}//end for
+
+//fill in the 6th value, ensuring there is at least one winning combo
+var sumComplete=false;
+var sum6=Number(0);
+while (sumComplete == false){
+	sum6=sumArr[0]+sumArr[1];
+	if((404-sum6)>0){
+		sumArr[5]=404-sum6;
+		sumComplete=true;
+		}//endif
+	else{
+		sumArr[1]=Math.floor((Math.random()*404));
+		sumComplete=false;
+		}//end else
+	}//end while
+
+
+// we are sure we have at least one winning  combo  
+// let s check all other winning combos
+
+for(var i=0;i<sumArr.length;i++){
+	for(var j=i+1;j<sumArr.length;j++){
+		for(var k=j+1;k<sumArr.length;k++){
+					//			strHTML = strHTML + sumArr[i] + " + " + sumArr[j] + " + " + sumArr[k] + " = " + (sumArr[i]+sumArr[j]+sumArr[k]) + " <br/>";
+			if(sumArr[i]+sumArr[j]+sumArr[k] == 404){
+				possibleCombos++;
+				}
+		}//end for k
+	}//enf for j
+
+}//end for i 
+//strHTML = strHTML + " possible combos : " + possibleCombos + "<br/>"; 
+strAreIs=(possibleCombos>1)?"are ":" is ";
+strS=(possibleCombos>1)?"s ":" ";
+strChallengeCombos="<p>There"+ strAreIs + possibleCombos + " winning combination" + strS + "</p>";
+
+//re-schuffle entries for display, so that we don't get evry time winning combo = 0,1 and 5...
+
+arrSourcePos=new Array(0,1,2,3,4,5);
+arrAvailPos=new Array(0,1,2,3,4,5);
+arrNewPos=new Array();
+
+
+for(var i=0;i<(sumArr.length-1);i++){
+		var j = Math.floor((Math.random()*(arrAvailPos.length)));	
+		arrNewPos[i]=sumArr[arrAvailPos[j]];
+		remFromArray(arrAvailPos,arrAvailPos[j]);
+}//end for
+
+arrNewPos[sumArr.length-1]=sumArr[arrAvailPos[0]];
+
+arrCheat=new Array(sumArr[0],sumArr[1],sumArr[5]);
+
+	strTblGame="<table width='100%' bgcolor='white'>";
+	for(var i=0;i<arrNewPos.length;i=i+2){
+		if(cheatMode===false){
+		strTblGame= strTblGame +"<tr><td witdh='50%' align='center' id='cell_" +i + "'onclick='calcSelect(" + i + "," + arrNewPos[i] + ");'>" + arrNewPos[i] +"<br/><br/></td><td witdh='50%' align='center' id='cell_" +(i+1) + "'onclick='calcSelect(" + (i+1) +  "," + arrNewPos[i+1] + ");'>" + arrNewPos[i+1] + "<br/><br/></td></tr>";
+		}//end if
+		
+		if(cheatMode===true){
+			strTblGame= strTblGame +"<tr><td witdh='50%' align='center' id='cell_" +i + "'onclick='calcSelect(" + i + "," + arrNewPos[i] + ");'>" + arrNewPos[i];
+
+			if(findInArray(arrCheat,arrNewPos[i])!==false){
+				strTblGame= strTblGame + "*";
+				} 			
+			 strTblGame= strTblGame +"<br/><br/></td><td witdh='50%' align='center' id='cell_" +(i+1) + "'onclick='calcSelect(" + (i+1) +  "," + arrNewPos[i+1] + ");'>" + arrNewPos[i+1];
+
+			  if(findInArray(arrCheat,arrNewPos[i+1])!==false){
+				strTblGame= strTblGame + "**";
+				} 			
+				strTblGame= strTblGame + "<br/><br/></td></tr>";
+		}//endif cheat
+	}//end for
+	strTblGame= strTblGame +"<tr><td colspan='2' id='dsp_calc' align='center'></td></table>";
+	
+	timing();
+}//end fn
+
+function nextRound(){
+	if(g_round==8 && level<3){
+		launchNextLevel();
+	}//end if
+	else{
+		g_round++;
+		buildBoard();
+		dsp_game.innerHTML=strTblGame;
+	}//end else
+}//end fn
+
+function gameOver(){
+	eval("dsp_calc.bgColor='orange'");
+	dsp_calc.innerHTML = "<p><br/><b>G&nbsp;A&nbsp;M&nbsp;E&nbsp;&nbsp;&nbsp;O&nbsp;V&nbsp;E&nbsp;R</b><br/></br/</p><input type='button' value='&GT; PLAY AGAIN &LT;' onclick='location.reload();' style='background-color:blue; border:none;color:white;text-align: center;'>";
+	setTimeout(function alertClrred(){eval("dsp_calc.bgColor='red'")},1000);
+	return;
+	//setTimeout(function pReload(){location.reload()},1500);	
+}//end fn
+
+var start_tm;
+var myvar;
+function timing(){	
+	//start_tm=10;
+	switch(level){
+		case 1:
+			start_tm=10;
+		break;
+		case 2:
+			start_tm=7;
+		break;
+		case 3:
+			start_tm=(start_tm<=1)?1:(5-g_round);
+		break;
+		default:
+			start_tm=10;
+		break;
+	}//end switch
+	myvar=setInterval(dspTm,1000);
+	//dsp_time.innerHTML="10";
+	/*
+	for(var i=10;i>=0;i=i-1){
+		setTimeout(dspTm(i),1000);
+		//dsp_time.innerHTML=i;
+	}//end for*/
+}//end fn
+
+function dspTm(){
+	//document.getElementById("dsp_time").innerHTML=sec;
+	dsp_time.innerHTML=start_tm;
+	if(start_tm == 0){
+		clearInterval(myvar);
+		//alert("time is up!");
+		if(lives>0){
+			timeUp();
+		}//end if
+		else{
+			return;
+			}
+		}//End if
+		else{
+	start_tm--;
+		}//end else
+}//end fn
+
+function timeUp(){
+	dsp_calc.bgColor="red";
+	dsp_calc.innerHTML="404.2 ANSWER NOT FOUND WHILE TIME IS UP !!!";
+	lives--;
+	dsp_lives.innerHTML=lives;
+	if(lives>0){
+		setTimeout(function nnext(){nextRound()},1500);
+	}//end if
+	else{
+		setTimeout(function nnext(){gameOver()},1500);
+		return;
+	}
+}//end fn
+
+
+function announceLevel(level){
+
+	dsp_board.innerHTML = "Prepare for Level " + level;
+	dsp_board.style.bold=true;
+	dsp_board.style.color='white';
+	dsp_board.style.backgroundColor='blue';
+	
+	var pos_x = document.getElementById("brainy").offsetLeft;
+	var pos_y = document.getElementById("brainy").offsetTop;
+	document.getElementById("brainy").style.visibility="visible";
+	document.getElementById("flying_board").style.visibility="visible";
+	document.getElementById("brainy").style.position = "absolute";
+	document.getElementById("flying_board").style.position = "absolute";
+	
+	br_posX= document.getElementById("brainy").offsetLeft;
+	bd_posX= document.getElementById("flying_board").offsetLeft;
+	
+	document.getElementById("brainy").style.top = 280;
+	document.getElementById("flying_board").style.top = 300;
+	//document.getElementById("brainy").style.left = ((window.screen.width/2)-150); //350;
+	//document.getElementById("flying_board").style.left = (window.screen.width/2);//500;
+	document.getElementById("brainy").style.left = ((window.innerWidth/2)-150); //350;
+	document.getElementById("flying_board").style.left = (window.innerWidth	/2);//500;
+
+	setTimeout(function nnext(){document.getElementById("brainy").style.visibility="hidden";document.getElementById("flying_board").style.visibility="hidden";},1500);
+	
+}//end fn
+
+
+var strHTML="";
+var clickCnt=0;
+arrSelVal=new Array(); //will contain selected values - to maage add removal when user clicks/taps
+arrSelValId=new Array();//will contain selected ids of values - as we don't want the user to tap twice same value
+var strCalc="";
+sumArr=Array(5);
+var possibleCombos=0;
+var level=0;
+var g_round=0;
+var lives=4;
+var strChallengeCombos="";
+var score=0;
+var cheatMode=false;
+
+strIntro="<p>Challenge yourself and train your brain with this series of mathematical challenges.</p><p>Click/tap 3 numbers that together sum up to 404. <br/>As you go up the levels,  you ll be asked to be more quick in responding. </p><br/><br/><input type='button' onclick='launchNextLevel()' value=' &GT; START GAME &LT;' style='background-color:blue; border:none;color:white;text-align: center;'>";
+strChallenge1="<p>Practice</p>";
+strChallenge2="<p>Intermediate</p>";
+strChallenge3="<p>!!! Genius mode <b>ON</b> !!!</p>";
+
+
+
+
+//build overall table
+strTblMainTop="<table width='1024' bgcolor='white' align='center'>";
+strTblMainTop=strTblMainTop+"<tr><td witdh='15%' align='center'><p><br/></p><p><br/></p>Time left (s): <div id='dsp_time'></div></td><td witdh='70%' align='center'><p><br/></p><p><br/></p><p><br/></p><h3 style='color:blue;'>&GT;&nbsp;B&nbsp;r&nbsp;a&nbsp;i&nbsp;n&nbsp;T&nbsp;r&nbsp;a&nbsp;i&nbsp;n&nbsp;4&nbsp;0&nbsp;4&nbsp;&LT;</h3><p><br/></p><p><br/></p><div id='dsp_score'></div><p><br/></p></td><td witdh='15%' align='center'><p><br/></p><p><br/></p>Lives<div id='dsp_lives'></div></td></tr>";
+strTblMainTop=strTblMainTop+"<tr><td colspan='3' width='100%' id='dsp_intro' align='center'>" + strIntro + "</td></tr><tr><td colspan='3' width='100%' id='dsp_game' align='center'>";
+strTblMainBottom="</td></tr></table>";
+
+/*
+
+// build board game
+strTblGame="<table width='100%' bgcolor='white'>";
+
+for(var i=0;i<arrNewPos.length;i=i+2){
+strTblGame= strTblGame +"<tr><td witdh='50%' align='center' id='cell_" +i + "'onclick='calcSelect(" + i + "," + arrNewPos[i] + ");'>" + arrNewPos[i] +"<br/><br/></td><td witdh='50%' align='center' id='cell_" +(i+1) + "'onclick='calcSelect(" + (i+1) +  "," + arrNewPos[i+1] + ");'>" + arrNewPos[i+1] + "<br/><br/></td></tr>";
+}//end for
+strTblGame= strTblGame +"<tr><td colspan='2' id='dsp_calc' align='center'></td></table>";
+*/
+
+
+//dsp screen
+//strHTML = strHTML + strTblMainTop + strTblGame + strTblMainBottom;
+strHTML = strHTML + strTblMainTop + strTblMainBottom;
+
+</script>
+
+<body bgcolor="blue">
+	
+<div id="dsp_zone"></div>
+<div ID="brainy">
+<img src = "brain404.png" height="150" onclick="dspBrain('brainy');">
+</div>
+<div id="flying_board">
+<table border="1" height="100" width="300"><tr><td align="center" valign="middle" bgcolor="blue"><div id="dsp_board"></div></td></tr></table>
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+document.getElementById("dsp_zone").innerHTML= strHTML;
+document.getElementById("brainy").style.visibility="hidden";
+document.getElementById("flying_board").style.visibility="hidden";
+
+</script>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Need My Space Game</title>
+<link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+  <h1>I Need My S&nbsp;p&nbsp;a&nbsp;c&nbsp;e!</h1><br>
+
+  <button id="instructbutton" onclick="showinstructions()">Show Instructions</button><br>
+  <div id="instructions" class="hideme">
+  <button onclick="hideinstructions()">Hide Instructions</button>
+  <p> <strong>Goal:</strong> Collect high totals in the row sums and bonuses, without letting your round score fall below the "death score."</p>
+  <strong>Get points by:</strong>
+  <ul>
+    <li>Placing positive numbers in boxes</li>
+    <li>Hitting the round target total exactly</li> 
+    <li>Getting a row or column to total 13 (as a tribute to JS13k)</li> 
+    <li>Getting the total of a row and column to match (if they weren't already matching)</li></ul>
+
+  <strong>Lose points by:</strong>
+  <ul>
+    <li>Placing negative numbers in boxes</li>
+  <li>You'll see squares with Spacey turning a pale red, then darker red, as their level of claustrophobia grows. 
+  After the third level of anxiety, they freak out because they NEED their SPACE. 
+  During a complete freak out, they erase the values of all the cells immediately around them.</li>
+ <li>Time passing (a point subtracted from round score every few seconds)</li></ul>
+  
+  <strong>Other notes</strong>
+  <p>Your round score doesn't get added to your total score until you hit the 'Submit' button! So time your submission carefully around eruptions.</p>  
+  <p>If you hit reload on the page, you will lose your high score! </p>
+</div>
+  <div class="header">
+<div id="header-left"> 
+<div class="headerbuttons">
+ <h3> 
+  <br>Round Target: <span id="target" class="is-black">0</span>
+  <br>Death Score: <span id="deathscore" class="is-black">0</span></h3>
+<h2>  Round Score: <span id="roundscore" class="is-black">0</span></h2>
+  <h3>Round bonuses: <span id="bonuses" class="is-black">0</span></h3>
+  <button id="submit" class="submit" onclick="submitround()">Submit Round</button><br><br>
+  <p><span id="bonusmsg" class="message"></span></p>
+  
+</div>
+ <div id="newgame" class="hideme"><h1>Game Over!</h1><button onclick="restart()">Play Again?</button></div>
+
+ </div>
+   
+<div class="scorebox">
+  <p>High Score:<br><span id="highscore" class="is-black">0</span> in <span id="highrounds" class="is-black">0</span>&nbsp;rounds</p>
+  <p>Total Score: <span id="score" class="is-black">0</span>
+    <br>Round: <span id="round" class="is-black">1</span> 
+    <div class="changerarea">Number to Place:<button id="changer" class="changernum">0</button></div>
+</p>
+    </div>
+
+</div>
+<table id="theTable">
+    </table>
+<br>
+
+  <script src="zzfx.min.js"></script>
+  <script  src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!Doctype html>
+<html>
+
+<head>
+	<title>Hit the Balls</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <script src="scripts/jquery-3.2.1.min.js"></script> -->
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+
+		.main {
+			height: 600px;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+			align-items: center;
+
+		}
+
+		.heading {
+			color:#282222;
+			position: absolute;
+			width: 80%;
+			text-align: center;
+			height: 2.875rem;
+			font-weight: bold;
+			font-size: 2.5em;
+			font-family: Noto Sans;
+		}
+
+		.arena {
+			background: #8e0e00;
+			/* fallback for old browsers */
+			background: -webkit-linear-gradient(to right, #8e0e00, #1f1c18);
+			/* Chrome 10-25, Safari 5.1-6 */
+			background: linear-gradient(to right, #8e0e00, #1f1c18);
+			/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			border: 7px inset #000;
+			width: 770px;
+			height: 480px;
+			position: relative;
+		}
+
+		.lead {
+			background: #335D7E;
+			color: #eee;
+			height: 480px;
+			width: 200px;
+			font-family: "sans-serif";
+			border-radius: 5px;
+			box-shadow: #777 0px 5px 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			align-items: center;
+			text-align: center;
+			transition: width 1s;
+			transition: height 2s;
+		}
+
+		.restart {
+			cursor: pointer;
+			color: #F27280;
+			text-decoration: underline;
+			font-size: 28px;
+		}
+
+		.timer div {
+			font-size: 24px;
+		}
+
+		.sc {
+			font-size: 24px;
+		}
+
+		.start {
+			position: absolute;
+			width: 300px;
+			height: 150px;
+			left: calc(50% - 150px);
+			top: calc(50% - 50px);
+			background: #00BA8B;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			color: #0C2834;
+			text-align: center;
+			box-shadow: 0 2px 5px #CCC;
+		}
+
+		#start-btn {
+			background: #0C2834;
+			border: none;
+			font-size: 18px;
+			font-family: "arial";
+			color: #ccc;
+			padding: 5px 10px;
+			cursor: pointer;
+			margin-top: 5px;
+		}
+
+		.emh {
+			justify-content: center;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+		}
+
+		.ball {
+			position: absolute;
+			border-radius: 50%;
+			opacity: .65;
+			cursor: pointer;
+			border: none;
+		}
+
+		#ball0 {
+			background: #BB1124;
+		}
+
+		#ball1 {
+			background: #3EA96A;
+		}
+
+		#ball2 {
+			background: #3393BB;
+			opacity: 0.8;
+		}
+
+		#ball3 {
+			background: #FFF;
+		}
+
+		#ball4 {
+			background: #E3602F;
+		}
+
+		#ball5 {
+			background: #DCA239;
+		}
+
+		#ball6 {
+			background: #F0359C;
+		}
+
+		#ball7 {
+			background: #F0FF00;
+		}
+
+		/*#ball8{
+	background: white;
+	width: 45px;
+	opacity: 1;
+	box-sizing: border-box;
+	text-align: center;
+	color: #0C2834;
+	font-family: "arial";
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	height: 45px;
+	border-radius: 50%;
+	display: none;
+	font-weight: 700;
+}*/
+	</style>
+	<script>
+		var score = 0;
+		function sad(s) {
+			score += parseInt(s);
+			// console.log(s)
+			document.getElementById("score").innerHTML = score;
+		}
+	</script>
+</head>
+
+<body>
+	<div class="heading">Hit the Balls</div>
+	<div class="main">
+		<div class="arena">
+			<div class="start">
+				<div class="emh">
+					<label for="easy">Easy</label><input type="radio" id="easy" name="diff" checked="">
+					<label for="medium">Medium</label><input type="radio" id="medium" name="diff" value="">
+					<label for="hard">Hard</label><input type="radio" id="hard" name="diff" value="">
+				</div>
+				<input type="button" id="start-btn" value="Start">
+			</div>
+			<div id="ball0" onclick="sad(80)" class="ball"></div>
+			<div id="ball1" onclick="sad(70)" class="ball"></div>
+			<div id="ball2" onclick="sad(60)" class="ball"></div>
+			<div id="ball3" onclick="sad(50)" class="ball"></div>
+			<div id="ball4" onclick="sad(40)" class="ball"></div>
+			<div id="ball5" onclick="sad(30)" class="ball"></div>
+			<div id="ball6" onclick="sad(20)" class="ball"></div>
+			<div id="ball7" onclick="sad(10)" class="ball"></div>
+			<!-- <div id='ball8' class='ball' etime='5'>+5s</div> -->
+		</div>
+		<div class="lead">
+			<div class="restart" onclick="location.reload()">Restart</div>
+			<div class="timer">
+				<div>Time Left</div>
+				<div id="timer">60</div> Seconds
+			</div>
+			<div class="Score">
+				<div class="sc"> Score </div>
+				<div id="score">0</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function (event) {
+			document.getElementsByClassName("lead")[0].style.opacity = "0";
+			document.getElementById("start-btn").onclick = function () {
+				document.getElementsByClassName("start")[0].style.display = "none";
+				document.getElementsByClassName("lead")[0].style.opacity = "1";
+
+				var time = 60;
+				// $("#time").html(time);
+				var ti2 = setInterval(function () {
+					time -= 1;
+
+					document.getElementById("timer").innerHTML = time;
+					if (time <= 0) {
+						clearInterval(ti);
+						clearInterval(ti2);
+						var ball = document.getElementsByClassName("ball")[0];
+
+						var lead = document.getElementsByClassName("lead");
+						lead[0].style = " width: 780px; justify-content: center; position: absolute; transition: width 1s; z-index: 100;"
+						// $(".lead").css({ "position": "absolute", "width": "780px", "transition": " width 1s", "z-index": "100" });
+						document.getElementsByClassName("timer")[0].style.display = "none";
+						var a = lead[0].style;
+						// console.log(a);
+						// document.getElementsByClassName("lead")[0].style =a +" justify-content: center;";
+						document.getElementsByClassName("Score")[0].innerHTML = "Your Final Score is " + score;
+					}
+
+				}, 1000);
+
+				if (document.getElementById("easy").checked == true) {
+					var multp = 30;
+				}
+				else if (document.getElementById("medium").checked == true) {
+					var multp = 50;
+				}
+				else if (document.getElementById("hard").checked == true) {
+					var multp = 70;
+				}
+				var ball = [];
+				var bcount = 7;
+				var widf = 40;
+				for (var i = 0; i <= bcount; i++) {
+					ball[i] = new Object;
+					ball[i].width = widf;
+					ball[i].height = widf;
+					ball[i].x = 0;
+					ball[i].y = 0;
+					ball[i].maxX = 770 - ball[i].width;
+					ball[i].maxY = 480 - ball[i].height;
+					ball[i].velX = 1;
+					ball[i].velY = 1;
+					ball[i].senseX = 1;
+					ball[i].senseY = 1;
+					ball[i].points = (bcount - i + 1) * 10;
+					ball[i].radius = ball[i].width / 2;
+					widf += 4;
+				}
+				function position(balll, ind) {
+					var x = Math.random() * balll.maxX;
+					var y = Math.random() * balll.maxY;
+					balll.x = x;
+					balll.y = y;
+					for (var j = 0; j < ind; j++) {
+						x1 = x + (balll.width / 2);
+						y1 = y + (balll.height / 2);
+						x2 = ball[j].x + (ball[j].width / 2);
+						y2 = ball[j].y + (ball[j].width / 2);
+						var dist = Math.sqrt(((y2 - y1) * (y2 - y1)) + ((x2 - x1) * (x2 - x1)));
+						if (dist <= balll.radius + ball[j].radius) {
+							position(ball[ind], ind);
+						}
+					};
+					balll.velX = (Math.random() * 4) + (8 - ind) / 3;
+					balll.velY = (Math.random() * 4) + (8 - ind) / 3;
+					document.getElementById("ball" + ind).style.marginLeft = x + "px";
+					document.getElementById("ball" + ind).setAttribute("point", balll.points);
+					document.getElementById("ball" + ind).style.marginTop = y + "px";
+					// console.log(ball)
+					document.getElementById("ball" + ind).style.width = balll.width + "px";
+					document.getElementById("ball" + ind).style.height = balll.height + "px";
+					document.getElementById("ball" + ind).style.zIndex = ind;
+				}
+				for (var i = 0; i <= bcount; i++) {
+					position(ball[i], i);
+				}
+				function collide(ball1, ball2) {
+					var x1 = ball1.x + ball1.radius;
+					var y1 = ball1.y + ball1.radius;
+					var x2 = ball2.x + ball2.radius;
+					var y2 = ball2.y + ball2.radius;
+					var dist = Math.sqrt(((y2 - y1) * (y2 - y1)) + ((x2 - x1) * (x2 - x1)));
+					if (dist <= ball1.radius + ball2.radius) {
+						if (ball1.x + ball1.radius > ball2.x + ball2.radius) {
+							ball1.senseX = 1;
+							ball2.senseX = -1;
+						}
+						else {
+							ball1.senseX = -1;
+							ball2.senseX = 1;
+						}
+						if (ball1.y + ball1.radius > ball2.y + ball2.radius) {
+							ball1.senseY = 1;
+							ball2.senseY = -1;
+						}
+						else {
+							ball1.senseY = -1;
+							ball2.senseY = 1;
+						}
+						var tempv = ball1.velX;
+						ball1.velX = ball2.velX;
+						ball2.velX = tempv;
+						tempv = ball1.velY;
+						ball1.velY = ball2.velY;
+						ball2.velY = tempv;
+					}
+				}
+				function newpos(ball) {
+					for (var i = 0; i <= bcount; i++) {
+						for (var j = i + 1; j <= bcount; j++) {
+							collide(ball[i], ball[j]);
+						};
+					};
+					for (var i = 0; i <= bcount; i++) {
+						if ((ball[i].x + ((ball[i].velX) / 60) * multp) >= ball[i].maxX) {
+							ball[i].senseX = -1;
+						}
+						else if ((ball[i].x - ((ball[i].velX) / 60) * multp) <= 0) {
+							ball[i].senseX = 1;
+						}
+						if (ball[i].senseX == 1) {
+							var newX = ball[i].x + ((ball[i].velX) / 60) * multp;
+						}
+						else {
+							var newX = ball[i].x - ((ball[i].velX) / 60) * multp;
+						};
+						ball[i].x = newX;
+						document.getElementById("ball" + i).style.marginLeft = newX + "px";
+
+						if ((ball[i].y + ((ball[i].velY) / 60) * multp) >= ball[i].maxY) {
+							ball[i].senseY = -1;
+						}
+						else if ((ball[i].y - ((ball[i].velY) / 60) * multp) <= 0) {
+							ball[i].senseY = 1;
+						}
+						if (ball[i].senseY == 1) {
+							var newY = ball[i].y + ((ball[i].velY) / 60) * multp;
+						}
+						else {
+							var newY = ball[i].y - ((ball[i].velY) / 60) * multp;
+						};
+						ball[i].y = newY;
+						document.getElementById("ball" + i).style.marginTop = newY + "px";
+					}
+				};
+				// $(".ball").click(function () {
+				// 	score += parseInt($(this).attr("point"));
+				// 	document.getElementById("score").innerHTML = score;
+				// });
+				var ti = setInterval(function () { newpos(ball) }, 1000 / 60);
+			};
+		}); 
+	</script>
+</body>
+
+</html>

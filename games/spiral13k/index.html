@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Spiral13k</title>
+	<style type="text/css">
+		.text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #000000; font-size: 1.4em; font-variant: small-caps; letter-spacing: 0.05em; line-height: 2em; text-align: center; }
+		canvas { position: absolute; }
+		.layers { margin-left: auto; margin-right: auto; width: 960px; }
+		.info-block { background: #fff; }
+		.info-block ul{ list-style: none; }
+	</style>
+</head>
+<body>
+	<div class="text layers" id="score">000000000</div>
+	<div class="layers">
+		<canvas id="background" style="border:1px solid;" class="canvas"></canvas>
+		<canvas id="canvas2d" style="border:1px solid; cursor: crosshair;" class="canvas"></canvas>
+		<div class="layers info-block text" id="game::over" style="display:none;">
+			<ul>
+				<li>Game Over</li>
+				<li id="points" style="color:#f00;"></li>
+			</ul>
+		</div>
+		<div class="layers info-block text" id="game::info">
+			<ul>
+				<li>S &mdash; start</li>
+				<li>R &mdash; restart</li>
+				<li>&nbsp;</li>
+				<li>Rules:</li>
+				<li>
+					<ul>
+						<li>Use the Mouse to control ehm... <b>Black</b> Circle around <b style="color:#3DCCF8;">Blue</b> Circle.</li>
+						<li>Try to get some score.</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<script src="./js/game.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>A-box INVADERS</title>
+  <meta name="description" content="A-INVADERS">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+  <script src="js/spawner.js"></script>
+  <script src="js/laser-behavior.js"></script>
+  <script src="js/collider.js"></script>
+  <script src="js/explode.js"></script>
+</head>
+
+<body>
+  <div class="screen title-screen">
+    <div class="title">A-box INVADERS</div>
+    <div class="start blink">Click to Start</div>
+    <div class="instructions">AD keys to move and click to shoot<br/> <small>Proudly based on <a href="https://github.com/dmarcos/a-invaders">A-Invaders</a></small></div>
+  </div>
+  <div class="screen end-screen">
+    <div class="end">Congratulations you saved the world!</div>
+    <div class="end">Made with <a href="http://www.aframevr.io">A-FRAME</a></div>
+  </div>
+  <a-scene>
+    <a-assets>
+      <a-mixin id="cube" geometry="primitive: box; buffer: false; height: 2; width: 2; depth: 2;" material="color: #167341; roughness: 1.0; metalness: 0.2;"></a-mixin>
+      <a-mixin id="laser" geometry="primitive: box; buffer: false; height: 2; width: 0.1; depth: 0.1" material="color: yellow;" laser-behavior collider></a-mixin>
+      <a-mixin id="enemy" explode="on: hit"></a-mixin>
+    </a-assets>
+    <a-entity position="0 0 20">
+      <a-entity camera="fov: 45"></a-entity>
+    </a-entity>
+
+    <a-text value="Score: 0" position="-10 7 0" width="10" height="10" id="score"></a-text>
+
+    <a-entity mixin="cube enemy" material="color: red" position="-17.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="-17.5 5 -10" to="-19 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="-14 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="-14 5 -10" to="-15.5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="-10.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="-10.5 5 -10" to="-12 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="-7 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="-7 5 -10" to="-8.5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="-3.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="-3.5 5 -10" to="-5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="0 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="0 5 -10" to="-1.5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="3.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="3.5 5 -10" to="2 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="7 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="7 5 -10" to="5.5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="10.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="10.5 5 -10" to="9 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="14 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="14 5 -10" to="12.5 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube enemy" material="color: red" position="17.5 5 -10">
+      <a-animation attribute="position" dur="1500" direction="alternate" from="17.5 5 -10" to="16 5 -10" repeat="indefinite"></a-animation>
+    </a-entity>
+    <a-entity mixin="cube" wasd-controls="acceleration: 400; wsEnabled: false" position="0 -10 -10" spawner="mixin: laser; on: mousedown" cursor></a-entity>
+  </a-scene>
+  <script src="js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+    <head>
+    
+        <title>asdf - A game for js13kGames by Tim Pietrusky</title>
+        
+        <meta charset="utf-8">
+        <meta name="author" content="Tim Pietrusky">
+        <meta name="robots" content="index,follow">
+        <meta name="revisit-after" content="1 days">
+        <meta name="description" content="A remake (HTML5, CSS3, JS) of the 1978 launched Simon electronic game.">
+        
+        <!-- asdf.css -->
+        <link rel="stylesheet" type="text/css" href="css/asdf-min.css" >
+    
+        <!-- prefix free is allowed -->
+        <script type="text/javascript" src="https://raw.github.com/LeaVerou/prefixfree/gh-pages/prefixfree.min.js"></script>
+        
+        <!-- pubsub.js -->
+        <script type="text/javascript" src="js/pubsub-min.js"></script>
+        
+        <!-- riffwave.js -->
+        <script type="text/javascript" src="js/riffwave-min.js"></script>
+    
+        <!-- asdf.js -->
+        <script type="text/javascript" src="js/asdf-min.js"></script>
+        
+        
+        <link rel="shortcut icon" href="img/asdf.ico" type="image/x-icon" />
+    </head>
+
+    <body>
+    
+        <div class="wrapper">
+          <span role="hole">
+              <div id="status"></div>
+          </span>
+          <section id="gaming-buttons">
+              <button role="one" class="a"></button>
+              <button role="two" class="s"></button>
+              <button role="three" class="d"></button>
+              <button role="four" class="f"></button>
+          </section>
+            
+          <div id="info">
+              <div id="score">0000000</div>
+              <div id="level">0</div>
+              <div id="mode-text">normal</div>
+          </div>
+        </div>
+        
+        <div id="controls">
+            <button id="space" class="key">space bar</button> <span><b>new game</b></span>
+            <button id="esc" class="key">esc</button> <span><b>reset</b></span>
+            
+            <hr />
+            
+            <b>mode</b>
+            <form id="mode">
+                <input type="radio" name="mode" id="normal" checked>
+                <label id="one" class="key" for="normal">1</label>
+                <input type="radio" name="mode" id="expert">
+                <label id="two" class="key" for="expert">2</label>
+                <input type="radio" name="mode" id="hell">
+                <label id="three" class="key" for="hell">3</label>
+            </form>
+                
+            <hr />
+            
+            <b>volume</b> 
+            <button id="up" class="key">&#8592;</button> <span>--</span>
+            <button id="down" class="key">&#8594;</button> <span>++</span>
+        </div>
+        
+        
+        <div id="message"><div class="container"></div></div>
+                
+        <div id="stuff">
+            <h1>asdf</h1>
+           
+            <p>
+                A remake of the 1978 launched <a href="http://en.wikipedia.org/wiki/Simon_(game)" target="_blank">Simon</a> electronic game! Why? <br> 2012 - 1978 = 34 mod <b>13</b> = 8 / 2 = 4! So? 4 buttons! 
+            </p>
+            
+            <p>
+                This is a <button class="key">K</button>eyboard-<button class="key">O</button>nly-<button class="key">G</button>ame (KOG).
+            </p>
+            
+            <p>
+                So please use your keyboard. There will maybe a clickable version later. 
+            </p>
+            <hr />
+            
+            <h2>Browser support</h2>
+            <p>
+                Best played with the latest WebKit-browsers (<b>Chrome</b> or <b>Safari</b>)
+                because WebKit has much better performance, css filter and css repeating-radial-gradient support. 
+            </p>
+            
+            <p>
+                Playable with <b>Firefox 15</b>.
+            </p>
+            <hr />
+            
+            <h2>Source</h2>
+            <p>
+                <a href="https://github.com/TimPietrusky/asdf" target="_blank">asdf</a> on GitHub.
+            </p>
+            
+            <hr />
+            
+            <h2>Powered by</h2>
+            <p>
+                <a href="http://codebase.es/riffwave/" target="_blank">riffwave.js</a> by <a href="http://codebase.es">Pedro Ladaria</a> <br>
+                A library that encodes audio data to a format that can be used to play synthesized sounds with the HTML5 audio element.
+            </p>
+            
+            <hr />
+            
+            <p>
+                <a href="https://github.com/phiggins42/bloody-jquery-plugins/blob/master/pubsub.js" target="_blank">pubsub.js</a> by <a href="http://higginsforpresident.net/" target="_blank">Peter Higgins</a> <br>
+                Ambiguous communication plugin. Small API surface. Publish some message to listeners.
+            </p>
+            
+            <hr />
+            <hr />
+            
+            <p>
+                2012 by <a href="http://timpietrusky.com" target="_blank">Tim Pietrusky</a> for <a href="http://js13kgames.com" target="_blank">js13kGames 2012</a>
+            </p>
+        </div>
+    
+    </body>
+    
+</html>

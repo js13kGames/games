@@ -1,0 +1,39 @@
+body * {
+    box-sizing: border-box;
+}
+
+section {
+    position: absolute;
+    left: 50vw;
+    width: 600px;
+    height: calc(51 * 1.4142 * 20px * .8);
+}
+
+#campo {
+    width: 1020px;
+    height: 1020px;
+    background-color: red;
+    transform-origin: center left;
+    transform: scale(1, 0.6) rotate(45deg) translate(calc(-20px * 51 / 2));
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    display: grid;
+    grid-template-columns: repeat(51, 20px);
+}
+
+#barra-esquerda, #barra-direita {
+    width: calc(20px * 51 / 1.4142);
+    height:100px;
+    background:#089;
+    transform: skewY(31deg) translateX(calc(-20px * 51 / 1.4142));
+    position: absolute;
+    left:0px;
+    top: calc(51 * 1.4142 * 20px * .803);
+}
+
+#barra-direita {
+    background:#067;
+    transform: skewY(-31deg);
+    top: calc(51 * 1.4142 * 20px * .503);
+}

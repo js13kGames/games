@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+	<style>
+	  body {
+      margin: 0px;
+      background-color: black;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+	</style>
+		<script>
+		  /*
+		  MIT License
+      Copyright (c) 2023 derellac
+      https://github.com/derellac
+		  */
+      window.onload = playGame
+      var temp
+      function playGame() {
+        this.canvas = document.getElementsByTagName("canvas").item(0)
+        this.ctx = canvas.getContext("2d")
+        this.canvas.width = window.innerWidth
+        this.canvas.height = window.innerHeight
+        this.clean = function() {
+          ctx.fillStyle = "rgb(0, 0, 0)"
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
+        clean()
+        /*
+        Main Class
+        blocks - array of walls/obstacles
+        coins - array of collectible coins
+        raster - number of blocks horizontally and vertically (blocks divide the playing field)
+        muted - set to true to disable sound effects
+        offset - specifies how many screen units have passed during play time (gets updated by timer, gets callibrated by canvas.height)
+        */
+        function PlayingField() {
+          var blocks = [];
+          var coins = [];
+          this.offset = 0;
+          this.current_level = 0;
+          this.score = 0
+          this.raster = 20
+          this.muted = false
+          function Player(raster) {
+            this.x = Math.floor(raster/2);
+            this.y = 0;
+            /*
+            draws the player avatar (with crown)
+            */
+            this.draw = function(offset) {
+                cx = canvas.width/raster*(this.x+0.5)
+                cy = canvas.height/raster*(this.y+0.5)+offset*canvas.height
+                dx = canvas.width/raster*(0.075)
+                dy = -canvas.height/raster*(0.15)
+                ctx.fillStyle = "rgb(250,220,220)"
+                ctx.shadowColor = "rgba(250,250,250,0.0)";
+                ctx.strokeStyle = "rgba(100,100,100,0.9)";
+                ctx.shadowBlur = 0
+                ctx.lineWidth = 0
+                ctx.beginPath();
+                ctx.arc(cx, cy, 1.5*dx, 0, 2 * Math.PI, false);
+                ctx.fill();
+                ctx.fillStyle = "rgb(220,220,0)"
+                ctx.shadowBlur = 5
+                ctx.shadowColor = "rgb(250,250,250)";
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx+2*dx, cy);
+                ctx.lineTo(cx+2*dx, cy+2*dy);
+                ctx.lineTo(cx+2*dx, cy+2*dy);
+                ctx.lineTo(cx+1*dx, cy+1*dy);
+                ctx.lineTo(cx+0*dx, cy+2*dy);
+                ctx.lineTo(cx-1*dx, cy+1*dy);
+                ctx.lineTo(cx-2*dx, cy+2*dy);
+                ctx.lineTo(cx-2*dx, cy+0*dy);
+                ctx.lineTo(cx-0*dx, cy+0*dy);
+                ctx.fill();
+            }
+          }
+          this.player = new Player(this.raster)
+          /*
+          displays player stats in the screen corner (level and score)
+          */
+          this.show_stats = function() {
+            ctx.shadowBlur = 0
+            ctx.lineWidth = 0
+            ctx.shadowColor = "rgb(250,250,250)";
+            ctx.fillStyle = "rgba(0,0,0,0.5)";
+            ctx.fillRect(canvas.width - canvas.width/this.raster*(4), canvas.height - canvas.height/this.raster*(1.5), canvas.width, this.raster*2)
+            ctx.font = Math.floor(canvas.height/this.raster/2)+"px Arial";
+            ctx.fillStyle = "rgb(255,255,255)";
+            ctx.shadowBlur = 5
+            ctx.shadowColor = "rgb(250,250,250)";
+            ctx.fillText("Score: "+this.score+" Level: "+this.current_level, canvas.width - canvas.width/this.raster*(3), canvas.height - canvas.height/this.raster*(1));
+          }
+          /*
+          Point Class
+          */
+          function PathwayPoint(raster) {
+            this.x = Math.floor(raster/2);
+            this.y = 0;
+            this.set_point = function(x,y) {
+              this.x = x
+              this.y = y
+            }
+          }
+          // pathway_point is used to save the last point, where the pathway method cleared the way
+          this.pathway_point = new PathwayPoint(this.raster)
+          /*
+          Collectible Coin Class
+          */
+          function Coin(x,y) {
+            this.row = y;
+            this.column = x;
+            this.raster = 20
+            this.draw = function(offset) {
+                ctx.lineWidth = 1
+                ctx.beginPath();
+                ctx.fillStyle = "rgb(220,220,0)";
+                ctx.strokeStyle = "rgba(250,250,250,0.9)";
+                ctx.shadowColor = "rgba(250,250,250,0.9)";
+                ctx.shadowBlur = 5
+                ctx.arc(canvas.width/this.raster*(this.column + 0.5), canvas.height/this.raster*(this.row + 0.5)+offset*canvas.height, canvas.height/this.raster/5, 0, 2 * Math.PI, false);
+                ctx.fill();
+                ctx.stroke();
+            }
+            // check if coin is at position x,y
+            this.at_position = function(x,y) {
+              if ((this.row == y) && (this.column == x)) {
+                return true
+              } else {
+                return false
+              }
+            }
+          }
+          /*
+          Block class
+          */
+          function Block(x,y) {
+            this.row = y;
+            this.column = x;
+            this.raster = 20
+            this.color = Math.floor(Math.random() * 120)
+            this.draw = function(offset) {
+                ctx.fillStyle = "rgba("+this.color+","+this.color+","+this.color+", .9)";
+                ctx.strokeStyle = "rgba(120,220,120, .9)";
+                ctx.lineWidth = 2
+                ctx.shadowBlur = 0
+                ctx.shadowColor = "rgba(250,250,250,0.0)";
+                ctx.beginPath();
+                ctx.roundRect(canvas.width/this.raster*this.column, canvas.height/this.raster*this.row+offset*canvas.height, canvas.width/this.raster, canvas.height/this.raster,10);
+                ctx.fill()
+                ctx.stroke();
+            }
+            this.at_position = function(x,y) {
+              if ((this.row == y) && (this.column == x)) {
+                return true
+              } else {
+                return false
+              }
+            }
+          }
+          /*
+          Pathway method, used to clean a path for the player
+          (path can get blocked, cause maze blocks randomly generated)
+          */
+          this.add_path = function(level) {
+            x = this.pathway_point.x
+            y = this.pathway_point.y
+            for (var i = 0; i < this.raster;i++) {
+              this.remove_block(x,y)
+              y -= 1
+              dx = Math.floor(Math.random()*3)-1
+              if ((x+dx < 0) || (x+dx > this.raster)) {
+                dx = 0
+              }
+              x += dx
+              this.remove_block(x,y-1)
+            }
+            this.remove_block(x,y)
+            this.pathway_point.set_point(x,y)
+            
+          }
+          this.find_block = function(x,y) {
+            var found_block = null
+            blocks.forEach(block => {
+              if (block.at_position(x,y)) {
+                found_block = block
+              }            
+            })
+            return found_block
+          }
+          /*
+          Remove unused array elements from previous levels
+          */
+          this.remove_beneath = function(level) {
+            blocks = blocks.filter(block => block.row < -(level-2) * this.raster)
+            coins = coins.filter(coin => coin.row < -(level-2) * this.raster)
+          }
+          this.remove_block = function(x,y) {
+            var delete_block
+            delete_block = this.find_block(x,y)
+            if (delete_block != null) {
+              blocks.splice(blocks.indexOf(delete_block),1)
+            }
+          }
+          this.init_blocks = function() {
+            blocks = []
+            this.add_blocks(0)
+          }
+          /*
+          Place coins randomly on the playing field
+          */
+          this.add_coins = function(level) {
+            for(var i = 0; i < 20; i++) {
+              x = Math.floor(Math.random() * this.raster)
+              y = Math.floor(Math.random() * this.raster)-level*this.raster
+              if (this.find_block(x,y) == null) {
+                coins.push(new Coin(x,y))
+              }
+            }
+          }
+          /*
+          Place blocks randomly on the playing field
+          */
+          this.add_blocks = function(level) {
+            for(var i = 0; i < 200; i++) {
+              x = Math.floor(Math.random() * this.raster)
+              y = Math.floor(Math.random() * this.raster)-level*this.raster
+              if (this.find_block(x,y) == null) {
+                blocks.push(new Block(x,y))
+              }
+            }
+            this.add_path(level)
+          }
+          this.draw_blocks = function() {
+            blocks.forEach(block => block.draw(this.offset));
+          }
+          this.draw_coins = function() {
+            coins.forEach(coin => coin.draw(this.offset));
+          }
+          /*
+          checks, if there is a coin at position (x,y)
+          if so, coin is collected
+          */
+          this.collect_coin = function(x,y) {
+            coin = coins.find(coin => ((coin.row==y) && (coin.column==x)))
+            if (coin != null) {
+              coins = coins.filter(coin => !((coin.row==y) && (coin.column==x)))
+              this.score++
+              this.play_success()
+            }
+          }
+          /*
+          Ask user, if game should be muted
+          */
+          this.mute_dialog = function() {
+            if (confirm('Enable sound effects?')) {
+              this.muted = false
+            } else {
+              this.muted = true
+            }
+          }
+          /*
+          Sound effect for coin collection
+          */
+          this.play_success = function() {
+            if (!this.muted) {
+              let context = new window.AudioContext();
+              let osc = context.createOscillator();
+              osc.type = 'square';
+              osc.frequency.value = 1555;
+              osc.connect(context.destination);
+              osc.start();
+              osc.stop(context.currentTime + 0.2);
+            }
+          }
+          /*
+          Check, if there is an obstacle (block) at position (x,y)
+          */
+          this.obstacle = function(x,y) {
+            var obstacles = 0
+            blocks.forEach(block => {
+              if (block.at_position(x,y)) {
+                obstacles++
+              }
+            });
+            if ((x < 0) || (x >= this.raster)) {
+              obstacles++
+            }
+            if (obstacles>0) {
+              return true
+            } else {
+              return false
+            }
+          }
+          /*
+          draw the playing field
+          */
+          this.draw_field = function() {
+            this.draw_blocks()
+            this.draw_coins()
+            this.player.draw(this.offset)
+            this.show_stats()
+          }
+          /*
+          refresh screen
+          */
+          this.refresh = function() {
+            clean()
+            this.draw_field()
+          }
+          /*
+          Raises the offset parameter at a speed determined by level number
+          The offset parameter is used to determine the position of objects
+          */
+          this.update_offset = function() {
+            if (this.current_level<20) {
+              this.offset = this.offset + 0.001 + this.current_level/2000
+            } else {
+              this.offset = this.offset + 0.001 + 20/2000
+            }
+            
+            if (this.offset > this.current_level) {
+              this.current_level = this.current_level + 1
+              this.add_blocks(this.current_level)
+              this.add_coins(this.current_level)
+              this.remove_beneath(this.current_level)
+            }
+            
+            if (this.player.y/this.raster+this.offset > 1) {
+              this.finish_game()
+            }            
+          }
+          /*
+          Stop the game and show score
+          */
+          this.finish_game = function() {
+            alert("Game finished! Score: " + this.score)
+            clearInterval(this.refresh_interval)
+            clearInterval(this.update_interval)
+          }
+          /*
+          Start game timers
+          */
+          this.start_moving = function() {
+            this.refresh_interval = setInterval(this.refresh.bind(this),50)
+            this.update_interval = setInterval(this.update_offset.bind(this),50)
+          }
+          /*
+          Event listener for keyboard events, player movement
+          */
+          this.move_player = function(key) {
+            var dx = 0
+            var dy = 0
+            if (key.keyCode == '37') {
+               dx = -1
+            }
+            if (key.keyCode == '38') {
+                dy = -1
+            }
+            if (key.keyCode == '39') {
+               dx = 1
+            }
+            if (key.keyCode == '40') {
+                dy = 1
+            }
+            if(!this.obstacle(this.player.x+dx,this.player.y+dy)) {
+              this.player.x+=dx
+              this.player.y+=dy
+              this.collect_coin(this.player.x,this.player.y)
+            }
+          }
+          document.onkeydown = this.move_player.bind(this);
+        }
+        /*
+        the actual game :)
+        */
+        t = new PlayingField()
+        t.mute_dialog()
+        t.draw_blocks()
+        t.draw_coins()
+        t.start_moving()
+      }
+    </script>
+ 		<meta charset="utf-8" />
+ 		<title>Castle Run</title>
+ 	</head>
+  	<body>
+		 <canvas width="800" height="600"></canvas>
+ 	</body>
+</html>
+

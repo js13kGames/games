@@ -1,0 +1,13 @@
+<html><head><link rel="stylesheet" type="text/css" href="main.css"><link rel="stylesheet" type="text/css" href="menu.css"><script src="output.min.js"></script></head><body><div class="HUD"><div id="ingame" class="hidden"><canvas id="minimap" width="100" height="200"></canvas><div class="remainingTime">disconnected since <span id="frameAlive">0</span> ticks !</div><canvas id="attackLoader"></canvas><div id="laserbeam"></div></div><div class="hidden menu" id="gameOver"><h1>Game Over</h1><h2>You survived <span id="score">x</span> ticks</h2><h3 id="scorePosition">Keep up the good work and you'll make it to the leaderboards !</h3><footer>Click anywhere to continue</footer></div><div class="hidden menu" id="gameOverNormal"><h1>Game Over</h1><h2>The data was corrupted !</h2><footer>Click anywhere to continue</footer></div><div class="menu" id="menu"><h1>Lost packet</h1><div class="middleMenu"><div class="options"><div class="option option-disabled" id="startButton">New Game</div><div class="option option-disabled" id="continueButton">Continue</div><div class="option" id="survivalButton">Survival</div><div class="option option-disabled" id="statButton">Score</div><div class="option" id="keyboardButton">Keyboard : <span id="keyboardType">qwerty</span></div></div><div class="infoMenu"><ul class="stats hidden" id="stats"></ul><!--
+								<div class="tutorial">
+									<h2>How to play</h2>
+									<div>
+										During a mundane transfert of data, the worst thing that can happen arrived : the connexion was lost !<br/>
+										You are now stuck in the network, trying to survive long enough for the connection to return. But the evil glitches will come to corrupt you !<br/>
+										You must protect your data at all cost : it can self-heal a bit, but if it gets completely corrupted, your packet will be lost. Be wary to not touch
+										the glitches yourself, or they will stun you for a while. use qsdz to move, the mouse to look and the mouse button to fire your un-glitching beam. <br/><br/>Good luck !
+
+									</div>
+
+								</div>
+							--></div></div><div class="glitch-warning">If you have graphical bug, blinking screen, or disapearing texture, check if the hardware acceleration is enabled on your browser or reduce the size of the browser's window</div><footer>Made by Dodormeur, for the js13kgames 2018</footer></div></div></body></html>

@@ -1,0 +1,13 @@
+body {
+    background: black;
+    display: flex;
+    justify-content: space-around;
+}
+
+canvas {
+    border: 1px solid white;
+}
+
+div {
+    color: white;
+}

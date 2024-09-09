@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>yourSpace</title>
+</head>
+<body>
+    <header>
+        <h1>yourspace</h1>
+        <div class="indicator">
+            <span id="count" class="number"></span>
+            <span class="title">Followers</span>
+        </div>
+    </header>
+    <main>
+        <div id="screenPost">
+            <h2>New Post</h2>
+            <span></span>
+            <div class="postTypes">
+                <button id="typeText">🔤 Text</button>
+                <button id="typePhoto">🖼️ Photo</button>
+                <button id="typeVideo">🎬 Video</button>
+                <button id="typeSong">🎵 Song</button>
+                <button id="typeLink">🔗 Link</button>
+                <button id="typeStory">🤳 Story</button>
+            </div>
+            <div class="postTopics">
+                <div>What do you want to post about?</div>
+                <button id="contentAnimal">🐶 Animals</button>
+                <button id="contentFood">🍔 Food</button>
+                <button id="contentNews">📰 News</button>
+                <button id="contentMemory">📅 Memories</button>
+                <button id="contentOpinion">💭 Opinion</button>
+                <button id="contentTravel">🏖️ Place</button>
+                <button id="contentDance">💃 Dance</button>
+            </div>
+            <div class="postConfirmation">
+                <button id="createPost">Post a
+                    <span id="currentPostType"></span>
+                    about
+                    <span id="currentPostContent"></span></button>
+            </div>
+        </div>
+        <div id="screenFeed">
+            <button class="btn--big" onclick="toggleScreen(screenPost, screenFeed)">New Post</button>
+            <h2>Active Posts</h2>
+            <div id="activePosts">
+            </div>
+            <h2>Old Posts</h2>
+            <div id="inactivePosts">
+            </div>
+
+        </div>
+        <div id="screenTrending">
+            <h2>Trending</h2>
+            <div class="info">
+                <p>Can you guess what are these things about? If you post something related, you will get an exposure boost for your posts.</p>
+                <p>Remember to come back often and check for new trends!</p>
+            </div>
+            <div id="trendingList">
+            </div>
+        </div>
+        <div id="screenFollowers">
+            <h2>Stats</h2>
+            <div class="statsBody">
+                <div class="indicator">
+                    <span id="countB" class="number"></span>
+                    <span class="title">Followers</span>
+                </div>
+                <div class="indicator">
+                    <span id="progress" class="number"></span>
+                    <span class="title">of all the world</span>
+                </div>
+                <div class="indicator">
+                    <span id="likes" class="number"></span>
+                    <span class="title">Total Likes</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="action-bar">
+        <button onclick="showScreen(screenFollowers)">
+            <span class="icon">☺</span>
+            <span>Followers</span>
+        </button>
+        <button onclick="showScreen(screenFeed)">
+            <span class="icon">✏</span>
+            <span>Post</span>
+        </button>
+        <button onclick="showScreen(screenTrending)">
+            <span class="icon">#⭎</span>
+            <span>Trending</span>
+        </button>
+
+
+    </footer>
+    <script src="config.js"></script>
+    <script src="Dashboard.js"></script>
+    <script src="yourspace.js"></script>
+    <script src="Post.js"></script>
+    <script src="posts.js"></script>
+    <script src="trending.js"></script>
+    <script src="gameScript.js"></script>
+</body>
+</html>
+

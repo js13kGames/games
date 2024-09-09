@@ -1,0 +1,1 @@
+"true"!==localStorage.getItem("kill-9-intro-completed")&&(window.location.href="intro.html");

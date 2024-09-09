@@ -1,0 +1,98 @@
+.cursor {
+  stroke: coral;
+  stroke-width: 0.1;
+  animation: winker 1s linear 0s infinite normal none;
+}
+
+@keyframes winker {
+  0% {
+    stroke: coral;
+  }
+
+  70% {
+    stroke: none;
+  }
+
+  100% {
+    stroke: coral;
+  }
+}
+.rect {
+  fill: #eff;
+  stroke: #000;
+  stroke-width: 0.05;
+}
+
+.character {
+  stroke: green;
+  stroke-width: 20;
+  fill: none;
+}
+
+.A {
+  stroke: blue;
+}
+.B {
+  stroke: black;
+}
+.C {
+  stroke: red;
+}
+
+.back-line {
+  stroke: darkblue;
+  stroke-width: 0.3;
+}
+
+.result {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 0%;
+  right: 0%;
+}
+
+#result {
+  visibility: hidden;
+}
+
+.result-svg {
+  height: 100%;
+  width: 100%;
+}
+
+.result-rect {
+  width: 1000cm;
+  height: 1000cm;
+
+  fill: wheat;
+  fill-opacity: 0.95;
+}
+
+.result-text {
+  position: absolute;
+  font-family: sans-serif;
+  text-anchor: middle;
+  font-weight: bold;
+  font-size: 10vmin;
+  top: 20%;
+  left: 0%;
+  right: 0%;
+}
+
+button:hover {
+  background: violet;
+}
+
+button {
+  border: none;
+  background: blueviolet;
+  color: whitesmoke;
+  font-size: 4vmin;
+  width: 30vmin;
+  height: 7vmin;
+}
+
+body {
+  text-align: center;
+}

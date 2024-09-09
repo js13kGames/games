@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta id="viewport" name="viewport" content="width=device-width, user-scalable=yes, initial-scale=0.75" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Ant Realm</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+<body>
+  <div id="ctrlBox">
+    <h1>Ant Realm</h1>
+    <div id="ctrl">
+      <div id="cmd">
+        <h2>Commands</h2>
+        <div id="btns">
+          <button id="btHome">Back Home</button>
+          <button id="btFood">Get Food</button>
+          <button id="btAttack">Attack!</button><br>
+          <button id="btN">Go North</button>
+          <button id="btS">Go South</button>
+          <button id="btW">Go West</button>
+          <button id="btE">Go East</button>
+        </div>
+        <hr>
+        <h2>Proportions</h2>
+        <ul>
+        <li class="prop" id="propWork">Worker:  <b id="propWorkV">90%</b></li>
+        <li class="prop" id="propWarr">Warrior: <b id="propWarrV">10%</b></li>
+        </ul>
+        <small>(click to increase)</small>
+        <hr>
+        <h2>Your ants</h2>
+        <li>workers: <b id="qtdWorkN">0</b> in, <b id="qtdWorkG">0</b> out.</li>
+        <li>warriors: <b id="qtdWarrN">0</b> in, <b id="qtdWarrG">0</b> out.</li>
+        <hr>
+        Food: <b id="qtdFood">0</b> <br>
+        Queen's health: <b id="queenFood">0</b> <br>
+        Lifetime: <b id="lifetimeEl">0</b>
+        <hr>
+      </div>
+    </div>
+    <div id="map">&nbsp;Map<div id="view"></div></div>
+  </div>
+  <div id="garden">
+    <canvas id="c"></canvas>
+    <canvas id="cTMP"></canvas>
+    <div id="debug"></div>
+    <div id="mvN" class="mv" x='0' y='-1'>&uarr;</div>
+    <div id="mvS" class="mv" x='0' y='1'>&darr;</div>
+    <div id="mvW" class="mv" x='-1' y='0'>&larr;</div>
+    <div id="mvE" class="mv" x='1' y='0'>&rarr;</div>
+  </div>
+  <b id="record"></b>
+  <div id="messageBox"></div>
+  <div id="dialog" style="display:none">
+    <h2 id="dialogTitle">Dialog Title</h2>
+    <b id="dialogBtClose" onclick="this.parentNode.style.display='none'">&times;</b>
+    <div id="dialogContent">Dialog content.</div>
+    <b id="dialogBtFunc">Button</b>
+  </div>
+  <script src="cookies.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+body {
+    background-color: black;
+    color: green;
+    font-family: Consolas;
+}
+#coma {
+	color: green;
+	background-color: black;
+	font-family: Consolas;
+	border: 1px solid black;
+}

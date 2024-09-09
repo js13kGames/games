@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>Chain</title> 
+<link type="text/css" rel="stylesheet" href="main.css" />
+<meta charset="utf-8">
+</head>
+<body>
+<div class="container">
+
+ <h2 class="title_sm"><span class="red">CHAINS</span></h2>
+ <h3>Create the longest chain</h3>
+
+<table class="heading">
+  <tbody>
+     <tr>
+      <td><button id="restart-button" onclick="StartGame()" type ="button">New Game</button></td>	  	  
+	  <td id="score_td">
+        <div id="score-container">0</div>
+        <div id="best-container">0</div>
+      </td>      
+    </tr>
+</tbody>
+</table>
+<div id="canvasContainer"><canvas id="myCanvas" width="500" height="500" onclick="StartShape(event)"></canvas>
+
+</div>
+<p class="game-explanation"><b>HOW TO PLAY:</b> Touch or click to grow rectangles and circles. When the new shape touches an existing shape of a different kind, they join in a chain. If the new shape cannot fit, a minimal dotted outline is shown. Create the longest chain.</p>
+<div id="bottom">© Shapes Mania</div>
+</div>
+
+<script src="ShapesGames.js"></script>
+<script src="rectangles.js"></script>
+<script src="circles.js"></script>
+<script src="mixshapes.js"></script>
+ </body>
+</html>

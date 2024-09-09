@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="main.css" />
+        <link rel="stylesheet" href="scene.css" />
+    </head>
+    <body id="field_body" onload="Open(), openScene()">
+        <div id="field_item" class="dash">
+            <div id="field_rabbit">🐇🐇🐇🐇</div>
+            <div id="field_material">
+                <span>[ Metal : x<em id="item_metal"></em> ]
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+                <span>[ Glass : x<em id="item_glass"></em> ]
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+                <span>[ Plastic : x<em id="item_plastic"></em> ]
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+                <span>[ Rubber : x<em id="item_rubber_tree"></em> ]
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+                <span>[ Carrot : x<em id="item_tree"></em> ]</span>
+            </div>
+        </div>
+        <div id="field_display">
+            <div id="field_display_left" class="dash">
+                <h2>LOCATION</h2>
+                <button id="button_city" class="dash" onclick="GoToCity()">
+                    <div class="field_display_button_left">City</div>
+                    <div class="field_display_button_right">
+                        <div class="field_display_button_right_mid">
+                            Metal, Plastic, Glass</div>
+                        <div class="field_display_button_right_up dash">
+                            <div id="field_sec_city" 
+                            class="field_display_button_right_up_left">2Sec</div>
+                            <div id="field_city_ea" 
+                            class="field_display_button_right_up_right">1-3 ea</div>
+                        </div>
+                        <div class="field_display_button_right_down">Collect</div>
+                    </div>
+                </button>
+
+                <button id="button_plantation" class="dash" onclick="GoToPlantation()">
+                    <div class="field_display_button_left">Rubber Plantation</div>
+                    <div class="field_display_button_right">
+                        <div class="field_display_button_right_mid">
+                            Rubber</div>
+                        <div class="field_display_button_right_up dash">
+                            <div id="field_sec_plantation" class="field_display_button_right_up_left">2Sec</div>
+                            <div id="field_plantation_ea" class="field_display_button_right_up_right">1-3 ea</div>
+                        </div>
+                        <div class="field_display_button_right_down">Collect</div>
+                    </div>
+                </button>
+
+                <button id="button_field" class="dash" onclick="GoToField()">
+                    <div class="field_display_button_left">Carrot Fields</div>
+                    <div class="field_display_button_right">
+                        <div class="field_display_button_right_mid">
+                            Carrot</div>
+                        <div class="field_display_button_right_up dash">
+                            <div id="field_sec_field" class="field_display_button_right_up_left">2Sec</div>
+                            <div id="field_field_ea" class="field_display_button_right_up_right">1-3 ea</div>
+                        </div>
+                        <div class="field_display_button_right_down">Collect</div>
+                    </div>
+                </button>
+            </div>
+
+            <div id="field_display_center" class="dash">
+            </div>
+
+            <div id="field_display_right" class="dash">
+
+                <button id="quest_upgrade_city" class="button_quest dash" onclick="Quest_Upgrade_City()">
+                    <div class="field_display_quest_up">
+                        <span>Quest : </span><span>???</span>
+                    </div>
+                    <div class="field_display_quest_mid">
+                        Upgrade City
+                    </div>
+                    <div class="field_display_quest_down">
+                        Hello, City
+                    </div>
+                </button>
+
+                <button id="quest_upgrade_plantation" 
+                class="button_quest dash" onclick="Quest_Upgrade_Plantation()">
+                    <div class="field_display_quest_up">
+                        <span>Quest : </span><span>???</span>
+                    </div>
+                    <div class="field_display_quest_mid">
+                        Upgrade Plantation
+                    </div>
+                    <div class="field_display_quest_down">
+                        Hello, Plantation
+                    </div>
+                </button>
+
+                <button id="quest_upgrade_field" class="button_quest dash" onclick="Quest_Upgrade_Field()">
+                    <div class="field_display_quest_up">
+                        <span>Quest : </span><span>???</span>
+                    </div>
+                    <div class="field_display_quest_mid">
+                        Upgrade Field
+                    </div>
+                    <div class="field_display_quest_down">
+                        Hello, Field
+                    </div>
+                </button>
+
+                <button id="quest_mother" class="button_quest dash" onclick="Quest_Mother()">
+                    <div class="field_display_quest_up">
+                        Compound 3 Items
+                    </div>
+                    <div class="field_display_quest_mid">
+                        MOM'S CARE
+                    </div>
+                    <div class="field_display_quest_down">
+                        Now, you can go all location together
+                    </div>
+                </button>
+
+                <button id="quest_father" class="button_quest dash" onclick="Quest_Father()">
+                    <div class="field_display_quest_up">
+                        Rocket was returned 3 times
+                    </div>
+                    <div class="field_display_quest_mid">
+                        DAD'S TRUST
+                    </div>
+                    <div class="field_display_quest_down">
+                        Moon Arrival Probability + 5%
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div id="field_show">
+            <div id="field_story" class="dash">
+            </div>
+            
+            <div id="field_down_mid" class="dash">
+                <div id="field_compound" class="">
+                    <h3>COMPONENT</h3>
+                    <div>
+                        <button onclick="CompoundItem_Steel()" 
+                        class="button_comp dash" id="button_comp_core">Spaceship Core</button>
+                        <span>>>></span>
+                    </div>
+                    <div>
+                        <button onclick="CompoundItem_Fiber()" 
+                        class="button_comp dash" id="button_comp_parts">Spaceship Parts</button>
+                        <span>>>></span>
+                    </div>
+                    <div>
+                        <button onclick="CompoundItem_Fuel()" 
+                        class="button_comp dash" id="button_comp_fuel">Carrot Fuel 1L</button>
+                        <span>>>></span>
+                    </div>
+                    
+                    <!-- <button onclick="CompoundItem()">가공</button> -->
+                </div>
+                
+                <div id="field_input" class="">
+                    <h3>COMBINATION</h3>
+                    <div class="field_input_item">
+                        <button onclick="AddInput(eCompound.core, -1)" class="dash">left</button>
+                        <span>Core : <em id="input_core"></em></span>
+                        <button onclick="AddInput(eCompound.core, 1)" class="dash">right</button>
+                    </div>
+                    <div class="field_input_item">
+                        <button onclick="AddInput(eCompound.parts, -1)" class="dash">left</button>
+                        <span>Parts : <em id="input_parts"></em></span>
+                        <button onclick="AddInput(eCompound.parts, 1)" class="dash">right</button>
+                    </div>
+                    <div class="field_input_item">
+                        <button onclick="AddInput(eCompound.fuel, -1)" class="dash">left</button>
+                        <span>Fuel : <em id="input_fuel"></em></span>
+                        <button onclick="AddInput(eCompound.fuel, 1)" class="dash">right</button>
+                    </div>
+                    <button id="button_build_rocket" onclick="BuildRocket()">BUILD ROCKET</button>
+                </div>
+            </div>
+            
+            <div id="field_rocket" class="dash">
+                <h3>MOON ARRIVAL PROBABILITY</h3>
+                <div><span id="percent_rocket"></span>% <em id="percent_extra"></em></div>
+                <hr width="100%" />
+                <button id="button_launch_rocket" onclick="launch_rocket();">LAUNCH</button>
+            </div>
+        </div>
+        <script type ="text/javascript" src="main.js"></script>
+        <script type ="text/javascript" src="scene.js"></script>
+        <script type ="text/javascript" src="launch.js"></script>
+    </body>
+</html>

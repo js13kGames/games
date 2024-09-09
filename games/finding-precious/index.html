@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Finding Precious</title>
+</head>
+<body>
+<h1 align="center" style="font-family:courier;"> <font color="#ff9900">Finding Precious</font></h1>
+<canvas id="myCanvas" width="800" height="600" style='display: block;margin: auto;'></canvas>
+</br>
+<table align="center">
+	<tr>
+		<td><input type=button onclick="javascript:left()" value="Left"></td>
+		<td><input type=button onclick="javascript:right()" value="Right"></td>
+		<td><input type=button onclick="javascript:pause()" value="Pause / Play"></td>
+		<td><input type=button onclick="javascript:restart()" value="Restart"></td>
+	</tr>
+</table>
+<p align="center">You can also use left/right arrow keys to play and " 'p' key" to pause.</p>
+<p align="center">If you drop more than 15 boxes you will loose.</p> 
+<p align="center">Note : You can loose before 15 miss if you drop the box with the precious.</p>
+<script type="text/javascript">
+
+var canvas,canvasContext;
+var ct=0,ct1=0;
+var eggSize=20;
+var eggS = [];
+
+for(var i=0;i<100;i++){
+	eggS[i]=[0]; 
+}
+
+var eggS1 = [];
+for(var i=0;i<100;i++){
+	eggS1[i]=[0]; 
+}
+
+var cnt=0,cnt1=0;
+var size=[340,290,240];
+var h=[100,240,400],hConware=60;
+var buffer=10;
+var score=0,miss=0;
+var ps=2;
+var randBox = Math.floor(Math.random()*90)+10;
+//var randBox = 5;
+var boxCnt =0;
+
+window.onload = function () {
+	console.log("hello");
+	canvas=document.getElementById('myCanvas');
+	canvasContext=canvas.getContext('2d');
+	
+	setInterval(function (){
+		if(ps===2)
+			newstart();
+
+		if(ps===0)
+		{	
+			background();
+			conwareL();
+			conwareR();
+			newEggL();
+			newEggR();
+			checkScore();
+		}
+	},300);
+	
+}
+
+var padLen =40;
+var padIni = 400;
+
+function background () {
+	canvasContext.fillStyle='#FFE4C4';
+	canvasContext.fillRect(0,0,canvas.width,canvas.height);
+
+	canvasContext.fillStyle='green';
+    canvasContext.fillRect(padIni-padLen/2,580,padLen,20);
+    canvasContext.fillText("Score :",60,70);
+    canvasContext.fillText(score,100,70);
+    canvasContext.fillText("Miss :",660,70);
+    canvasContext.fillText(miss,700,70);
+}
+
+function conwareL() {
+	for(k=0;k<3;k++)
+	{
+		canvasContext.fillStyle='#00FFFF';
+		canvasContext.fillRect(0,h[k],size[k],hConware);
+	}
+	var color,color1;
+
+	if (ct%2===0)
+		color="white",color1="black";
+
+	else
+		color="black",color1="white";
+
+	for (j=0;j<3;j++)
+	{
+		for(var i=0;i<size[j];)
+		{
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(i,h[j],buffer,2);
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(i,h[j]+hConware,buffer,2);
+			i+=2*buffer;
+		}
+
+		for(var i=buffer;i<size[j];)
+		{
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(i,h[j],buffer,2);
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(i,h[j]+hConware,buffer,2);
+			i+=2*buffer;
+		}	
+
+		for (var i=0;i<hConware;)
+		{
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(size[j]-2,h[j]+i,2,buffer);
+			i+=2*buffer;
+		}
+	
+		for (var i=buffer;i<hConware;)
+		{
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(size[j]-2,h[j]+i,2,buffer);
+			i+=2*buffer;
+		}
+	}
+	ct++;
+}	
+
+function conwareR(){
+	for(k=0;k<3;k++)
+	{
+		var len=canvas.width-size[k];
+		canvasContext.fillStyle='#00FFFF';
+		canvasContext.fillRect(len,h[k],size[k],hConware);
+	}
+	var color,color1;
+
+	if (ct1%2===0)
+		color="white",color1="black";
+
+	else
+		color="black",color1="white";
+
+	for (j=0;j<3;j++)
+	{
+		var len=canvas.width-size[j];
+		for(var i=0;i<size[j];)
+		{
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(len+i,h[j],buffer,2);
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(len+i,h[j]+hConware,buffer,2);
+			i+=2*buffer;
+		}
+
+		for(var i=buffer;i<size[j];)
+		{
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(len+i,h[j],buffer,2);
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(len+i,h[j]+hConware,buffer,2);
+			i+=2*buffer;
+		}	
+
+		for (var i=0;i<hConware;)
+		{
+			canvasContext.fillStyle=color;
+			canvasContext.fillRect(len,h[j]+i,2,buffer);
+			i+=2*buffer;
+		}
+	
+		for (var i=buffer;i<hConware;)
+		{
+
+			canvasContext.fillStyle=color1;
+			canvasContext.fillRect(len,h[j]+i,2,buffer);
+			i+=2*buffer;
+		}
+	}
+	ct1++;
+}
+
+function newEggL(){
+	if(cnt%16===0)
+	{
+		var x= Math.floor(Math.random()*3);
+		//var x=2;
+		for (var i=0;i<100;i++) 
+		{
+			if(eggS[i][0]===0)
+			{
+				boxCnt++;
+				eggS[i][1]=boxCnt;
+				eggS[i][2]=h[x];	
+				eggS[i][0]=1;
+				eggS[i][3]=0;
+				eggS[i][4]=h[x];
+				eggS[i][5]=x;
+				break;
+			}
+		}
+	}
+	cnt++;
+	eggCreateL();
+}
+
+function eggCreateL(){
+	for(var i=0;i<100;i++)
+	{
+		if(eggS[i][0]===1)
+		{
+			if(eggS[i][3]<size[eggS[i][5]]+eggSize)
+			{
+				canvasContext.fillStyle='#D2691E';
+				canvasContext.fillRect(eggS[i][3],h[eggS[i][5]]-1-eggSize,eggSize,eggSize);
+				eggS[i][3]+=eggSize;
+			}	
+			else if(eggS[i][4]>=560)
+			{
+				if(eggS[i][3]>=padIni-padLen/2 && (eggS[i][3]+eggSize)<=(padIni+padLen/2))
+				{
+					eggS[i][0]=0;
+					score++;
+
+					if(eggS[i][1]===randBox)
+						youWin();	
+				}
+				else
+				{
+					eggS[i][4]+=eggSize;
+					canvasContext.fillRect(eggS[i][3],eggS[i][4],eggSize,eggSize);
+					eggS[i][0]=0;
+					miss++;
+					if(eggS[i][1]===randBox)
+						youLoose();
+				}
+			}
+			else if(eggS[i][4]<560)
+			{
+				eggS[i][4]+=eggSize;
+				canvasContext.fillStyle='#D2691E';
+				canvasContext.fillRect(eggS[i][3],eggS[i][4],eggSize,eggSize);	
+			}	
+		}	
+	}
+}
+
+function newEggR(){
+	if(cnt1%16===0)
+	{
+		var x1= Math.floor(Math.random()*3);
+		//var x1=0;
+		for (var i=0;i<100;i++) 
+		{
+			if(eggS1[i][0]===0)
+			{
+				boxCnt++;
+				eggS1[i][1]=boxCnt;
+				eggS1[i][2]=h[x1];	
+				eggS1[i][0]=1;
+				eggS1[i][3]=canvas.width-eggSize;
+				eggS1[i][4]=h[x1];
+				eggS1[i][5]=x1;
+				break;
+			}
+		}
+	}
+	cnt1++;
+	eggCreateR();
+}
+
+function eggCreateR(){
+	for(var i=0;i<100;i++)
+	{
+		if(eggS1[i][0]===1)
+		{
+			if(eggS1[i][3]>=canvas.width - size[eggS1[i][5]]-eggSize)
+			{
+				canvasContext.fillStyle='#D2691E';
+				canvasContext.fillRect(eggS1[i][3],h[eggS1[i][5]]-1-eggSize,eggSize,eggSize);
+				eggS1[i][3]-=eggSize;
+			}	
+
+			else if(eggS1[i][4]===560)
+			{
+				if(eggS1[i][3]>=padIni-padLen/2 && eggS1[i][3]+eggSize<=padIni+padLen/2)
+				{
+					eggS1[i][0]=0;
+					score++;
+					if(eggS1[i][1]===randBox)
+						youWin();
+				}
+				else
+				{
+					eggS1[i][4]+=eggSize;
+					canvasContext.fillRect(eggS1[i][3],eggS1[i][4],eggSize,eggSize);
+					eggS1[i][0]=0;
+					miss++;
+					if(eggS1[i][1]===randBox)
+						youLoose();
+				}
+			}
+			else if(eggS1[i][4]<560)
+			{
+				eggS1[i][4]+=eggSize;
+				canvasContext.fillStyle='#D2691E';
+				canvasContext.fillRect(eggS1[i][3],eggS1[i][4],eggSize,eggSize);	
+			}	
+		}	
+	}
+}
+
+window.onkeydown = function(event) {
+    var keyPr = event.keyCode;
+    if(keyPr === 39 && padIni<canvas.width - padLen/2) 
+        padIni += 40; //right arrow
+    else if(keyPr === 37 && padIni>padLen/2)
+        padIni -= 40; //left arrow 
+
+    if(keyPr === 80) // p key
+    {
+    	if(ps===0)
+    		ps=1;	
+    	else if(ps===1)
+    		ps=0;
+    }
+
+    if(keyPr === 82) // r key
+    	restart();
+
+    if(keyPr === 83) // s key
+    	if(ps===2)
+    		ps=0;	
+}
+
+function pause() {
+	if(ps===0)
+		ps=1;
+	else if(ps===1)
+		ps=0;
+}
+
+function left() {
+	if(padIni>padLen/2)
+		padIni -=40;
+}
+
+function right() {
+	if(canvas.width - padLen/2)
+		padIni +=40;
+}
+
+function restart() {
+	window.location.reload(true);
+}
+
+function checkScore() {
+	if(miss>15)
+	{
+		pause();
+		youLoose();
+	}
+}
+
+function youLoose() {
+	pause();
+	ps=3;
+	canvasContext.fillStyle='#FFE4C4';
+	canvasContext.fillRect(0,0,canvas.width,canvas.height);
+
+	canvasContext.fillStyle='black';	
+	canvasContext.fillText("You Loose",370,290);
+	canvasContext.fillText("You lost your Precious",340,310);
+	canvasContext.fillText("Precious can never be yours",330,330);
+	canvasContext.fillText("Final Score = ",360,350);
+	canvasContext.fillText(score,430,350);
+	canvasContext.fillText("Press <R> to restart the game",325,370);
+}
+
+function newstart() {
+	canvasContext.fillStyle='#FFE4C4';
+	canvasContext.fillRect(0,0,canvas.width,canvas.height);
+
+	canvasContext.fillStyle='black';	
+
+	canvasContext.fillText("You are at a factory which is manufacturing articles",265,240);
+	canvasContext.fillText("and one of the box contains your Precious. If you ",275,260);
+	canvasContext.fillText("catch the box containing the Precious you win else",270,280);
+	canvasContext.fillText("if you drop it you loose",340,300);
+	canvasContext.fillText("Instructions :",370,340);
+	canvasContext.fillText("Press <S> to start the game",330,360);	
+}
+
+function youWin() {
+	pause();
+	ps=3;
+	canvasContext.fillStyle='#FFE4C4';
+	canvasContext.fillRect(0,0,canvas.width,canvas.height);
+
+	canvasContext.fillStyle='black';	
+	canvasContext.fillText("You Win",380,290);
+	canvasContext.fillText("You found your Precious",340,310);
+	canvasContext.fillText("Final Score = ",360,330);
+	canvasContext.fillText(score,430,330);	
+	canvasContext.fillText("Press <R> to restart the game",325,350);	
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+html, body {
+	background: rgb(24, 24, 24);
+	width: 100%;
+	height: 100%;
+  }
+  h1, h2, p {
+	font-family: "Lucida Console";
+	font-size: 7vw;
+	text-align: center;
+	line-height: 1;
+	margin: 0;
+	top: 30%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	color: rgba(45, 45, 45, 1);
+	letter-spacing: -0.5rem;
+  }
+  h2 {
+	color: rgba(255, 255, 255, .4);
+	top: 60%;
+	font-size: 4vw;
+	letter-spacing: 0rem;
+  }
+  p {
+	font-size: 2vw;
+	letter-spacing: 0rem;
+  }
+  .credits-titles{
+	color: rgba(255, 255, 255, .4);
+	top: 35%;
+	font-size: 4vw;
+	letter-spacing: 0rem;
+  }
+  .credits-names{
+	font-size: 5vw;
+	top: 55%;
+  }
+  h1:before {
+	content: attr(data-heading);
+	position: absolute;
+	overflow: hidden;
+	color: #fc0;
+	width: 100%;
+	z-index: 5;
+	text-shadow: none;
+	left: 0%;
+	text-align: center;
+	animation: flicker 3s linear infinite;
+  }
+  @keyframes flicker {
+	0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+	  opacity: 0.99;
+	  text-shadow: -1px -1px 0 rgba(255, 255, 255, .4), 1px -1px 0 rgba(255, 255, 255, .4), -1px 1px 0 rgba(255, 255, 255, .4), 1px 1px 0 rgba(255, 255, 255, .4), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00, 0 0 15px #f44, 0 0 2px #ff7e00, 0 2px 3px #000;
+	}
+	20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+	  opacity: 0.4;
+	  text-shadow: none;
+	}
+  }
+  

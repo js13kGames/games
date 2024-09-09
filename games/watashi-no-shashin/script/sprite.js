@@ -1,0 +1,1 @@
+var Sprite=function(){var r,a=0,e=0,t=1,c=0,i=1,u=0;return{Init:function(n){a=n.x,e=n.y,r=n.src,logic=n.logic,t=n.scale||t},Update:function(n,l){a=null!=l.x?l.x:a,e=null!=l.y?l.y:e,u=null!=l.frame?l.frame:u,r=l.src||r,t=null!=l.scale?l.scale:t,c=null!=l.rotation?l.rotation:c,i=null!=l.alpha?l.alpha:i},Render:function(){Renderer.Sprite(a,e,r,u,t,c,i)}}};

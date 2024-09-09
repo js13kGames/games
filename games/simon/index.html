@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="">
+   <head>
+      <meta charset="UTF-8">
+      <title>Simon</title>
+      <meta name="Godsey" content="" />
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <script src="TinyMusic.js"></script>
+   </head>
+   <body>
+      <div id="content">
+         <a id="sound" href="javascript: toggleSound()" onclick="">Sound On</a>
+         <div id="intro">
+            <div id="story" style="color:white"></div>
+            <div class="dialog" id="play" onClick="playStateInit();">Play</div>
+         </div>
+         <div id="gameState" style="display:none">
+            <div id="space">
+               <div class="stars"></div>
+               <div class="stars"></div>
+            </div>
+            <div id="lives">Player Lives: </div>
+            <div id="simon" class="simon">
+               <div id="blue" class="tile"></div>
+               <div id="red" class="tile"></div>
+               <div id="green" class="tile"></div>
+               <div id="yellow" class="tile"></div>
+               <div id="circle"></div>
+            </div>
+         </div>
+         <div id="fail" style="display:none">
+            <div id="failText" style="color:white">
+            
+            </div>
+            <div class="dialog" id="play" onClick="playStateInit();">Retry</div>
+         </div>
+          
+        <div id="win" style="display:none">
+            <div id="winText" style="color:white"> </div>
+            <div class="dialog" id="play" onClick="playStateInit();">Again</div>
+         </div>
+      </div>
+      <script src="game.js"></script>
+   </body>
+</html>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="CanvasContainer">
+            <div id="GameOverlay">
+                <div class="button" id="btnSendCreeps">Send creeps!</div>
+            </div>
+            <canvas id="GameView">
+            </canvas>
+            <div id="GameMenu">
+                <div>
+                    <div id="Scores" style="opacity: 0; ">
+                        Score: <span id="Score">0</span>
+                        <br>
+                        Highscore: <span id="Highscore">0</span>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="button" id="btnNewGame">Start</div>
+                </div>
+            </div>
+        </div>
+        <script src="engine.js"></script>
+        <script src="vector.js"></script>
+        <script src="td.js"></script>
+    </body>
+</html>

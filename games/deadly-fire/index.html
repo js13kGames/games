@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en-en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="author" content="Kamil Zurek">
+    <title>Deadly Fire</title>
+    <style>
+body {
+        background: #110f10;
+        color: #fff1e8;
+        text-align: center;
+        font-size: 20px;
+        line-height: 24px;
+        font-family: Verdana, sans-serif;
+        padding-top: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    h1 {
+        font-size: 90px;
+        text-align: center;
+        letter-spacing: 4px;
+        animation: naglowek 4s infinite;
+        min-width: 810px;
+    }
+    
+    @keyframes naglowek {
+        0% {
+            color: #fbf2be;
+            text-shadow: 0 0 5px #92151f;
+        }
+        50% {
+            color: #f3d45c;
+            text-shadow: 0 0 20px #c42e3f;
+        }
+        100% {
+            color: #fbf2be;
+            text-shadow: 0 0 5px #92151f;
+        }
+    }
+    
+    p {
+        margin-bottom: 0px;
+    }
+    
+    img {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+    }
+    
+    .pole {
+        padding: 6px 6px;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+    }
+    
+    .obejma {
+        width: 810px;
+        margin: 0 auto;
+        display: flex;
+    }
+    
+    #pilot {
+        flex: 1;
+    }
+    
+    #pilot img {
+        width: 160px;
+        height: 160px;
+    }
+    
+    #ekran {
+        flex: 3;
+    }
+    
+    .rzad {
+        height: 30px;
+        display: block;
+    }
+    
+    .wartosc0 {
+        background: #074c64;
+    }
+    
+    .wartosc1 {
+        background: #92151f;
+        animation: czerwone 2s infinite;
+    }
+    
+    .wartosc2 {
+        background: #ad5c7f;
+    }
+    
+    .wartosc3 {
+        background: #1d2b53;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAGkmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuNTY2ZWJjNWI0LCAyMDIyLzA1LzA5LTA4OjI1OjU1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjMuNCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjItMDktMDJUMTY6NTA6MDYrMDI6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDIyLTA5LTA1VDAwOjQzOjA3KzAyOjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIyLTA5LTA1VDAwOjQzOjA3KzAyOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0Y2M0MWFkNi1iM2Q0LTRiOWYtODhjZC1lZjFiZjI4YWEyYTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDY1YzVhZjEtOGNlOS00MjU3LTk1NGItNjAyZTg3YjYwMWM0IiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MDY1YzVhZjEtOGNlOS00MjU3LTk1NGItNjAyZTg3YjYwMWM0Ij4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowNjVjNWFmMS04Y2U5LTQyNTctOTU0Yi02MDJlODdiNjAxYzQiIHN0RXZ0OndoZW49IjIwMjItMDktMDJUMTY6NTA6MDYrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMy40IChNYWNpbnRvc2gpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MjI4NzQ0Ni1kMTVjLTQ3MDctYTkzMS04MDQ5YjQ0YzJiZTIiIHN0RXZ0OndoZW49IjIwMjItMDktMDRUMjE6NTM6NDUrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMy40IChNYWNpbnRvc2gpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo0Y2M0MWFkNi1iM2Q0LTRiOWYtODhjZC1lZjFiZjI4YWEyYTYiIHN0RXZ0OndoZW49IjIwMjItMDktMDVUMDA6NDM6MDcrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMy40IChNYWNpbnRvc2gpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pil3g4YAAAEySURBVCiRY2T3SWFgYJA8see5hQsDEYAFv7TkiT1wNsREJrgoXE770Q3tRzfg6sLXTQ9fNx3OZYLIIQuhGb8yKHNlUCacy8z+l4mBgeHqyq0MDAy8T+59kVES+/iGgYFB7OOb758/ha+bvqE9+JW9hwynwt0Lp+X//WJhYGDo9YhnYGBwq7ir63AE2TEQUHPhJzKXCUL5TbMvWaAPF3337Mm7Z08g7kFW/e7ZE6iGTVkH0QwOXzfdPSEbaonQUgYGhtv35kFtcKu4i+ljBgaGKXXGEEbLu2gGBoacprNQDbs6lJGl4QCiAg0w4ZeGg56EiwgNWJ0EcTccwIME4aSdC6YyIIWPrsMRqAcM2JEtYUI2ptcj/vIBG/eEbHj4MCDFA8QSFA0MuAMADtA1QACeAAAAosl5CYO4X8UAAAAASUVORK5CYII=);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+    }
+    
+    .wartosc4 {
+        background: #0a92a0;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAE9GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuNTY2ZWJjNWI0LCAyMDIyLzA1LzA5LTA4OjI1OjU1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjMuNCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjItMDktMDRUMjM6MzM6NTIrMDI6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDIyLTA5LTA1VDAwOjQ0OjQ2KzAyOjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIyLTA5LTA1VDAwOjQ0OjQ2KzAyOjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowNWQ0MzZmYS1kZTI0LTRmOTMtYjhlYy00ODk1ODBiZDU5YmYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDVkNDM2ZmEtZGUyNC00ZjkzLWI4ZWMtNDg5NTgwYmQ1OWJmIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MDVkNDM2ZmEtZGUyNC00ZjkzLWI4ZWMtNDg5NTgwYmQ1OWJmIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowNWQ0MzZmYS1kZTI0LTRmOTMtYjhlYy00ODk1ODBiZDU5YmYiIHN0RXZ0OndoZW49IjIwMjItMDktMDRUMjM6MzM6NTIrMDI6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMy40IChNYWNpbnRvc2gpIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PlxCK6EAAACTSURBVCiRY2T3SWEgBbDAWZIn9jAwMLAm+KCp+L1gCwMDw3MLFxQNkif23L43j4GBQVUpCU0DXByih5HdJwWimn/BIzwu+ZggB9HDRJIHGBgYmCDuxnQJGlBVSoJ4jywbhoOG3wu2QGIHD7h9bx4kykm2gYWBgeG5hYuqUtJH4pIGNC1B9DBgS3wQcXjiYyQ1eQMAQlA0mSt8KQ8AAAAASUVORK5CYII=);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+    }
+    
+    .wartosc5 {
+        background: #074c64;
+        animation: wylanie 1s 1;
+    }
+    
+    @keyframes wylanie {
+        0% {
+            background: #77c2b7;
+        }
+        100% {
+            background: #074c64;
+        }
+    }
+    
+    .podpis {
+        font-size: 10px;
+        margin-top: 12px !important;
+        margin-bottom: 0 !important;
+        font-weight: 300;
+        color: #7e8f9e;
+        line-height: 12px;
+    }
+    
+    .podpis2 {
+        font-size: 10px;
+        margin-top: 24px !important;
+        margin-bottom: 0 !important;
+        font-weight: 300;
+        color: #c42e3f;
+        line-height: 12px;
+    }
+    
+    @keyframes czerwone {
+        0% {
+            background-color: #92151f;
+        }
+        50% {
+            background-color: #c42e3f;
+        }
+        100% {
+            background-color: #92151f;
+        }
+    }
+    
+    @keyframes utrata {
+        0% {
+            filter: brightness(1.0);
+            -webkit-filter: brightness(1.0);
+        }
+        50% {
+            filter: brightness(2.0);
+            -webkit-filter: brightness(2.0);
+        }
+        100% {
+            filter: brightness(1.0);
+            -webkit-filter: brightness(1.0);
+        }
+    }
+    
+    .utrata {
+        animation: utrata 1s 3;
+    }
+    
+    #instrukcja,
+    #lewa {
+        display: none;
+    }
+    
+    #instrukcja.pokaz {
+        display: initial !important;
+    }
+    
+    #lewa.pokaz {
+        display: flex !important;
+    }
+    
+    #instrukcja {
+        text-align: center;
+    }
+    
+    .helikopter {
+        width: 30px;
+        height: 30px;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block;
+        position: relative !important;
+        left: -5px;
+        top: -5px;
+    }
+    
+    #gameover {
+        display: none;
+        font-size: 35px;
+        line-height: 50px;
+        color: #c42e3f;
+        padding-top: 50px;
+    }
+    
+    #gameover.pokaz {
+        display: block !important;
+    }
+    
+    .obejma.ukryj {
+        display: none !important;
+    }
+    
+    .rozblysk {
+        animation: rozblysk 2s 1;
+    }
+    
+    @keyframes rozblysk {
+        0% {
+            filter: brightness(1.0);
+            -webkit-filter(1.0);
+        }
+        50% {
+            filter: brightness(3.0);
+            -webkit-filter(3.0);
+        }
+        100% {
+            filter: brightness(1.0);
+            -webkit-filter(1.0);
+        }
+    }
+    
+    #stopka {
+        font-size: 10px;
+        font-weight: 400;
+        color: #444;
+        width: 810px;
+        margin: 20px auto;
+        border-top: 1px solid #444;
+    }
+    
+    #komunikat {
+        min-height: 24px;
+    }
+    
+    .obrot1 {
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+}
+    </style>
+</head>
+<body>
+    <h1>DEADLY FIRE</h1>
+    <div id="instrukcja">
+        <br /> <span style="color: #c42e3f;">You and your helicopter are the last chance for humanity. <br />
+        A deadly fire is coming. Prepare for flight. </span>
+        <br />
+        <br />
+        <br /> <span style="color: #77c2b7;">1) Use cursors to move your helicopter.<br />
+        2) Protect cities from deadly fire.<br />
+        3) Press 'enter' to extinguish fire.<br />
+        4) Fly over the lakes to refill your water supplies.<br />
+        5) Survive long enough for the people to evacuate.<br />
+        6) Save at least one city.<br />
+        <br /><br /></span> <span style="color: #f3d45c;">PRESS ENTER TO START THE GAME</span> </div>
+    <div id="gameover"></div>
+    <div id="lewa" class="obejma">
+        <div id="pilot"><img src='data:image/png;base64,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'/>
+            <p id="miasta"></p>
+            <p class="podpis">left for protection</p>
+            <p id="woda"></p>
+            <p class="podpis">in your helicopter</p>
+            <p id="tury"></p>
+            <p class="podpis">time to evacuate</p>
+            <p id="level"></p>
+            <p class="podpis">play with death</p>
+            <div class="podpis2"> use cursors to move
+                <br /> and enter to put out the fire</div>
+        </div>
+        <div id="ekran"></div>
+    </div>
+    <p id="komunikat"></p>
+    <p id="stopka">Game design and graphics by Kamil Żurek 2022.</p>
+    <script>
+    // variables declaration
+    let rozmiar = 17;
+    let napis = '';
+    let tablica = [];
+    let pozar = 2;
+    let miasta = 4;
+    let jeziora = 4;
+    let doPodpaleniaX = 0;
+    let doPodpaleniaY = 0;
+    let pozycjaX = 8;
+    let pozycjaY = 8;
+    let woda = 3;
+    let tury = 100;
+    let ogienIstnieje = 0;
+    let start = 1;
+    let level = 1;
+    let nextLevel = 0;
+    let obrot = 0;
+
+    // random integer function
+    function numer(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    //map generating
+    function generowaniePlanszy() {
+        
+        for(let i = 0; i < rozmiar; i++) {
+            tablica[i] = [];
+        }
+        // grass
+        for(let i = 0; i < rozmiar; i++) {
+            for(let j = 0; j < rozmiar; j++) {
+                tablica[i][j] = 0;
+            }
+        }
+        // lakes
+        for(let k = 0; k < jeziora; k++) {
+            tablica[numer(0, rozmiar - 5) + 2][numer(0, rozmiar - 5) + 2] = 4;
+        }
+        // fire
+        for(let k = 0; k < pozar; k++) {
+            tablica[numer(0, rozmiar - 5) + 2][numer(0, rozmiar - 5) + 2] = 1;
+        }
+        // cities
+        for(let k = 0; k < miasta; k++) {
+            tablica[numer(0, rozmiar - 5) + 2][numer(0, rozmiar - 5) + 2] = 3;
+        }
+        document.getElementById("ekran").classList.add("rozblysk");
+    }
+
+    // putting out the fire
+    function wygaszenieOgnia() {
+        if(pozycjaY == 0) {
+            for(let i = 0; i < 2; i++) {
+                for(let j = -1; j < 2; j++) {
+                    if(tablica[pozycjaY + i][pozycjaX + j] < 3) {
+                        tablica[pozycjaY + i][pozycjaX + j] = 5
+                    }
+                }
+            }
+        } else if(pozycjaY == rozmiar - 1) {
+            for(let i = -1; i < 1; i++) {
+                for(let j = -1; j < 2; j++) {
+                    if(tablica[pozycjaY + i][pozycjaX + j] < 3) {
+                        tablica[pozycjaY + i][pozycjaX + j] = 5
+                    }
+                }
+            }
+        } else {
+            for(let i = -1; i < 2; i++) {
+                for(let j = -1; j < 2; j++) {
+                    if(tablica[pozycjaY + i][pozycjaX + j] < 3) {
+                        tablica[pozycjaY + i][pozycjaX + j] = 5
+                    }
+                }
+            }
+        }
+    }
+    // fire spreading
+    function rozpalanieOgnia() {
+        for(let i = 0; i < rozmiar; i++) {
+            for(let j = 0; j < rozmiar; j++) {
+                if(tablica[i][j] == 2) {
+                    tablica[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    // refueling water from lakes
+    function nabieranieWody() {
+        if(tablica[pozycjaY][pozycjaX] == 4) {
+            woda = 3;
+            document.getElementById("komunikat").innerHTML = "Water supplies replenished.";
+        }
+    }
+
+    // map refresh
+    function rysowaniePlanszy() {
+        ogienIstnieje = 0;
+        napis = '';
+        for(let i = 0; i < rozmiar; i++) {
+            napis += '<div class="rzad">'
+            for(let j = 0; j < rozmiar; j++) {
+                if(tablica[i][j] == 1) {
+                    ogienIstnieje = 1;
+                }
+                if(j == pozycjaX && i == pozycjaY) {
+                    napis += '<div class="pole podswietlenie wartosc' + tablica[i][j] + ' obrot' + obrot + '"><img class="helikopter" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAuElEQVQ4jWP8//8/AyWAiSLd1DCABZmjLKJEsn9Y0AUuz/QmWrNu+lYGRiVhRYK2Xp7pzaCbvhWrHBOyrUTazoiM4S64PNObofWJCYpKtYJKDN1NwhzIBkG8AHMijI6orcfQWC1zhoGBgYFhdchamCGMd9/cwx8GMIOQXYLsApgBuPTDDXZKzGHYN38KshwjAwMDA0EDnBJzUASghjDC+Hff3GNgxJUX8CQquO0MDAy4DSAWDHxmAgByzUN8cVzicQAAAABJRU5ErkJggg=="" /></div>';
+                } else {
+                    napis += '<div class="pole wartosc' + tablica[i][j] + '"></div>';
+                }
+            }
+            napis += '</div>';
+        }
+
+        document.getElementById("ekran").innerHTML = napis;
+        document.getElementById("miasta").innerHTML = 'CITIES: ' + miasta;
+        document.getElementById("woda").innerHTML = 'WATER: ' + woda;
+        document.getElementById("tury").innerHTML = 'TURNS: ' + tury;
+        document.getElementById("level").innerHTML = 'LEVEL: ' + level;
+    }
+
+    // map modification
+    function modyfikacjaPlanszy() {
+        //dokładanie pół z ogniem
+        for(let i = 0; i < rozmiar; i++) {
+            for(let j = 0; j < rozmiar; j++) {
+                if(tablica[i][j] == 1 && numer(0, 4) == 1) {
+                    doPodpaleniaX = i + numer(-1, 1);
+                    if(doPodpaleniaX < 0) {
+                        doPodpaleniaX = 0
+                    };
+                    if(doPodpaleniaX > rozmiar - 1) {
+                        doPodpaleniaX = rozmiar - 1
+                    };
+                    doPodpaleniaY = j + numer(-1, 1);
+                    if(doPodpaleniaY < 0) {
+                        doPodpaleniaY = 0
+                    };
+                    if(doPodpaleniaY > rozmiar - 1) {
+                        doPodpaleniaY = rozmiar - 1
+                    };
+                    if(tablica[doPodpaleniaX][doPodpaleniaY] == 3) {
+                        miasta = miasta - 1;
+                        document.getElementById("pilot").classList.add("utrata");
+                        setTimeout(function() {
+                            document.getElementById("pilot").classList.remove("utrata");
+                        }, 3000);
+                    }
+                    if(tablica[doPodpaleniaX][doPodpaleniaY] != 1) {
+                        tablica[doPodpaleniaX][doPodpaleniaY] = 2;
+                    }
+                }
+            }
+        }
+    }
+
+    function czyszczenieWody() {
+        for(let i = 0; i < rozmiar; i++) {
+            for(let j = 0; j < rozmiar; j++) {
+                if(tablica[i][j] == 5) {
+                    tablica[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    function gameLoop() {
+        if(start == 1) {
+            document.getElementById("instrukcja").classList.add("pokaz");
+        }
+        if(nextLevel == 1) {
+            level = level + 1;
+            nextLevel = 0;
+            napis = '';
+            tablica = [];
+            pozar = 1 + level;
+            miasta = 4;
+            jeziora = 4;
+            doPodpaleniaX = 0;
+            doPodpaleniaY = 0;
+            pozycjaX = 7;
+            pozycjaY = 7;
+            woda = 3;
+            tury = 90 + level * 10;
+            ogienIstnieje = 0;
+            document.getElementById("komunikat").innerHTML = "";
+            generowaniePlanszy();
+            document.getElementById("ekran").classList.add("rozblysk");
+            gameLoop();
+        }
+        if(miasta > 0 && start == 0) {
+            rysowaniePlanszy();
+        } else if(miasta == 0 && start == 0) {
+            document.getElementById("komunikat").innerHTML = "";
+            document.getElementById("gameover").classList.add("pokaz");
+            document.getElementById("lewa").classList.remove("pokaz");
+            document.getElementById("gameover").innerHTML = 'They are all dead.<br /><br /><span style="color:#77c2b7;">GAME OVER</span><br /><br /><span style="color: #f3d45c;">Refresh browser to start again.</span><br /><br />you have reached level ' + level;
+        }
+        if(ogienIstnieje == 0 && start == 0) {
+            document.getElementById("komunikat").innerHTML = "VICTORY. Make a move to go to the next level.";
+            document.getElementById("ekran").classList.remove("rozblysk");
+            nextLevel = 1;
+        }
+        if(miasta > 0 && tury == 0 && start == 0) {
+            document.getElementById("komunikat").innerHTML = "VICTORY. Make a move to go to the next level.";
+            document.getElementById("ekran").classList.remove("rozblysk");
+            nextLevel = 1;
+        }
+    }
+
+    // movement and actions
+    document.addEventListener("keydown", function(event) {
+        if(event.keyCode == 13 && start == 1) {
+            document.getElementById("instrukcja").classList.remove("pokaz");
+            document.getElementById("lewa").classList.add("pokaz");
+            start = 0;
+            rysowaniePlanszy();
+        } else if(event.keyCode == 37 && pozycjaX > 0) {
+            pozycjaX = pozycjaX - 1;
+            obrot = 1;
+            czyszczenieWody();
+            nabieranieWody();
+            rozpalanieOgnia();
+            modyfikacjaPlanszy();
+            tury = tury - 1;
+            rysowaniePlanszy();
+            console.log('lewo');
+            gameLoop();
+        } else if(event.keyCode == 38 && pozycjaY > 0) {
+            pozycjaY = pozycjaY - 1;
+            obrot = 1;
+            czyszczenieWody();
+            nabieranieWody();
+            rozpalanieOgnia();
+            modyfikacjaPlanszy();
+            tury = tury - 1;
+            rysowaniePlanszy();
+            console.log('góra');
+            gameLoop();
+        } else if(event.keyCode == 39 && pozycjaX < rozmiar - 1) {
+            pozycjaX = pozycjaX + 1;
+            obrot = 0;
+            czyszczenieWody();
+            nabieranieWody();
+            rozpalanieOgnia();
+            modyfikacjaPlanszy();
+            tury = tury - 1;
+            rysowaniePlanszy();
+            console.log('prawo');
+            gameLoop();
+        } else if(event.keyCode == 40 && pozycjaY < rozmiar - 1) {
+            pozycjaY = pozycjaY + 1;
+            obrot = 0;
+            czyszczenieWody();
+            nabieranieWody();
+            rozpalanieOgnia();
+            modyfikacjaPlanszy();
+            tury = tury - 1;
+            rysowaniePlanszy();
+            console.log('dół');
+            gameLoop();
+        } else if(event.keyCode == 13) {
+            if(woda > 0) {
+                woda = woda - 1;
+                wygaszenieOgnia();
+            } else {
+                document.getElementById("komunikat").innerHTML = "You don't have water. Get water from the lake.";
+            };
+            rozpalanieOgnia();
+            modyfikacjaPlanszy();
+            tury = tury - 1;
+            rysowaniePlanszy();
+            console.log('enter');
+            gameLoop();
+        }
+    });
+    generowaniePlanszy();
+    gameLoop();
+    </script>
+</body>
+
+</html>

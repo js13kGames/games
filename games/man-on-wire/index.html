@@ -1,0 +1,25 @@
+﻿<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script>
+setInterval(function(){
+  window.orientation = 90;
+  if(window.orientation == 90) { ko.style.display = "none"; ok.style.display = "block"; }
+  else { ok.style.display = "none"; ko.style.display = "block"; }
+}, 100);
+</script>
+
+<div id=ok>
+<h1>Man on Wire</h1>
+<h3>Place your phone in a VR cardboard and press play</h3>
+<h2 onclick="location='game.html'">PLAY</h2>
+</div>
+
+<div id=ko>
+  <br><br>
+  <h3>Please hold your phone<br>in "landscape left" mode</h3>
+</div>
+<style>
+* { background: #000; color: #fff; text-align: center; font-family: arial; }
+h1 { line-height: 25vh; font-size: 20vmin; margin: 10vmin 0 0; }
+h3 { line-height: 8vh; font-size: 5vmin; }
+h2 { line-height: 8vh; font-size: 10vmin; }
+</style>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="game.min.css" rel="stylesheet" />
+<script src="source.min.js"></script>
+</head>
+<body>
+<div class="control-panel">
+<div class="control-panel-display">
+<canvas id="display" width="600" height="600"></canvas>
+</div>
+<div class="control-panel-input control-panel-steer">
+<input type="range" id="steer" value="0" min="-100" max="100" />
+</div>
+<div class="control-panel-input control-panel-gas">
+<input type="range" id="gas" value="0" min="-100" max="100"  />
+</div>
+</div>
+<script>window.onload = function() {var game = new Game({});game.init();}</script>
+</body>
+</html>

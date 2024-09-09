@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <meta charset=utf-8"" >
+    <title>cat meow - A WebVR game with A-frame</title>
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+    
+    <script>
+
+     var gameState = 'play';
+
+     AFRAME.registerComponent('cursor-listener', {
+       init: function () {
+         this.el.addEventListener('click', function (evt) {
+           if (gameState !== 'over') {
+             gameState = 'over';
+             var cat = document.querySelector('#cat');
+             var camera = document.querySelector('#camera');
+             var cursor = document.querySelector('#cursor');
+             cat.components.sound.stopSound();
+
+             var el = document.createElement('a-entity');             
+             el.setAttribute('position', cursor.getAttribute('position'));
+             el.setAttribute('rotation', cursor.getAttribute('rotation'));
+             el.setAttribute('scale', '1.4 1.4 1.4');
+             el.setAttribute('text', { color: 'midnightblue', value: 'You found the cat. Stare to restart.', align: 'center', wrapCount: '18'});
+             el.setAttribute('id', 'end-screen');
+             el.setAttribute('cursor-listener');
+             camera.appendChild(el);
+             cursor.setAttribute('visible', false);
+           } else {
+             setTimeout(function () {
+               window.location.reload();
+             }, 1000);
+           }
+         });
+       }
+     });
+
+     AFRAME.registerComponent('collider-check', {
+       dependencies: ['raycaster'],
+       init: function () {
+         this.el.addEventListener('raycaster-intersected', function (ev) {
+           if (gameState === 'play') {
+             var cat = document.querySelector('#cat');
+             cat.setAttribute('sound', { volume: 10 });
+           }
+         });
+         this.el.addEventListener('raycaster-intersected-cleared', function (ev) {
+           if (gameState === 'play') {
+             var cat = document.querySelector('#cat');
+             cat.setAttribute('sound', { volume: 3 });
+           }
+         });
+       }
+     });
+
+     AFRAME.registerComponent('random-radius', {
+       init: function () {
+         var catWrapper = document.querySelector('#cat-wrapper');
+         var deg = Math.floor(Math.random() * 300);
+         catWrapper.setAttribute('rotation', `0 ${deg} 0`);
+       }
+     });
+
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <a-audio id="meow" src="meow.ogg" preload="auto"></a-audio>
+      </a-assets>
+      <a-sky id="sky" color="powderblue"></a-sky>
+
+      <a-entity id="camera" camera="userHeight: 1.6" look-controls rotation="0 0 0" >
+        <a-entity  id="cursor" cursor="fuse: true; fuseTimeout: 300"
+                   position="0 0 -0.8"
+                   geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                   material="color: black; shader: flat">
+        </a-entity>
+      </a-entity>
+
+      <a-text id="title" value="cat meow" position="-0.9 2 -1" scale="1.7 2.5 1.7" color="midnightblue"></a-text>
+
+      <a-entity id="lightSphere" position="-7 4 -2" geometry="primitive: sphere; radius: .5" material="color: lightyellow; shader: flat" light="color: #ffffff; type: ambient; intensity: 1.3"></a-entity>
+
+      <a-entity id="plane" geometry="primitive: plane; width: 6; height: 6" position="0 0 0 -4" rotation="-90 0 0"  material="color: lightslategrey"></a-entity>
+      <a-torus id="bush" rotation="90 0 0" position="0 0.6 0" color="lightslategrey" radius-tubular="0.5" radius="3" shader="flat"></a-torus>
+
+      <a-entity id="cat-wrapper" position="0 0 0" rotation="0 90 0" random-radius>
+        <a-entity cursor-listener collider-check class="collidable" id="cat" position="3 0.48 0" rotation="0 90 0" sound="src: #meow; autoplay: true; loop: true, poolSize: 1, volume: 3">
+          <a-animation attribute="position" to="1.3 0.48 0" begin="raycaster-intersected" dur="2000" delay="2000" fill="forward"></a-animation>
+          <a-sphere id="cat-head" position="0 0.4 -0.5" radius="0.3" color="indianred" scale="1 0.8 0.8" shader="flat">
+            <a-cone position="0.2 0.3 0" height="0.3"  radius-bottom="0.1" radius-top="0" color="indianred" rotation="0 0 -14" shader="flat"></a-cone>
+            <a-cone position="-0.2 0.3 0" height="0.3"  radius-bottom="0.1" radius-top="0" color="indianred" rotation="0 0 14" shader="flat"></a-cone>
+          </a-sphere>
+          <a-cylinder id="cat-body" position="0 0.04 0" color="indianred" height="0.8" radius=".3" rotation="-90 0 0" scale="1 1 0.8" shader="flat">
+            <a-cone position="-0.14 0.246 -0.4" radius-bottom="0.11" radius-top="0.05" height=".5" rotation="-90 0 0" color="indianred" shader="flat"></a-cone>
+            <a-cone position="0.14 0.246 -0.4" radius-bottom="0.11" radius-top="0.05" height=".5" rotation="-90 0 0" color="indianred" shader="flat"></a-cone>
+            <a-cone position="-0.14 -0.29 -0.4" radius-bottom="0.11" radius-top="0.05" height=".5" rotation="-90 0 0" color="indianred" shader="flat"></a-cone>
+            <a-cone position="0.14 -0.29 -0.4" radius-bottom="0.11" radius-top="0.05" height=".5" rotation="-90 0 0" color="indianred" shader="flat"></a-cone>
+            <a-torus position="-0.014 -0.97 0.242" rotation="0 -70 0" radius="0.58" radius-tubular="0.02" arc="90" color="indianred" shader="flat"></a-torus>
+          </a-cylinder>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+
+  </body>
+</html>

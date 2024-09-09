@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>js13kGames 2015 -- Aaron Fischer</title>
+    <script src="minified.min.js"></script>
+    <script src="js13kgames-2015.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <img src="asteroid.png" width="300px">
+    <nav>
+      <ul>
+        <li>Dust: <strong class="res-dust">0</strong></li>
+        <li>Stone: <strong class="res-stone">0</strong></li>
+        <li>Carbon: <strong class="res-carbon">0</strong></li>
+        <li>Metal: <strong class="res-metal">0</strong></li>
+        <li>cBTC: <strong class="cbtc">200</strong></li>
+      </ul>
+    </nav>
+
+    <div id="startgame">
+      Oh snap! The <strong>reverser</strong> is broken! Without this expensive part, tthe ship
+      can't do any hyperjumps any more. We are stuck in the middle of nowhere,
+      just a vast amount of black space. Luckily, there is an old space station
+      near by, so we can buy the part for some money.<br><br>
+      But before that, some resources need to be harvest...
+      <br><br><br>
+      <button>Poke your probe!</button>
+    </div>
+
+    <div id="endgame">
+      You've made it!<br>
+      You can leave this rotten ugly place now.
+    </div>
+
+    <div id="ship">
+      Active tool: <strong id="active-tool">Probe</strong><br>
+      Equipment:
+      <ul id="ship-equipment"></ul>
+    </div>
+
+    <div id="asteroid">
+      <p>Time wasted on this ateroid: <strong id="time">0 hours</strong></p>
+      <h2>Asteroid classification: <span id="asteroid-classification"></span></h2>
+      <ul id="bots"></ul>
+      <button id="btn-mine">Mine on this asteroid now!</button>
+      <button id="btn-to-station">Fly to station</button>
+    </div>
+
+    <div id="station">
+      <h2>Docked to station</h2>
+
+      Buy:
+      <ul id="station-inventory"></ul>
+
+      Sell:
+      <ul id="ship-inventory">
+        <li>Dust: <input type="text" class="res-dust" name="sell-res-dust"> <a href="#" data-res="dust">sell</a></li>
+        <li>Stone: <input type="text" class="res-stone" name="sell-res-stone"> <a href="#" data-res="stone">sell</a></li>
+        <li>Carbon: <input type="text" class="res-carbon" name="sell-res-carbon"> <a href="#" data-res="carbon">sell</a></li>
+        <li>Metal: <input type="text" class="res-metal" name="sell-res-metal"> <a href="#" data-res="metal">sell</a></li>
+      </ul>
+      
+      <button id="btn-to-asteroid">Fly to the asteroid</button>
+    </div>
+  </body>
+</html>

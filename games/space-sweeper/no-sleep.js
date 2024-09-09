@@ -1,0 +1,1 @@
+let wakeLock=null;const requestWakeLock=async()=>{try{wakeLock=await navigator.wakeLock.request("screen")}catch(e){}},releaseWakeLock=()=>{null!==wakeLock&&wakeLock.release().then(()=>{wakeLock=null})};export{requestWakeLock,releaseWakeLock};

@@ -1,0 +1,155 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Gone One Hour</title>
+<link rel="stylesheet" type="text/css" href="css/idle.css">
+<script src="js/idle.js"></script>
+<link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+  <div id="HQs">
+    <div id="titleplace">
+      <div id="title">HQ</div>
+    </div>
+    <p><div id="sts"><div id="instr">Hire 1,000,000 units in just one hour. Hire nerds, geeks, and so on. The tables contain the buttons. Use alt, enter, and tab keys. Good Luck!</div></div>
+    <br>
+    <br>
+    <div id="sts"><div id="finish"><div id="alunts">Units: 0/1000000</div></div></div></br>
+    <div id="sts"><div id="time">Time elapsed: 0s</div></div></br>
+    <div id="sts"><div id="money">Money: $30</div></div></p>
+    <br>
+    <table>
+      <tr>
+        <th>Producer</th>
+        <th>Cost</th>
+        <th>Produces</th>
+        <th>Quantity</th>
+        <th>Upgraded</th>
+        <th>Gains</th>
+        <th>Hireable</th>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="Nerd" onclick="Buynrd()"></td>
+        <td><div id="nrdcost">$30</div></td>
+        <td><div id="nrdadd">$1</div></td>
+        <td><div id="nrd">0</div></td>
+        <td><div id="upnrd">0</div></td>
+        <td><div id="nrdgains">$0</div></td>
+        <td><div id="howmanynrds">0</div></td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="Geek" onclick="Buygk()"></td>
+        <td><div id="gkcost">$90</div></td>
+        <td><div id="gkadd">$3</div></td>
+        <td><div id="gk">0</div></td>
+        <td><div id="upgk">0</div></td>
+        <td><div id="gkgains">$0</div></td>
+        <td><div id="howmanygks">0</div></td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="Hacker" onclick="Buyhkr()"></td>
+        <td><div id="hkrcost">$270</div></td>
+        <td><div id="hkradd">$9</div></td>
+        <td><div id="hkr">0</div></td>
+        <td><div id="uphkr">0</div></td>
+        <td><div id="hkrgains">$0</div></td>
+        <td><div id="howmanyhkrs">0</div></td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="Scientist" onclick="Buyscnst()"></td>
+        <td><div id="scnstcost">$810</div></td>
+        <td><div id="scnstadd">$27</div></td>
+        <td><div id="scnst">0</div></td>
+        <td><div id="upscnst">0</div></td>
+        <td><div id="scnstgains">$0</div></td>
+        <td><div id="howmanyscnsts">0</div></td>
+      </tr>
+    </table>
+  </div>
+  <br>
+  <div id="Upgrades">
+    <div id="titleplace">
+      <div id="title">Upgrades</div>
+      <br>
+    </div>
+    <br>
+    <br>
+    <div id="uprds">Nerds</div>
+    <table>
+      <tr>
+        <th>Upgrade</th>
+        <th>Cost</th>
+        <th>Gains</th>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="OS for nerds" onclick="Upnrd()"></td>
+        <td><div id="upnrdcost">100 nerds</div></td>
+        <td>Nerds produce more money</td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="More nerds" onclick="Moarnrds()"></td>
+        <td><div id="moarnrdcost">50 geeks</div></td>
+        <td>Allows to hire one more nerd than before</td>
+      </tr>
+    </table>
+    <br>
+    <div id="uprds">Geeks</div>
+    <table>
+      <tr>
+        <th>Upgrade</th>
+        <th>Cost</th>
+        <th>Gains</th>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="OS for geeks" onclick="Upgk()"></td>
+        <td><div id="upgkcost">150 geeks</div></td>
+        <td>Geeks produce more money</td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="More geeks" onclick="Moargks()"></td>
+        <td><div id="moargkcost">75 hackers</div></td>
+        <td>Allows to hire one more geek than before</td>
+      </tr>
+    </table>
+    <br>
+    <div id="uprds">Hackers</div>
+    <table>
+      <tr>
+        <th>Upgrade</th>
+        <th>Cost</th>
+        <th>Gains</th>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="OS for hackers" onclick="Uphkr()"></td>
+        <td><div id="uphkrcost">200 hackers</div></td>
+        <td>Hackers produce more money</td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="More hackers" onclick="Moarhkrs()"></td>
+        <td><div id="moarhkrcost">100 scientists</div></td>
+        <td>Allows to hire one more hacker than before</td>
+      </tr>
+    </table>
+    <br>
+    <div id="uprds">Scientists</div>
+    <table>
+      <tr>
+        <th>Upgrade</th>
+        <th>Cost</th>
+        <th>Gains</th>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="OS for scientists" onclick="Upscnst()"></td>
+        <td><div id="upscnstcost">250 scientists</div></td>
+        <td>Scientists produce more money</td>
+      </tr>
+      <tr>
+        <td><input id="button" type="button" value="More scientists" onclick="Moarscnsts()"></td>
+        <td><div id="moarscnstcost">200 scientists</div></td>
+        <td>Allows to hire one more scientist than before</td>
+      </tr>
+    </table>
+    <br>
+  </div>
+</body>
+</html>

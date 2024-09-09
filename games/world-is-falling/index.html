@@ -1,0 +1,465 @@
+<html>
+<head>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    .cf {
+        overflow: hidden;
+        zoom: 1;
+    }
+    .hidden { display: none; }
+    .ta-center{ text-align: center; }
+    body {
+        font-size: 16px;
+        font-family: Arial;
+        color: #777;
+    }
+
+    input {
+        border: 1px solid #CCC;
+        padding: 12px;
+        font-size: 18px;
+        color: #777;
+    }
+
+    .btn {
+        background: #8DBB3C;
+        color: white;
+        bottom: 0;
+        left: 0;
+        border: none;
+        padding: 13px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .btn:hover {
+        opacity: 0.8;
+    }
+
+    h1 {
+        font-size: 100px;
+    }
+
+    .ready-btn {
+        margin: 20px 10px;
+    }
+
+    .screen {
+        position: absolute;
+        width: 650px;
+        left: 50%;
+        margin-left: -325px;
+        //opacity: 0;
+    }
+    .game-box {
+        text-align: center;
+        float: left;
+        width: 450px;
+        margin-bottom: 15px;
+    }
+    .scores-wrap {
+        width: 150px;
+        float: right;
+    }
+
+    .logs {
+        font-size: 12px;
+        padding-left: 14px;
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 16px;
+    }
+
+    .score-row {
+        position: relative;
+        list-style: none;
+        padding: 2px;
+    }
+    .score-row:nth-child(even) {
+        background: #EEE;
+    }   
+
+    .score-row-color-box {
+        position: absolute;
+        width: 13px;
+        height: 19px;
+        right: 2px;
+        top: 2px;
+    }
+    .score-row-me {
+        border: 3px solid #0A8BE7;
+    }
+
+    .join-form {
+        margin-top: 50px;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+    }
+    
+    canvas {
+        border: 1px solid #DDD;
+    }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+<div class="screen  ta-center" id="js-home-screen">
+    <h1>World is Falling</h1>
+    <form action="" id="js-join-form" class="join-form">
+        <input id="js-name" placeholder="Nickname?"/>
+        <input type="submit" class="btn  join-btn" value="JOIN>"/>
+    </form>
+    <div class="footer  ta-align">Game by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></div>
+</div>
+
+<div class="screen  hidden" id="js-game-screen">
+    <div class="cf">
+        <div class="game-box">
+            <canvas id="c" width="450" height="300"></canvas>
+            <br>
+            <small>Any one block will fall randomly. Guess which one, and save yourself. Arrow keys might come handy. <b>Last man standing, WINS</b>.</small>
+        </div>
+
+        <div class="scores-wrap">
+            <h3>LEADERBOARD</h3>
+            <ul id="js-scores" class="scores"></ul>
+        </div>
+    </div>
+
+    <h3>CHAT</h3>
+    <form action="" id="js-chat-form">
+        <input id="js-msg" placeholder="Chat message here..."/>
+    </form>
+    <ul id="js-responses" class="logs"></ul>
+</div>
+
+<script>
+    var socket = null,
+        el_responses = document.querySelector('#js-responses'),
+        el_scores = document.querySelector('#js-scores'),
+        el_send_btn = document.querySelector('#js-send-btn'),
+        el_chat_form = document.querySelector('#js-chat-form'),
+        el_join_form = document.querySelector('#js-join-form'),
+        el_ready_btn =  document.querySelector('#js-ready-btn'),
+        el_msg = document.querySelector('#js-msg'),
+        el_name = document.querySelector('#js-name'),
+        el_home_screen = document.querySelector('#js-home-screen'),
+        el_game_screen = document.querySelector('#js-game-screen'),
+        //name = Array.apply(null, new Array(4)).map(function(){return String.fromCharCode(~~(Math.random()*26) + 97); }).join('');
+        name = '';
+
+
+    function updateScores (players) {
+        var html = '';
+        forEvery (players, function (p) {
+            html += '<li class="score-row' + (p.id === id ? ' score-row-me ' : '') + '">' + p.name + ' (<b>' + p.score + '</b>)<div style="background:' + p.color + '" class="score-row-color-box"></div></li>';
+        });
+        el_scores.innerHTML = html;
+    }
+    
+    function log (data) {
+        var li = '<li>' + data + '</li>';
+        el_responses.innerHTML = li + el_responses.innerHTML;
+    }
+
+    el_chat_form.addEventListener('submit', function (e) {
+        var msg = el_msg.value;
+        el_msg.value = '';
+        socket.emit('msg', msg);
+        log('<b>You</b>: ' + msg);
+        e.preventDefault();
+    });
+
+    /*el_ready_btn.addEventListener('click', function (e) {
+        if (state === states.READY) return;
+        state = states.READY;
+        socket.emit('msg', 'ready');
+        log('READY!');
+    });*/
+
+    el_join_form.addEventListener('submit', function (e) {
+        name = el_name.value;
+        if (name) {
+            socket = io.connect('/');
+            initSocketListeners();
+        }
+        e.preventDefault();
+    });
+
+    function initSocketListeners () {
+        socket.on('welcome', function (data) {
+            id = data.id;
+            log(data.msg);
+            init();
+        });
+        
+        socket.on('msg', function (data) {
+            log(data);
+        });
+        
+        socket.on('remove-player', function (data) {
+            delete players[data.id];
+            log('<b>' + data.name + '</b> left.');
+        });
+         
+        socket.on('insert-player', function (data) {
+            insertPlayer(data);
+            log('<b>' + data.name + '</b> joined.');
+        });
+
+        socket.on('insert-players', function (players) {
+            for (var i = 0, len = players.length; i < len; i++) {
+                insertPlayer(players[i]);
+            }
+            updateScores(players);
+        });
+
+        socket.on('level-start', function (msg) {
+            createLevel(msg.data);
+            state = states.PLAYING;
+        });
+
+        
+        socket.on('level-end', function (msg) {
+            state = states.READY;
+            log(msg.won ? 'Well done.' : 'You LOSE. Badluck!');
+            forEvery (msg.fall, function (i) {
+                blocks[i].is_on_ground = 0;
+            });
+            updateScores(msg.players);
+        });
+        
+        socket.on('update-players', function (data) {
+            for (var i = 0, len = data.length; i < len; i++) {
+                // do not update myself, for now.
+                if (data[i].id === id) continue;
+                var player = players[data[i].id];
+                if (!player) continue;
+                player.x = data[i].x;
+                player.y = data[i].y;
+                //player.speed_x = data[i].speed_x;
+                //player.speed_y = data[i].speed_y;
+                //player.speed_is_on_ground = data[i].is_on_ground;
+            };
+        });
+
+        socket.on('won', function (data) {
+            log('Awesome, YOU WON THE GAME!!!');
+        });
+    }
+
+    /* Game code */
+    var w = c.width,
+        h = c.height,
+        G = 1550,
+        ground_y = h,
+        last_time = Date.now(),
+        last_emit_time = Date.now(),
+        ctx = c.getContext('2d'),
+        players = {},
+        blocks = [],
+        me = null,
+        id = 0,
+        updateInterval = 1000/10,
+        states = {
+            PLAYING: 0,
+            READY: 1
+        },
+        state = states.PLAYING,
+        shake_timer = 0,
+        max_shake = 2;
+
+    function createLevel (splits) {
+        var start_x = 0,
+            end_x = 0
+            block = null;
+        splits = splits.concat(1);
+        blocks = [];
+
+        for (var i = 0, len = splits.length; i < len; i++) {
+            end_x = ~~(splits[i] * w);
+            block = createChar();
+            block.x = start_x;
+            block.w = end_x - start_x;
+            block.h = 50;
+            block.color = generateRandomColor();
+            block.is_on_ground = 1;
+            blocks.push(block);
+            start_x = end_x;
+        }
+    }
+
+    function createChar () {
+        return {
+            x: 0,
+            y: 0,
+            w: 10,
+            h: 10,
+            color: '#000',
+            speed_x: 0,
+            speed_y: 0,
+            is_on_ground: 0,
+            jump: function () {
+                this.speed_y = -550;
+                this.is_on_ground = 0;
+            },
+            update: function (dt) {
+                if (!this.is_on_ground) {
+                    this.speed_y += G * dt;
+                }
+                this.x += this.speed_x * dt;
+                this.y += this.speed_y * dt;
+
+                if (this.y + this.h > ground_y) {
+                    this.y = ground_y - this.h;
+                    this.is_on_ground = 1;
+                    this.speed_y = 0;
+                    shake_timer = 0.3;
+                }
+                
+                return this;
+            },
+            draw: function () {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.rect(this.x, this.y, this.w, this.h);
+                ctx.fill();
+
+                if (this.name) {
+                    ctx.font = '8pt Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(this.name === name ? 'YOU' : this.name, this.x, this.y - 10);
+                }
+
+                return this;
+            }
+        };
+    }
+
+    function insertPlayer (data) {
+        var player = createChar();
+        player.x = data.x;
+        player.y = data.y;
+        player.color = data.color;
+        player.id = data.id;
+        player.name = data.name;
+        players[data.id] = player;
+        return player;
+    }
+
+    function animate () {
+        var current_time = Date.now(),
+            dt = (current_time - last_time) / 1000;
+        last_time = current_time;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.save();
+        if (shake_timer) {
+            (shake_timer -= dt) > 0 && ctx.translate(Math.random() * (max_shake<<1) - max_shake, Math.random() * (max_shake<<1) - max_shake);
+        }
+        else {
+            shake_timer = 0
+        }
+        forEvery (players, function (player) {
+            player && player.update(dt).draw();
+        });
+
+        forEvery (blocks, function (block) {
+            block && block.update(dt).draw();
+        });
+        ctx.restore();
+
+        // is it time to publish data
+        if (Date.now() - last_emit_time > updateInterval) {
+            socket.emit('update-data', {
+                x: me.x,
+                y: me.y,
+                speed_x: me.speed_x,
+                speed_y: me.speed_y,
+                is_on_groud: me.is_on_ground
+            });
+            last_emit_time = Date.now();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    function initListeners () {
+        document.addEventListener('keyup', function (e) {
+            if (e.which === 38 && me.is_on_ground) {
+                me.jump();
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.which === 39) {
+                (state != states.READY) && (me.x += me.w);
+            }
+            else if (e.which === 37) {
+                (state != states.READY) && (me.x -= me.w);
+            }
+        });
+    }
+    
+    function generateRandomColor () {
+        return '#' + (~~(Math.random()*255) + (~~(Math.random()*255)<<8) + (~~(Math.random()*255)<<16) + (1<<24)).toString(16).slice(1);
+    }
+
+    function forEvery (obj, cb) {
+        // Its an array
+        if (obj instanceof Array) {
+            for (var i = 0, len = obj.length; i < len; i++) {
+                cb.call(this, obj[i]);
+            }
+            return;
+        }
+        // otherwise, loop object
+        for (var i in obj) {
+            cb.call(this, obj[i]);
+        }
+    }
+
+    function init () {
+        me = insertPlayer({
+            id: id,
+            x: ~~(Math.random() * 300) + 100,
+            y: 25,
+            color: generateRandomColor(),
+            name: name
+        });
+
+        // notify server about our data
+        socket.emit('set-data', {
+            id: me.id,
+            x: me.x,
+            y: me.y,
+            name: name,
+            color: me.color
+        });
+
+        initListeners();
+        hide(el_home_screen);
+        show(el_game_screen);
+        animate();
+    }
+
+    function show (el) {
+        el.className = el.className.replace(/hidden/g, '');
+    }
+
+    function hide (el) {
+        el.className = el.className + ' hidden ';
+    }
+
+</script>
+</body>
+</html>

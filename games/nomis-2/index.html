@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+</head>
+<body>
+    <script src="js/main.min.js"></script>
+    <div style="text-align: center;">
+        <canvas id="canvas" width="800" height="600" style="border:none;"></canvas>
+    </div>
+</body>
+</html>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var game = new Game(context, canvas.width, canvas.height);
+    game.start();
+</script>

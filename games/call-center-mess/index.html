@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS13K</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="start-screen">
+        <p>
+            You are the call center officer for the biggest <b>Internet Service Provider</b>. 
+            The internet has gone <b>OFFLINE!</b>. Pick up as many phones as I can to help 
+            angry customers who can not reach their social media.
+        </p>
+        <h3>
+            Click the button to start
+        </h3>
+        <br>
+        <button>Start Game</button>
+    </div>
+    <div id="finish-screen" class="hide">
+        <p>
+            Refresh the page to restart!
+        </p>
+        <p>
+            <button onClick="window.location.reload()">Restart</button>
+        </p>
+    </div>
+    <div id="score"></div>
+    <script src="game.bundle.js"></script>
+</body>
+</html>

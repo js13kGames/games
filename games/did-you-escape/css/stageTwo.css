@@ -1,0 +1,208 @@
+/*background*/
+html, body{
+  background: rgb(40, 33, 37);
+  margin-top: 15px;
+}
+/*background*/
+/*gameWindow*/
+.gameArea{
+  height: 640px;
+  width: 780px;
+  background: #645e65;
+  display: block;
+  margin: auto;
+  position: relative;
+  box-shadow: 0px 4px 10px 0px rgba(75,195,60,0.4);
+}
+/*gameWindow*/
+/*desktop*/
+.desktop{
+  background: rgb(27, 100, 176);
+  display: block;
+  position: relative;
+  height: 640px;
+  width: 780px;
+}
+/*desktop*/
+/*icon work*/
+figure{
+  margin: 5px 10px;
+}
+.myPc{
+  padding-top: 30px;
+  padding-left: 30px;
+  display: inline-block;
+  position: relative;
+}
+.myPc img{
+  width: 50px;
+  padding-left: 5px;
+}
+.myPc a, .myRouter a, .myBin a{
+  text-decoration: none;
+  color: white;
+  font-family: monospace;
+  padding: 0;
+  margin: 0;
+}
+.myPc a:hover, .myRouter a:hover, .myBin a:hover{
+  cursor: pointer;
+}
+.myRouter, .myBin{
+  padding-top: 30px;
+  padding-left: 25px;
+  display: inline-block;
+  position: relative;
+}
+.myRouter img{
+  padding-left: 12px;
+  width: 45px;
+}
+.myBin img{
+  width: 40px;
+  padding-left: 12px;
+}
+.emptySpace{
+  display: inline-block;
+  width: 107px;
+  height: 99.2px;
+}
+/*icon work*/
+/*toDo list*/
+.toDo{
+  margin-top: 60px;
+  font-family: monospace;
+  color: white;
+  background: rgb(233, 169, 54);
+  width: 250px;
+  padding: 5px 0px;
+  margin-left: 25px;
+  box-shadow: 5px 2px 5px rgb(144, 138, 127);
+}
+.toDo p{
+  text-decoration: underline;
+  font-variant: small-caps;
+  font-size: 15px;
+}
+.toDo ul{
+  list-style-type: none;
+  padding-left: 20px;
+}
+.selfDistruct{
+  display: inline-block;
+  cursor: pointer;
+  font-family: monospace;
+  padding: 5px;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+/*toDo list*/
+/*clock work*/
+.watchu{
+  background: rgb(144, 138, 127);
+  padding: 5px 0px;
+  margin-top: 28px;
+  text-align: right;
+}
+.watchu span{
+  margin: 0px 30px;
+  font-family: monospace;
+  color: white;
+  font-size: 17px;
+}
+/*clock work*/
+/*countdown clock work*/
+#clockdiv{
+  margin-left: 570px;
+  margin-top: 121px;
+	display: inline-block;
+  font-family: monospace;
+  color: white;
+  font-size: 17px;
+  background: rgb(233, 169, 54);
+  padding: 5px 10px;
+}
+#clockdiv > div{
+	display: inline-block;
+}
+#clockdiv div > span{
+	display: inline-block;
+  margin: 0px;
+}
+.drawEye{
+  font-size: 25px;
+  color: white;
+  font-family: monospace;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{color: white}
+  50%{color: red}
+  100%{color: white}
+}
+/*countdown clock work*/
+/*clickMenu work*/
+.myPc:hover .clickMenu, .myRouter:hover .clickMenu, .myFolder:hover .clickMenu, .myBin:hover .clickMenu{
+  display: block;
+  position: absolute;
+}
+.clickMenu{
+  width: 85px;
+  display: none;
+  z-index: 1;
+  position: absolute;
+  margin-left: 10px;
+}
+.clickMenu a{
+  padding: 0px 4px;
+  display: block;
+  z-index: 1;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  background: rgb(156, 153, 152);
+}
+.clickMenu a:hover{
+  background: rgb(92, 97, 91);
+}
+.clickMenu .borderOnly{
+  border-bottom: 1px solid black;
+}
+/*clickMenu work*/
+/*routerStageOne*/
+.routerStageOne, .pcStage{
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 500px;
+  height: 400px;
+  top: 120px;
+  left: 200px;
+  border: 2px solid rgb(233, 169, 54);
+}
+.evidenceStage{
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 600px;
+  height: 400px;
+  top: 120px;
+  left: 150px;
+  border: 2px solid rgb(233, 169, 54);
+}
+/*routerStageOne*/
+/*leftSide close program*/
+.leftSide{
+  width: 100%;
+  text-align: right;
+  color: red;
+  font-family: monospace;
+  font-size: 25px;
+  right: 15px;
+  top: 10px;
+  position: absolute;
+  z-index: 1;
+}
+.closingTime a{
+  cursor: pointer;
+}

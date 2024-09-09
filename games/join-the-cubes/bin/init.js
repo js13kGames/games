@@ -1,0 +1,1 @@
+export const canvas=document.getElementById("canvas");export const gl=canvas.getContext("webgl2",{alpha:!1,antialias:!0,powerPreference:"high-performance",preserveDrawingBuffer:!1,depth:!0,desynchronized:!0});

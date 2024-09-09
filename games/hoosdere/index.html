@@ -1,0 +1,228 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><style>html {
+        --animation-pace: 1500ms;
+        --background-color: #05100B;
+        --light-color: #F8F0C5;
+      }
+      html {
+        background: var(--light-color);
+      }
+      html, body {
+        margin: 0px;
+        padding: 0px;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        -moz-user-select: none;
+        user-select: none;
+      }
+      body {
+        background: var(--background-color);
+        color: white;
+        display: flex;
+        justify-content: center;
+        -ms-align-items: center;
+        align-items: center;
+        transition: transform 1s ease 0.1s;
+      }
+      .light {
+        position: relative;
+        width: 100vw;
+        transition: transform 1s ease;
+      }
+      .light > svg {
+        font-size: 15vh;
+        height: 60px;
+        letter-spacing: 60px;
+        position: absolute;
+        top: -25vh;
+        width: 100vw;
+        text-align: center;
+        animation-duration: var(--animation-pace);
+        animation-iteration-count: infinite;
+        animation-delay: var(--animation-pace);
+        animation-name: walking2;
+      }
+      .light > svg:first-child {
+        filter: blur(1px);
+      }
+      .light > svg stop {
+        stop-color: var(--light-color);
+      }
+      .light > svg:last-child {
+        animation-name: walking;
+        height: 75px;
+        margin-top: -8px;
+        fill: var(--background-color);
+      }
+      @keyframes walking {
+        0% {
+          transform: translate(10px, 0);
+        }
+
+        30% {
+          transform: translate(-5px, 10px);
+        }
+
+        50% {
+          transform: translate(-10px, 0);
+        }
+
+        80% {
+          transform: translate(5px, 10px);
+        }
+
+        100% {
+          transform: translate(10px, 0);
+        }
+      }
+      @keyframes walking2 {
+        0% {
+          transform: translate(5px, 0);
+        }
+
+        30% {
+          transform: translate(-2px, 5px);
+        }
+
+        50% {
+          transform: translate(-5px, 0);
+        }
+
+        80% {
+          transform: translate(2px, 5px);
+        }
+
+        100% {
+          transform: translate(5px, 0);
+        }
+      }
+
+      @keyframes hands {
+        0% {
+          transform: translate(15px, 0);
+        }
+
+        30% {
+          transform: translate(-7px, -15px);
+        }
+
+        50% {
+          transform: translate(-15px, 0);
+        }
+
+        80% {
+          transform: translate(7px, -15px);
+        }
+
+        100% {
+          transform: translate(15px, 0);
+        }
+      }
+
+      .hands {
+        position: absolute;
+        bottom: -5%;
+        width: 100%;
+        filter: blur(1px);
+        font-weight: bold;
+        font-family: serif;
+        text-align: center;
+        transition: bottom 0.5s ease-out;
+      }
+      .hands > svg {
+        height: 50vh;
+        display: inline-block;
+        animation-name: hands;
+        animation-duration: var(--animation-pace);
+        animation-iteration-count: infinite;
+        fill: #171b19;
+      }
+      .hands > svg:last-child {
+        margin-left: 16vw;
+        animation-delay: 0.1s;
+      }
+      .status {
+        position: fixed;
+        color: white;
+        top: 0px;
+        left: 0px;
+        padding: 5px;
+        font-family: mono;
+        max-height: 6em;
+        overflow-y: auto;
+        width: 110%;
+        font-size: 0.8em;
+      }
+      canvas.map {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        height: 150px;
+        width: 150px;
+        background: #1b2e17;
+        border-radius: 50%;
+        box-shadow: 0 0 10px 10px #1b2e17;
+      }
+      .overlay {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        top: 0;
+        left: 0;
+        background: black;
+        box-shadow: 0 0 50vh 50px black inset;
+        opacity: 0;
+        z-index: 1;
+        transition: opacity 5s ease-out;
+      }
+      .overlay:before {
+        color: white;
+        font-size: 3em;
+        font-family: Arial, sans;
+        position: fixed;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+      }
+      .overlay.standby {
+        background: black;
+        opacity: 1;
+      }
+      .overlay.standby:before {
+        content: "You woke up in the middle of the forest just in time before they came, attracted by your smell. Get out of here, FAST! You cannot see them but if you're lucky, you might hear where they are coming from.";
+        color: #a2b35e;
+        font-size: 2em;
+        line-height: 2;
+        max-width: 1000px;
+        top: 5vh;
+        left: 5vh;
+        text-align: left;
+        width: 100%;
+        padding: 0px 10vw 0 0;
+        box-sizing: border-box;
+      }
+      .overlay.win {
+        opacity: 1;
+        background: #7db9e8;
+        background: -moz-linear-gradient(top, #7db9e8 0%, #2989d8 32%, #f7e47b 45%, #2989d8 47%, #a1cc3f 49%, #4c6b38 100%);
+        background: -webkit-linear-gradient(top, #7db9e8 0%,#2989d8 32%,#f7e47b 45%,#2989d8 47%,#a1cc3f 49%,#4c6b38 100%);
+        background: linear-gradient(to bottom, #7db9e8 0%,#2989d8 32%,#f7e47b 45%,#2989d8 47%,#a1cc3f 49%,#4c6b38 100%);
+        box-shadow: 0 0 50vh 50px white inset;
+      }
+      .overlay.win:before {
+        content: 'Your are free... for now.';
+        color: white;
+      }
+      .overlay.lose {
+        opacity: 1;
+        background: #dd0412;
+        background: -moz-linear-gradient(top, #dd0412 0%, #8f0222 25%, #3a0018 100%);
+        background: -webkit-linear-gradient(top, #dd0412 0%,#8f0222 25%,#3a0018 100%);
+        background: linear-gradient(to bottom, #dd0412 0%,#8f0222 25%,#3a0018 100%);
+        opacity: 1;
+      }
+      .overlay.lose:before {
+        content: 'They caught you.';
+        font-family: 'serif';
+        color: black;
+      }</style></head><body><div class="overlay standby"></div><div class="light"><svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" height="200" width="380" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 379.99999 200" xmlns:dc="http://purl.org/dc/elements/1.1/"><defs><radialGradient id="radialGradient5335" gradientUnits="userSpaceOnUse" cy="554.06" cx="401.95" gradientTransform="matrix(1.1006 -1.0416e-8 0 .51437 -40.428 269.07)" r="164.05"><stop offset="0"/><stop offset=".17543"/><stop stop-opacity=".23529" offset=".87716"/><stop stop-opacity="0" offset="1"/></radialGradient></defs><g transform="translate(-215.27 -437.5)"><path d="m401.95 466.18c-15.242 1.8289-38.218-1.8187-48.436 7.6893-0.043 7.107-0.29881 14.289 1.7988 20.263 2.3381 7.7217 6.1623 20.888 10.221 30.231 3.7653 6.9717 5.7101 16.892 6.7188 25.455 1.5784 9.5605 4.0584 18.964 4.9492 28.639 11.882 2.6759 27.761 0.1257 41.277 1.1155 8.1089 1.0558 15.578 1.5214 12.817-8.4756-0.67713-14.823 6.5759-28.432 8.8379-42.845 1.5445-6.6674 4.3615-17.209 4.9512-26.226-0.39765-11.244 1.786-23.098-4.4902-32.953-12.792-1.8692-25.714-2.891-38.645-2.8926zm66.441 8.3301c-0.25733 11.765-5.8604 22.598-8.1055 34.297-3.8932 12.173-5.3195 24.426-6.3633 38.891-1.2194 10.984-3.5764 21.58-4.5957 32.535 24.575 0.33628 50.409 2.1172 74.246 0.3457-2.6148-11.848-4.4009-25.621-6.0098-39.598 0.10324-11.859-3.3408-22.977-4.6047-34.47 0.16484-14.164-6.794-24.204-21.555-25.392-7.5797-2.5046-15.259-4.7082-23.012-6.6083zm-154.23 6.0644c-9.0816 0.66251-4.837 12.035-6.9648 17.979-2.0084 14.581-0.67799 29.704-1.0606 44.549 1.105 9.5133 1.9233 19.06 2.8281 27.93 0.0645 8.1107 0.94416 13.075 11.103 10.054 9.6686-2.442 28.318 3.743 32.739-3.8934-0.31029-9.5301-0.85104-19.027-1.6155-28.545-1.6317-3.6524-2.2562-18.781-6.1638-26.758-3.2144-9.8236-8.0595-18.995-13.082-27.932-4.3706-4.2064-11.204-10.465-17.783-13.383zm209.07 13.209c0.97142 10.753 3.1859 21.59 5.6387 33.055 0.97664 11.299 3.6155 21.882 4.9492 33.588 0.72322 6.6152 0.18911 13.355 0.35352 20.025 16.462-1.8175 36.047-2.0991 48.114-15.141 9.5975-13.732-1.5854-30.355-11.688-40.174-13.598-13.36-30.268-23.177-47.368-31.353zm-244.36 0.84571c-22.486 11.448-46.554 25.013-58.459 48.291-6.1435 11.145-0.8049 25.943 11.424 30.014 18.733 7.569 40.366 8.16 59.799 7.998-1.2951-10.158-2.0572-20.402-2.1211-30.76-1.5981-10.906-1.1775-22.171-3.1816-32.881-0.79302-7.7058-2.4345-16.346-7.4609-22.662z" fill="url(#radialGradient5335)"/></g></svg> <svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" height="200" width="380" version="1.1" xmlns:cc="http://creativecommons.org/ns#" viewBox="0 0 379.99999 200" xmlns:dc="http://purl.org/dc/elements/1.1/"><g transform="translate(-215.27 -437.5)"><path d="m-14.85-8.9492v219.91h396.33v-219.91l-396.33 0.0008zm220.67 33.929c2.17-0.036 4.51 0.918 7.7 3.889 0.04 7.107-2.2 13.29-0.3 24.264 0.91 8.722 4.59 17.137 0.53 26.48-3.76 6.972 3.54 24.147 2.53 32.707-1.58 9.56 7.19 19.21 6.3 28.89-11.88 2.67-39.01-0.13-52.52 0.86-8.11 1.06-35.73 1.88-32.97-8.12 0.79-4-0.66-11.14 1.28-11.96 2.4-1.01 3.54-2.57 1.1-13.03-1.55-6.66 4.57-35.417 3.98-44.435 0.4-11.244-1.78-23.097 4.49-32.953 12.79-1.869 25.72-2.891 38.65-2.892 10.48 1.257 14.45-3.619 19.23-3.7zm-72.18 8.53c0.26 11.764-1.89 20.348 0.36 32.047 3.89 12.173-14.57 39.723-13.53 54.183 1.22 10.99-3.85 11.33-2.83 22.29-24.572 0.33-15.59 2.32-39.427 0.55 2.615-11.85 1.401-26.12 3.01-40.1-0.104-11.859-6.911-21.976-5.647-33.47-7.165-23.665 6.796-24.205 21.557-25.393 7.577-2.504 28.757-8.207 36.507-10.107zm106.48 0.064c43.58 6.413 53.09 20.285 55.22 26.229 3.32 15.177 1.15 32.941-3.94 45.297-1.11 9.51-6.17 19.31-7.08 28.18-0.06 8.11-5.69 13.33-15.85 10.31-9.67-2.45-14.07 6.24-18.49-1.4 0.31-9.53-13.4-21.53-12.64-31.04 1.64-3.66-13.24-21.034-9.33-29.011 3.21-9.824 0.31-22.245 5.33-31.182 4.37-4.206 0.2-14.465 6.78-17.383zm-174.82 22.709c-0.972 10.753-0.186 11.59 1.611 23.055-0.976 11.299 1.885 18.381 0.551 30.092-0.723 6.61-0.689 27.1-0.854 33.77-16.462-1.82-48.297-2.35-60.365-15.39-9.5973-13.73 1.5853-30.355 11.688-40.173 13.598-13.361 30.269-23.177 47.369-31.354zm244.36 0.846c22.48 11.448 46.55 25.013 58.46 48.291 6.14 11.15 0.8 25.94-11.43 30.01-18.73 7.57-40.36 8.16-59.8 8 1.3-10.16 8.31-17.9 8.38-28.26 1.59-10.9 1.17-19.919 3.18-30.629 0.79-7.706 3.43-16.346 1.21-27.412z" transform="translate(215.27 437.5)"/></g></svg></div><div class="hands"><svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 299.99999 250"><g transform="translate(-1.6e2 -4.5e2)"><path d="m2.9e2 7e2s16-21 32-38 51-66 51-66 18-6.5 27-12c8.7-6 16-16 24-23 8.7-7.4 28-21 28-21 2.2-1.3 1-6.9-9-7.2-10-0.36-22 9.3-22 9.3-8.7 7.5-12 1.9-11-13 0.38-4.3 0.8-8.8 2.6-16 0 0 3-11 4.5-18 1.5-6.8 5.1-14 6.1-18 0.96-4-0.37-7.6-3.8-8.7s-7.5 2.9-9.3 5.7c-1.7 2.8-6 9.8-7.5 13-1.4 3.6-7.2 25-7.2 25s-3-7.7-3.2-13c-0.18-5.4 1.3-13 2.9-21 1.6-8.5 4.2-14 4.8-18 0.56-4.7 0.048-7.1-2.8-8.5-2.9-1.4-6.7 1.9-7.9 3.7-1.2 1.9-2.1 2.6-4.2 7.9-2.2 5.2-5.1 14-6.1 19-1.1 5.3-3.8 19-5.1 27-1.7-0.91-3.1-3.5-3.5-11l1.3-16s1.3-8.5 1.3-12c0.013-3.9-1.7-6.8-4.4-7-2.7-0.15-5.3 2.3-6.3 4.8-1.1 2.5-2.8 8.8-3.7 14-0.94 5-5.1 34-5.1 34-2.8-5-2.7-12-2.4-18 0.28-6.2 2-11 2-14-0.057-2.9-0.83-4.3-3.2-5.3-2.3-1-5.9 1.5-7.5 7.3s-3 9.3-4.2 22c-0.77 11-4.1 19-4.9 27-0.81 8 0.31 11-3.4 16 0 0-4.8 2.1-7.7 4.3-2.8 2.1-4 9.2-6.9 12-2.9 2.9-1.6e2 1.3e2 -1.6e2 1.3e2z"/></g></svg><svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 299.99999 250"><g transform="translate(-1.6e2 -4.5e2)"><path d="m3.2e2 7e2s-16-21-32-38-51-66-51-66-18-6.5-27-12c-8.7-6-16-16-24-23-8.7-7.4-28-21-28-21-2.2-1.3-1-6.9 9-7.2 10-0.36 22 9.3 22 9.3 8.7 7.5 12 1.9 11-13-0.38-4.3-0.8-8.8-2.6-16 0 0-3-11-4.5-18-1.5-6.8-5.1-14-6.1-18-0.96-4 0.37-7.6 3.8-8.7s7.5 2.9 9.3 5.7c1.7 2.8 6 9.8 7.5 13 1.4 3.6 7.2 25 7.2 25s3-7.7 3.2-13c0.18-5.4-1.3-13-2.9-21-1.6-8.5-4.2-14-4.8-18-0.56-4.7-0.048-7.1 2.8-8.5 2.9-1.4 6.7 1.9 7.9 3.7 1.2 1.9 2.1 2.6 4.2 7.9 2.2 5.2 5.1 14 6.1 19 1.1 5.3 3.8 19 5.1 27 1.7-0.91 3.1-3.5 3.5-11l-1.3-16s-1.3-8.5-1.3-12c-0.013-3.9 1.7-6.8 4.4-7 2.7-0.15 5.3 2.3 6.3 4.8 1.1 2.5 2.8 8.8 3.7 14 0.94 5 5.1 34 5.1 34 2.8-5 2.7-12 2.4-18-0.28-6.2-2-11-2-14 0.057-2.9 0.83-4.3 3.2-5.3 2.3-1 5.9 1.5 7.5 7.3s3 9.3 4.2 22c0.77 11 4.1 19 4.9 27 0.81 8-0.31 11 3.4 16 0 0 4.8 2.1 7.7 4.3 2.8 2.1 4 9.2 6.9 12 2.9 2.9 1.6e2 1.3e2 1.6e2 1.3e2z"/></g></svg></div><div class="status"></div><canvas class="map" height="150" width="150"></canvas><script>"use strict";function SfxrParams(){this.setSettings=function(t){for(var e=0;24>e;e++)this[String.fromCharCode(97+e)]=t[e]||0;this.c<.01&&(this.c=.01);var n=this.b+this.c+this.e;if(.18>n){var a=.18/n;this.b*=a,this.c*=a,this.e*=a}}}function SfxrSynth(){this.a=new SfxrParams;var t,e,n,a,i,o,s,r,d,c,u,h;this.reset=function(){var t=this.a;a=100/(t.f*t.f+.001),i=100/(t.g*t.g+.001),o=1-t.h*t.h*t.h*.01,s=-t.i*t.i*t.i*1e-6,t.a||(u=.5-t.n/2,h=5e-5*-t.o),r=1+t.l*t.l*(t.l>0?-.9:10),d=0,c=1==t.m?0:(1-t.m)*(1-t.m)*2e4+32},this.totalReset=function(){this.reset();var a=this.a;return t=a.b*a.b*1e5,e=a.c*a.c*1e5,n=a.e*a.e*1e5+12,3*((t+e+n)/3|0)},this.synthWave=function(l,p){var y=this.a,f=1024,g=1!=y.s||y.v,m=y.v*y.v*.1,v=1+3e-4*y.w,w=y.s*y.s*y.s*.1,S=1+1e-4*y.t,b=1!=y.s,P=y.x*y.x,k=y.g,x=y.q||y.r,B=y.r*y.r*y.r*.2,M=y.q*y.q*(y.q<0?-1020:1020),R=y.p?32+((1-y.p)*(1-y.p)*2e4|0):0,L=y.d,C=y.j/2,q=y.k*y.k*.01,A=y.a,I=t,T=1/t,E=1/e,H=1/n,U=5/(1+y.u*y.u*20)*(.01+w);U>.8&&(U=.8),U=1-U;var D,N,W,j,z,O,F,X=!1,Y=0,_=0,G=0,J=0,K=0,Q=0,V=0,Z=0,$=0,tt=0,et=new Array(f),nt=new Array(32);for(F=et.length;F--;)et[F]=0;for(F=nt.length;F--;)nt[F]=2*Math.random()-1;for(F=0;p>F;F++){if(X)return F;if(R&&++$>=R&&($=0,this.reset()),c&&++d>=c&&(c=0,a*=r),o+=s,(a*=o)>i&&(a=i,k>0&&(X=!0)),N=a,C>0&&(tt+=q,N*=1+Math.sin(tt)*C),8>(N|=0)&&(N=8),A||(0>(u+=h)?u=0:u>.5&&(u=.5)),++_>I)switch(_=0,++Y){case 1:I=e;break;case 2:I=n}switch(Y){case 0:G=_*T;break;case 1:G=1+2*(1-_*E)*L;break;case 2:G=1-_*H;break;case 3:G=0,X=!0}x&&(M+=B,0>(W=0|M)?W=-W:W>f-1&&(W=f-1)),g&&v&&(1e-5>(m*=v)?m=1e-5:m>.1&&(m=.1)),O=0;for(var at=8;at--;){if(++V>=N&&(V%=N,3==A))for(var it=nt.length;it--;)nt[it]=2*Math.random()-1;switch(A){case 0:z=u>V/N?.5:-.5;break;case 1:z=1-V/N*2;break;case 2:z=.225*((0>(z=1.27323954*(j=6.28318531*((j=V/N)>.5?j-1:j))+.405284735*j*j*(0>j?1:-1))?-1:1)*z*z-z)+z;break;case 3:z=nt[Math.abs(32*V/N|0)]}g&&(D=Q,0>(w*=S)?w=0:w>.1&&(w=.1),b?(K+=(z-Q)*w,K*=U):(Q=z,K=0),Q+=K,J+=Q-D,J*=1-m,z=J),x&&(et[Z%f]=z,z+=et[(Z-W+f)%f],Z++),O+=z}O*=.125*G*P,l[F]=O>=1?32767:-1>=O?-32768:32767*O|0}return p}}function Scheduler(){var t=this;this.s=[],this.pace=750,this.init=function(){t.interval=window.setInterval(function(){t.s.map(function(t){return t()})},t.pace)},this.add=function(e){t.s.push(e)},this.setPace=function(e){e<=0&&(clearInterval(t.interval),am.setAnimationSpeed(0),t.pace=99999999,t.s=[],bm.beasts.map(function(t){return t.stop()}),sb.add("The END")),e!==t.pace&&(t.pace=e,clearInterval(t.interval),t.init(),sb.add("Pace set to "+e),am.setAnimationSpeed(2*t.pace+"ms"))}}function AnimationManager(){var t=this;this.bkgStep=150,this.bkgPosition=0,this.setAnimationSpeed=function(t){document.body.style.setProperty("--animation-pace",t)},this.updateLight=function(){var e="scale("+(t.isRunning?1.3:1)+") translateX("+t.bkgPosition+"px)";t.getLight().style.setProperty("transform",e)},this.stopRunning=function(){sch.setPace(750),t.isRunning=!1,t.updateLight(),t.getHands().style.setProperty("bottom","-5%")},this.startRunning=function(){sch.setPace(350),t.isRunning=!0,t.updateLight(),t.getHands().style.setProperty("bottom","-25%")},this.updateDirection=function(){t.updateLight()},this.setBkgPosition=function(e){t.bkgPosition+=e},this.moveRight=function(){t.setBkgPosition(-t.bkgStep),map.movePlayerRight()},this.moveLeft=function(){t.setBkgPosition(t.bkgStep),map.movePlayerLeft()},this.getLight=function(){return t.light||(t.light=document.querySelector(".light"))},this.getHands=function(){return t.hands||(t.hands=document.querySelector(".hands"))};var e={};window.onkeydown=function(t){e[t.keyCode]=!0},window.onkeyup=function(t){delete e[t.keyCode]};sch.add(function(){var n=!1;(e[68]||e[39])&&(t.moveRight(),n=!0),(e[65]||e[37])&&(t.moveLeft(),n=!0),n&&((map.player.dir>2*Math.PI||map.player.dir<0)&&(t.getLight().classList.remove("light"),t.setBkgPosition(-2*t.bkgPosition),t.updateDirection(),sb.add("Wraped around")),t.getLight().classList.add("light"),t.updateDirection(),sb.add("Direction: "+map.player.dir.toFixed(1)+"rad"))})}function StatusBar(){var t=this;this.getStatusBar=function(){return t.statusBar||(t.statusBar=document.querySelector(".status"))},this.add=function(e){if(window.location.host.includes(":8013")){var n=new Date;t.getStatusBar().innerHTML+=n.getHours()+":"+n.getMinutes()+":"+n.getSeconds()+" "+e+" <br/>",t.getStatusBar().scrollTop=t.getStatusBar().scrollHeight}},this.add("game started"),this.add("press [w] to sprint"),this.add("[<][>] or [a][d] to move")}function playSound(t,e){try{var n=jsfxr(t),a=new window.Audio;a.addEventListener("error",function(t){console.error(a.error)},!1),a.src=n;var i=new(window.AudioContext||window.webkitAudioContext),o=i.createMediaElementSource(a),s=i.createStereoPanner();s.pan.value=e,o.connect(s),s.connect(i.destination),a.play(),a.addEventListener("ended",function(t){url.revokeObjectURL(n)},!1)}catch(t){console.log(t.message)}}function playString(t){for(var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:0,n=t.split(","),a=[],i=0;i<n.length;i++)a[i]=parseFloat(n[i]);playSound(a,e)}function startNewBackgroundSound(){var t=2*Math.random()-1;playString(background[parseInt(Math.random()*background.length)],t),backgroundSemaphore=parseInt(5*Math.random())}function playStepSound(){isRunning?playString(fastSteps[parseInt(3*Math.random())],footSideBalance):playString(steps[parseInt(3*Math.random())],footSideBalance),footSideBalance=-footSideBalance}function SoundManager(){this.playBeastSound=function(t,e){var n=2*t;playString((e?beast2:beast1)[parseInt(3*Math.random())],n)},sch.add(function(){playStepSound()}),sch.add(function(){backgroundSemaphore--<=0&&startNewBackgroundSound()}),document.body.onkeydown=function(t){87===t.which&&(isRunning=!0,am.startRunning())},document.body.onkeyup=function(t){87===t.which&&(isRunning=!1,am.stopRunning())}}function Beast(){var t=this;this.init=function(){t.x=Math.random()*window.mapWidth,t.y=Math.random()*window.mapHeight,t.soundRadius=0,t.dir=0,window.setTimeout(t.playSound,5e3*Math.random())},this.stop=function(){t.stopped=!0},this.playSound=function(){sm.playBeastSound(t.dir),t.soundRadius=5,t.stopped||window.setTimeout(t.playSound,1e4*Math.random())},this.init()}function BeastManager(){var t=this;this.beasts=[],this.create=function(){var e=new Beast;t.beasts.push(e)},this.getBeasts=function(){return t.beasts},this.updateBeasts=function(){t.beasts.map(map.updateBeastPos)},this.init=function(){for(var e=BEAST_COUNT;e--;)t.create();sch.add(t.updateBeasts)}}function Map(){function t(t,e,n){var a=e.x-t.x,i=e.y-t.y;return Math.sqrt(Math.pow(a,2)+Math.pow(i,2))}function e(t,e,n,a){var i=arguments.length>4&&void 0!==arguments[4]?arguments[4]:1,o=!(arguments.length>5&&void 0!==arguments[5])||arguments[5];t.beginPath(),t.fillStyle=e,t.strokeStyle=e,t.arc(n,a,i,0,2*Math.PI,!0),o&&t.fill(),t.stroke()}var n=this;this.player={x:75,y:140,dir:Math.PI},this.exit={x:75,y:5},this.gameRunning=!0,this.movePlayerRight=function(){n.player.dir-=rotationStepSize},this.movePlayerLeft=function(){n.player.dir+=rotationStepSize},this.getCanvas=function(){return n.canvas||document.querySelector("canvas.map")};this.updatePlayerPos=function(){var t=n.player.dir,e=2*Math.sin(t),a=2*Math.cos(t);n.player.x+=e,n.player.y+=a,am.setBkgPosition(-e*am.bkgStep)};this.updateBeastPos=function(t){var e=Math.atan((t.y-n.player.y)/(t.x-n.player.x));n.player.x>t.x&&(e+=Math.PI);var a=1*Math.cos(e),i=1*Math.sin(e);return t.x-=a,t.y-=i,t.dir=n.player.dir-e,t};this.detectBeastPlayerCollision=function(){bm.getBeasts().map(function(e){t(e,n.player)<5&&(sb.add("They caught you"),n.gameRunning=!1,sm.playBeastSound(0,!0),document.querySelector(".overlay").style.removeProperty("opacity"),document.querySelector(".overlay").classList.add("lose"),sch.setPace(0))})};this.detectExitPlayerCollision=function(){var e=t(n.exit,n.player);e<5?(sb.add("You are free... for now"),n.gameRunning=!1,document.querySelector(".overlay").style.removeProperty("opacity"),document.querySelector(".overlay").classList.add("win"),sch.setPace(0)):n.gameRunning&&document.querySelector(".overlay").style.setProperty("opacity",(150-e)/600)},this.clearCanvas=function(t){t.clearRect(0,0,150,150)},this.draw=function(){var t=n.getCanvas().getContext("2d");n.clearCanvas(t),e(t,"white",n.player.x,n.player.y),e(t,"yellow",n.exit.x,n.exit.y),bm.getBeasts().map(function(n){n.soundRadius>0&&e(t,"red",n.x,n.y,n.soundRadius--,!1)})},this.init=function(){var t=n.getCanvas().getContext("2d");e(t,"white",n.player.x,n.player.y),e(t,"yellow",n.exit.x,n.exit.y),sch.add(n.updatePlayerPos),sch.add(n.draw),sch.add(n.detectBeastPlayerCollision),sch.add(n.detectExitPlayerCollision)}}var synth=new SfxrSynth;window.jsfxr=function(t){synth.a.setSettings(t);var e=synth.totalReset(),n=new Uint8Array(4*((e+1)/2|0)+44),a=2*synth.synthWave(new Uint16Array(n.buffer,44),e),i=new Uint32Array(n.buffer,0,44);i[0]=1179011410,i[1]=a+36,i[2]=1163280727,i[3]=544501094,i[4]=16,i[5]=65537,i[6]=44100,i[7]=88200,i[8]=1048578,i[9]=1635017060,i[10]=a,a+=44;for(var o=0,s="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",r="data:audio/wav;base64,";a>o;o+=3){var d=n[o]<<16|n[o+1]<<8|n[o+2];r+=s[d>>18]+s[d>>12&63]+s[d>>6&63]+s[63&d]}return r},window.sch=new Scheduler,document.body.onclick=function(){window.setTimeout(function(){sch.init(),bm.init(),map.init(),document.querySelector(".overlay").classList.remove("standby")},500),delete document.body.onClick},window.am=new AnimationManager,window.sb=new StatusBar;var steps=["3,0.29,0.01,,0.25,0.5409,,0.5205,-0.1883,0.2219,,0.0382,0.1761,0.0054,0.0915,0.1099,-0.1205,-0.0348,0.9878,0.8539,0.232,0.0817,0.0354,0.32","3,0.26,0.0401,,0.26,0.5874,0.0841,0.6539,-0.1804,0.8442,0.0943,0.0593,0.2596,0.0133,0.0461,0.1529,-0.1225,-0.066,1,0.8587,0.2421,,0.0231,0.321","3,0.27,0.0401,,0.33,0.5874,0.0841,0.6539,-0.1804,0.8442,0.7,0.0593,0.2596,0.0133,0.0461,,-0.1225,-0.066,1,0.8587,0.2421,,0.0231,0.321"],fastSteps=["3,0.07,0.07,,0.4,0.5409,,0.5205,-0.1883,0.2219,,0.0382,0.1761,0.0054,0.0915,0.1099,-0.1205,-0.0348,0.9878,0.8539,0.232,0.0817,0.0354,0.32","3,0.12,0.04,,0.27,0.5409,,0.5017,-0.2135,0.2219,,0.0382,0.2067,0.041,0.1401,0.1099,-0.1205,-0.0348,0.9878,0.8505,0.2105,0.081,0.026,0.32","3,0.1507,0.0318,0.0486,0.27,0.5231,0.0137,0.4671,-0.1965,0.2835,,0.0225,0.2067,0.0286,0.1401,0.1099,-0.1237,0.0103,0.9878,0.8837,0.2591,0.0391,0.0469,0.32"],url=window.URL||window.webkitURL,background=["3,1,1,,1,0.2,,0.6539,-0.1804,0.8442,0.7,1,0.88,0.0133,0.0461,,0.1999,0.1,0.79,0.08,0.2421,,0.0231,0.05","3,0.9993,1,,1,0.2068,0.0241,1,-0.1804,,,-1,,0.0133,0.0865,,0.04,0.02,0.69,-0.02,0.5,,0.0231,0.05","3,0.77,0.01,,0.81,0.2,,0.6539,-0.1804,0.8442,,-1,0.88,0.0133,0.0461,,0.1999,0.1,0.79,0.08,0.2421,,0.0231,0.05"],backgroundSemaphore=0,beast1=["3,0.3303,0.2855,0.0407,0.537,0.5074,,0.0307,,,0.1724,-0.8984,0.8862,,-0.8551,-0.3079,0.4369,-0.0885,0.1191,-0.0096,0.6318,0.0001,0.0263,0.55","3,0.2855,0.2792,0.0576,0.4807,0.4709,,0.0228,0.0457,,0.1089,-0.9107,,,-0.7935,0.0462,0.4317,-0.0991,0.1503,0.0368,0.6059,0.0001,0.0263,0.55","3,0.3303,0.2792,0.08,0.4915,0.4715,,0.0307,-0.0015,,0.1248,-0.8679,,,-0.8111,,0.4369,-0.0991,0.1503,-0.0135,0.6318,0.0001,0.0263,0.55"],beast2=["3,0.57,0.51,1,0.39,1,1,0.04,0.0597,0.1421,0.0675,-1,0.0173,0.0165,-0.7684,0.02,0.4729,-0.0726,0.61,0.12,0.6819,0.0418,0.0425,0.28","3,0.5328,0.4756,0.51,0.4342,1,0.9057,-0.0354,0.0597,0.147,0.0966,-0.9694,,0.0603,-0.7362,0.0068,0.4729,-0.0726,0.87,0.079,0.1,,-1,0.28","3,0.1227,0.6897,0.2757,0.6204,0.5092,,0.0706,0.0055,0.6805,0.4902,0.89,0.9514,-0.1546,,,-0.3972,0.0501,0.6609,-0.0217,0.015,0.0826,-0.0207,0.29"],footSideBalance=.5,isRunning=!1;window.sm=new SoundManager;var BEAST_COUNT=6;window.bm=new BeastManager,window.mapHeight=150,window.mapWidth=150;var rotationStepSize=Math.PI/24;window.map=new Map;</script></body></html>

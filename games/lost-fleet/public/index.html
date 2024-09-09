@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Lost Fleet</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+}
+.stat-cont {
+  margin-top: 4px;
+}
+.stat {
+  height: 2px;
+  background: grey;
+  margin-top: 2px
+}
+body {
+  cursor: default;
+  margin: 0;
+  background-color: #07002B;
+  user-select: none;
+  color: white;
+}
+.selected {
+  color: #57BEFF;
+}
+
+.selectable:hover {
+  color: #57BEFF;
+}
+
+table {
+  width: 100%;
+  border: none;
+  border-spacing: 0;
+}
+
+ul {
+  list-style-type: circle;
+  padding-left: 1em;
+}
+
+canvas {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+#info {
+  background-color: #312769;
+  padding: 5px;
+  position: absolute;
+  right: 1em;
+  bottom: 1em;
+  width: 20em;
+  color: #eee;
+}
+button, input {
+  color: #57BEFF;
+  border: 2px solid #57BEFF;
+  text-align: center;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px;
+}
+button:active {
+  color: #278DCC;
+  border-color: #278DCC;
+}
+#join > span {
+  white-space: nowrap;
+}
+#join, #room {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 30vh;
+}
+
+.labelled_input {
+  display: flex;
+  align-items: center;
+}
+
+.labelled_input > label {
+  flex: none;
+  margin-right: 5px;
+}
+
+.labelled_input > input {
+  flex: auto;
+  min-width: 0;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  border: none;
+  margin: 0;
+}
+input[type=range]::-moz-range-thumb {
+  background: #278DCC;
+  border: none;
+  width: 0.2em;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #278DCC;
+  height: 1em;
+  margin-top: -0.5em;
+  width: 0.2em;
+  border-radius: 0.1em;
+}
+input[type=range]::-moz-range-track {
+  background: gray;
+  height: 0.15em;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  background: gray;
+  height: 0.15em;
+}
+</style>
+  </head>
+  <body id="q">
+    <div id="join">
+      <span class="labelled_input">
+        <label for="game_name">Room ID:</label><input type="text" id="game_name">
+      </span>
+      <span class="labelled_input">
+        <label for="username">Username:</label><input type="text" id="username">
+      </span>
+      <button id="join_game">Join Game</button>
+      <div id="instructions">
+# Lost Fleet
+
+You are in command of a fleet of ships stranded in a hostile sector. With no backup
+available, you must gather resources from asteroids to build the strength of the fleet
+so it can defend itself in the event of encounters with hostile ships.
+
+Your mission is to ensure the safety of the fleet while eliminating all threats in the area.
+
+## Creating a game
+
+To get started in Lost Fleet, you and your friends (optional) should start a room by entering
+the same room ID. Once you have all joined, hit _Start Game_ to begin.
+
+## Controls
+
+Control your viewport using WASD, select units with left-click (hold shift or click and drag for multiple), command the selected
+units to move/ attack/ create/ mine with right-click.
+
+Pressing *E* will select *e*verything, and *space* will move the view to focus on the
+currently selected unit.
+
+      </div>
+
+    </div>
+    <div id="room">
+      <div id="room_name"></div>
+      <ul id="players"></ul>
+      <button id="start">Start</button>
+    </div>
+    <div id="game" style="display: none">
+      <canvas id="far_stars"></canvas>
+      <canvas id="mid_stars"></canvas>
+      <canvas id="near_stars"></canvas>
+      <canvas id="c"></canvas>
+      <div id="info">
+        <div id="selected"></div>
+        <div id="pcks"></div>
+        <button id="create">Create (cost <span id="cost"></span> / <span id="cap"></span>)</button>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/shared.js"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+	<head>
+		<title>JS13k</title>
+		<meta charset="UTF-8">
+	</head>
+	<body onkeydown="kPressed(event)" >
+		<div style="text-align: center;">
+			<canvas id="canvas" width=400 height=400 style="border:1px solid #000000;"></canvas>
+		</div>
+		<button onclick="toggleMusic()">Turn Music on/off</button><br/><br/>
+		<button onclick="playTitle()">Title</button>
+		<button onclick="playMaze()">Maze</button>
+		<button onclick="playBattle()">Battle</button>
+		<button onclick="playVictory()">Victory</button>
+		<button onclick="playBoss()">Boss</button>
+		<button onclick="playShop()">Shop</button>
+		<button onclick="playLose()">Game Over</button><br/><br/>
+		<a href="https://www.youtube.com/watch?v=zQGI-_L9OHA">Music Source</a>
+		<script src="TinyMusic.min.js"></script>
+		<script src="music.min.js"></script>
+		<script src="game.min.js"></script>
+	</body>
+</html>

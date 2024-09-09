@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<h1 id="title" align="center">Depth Charge</h1>
+</head>
+<style>
+#title 	   {color: black;
+    	    font-family: courier;
+    	    font-size: 300%;}
+#container {width:800px;
+	   Height:600px;
+	   border:1px solid black;
+	   margin: 0px auto;
+	   text-align center; }
+#top 	  {width:800px;
+	   Height:300px;
+	   margin: 0px auto;
+	   text-align center; }
+#mid	  {width:800px;
+	   Height:100px;
+	   margin: 0px auto;
+	   text-align center; }
+#space {width:800px;
+	   Height:50px;
+	   margin: 0px auto;
+	   text-align center; }
+#push {width:800px;
+	   Height:500px; }
+#gameCanvas {border: 1px solid blue;
+	    width:800px;
+	    height:600px}
+#bot   {width:800px;
+	   Height:300px;
+	   margin: 0px auto;
+	   text-align center; }
+#bg {background-color: PeachPuff;}
+#P1 {color: black;
+     font-family: courier;
+     font-size: 125%;}
+#P2 {color: black;
+     font-family: courier;
+     font-size: 125%;}
+#txt {color: black;
+     font-family: Comic Sans MS;
+     font-size: 125%;}
+#link {color: black;
+     font-family: courier;
+     font-size: 300%;
+     }
+#header {color: black;
+     font-family: courier;
+     font-size: 300%;
+     align: center;}
+</style>
+<body id="bg">
+<div id="top">
+<p1 id="txt">Your friends have just been lost at sea, because of a submarine attack! You are the captain of a submarine detroyer and have been givin orders to sink as many submarines as you can.</p1>
+<p1 id="txt">In this game the Red rectangle is the destroyer, while the Black and Yellow circles represent submarines.</p1>
+<p1 id="txt">Use the Space bar to drop the depth charges, one point if you hit the black submarince, two points if you hit the yellow submarine.</p1>
+<p1 id="txt">If the two submarines collide one point is taken away from the total. Five points are needed to win!</p1>
+<h1 id="title" align="center"><a href="#mid">Play!</a></h1>
+</div>
+<div id="push">
+</div>
+<div id="mid">
+<h1 id="title" align="center">Depth Charge</h1>
+</div>
+<div id="container">
+<canvas id="gameCanvas" width="800" height= "600">Your browser does not support the HTML5 canvas tag.</canvas>
+</div>
+<div id= "space">
+</div>
+<div id="bot">
+<p1 id="txt">Use the spacebar to drop depth charges on the passing submarines. One point if you hit the black, two points if you hit the yellow one.</p1>
+<p1 id="txt">If the two submarines collide then one point is taken away from your total. You need Five point to win the Game!</p1>
+</div>
+<script>
+var canvas;
+var canvasContext;
+var ballX = 400;
+var ballY = 300;
+var ballSpeedX = 2;
+var ballSpeedY = -2;
+var boatWidth = 90;
+var boatHeight = 30;
+var paddleWidth = 15;
+var paddleHeight = 100;
+var paddleBuffer = 10;
+var paddleLeftY = 250;
+var paddleLeftX = 10;
+var paddleLeftSpeedY = 5;
+var paddleRightY = 250;
+var paddleRightX = 770;
+var paddleRightSpeedY = 5;
+var progressBarBuffer = 20;
+var progressBarHeight = 15;
+var progressBarY = 60;
+var radius = 15;
+var score = 0;
+var subX = 0;
+var subY = 300;
+var subRightX = 0;
+var subRightY = 200;
+var subSpeedX = 3;
+var subSpeedY = -3;
+var bulletY = 10;
+var bulletX = 10;
+var bulletSpeedY = 3;
+var drop = false;
+
+
+window.onload = function(){
+
+	canvas = document.getElementById("gameCanvas");
+	canvasContext = canvas.getContext("2d");
+	var framesPerSecond = 30;
+	subY = getRandomInt(100,500);
+	subRightX = canvas.width + radius;
+	progressBarRightBuffer = canvas.width - progressBarBuffer;
+	setInterval(function(){
+	drawCanvas();
+	drawProgressBar();
+	moveBullet();
+	moveBall();
+	moveSubRight();
+	moveSubLeft();
+	drawText();
+	keyboardInput();
+	BulletSubCollision();
+	BulletSubCollision2();
+	SubOnSubCollision();
+	checkScore();
+	},1000/framesPerSecond);
+	}
+
+window.onbeforeunload = function (){
+	window.scrollTo(0,0);
+}	
+
+function keyboardInput(){
+	document.onkeydown = function (e) {
+    	switch (e.key) {
+       	case 'ArrowUp':
+	console.log("Up!");
+	keyboardControl();
+	break;
+	case ' ':
+	console.log("Down!");
+	keyboardControl();
+	break;
+	}
+    	}
+	};
+	
+
+function drawCanvas(){
+
+	canvasContext.fillStyle = "#66ccff";
+	canvasContext.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function drawProgressBar(){
+
+	canvasContext.fillStyle = 'grey';
+	canvasContext.fillRect(progressBarBuffer,progressBarY,canvas.width - ( 2 * progressBarBuffer),progressBarHeight);
+
+}
+
+function drawBoat(){
+
+	canvasContext.fillStyle = 'red';
+	canvasContext.fillRect((ballX - (boatWidth / 2)),(progressBarY - (progressBarHeight - (radius / 2))),boatWidth, boatHeight);
+
+}
+
+function drawSubRight(){
+
+	canvasContext.beginPath();
+	canvasContext.arc(subRightX,subRightY + (radius / 2),(2 * radius),0,2*Math.PI,false);
+	canvasContext.fillStyle = "yellow";
+	canvasContext.fill();
+	canvasContext.closePath;
+
+}
+
+function drawSub(){
+
+	canvasContext.beginPath();
+	canvasContext.arc(subX + 10,subY + (radius / 2),(2 * radius),0,2*Math.PI,false);
+	canvasContext.fillStyle = "black";
+	canvasContext.fill();
+	canvasContext.closePath;
+
+}
+
+function drawBullet(){
+
+	canvasContext.beginPath();
+	canvasContext.arc(bulletX,bulletY,radius,0,2*Math.PI,false);
+	canvasContext.fillStyle = "green";
+	canvasContext.fill();
+	canvasContext.closePath;
+
+}
+
+function moveBall(){
+	canvasContext.clearRect(0,0,canvas.Width,canvas.Height);
+	//drawBall();
+	drawBoat();
+	if(ballX + ballSpeedX > canvas.width - (boatWidth - boatHeight)  || ballX + ballSpeedX < (boatWidth - boatHeight)){
+	ballSpeedX = -ballSpeedX;
+	}
+	ballX += ballSpeedX;	
+}
+
+function moveSubRight(){
+	canvasContext.clearRect(0,0,canvas.Width,canvas.Height);
+	drawSub();
+	if (subX + subSpeedX > canvas.width){
+	subY = getRandomInt(progressBarY + 40,canvas.height - 2 * radius);
+	subX = -10;
+	}
+	subX = subX + subSpeedX;
+	//console.log(subY);
+}
+
+function moveSubLeft(){
+	canvasContext.clearRect(0,0,canvas.Width,canvas.Height);
+	drawSubRight();
+	if (subRightX + subSpeedX < 0){
+	subRightY = getRandomInt(progressBarY + 40,canvas.height - 2 * radius);
+	subRightX = canvas.width + 10;
+	}
+	subRightX = subRightX - subSpeedX;
+}
+
+function moveBullet(){
+	canvasContext.clearRect(0,0,canvas.Width,canvas.Height);
+	drawBullet();
+	if (drop == true){
+	bulletY += bulletSpeedY;
+	} else {
+	bulletX = ballX;
+	bulletY = progressBarY + (radius/2);
+	}
+	if (bulletY + bulletSpeedY > canvas.height + (2 * radius)){
+	bulletX = ballX;//getRandomInt(10,400);
+	bulletY = progressBarY;
+	drop = false;
+	}
+}
+
+function drawText(){
+
+	canvasContext.font = "30px Arial";
+	canvasContext.fillStyle = "black";
+	canvasContext.strokeText("Score:",canvas.width/2 - 70,paddleBuffer * 3);
+	canvasContext.strokeText(score,canvas.width/2 + 30,paddleBuffer * 3);
+
+}
+
+function getRandomInt(min, max){
+	return Math.floor(Math.random() * (max - min +1)) + min;
+}
+
+function keyboardControl(){
+	if (drop == false){
+	drop = true;
+	}
+
+}
+
+function BulletSubCollision(){
+	if(bulletX > subX && bulletX < subX + (2 * radius)){
+	if(bulletY > subY && bulletY < subY + (2 * radius)){
+	score = score + 1;   
+	bulletY = progressBarY;
+	drop = false;
+	}
+	}
+}
+
+
+function BulletSubCollision2(){
+	if(bulletX > subRightX && bulletX < subRightX + (2 * radius)){
+	if(bulletY > subRightY && bulletY < subRightY + (2 * radius)){
+	score = score + 2;   
+	bulletY = progressBarY;
+	drop = false;
+	}
+	}
+}
+
+function SubOnSubCollision(){
+	if(subX + (4 * radius) > subRightX && subX < subRightX + (4 * radius)){
+	if(subY + (4 * radius) > subRightY && subY < subRightY + (4 * radius)){
+	subX = 0;
+	subY = 300;
+	subRightX = canvas.width + radius;
+	subRightY = 200;
+	if(score == 0){
+	score = 0;	}
+	else{
+	score = score - 1;
+	}
+	}
+	}
+}
+
+function checkScore(){
+	if(score >=1){
+	alert("Winner");
+	score = 0;
+	
+	}
+}
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="notranslate" translate="no">
+
+<head>
+<meta charset="utf-8"/>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=UTF-8"> 
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#000000" />
+<meta name="google" content="notranslate" />
+<style>
+@charset "UTF-8";
+
+html, body {
+	user-select: none;
+	-webkit-print-color-adjust: exact; 
+	height: 100%;
+	margin: 0;
+}
+
+
+.blink_me {
+	animation: blinker 1s ease-in infinite;
+}
+@keyframes blinker {  
+	50% { opacity: .4; }
+}
+
+
+@-webkit-keyframes Gradient {
+	0% {background-position: 30% 50%}
+	50% {background-position: 25% 50%}
+	100% {background-position: 30% 50%}
+}
+
+
+
+
+.glitch {
+  color: white;
+  font-size: 60px;
+  position: relative;
+  width:100%;
+  text-align:center;
+  margin: 0 auto;
+}
+
+@keyframes noise-anim {
+  0% {
+    clip: rect(88px, 9999px, 98px, 0);
+  }
+  5% {
+    clip: rect(39px, 9999px, 2px, 0);
+  }
+  10% {
+    clip: rect(11px, 9999px, 17px, 0);
+  }
+  15% {
+    clip: rect(37px, 9999px, 22px, 0);
+  }
+  20% {
+    clip: rect(85px, 9999px, 2px, 0);
+  }
+  25% {
+    clip: rect(45px, 9999px, 15px, 0);
+  }
+  30% {
+    clip: rect(62px, 9999px, 36px, 0);
+  }
+  35% {
+    clip: rect(77px, 9999px, 36px, 0);
+  }
+  40% {
+    clip: rect(79px, 9999px, 81px, 0);
+  }
+  45% {
+    clip: rect(51px, 9999px, 82px, 0);
+  }
+  50% {
+    clip: rect(72px, 9999px, 61px, 0);
+  }
+  55% {
+    clip: rect(49px, 9999px, 68px, 0);
+  }
+  60% {
+    clip: rect(46px, 9999px, 19px, 0);
+  }
+  65% {
+    clip: rect(56px, 9999px, 57px, 0);
+  }
+  70% {
+    clip: rect(19px, 9999px, 81px, 0);
+  }
+  75% {
+    clip: rect(48px, 9999px, 44px, 0);
+  }
+  80% {
+    clip: rect(14px, 9999px, 93px, 0);
+  }
+  85% {
+    clip: rect(24px, 9999px, 48px, 0);
+  }
+  90% {
+    clip: rect(2px, 9999px, 47px, 0);
+  }
+  95% {
+    clip: rect(87px, 9999px, 100px, 0);
+  }
+  100% {
+    clip: rect(50px, 9999px, 59px, 0);
+  }
+}
+.glitch:after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  text-shadow: -1px -1px #256966;
+  top: 0;
+  width:100%;
+  text-align:center;
+  background: rgba(0,0,0,.1);
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+@keyframes noise-anim-2 {
+  0% {
+    clip: rect(95px, 9999px, 2px, 0);
+  }
+  5% {
+    clip: rect(95px, 9999px, 92px, 0);
+  }
+  10% {
+    clip: rect(19px, 9999px, 86px, 0);
+  }
+  15% {
+    clip: rect(3px, 9999px, 31px, 0);
+  }
+  20% {
+    clip: rect(70px, 9999px, 4px, 0);
+  }
+  25% {
+    clip: rect(29px, 9999px, 55px, 0);
+  }
+  30% {
+    clip: rect(70px, 9999px, 80px, 0);
+  }
+  35% {
+    clip: rect(1px, 9999px, 20px, 0);
+  }
+  40% {
+    clip: rect(48px, 9999px, 52px, 0);
+  }
+  45% {
+    clip: rect(53px, 9999px, 18px, 0);
+  }
+  50% {
+    clip: rect(1px, 9999px, 28px, 0);
+  }
+  55% {
+    clip: rect(40px, 9999px, 54px, 0);
+  }
+  60% {
+    clip: rect(62px, 9999px, 60px, 0);
+  }
+  65% {
+    clip: rect(94px, 9999px, 36px, 0);
+  }
+  70% {
+    clip: rect(79px, 9999px, 16px, 0);
+  }
+  75% {
+    clip: rect(66px, 9999px, 5px, 0);
+  }
+  80% {
+    clip: rect(63px, 9999px, 22px, 0);
+  }
+  85% {
+    clip: rect(36px, 9999px, 57px, 0);
+  }
+  90% {
+    clip: rect(38px, 9999px, 69px, 0);
+  }
+  95% {
+    clip: rect(38px, 9999px, 91px, 0);
+  }
+  100% {
+    clip: rect(18px, 9999px, 48px, 0);
+  }
+}
+.glitch:before {
+  content: attr(data-text);
+  position: absolute;
+  left: -2px;
+  text-shadow: 1px 0 #ff0000;
+  top: 0;
+  width:100%;
+  text-align:center;
+  background: rgba(0,0,0,.1);
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim-2 3s infinite linear alternate-reverse;
+}
+</style>
+</head>
+
+
+
+<body style="font-family: 'Arial'; font-size:12px; width:100%; height:100%; overflow:visible; padding:0px; margin:0px; background-color:black;">
+
+
+	<div id="mainMenu" style="position:absolute; top:0px; width:100%; height:auto; overflow:visible;  z-index:100;">
+		
+		<div style="clear:both; height:120px;"></div>
+		
+		<div id="Gametitle" style="position:relative; line-height:60px; width:100%; font-family:arial; font-weight:900; opacity:.5;">
+			<div class="glitch" data-text="Ghosts'n" style="color:#ab3232;">Ghosts'n</div>
+			<div class="glitch" data-text="Vamps'n" style="color:#8e4fab;">Vamps'n</div>
+			<div class="glitch" data-text="Skulls" style="color:#b0b0b0;">Skulls</div>
+		</div>
+		
+		<div style="clear:both; height:110px;"></div>
+		
+		
+		
+		<div id="botonPlay" style="text-align:center; width:100%;">
+			<div class="blink_me" onclick="play();" style="display:inline-block; text-align:center; padding:6px 20px 6px 20px; font-size:20px; color:#d3fc6f; font-weight:500; box-shadow: 0px 0px 10px 5px #86a145; border-radius:10px; border:3px solid #d3fc6f; background-color:rgba(0,0,0,0.5);">
+				Start game
+			</div>
+		</div>
+		
+	</div>
+
+
+
+	<div id="mainDIV" style="position:relative; margin:0 auto; width:100%; height:100%; overflow:hidden; background-color:black;">
+
+		<div id="gameStartMSG" style="position:absolute; width:100%; pointer-events:none; transition: 5s opacity; display:none; top:150px; left:0px; font-size:18px; z-index:100;">
+			<div style="pointer-events:none; text-align:center; margin:0 auto; width:80%; max-width:61.50vh; font-weight:500; color:#c9af00; ">
+				Good luck warriors!
+			</div>
+		</div>
+		
+		
+		
+		<div style="position:relative; margin:0 auto; width:61.50vh; height:calc(100% - 90px); max-height:140vw; max-width:100vw; overflow:visible;">	
+			<div id="gameMSG" style="position:absolute; top:150px; left:5%; width:84%; text-align:center; display:none; color:orange; border-radius:20px; font-size:12px; padding:3%; background-color:rgba(0,0,0,0.5); z-index:1000;">
+			</div>
+			
+			<div id="config" style="position:absolute; display:none; top:150px; left:5%; width:84%; text-align:center; color:silver; border-radius:20px; font-size:12px; padding:3%; background-color:rgba(25,25,25,0.9); z-index:1000;">	
+				<br><br>
+				Set game volume
+				<br>
+				<input id="vol" type="range" min="0" max="1" step="0.01" value="0.5" oninput="zzfxV=this.value;" onchange="zzfxV=this.value;">
+				<br><br><br><br>
+				<div onclick="document.getElementById('config').style.display='none';"
+					style="display:inline-block; color:lime; padding:15px; width:50px; text-align:center; border-radius:10px; background-color:black">
+					OK
+				</div>	
+				<br><br>
+			</div>
+			
+			
+			
+			<DIV  id="canvasDIV" style="position:relative; height:100%; overflow:hidden; background-color:black;">
+				<canvas id="mycanvas">
+				</canvas>	
+			</DIV>
+			
+			<div style="position:relative; overflow:hidden; text-align:center; width:100%; height:90px; background-color:black;">
+			
+				<div id="SwapLine1" style="position:absolute; width:30%; top:-33px; height:70px; transition:2s; left:-50%; display:inline-block; border-radius:15px; border:3px solid #404040; ">
+					<div id="SwapButton1" onpointerdown="swap(1);" style="position:relative; width:58px; height:58px; top:37px; display:inline-block; border-radius:150px; border:3px solid #404040; background-color:#202520;">
+						<div style="position:absolute; top:22px; text-align:center; width:100%; font-size:16px; color:silver;">
+							SWAP
+						</div>
+					</div>
+				</div>
+				<div id="SwapLine2" style="position:absolute; width:30%; top:-33px; height:70px; transition:2s; left:150%; display:inline-block; border-radius:15px; border:3px solid #404040; ">
+					<div id="SwapButton2" onpointerdown="swap(2);" style="position:relative; width:58px; height:58px; top:37px; display:inline-block; border-radius:150px; border:3px solid #404040; background-color:#202520;;">
+						<div style="position:absolute; top:22px; text-align:center; width:100%; font-size:16px; color:silver;">
+							SWAP
+						</div>
+					</div>
+				</div>
+				
+
+				<div style="position:relative; display:none; top:-15px; clear:both; text-align:center; width:100%; height:auto; background-color:none;">			
+					<div style="position:relative; width:58px; height:58px; display:inline-block; border-radius:150px; border:3px solid #404040; background-color:#252020;;" 
+						 onpointerdown="if(VelTurbo==1) {VelTurbo=3;this.style.borderColor='#f5e878';} else {VelTurbo=1; this.style.borderColor='#404040'}">
+						<div style="position:absolute; top:22px; text-align:center; width:100%; font-size:14px; color:silver;">
+							TURBO
+						</div>
+					</div>			
+				</div>
+				
+			</div>
+
+		</div>
+		
+		
+
+	</div>
+
+
+		
+
+	<!-- ///////////////// ojo quitar lo de abajo y dejar lo de arriba //////////////////////// -->
+	<script type="text/javascript" language="javascript">  
+		var CanvasSize,record=0;null!==localStorage.getItem("GhostsVampsSkulls")&&(record=parseInt(localStorage.getItem("GhostsVampsSkulls"))),context=(canvas=document.getElementById("mycanvas")).getContext("2d");var cWidth=1e3,cHeight=1400;canvas.width=cWidth,canvas.height=cHeight;var elapsed,fps=60,mainCounter=0;function resize(){context.setTransform(1,0,0,1,0,0),CanvasSize=document.getElementById("canvasDIV").clientWidth/cWidth,context.scale(CanvasSize,CanvasSize)}game_running=!1,document.body.onresize=function(){resize()};var P=[],AA=[],SA=[],Life=100,metros=0,Vel=3,VelTurbo=1,AAid=1,SAid=1;function resetPlayers(){P=[{tipo:2,x:180,y:amigoY+400,w:amigoW,h:amigoW,LastShoot:0,nextPos:180,damage:0,paso:0},{tipo:1,x:500,y:amigoY+400,w:amigoW,h:amigoW,LastShoot:0,nextPos:500,damage:0,paso:8},{tipo:3,x:820,y:amigoY+400,w:amigoW,h:amigoW,LastShoot:0,nextPos:820,damage:0,paso:15}]}var pasoVol=.2;let zzfxX,zzfxR;zzfx=(...a)=>zzfxP(zzfxG(...a)),zzfxP=(...b)=>{let a=zzfxX.createBufferSource(),c=zzfxX.createBuffer(b.length,b[0].length,zzfxR);return b.map((a,b)=>c.getChannelData(b).set(a)),a.buffer=c,a.connect(zzfxX.destination),a.start(),a},zzfxG=(B=1,u=.05,k=220,d=0,n=0,o=.1,l=0,C=1,p=0,v=0,q=0,w=0,g=0,x=0,r=0,D=0,c=0,s=1,i=0,y=0)=>{let b=2*Math.PI,E=p*=500*b/zzfxR**2,F=(0<r?1:-1)*b/4,z=k*=(1+2*u*Math.random()-u)*b/zzfxR,t=[],e=0,A=0,a=0,j=1,G=0,H=0,f=0,m,h;for(d=99+zzfxR*d,i*=zzfxR,n*=zzfxR,o*=zzfxR,c*=zzfxR,v*=500*b/zzfxR**3,r*=b/zzfxR,q*=b/zzfxR,w*=zzfxR,g=zzfxR*g|0,h=d+i+n+o+c|0;a<h;t[a++]=f)++H%(100*D|0)||(f=(g?1-y+y*Math.sin(2*Math.PI*a/g):1)*(0<(f=l?1<l?2<l?3<l?Math.sin((e%b)**3):Math.max(Math.min(Math.tan(e),1),-1):1-(2*e/b%2+2)%2:1-4*Math.abs(Math.round(e/b)-e/b):Math.sin(e))?1:-1)*Math.abs(f)**C*B*zzfxV*(a<d?a/d:a<d+i?1-(a-d)/i*(1-s):a<d+i+n?s:a<h-c?(h-a-c)/o*s:0),f=c?f/2+(c>a?0:(a<h-c?1:(h-a)/c)*t[a-c|0]/2):f),e+=(m=(k+=p+=v)*Math.sin(A*r-F))-m*x*(1-1e9*(Math.sin(a)+1)%2),A+=m-m*x*(1-1e9*(Math.sin(a)**2+1)%2),j&& ++j>w&&(k+=q,z+=q,j=0),!g|| ++G%g||(k=z,p=E,j=j||1);return t},zzfxV=.3,zzfxR=44100;const song1=[[[,0,77,,,.7,2,.41,,,,,,,,.06],[,0,43,.01,,.3,2,,,,,,,,,.02,.01],[,0,170,.003,,.008,,.97,-35,53,,,,,,.1],[.8,0,270,,,.12,3,1.65,-2,,,,,4.5,,.02],[,0,86,,,,,.7,,,,.5,,6.7,1,.05],[,0,41,,.05,.4,2,0,,,9,.01,,,,.08,.02],[,0,2200,,,.04,3,2,,,800,.02,,4.8,,.01,.1],[.3,0,16,,,.3,3]],[[[1,-1,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33],[3,1,22,,,,,,,,,,,,,,,,,,,,,,,,,,,,24,,,,24,,,,,,,,,,,,,,,,,,,,,,,,22,,22,,22,,,,],[5,-1,21,,,,,,,,,,,,,,,,,,,,,,,,,,,,24,,,,23,,,,,,,,,,,,,,,,,,,,,,,,24,,23,,21,,,,],[,1,21,,,,,,,,,,,,,,,,,,,,,,,,,,,,24,,,,23,,,,,,,,,,,,,,,,,,,,,,,,24,,23,,21,,,,]],[[1,-1,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33],[3,1,24,,,,,,,,27,,,,,,,,,,,,,,,,27,,,,24,,,,24,,,,,,,,27,,,,,,,,,,,,,,,,24,,24,,24,,,,],[5,-1,21,,,,,,,,,,,,,,,,,,,,,,,,,,,,24,,,,23,,,,,,,,,,,,,,,,,,,,,,,,24,,23,,21,,,,],[,1,21,,,,,,,,,,,,,,,,,,,,,,,,,,,,24,,,,23,,,,,,,,,,,,,,,,,,,,,,,,24,,23,,21,,,,],[6,1,,,34,34,34,,,,,,34,34,,,,,34,,,,34,34,,,,,34,,,,34,,,,34,34,34,,,,,,34,,,,,,34,34,,,34,34,,,,,,,,,34,34],[4,1,,,,,,,24,,,,,,24,,24,,,,24,,,,24,,,,,,,,,,,,,,,,24,,,,,,24,,24,,,,24,,,,24,,,,,,,,,,]],[[1,-1,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,23,23,35,23,23,36,23,23,35,23,23,36,23,23,35,35,23,23,35,23,23,35,23,23,36,23,23,35,23,23,36,36],[5,-1,21,,,19,,,21,,,,,,,,,,21,,,19,,,17,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,],[3,1,24,,,24,,,24,,,,,,,,,,24,,,24,,,24,,,,24.75,24.5,24.26,24.01,24.01,24.01,,,,,25,,,,,,,,25,,,,,,,,25,,,,,,,,25,25,25,25],[4,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,24.75,24.5,24.26,24.01,24.01,24.01,24.01,24,,24,24,,24,24,24,24,,24,24,,24,,24,24,,24,24,,24,24,24,24,,24,24,,24,24],[7,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,23,,21,23,,35,,23,,21,23,,35,,35,,23,,21,23,,35,,21,23,,35,,21,23,,,],[6,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,34,36,34,,33,34,34,36,31,36,34,,31,34,32,,33,36,34,,31,34,34,36,33,36,33,,31,,,]],[[1,-1,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,21,21,33,21,21,33,21,21,33,21,21,33,21,21,33,33,17,17,29,17,17,29,17,17,29,17,17,29,17,17,29,29,17,17,29,17,17,29,17,17,29,17,17,29,17,17,29,29],[4,1,24,24,,24,24,,24,24,24,24,,24,24,,24,,24,24,,24,24,,24,24,24,24,,24,24,,24,24,24,24,,24,24,,24,24,24,,,24,24,,24,,24,24,,24,24,,24,24,24,24,,24,24,,24,24],[7,-1,21,,19,21,,33,,21,,19,21,,33,,33,,21,,19,21,,33,,21,,19,21,,33,,33,,17,,17,17,29,17,17,29,17,,17,17,29,17,17,29,17,,17,17,29,17,17,29,17,,17,17,29,17,17,29],[2,1,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,,,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,34,34,,34,,,],[6,1,,,36,,,,,,36,,36,,,,,,,,36,,,,,,36,,36,,,,,,,,36,,,,,,,,,,,,,,,,36,,,,,,36,,36,,,,,,],[3,1,,,,,25,,,,,,,,25,,,,,,,,25,,,,,,,,25,25,25,25,,,,,25,,,,,25,,,25,,,,,,,,25,,,,,,,,25,25,25,25]],[[1,-1,14,14,26,14,14,26,14,14,26,14,14,26,14,14,26,26,14,14,26,14,14,26,14,14,26,14,14,26,14,14,26,26,17,17,29,17,17,29,17,17,29,17,17,29,17,17,29,29,19,19,31,19,19,31,19,19,31,19,19,31,19,19,31,31],[4,1,24,24,,24,24,,24,24,24,24,,24,24,,24,,24,24,,24,24,,24,24,24,24,,24,24,,24,24,24,24,,24,24,,24,24,24,24,,24,24,,36,,24,24,,24,24,,24,24,24,24,,24,24,,24,24],[7,-1,14,,14,14,26,14,14,26,14,,14,14,26,14,14,26,14,,14,14,26,14,14,26,14,,14,14,26,14,14,26,17,,17,17,29,17,17,29,17,,17,17,29,17,17,29,19,,19,19,31,19,19,31,19,,19,19,31,19,19,31],[2,1,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,,,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,36,36,,36,,,],[3,1,,,,,25,,,,,,,,25,,,,,,,,25,,,,,,,,25,25,25,25,,,,,25,,,,,,,,25,,,,,,,,25,,,,,,,,25,25,25,25],[6,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,34,,,,,,34,,34,,,,,,,,34,,,,,,34,,34,,,,,,]]],[0,1,1,2,3,4,4]];let currentNode=null,currentSong=null,currentBuffer=null;const renderSong=a=>new Promise(b=>requestIdleCallback(()=>b(zzfxM(...a)))),playSong=async a=>{currentNode&&currentNode.stop(),currentBuffer||(currentBuffer=await renderSong(song1)),(currentNode=zzfxP(...currentBuffer)).loop=!0,zzfxX.suspend()},stopSong=async()=>{currentNode&&currentNode.stop(),await stopSong()};function play(){zzfxX=new(top.AudioContext||webkitAudioContext),zzfx(...[2.68,,465,.01,.01,.06,4,2.63,2.6,-2,,,.03,1.2,18,.5,.16,.42,.04,.23]),//! ZzFXM (v2.0.3) | (C) Keith Clark | MIT | https://github.com/keithclark/ZzFXM
+zzfxM=(j,k,b,c=125)=>{let l,m,n,o,p,q,r,d,s,t,u,e,v,w,x=0,f=[],g=[],h=[],i=0,y=0,a=1,z={},A=zzfxR/c*60>>2;for(;a;i++)f=[a=d=e=0],b.map((c,B)=>{for(r=k[c][i]||[0,0,0],a|=!!k[c][i],w=e+(k[c][0].length-2- !d)*A,v=B==b.length-1,m=2,o=e;m<r.length+v;d=++m){for(p=r[m],s=m==r.length+v-1&&v||t!=(r[0]||0)|p|0,n=0;n<A&&d;(n++)>A-99&&s&&(u+=(u<1)/99))q=(1-u)*f[x++]/2||0,g[o]=(g[o]||0)-q*y+q,h[o]=(h[o++]||0)+q*y+q;p&&(u=p%1,y=r[1]||0,(p|=0)&&(f=z[[t=r[x=0]||0,p]]=z[[t,p]]||(l=[...j[t]],l[2]*=2**((p-12)/12),p>0?zzfxG(...l):[])))}e=w});return[g,h]},playSong(song1),setTimeout(function(){zzfxX.resume()},2e3),reset(),Vel=3,game_running=!0,Life=100,setTimeout(function(){document.getElementById("SwapLine1").style.left="17%",document.getElementById("SwapLine2").style.left="52%"},4e3),document.getElementById("Gametitle").style.display="none",document.getElementById("mainMenu").style.display="block",document.getElementById("botonPlay").style.display="none",document.getElementById("gameStartMSG").style.opacity="0",document.getElementById("gameStartMSG").style.display="block",setTimeout(function(){document.getElementById("gameStartMSG").style.opacity="1"},10),setTimeout(function(){document.getElementById("gameStartMSG").style.opacity="0"},6e3),setTimeout(function(){document.getElementById("gameStartMSG").style.display="none"},9e3),document.getElementById("gameMSG").style.display="none",mainCounter=0,setTimeout(function(){document.getElementById("mainMenu").style.display="none"},1e3)}function reset(){AAtype=2,AA=[],SA=[],resetPlayers(),mainCounter=0,AAid=1,SAid=1,game_running=!1,document.getElementById("gameMSG").style.display="none",metros=0,document.getElementById("Gametitle").style.display="block",document.getElementById("botonPlay").style.display="block",document.getElementById("mainMenu").style.display="block",document.getElementById("gameStartMSG").style.display="none",context.fillStyle="#000000",context.fillRect(0,0,CanvasSize,CanvasSize)}function swap(a){for(zzfx(...[,,130.8128,.03,.03,.2,1,1.52,9,,,,,,,,,.8]),i=0;i<P.length;i++){if(1==a)switch(P[i].nextPos){case 180:P[i].nextPos=500;break;case 500:P[i].nextPos=180}if(2==a)switch(P[i].nextPos){case 820:P[i].nextPos=500;break;case 500:P[i].nextPos=820}}document.getElementById("SwapLine"+a).style.borderColor="#f5e878",document.getElementById("SwapButton"+a).style.borderColor="#f5e878",setTimeout(function(){document.getElementById("SwapLine"+a).style.borderColor="#303030",document.getElementById("SwapButton"+a).style.borderColor="#404040"},50)}var amigoW=150,amigoY=cHeight-325,viaLibre=[0,0,0],RGB=["#ad5555","#5d915c","#507ab5"],RGBd=["#612f2f","#385937","#334b6b"];function newA(a,b,c,d,e){var f={id:AAid,tipo:a,x:b,y:c,w:d,h:e,damage:-1,fx1:Math.floor(359*Math.random())+1,fx2:Math.floor(359*Math.random())+1};AA.push(f),AAid++}function newS(a,b,c){var d={id:SAid,tipo:a,x:b,y:c,decay:1};SA.push(d),SAid++}resetPlayers(),context.imageSmoothingEnabled=!1,function(a,c,d){function e(){for(mainCounter++,metros+=.019,(pasoVol-=7e-4)>0&&mainCounter%20==0&&zzfx(...[pasoVol,,236,,,.04,4,.6,,,,,,.5,,.2,,.99]),a=0;a<P.length;a++)P[a].y>amigoY&&(P[a].y-=1.5),mainCounter>260&&(P[a].LastShoot+=5.3*Vel),P[a].LastShoot>1e3&&(P[a].LastShoot=1e3),P[a].x!=P[a].nextPos&&(P[a].x>P[a].nextPos?(P[a].x-=20+Vel,P[a].x<P[a].nextPos&&(P[a].x=P[a].nextPos)):(P[a].x+=20+Vel,P[a].x>P[a].nextPos&&(P[a].x=P[a].nextPos)));var i,f=[1,2,3];for(a=0;a<AA.length;a++){if(i=0,-1==AA[a].damage&&AA[a].y+500>amigoY){i=2;var d=-1;for(j=0;j<P.length;j++)AA[a].x==P[j].x&&(d=j);if(d> -1&&1e3==P[d].LastShoot){switch(newS(P[d].tipo,AA[a].x,amigoY),P[d].tipo){case 1:zzfx(...[.3,,220,.04,.07,.08,,1.28,7.2,2.8,,,,1.8,,,,.89,.03]);break;case 2:zzfx(...[.7,,500,.01,.15,.23,1,1.06,-1.3,-0.6,,,,3,,,,.56,.24]);break;case 3:zzfx(...[1.1,.01,407,.02,.01,.04,,.7,-6.8,,,,,.8,,.1,,.8,.06,.17])}P[d].LastShoot=0}}if(-1==AA[a].damage&&AA[a].y+90>amigoY){if(AA[a]){var d=-1;for(j=0;j<P.length;j++)AA[a].x==P[j].x&&(d=j);Life-=10,P[d]&&(P[d].damage=16),AA.splice(a,1),zzfx(...[.4,,316,.01,.04,.03,3,.93,-7.3,,,,,1.7,,.3,,.8,.07,.41])}}else AA[a].y+=Vel*VelTurbo+i;if(AA[a]&&AA[a].damage> -1&&AA[a].damage<0&&(AA.splice(a,1),zzfx(...[.3,,662,.1,.2,.8,1,0,,-0.2,,,,1.2,,.26,.01,,.2])),Life<=0&&(parseInt(metros)>parseInt(record)&&(localStorage.setItem("GhostsVampsSkulls",String(metros)),record=parseInt(metros)),game_running=!1,currentNode.stop(),c.getElementById("gameMSG").style.display="block",c.getElementById("SwapLine1").style.left="-50%",c.getElementById("SwapLine2").style.left="150%",c.getElementById("gameMSG").innerHTML="<br><font style='font-size:25px; color:orange;'>Game Over<br><font style='font-size:35px; color:silver;'>"+parseInt(metros)+" mtrs<br></font><font style='font-size:20px; color:#6c8dc4;'>Best "+parseInt(metros)+" mtrs<br><br></font><div class='blink_me' onclick='reset();' style='display:inline-block; text-align:center; padding:6px 20px 6px 20px; font-size:20px; color:#d3fc6f; font-weight:500; box-shadow: 0px 0px 10px 5px #86a145; border-radius:10px; border:3px solid #d3fc6f; background-color:rgba(0,0,0,0.5);'>try again</div><br><br>"),Vel+=parseInt(35/Vel)/11e4,AA[a].y<=0){let m=f.indexOf(AA[a].tipo);m> -1&&f.splice(m,1)}}for(a=0;a<SA.length;a++){var d=-1;if(SA[a].decay>.5)for(j=0;j<AA.length;j++)-1==AA[j].damage&&SA[a].x==AA[j].x&&SA[a].y-75<AA[j].y&&SA[a].tipo==AA[j].tipo&&(d=j);d> -1&&(AA[d].damage=16,SA.splice(a,1)),SA[a]&&(SA[a].y-=7,SA[a]&&SA[a].y<800&&(SA[a].decay-=.05,SA[a].decay<0&&SA.splice(a,1)))}(Life+=.02)>100&&(Life=100),viaLibre=viaLibre.map(function(a){return a-Vel*VelTurbo});for(var g=0;g<3;g++)if(viaLibre[g]< -800){var h=180,n=Math.floor(500*Math.random());switch(viaLibre[g]=n,g){case 0:h=180;break;case 1:h=500;break;case 2:h=820}var j=f[Math.floor(Math.random()*f.length)];if(f.splice(f.indexOf(j),1),j)for(var q=Math.floor(4*Math.random())+1,a=0;a<q;a++)newA(j,h,-n-10-220*a,190,190)}context.shadowBlur=0,context.fillStyle="#151515",context.fillRect(0,0,cWidth+1,cHeight),context.globalAlpha=.4;var o=mainCounter%200;mainCounter<230&&(o=230);for(var k=0;k<cHeight/200+2;k++)for(var l=0;l<cWidth/200;l++)context.drawImage(b,0,57,19,19,200*l,200*k+2*o-400,200,200);context.globalAlpha=1;var e=context.createLinearGradient(0,cHeight-150,0,cHeight);e.addColorStop(0,"transparent"),e.addColorStop(1,"black"),context.fillStyle=e,context.fillRect(0,cHeight-150,cWidth+1,cHeight),context.shadowColor="#000",context.shadowBlur=20,context.shadowOffsetX=0,context.shadowOffsetY=0,context.fillStyle="rgba(0,0,0,.3)";for(var a=0;a<AA.length;a++)switch(AA[a].tipo){case 1:context.beginPath(),AA[a].fx1=9*Math.cos(mainCounter/2%360),context.ellipse(AA[a].x,AA[a].y+AA[a].h+15,AA[a].w/2,AA[a].h/4+AA[a].fx1,0,0,2*Math.PI),context.fill();break;case 2:context.beginPath(),AA[a].fx1=15*Math.cos(mainCounter/10%360),context.ellipse(AA[a].x+AA[a].fx1,AA[a].y+AA[a].h+15,AA[a].w/2,AA[a].h/4,0,0,2*Math.PI),context.fill();break;case 3:context.beginPath(),AA[a].fx1=15*Math.cos(mainCounter/6%360),context.ellipse(AA[a].x- +AA[a].fx1/2,AA[a].y+AA[a].h+15,AA[a].w/2+AA[a].fx1,AA[a].h/4,0,0,2*Math.PI),context.fill()}for(var a=0;a<AA.length;a++){switch(context.shadowColor="#"+Math.ceil(AA[a].damage).toString(16)+Math.ceil(AA[a].damage).toString(16)+"0",AA[a].damage> -1&&(AA[a].w=AA[a].w-AA[a].damage,context.globalAlpha=(100-6.25*(16-AA[a].damage))/100),AA[a].tipo){case 1:AA[a].fx1=9*Math.cos(mainCounter/2%360),context.drawImage(b,(AA[a].tipo-1)*19,0,19,19,AA[a].x-AA[a].w/2,AA[a].y,AA[a].w,AA[a].h+AA[a].fx1);break;case 2:AA[a].fx1=15*Math.cos(mainCounter/10%360),context.drawImage(b,(AA[a].tipo-1)*19,0,19,19,AA[a].x-AA[a].w/2+AA[a].fx1,AA[a].y,AA[a].w,AA[a].h);break;case 3:AA[a].fx1=15*Math.cos(mainCounter/6%360),context.drawImage(b,(AA[a].tipo-1)*19,0,19,19,AA[a].x-AA[a].w/2- +AA[a].fx1/2,AA[a].y,AA[a].w+AA[a].fx1,AA[a].h)}context.globalAlpha=1,context.shadowColor="#000",AA[a].damage> -1&&(AA[a].damage-=.9)}context.fillStyle="rgba(0,0,0,.3)";for(var a=0;a<P.length;a++)context.beginPath(),context.ellipse(P[a].x,P[a].y+P[a].h+15,P[a].w/2,P[a].h/4,0,0,2*Math.PI),context.fill();for(var a=0;a<SA.length;a++)context.globalAlpha=SA[a].decay,context.drawImage(b,(SA[a].tipo-1)*19,95,19,19,SA[a].x-60,SA[a].y,120,120),context.globalAlpha=1;context.beginPath();for(var a=0;a<P.length;a++){var p=19;P[a].paso++,P[a].paso>=20&&(p=38),P[a].paso>=40&&(P[a].paso=0),context.shadowColor="#"+Math.ceil(P[a].damage).toString(16)+"00",context.drawImage(b,(P[a].tipo-1)*19,p,19,19,P[a].x-P[a].w/2,P[a].y,P[a].w,P[a].h),context.globalAlpha=.3,context.drawImage(b,(P[a].tipo-1)*19,76,19,19,P[a].x-60,P[a].y+180,120,120),context.globalAlpha=1,context.drawImage(b,(P[a].tipo-1)*19,95-.19*(P[a].LastShoot/10),19,.19*(P[a].LastShoot/10),P[a].x-60,P[a].y+180+120-1.2*(P[a].LastShoot/10),120,1.2*(P[a].LastShoot/10)),P[a].damage-=.1,P[a].damage<0&&(P[a].damage=0)}context.shadowColor="#000",context.globalAlpha=1;var e=context.createLinearGradient(0,0,0,600);e.addColorStop(0,"rgba(0,0,0,0.5)"),e.addColorStop(1,"transparent"),context.fillStyle=e,context.fillRect(0,0,cWidth+1,600),game_running&&(context.globalAlpha=.25,context.fillStyle="black",context.fillRect(150,50,700,50),context.fillStyle="hsl("+Life+",100%,50%)",context.fillRect(160,60,Math.abs(6.8*Life),30),context.globalAlpha=.4,context.fillStyle="silver",context.font="normal 60pt Arial",context.fillText(parseInt(metros)+" mtrs",380,180),parseInt(metros)>parseInt(record)?context.fillStyle="yellow":context.fillStyle="#6c8dc4",context.font="normal 35pt Arial",context.fillText("Best "+parseInt(record)+" mtrs",380,250),context.globalAlpha=.6),context.globalAlpha=1}f=a.requestAnimationFrame||a.mozRequestAnimationFrame||a.webkitRequestAnimationFrame||a.msRequestAnimationFrame,a.requestAnimationFrame=f,function(){var a,d,b,g;function c(){f(c),(elapsed=(d=Date.now())-b)>a&&(b=d-elapsed%a,game_running&&e())}a=1e3/fps,b=Date.now(),c()}();var f,b=new Image;b.src="img/sprites.png?v="+Date(),b.onload=function(){e()}}(this,this.document),resize() 
+	</script>  
+
+</body>
+</html>

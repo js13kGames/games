@@ -1,0 +1,28 @@
+body{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+canvas.game{
+    width: 720px;
+}
+
+header{
+    background-color: rgb(95, 95, 95);
+    box-shadow: 0 8px 16px rgb(95, 95, 95);
+    padding: 8px;
+    margin-bottom: 16px;
+}
+
+section{
+    margin: 8px 0;
+    padding: 8px;
+    border-top: 1px solid rgb(95, 95, 95);
+    border-bottom: 1px solid rgb(95, 95, 95);
+}
+
+h3{
+    margin: 0;
+    color: #530000;
+}

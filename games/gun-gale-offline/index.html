@@ -1,0 +1,100 @@
+<head>
+  <title>Gun Gale Online</title>
+  <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+  <script src="./main.js"></script>
+  <script src="./look-at.js"></script>
+  <script>
+    AFRAME.registerComponent('click-to-shoot', {
+      init: function() {
+        document.body.addEventListener('mousedown', () => {
+          this.el.emit('shoot');
+        });
+      }
+    });
+    AFRAME.registerComponent('hit-handler', {
+      dependencies: ['material'],
+
+      init: function() {
+        var color;
+        var el = this.el;
+        el.addEventListener('hit', () => {
+          // console.log("HIT");
+        });
+
+        el.addEventListener('die', () => {
+          el.parentNode.removeChild(el);
+        });
+      }
+    });
+    AFRAME.registerPrimitive('a-p', {
+      defaultComponents: {
+        p: {}
+      }
+    });
+    AFRAME.registerComponent('p', {
+      init: function() {
+        let el = this.el;
+        el.innerHTML =
+          `<a-octahedron id="o" color="#FF926B" radius="5" scale="0.5 0.5 0.5" position="0 0 -5">
+        <a-animation attribute="rotation" dur="5000" fill="forwards" to="0 360 360" easing="ease-in-out" direction="alternate" repeat="indefinite"></a-animation>
+        <a-animation attribute="position" dur="5000" fill="forwards" to="0 2 -10" easing="ease-in-out" direction="alternate" repeat="indefinite"></a-animation>
+      </a-octahedron>`;
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <a-scene light="defaultLightsEnabled: false">
+    <a-entity id="light" light="type:point;color:rgb(19, 41, 198);"></a-entity>
+
+    <a-entity id="bulletTemplate" bullet geometry="primitive: sphere; radius: 0.1" material="color: orange"></a-entity>
+    <!-- <a-p class="target" target="healthPoints: 10" hit-handler></a-p> -->
+    <!-- <a-entity class="target" target="healthPoints: 10" geometry="primitive: box" material="color: teal" position="0 0 -4" hit-handler></a-entity> -->
+
+    <a-camera id="camera" position="-1 0 0" shooter click-to-shoot></a-camera>
+    <a-sky color="#29292d"></a-sky>
+
+  </a-scene>
+  <script type="text/javascript">
+    let light = document.getElementById("light")
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+
+
+    function change() {
+      let val = "rgb(" + getRandomInt(256) + ", " + getRandomInt(256) + ", " + getRandomInt(256) + ")";
+      light.setAttribute('light', {
+        color: val
+      });
+      var t = setTimeout(change, 1000);
+    }
+    change();
+
+    function add() {
+      let sc = document.querySelector('a-scene');
+      // console.log(sc);
+
+      let p = document.createElement('a-p');
+      var rv1 = Math.random() * (10 - -10) + -10;
+      var rv2 = Math.random() * (10 - -10) + -10;
+      var rv3 = Math.random() * (10 - -10) + -10;
+      p.setAttribute("position", {
+        x: Math.round(rv1),
+        y: Math.round(rv2),
+        z: Math.round(rv3)
+      });
+      p.setAttribute("class", "target");
+      p.setAttribute("target", "");
+      p.setAttribute("hit-handler", "");
+
+
+      sc.appendChild(p);
+    }
+    for (var i = 0; i < 30; i++) {
+      add();
+    }
+  </script>
+</body>

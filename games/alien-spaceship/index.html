@@ -1,0 +1,744 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Alien Spaceship by Johan Strydom</title><style type="text/css">html,body{ font-family: Courier New; width: 100%; height: 100%; padding:0; margin:0; } canvas{	cursor: url(cursor.svg), auto; } 
+#info{
+	margin:0;
+	padding:0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,255,0,0.1);
+}
+#info>div{
+	width: 33%;
+	padding: 1%;
+	position: relative;
+	margin: 0 auto;
+	background-color: rgba(0,255,0,0.15);
+	color: #00FF00;
+	border: 2px solid #009900;
+	border-radius: 6px;
+	cursor: url(cursor.svg), auto;
+	text-shadow: 1px 0 6px #009900;
+	margin-top: 15%;
+}
+#info>div h1{
+color: #00FF00;
+}
+#info>div button{
+	background-color: transparent;
+	color: #00FF00;
+	width: 33%;
+	text-align: center;
+	border: 1px solid #00FF00;
+	cursor: url(cursor.svg), auto;
+	padding: 6px;
+	background-color: rgba(0,255,0,0.11);
+	font-weight: bold;
+}
+</style></head><body>
+<canvas id="gameCanvas" class="game" tabindex="1" onblur="return this.focus();"></canvas>
+<script type="text/javascript">
+// 2D Point with x and y properties
+function Point2D(x=0,y=0){
+	var _P = this;
+	
+	_P.x = x;
+	_P.y = y;
+	
+	return _P;
+}
+
+// 2D Circle with custom properties
+var Circle2D = function ( options ){
+	
+	var _C = this;
+	
+	_C.centre = null;
+	_C.radius = 0;
+	_C.diameter = 0;
+	_C.strokeStyle = "#202020";
+	_C.fillStyle = "#FFFFFF";
+	_C.lineWidth = "1";
+	_C.lineDash = [];
+	
+	if(typeof options != 'undefined'){
+		
+		if(typeof options.centre != 'undefined'){    
+			_C.centre = options.centre;
+		}
+		
+		if(typeof options.radius != 'undefined'){    
+			_C.radius = options.radius;
+		}
+
+		if(typeof options.strokeStyle != 'undefined'){    
+			_C.strokeStyle = options.strokeStyle; 
+		}
+		
+		if(typeof options.fillStyle != 'undefined'){    
+			_C.fillStyle = options.fillStyle;
+		}
+		
+		if(typeof options.lineWidth != 'undefined'){    
+			_C.lineWidth = options.lineWidth;
+		}
+		
+		if(typeof options.lineDash != 'undefined'){    
+			_C.lineDash = options.lineDash;
+		}
+	}
+	
+	_C.diameter = _C.radius * 2;
+
+	return _C;
+}
+
+const StarClass = [
+{c1:"#b3ff80",c2:"#0F0"},
+{c1:"#ffd42a",c2:"#ffe680"},
+{c1:"#ff0000",c2:"#ff5555"},
+{c1:"#0055d4",c2:"#2a7fff"},
+{c1:"#7f2aff",c2:"#9955ff"},
+{c1:"#cccccc",c2:"#e6e6e6"},
+];
+
+const PlanetClass = [
+{c1:"#6c5d53",c2:"#483e37"},
+{c1:"#447821",c2:"#2d5016"},
+{c1:"#0088aa",c2:"#006680"},
+{c1:"#a02c5a",c2:"#782144"},
+{c1:"#d4aa00",c2:"#554400"},
+{c1:"#b3b3b3",c2:"#666666"},
+];
+
+var Sun = function( options ){
+	_S = this;
+	
+	_S.position = new Point2D(0,0);
+	
+	_S.angle = 0;	
+	_S.class = 	0;
+	
+	_S.x = function(){
+		return _S.position.x;
+	}
+	
+	_S.y = function(){
+		return _S.position.y;
+	}
+	
+	_S.Draw = function(g){
+		var f = StarClass[_S.class].c1;
+		var s = "";
+		
+		var ctx = g.context;
+		
+		if(_S.angle != 0){
+			ctx.translate(_S.x(),_S.y());
+			//ctx.rotate(rotationDegrees * Math.PI / 180);
+			
+			ctx.rotate(_S.angle * Math.PI / 180);
+			
+		}
+		
+		ctx.shadowColor = StarClass[_S.class].c2;
+		ctx.shadowBlur = 10;
+		
+		 var starCircle = new Circle2D({
+			centre: new Point2D( _S.x()+ 20.069,(_S.y()+20.031) ),
+			radius: 10,
+			strokeStyle: "",
+			fillStyle: StarClass[_S.class].c2,
+		});
+		
+		g.DrawCircle2D( starCircle );
+
+		ctx.shadowBlur = 8;		
+		
+		d = "m" + (_S.x() + 19.984) + " " + (_S.y()+1.2397) + "-0.51366 9.8144a9 9 0 0 0-1.4681 0.22066l-1.5808-5.5413 1.2681 5.625a9 9 0 0 0-5.271 3.945l-5.039-2.8024 4.8705 3.0784a9 9 0 0 0-1.1658 4.0592l-9.8066 0.47852 9.8144 0.51366a9 9 0 0 0 0.22066 1.4681l-5.5407 1.5808 5.6245-1.2681a9 9 0 0 0 3.945 5.2705l-2.8019 5.0395 3.0778-4.8705a9 9 0 0 0 4.0597 1.1658l0.47852 9.8066 0.51315-9.8144a9 9 0 0 0 1.4686-0.22066l1.5808 5.5407-1.2681-5.6245a9 9 0 0 0 5.27-3.945l5.0395 2.8019-4.8705-3.0784a9 9 0 0 0 1.1658-4.0592l9.8066-0.47852-9.8123-0.51366a9 9 0 0 0-0.22014-1.4686l5.5387-1.5803-5.6198 1.2671a9 9 0 0 0-3.947-5.2741l2.7993-5.0343-3.0773 4.869a9 9 0 0 0-4.0607-1.17z";
+		g.DrawPath2D(d,f,s);
+		
+		ctx.shadowColor = "";
+		ctx.shadowBlur = 0;
+		
+		if(_S.angle != 0){
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+		}
+	}
+	
+}
+
+var Resource = function(){
+	var _R = this;
+	
+	_R.position = new Point2D(0,0);
+	_R.fill = "#EFEFEF";
+	_R.stroke = "#CCC";
+	_R.path = null;
+	_R.selected = false;
+	
+	_R.Draw = function(g){
+		var x = _R.position.x;
+		var y = _R.position.y;
+		var d = "m" + (x+2.5176) + " " + (y) + "-2.5176 3.7056 8.0341 8.9624 7.9653-8.9624-2.5498-3.7056zm7.0347 1.1524h3.1587l1.8425 2.1715-6.3832 7.8967 3.751-7.7651z";
+		
+		_R.path = g.DrawPath2D(d,_R.fill,_R.stroke);
+		
+		if(_R.selected){
+			ctx = g.context;
+			ctx.rect(_R.position.x - 6, _R.position.y -6, 28,25);
+			ctx.stroke();
+		}
+	}
+	
+	_R.Hit = function(g,x,y){
+		ctx = g.context;
+		return ctx.isPointInPath(_R.path, x, y);
+	}
+	
+	
+}
+
+var Planet = function(options){
+	var _P = this;
+	
+	_P.orbit = null;
+	_P.orb = null;
+	_P.speed = ( Math.random() * 0.25 );
+	_P.location = ( Math.floor( Math.random() * 270 ));
+	_P.step = Math.PI / 180;
+	_P.angle = _P.location * _P.step;
+	
+	_P.resources = [];
+}
+
+var Ship = function(){
+	var _S = this;
+	
+	_S.health = 100;
+	_S.speed = 1;
+	_S.angle = 0;
+	
+	_S.fill = "#009900";
+	_S.stroke = "#00CC00";
+
+	_S.hull = { defence: 1, rockets:-1, lazer:-1, projectiles: 0 };
+	_S.armor = { defence: 1, rockets:-1, lazer:-1, projectiles: 0 };
+	_S.forcefield = { defence: 1, rockets: 0, lazer: 0, projectiles: -1 };
+	_S.rockets = { offence: 1, hull: 1, forcefield: 1, armor: 1 };
+	_S.lazers = { offence: 1, hull: 1, forcefield: 1, armor: 1 };
+	_S.projectiles = { offence: 1, hull: 1, forcefield: 1, armor: 1 };
+	
+	_S.position = new Point2D(0,0);
+	_S.target = new Point2D(0,0);
+	
+	_S.data = "-11.967-6.0273-11.967-3.3641s4.1107 6.2949 4.0425 9.8404c-0.06345 3.2965-4.108 8.998-4.108 8.998l12-3.3916zm-2.8641-0.02602-8.7749-3.3698-6.6688 2.3168-2.5269-5.7563 9.4065 2.3162z";
+	_S.svgx = 2.5176;
+	_S.svgy = 0;
+	
+	_S.path = 0;
+	
+	_S.moving = false;
+	
+	_S.MoveTo = function(point,start = false){
+		if(start == true){ _S.moving = true; }
+		_S.target.x = point.x;
+		_S.target.y = point.y;
+	}
+	
+	_S.Move  = function(g){
+		//move to target
+		if(_S.moving){
+			//todo. calculate line to point
+			_S.position.x += _S.speed;
+		}
+		if(_S.position.x > g.centre.x){
+			_S.position.x = 0;
+		}
+	}
+	
+	_S.Draw = function(g){
+		var x = _S.position.x;
+		var y = _S.position.y;
+
+		var d = "m" + (x+_S.svgx) + " " + (y+_S.svgy) + _S.data;
+		
+		_S.path = g.DrawPath2D(d,_S.fill,_S.stroke);
+	}
+	
+	_S.Hit = function(g,x,y){
+		ctx = g.context;
+		return ctx.isPointInPath(_S.path, x, y);
+	}
+}
+
+const GameState = {
+	Init: 0,
+	Menu: 1,
+	Start: 2,
+	Run: 3,
+	Paused: 4,
+	Shutdown: 5
+};
+
+function Game(){
+	var _G = this;
+	
+	_G.state = GameState.Init;
+	
+	_G.container = document.body;
+	_G.html = document.documentElement;
+	_G.width = window.innerWidth;
+	_G.height = window.innerHeight; 
+	_G.fillStyle = "#202020";
+	_G.strokeStyle = "#FFFFFF";
+	_G.id = "gameCanvas";
+	_G.canvas = document.getElementById(_G.id);
+	
+	if(_G.height == 0){ _G.height = _G.html.scrollHeight; }
+	
+	_G.canvas.width = _G.width;
+	_G.canvas.height = _G.height;
+	
+	_G.centre = new Point2D(_G.width/2,_G.height/2);
+	
+	_G.resourcesLeft = [];
+	_G.resourcesRight = [];
+	_G.playerBalance = 0;
+	_G.resourceCount = 20;
+	
+	//Get corners
+	_G.bottomLeft = new Point2D(0,_G.height);
+	_G.topLeft = new Point2D(0,0);
+	_G.bottomRight = new Point2D(_G.width,_G.height);	
+	_G.topRight = new Point2D(_G.width,0);
+	
+	_G.centreLeft = new Point2D(0,_G.centre.y);
+	_G.centreRight = new Point2D(_G.width,_G.centre.y);
+	_G.centreTop = new Point2D(_G.centre.x,0);
+	_G.centreBottom = new Point2D(_G.centre.x,_G.height);
+	
+	_G.context = _G.canvas.getContext("2d");
+	
+	_G.starCount = 250;
+	_G.starMaxRadius = 3;
+	_G.stars = null;
+	_G.planetCount = Math.floor( Math.random() * 8 );
+	if(_G.planetCount < 4){ _G.planetCount = 4; }
+	_G.planets = null;
+	
+	_G.player = new Ship();
+	
+	_G.alienShip = new Ship();
+
+	_G.alienShip.svgx = 21.072;
+	_G.alienShip.svgy = 0;
+	_G.alienShip.data = "-21.072 6.6818 17.275-0.52336-0.14114 1.2801-5.456 2.2104 5.3956 2.0627 0.20154 1.2796-17.275-0.52391 21.072 6.6823 3.3159-5.5423h0.61178v-8.2305h-0.71063zm3.0984 6.1205-0.05217 2.2533-5.9734-2.2005zm-7.0733 1.7815-0.02636 1.8079-4.3747-0.10489z";
+	
+	_G.ClearCanvas = function(){
+	
+		var ctx = _G.context;
+			
+		ctx.save();
+		ctx.fillStyle = "#000000";				
+		ctx.fillRect(0,0,_G.canvas.width,_G.canvas.height);
+		ctx.restore();
+	}
+	
+	_G.DrawCircle2D = function( circle ){
+	
+		var ctx = _G.context;
+
+		ctx.save();
+		ctx.beginPath();
+		ctx.lineWidth = circle.lineWidth;
+		ctx.arc(circle.centre.x, circle.centre.y, circle.radius, 0, 2 * Math.PI);
+		
+		if(circle.lineDash != []){
+			ctx.setLineDash(circle.lineDash);
+		}
+		
+		ctx.strokeStyle = circle.strokeStyle;
+		ctx.stroke();
+		
+		if(circle.fillStyle != ""){
+			ctx.fillStyle = circle.fillStyle;
+			ctx.fill();
+		}
+		
+		ctx.setLineDash([]);
+		ctx.closePath();
+		ctx.restore();
+	}
+	
+	_G.DrawPath2D = function(svg,fill,stroke){
+		var ctx = _G.context;
+	
+		ctx.save();
+		ctx.beginPath();
+		
+		var path = new Path2D(svg);
+		
+		if(stroke != ""){
+			ctx.strokeStyle = stroke;
+			ctx.stroke(path);
+		}
+		
+		if(fill != ""){
+			ctx.fillStyle = fill;
+			ctx.fill(path);
+		}
+		
+		ctx.closePath();
+		ctx.restore();
+		
+		return path;
+	}
+	
+	_G.Pause = function(){
+		_G.state = GameState.Paused;
+	}
+	
+	_G.Init = function(){
+		_G.GenerateStars();
+		_G.GeneratePlanets();
+		//_G.GenerateResources();
+		
+		_G.mainStar = new Sun();
+		_G.mainStar.class = Math.floor( Math.random() * 6 );
+		
+		_G.mainStar.position.x =_G.centre.x;
+		_G.mainStar.position.y = _G.centre.y;
+	
+		if( _G.mainStar.class<0 ){ _G.mainStar.class=0; }
+		if( _G.mainStar.class>5 ){ _G.mainStar.class=0; }
+		
+		_G.player.position = _G.centreLeft;
+		_G.player.position.x += 24;
+		_G.player.position.y = Math.floor( Math.random() * _G.height );
+		
+		_G.alienShip.position = _G.centreRight;
+		_G.alienShip.position.x -= 24;
+		_G.alienShip.position.y = Math.floor( Math.random() * _G.height );
+		_G.alienShip.fill = "#FF0000";
+		_G.alienShip.stroke = "#990000";
+	}
+
+	_G.GenerateStars = function(){
+		_G.stars = Array.from({length: _G.starCount},(c = new Circle2D()) => { 
+			c.centre = new Point2D(	Math.floor( Math.random() * _G.width ),	Math.floor( Math.random() * _G.height )	);
+			c.radius = Math.floor( Math.random() * _G.starMaxRadius );
+			return c;
+		});
+	}
+	
+	_G.GeneratePlanets = function(){
+		var distance = 60;	
+		
+		_G.planets = Array.from({ length: _G.planetCount }, (p = new Planet()) => {
+			p.orbit = new Circle2D({
+				centre: new Point2D( _G.centre.x + 20.069, _G.centre.y + 20.031 ),			
+				radius: distance,
+				strokeStyle: "rgba(179,179,179,0.6)",
+				fillStyle: "",
+				lineDash: [5,15],
+			});
+			
+			var ox = p.orbit.centre.x + p.orbit.radius*Math.cos(p.angle);
+			var oy = p.orbit.centre.y + p.orbit.radius*Math.sin(p.angle);
+			
+			var pc = Math.floor( Math.random() * PlanetClass.length );
+			
+			p.orb = new Circle2D({
+				centre: new Point2D( ox, oy ),			
+				radius: Math.floor(Math.random()* 20 ),
+				//strokeStyle: "rgba(179,179,179,0.6)",
+				strokeStyle: PlanetClass[pc].c2,
+				fillStyle: PlanetClass[pc].c1
+			});
+			if(p.orb.radius < 6){ p.orb.radius = 6; }
+	
+			distance += 60;
+			
+			return p;
+		});
+		
+	}
+	
+	_G.GenerateResources = function(){
+		_G.resourcesLeft = Array.from({ length: _G.resourceCount }, (r = new Resource()) => {
+			
+			r.position = new Point2D(	Math.floor( Math.random() * _G.width/2 ),	Math.floor( Math.random() * _G.height-70 )	);
+			
+			if(r.position.x < 40){
+				r.position.x = 40;
+			}
+			
+			if(r.position.y < 60){
+				r.position.y = 60;
+			}
+			
+			r.fill = "#00FF00";
+
+			return r;
+		});
+		
+		_G.resourcesRight = Array.from({ length: _G.resourceCount }, (r = new Resource()) => {
+			
+			r.position = new Point2D( (_G.width/2) + Math.floor( Math.random() * (_G.width - (_G.width/2) ) ),	Math.floor( Math.random() * _G.height-70 )	);
+			
+			if(r.position.x > (_G.width-56)){
+				r.position.x = (_G.width-56);
+			}
+			
+			if(r.position.y < 70){
+				r.position.y = 70;
+			}
+			
+			r.fill = "#0000FF";
+
+			return r;
+		});
+		
+		//align resource with planet if inside orbit.
+	}
+	
+	_G.DrawStars = function(){
+		_G.stars.forEach((star) => { _G.DrawCircle2D(star); } );
+	}
+	
+	_G.DrawPlanets = function(){
+		_G.planets.forEach((planet, idx) => { 
+		
+			planet.location += planet.speed;
+			planet.angle = planet.location * planet.step;
+
+			if(planet.location>359){ 
+				planet.location = 0;
+			}
+			var nx = planet.orbit.centre.x + planet.orbit.radius*Math.cos(planet.angle);
+			var ny = planet.orbit.centre.y + planet.orbit.radius*Math.sin(planet.angle);
+
+			planet.orb.centre.x = nx;
+			planet.orb.centre.y = ny;
+			
+			_G.DrawCircle2D(planet.orbit);
+			_G.DrawCircle2D(planet.orb);
+			
+			_G.planets[idx] = planet;
+		} );
+	}
+	
+	_G.DrawResources = function(){
+		_G.resourcesLeft.forEach((r) => { r.Draw(_G); } );
+		_G.resourcesRight.forEach((r) => { r.Draw(_G); } );
+	}
+
+	_G.DrawHud = function(){
+	
+		var ctx = _G.context;
+	
+		ctx.beginPath();
+		
+		ctx.strokeStyle = "#009900";
+		
+		ctx.shadowColor = "#00CC00";
+		ctx.shadowBlur = 8;
+		
+		var xs = 30;
+		var ys = 30;
+		
+		ctx.moveTo(xs, ys);
+		
+		ctx.lineTo(_G.centreTop.x,_G.centreTop.y);
+		ctx.lineTo(_G.topRight.x-xs,_G.topRight.y+ys);
+		ctx.lineTo(_G.bottomRight.x-xs,_G.bottomRight.y-ys);
+		ctx.lineTo(_G.centreBottom.x,_G.centreBottom.y);
+		ctx.lineTo(_G.bottomLeft.x+xs,_G.bottomLeft.y-ys);
+		ctx.lineTo(xs,ys);
+		ctx.stroke();
+		ctx.stroke();
+		ctx.closePath();
+		
+		ctx.beginPath();
+		ctx.moveTo(_G.bottomLeft.x+xs, _G.bottomLeft.y-(ys*2));
+		ctx.lineTo(_G.bottomRight.x-xs,_G.bottomRight.y-(ys*2));
+		ctx.lineTo(_G.bottomRight.x-xs,_G.bottomRight.y-ys);
+		ctx.lineTo(_G.centreBottom.x,_G.centreBottom.y);
+		ctx.lineTo(_G.bottomLeft.x+xs,_G.bottomLeft.y-ys);
+		ctx.fillStyle = "rgba(0,153,0,0.08)";	
+		ctx.fill();
+		
+		ctx.moveTo(_G.bottomRight.x-xs,_G.bottomRight.y-ys);
+		ctx.lineTo(_G.bottomLeft.x+xs, _G.bottomLeft.y-ys);
+
+		ctx.stroke();
+		
+		ctx.closePath();
+		
+		ctx.beginPath();
+		ctx.moveTo(_G.centreBottom.x, _G.centreBottom.y-(ys*2));
+		ctx.lineTo(_G.centreBottom.x,_G.centreBottom.y);
+		
+		var px = (_G.centreBottom.x-xs)/4;
+		
+		ctx.moveTo(_G.centreBottom.x-px, _G.centreBottom.y-(ys*2));
+		
+		
+		var angle = (Math.PI / 180) * 122;
+		
+		var nx = _G.centreBottom.x-px + (ys*2)*Math.cos(angle);
+		var ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.moveTo(_G.centreBottom.x-(px*2), _G.centreBottom.y-(ys*2));
+		
+		angle = (Math.PI / 180) * 132;
+		
+		nx = _G.centreBottom.x-(px*2) + (ys*2)*Math.cos(angle);
+		ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.moveTo(_G.centreBottom.x-(px*3), _G.centreBottom.y-(ys*2));
+		
+		angle = (Math.PI / 180) * 142;
+		
+		nx = _G.centreBottom.x-(px*3) + (ys*2)*Math.cos(angle);
+		ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.moveTo(_G.centreBottom.x+px, _G.centreBottom.y-(ys*2));
+		
+		var angle = (Math.PI / 180) * 58;
+		
+		var nx = _G.centreBottom.x+px + (ys*2)*Math.cos(angle);
+		var ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.moveTo(_G.centreBottom.x+(px*2), _G.centreBottom.y-(ys*2));
+		
+		var angle = (Math.PI / 180) * 48;
+		
+		var nx = _G.centreBottom.x+(px*2) + (ys*2)*Math.cos(angle);
+		var ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.moveTo(_G.centreBottom.x+(px*3), _G.centreBottom.y-(ys*2));
+		
+		var angle = (Math.PI / 180) * 38;
+		
+		var nx = _G.centreBottom.x+(px*3)+ (ys*2)*Math.cos(angle);
+		var ny = _G.centreBottom.y-(ys*2) + (ys*2)*Math.sin(angle);
+		
+		ctx.lineTo(nx,ny);
+		
+		ctx.stroke();
+		
+		ctx.closePath();
+
+		ctx.shadowColor = "";
+		ctx.shadowBlur = 0;
+		
+		//Draw Balance
+		d = "m" + (_G.centreTop.x-12) + " " + (_G.centreTop.y+ys) + "-3.7765 5.5587 12.052 13.444 11.948-13.444-3.8248-5.5587zm10.552 1.7286h4.7382l2.7638 3.2573-9.5752 11.845 5.6267-11.648z";
+		_G.DrawPath2D(d,"#009900","");
+		
+		ctx.font = "bold 26px Courier New";
+		ctx.fillStyle = "#009900";
+		ctx.textAlign = "left";
+		
+		var txt = _G.playerBalance;
+		var txtPosition = new Point2D(_G.centreTop.x+18, (_G.centreTop.y+ys)+18);
+		
+		ctx.fillText(txt, txtPosition.x, txtPosition.y);
+		
+	}
+	
+	_G.updateAlienShip = function(){
+		
+		if(_G.alienShip.moving){
+			//todo replace with custom logic to scan for targets
+			if(_G.alienShip.position.x < -24){
+				_G.alienShip.position.x = _G.width - 24;
+			}
+			
+			_G.alienShip.position.x -= _G.alienShip.speed;
+		}
+	}
+	
+	_G.Update = function(){
+	
+		if (document.hidden) {
+			_G.Pause();
+		}
+		_G.ClearCanvas();
+		_G.DrawStars();
+		_G.mainStar.Draw(_G);
+		_G.DrawPlanets();
+		_G.DrawResources();
+		_G.DrawHud();
+		
+		_G.player.Move(_G);
+		_G.player.Draw(_G);
+		_G.updateAlienShip();
+		_G.alienShip.Draw(_G);
+	}
+	
+	_G.Run = function(){
+	
+		_G.state = GameState.Running;
+		_G.Update();
+		
+		requestAnimationFrame(_G.Run);
+	}
+	
+	// Calculate click position within canvas
+	_G.onclick = function(event){
+		var e = event ? event:window.event;
+		// Get client rect of canvas
+		var clientRect = _G.canvas.getBoundingClientRect();
+		
+		var diWidth = _G.canvas.width / clientRect.width;
+		var diHeight = _G.canvas.height / clientRect.height;
+		
+		var X = (e.clientX - clientRect.left) * diWidth;
+		var Y = (e.clientY - clientRect.top) * diHeight;
+		
+		var point= new Point2D(X,Y);
+		// Do something on click HERE
+		//alert(point.x + ":" + point.y);
+		_G.player.MoveTo(point,true);
+	}
+	
+	// capture click event on canvas
+	_G.canvas.onclick = function(event){ _G.onclick(event); }
+}
+
+var g = new Game();
+
+g.Init();
+g.Run();
+
+function hideInfo(){
+	g.GenerateResources();
+	g.alienShip.moving = true;
+	document.getElementById("info").style.visibility='hidden';
+	return true;
+}
+</script>
+<div id="info">
+<div id="info-inner">
+<h1>ALIEN SPACESHIP</h1>
+<p>Gather resources and upgrade your ship.</p>
+<p>Defend this sector against the alien spaceship.</p>
+<!--<p><i>Press F5 to start a new game</i></p>-->
+<p align="right"><button onclick="return hideInfo();">OK</button></p>
+</div>
+</div>
+</body></html>

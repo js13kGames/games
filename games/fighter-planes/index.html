@@ -1,0 +1,754 @@
+<html>
+	<head>
+		<title>App</title>
+		<meta charset=utf-8/>
+	</head>
+	<body>
+		<canvas id='canva'>You have a very-very old browser</canvas>
+		<script>
+		function drawOcean(y,wind,ww,wh) {
+			let size = 4;
+			ctx.fillStyle = "rgb("+24+","+82+","+144+")";
+			ctx.fillRect(0,y,ww,wh+1);
+			ctx.translate(wind, 0);
+			ctx.lineWidth = 30;
+			for ( let lv = 0; lv < size; lv ++) {
+				ctx.strokeStyle = "rgb("+(16+2*lv)+","+(70+3*lv)+","+(120+6*lv)+")";
+				for ( let num = -1; num < ww/140+2; num++ ) {
+					ctx.beginPath();
+					ctx.arc(num*140,y+lv*30,50,1.25*Math.PI, 1.75*Math.PI);
+					ctx.stroke();
+					ctx.closePath();
+					ctx.beginPath();
+					ctx.arc(num*140 + 70,y-71+lv*30,50,0.25*Math.PI, 0.75*Math.PI);
+					ctx.stroke();
+					ctx.closePath();
+				}
+			}
+			ctx.translate(-wind, 0);
+		}
+		function line(x1,y1,x2,y2) {
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+		}
+		function drawTarget(x, y) {
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = 'black';
+			ctx.beginPath();
+			ctx.arc(x,y,15,0.1*Math.PI, 0.4*Math.PI);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.arc(x,y,15,0.6*Math.PI, 0.9*Math.PI);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.arc(x,y,15,1.1*Math.PI, 1.4*Math.PI);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.arc(x,y,15,1.6*Math.PI, 1.9*Math.PI);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.beginPath();
+			line(x,y,x,y-20);
+			line(x,y,x-20,y);
+			line(x,y,x+20,y);
+			line(x,y,x,y+20);
+			ctx.stroke();
+			ctx.closePath();
+		}
+		let mouse_x = 0, mouse_y = 0, dir_to_mouse = 0, speed = 32, dx = 1, dy = 1, x = 0, y = 20000, xold = 0, yold = 0, kCode = 0, kCodeUp = 0, keyPress = [],
+		moveVector = 0, windSmesh = 0, crashed = false, vx = 0, vy = 0, bullets = [], leftClick = false, cloud = [], strikeEnabled = true, strikeCount = 0,
+		rocket = [], warplane = [], ts = performance.now(), wwh = 0, whh = 0, elapsed = 0, exp = 0, planei = new Image(), canvas = document.getElementById('canva'),
+		ctx = canvas.getContext('2d'), bumi = new Image(), rocketi = new Image(), warplanei = new Image(), cloudi = new Image(), buttonActived = false, bumaudio,
+		bulletaudio;
+		canvas.style.cursor = 'none';
+		planei.src = 'plane.png';
+		bumi.src = 'bum.png';
+		rocketi.src = 'rocket.png';
+		warplanei.src = 'warplane.png';
+		cloudi.src = 'cloud.png';
+
+		function playBulletSound(vl) {
+			if ( bulletaudio === undefined ) {
+				bulletaudio = new Audio();
+				bulletaudio.src = 'bulletaudio.mp3';
+				var bulletaudio;
+			}
+			var bulletaudiou = bulletaudio;
+			bulletaudiou.volume = vl;
+		  bulletaudiou.autoplay = true; // Автоматически запускаем
+		}
+
+		class Airplane {
+			constructor(x, y, width, height, image, crashImage) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.image = image;
+				this.crashImage = crashImage;
+				this.crashed = 27;
+				this.hh = this.height / 2;
+				this.wh = this.width / 2;
+			}
+			draw(direct, movevector, waylength, wayColor, wayPos, wayPosx2, wayPosy2) {
+				//waylength /= 2;
+				ctx.lineWidth = 2;
+				ctx.strokeStyle = wayColor;
+				if ( waylength > 32 ) waylength = 32;
+				ctx.save();
+				ctx.translate(this.x, this.y);
+				ctx.rotate(direct);
+				ctx.drawImage( this.image, -this.wh, -this.hh, this.width, this.height );
+
+				ctx.beginPath();
+				ctx.moveTo(-this.wh, wayPos);
+				ctx.translate(-this.wh, wayPos);
+				ctx.rotate( movevector - direct );
+				ctx.lineTo(waylength,0);
+				ctx.rotate( direct - movevector );
+				ctx.translate(0, -2 * wayPos);
+				ctx.rotate( movevector - direct );
+				line(0,0,waylength, 0);
+				ctx.restore();
+				ctx.translate(this.x, this.y);
+				ctx.rotate(direct);
+
+				ctx.moveTo(-wayPosx2, wayPosy2);
+				ctx.translate(-wayPosx2, wayPosy2);
+				ctx.rotate( movevector - direct );
+				ctx.lineTo(waylength*2,0);
+				ctx.rotate( direct - movevector );
+				ctx.translate(0, -2 * wayPosy2);
+				ctx.rotate( movevector - direct );
+				line(0,0,waylength*2, 0);
+
+				ctx.stroke();
+				ctx.closePath();
+				ctx.restore();
+			}
+			crash() {
+				this.height = this.width;
+				this.crashed --;
+				if ( this.crashed <= 0 ) return true;
+				ctx.translate(this.x, this.y);
+				ctx.drawImage( this.crashImage, 16*(8-Math.floor(this.crashed/3)), 0, 16, 16, -this.wh, -this.hh, this.width, this.height );
+				ctx.translate(-this.x, -this.y);
+				return false;
+			}
+		}
+
+		class Cloud {
+			constructor(x,y) {
+				this.x = x;
+				this.y = y;
+			}
+			draw() {
+				ctx.drawImage(cloudi, this.x, this.y, 80, 60);
+			}
+		}
+
+		class Bullet {
+			constructor(x, y, dir, strk, crashImage) {
+				this.x = x + (strk - 0.5)*24*Math.sin(dir);
+				this.y = y + (strk - 0.5)*24*Math.cos(dir);
+				this.dir = dir;
+				this.crashed = false;
+				this.crash = 9;
+				this.crashImage = crashImage;
+			}
+			draw() {
+				if (!this.crashed ) {
+					if ( this.x < -10 || this.x > ww + 10 || this.y < -10 || this.y > ww + 10 ) return false;
+					ctx.strokeStyle = 'yellow';
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					ctx.save();
+					ctx.translate(this.x, this.y);
+					ctx.rotate(this.dir);
+					ctx.moveTo(0,0);
+					ctx.lineTo(10, 0);
+					ctx.restore();
+					ctx.stroke();
+					ctx.closePath();
+					this.x -= Math.cos(this.dir+Math.PI)*30;
+					this.y -= Math.sin(this.dir+Math.PI)*30;
+				}
+				else {
+					this.height = this.width;
+					this.crash --;
+					if ( this.crash <= 0 ) return true;
+					ctx.translate(this.x, this.y);
+					ctx.drawImage( this.crashImage, 16*(8-this.crash), 0, 16, 16, -8, -8, 16, 16 );
+					ctx.translate(-this.x, -this.y);
+					return false;
+				}
+			}
+		}
+
+		class Rocket {
+			constructor ( x, y, image, crashImage ) {
+				this.timerok = 6000 + Math.random() * 500;
+				this.sx = x;
+				this.sy = y;
+				this.image = image;
+				this.crashed = false;
+				this.crash = 27;
+				this.blocked = false;
+				this.crashImage = crashImage;
+				this.crashSoundEnabled = true;
+			}
+			draw (_x,_y) {
+				if ( this.blocked ) return true;
+				this.x = this.sx + x;
+				this.y = this.sy + y;
+				if ( !this.crashed ) {
+					this.timerok --;
+					if ( this.timerok < 0 ) {
+						this.crashed = true;
+					}
+					this.direct = Math.atan( ( _y - this.y ) / ( _x - this.x ) );
+					if ( this.x > _x ) {
+						this.direct += Math.PI;
+					}
+					let cos = Math.cos(this.direct);
+					let sin = Math.sin(this.direct);
+					if ( this.x > -150 && this.x < ww+150 && this.y > -150 && this.y < wh+150 ){
+						ctx.save();
+						ctx.translate(this.x, this.y);
+						ctx.rotate(this.direct);
+						ctx.drawImage( this.image, -16, -8, 32, 16 );
+						ctx.restore();
+						this.sx += cos*(24);
+						this.sy += sin*(24);
+					}
+					else {
+						this.sx += cos*(30);
+						this.sy += sin*(30);
+					}
+					ctx.save();
+					ctx.translate(wwh,whh);
+					ctx.rotate(this.direct-Math.PI);
+					ctx.translate(ww/5,0);
+					ctx.beginPath();
+					ctx.moveTo(0,-10);
+					ctx.lineTo(0,10);
+					ctx.lineTo(10,0);
+					ctx.lineTo(0,-10);
+					ctx.closePath();
+					ctx.fillStyle = '#FFFF33';
+					ctx.fill();
+					ctx.strokeStyle = 'black';
+					ctx.lineWidth = 1;
+					ctx.stroke();
+					ctx.restore();
+					return false;
+				}
+				else {
+					if ( this.crashSoundEnabled ) {
+						playBulletSound(0.4);
+						this.crashSoundEnabled = false;
+					}
+					this.height = this.width;
+					this.crash --;
+					if ( this.crash <= 0 ) return true;
+					ctx.translate(this.x, this.y);
+					ctx.drawImage( this.crashImage, 16*(8-Math.floor(this.crash/3)), 0, 16, 16, -16, -8, 32, 16 );
+					ctx.translate(-this.x, -this.y);
+					return false;
+				}
+			}
+		}
+
+		class Warplane {
+			constructor ( x, y, image, crashImage ) {
+				this.sx = x;
+				this.sy = y;
+				this.image = image;
+				this.crashed = false;
+				this.crash = 27;
+				this.blocked = false;
+				this.crashImage = crashImage;
+				this.startRocket = 240;
+				this.iscrash = 64;
+				this.crashSoundEnabled = true;
+			}
+			draw (_x,_y) {
+				this.startRocket --;
+				if ( this.blocked ) return true;
+				this.x = this.sx + x;
+				this.y = this.sy + y;
+				if ( !this.crashed ) {
+					this.direct = Math.atan( ( _y - this.y ) / ( _x - this.x ) );
+					if ( this.x > _x ) {
+						this.direct += Math.PI;
+					}
+					if ( this.startRocket < 0 ) {
+						this.startRocket = 240;
+						if ( rocket.length < 12 ) rocket.push(new Rocket(this.sx, this.sy, rocketi, bumi));
+					}
+					ctx.save();
+					ctx.translate(this.x, this.y);
+					ctx.rotate(this.direct);
+					ctx.drawImage( this.image, -32, -32, 64, 64 );
+					ctx.restore();
+					this.sx += Math.cos(this.direct)*12;
+					this.sy += Math.sin(this.direct)*12;
+					ctx.save();
+					ctx.translate(wwh,whh);
+					ctx.rotate(this.direct-Math.PI);
+					ctx.translate(ww/5,0);
+					ctx.moveTo(0,-15);
+					ctx.beginPath();
+					ctx.lineTo(0,15);
+					ctx.lineTo(15,0);
+					ctx.lineTo(0,-15);
+					ctx.closePath();
+					ctx.fillStyle = '#FF0000';
+					ctx.fill();
+					ctx.strokeStyle = 'black';
+					ctx.lineWidth = 1;
+					ctx.stroke();
+					ctx.restore();
+					return false;
+				}
+				else {
+					if ( this.crashSoundEnabled ) {
+						playBulletSound(0.4);
+						this.crashSoundEnabled = false;
+					}
+					this.height = this.width;
+					this.crash --;
+					if ( this.crash <= 0 ) return true;
+					ctx.translate(this.x, this.y);
+					ctx.drawImage( this.crashImage, 16*(8-Math.floor(this.crash/3)), 0, 16, 16, -32, -32, 64, 64 );
+					ctx.translate(-this.x, -this.y);
+					return false;
+				}
+			}
+		}
+		// check size of canvas
+		ww = window.innerWidth;
+		wh = window.innerHeight;
+		canvas.style.position = 'fixed';
+		canvas.style.top = canvas.style.left = '0';
+
+		let myAirplane = new Airplane( wwh, whh, 50, 64, planei, bumi);
+		for ( let num = 0; num < 64; num ++ ) {
+			let num1 = cloud.length;
+			cloud.push(new Cloud(num%8*300+(Math.random()-0.5)*256, Math.floor(num/8)*300+(Math.random()-0.5)*256, 25+(Math.random()-0.5)*20));
+			if ( cloud[num1].x < -120 || cloud[num1].x > ww + 120 || cloud[num1].y < -120 || cloud[num1].y > wh + 120 ) cloud.splice(num1, 1);
+		}
+		menu();
+		setTimeout('buttonActived = true;', 100);
+		function gen_new_plane() {
+			if( warplane.length < 2 ) warplane.push(new Warplane(-x+Math.sign(Math.random()-0.5)*1500+(Math.random()-0.5)*500, -y+Math.sign(Math.random()-0.5)*1500+(Math.random()-0.5)*500,warplanei,bumi));
+			setTimeout(gen_new_plane, 6000);
+		}
+		let tt = performance.now();
+		function animate() {  // create the main game loop
+			ww = window.innerWidth;
+			wh = window.innerHeight;
+			wwh = ww / 2;
+			whh = wh / 2;
+			canvas.width = canvas.style.width = ww;
+			canvas.height = canvas.style.height = wh+1;
+			ctx.fillStyle = '#CCCCFF';
+			ctx.fillRect(0,0,ww,wh);
+			if ( !crashed ) {
+				xold = x;
+				yold = y;
+				x += dx;
+				y += dy;
+			}
+			if ( mouse_x > ww / 2 ) {// if mouse position of x in two part of display
+				dir_to_mouse = Math.atan( ( wh / 2 - mouse_y ) / ( ww / 2 - mouse_x ) );
+			}
+			else {
+				dir_to_mouse = Math.PI + Math.atan( ( wh / 2 - mouse_y ) / ( ww / 2 - mouse_x ) );
+			}
+			if ( dx < 0 ) {// if mouse position of x in two part of display
+				moveVector = Math.PI + Math.atan( dy / dx );
+			}
+			else {
+				moveVector =  Math.atan( dy / dx );
+			}
+			//kontra.canvas.style.backgroundColor = 'black';
+			if (!crashed) {
+				if(keyPress[87]) { // go up
+					vx -= Math.cos(dir_to_mouse) * speed;
+					vy -= Math.sin(dir_to_mouse) * speed;
+				}
+				if (leftClick && strikeEnabled) { // strike
+					strikeEnabled = false;
+					bullets.push(new Bullet(wwh, whh, dir_to_mouse, strikeCount%2, bumi));
+					playBulletSound(0.1);
+					strikeCount += 1;
+					setTimeout('strikeEnabled = true;', 125);
+				}
+			}
+			let r = Math.sqrt(dx*dx+dy*dy);
+			let a = 900/*koef*//(r*r);
+			let ax = a * dx; // a * cos
+			let ay = a * dy; // a * sin
+			vx += ax / 60;
+			vy += ay / 60 - 18;
+			dx = vx / 60;
+			dy = vy / 60;
+			if ( Math.sqrt(vx*vx+vy*vy) > 1200 ) {
+				vx *= 0.95;
+				vy *= 0.95;
+			}
+			let bullength = bullets.length;
+			for ( let num = 0; num < bullength; num++ ) {
+				if ( bullets[num] === undefined ) {
+					continue;
+				}
+				if ( bullets[num].x > 5000 || bullets[num].x < -5000 || bullets[num].y > 5000 || bullets[num].y < -5000 ) {
+					bullets.splice(num, 1);
+					bullength --;
+					num --;
+					continue;
+				}
+				for ( let num1 = 0; num1 < rocket.length; num1++ ) {
+					if ( rocket[num1] === undefined || bullets[num] === undefined || rocket[num1].x === undefined || rocket[num1].y === undefined ) continue;
+					if ( 	bullets[num].x > rocket[num1].x - 12 &&
+					 			bullets[num].x < rocket[num1].x + 12 &&
+							 	bullets[num].y > rocket[num1].y - 24 &&
+							 	bullets[num].y < rocket[num1].y + 24 ) {
+									bullets.splice(num, 1);
+									rocket[num1].crashed = true;
+									bullength --;
+									num --;
+									exp += 1;
+								}
+				}
+			}
+			for ( let num = 0; num < bullets.length; num ++ ) {
+				bullets[num].draw();
+			}
+			for ( let num = 0; num < bullets.length; num++ ) {
+				for ( let num1 = 0; num1 < warplane.length; num1++ ) {
+					if ( 	bullets[num].x > warplane[num1].x - 32 &&
+								bullets[num].x < warplane[num1].x + 32 &&
+								bullets[num].y > warplane[num1].y - 32 &&
+								bullets[num].y < warplane[num1].y + 32 ) {
+									bullets[num].crashed = true;
+									warplane[num1].iscrash --;
+									if ( warplane[num1].iscrash < 0 ) {
+										warplane[num1].crashed = true;
+									}
+								}
+				}
+			}
+			for( let num = 0; num < warplane.length; num ++ ) {
+				if (warplane[num].draw(wwh,whh)) {
+					warplane.splice(num,1);
+					exp += 25;
+				}
+			}
+			if ( y < 1000 ) {
+				drawOcean(wh-80+y/2, windSmesh%140, ww, wh);
+			}
+			if ( y < -wh/1.5 )
+			{
+				if ( !crashed ) playBulletSound(1);
+				crashed = true;
+			}
+			for( let num = 0; num < rocket.length; num ++ ) {
+				if ( 	rocket[num].x > wwh-32 && rocket[num].x < wwh+32 &&
+				rocket[num].y > whh-32 && rocket[num].y < whh+32 ) {
+					crashed = true;
+					rocket[num].blocked = true;
+					playBulletSound(1);
+					continue;
+				}
+				if ( 	rocket[num].x > ww*6 && rocket[num].x < -ww*6 &&
+				rocket[num].y > wh*6 && rocket[num].y < -wh*6 ) {
+					rocket[num].crashed = true;
+				}
+			}
+			for( let num = 0; num < warplane.length; num ++ ) {
+				if ( 	warplane[num].x > wwh-32 && warplane[num].x < wwh+32 &&
+				warplane[num].y > whh-32 && warplane[num].y < whh+32 ) {
+					crashed = true;
+					warplane[num].blocked = true;
+					playBulletSound(1);
+				}
+			}
+
+			if ( crashed ) {
+				dx = Math.random()*100-50;
+				dy = Math.random()*100-50;
+				if ( myAirplane.crash() )
+				{
+					lose();
+					setTimeout('buttonActived = true;', 500);
+					return;
+				}
+				ctx.translate(Math.random()*50-25, Math.random()*50-25);
+			}
+			for( let num = 0; num < rocket.length; num ++ ) {
+				if (rocket[num].draw(wwh,whh)) {
+					setTimeout('rocket.splice('+num+',1);', 10);
+					exp += 1;
+				}
+			}
+
+			for ( let num = 0; num < cloud.length; num++ ) {
+				cloud[num].x += dx + 1;
+				cloud[num].y += dy;
+				if ( cloud[num].x < -120 ) cloud[num].x = ww+90;
+				if ( cloud[num].x > ww + 120 ) cloud[num].x = -30;
+				if ( cloud[num].y < -120 ) cloud[num].y = wh+90;
+				if ( cloud[num].y > wh + 120 ) cloud[num].y = -30;
+				cloud[num].draw();
+			}
+			windSmesh += dx;
+			ctx.fillStyle = "#FFD700";
+			ctx.font = 'bold 20px sans-serif';
+			ctx.fillText("Elevation:"+Math.floor((y+wh/1.5+4)*0.1)+" m", ww-200, 20);
+			ctx.fillStyle = "#7CFC00";
+			ctx.font = 'bold 30px algerian';
+			ctx.fillText("score " + exp, ww-200, 50);
+			myAirplane.x = ww / 2;
+			myAirplane.y = wh / 2;
+			drawTarget(mouse_x, mouse_y);
+			if (!crashed) myAirplane.draw(dir_to_mouse, moveVector, r, 'white', 12, -1, 32);
+			elapsed = performance.now()-ts;
+			ts = performance.now();
+			requestAnimationFrame(animate);
+		}
+		let r = 230, g = 120, b = 10, r_c = -1, b_c = 1, g_c = 1;
+		function lose() {
+			ww = window.innerWidth;
+			wh = window.innerHeight;
+			canvas.width = canvas.style.width = ww;
+			canvas.height = canvas.style.height = wh+1;
+			ctx.fillStyle = '#AAFFBB';
+			ctx.fillRect(0,0,ww,wh);
+			ctx.fillStyle = '#88CC99';
+			ctx.fillRect(ww/3,wh/5*1-50,ww/3,wh/5*3+100);
+			ctx.fillStyle = "#191970";
+			ctx.font = 'bold 50px arial black';
+			ctx.fillText("You are lose", ww/2-175, wh/2-180);
+			ctx.fillStyle = "#FFD700";
+			ctx.font = 'bold 30px fantasy';
+			ctx.fillText("SCORE", ww/2-60, wh/2-100);
+			if ( r > 254 ) r_c = -4;
+			if ( r < 60 ) r_c = 4;
+			r+=r_c;
+			if ( b > 170 ) b_c = -4;
+			if ( b < 1 ) b_c = 4;
+			b+=b_c;
+			if ( g > 220 ) g_c = -4;
+			if ( g < 40 ) g_c = 4;
+			g+=g_c;
+			ctx.fillStyle = "rgb("+r+","+g+","+b+")";
+			ctx.font = 'bold 120px fantasy';
+			ctx.fillText(exp, ww/2-Math.floor(Math.log10(Math.abs(exp)))*30-50, wh/11*6);
+			if ( mouse_x > ww/2-200 && mouse_x < ww/2+200 && mouse_y > wh/10*7-50 && mouse_y < wh/10*7+50 ) {
+				if ( buttonActived ) {
+					ctx.fillStyle = '#D0FFFF';
+					ctx.fillRect(ww/2-200, wh/10*7-50, 400, 100);
+					ctx.fillStyle = '#FFD700';
+					ctx.font = 'bold 60px algerian';
+					ctx.fillText("RESTART", ww/2-140, wh/10*7+20);
+				}
+				else {
+					ctx.fillStyle = '#A0CCCC';
+					ctx.fillRect(ww/2-200, wh/10*7-50, 400, 100);
+					ctx.fillStyle = '#FF8C00';
+					ctx.font = 'bold 60px algerian';
+					ctx.fillText("RESTART", ww/2-140, wh/10*7+20);
+				}
+				if ( leftClick && buttonActived) {
+					mouse_x = 0;
+					mouse_y = 0;
+					xold = 0;
+					yold = 0;
+					dir_to_mouse = 0;
+					speed = 32;
+					dx = 1;
+					x = 0;
+					y = 20000;
+					kCode = 0;
+					kCodeUp = 0;
+					keyPress = [];
+					moveVector = 0;
+					windSmesh = 0;
+					crashed = false;
+					vx = 0;
+					vy = 0;
+					bullets = [];
+					leftClick = false;
+					cloud = [];
+					strikeEnabled = true;
+					strikeCount = 0;
+					rocket = [];
+					warplane = [];
+					ts = performance.now();
+					wwh = 0;
+					whh = 0;
+					elapsed = 0;
+					exp = 0;
+					ww = window.innerWidth;
+					wh = window.innerHeight;
+					canvas.style.position = 'fixed';
+					canvas.style.top = canvas.style.left = '0';
+					planei = new Image();
+					planei.src = 'plane.png';
+					myAirplane = new Airplane( wwh, whh, 50, 64, planei, bumi);
+					for ( let num = 0; num < 64; num ++ ) {
+						let num1 = cloud.length;
+						cloud.push(new Cloud(num%8*300+(Math.random()-0.5)*256, Math.floor(num/8)*300+(Math.random()-0.5)*256, 25+(Math.random()-0.5)*20));
+						if ( cloud[num1].x < -120 || cloud[num1].x > ww + 120 || cloud[num1].y < -120 || cloud[num1].y > wh + 120 ) cloud.splice(num1, 1);
+					}
+					buttonActived = false;
+					setTimeout(animate(),50);
+					setTimeout(gen_new_plane(),50);
+					return;
+				}
+			}
+			else {
+				ctx.fillStyle = '#B0E0E6';
+				ctx.fillRect(ww/2-200, wh/10*7-50, 400, 100);
+				ctx.fillStyle = '#90C0C6';
+				ctx.font = 'bold 60px algerian';
+				ctx.fillText("RESTART", ww/2-140, wh/10*7+20);
+			}
+			drawTarget(mouse_x,mouse_y);
+			requestAnimationFrame(lose);
+		}
+		function menu() {
+			ww = window.innerWidth;
+			wh = window.innerHeight;
+			canvas.width = canvas.style.width = ww;
+			canvas.height = canvas.style.height = wh+1;
+			ctx.fillStyle = '#AAFFBB';
+			ctx.fillRect(0,0,ww,wh);
+			ctx.fillStyle = '#88CC99';
+			ctx.fillRect(ww/2-300,wh/5*1-50,600,600);
+			ctx.fillStyle = '#191970';
+			ctx.font = 'bold 60px matura mt script capitals';
+			ctx.fillText("Fighter planes", ww/2-220, wh/10*2+20);
+			if ( mouse_x > ww/2-200 && mouse_x < ww/2+200 && mouse_y > wh/10*5-50 && mouse_y < wh/10*5+50 ) {
+				ctx.fillStyle = '#D0FFFF';
+				ctx.fillRect(ww/2-200, wh/10*5-50, 400, 100);
+				ctx.fillStyle = '#FFD700';
+				ctx.font = 'bold 60px algerian';
+				ctx.fillText("START", ww/2-100, wh/10*5+20);
+				if ( leftClick && buttonActived ) {
+					mouse_x = 0;
+					mouse_y = 0;
+					xold = 0;
+					yold = 0;
+					dir_to_mouse = 0;
+					speed = 32;
+					dx = 1;
+					x = 0;
+					y = 20000;
+					kCode = 0;
+					kCodeUp = 0;
+					keyPress = [];
+					moveVector = 0;
+					windSmesh = 0;
+					crashed = false;
+					vx = 0;
+					vy = 0;
+					bullets = [];
+					leftClick = false;
+					cloud = [];
+					strikeEnabled = true;
+					strikeCount = 0;
+					rocket = [];
+					warplane = [];
+					ts = performance.now();
+					wwh = 0;
+					whh = 0;
+					elapsed = 0;
+					exp = 0;
+					ww = window.innerWidth;
+					wh = window.innerHeight;
+					canvas.style.position = 'fixed';
+					canvas.style.top = canvas.style.left = '0';
+					planei = new Image();
+					planei.src = 'plane.png';
+					myAirplane = new Airplane( wwh, whh, 50, 64, planei, bumi);
+					for ( let num = 0; num < 64; num ++ ) {
+						let num1 = cloud.length;
+						cloud.push(new Cloud(num%8*300+(Math.random()-0.5)*256, Math.floor(num/8)*300+(Math.random()-0.5)*256, 25+(Math.random()-0.5)*20));
+						if ( cloud[num1].x < -120 || cloud[num1].x > ww + 120 || cloud[num1].y < -120 || cloud[num1].y > wh + 120 ) cloud.splice(num1, 1);
+					}
+					buttonActived = false;
+					setTimeout(animate(),50);
+					setTimeout(gen_new_plane(),50);
+					return;
+				}
+			}
+			else {
+				ctx.fillStyle = '#B0E0E6';
+				ctx.fillRect(ww/2-200, wh/10*5-50, 400, 100);
+				ctx.fillStyle = '#90C0C6';
+				ctx.font = 'bold 60px algerian';
+				ctx.fillText("START", ww/2-100, wh/10*5+20);
+			}
+			drawTarget(mouse_x,mouse_y);
+			requestAnimationFrame(menu);
+		}
+
+		document.onmousemove = function (event) { // get the mouse position
+				if (document.attachEvent != null) {
+					mouse_x = window.event.clientX;
+					mouse_y = window.event.clientY;
+				} else if (!document.attachEvent && document.addEventListener) {
+					mouse_x = event.clientX;
+					mouse_y = event.clientY;
+				}
+		}
+
+		document.onmousedown = function (event) {
+			if ( event.which == 1 ) {
+				leftClick = true;
+			}
+		}
+		document.onmouseup = function (event) {
+			if ( event.which == 1 ) {
+				leftClick = false;
+			}
+		}
+
+		document.oncontextmenu = function (event) {
+			return false;
+		}
+
+		document.onkeydown = function(event) {
+			kCode = window.event ? window.event.keyCode :
+					(event.keyCode ? event.keyCode : (event.which ? event.which : null));
+			keyPress[kCode] = true;
+			return false;
+		}
+
+		document.onkeyup = function( event ) {
+			kCodeUp = window.event ? window.event.keyCode :
+				(event.keyCode ? event.keyCode : (event.which ? event.which : null));
+				keyPress[kCodeUp] = false;
+			return false;
+		}
+
+		if ( !window.requestAnimationFrame ) {
+			window.requestAnimationFrame = ( function() {
+				return window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.oRequestAnimationFrame ||
+				window.msRequestAnimationFrame ||
+				function(callback, element ) {
+					window.setTimeout( callback, 16.6 );
+				};
+			} )();
+		}
+		</script>
+	</body>
+</html>

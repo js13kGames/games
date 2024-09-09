@@ -1,0 +1,142 @@
+:root{
+    --color-main-background : #04349a;
+    --color-main-foreground : white;
+    --color-ui-separator    : #ccc;
+    --progress              : 50%;
+}
+body{
+    display         : flex;
+    flex-direction  : column;
+    
+    font-family : sans-serif;
+
+    padding : 0;
+    margin  : 0;
+    height  : 100vh;
+}
+header{
+    background  : var(--color-main-background);
+    color       : var(--color-main-foreground);
+    
+    height      : 100px;
+    padding     : 10px 20px;
+    box-sizing  : border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+main{
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1em;
+}
+footer{
+    background  : var(--color-main-background);
+    color       : var(--color-main-foreground);
+
+    height      : 100px;
+    box-sizing  : border-box;
+}
+footer .icon{
+    font-size: 3em;
+}
+footer>*{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: transparent;
+    border: transparent;
+    color: var(--color-main-foreground);
+}
+.action-bar{
+    display: flex;
+}
+.action-bar>*{
+    flex-grow:  1;
+}
+.post{
+    padding:20px;
+    border: solid 1px var(--color-ui-separator);
+}
+.post>.action-bar{
+    justify-content: flex-end;
+}
+.post>.action-bar>*{
+    font-size: 1.5em;
+}
+.postTypes{
+    display:flex;
+    justify-content: space-between;
+}
+.postTypes>button,
+.postTopics>button{
+    background: none;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+}
+.postTypes>button:hover,
+.postTopics>button:hover{
+    background: var(--color-ui-separator);
+}
+.postTopics{
+    border:solid 1px var(--color-ui-separator);
+    border-radius: 1em;
+
+    padding: 1em;
+    margin: 1em 0;
+    font-size: .8em;
+}
+
+#createPost,.btn--big{
+    font-size: 1em;
+    padding: 1em;
+    width: 100%;
+
+    background: var(--color-main-background);
+    color: var(--color-main-foreground);
+    border: none;
+    border-radius: 5px;
+}
+#screenPost,
+/*#screenTrending,*/
+#screenFollowers,
+#screenFeed{
+    display: none;
+}
+.indicator{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.indicator>.number{
+    font-size: 1.3em;
+}
+header::after{
+    content :' ';
+    background: var(--color-main-background);
+    filter:brightness(50%) opacity(.5);
+    
+    position: absolute;
+    left    : 0px;
+    height  : 100px;
+    width   : var(--progress);
+}
+
+.statsBody>.indicator{
+    font-size   : 1.3em;
+    padding     : 10px;
+}
+
+.trend{
+    padding:15px;
+    border: solid 1px var(--color-ui-separator);
+    font-weight: bold;
+}
+
+.info{
+    font-size: .8em;
+    margin  : 10px 0;
+}

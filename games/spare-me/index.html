@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Spare Me</title>
+  <meta name="author" content="Frank Mitchell" />
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="stylesheet" media="screen, handheld" href="css/mobile.css" />
+</head>
+<body>
+<div id="alley">
+  <h1>Spare Me</h1>
+  <h2 id="tag">Battle boredom by bowling by yourself.</h2>
+  <ul id="pins">
+    <li id="pin0" class="pin"></li>
+    <li id="pin1" class="pin"></li>
+    <li id="pin2" class="pin"></li>
+    <li id="pin3" class="pin"></li>
+    <li id="pin4" class="pin"></li>
+    <li id="pin5" class="pin"></li>
+    <li id="pin6" class="pin"></li>
+    <li id="pin7" class="pin"></li>
+    <li id="pin8" class="pin"></li>
+    <li id="pin9" class="pin"></li>
+    <li id="shout" class="overlay"></li>
+  </ul>
+  <div id="controls">
+    <table id="stats" class="invisible">
+      <tr><td>Strikes bowled</td><td id="stats-strikes"></td></tr>
+      <tr><td>Spares nailed</td><td id="stats-spares"></td></tr>
+      <tr><td>Balls rolled</td><td id="stats-balls"></td></tr>
+      <tr><td>Pins downed</td><td id="stats-pins"></td></tr>
+    </table>
+    <p id="nextBall" class="button"><span>Next Ball</span></p>
+    <a id="linkGame" class="invisible button" href="https://github.com/onefrankguy/spare-me" title="Frank Mitchell (GitHub): Spare Me"><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAA4UlEQVQoFQXBvUpCAQAG0FMSXoe2IAiiF7DELQia2nqL6E1sDhzUS7g2hW8QUS0NQVBDolNNDa2BP+X9OgeAttLUwsLEQAsAaBiKiIiISqkAaHgUEREREXGvAIbiyblXSx8+/Xpx5lkMoC2ii5o6qKuhLyotShGXAAC6InpMxco2AIAdlRizEF8AAOBbzFmKH2sAAGrmYs5UxDEAgBMRY0oR73YBwJ6JiB5tlY6RmRtN0DYyE1E5gCt/Dl27tQm2RET0gcKDN6eOABsi4k4BUChVAqiLlZ46ALCvA1h3oQnwD/jZbQoyc5DcAAAAAElFTkSuQmCC" height="16px" width="16px" alt="GitHub Octocat" title="GitHub Octocat" /></span></a>
+    <p id="newGame" class="invisible button"><span>New Game</span></p>
+    <a id="tweetGame" class="invisible button" href="https://twitter.com" title="Share your score on Twitter"><span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABaUlEQVQ4y2NgGBygcZMAXrnGTf1AvB+I5wOxApKcAogwYGzZdgGrIUAxsNzMK/8ZFt7/zzDnxn/Gtl0foAae5+/dF8ogP/2oJ8OSx/+BCh+ADEPWz9K2vQgkx7DmHQKvfPUfZCDz0sefeCafWM7gt/6KHlhi+fP/DJ17/yM7U3LexT4UzUhYfdvblf///9dgEJtwwE1r18fVcEmgMxnadoEMus8y4+JjXAYAgQrYmWZLztmC/YiuCOQiEMaimW/j+9twfwJN4kFxARFYecPzZSiBXXv6pb3x3o8LWNa++0yMASD1KAb4rT4vzj7z4lVwCBPQrLj9w3agqzlQDAAKsACxifeRzx0gBbg0g/y+6eFnU1wpzkBs1rketnk3n+DSfODlD0eQZegaG4D4PTgNTLuAEfKgcAGFD3bNEOcrHHvzyyPq5JcakEKpLR8Og7wBYoPEQHIgNVg1o4WBCFShDiiFQdkieDUCAQDllKJMKv363gAAAABJRU5ErkJggg==" height="16px" width="16px" alt="Twitter Bird" title="Twitter Bird" /></span></a>
+  </div>
+  <ul id="balls">
+    <li id="ball0" class="ball"></li>
+    <li id="ball1" class="ball"></li>
+    <li id="ball2" class="ball"></li>
+  </ul>
+  <ul id="chutes">
+    <li id="chute0">&#9673; &#9673; &#9673; &#9673; &#9673;</li>
+    <li id="chute1">&#9673; &#9673; &#9673; &#9678; &#9678;</li>
+    <li id="chute2">&#9673; &#9673; &#9678; &#9678; &#9678;</li>
+  </ul>
+  <div id="how-to" class="note tape">
+    <h3>How to Bowl</h3>
+    <ol>
+      <li>Pick one to three pins.</li>
+      <li>Add the numbers on the pins.</li>
+      <li>Match a ball to the last digit.</li>
+      <li>You scored!</li>
+      <li>No match? Try the next ball.</li>
+    </ol>
+    <p>Example:<span id="example"> Pick pins 6, 8 and 7. They sum to 21. The last digit of 21 is 1. Pick ball 1. You score three points!</span></p>
+  </div>
+  <ul id="difficulty">
+    <li id="level0" class="button pressed" data-value="0"><span data-value="0">Easy</span></li>
+    <li id="level1" class="button" data-value="1"><span data-value="1">Medium</span></li>
+    <li id="level2" class="button" data-value="2"><span data-value="2">Hard</span></li>
+  </ul>
+  <div class="note tape">
+    <h3>Rules</h3>
+    <ol id="rules">
+      <li>Have fun!</li>
+    </ol>
+  </div>
+  <p id="credits">Desgin <abbr title="and">&amp;</abbr> dev by <a href="http://frankmitchell.org/" title="designer, engineer, wizard">Frank Mitchell</a> for <a href="http://js13kgames.com/" title="Andrzej Mazur (Enclave Games): HTML5 and JavaScript game development competition in just 13 kB">js13kGames</a><br />A digital spin on Sid Sackson&rsquo;s <em>Bowling Solitaire</em></p>
+  <ul id="scores" class="short tape">
+    <li><span id="frame1" class="frame"></span><span id="frame2" class="frame"></span><span id="score1" class="score"></span></li>
+    <li><span id="frame3" class="frame"></span><span id="frame4" class="frame"></span><span id="score2" class="score"></span></li>
+    <li><span id="frame5" class="frame"></span><span id="frame6" class="frame"></span><span id="score3" class="score"></span></li>
+    <li><span id="frame7" class="frame"></span><span id="frame8" class="frame"></span><span id="score4" class="score"></span></li>
+    <li><span id="frame9" class="frame"></span><span id="frame10" class="frame"></span><span id="score5" class="score"></span></li>
+    <li><span id="frame11" class="frame"></span><span id="frame12" class="frame"></span><span id="score6" class="score"></span></li>
+    <li><span id="frame13" class="frame"></span><span id="frame14" class="frame"></span><span id="score7" class="score"></span></li>
+    <li><span id="frame15" class="frame"></span><span id="frame16" class="frame"></span><span id="score8" class="score"></span></li>
+    <li><span id="frame17" class="frame"></span><span id="frame18" class="frame"></span><span id="score9" class="score"></span></li>
+    <li><span id="frame19" class="frame"></span><span id="frame20" class="frame"></span><span id="score10" class="score"></span></li>
+    <li id="frame21" class="invisible"></li>
+  </ul>
+  <p id="marker" class="pencil">
+    <span class="eraser"></span>
+    <span class="ferrule"></span>
+    <span class="shaft"></span>
+    <span class="lead"></span>
+  </p>
+</div>
+<p id="balll" class="hidden overlay ball"></p>
+<script src="js/polyfill.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/spare.js"></script>
+<script>Spare.play()</script>
+</body>
+</html>

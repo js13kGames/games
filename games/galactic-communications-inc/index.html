@@ -1,0 +1,259 @@
+<html>
+  <head>
+    <link rel="icon" href="./favicon.svg" />
+  </head>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: "Lucida Console", Monaco, monospace;
+    }
+    body > * {
+      position: absolute;
+      
+    }
+    #game {
+      display: flex;
+      flex-direction: row;
+    }
+    canvas {
+      width: 900px;
+      height: 900px;
+      left: 307px;
+      top: 43px;
+    }
+    #col1 {
+      width: 300px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    #panel{
+      overflow-x: hidden;
+    }
+    .stardbg{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;      
+    }
+    .stardbg *{
+      text-align: right;
+      font-size: 10pt;
+    }
+    .tags {
+      padding-top: 5px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }    
+    .tags > * {
+      text-align: left;
+    }
+    .tags > *:nth-child(odd) {
+      text-align: right;
+      padding-right: 5px;
+    }
+    #menu {
+      margin-bottom: 15px;
+      border-bottom: solid 1px #888;
+      width: 1200px;
+      text-align: left;
+    }
+    button {
+      border: solid 1px #888;
+      color: #fff;
+      background: #000;
+      margin: 2px;
+      cursor: pointer;
+      height: 34px;
+      border-radius: 0px;
+    }
+    #menu > button {
+      margin-bottom: -1px;
+      width: 96px;
+    }
+
+    button:disabled {
+      cursor: default;
+      background: #000;
+      border: none;
+    }
+    #saves {
+      display: grid;
+      gap: 3px;
+      grid-template-columns: auto auto;
+      padding: 0px;
+    }
+    #saves > button:nth-child(odd) {
+      width: 195px;
+    }
+    #rdmenu {
+      display: grid;
+      grid-template-columns: 150px 25px 35px 80px;
+      text-align: left;
+      font-size: 10pt;
+      padding-left: 5px;
+      gap: 1px;
+    }
+    #rdmenu button{
+      height: 24px;
+    }
+    button.rdx{
+      width: 24px;
+    }
+    #rdmenu > * {
+      width: 100%;
+      margin: 0;
+    }
+    #rdmenu > div {
+      padding-top: 5px;
+    }
+    button:hover {
+      cursor: pointer;
+    }
+    @keyframes blink {
+      50% {
+        opacity: 0.8;
+      }
+    }
+    #paused {
+      left: 330px;
+      animation: blink 1s infinite;
+    }
+    #paused.off{
+      animation:none;
+      color: #444;
+    }
+      #helpToggleHeader{
+      left: 1160px;
+    }
+    #header {
+      left: 440px;
+      top: 19px;
+      width: 800px;
+    }
+    #tooltip{
+      padding: 5px;
+      left: 340px;
+      width: 500px;
+      font-size: 14px;
+      opacity: 0%;
+      background: rgba(0,0,0,0.3);
+      transition: all 0.25s ease-out 0s;
+      text-shadow: 1px 1px 3px black;
+      cursor: default;
+      pointer-events: none;
+    }
+    #tooltip.visible{
+      opacity: 100%;
+    }
+    #C{
+      border-top: solid 1px #888;
+    }
+    .ref{
+      cursor: pointer;
+    }
+    h3{
+      margin: 0px;
+      background: #444;
+      color: #aaa;
+      font-size: 14px;
+    }
+    h4{
+      text-align: left;
+      border-bottom: solid 1px #444;;
+      color: #aaa;
+      margin-bottom: 5px;
+      font-weight: 300;
+    }
+    big{
+      font-size: 20px;
+    }
+    .close{
+      display: relative;
+      height: 16px;
+      margin-bottom:-20px;
+      margin-left:275px;
+      border:solid 1px #555;
+    }
+    button.enabled{
+      border: solid 2px #fff;
+      margin: 2px 1px;
+      filter: contrast(200%);
+    }
+    .tagsControls {
+      display: grid;
+      grid-template-columns: 100px 40px 40px 40px 45px;
+      column-gap: 3px;
+    }
+    .tagsControls * {
+      text-align: right;
+      height: 15px;
+    }
+    .tagControl{
+      border: solid 1px #888;
+      margin-top: -2px;
+      cursor: pointer;
+      text-align: center;
+    }
+    em{
+      color:#0f0;
+      font-style: normal;
+      pointer-events: none;
+    }
+    span{
+      cursor: pointer;
+    }
+    #help{
+      background: rgba(0,0,0,0.7);
+      left:320px;
+      top:50px;
+      width: 850px;
+      border: solid 1px white;
+      padding: 10px;
+      text-align: center;
+      display: block;
+    }
+    li{
+      text-align: left;
+    }
+    #quote{
+      text-align: right;
+      font-style: italic;
+    }
+    #over{
+      width: 80%;
+      height: 100%;
+      font-size: 30pt;
+      padding:100px;
+      text-align: center;
+      background:rgba(0,0,0,0.7);
+      display: none;
+    }
+  </style>
+  <body>
+    <button id="paused">PAUSE</button>
+    <canvas id="C"></canvas>
+    <canvas id="D"></canvas>
+    <div id="tooltip"></div>
+    <div id="header"></div>
+    <div id="col1">
+      <div id="menu"></div>
+      <div id="panel"></div>
+    </div>
+    <div id="help">
+<h1><img style="height: 30px; filter: invert()" src="favicon.svg"/>Galactic Communications inc.</h1>      
+<div id="quote"></div>
+<ul>
+  <li>Link stars with mouse drag.</li>
+  <li>You can select an established link by clicking it, or mouse dragging between the systems it connects.</li>
+  <li>You get money from data sent through links, and also small profits from population in systems.</li>
+  <li>Payment drops when latency raises. Latency raises with range.</li>
+  <li><em>S</em> and <em>L</em> buttons save/load to the first slot. <em>Space</em> button pauses/unpauses the game.</li>
+  <li>CHEATS: Shift-1 completes all researches instantly and gives you $1000,000. Shift-2 lets you see some internal system info. Shift-click on star or links dumps it's info in browser log.</li>
+</ul>
+<button id="helpToggle" style="width:200px">OK</button>
+    </div>
+    <button id="helpToggleHeader">HELP</button>
+    <div id="over" onclick="over.outerHTML=''">Congratulations! Our targeted adverts algorithm now is so smart, it can do your job!<br/>
+      And it will. Happy retirement and GAME OVER.</div>
+  </body>
+  <script src="bundle.js"></script>
+</html>

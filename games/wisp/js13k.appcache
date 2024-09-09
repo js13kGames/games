@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# 2014-09-12:v17
+
+CACHE:
+index.html
+js13k.css
+js13k.js
+
+NETWORK:
+*

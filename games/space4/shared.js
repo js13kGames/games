@@ -1,0 +1,1 @@
+randomNumber=(a,r)=>Math.floor(Math.random()*(r-a+1))+a,guid=()=>{const a=()=>Math.floor(65536*(1+Math.random())).toString(16).substring(1);return a()+a()+"-"+a()+"-"+a()+"-"+a()+"-"+a()+a()+a()},sTag=a=>a?a.replace(/<\/?[^>]+(>|$)/g,""):"";

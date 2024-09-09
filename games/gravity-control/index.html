@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>js13k Game</title>
+<style>
+	#game{
+		border: 1px solid #ccc;
+	}
+</style>
+<script src="game-min.js"></script>
+</head>
+<body>
+	<div style="margin: 0 auto; display:block; width:602px;">
+		<canvas id="game" width="600" height="350"></canvas>
+	</div>
+	
+	<script>
+	(function() {
+	  	var onEachFrame;
+		onEachFrame = function(cb) {
+		  	var _cb = function() {cb(); requestAnimationFrame(_cb);}
+		  	_cb();
+		};
+	  	window.onEachFrame = onEachFrame;
+	})();
+	document.body.onload = function(){
+		var game = Game('game', 30, 40, function(){
+			this.ca.click();
+		});
+
+		window.onEachFrame(game.run);
+	};
+	</script>
+</body>
+</html>

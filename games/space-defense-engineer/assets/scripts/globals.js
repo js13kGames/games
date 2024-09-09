@@ -1,0 +1,1 @@
+const html=t=>t;

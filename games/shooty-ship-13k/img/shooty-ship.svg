@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" stroke="#444" fill="url(#hull)" stroke-width="3">
+<radialGradient id="dome" cx="0.4" cy="0.55" r="0.2">
+	<stop offset="0%" stop-color="#fff"/>
+	<stop offset="100%" stop-color="#444"/>
+</radialGradient>
+<linearGradient id="hull">
+	<stop offset="0%" stop-color="#aad"/>
+	<stop offset="30%" stop-color="#ddd"/>
+	<stop offset="40%" stop-color="#ddd"/>
+	<stop offset="45%" stop-color="#fff"/>
+	<stop offset="50%" stop-color="#ddd"/>
+	<stop offset="70%" stop-color="#ddd"/>
+	<stop offset="100%" stop-color="#db9"/>
+</linearGradient>
+<polygon points="30,70 20,95 40,95 30,70" />
+<polygon points="70,70 80,95 60,95 70,70" />
+<polygon points="50,4 96,76 4,76 50,4" />
+<ellipse cx="50" cy="47" rx="10" ry="20" stroke-width="2" fill="url(#dome)" />
+</svg>

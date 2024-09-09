@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars Defence</title>
+</head>
+
+<body style="background:grey;overflow:hidden;">
+    <canvas style="height:650px;transform:translate(25%, 0);border: 4px solid black;user-select: none;z-index:0;" id="canvas" width="480px" height="360px"></canvas>
+    <p style="position:absolute;left:5px;top:0%;font-size: 50px;margin:0px;">❤️</p>
+    <p style="position:absolute;left:5px;top:60px;font-size: 50px;margin:0px;">🔨</p>
+    <p style="position:absolute;left:5px;top:120px;font-size: 50px;margin:0px;">🔧</p>
+    <p style="position:absolute;left:5px;top:180px;font-size: 50px;margin:0px;">💣</p>
+    <p style="position:absolute;left:5px;top:240px;font-size: 50px;margin:0px;">💀</p>
+    <p style="position:absolute;left:5px;top:300px;font-size: 50px;margin:0px;">🛕</p>
+    <p id="hammers" style="position:absolute;left:60px;top:60px;font-size: 40px;font-family:monospace;;margin:0px;">0</p>
+    <p id="wrenches" style="position:absolute;left:60px;top:125px;font-size: 40px;font-family:monospace;;margin:0px;">0</p>
+    <p id="bombs" style="position:absolute;left:60px;top:190px;font-size: 40px;font-family:monospace;;margin:0px;">0</p>
+    <p id="kills" style="position:absolute;left:60px;top:255px;font-size: 40px;font-family:monospace;;margin:0px;">0</p>
+    <p id="structure" style="position:absolute;left:60px;top:320px;font-size: 40px;font-family:monospace;;margin:0px;">0</p>
+    <p id="wave" style="position:absolute;left:5px;top:330px;font-size: 40px;font-family:monospace;">Wave 1<br>(120s)</p>
+    <div style="position:absolute;left:60px;top:20px;width: 125px;background-color:black;height: 25px;"></div>
+    <div id="playerHealth" style="position:absolute;left:64px;top:24px;width: 117px;background-color:rgb(0, 255, 0);height: 17px;"></div>
+    <p id="instructions" style="float:right; color: white; width: 300px; font-size: 20px;font-family:monospace;z-index: 1000;position: relative;">WASD to move <br> Mouse to look around <br> Click to shoot <br> H to use a hammer and build <br> F to use a wrench and repair <br> B to throw a bomb</p>
+    <script src="lines.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

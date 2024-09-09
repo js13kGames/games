@@ -1,0 +1,21 @@
+{
+    "name": "flappingBird",
+    "short_name": "flappingBird",
+    "description": "FlappingBird is a Mobile side scroller game where the player controls a bird, attempting to fly between columns trees without hitting them",
+    "start_url": "./index.html?utm=homescreen",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#fac901",
+    "theme_color": "#fac901",
+    "icons": [{
+            "src": "./image.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "./image.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

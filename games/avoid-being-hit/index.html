@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<meta name="viewport" content="minimal-ui,width=device-width, height=device-height, initial-scale=1.0 ,user-scalable=no">
+<head>
+<title>AVOID_BEING_HIT</title>
+<script>
+var top_pos = 0;
+var score=0;
+var lives = 5;
+var loop ; 
+var add_lives;
+
+var shoot = new Audio();
+shoot.load();
+var loose_life = new Audio();
+loose_life.load();
+var game_over = new Audio();
+game_over.load();
+
+function move_left(){
+var x = document.getElementById("ball");
+if(top_pos == 0){
+x.style.top = "20.5vw";
+x.style.left = "2.5vw";
+top_pos = 3;
+}
+else if (top_pos == 1 ){
+x.style.top = "39vw";
+x.style.left = "20.5vw";
+top_pos--;
+}
+else if (top_pos == 2 ){
+x.style.top = "20.5vw";
+x.style.left = "39vw";
+top_pos--;
+}
+else if (top_pos == 3 ){
+x.style.top = "2vw";
+x.style.left = "20.5vw";
+top_pos--;
+}
+
+if(!navigator.onLine){
+x.style.background = "#" + Math.floor(Math.random()* 1000);
+document.getElementById("square_core").style.background  = "#" + Math.floor(Math.random()* 1000);
+document.getElementById("launcher").style.background  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("screen").style.background  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_u").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_l").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_r").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_d").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+}
+}	
+
+function move_right(){
+var x = document.getElementById("ball");
+if(top_pos == 0){
+x.style.top = "20.5vw";
+x.style.left = "39vw";
+top_pos++;
+}
+else if (top_pos == 1 ){
+x.style.top = "2vw";
+x.style.left = "20.5vw";
+top_pos++;
+}
+else if (top_pos == 2 ){
+x.style.top = "20.5vw";
+x.style.left = "2vw";
+top_pos++;
+}
+else if (top_pos == 3 ){
+x.style.top = "39vw";
+x.style.left = "20.5vw";
+top_pos = 0;
+}
+
+if(!navigator.onLine){
+x.style.background = "#" + Math.floor(Math.random()* 1000);
+document.getElementById("square_core").style.background  = "#" + Math.floor(Math.random()* 1000);
+document.getElementById("launcher").style.background  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("screen").style.background  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_u").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_l").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_r").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+document.getElementById("tile_d").style.borderBottomColor  = "#" +  Math.floor(Math.random()* 1000);
+}
+}	
+
+function create_obstacles(){
+var obj = document.getElementById("obstacles_handler");
+var box  = document.createElement("div");
+box.setAttribute("class","obstacles");
+box.style.background = "#" + Math.floor(Math.random()* 1000);
+obj.appendChild(box);
+var pos =22;
+var ran = Math.floor(Math.random() * 4);
+if(ran == 0){
+	document.getElementById("launcher").style.transform = "rotateZ(90deg)";
+	var timer_d = setInterval(move_obstacles_d,60);
+	function move_obstacles_d(){
+		if(pos == 39){
+			obj.removeChild(box);
+			if(lives > 0) {
+			score++;
+			document.getElementById("score").innerHTML = "Score : " + score;
+			}
+			
+		}
+		pos++;
+		box.style.top = pos + 'vw';
+		
+		
+		if(top_pos == 0 && parseFloat(box.style.top,10) == 39){
+			if(lives > 0) {
+			lives--;
+			loose_life_sound();
+			add_lives.removeChild(add_lives.lastChild);
+			}
+			if(lives==0){
+			show_result();
+			}
+			
+		}
+	}
+}
+else if(ran == 1){
+		document.getElementById("launcher").style.transform = "rotateZ(-90deg)";
+var timer_u = setInterval(move_obstacles_u,60);
+function move_obstacles_u()
+{
+		
+		if(pos == 3){
+			obj.removeChild(box);
+			if(lives > 0) {
+			score++;
+			document.getElementById("score").innerHTML = "Score : " + score;
+			}
+		}
+		pos--;
+		box.style.top =  pos + 'vw';
+		
+		if(top_pos == 2 && parseFloat(box.style.top,10) == 4){
+		if(lives > 0) {
+			lives--;
+			loose_life_sound();
+			add_lives.removeChild(add_lives.lastChild);
+			}
+			if(lives==0)
+			{
+			show_result();
+			}
+			
+		}
+	}
+}
+else if(ran==2){
+		document.getElementById("launcher").style.transform = "rotateZ(180deg)";
+ var timer_l = setInterval(move_obstacles_l,60);
+function move_obstacles_l()
+{
+		
+		if(pos == 4){
+		
+			obj.removeChild(box);
+			if(lives > 0) {
+			score++;
+			document.getElementById("score").innerHTML = "Score : " + score;
+			}
+		}
+		pos--;
+		box.style.left =  pos + 'vw';
+		
+		if(top_pos == 3 && parseInt(box.style.left,10) == 5){
+		if(lives > 0) {
+			lives--;
+			loose_life_sound();
+			add_lives.removeChild(add_lives.lastChild);
+			}
+			if(lives==0)
+			{
+			show_result();
+			}	
+		}
+	}
+}
+else if(ran ==3){
+		document.getElementById("launcher").style.transform = "rotateZ(0deg)";
+		var timer_r = setInterval(move_obstacles_r,60);
+	function move_obstacles_r()
+{
+		
+		if(pos == 40){
+		
+			obj.removeChild(box);
+			if(lives > 0) {
+			score++;
+			document.getElementById("score").innerHTML = "Score : " + score;
+			}
+		}
+		pos++;
+		box.style.left =  pos + 'vw';
+		
+		if(top_pos == 1 && parseInt(box.style.left,10) == 39){
+		if(lives > 0) {
+			lives--;
+			loose_life_sound();
+			add_lives.removeChild(add_lives.lastChild);
+			}
+			if(lives==0)
+			{
+			show_result();
+			}
+		}
+	}
+}
+
+document.getElementById("score").innerHTML = "Score : " + score;
+shoot_objects_sound();
+}
+
+function game_loop(){
+lives_count(5);
+loop = setInterval(create_obstacles, 500);
+}
+
+function play(){
+var start =screenorientation();
+if(start){
+document.getElementById("main_menu").style.display = "none";
+document.getElementById("screen").style.opacity = "1";
+game_loop();
+}
+}
+
+function screenorientation(){
+var elem = document.documentElement;
+if(screen.width < screen.height){
+window.alert("Landscape Mode is requied, Please switch to landscape mode before playing");
+return false;
+}
+else{
+if(screen.width < screen.height){
+if(elem.requestFullscreen){
+elem.requestFullscreen();
+}
+else if(elem.mozRequestFullScreen){
+elem.mozRequestFullScreen();
+}
+else if(elem.webkitRequestFullscreen){
+elem.webkitRequestFullscreen();
+}
+else if(elem.msRequestFullscreen){
+elem.msRequestFullscreen();
+}
+}
+return true;
+}
+}
+
+function show_result(){
+clearTimeout(loop);
+document.getElementById("score_result").innerHTML = "Your Score is : " + score;
+document.getElementById("play_again").style.opacity = "1";
+document.getElementById("score_result").style.opacity = "1";
+document.getElementById("screen").style.opacity = "0.2";
+document.getElementById("btn_l").disabled=  true;
+document.getElementById("btn_r").disabled=  true;
+
+game_over.src = "game_over.wav";
+game_over.play();
+}
+
+function play_again(){
+window.location.reload();
+}
+
+function loose_life_sound(){
+navigator.vibrate(50);
+loose_life.src ="loose_life.wav";
+loose_life.play();
+}
+
+function shoot_objects_sound(){
+shoot.src= "shoot.wav";
+shoot.play();
+}
+
+function lives_count( x){
+for(x=0;x<=4;x++){
+add_lives = document.getElementById("lives");
+var life = document.createElement("div");
+life.setAttribute("class","add_life");
+add_lives.appendChild(life);
+}
+}
+
+</script>
+
+<style type="text/css">
+.add_life {
+	background-color:#FF6347;
+	transform:rotateZ(45deg);
+	height: 1.5vw;
+	width: 1.5vw;
+	margin:0.5vw;
+}
+
+.lives_handler{
+	height:2vw;
+	transform:rotateZ(-90deg);
+	position:absolute;
+	font-size:1.5vw;
+	font-family:courier;
+	font-weight:bold;
+	color:white;
+}
+.lives_box{
+	position:absolute;
+	left:55vw;
+	top:3vw;
+	height:5vw;
+	width:auto;
+	background-color: #00008b;
+	border:0.3vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 2vw;
+	font-family:courier;
+	}
+
+.title{
+	color:#4169E1;
+	font-size: 6vw;
+	font-family:courier;
+	font-weight:bold;
+}
+
+
+.score_box{
+	position:absolute;
+	left:27vw;
+	top:3vw;
+	height:auto;
+	width:auto;
+	background-color: #00008b;
+	border:0.3vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 2vw;
+	font-family:courier;
+	}
+	
+.score_result{
+	position:absolute;
+	left:30vw;
+	top:15vw;
+	height:auto;
+	width:auto;
+	background-color: #FF6347;
+	border:0.3vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 4vw;
+	font-family:courier;
+	opacity:0;
+	}
+	
+.main_menu {  
+	position:absolute;
+	background-color:#000080;
+	width:60vw;
+	height:40vw;
+	left:15vw;
+	top:2vw;
+	overflow:hidden;
+	display:block;
+	border:0.5vw solid white;
+	border-radius : 3%;
+	font-size:1.5vw;
+	color:white;
+	text-align:center;
+	line-height:3.5vw;
+	padding:1vw;
+	font-family:courier;
+	z-index:1;
+}
+
+.main_body {
+	position:fixed;
+	background-color:#483D8B;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+}
+
+.btn_l{
+	position:absolute;
+	height:45vw;
+	width:22.5vw;
+	left:-23vw;
+	background-color: #2F4F4F;
+	border:0.5vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 7vw;
+	font-family:courier;
+}
+
+.btn_r{
+	position:absolute;
+	left:45.5vw;
+	height:45vw;
+	width:22.5vw;
+	background-color: #2F4F4F;
+	border:0.5vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 7vw;
+	font-family:courier;
+}
+
+.play_again{
+	position:absolute;
+	height:10vw;
+	width :30vw;
+	left:35vw;
+	top:25vw;
+	background-color:#2F4F4F;
+	border:0.5vw solid white;
+	border-radius : 10%;
+	color: white;
+	font-size: 4.5vw;
+	opacity:0;
+	font-family:courier;
+}
+
+.btn_l:active ,.btn_r:active, .play_btn:active, .play_again:active { 
+	background-color:#8FBC8F;
+	border:0.5vw solid white;
+	color: white;
+	font-weight:bold;
+}
+
+.play_btn{
+	position:absolute;
+	height:5vw;
+	width :20vw;
+	left:20vw;
+	top:36vw;
+	background-color:#2F4F4F;
+	border:0.5vw solid white;
+	border-radius : 15%;
+	color: white;
+	font-size: 3vw;
+	font-family:courier;
+}
+
+
+
+.screen{
+	position:absolute;
+	left:25vw;
+	top:0vw;
+	height:45vw;
+	width:45vw;
+	background-color:#483D8B;
+	border:0.5vw solid white;
+	opacity:0;
+	}
+	
+.tile_d {
+	position:absolute;
+	top:16vw;
+	left:15vw;
+	height: 10vw;
+	width: 7vw;
+	border-bottom : 19vw solid  #1E90FF;
+	border-left : 4vw solid transparent;
+	border-right : 4vw solid transparent;
+	}
+.tile_l {
+	position:absolute;
+	top:8vw;
+	left:7vw;
+	transform : rotateZ(90deg);
+	height: 10vw;
+	width: 7vw;
+	border-bottom : 19vw solid 	#1E90FF;
+	border-left : 4vw solid transparent;
+	border-right : 4vw  solid transparent;
+	}
+.tile_r {
+	position:absolute;
+	top:8vw;
+	left:23vw;
+	transform : rotateZ(-90deg);
+	height: 10vw;
+	width: 7vw;
+	border-bottom : 19vw solid  #1E90FF;
+	border-left : 4vw solid transparent;
+	border-right : 4vw solid transparent;
+	}
+.tile_u {
+	position:absolute;
+	top:0vw;
+	left:15vw;
+	transform : rotateX(180deg);
+	height: 10vw;
+	width: 7vw;
+	border-bottom : 19vw solid 	#1E90FF;
+	border-left : 4vw solid transparent;
+	border-right : 4vw solid transparent;
+	}
+	
+.ball {
+	position:absolute;
+	background-color:#FF4500;
+	top:39vw; 
+	left:20.5vw;
+	height: 3.5vw;
+	width: 3.5vw;
+	border-radius : 50%;
+	border:0.2vw solid #FFA500;
+}
+.square_core{
+	position:absolute;
+	background-color:#006400;
+	border-radius : 40%;
+	border:0.2vw solid #228B22;
+	top:20.5vw; 
+	left:20.5vw;
+	height: 4vw;
+	width: 4vw;
+}
+
+.launcher{
+	position:absolute;
+	background-color:#006400;
+	transform : rotateZ(0deg);
+	border-radius : 50% 15% 15% 50%;
+	border:0.2vw solid #228B22;
+	top:1vw;
+	left:-0.5vw;
+	height: 2vw;
+	width: 5vw;
+}
+	
+.obstacles{
+	position:absolute;
+	background-color:#909;
+	transform : rotateZ(45deg);
+	border:0.2vw solid 	#FFA500;
+	top:22vw; 
+	left:22vw;
+	height: 1vw;
+	width: 1vw;
+}	
+</style>
+
+</head>
+<body class= "main_body" id="main">
+<div id="game_area">
+<div class = "screen" id="screen">
+<div class ="tile_u" id="tile_u"></div>
+<div class ="tile_l" id="tile_l"></div>
+<div class ="tile_r" id="tile_r"></div>
+<div class ="tile_d" id="tile_d"></div>
+<div id="ball" class= "ball"></div>
+<div id ="obstacles_handler"></div>
+<div class = "square_core" id="square_core">
+<div class="launcher" id="launcher">
+</div>
+</div>
+<input type=submit onclick="move_left();" class="btn_l" value="&#8635;" id="btn_l">
+<input type=submit onclick="move_right();" class="btn_r" value="&#8634;" id="btn_r">
+</div>
+<label id="score_result" class="score_result">Your Score is : 0</label>
+<input type=submit onclick="play_again();" id="play_again" class="play_again" value="Play Again">
+<label id="score" class="score_box">Score : 0</label>
+<div class="lives_box">Lives left:<div id="lives" class="lives_handler"></div></div>
+</div>
+<div class ="main_menu" id="main_menu">
+<div class="title">AVOID BEING HIT</div>
+Created by Shubham7997</br>
+<label style="color:#FF6347">Warning : Landscape mode on handheld devices is required.</label> </br>
+<label style="color:#00FF7F">How to Play : You have to move the ball to avoid being hit </br>
+by objects shoot by core shooting tank by two buttons :</br>
+|&#8635;| to move Clockwise </br>
+|&#8634;| to move Anti-clockwise</br>
+with available 5x Lives provided to you.</br></label>
+<label style="color:#FFD700">Extras : System in offline mode will add extra color changing distracting difficulty during gameplay.</label>
+<input type=submit onclick="play();" class="play_btn" value="Play">
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head><title>Vendredi</title><meta content="text/html;charset=utf-8" http-equiv="Content-Type"><meta content="utf-8" http-equiv="encoding"><link rel="stylesheet" type="text/css" href="./vendredi.css"/><script src="./perlin.js"></script><script src="./cell.js"></script><script src="./atlas.js"></script><script src="./canvas.js"></script><script src="./vendredi.js"></script><script src="./utils.js"></script></head><body><canvas id="canvas"></canvas>
+<div id="level">
+Level <span id="level-id">1</span>
+</div>
+<div id="board">
+<div id="food">
+<span id="fish">0</span><img src="./fish.svg" class="fish" /><span id="max-fish" class="max">MAX</span>
+<span id="meat">0</span><img src="./meat.svg" class="meat" /><span id="max-meat" class="max">MAX</span>
+</div>
+<div id="final-score">
+<div id="result">
+<span class="dead">You just died!</span>
+<span class="alive">New land!</span>
+</div>
+<div id="final-score-days">
+<span class="dead">You survived</span>
+<span class="alive">You saved yourself in</span>
+<span id="final-days">0</span> days
+</div>
+<div id="final-score-islands">
+<span id="final-islands">0</span> islands visited
+</div>
+<div id="final-score-food">
+<span id="final-fish">0</span><img src="./fish.svg" class="fish" />
+<span id="final-meat">0</span><img src="./meat.svg" class="meat" />
+eaten
+</div>
+<button id="previous">Level <span id="previous-level">1</span></button>
+<button id="replay">Replay</button>
+<button id="next">Level <span id="next-level">2</span></button>
+</div>
+</div>
+<div id="scores">
+<span>3 best</span>
+<table>
+<thead>
+<tr>
+<th>days</th>
+<th>islands</th>
+<th><img src="./fish.svg" /></th>
+<th><img src="./meat.svg" /></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</body>
+</html>

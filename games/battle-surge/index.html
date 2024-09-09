@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+
+		<title>js13k-2017</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<style type="text/css">
+
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: hsl(200, 80%, 0%);
+			}
+
+			#wrap {
+				position: absolute;
+				top: 0;
+				left: 0;
+				opacity: 0;
+			}
+
+			canvas {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				cursor: none;
+				/*transition: opacity 3000ms, width 200ms, height 200ms;*/
+				image-rendering: optimizeSpeed;
+			}
+
+			#f {
+				font-family: consolas;
+				position: absolute;
+				bottom: 19px;
+				left: 10px;
+				font-size: 20px;
+				color: #11c;
+				text-decoration: none;
+			}
+
+			#f:hover { color: #acc; }
+
+		</style>
+
+	</head>
+
+	<body>
+		<div id="wrap">
+			<canvas id="game"></canvas>
+		</div>
+		<a href='#' id='f' title='fullScreen'>FullScreen</a>
+		<script type="text/javascript" src="bs.min.js"></script>
+	</body>
+
+</html>

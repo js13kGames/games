@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<title>js13k game</title>
+		<meta charset="UTF-8">
+		<style>
+			body {
+				margin: 0;
+			}
+			.button {
+				cursor: pointer;
+				transition: ease-out 0.2s;
+			}
+			#overlay div.visited {
+				color: red;
+			}
+			#overlay div.done {
+				color: green;
+			}
+			.button:hover {
+				color: orange !important;
+				transition: ease-out 0.2s;
+			}
+			#overlay {
+				height: 100%;
+				width: 100%;
+				position: fixed;
+				top: 0;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			#overlay div {
+				color: white;
+				font-size: 30px;
+				font-weight: bold;
+				margin: 10px;
+				padding: 15px;
+				background: rgba(0, 0, 0, 0.5);
+				border-radius: 10px;
+			}
+			#info-contents, #level-contents, #credits-contents, #win, #back {
+				display: none;
+			}
+			#overlay.game > * {
+				display: none;
+			}
+			#overlay.info > *:not(#info-contents) {
+				display: none;
+			}
+			#overlay.info #info-contents, #overlay.info #back {
+				display: block;
+			}
+			#overlay.level > *:not(#level-contents) {
+				display: none;
+			}
+			#overlay.level #level-contents {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				width: 35%;
+			}
+			#level-contents > div {
+				min-width: 38px;
+				text-align: center;
+			}
+			#overlay.level #back {
+				display: block;
+			}
+			#overlay.credits > *:not(#credits-contents) {
+				display: none;
+			}
+			#overlay.credits #credits-contents, #overlay.credits #back {
+				display: block;
+			}
+			#info-contents, #overlay.level #level-contents {
+				max-height: 80%;
+				overflow-y: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<div id="overlay">
+			<div id="info">How to play</div>
+			<div id="info-contents">
+				Controls: <br>
+				WSAD - camera movement, <br>
+				IKJL or Arrow keys - ray movement, <br>
+				Space - lift or drop first block hit by ray, <br>
+				Backspace or Escape - exit current level. <br>
+				<br>
+				Objectives: <br>
+				Connect all lighter blocks of the same color using darker blocks. <br>
+				Darker blocks start to pulse when they are connected. <br>
+				All blocks of the same color light up when they are fully connected. <br>
+				Gray blocks cannot be used to make connections. <br>
+				Black blocks and light blocks cannot be moved.
+			</div>
+			<div id="level">Select level</div>
+			<div id="level-contents"></div>
+			<div id="credits">Credits</div>
+			<div id="credits-contents">
+				<div>Art: <br> Adam Kazubski </div>
+				<div>Programming: <br> Maciej Jurga</div>
+				<div>Levels: <br> Robert Salata, <br> Adam Kazubski, <br> Maciej Jurga</div>
+			</div>
+			<div id="back">Back</div>
+		</div>
+	</body>
+	<script src="bin/main.js" type="module"></script>
+</html>

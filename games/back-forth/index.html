@@ -1,0 +1,135 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="monetization" content="$coil.xrptipbot.com/P37VIS7iSSi_7RJaiZKz-w">
+  <style>
+    body{
+       background:black;
+       font-family:  sans-serif;
+       line-height:2.5em;
+    }
+    .modal {
+       display: block;
+       width: 600px;
+       max-width: 100%;
+       height: 100%;
+       max-height: 100%;
+       position: fixed;
+       z-index: 100;
+       left: 50%;
+       top: 50%;
+       transform: translate(-50%, -50%);
+       opacity:.8;
+       background: black;
+       color:white;
+       font-size:25px;
+       font-family:sans-serif;
+       font-weight:bold;
+    }
+    .modal-guts {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       overflow: auto;
+       padding: 20px 50px 20px 20px;
+    }
+    *{
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+    }
+   .close-button {
+       display:block;
+       z-index: 1;  
+       bottom: 10px;
+       margin-left: auto;
+       margin-right: auto;
+       margin-bottom: 30px;
+       margin-top: 30px;
+       border: 0;
+       background: black;
+       color: white;
+       padding: 5px 10px;
+       font-size: 1.3rem;
+       border: white solid;
+       width:80%;
+    }
+    .open-button {
+       position: absolute;
+       top: 10px;
+       right: 10px;
+       border:none;
+       background:black;
+       color: white;
+       padding: 10px 20px;
+       border-radius: 100% ;
+       font-size: 20px;
+       font-weight:bolder;
+    }
+    #bob{
+       width: 100px;
+       height:100px;
+       margin-top:10%;
+       margin-bottom:10%;
+       margin-left: auto;
+       margin-right: auto;
+       display:block;
+      
+    }
+    #greeting{ 
+       display:none;
+    }
+    .tips{
+       margin-top:5%;
+       font-weight:normal;
+       font-style:italic;
+       display:none;
+
+    }
+    .highlight{
+       color:black;
+       background:white;
+    }
+    .bold{
+       font-weight:bold;
+
+    }
+    
+
+  </style>
+</head>
+<body>
+
+   <div id="greeting" class="modal">
+     <div class="modal-guts">
+         <img id="bob"  src="./Bob.png"></img> 
+         <p >
+          <div>Hi, I'm Bob - a beetle, living in an old Victorian clock.</div> Recently, my clock began to behave strangely: it's hands would move <span class="highlight"> back&forth </span> , apparently trying to kick me out. Sure, this might be due to global warming, but anyway, could you help me out?  
+
+
+         <p id = "tips_mobile" class="tips">
+            tap right half of screen to jump, and left half to switch direction
+         </p>
+         <p id = "tips_desktop" class="tips">
+            press <span class="bold">ArrowUp</span> to jump, <span class="bold">Space</span> to switch direction
+         </p>
+         <span class="highlight">#js13kGames</span>
+         <button id="greeting_close" class="close-button">I'm In!</button>
+     </div>
+
+
+   </div>
+
+   <button id="greeting_open" class="open-button">!</button>
+   
+   
+   <canvas></canvas>
+
+   <script src="./bundle.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<html>
+  <head>
+      <title>They're Back!</title>
+      <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+      <script src="components.js"></script>
+  </head>
+  
+  <body>
+      <a-scene light="defaultLightsEnabled: false" background = "color: #ff2153" gameworld hud game-engine>
+        
+        <a-entity id="rig" position = "0 0 0">  
+          <a-camera look-controls wasd-controls="enabled: false">
+            <a-entity id="aim"
+                      animation__click="property: scale; startEvents: click; easing: easeInCubic; dur: 50; from: 0.1 0.1 0.1; to: 1 1 1"
+                      animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 150; from: 1 1 1; to: 0.1 0.1 0.1"
+                      animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 50; to: 1 1 1"
+                      cursor="fuse: true; fuse-timeout: 250"
+                      material="color: #0000ff; shader: flat"
+                      position="0 0 -1.5"
+                      geometry="primitive: ring; radius-inner: 0.01; radius-outer: 0.015"
+                      raycaster="objects: .collidable">
+            </a-entity> 
+            
+          </a-camera>
+        </a-entity>
+        
+        <a-entity light="type: directional; 
+                         color: white;
+                         intensity: 0.5;
+                         distance: 500;"
+                  position="0 0 1"></a-entity> 
+        
+        <a-entity light="type: directional; 
+                         color: white;
+                         intensity: 0.5;
+                         distance: 500;"
+                  position="0 0 1"></a-entity> 
+        
+        <a-entity light="type: directional; 
+                         color: white;
+                         intensity: 0.5;
+                         distance: 500;"
+                  position="0 0 -1"></a-entity> 
+        
+        <a-entity light="type: directional; 
+                         color: white;
+                         intensity: 0.5;
+                         distance: 500;"
+                  position="-1 0 0"></a-entity> 
+
+        <a-entity light="type: directional; 
+                         color: white;
+                         intensity: 0.5;
+                         distance: 500;"
+                  position="1 0 0"></a-entity> 
+        
+         <a-entity light="type: ambient; color: white; intensity: 1"></a-entity>
+        
+         <a-entity skyline="buildingDefaultHeight: 5 buildingVariableHeight: 40 " rotation="0 0 0"></a-entity>
+         <a-entity skyline="buildingDefaultHeight: 5 buildingVariableHeight: 40 " rotation="0 -90 0"></a-entity>
+         <a-entity skyline="buildingDefaultHeight: 5 buildingVariableHeight: 40 " rotation="0 -180 0"></a-entity>
+         <a-entity skyline="buildingDefaultHeight: 5 buildingVariableHeight: 40 " rotation="0 -270 0"></a-entity>
+        
+        <a-entity position="0 60 -55" rotation="45 0 0 ">
+          <a-entity id="highscore"
+                geometry="primitive: plane; width: 100; height: 20"
+                material="color: #ff2153; shader: flat"
+                opacity="0.1"
+                text="value: High Score: 0000000000; 
+                      color: white;
+                      align: center;
+                      wrapCount: 30;">
+          </a-entity>
+        </a-entity>
+        
+        <a-entity id="intro" visible="true">
+          <a-entity
+              geometry="primitive: plane; width: 0.8; height: 0.2"
+              material="color: #3988cb"
+              position="0 2 -0.9"
+              text="value: They're Back!; 
+                    color: #ff68a8;
+                    align: center;
+                    wrapCount: 15;">
+           </a-entity>
+            <a-entity
+              geometry="primitive: plane; width: 0.8; height: 0.5"
+              material="color: #3988cb"
+              position="0 1.65 -0.9"
+              text="value: During the 80s, you were part of an elite team who succesfully protected the galaxy against various threats.
+                    \nJust as you thought it was safe, they're back! 
+                    \nIt's up to you to protect your block against them.
+                    \nLook at enemies to aim and fire.
+                    \nClick or Touch to run in the direction you are looking.
+                    \nGood Luck - look at Start; 
+                    color: #000000;
+                    align: left;
+                    xOffset: 0.01;
+                    wrapCount: 42;">
+           </a-entity>
+           <a-entity id="start"
+                     start-listener
+                     geometry="primitive: circle; radius: 0.15"
+                     class="collidable"
+                     material="color: #ff68a8"
+                     position="0 1.125 -1.6"
+                     rotation="-60 0 0">
+             
+             <a-entity geometry="primitive: plane; width: 0.25; height: 0.1"
+                       material="color: #ff68a8"
+                       position="0 0 0.001"
+                       text="value: Start; wrapCount:5; align: center; color: #000000"></a-entity>
+          </a-entity>
+        </a-entity>
+            
+    </a-scene>
+  </body>
+  
+</html>
+

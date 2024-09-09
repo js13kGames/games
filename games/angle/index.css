@@ -1,0 +1,30 @@
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+  font-weight: 300;
+  margin: 0;
+  text-align: top;
+  touch-action: none;
+  overflow: hidden;
+  /* background-color: #282c34; */
+}
+
+canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+}
+
+.message {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 10vmin);
+  color: white;
+  z-index: 999;
+}
+
+.message.hide {
+  display: none;
+}

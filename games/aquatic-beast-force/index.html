@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aquatic Beast Force</title>
+        <style>
+            body {
+                background-color: rgb(191, 175, 137);
+            }
+
+            div {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+
+            canvas {
+                margin-left: -245px;
+                margin-top: -221px;
+                background-color: #C5CCA1;
+                border: 10px solid rgb(175, 127, 112);
+                box-shadow: 10px 10px 0px 0px rgba(159, 93, 108, 1);
+            }
+
+            img {
+                height: 150px;
+                image-rendering: pixelated;
+                margin-left: -173px;
+                margin-top: -450px;
+                padding-bottom: 250px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="g" width="480" height="432"></canvas>
+        </div>
+        <div>
+            <img src="assets/logo.png" />
+        </div>
+
+        <script src="g.js"></script>
+    </body>
+</html>

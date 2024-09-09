@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>0r0b0r0s JS13K 2014 2</title>
+        <style>
+            * {
+              position:fixed
+            }
+
+            body {
+              background:#eee;
+              color:#f0f
+            }
+
+            h2 {
+              text-shadow:0 0 12px #0f0;
+              z-index:99
+            }
+
+            a, p {
+              z-index:98
+            }
+
+            a {
+              width:200%;
+              height:200%;
+              top:-100%;
+              left:-100%;
+              background:-webkit-radial-gradient(center,ellipse cover,rgba(255,255,222,.9)3%,rgba(99,99,88,0)12%,rgba(6,6,9,.9)75%)
+            }
+
+            p {
+              border-style:solid;
+              border-width:999px 0 0 600px;
+              border-color:transparent transparent transparent #fff;
+              opacity:.15;
+              -webkit-transform-origin:0 0;
+              -webkit-filter:blur(9px)
+            }
+        </style>
+    </head>
+    
+    <body>
+        <h2>WASD + E + MOUSE</h2>
+        <h2></h2>
+        <a></a>
+        <p></p>
+        <p></p>
+
+        <script>
+            var visibleLevels = 9, //n
+                zoomSpeed = 99, //zs
+                zoomScales = [.06, .1, .2, .36, .6, 1, 1.8, 3.2, 5.7], //zt
+                rotations = [], //rs
+                document = document, //d
+                math = Math, //m
+                window = window, //w
+                windowWidth = window.innerWidth, //wx
+                windowHeight = window.innerHeight, //wy
+                playerRotation = //r
+                lightbeamRotation = //qr
+                level = //l
+                levelRotation = //a
+                innerLevelOpacity = //o
+                invertAmount = 0; //v
+
+            function randomInteger(min, max) {
+                return math.floor(math.random() * (max - min + 1) + min)
+            }
+
+            function Update() {
+                zoomScales[8] < 9.2 ? ( // levels are not at max scale // zoom
+                    zoomScales = [zoomScales[0] += 4e-5 * zoomSpeed,zoomScales[1] += 1e-4 * zoomSpeed,zoomScales[2] += 16e-5 * zoomSpeed,zoomScales[3] += 24e-5 * zoomSpeed,zoomScales[4] += 4e-4 * zoomSpeed,zoomScales[5] += 8e-4 * zoomSpeed,zoomScales[6] += .0014 * zoomSpeed,zoomScales[7] += .0025 * zoomSpeed,zoomScales[8] += .004 * zoomSpeed],
+                    innerLevelOpacity += .001 * zoomSpeed // fade in inner level
+                ) : ( // levels are at max scale // set new rotations
+                    rotations = [rotations[8] + 90,rotations[0],rotations[1],rotations[2],rotations[3],rotations[4],rotations[5],rotations[6],rotations[7]],
+                    // hide outer level
+                    innerLevelOpacity = 0,
+                    // reset scales
+                    zoomScales = [.06, .1, .2, .36, .6, 1, 1.8, 3.2, 5.7],
+                    //level up
+                    level++,
+                    HUD[1].innerHTML = "<br/><br/>LEVEL:" + level
+                );
+                for (var e = 0; visibleLevels > e; e++) // apply scales and rotations
+                    levels[e].style.webkitTransform = "scale(" + zoomScales[e] + "," + zoomScales[e] + ")rotate(" + (playerRotation + rotations[e]) + "deg)";
+                levels[0].style.opacity = innerLevelOpacity,// apply opacity
+                playerRotation += .1,// add slight rotation
+                setTimeout(function () { Update() }, 20)
+            }
+
+            !function () { // init
+                sun = document.getElementsByTagName("a"), //s
+                lightBeam = document.getElementsByTagName("p"), //q
+                HUD = document.getElementsByTagName("h2"); //h
+                for (var t = 0; visibleLevels > t; t++) {
+                    rotations.push(210 * t),
+                    container = document.body.appendChild(document.createElement("div")); //c
+                    for (var r = 1; 3 > r; r++)
+                        for (var o = 1; 4 > o; o++)
+                            building = document.createElement("img"), 
+                            building.src = o + ".png",
+                            container.appendChild(building)
+                }
+                levels = document.getElementsByTagName("div"), //b
+                buildings = document.getElementsByTagName("img"); //p
+                for (var t = 0; 54 > t; t++)
+                    buildings[t].style.webkitTransform = "rotate(" + 60 * t + "deg)";
+                for (var t = 0; 54 > t; t += 6)
+                    buildings[0 + t].style.margin = "100px 0 0 -150px",
+                    buildings[1 + t].style.margin = "0 0 0 -330px",
+                    buildings[2 + t].style.margin = "-210px 0 0 -340px",
+                    buildings[3 + t].style.margin = "-324px 0 0 -150px",
+                    buildings[4 + t].style.margin = "-224px 0 0 30px",
+                    buildings[5 + t].style.margin = "-9px 0 0 30px";
+                Update()
+            }(),
+
+            document.onkeydown = function () {
+                character = String.fromCharCode(event.keyCode); //k
+                if ("A" == character && (playerRotation -= 2),
+                    "D" == character && (playerRotation += 2),
+                    "W" == character && (zoomSpeed += 9, zoomSpeed > 99 && (zoomSpeed = 98)),
+                    "S" == character && (zoomSpeed -= 9, 9 > zoomSpeed && (zoomSpeed = 9)),
+                    "E" == character) {
+                    invertAmount = 0 == invertAmount ? 100 : 0;
+                    for (var t = 0; 54 > t; t++)
+                        buildings[t].style.webkitFilter = "invert(" + invertAmount + "%)"
+                }
+            },
+
+            document.onmousemove = function (event) {
+                mouseX = ((event.clientX + document.body.scrollLeft) / windowWidth * 100 * -1 + 150) / 2,
+                mouseY = ((event.clientY + document.body.scrollTop) / windowHeight * 100 * -1 + 100) / 2;
+                for (var t = 0; visibleLevels > t; t++)
+                    levels[t].style.left = mouseX + "%",
+                    levels[t].style.top = mouseY + "%",
+                    2 > t && (
+                        lightBeam[t].style.left = mouseX + "%",
+                        lightBeam[t].style.top = mouseY + "%",
+                        lightbeamRotation -= 1.5 + randomInteger(-2, 2) * randomInteger(-2, 2),
+                        lightBeam[t].style.webkitTransform = "rotate(" + lightbeamRotation * randomInteger(-1, 1.5) + "deg)"
+                    );
+                sun[0].style.left = mouseX - 100 + "%",
+                sun[0].style.top = mouseY - 100 + "%"
+            },
+
+            document.onmousedown = function () {
+                levelRotation = 90 != levelRotation ? 90 : 210,
+                rotations = [];
+                for (var e = 0; visibleLevels > e; e++)
+                    rotations.push(e * levelRotation)
+
+            };
+        </script>
+
+    </body>
+</html>

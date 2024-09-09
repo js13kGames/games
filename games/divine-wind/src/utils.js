@@ -1,0 +1,1 @@
+function shuffle(n){for(let r=n.length-1;r>=1;r--){let o=randIntFromZero(r),t=n[o];n[o]=n[r],n[r]=t}}function randIntFromZero(n){return Math.floor(Math.random()*n)}

@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>JS13kGame - Visible & Co.</title>
+<style>
+.intro,.ui{background:#fff;border-radius:6px}body{margin:0}.ui,.ui div{margin:0 auto}.intro{width:40%;height:80%;overflow:auto;position:absolute;top:10%;left:30%;padding:6px}.ui_b,.ui_t{position:absolute;width:100%}.intro *{color:#fff}.ui_t{top:0}.ui_b{bottom:0}.ui{width:493px;display:none}.ui div{width:476px}.ui_b label{text-align:center;color:#000;height:90px;padding-top:16px}.ui img{padding:0 14px}.ui label{display:inline-block}.ui input{display:none}input[type=radio]:checked+label{background:rgba(0,255,255,.3)}.ui_t .ui>span{display:block}
+</style>
+</head>
+<body>
+<canvas style="width:100%;height:100%;" width="1024" height="768"></canvas>
+<canvas style="display:none;" width="512" height="512"></canvas>
+<canvas style="display:none;" width="64" height="64"></canvas>
+<div class="intro"></div>
+<div class="ui_b">
+    <form class="ui uV">
+        <div>
+            <input name="g" type="radio" value="floor" id="r1"></input>
+            <label for="r1">
+                <img offset="128 0" /><br />
+                Toggle Floor
+            </label>
+            <input name="g" type="radio" value="freeze" id="r2">
+            <label for="r2">
+                <img offset="192 64" /><br />
+                Freeze TDS&copy;
+            </label>
+            <input name="g" type="radio" value="shock" id="r3"></input>
+            <label for="r3">
+                <img offset="320 64" /><br />
+                Shock TDS&copy;
+            </label>
+            <input name="g" type="radio" value="alarm" id="r4"></input>
+            <label for="r4">
+                <img offset="256 64" /><br />
+                Alarm TDS&copy;
+            </label>
+            <input name="g" type="radio" value="sigil" id="r5"></input>
+            <label for="r5" style="display:none" class="bH">
+                <img offset="0 128" /><br />
+                Attract guard.
+            </label>
+            <label class="bV" onclick="scene.start()">
+                <img offset="256 128" /><br />
+                Start game.
+            </label>
+        </div>
+    </form>
+</div>
+<div class="ui_t">
+    <div class="ui uH" id="nT">
+    </div>
+</div>
+<script src="ugly.js"></script>
+</body>
+</html>

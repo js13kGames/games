@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0, 0, 100, 100" xmlns="http://www.w3.org/2000/svg"
+	stroke="#222" fill="#444" stroke-width="3"
+>
+<polygon name='top' points="50,5 65,20 35,20 50,5" />
+<polygon name='bottom' points="50,95 65,80 35,80 50,95" />
+<polygon name='left' points="5,50 20,65 20,35 5,50" />
+<polygon name='right' points="95,50 80,65 80,35 95,50" />
+<circle cx="50" cy="50" r="15" />
+</svg>

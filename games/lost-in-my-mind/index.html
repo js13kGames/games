@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">    
+    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/house.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/ocean.js"></script>
+    <script src="js/tree.js"></script>
+    <script src="js/person.js"></script>
+</head>
+  <body>
+    <a-scene class="fullscreen" fog="type: linear; color: #FFF; far: 30; near: 0">
+      <a-light type="ambient" color="#FFF" intensity="0.6"></a-light>
+      <a-entity id="wordlist"></a-entity>
+      <a-entity id="word-slots"></a-entity>     
+      <a-entity id="player" position="0 0 2">
+          <a-light color="#fff" distance="50" intensity="0.7" type="point"></a-light>
+          <a-entity camera="userHeight: 1.6;" velocity="0 0 0" raycaster wasd-controls look-controls>
+            <a-entity cursor="fuse: true; fuseTimeout: 500"
+              position="0 0 -1"
+              geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+              material="color: #7AD2F9; shader: flat">
+              <a-animation begin="click" easing="ease-in" attribute="scale"
+               fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
+              <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+               fill="backwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+            </a-entity>
+          </a-entity>
+
+      </a-entity>
+
+    <a-sky color="#BBB"></a-sky>
+    </a-scene>
+  </body>
+</html>

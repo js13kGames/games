@@ -1,0 +1,55 @@
+<html>
+<head>
+	<title>13kb js</title>
+    <style type="text/css">
+        #animater,body{background-color:#aaa}#animater,#animater_cover{position:relative;margin:auto;color:#111;border-radius:25px}#loader,#main_grid,#menu{margin-right:auto;margin-left:auto;display:none}#menu,h3{padding:10px}#animater,#heading,#howto,#menu{text-align:center}#howto,#menu,#menu_btn{border-radius:10px;position:fixed}#howto,#loader,#main_grid,#menu,#score_board,#timer{display:none}#main_grid{height:550px;width:550px}#heading{margin:auto;padding-top:20px;padding-bottom:20px}#loader{height:550px;width:80%;background-color:#000;border-radius:35px}#animater_cover{top:200px;height:110px;width:90%;background-color:#fff}#animater{top:5px;height:100px;width:0;vertical-align:middle;line-height:100px}h3{border-radius:5px}h3:hover{background-color:#666;cursor:pointer}#howto{padding-top:35px;margin:80px 15% 15%;top:0;width:70%;background-color:#777}#menu{top:200px;width:40%;background-color:#333}#menu_btn{display:inline-block;cursor:pointer;right:40px;top:30px;padding:6px}#menu_btn:hover{background-color:#999}.bar1,.bar2,.bar3{border-radius:3px;width:35px;height:5px;background-color:#333;margin:6px 0;transition:.4s}#timer_cont{position:absolute;right:7%;top:250px}#score_board{position:absolute;left:4%;top:200px}#big_box1{pointer-events:none;opacity:.3}
+    </style> 
+</head>
+
+<body onload="animate()"> 
+    <h2 id="heading">Loading...</h2>
+	<div id="menu_btn">
+		<div class="bar1"></div>
+		<div class="bar2"></div>
+		<div class="bar3"></div>
+	</div> 
+
+	<div id="score_board">
+		<h3 id="score">Score:</h3>
+		<h3 id="lives">Lives:</h3>
+		<h3 id="leveldis">Level:</h3>
+	</div>
+
+	<div id="container">
+		<div id="loader">
+			<div id="animater_cover">
+				<div id="animater"></div>
+			</div>
+		</div>
+        
+        <div id="howto">
+            <img src="original.png" style="float: left; padding-left: 35px;">
+            <div style="color: beige; text-align: left">
+                <p style="padding-left: 270px; padding-top: 30px;">Original grid is given in the top-left corner. <br> Find the lost of original grid. <br> <br> In lost the black small pixels turn white and white small pixels turn black</p>
+            </div>
+            <h4 style="float: left; margin-top: 100px;">Ex:</h4>
+            <img src="original.png" style="margin-top: 120px; float: left; padding: 35px;">
+            <img src="5-2-arrow-transparent.png" style="margin-top: 220px; width: 100px;">
+            <img src="lost.png" style="margin-top: 120px; float: right; padding: 35px; border: 2 white">
+		</div>
+            
+		<div id="menu">
+			<h3 id="play_btn">Play</h3>
+			<h3 id="how_btn">How to play</h3>
+		</div>
+
+		<svg id="main_grid"></svg>
+		<svg id="timer_cont" height="200" width="200">
+			<circle id="timer" cx="100" cy="100" r="90" stroke="black" stroke-width="3" fill="white" />
+		</svg> 
+	</div>
+	<script type="text/javascript">
+        function restartGame(){scoreNow=0,livesLeft=5,level=2,wins=0,mainLoad()}function updateScoreBoard(){score.innerHTML="Score: "+scoreNow,lives.innerHTML="Lives: "+livesLeft,leveldis.innerHTML="Level: "+(level-1)}function stopTimer(){clearInterval(int),timer.style.display="none"}function startTimer(){function e(){0>=n?(clearInterval(int),0==livesLeft?(alert("Game over!\n\nyour score: "+scoreNow+"\n\nRestart Game"),restartGame()):(alert("Time up!! try again"),livesLeft--,mainLoad())):(n-=t,timer.setAttribute("r",n))}int=setInterval(e,50);var n=90,t=1/level;timer.style.display="block"}function showMenu(){var e=(win_width-40*win_width/100)/2;menu.style.right=e,heading.innerHTML="MENU",menu.style.display="block";document.getElementById("play_btn").onclick=function(){mainLoad(),menu.style.display="none",main_grid.style.display="block",score_board.style.display="block"},document.getElementById("how_btn").onclick=function(){menu.style.display="none",howto.style.display="block",heading.innerHTML="HOW TO PLAY"}}function animate(){function e(){98.5==n?(clearInterval(o),loader.style.display="none",main_grid.style.display="block",showMenu()):(n+=.5,t.style.width=n+"%",n%5==0&&(t.innerHTML=n+"%"))}loader.style.display="block";var n=0,t=document.getElementById("animater"),o=setInterval(e,1)}function make_answer(e){var n=e+1,t=n*n;for(random_answer_box=Math.floor(1e3*Math.random()%t)+1;1==random_answer_box;)random_answer_box=Math.floor(1e3*Math.random()%t)+1;var o=random_answer_box%n,r=Math.floor(random_answer_box/n)+1;0==o&&(o=n,r-=1);for(var i=4*n*(r-1)*4+4*(o-1)+1,l=0,a=1;4>=a;a++){for(var s=i;i+4>s;s++)positions[l]=s,l++;i+=4,i=i+4*n-4}for(var a=0;16>a;a++)1==first_box[a]?document.getElementById("small_box"+positions[a]).style.fill="rgb(0,0,0)":document.getElementById("small_box"+positions[a]).style.fill="rgb(255,255,255)"}function creat_boxes(e){for(var n=e+1,t="",o=svg_size/n,r=1,i=0;n>i;i++)for(var l=0;n>l;l++)t+="<rect id=big_box"+r+' onclick="check_win(this.id)" x="'+i*o+'" y="'+l*o+'" height="'+o+'" width="'+o+'" style="fill:rgb(255,255,255);stroke-width:4;stroke:rgb(250,0,0);fill-opacity: 0.3"></rect>',r++;return t}function creat_small_boxes(e){for(var n="",t=e+1,o=1,r=svg_size/(4*t),i=0,l=0;4*t>l;l++)for(var a=0;4*t>a;a++){var s=Math.floor(10*Math.random()%2);4>a&&4>l&&(first_box[i]=s,i++),n+="<rect id=small_box"+o+' x="'+l*r+'" y="'+a*r+'" height="'+r+'" width="'+r+'" style="fill:rgb('+255*s+","+255*s+","+255*s+');stroke-width:1;stroke:rgb(0,0,0)"></rect>',o++}var d=creat_boxes(e);return n+=d}function mainLoad(){heading.innerHTML="LOST";var e=creat_small_boxes(level);main_grid.innerHTML=e;document.getElementById("big_box1");make_answer(level),startTimer(),updateScoreBoard()}function check_win(e){stopTimer();var n="big_box"+random_answer_box;e==n?(wins++,scoreNow+=level-1,5>=level&&3==wins?(alert("correct answer.. next level !!!"),level++,wins=0):alert("correct answer.. :)"),mainLoad()):0==livesLeft?(alert("Game over!\n\nyour score: "+scoreNow+"\n\nRestart Game"),restartGame()):(alert("wrong answer"),livesLeft-=1,mainLoad())}var main_grid=document.getElementById("main_grid"),grid_html,level=2,svg_size=550,first_box=[],random_answer_box,positions=[],int,wins=0,loader=document.getElementById("loader"),heading=document.getElementById("heading"),menu=document.getElementById("menu"),win_width=window.innerWidth,menu_btn=document.getElementById("menu_btn").onclick=function(){heading.innerHTML="MENU",main_grid.style.display="none",menu.style.display="block",score_board.style.display="none",howto.style.display="none",stopTimer()},timer=document.getElementById("timer"),score_board=document.getElementById("score_board"),score=document.getElementById("score"),lives=document.getElementById("lives"),leveldis=document.getElementById("leveldis"),howto=document.getElementById("howto"),scoreNow=0,livesLeft=5;
+    </script>
+</body>
+</html>

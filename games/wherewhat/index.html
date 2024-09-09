@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>lostVR</title>
+  <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a-scene general-scene>
+
+
+    <a-entity id="sky" geometry="primitive: sphere; radius: 50" material="color: #0f0f0f; shader: flat; side: back"></a-entity>
+
+    <a-plane id="floor" position="0 0 -4" rotation="-90 0 0" width="75" height="90" color="#1A1A1A" shader="flat"></a-plane>
+    <!-- first episode -->
+    <a-plane id="welcom" position="-19 3 29.7" color="#0f0f0f" width="13" height="10">
+      <a-entity position="-0.3 0 0">
+        <a-text value="hey!" position="0 2.19 0" width="3" height="auto"></a-text>
+        <a-text value="you're lost!" position="-0.31 1.88 0" width="3" height="auto"></a-text>
+        <a-text value="find your universe and save your self" position="-0.97 1.55 0" width="3" height="auto"></a-text>
+        <a-text value="you can only look" position="-0.55 1.21 0" width="3" height="auto"></a-text>
+        <a-text value="but when you look - things happen" position="-0.97 0.9 0" width="3" height="auto"></a-text>
+        <a-text value="grab the cursor and watch" position="-0.47 0.59 0" width="3" height="auto"></a-text>
+        <a-text value="find red ball" position="-0.33 0.28 0" width="2" height="auto"></a-text>
+        <a-sphere id="gamestart" geometry="radius:0.5" scale="0.3 0.3 0.3" position="0.1 -0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3">
+        </a-sphere>
+
+      </a-entity>
+    </a-plane>
+    <a-plane id="forest-left1" position="-29 2.5 27.7" rotation="0 87 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="forest-left2" position="-29 2.5 19.3" rotation="0 75 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="forest-right1" position="-8.6 2.5 32.5" rotation="0 75 0" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-right2" position="-8.5 2.5 24.8" rotation="0 75 0" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-leftcorner" position="-25 2.5 14.1" rotation="0 41 0" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-rightcorner" position="-10.5 2.5 14.5" rotation="0 -69 0" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-rightcorner2" position="-17.5 2.5 12" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <!-- left side of vieu -->
+    <a-sphere id="left-white" position="-24.7 0.3 17.9" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="left-blue" position="-24.3 0.1 17.9" radius="0.65" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <!-- animating elements -->
+    <a-plane id="firstAnPlane" position="-19.2 2.9 17.2" width="0.75" height="0.75" color="#1ABC9C" scale="1.3 1.3 0.3">
+      <a-animation color begin="mouseenter" attribute="color" from="#1ABC9C" to="#E74C3C" dur="2300"></a-animation>
+      <a-animation begin="mouseleave" attribute="color" from="#E74C3C" to="#1ABC9C" dur="1500"></a-animation>
+      <a-animation begin="mouseleave" attribute="scale" to="0 0 0 " dur="1000"></a-animation>
+    </a-plane>
+    <a-sphere id="firstAnSphere" position="-19.2 4.59 19.4" scale="0.7 0.7 0.3" radius="0.7" color="#fff">
+      <a-animation attribute="scale" begin="mouseenter" to="1.5 1.5 0.3" fill="forward" dur="1000"></a-animation>
+      <a-animation attribute="scale" begin="mouseleave" to="1 1 0.3" fill="forward" dur="1300"></a-animation>
+    </a-sphere>
+    <a-sphere id="firstAnSphere2" position="-19.2 4.1 17.5" scale="0.1 0.1 0.3" radius="0.3" color="#fff">
+      <a-animation attribute="color" from="#fff" to="#8B4D93" begin="mouseenter" dur="700"></a-animation>
+    </a-sphere>
+    <a-tetrahedron id="trian" position="-19.2 6.1 20" color="#fff" shader="flat" radius="0.5">
+      <a-animation begin="mouseenter" attribute="position" to="-21.2 8.1 19.4"  dur="1000" ></a-animation>
+      <a-animation begin="mouseenter" attribute="rotation" to="0 0 -180"></a-animation>
+    </a-tetrahedron>
+    <!-- right side -->
+    <a-sphere id="right-white" position="-15 0.3 19.4" radius="0.87" scale="0.6 0.65 0.35"></a-sphere>
+    <a-tetrahedron color="#fff"></a-tetrahedron>
+    <a-sphere id="right-blue1" position="-15.9 0.1 20.4" radius="0.35" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="right-blue2" position="-15 0.03 21" radius="0.35" scale="0.35 0.5 0.5" color="#48569E"></a-sphere>
+    <!-- active objects -->
+    <a-sphere id="one" geometry="radius:0.17"  material="opacity: 1; color: #E74C3C; shader: flat" position="-19.2 4.1 17" metalness="3"></a-sphere>
+    <!-- second episode -->
+    <!-- <a-plane id="forest-left-second" position="8.3 5.1 15.6" rotation="0 75 0" width="17" height="11" color="#1A1A1A"></a-plane> -->
+    <a-plane id="forest-right-second2" position="2.3 2.5 34.3" rotation="0 75 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-right-second3" position="4.1 2.5 25" rotation="0 87 13" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-right-second5" position="5.2 2.5 16.3" rotation="0 -69 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="forest-leftcorner-second" position="-5.2 2.5 18.8" side="double" rotation="0 41 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="forest-rightcorner-second" position="-0.8 2.5 15.5" side="double" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <!-- landscape -->
+    <a-sphere id="right-white-back-second" position="-1.3 0.05 15.4" radius="0.87" scale="0.9 1.7 0.7"></a-sphere>
+    <a-sphere id="right-white-front-second" position="1.15 0.7 19.7" radius="0.87" scale="0.9 1.7 0.7"></a-sphere>
+    <a-sphere id="left-blue--second" position="0.39 0.054 20.3" radius="0.65" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="right-blue-front-second" position="-0.3 0.01 15.1" radius="0.65" scale="0.25 0.55 0.25" color="#54ACD2"></a-sphere>
+    <a-sphere id="left-white-second" position="2.1 0.15 20.1" radius="0.87" scale="0.75 0.85 0.35"></a-sphere>
+    <a-sphere id="left-blue1-back-second" position="1.2 0.5 18" radius="0.35" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="right-blue1-back-second" position="1.3 0.5 15.5" radius="0.35" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="left-white-front2-second" position="-5 0.02 16.7" radius="0.35" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="left-white-front1-second" position="-2.3 0.02 20.4"radius="0.35" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="right-blue1-second" position="-6.4 0.48 22" radius="0.35" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="right-blue2-second" position="3 0.3 15.7" radius="0.35" scale="0.65 0.5 0.35" color="#48569E"></a-sphere>
+    <!-- animating objects -->
+    <a-sphere id="second-sphere-one" position="-2.8 1.37 21.7" scale="0.5 0.5 0.5" radius="0.65" color="#E7E7DE">
+      <a-animation attribute="color" begin="mouseenter" from="#E7E7DE" to="#008891" dur="500" ></a-animation>
+      <a-animation attribute="scale" begin="mouseenter" to="0.3 0.3 0.3" dur="800"></a-animation>
+      <a-animation attribute="color" begin="mouseleave" from="#008891" to="#E7E7DE" dur="500"></a-animation>
+      <a-animation attribute="scale" begin="mouseleave" from="0.3" to="0.5 0.5 0.5" dur="800"></a-animation>
+    </a-sphere>
+    <a-sphere id="second-sphere-two" position="-2.8 3.5 21.7" color="#E3EEFF" radius="0.6">
+      <a-animation attribute="color" begin="mouseenter" from="#E3EEFF" to="#5991B1" dur="1000"></a-animation>
+      <a-animation attribute="color" begin="mouseleave" from="#5991B1" to="#E3EEFF"></a-animation>
+    </a-sphere>
+    <a-box id="second-box" position="-2.8 2.3 21.7" color="#EDF9FF" scale="0.65 0.65 0.65">
+      <a-animation attribute="color" begin="mouseenter" from="#EDF9FF" to="#8B4D93" dur="1000" ></a-animation>
+      <a-animation attribute="scale" begin="mouseenter" to="1 1 1"></a-animation>
+      <a-animation begin="mouseleave" attribute="color" from="#8B4D93" to="#EDF9FF" dur="1000"></a-animation>
+      <a-animation attribute="scale" begin="mouseleave" to="0.65 0.65 0.65"></a-animation>
+    </a-box>
+    <a-sphere id="second-sphere-three" position="-2.8 2.3 19.9" color="#54ACD2" radius="0.17">
+    </a-sphere>
+    <a-tetrahedron id="second-nextLevel" color="#fff" position="-2.8 3.6 18.6" radius="0.35" scale="0.3 0.3 0.3">
+      <a-animation attribute="rotation" begin="mouseenter" to="0 0 -360" ></a-animation>
+      <a-animation attribute="rotation" begin="mouseleave" to="0 0 360" ></a-animation>
+    </a-tetrahedron>
+    <!-- active object - next level -->
+    <a-sphere id="movetwo" geometry="radius:0.3" position="-2.8 3.3 15" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3">
+      <a-animation attribute="scale" begin="mouseenter" to="1.66 1.66 0.65"></a-animation>
+      <a-animation attribute="scale" begin="mouseleave" to="1 1 1"></a-animation>
+    </a-sphere>
+
+    <!-- third episode -->
+    <!-- forest -->
+    <a-plane id="third-forest-left" position="31 0 0" rotation="0 75 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-right" position="23 1.7 20" rotation="0 102 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-rightcorner" position="18.7 3.1 11" side="double" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="third-forest-right-up" position="16 -3 8.5" rotation="0 0 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-right-top" position="11.5 2.7 13.2" rotation="0 43 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-right-top2" position="7 2 22" rotation="0 78 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-right-top3" position="7 2.1 15" rotation="0 78 23" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="third-forest-left-top" position="23.5 -3 27" rotation="0 -73 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <!-- landscape -->
+    <a-sphere id="tree" position="10.9 0 17.2" radius="1" scale="0.3 1.03 0.93" color="#54ACD2" rotation="0 90 0"></a-sphere>
+    <a-sphere id="third-bush" position="16.9 0.04 18.5" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="third-bush-blue" position="10.6 0.6 15.7" radius="0.65" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="third-bush2" position="16.6 0.03 17.7" radius="0.25" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="third-bush3" position="10.3 -0.03 18" radius="0.25" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="third-bush4r" position="10.1 0.05 17" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="third-bush5r" position="11.1 0.3 15.6" radius="0.87" scale="0.75 0.85 0.357" rotation="0 32 0"></a-sphere>
+    <a-sphere id="third-bush5rb" position="11.8 -0.1 16" radius="0.65" scale="0.25 0.55 0.25" color="#54ACD2"></a-sphere>
+    <!-- animated elements -->
+    <!-- first -->
+    <a-box id="boxOne" position="14.69 2.9 15" scale="0.5 0.5 0.5">
+      <a-animation attribute="scale" begin="mouseenter" from="0.5 0.5 0.5" to="2.3 2.3 2.3" dur="879"></a-animation>
+      <a-animation attribute="scale" begin="mouseleave" from="2.3 2.3 2.3" to="0.5 0.5 0.5" dur="1000"></a-animation>
+    </a-box>
+    <a-box id="boxTwo" position="14.69 3.5 15" scale="0.5 0.5 0.5">
+      <a-animation attribute="rotation" from="0 0 0" to="0 0 90" begin="mouseenter" dur="900"></a-animation>
+    </a-box>
+    <a-box id="boxThree" position="14.69 4.1 15" scale="0.5 0.5 0.5"></a-box>
+    <!-- second -->
+    <a-tetrahedron id="trianOne" position="14.69 2.1 14.5" scale="0.01 0.01 0.01" rotation="0 45 0">
+    </a-tetrahedron>
+    <a-tetrahedron id="trianTwo" position="14.69 3.1 14" scale="0.01 0.01 0.01" rotation="0 43 0">
+    </a-tetrahedron>
+    <a-tetrahedron id="trianThree" position="14.69 3.95 14.5" scale="0.01 0.01 0.01" rotation="0 47 0"></a-tetrahedron>
+    <a-sphere id="enter" position="14.69 1.7 11.7" radius="0.5" scale="0.01 0.01 0.01">
+      <a-animation attribute="scale" from="0.53 0.53 0.53" to="1.3 1.3 1.3" begin="mouseenter"></a-animation>
+      <a-animation attribute="scale" from="1.3 1.3 1.3" to="0.53 0.53 0.53" begin="mouseenter"></a-animation>
+      <a-animation attribute="scale" from="0.53 0.53 0.53" to="1.6 1.6 1.6" begin="mouseenter"></a-animation>
+      <a-animation attribute="scale" from="1 1 1" to="0 0 0" begin="mouseenter"></a-animation>
+    </a-sphere>
+    <!-- next level -->
+    <a-sphere id="movethree" radius="0.17" position="14.69 1.5 5" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3">
+    </a-sphere>
+    <!-- four episode -->
+    <!-- forest -->
+    <a-plane id="four-forest-left" position="23.5 2.3 5.9" rotation="0 75 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-left2" position="19.3 2.3 6.1" rotation="0 35 13" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+
+    <a-plane id="four-forest-right" position="23 1.7 -15.2" rotation="0 90 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right2" position="23 1.7 -13.2" rotation="0 90 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+
+    <a-plane id="four-forest-rightcorner" position="18.7 3.1 -15.3" side="double" rotation="0 -17 -21" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-rightcorner2" position="12.7 2.1 -14.3" side="double" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-rightcorner3" position="5.7 3.5 -17.7" side="double" rotation="0 23 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-rightcorner4" position="-1.7 3.1 -14.3" side="double" rotation="0 13 0" width="8.5" height="5.5" color="#1A1A1A" shader="flat"></a-plane>
+    <a-plane id="four-forest-rightcorner5" position="12.3 2.1 8.3" side="double" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-rightcorner6" position="5.1 2.7 8.3" side="double" rotation="0 -17 0" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-rightcorner7" position="-3.2 4.1 8.3" side="double" rotation="0 -17 -21" width="8.5" height="5.5" color="#1A1A1A"></a-plane>
+    <a-plane id="four-forest-right-up" position="8.3 2.1 5.5" rotation="0 0 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right-top" position="-5.7 2 4.3" rotation="0 78 0" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right-top2" position="-5.5 3 -1.6" rotation="0 78 23" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right-top2-2" position="-5.5 2.7 -6.7" rotation="0 78 3" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right-top2-3" position="-5.5 3 -12" rotation="0 78 -13" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <a-plane id="four-forest-right-top3" position="-79 3.1 -9.7" rotation="0 78 18" side="double" width="8.5" height="5.5" color="#1A1A1A" side="double"></a-plane>
+    <!-- landscape -->
+    <a-sphere position="10.9 0 1.32" radius="1" scale="0.3 1.03 0.93" color="#54ACD2" rotation="0 57 0"></a-sphere>
+    <a-sphere id="four-bush" position="11.3 -0.37 1.7" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="four-bush4" position="7.6 0.04 -7.5" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="four-bush-blue" position="10.6 0.6 -7" radius="0.65" scale="0.35 0.5 0.5" color="#54ACD2"></a-sphere>
+    <a-sphere id="four-bush2" position="5.8 0.03 -10" radius="0.25" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="four-bush3" position="7.7 -0.03 -1.1" radius="0.25" scale="0.35 0.5 0.5"></a-sphere>
+    <a-sphere id="four-bush4r" position="6.7 0.05 -0.3" radius="0.87" scale="0.45 0.85 0.35"></a-sphere>
+    <a-sphere id="four-bush5r" position="5.7 0.3 -11.7"  radius="0.87" scale="0.75 0.85 0.357" rotation="0 32 0"></a-sphere>
+    <a-sphere id="four-bush5rb" position="3.2 -0.1 -2.1" radius="0.65" scale="0.25 0.55 0.25" color="#54ACD2"></a-sphere>
+    <!-- animated elements -->
+    <a-entity id="objects">
+        <a-sphere class="first" color="#B6C8D1" position="10.9 4.81 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-sphere id="right" class="first" color="#DCE3C9" position="9 4.59 -3.9" radius="0.32"></a-sphere>
+        <a-sphere id="spherebtn" class="first" color="#008891" position="9 4.59 -3.9" radius="0.32" scale="0.02 0.02 0.02"></a-sphere>
+        <a-sphere class="first" color="#E1FAFC" position="10.2 3.75 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation delay="35" attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-sphere delay="55" class="second" color="#F3EECC" position="11.2 3.55 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-tetrahedron id="triangle" class="second" position="9 3 -3.9" radius="0.37" rotation=" 0 0 45"></a-tetrahedron>
+        <a-sphere id="movefour" radius="0.17" position="8.7 3 -3.9" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3" scale="0.02 0.02 0.02"></a-sphere>
+        <a-sphere delay="95" class="second" color="#E1FAFC" position="10.2 2.65 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-sphere delay="235" class="three" color="#DCE3C9" position="10.7 2.33 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-box id="boxblue" class="three" position="9 1.91 -3.9" color="#B6C8D1" width="0.47" height="0.47" depth="0.47"></a-box>
+        <a-sphere delay="25" class="three" color="#F3EECC" position="11.5 1.55 -3.9" radius="0.07" scale="0.3 0.3 0.3">
+          <a-animation attribute="scale" to="7.7 7.7 7.7" dur="1500" repeat="indefinite" easing="ease-in-out" fill="both" direction="alternate"></a-animation>
+        </a-sphere>
+        <a-box id="boxblue2" class="three" position="8 0.91 -3.9" color="#00587A" width="0.47" height="0.47" depth="0.47" scale="0.02 0.02 0.02"></a-box>
+    </a-entity>
+    <a-plane id="plane" position="8 3 -3.9" width="2.3" height="3.5" color="#1A1A1A" rotation=" 0 90 0"></a-plane>
+    <a-plane id="planetwo" position="7.9 3 -3.9" width="2.3" height="3.3" color="#1A1A1A" rotation=" 0 90 0">
+      <a-animation attribute="scale" begin="mouseleave" to="0 0 0"></animation>
+    </a-plane>
+    <a-sphere id="universe" position="7.3 3.9 -3.9" radius="0.27" scale="0.02 0.02 0.02">
+      <a-animation attribute="scale" begin="mouseenter" to="7.3 7.3 7.3" dur="3700"></a-animation>
+      <a-entity>
+        <a-animation attribute="rotation" to="0 360 0" dur="4700" repeat="indefinite" easing="ease-in-out-cubic" ></a-animation>
+          <a-sphere position="0.3 0.3 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.2 -0.45 -0.16" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.12 0.42 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.26 0.3 0.23" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.04 -0.46 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.08 0.49 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.3 0.39 -0.1" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.3 -0.34 0.003" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+
+          <a-sphere position="0.3 0.046 0.427" radius="0.05" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.2 -0.37 0.24" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #4CD4B0; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.12 -0.14 0.3" radius="0.11" scale="0.1 0.1 0.1" material="opacity: 1; color: #F24D16; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.26 0.04 0.55" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.04 -0.96 -0.4" radius="0.11" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.08 0.09 -0.31" radius="0.11" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.3 0.33 -0.42" radius="0.11" scale="0.1 0.1 0.1" material="opacity: 1; color: #F24D16; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.3 -0.25 -0.21" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.3 0.11 0.34" radius="0.03" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.2 -0.1 -0.51" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.12 0.6 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.39 0.03 0.23" radius="0.09" scale="0.1 0.1 0.1" material="opacity: 1; color: #F24D16; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.7 -0.32 0.04" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #F24D16; shader: flat" metalness="3"></a-sphere>
+          <a-sphere id="end" position="-0.5 -0.05 0.04" radius="0.29" scale="0.1 0.1 0.1" material="opacity: 1; color: #4CD4B0; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.34 0.02 0.13" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.5 -0.34 0.003" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.5 0.08 0.003" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.28 -0.08 -0.4" radius="0.11" scale="0.1 0.1 0.1" material="opacity: 1; color: #F24D16; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.28 -0.08 0.28" radius="0.05" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="-0.03 0.08 0.43" radius="0.07" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+          <a-sphere position="0.48 0.07 0.06" radius="0.03" scale="0.1 0.1 0.1" material="opacity: 1; color: #E74C3C; shader: flat" metalness="3"></a-sphere>
+      </a-entity>
+    </a-sphere>
+    <a-plane id="endplane" position="17.9 3.3 -4.7" rotation=" 0 90 0" scale="0.01 0.01 0.01" width="3" height="1.7" side="double" shader="flat">
+      <a-text value="the end" position="-0.47 -0.21 0" width="4" height="auto" color="#F24D16"></a-text>
+    </a-plane>
+
+
+
+    <!-- lights -->
+    <a-light type="ambient" color="#413333" intensity="0.5" position="-11 8.2 23.4"></a-light>
+    <a-light type="ambient" color="#413333" intensity="0.5" position="-25 4.7 11"></a-light>
+    <a-light type="ambient" color="#413333" intensity="1.3" position="-9 8 7.5"></a-light>
+    <a-light type="ambient" color="#44BBFF" intensity="0.5" position="-8 8 16"></a-light>
+    <a-light type="hemisphere" color="#fff" decay="0.3" intensity="0.17" position="17 7.3 0"></a-light>
+    <a-light type="directional" color="#A0A0A0" intensity="0.43" position="-25 4.7 11"></a-light>
+
+    <!-- camera -->
+    <a-camera id="camera" position="-19.2 3 35.3" rotation="0 0 0" far="100" fov="35" near="0.005" userHeight="0.7" look-controls wasd-controls>
+      <a-cursor position="0.1 -0.7 -7" geometry="primitive: ring" scale="0.75 0.75 0.3" material="color: #FF7B2C; shader: flat" userHeight="0.7"></a-cursor>
+    </a-camera>
+
+  </a-scene>
+
+</body>
+</html>

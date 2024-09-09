@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, 
+    user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<style type="text/css">
+body { margin: 0; padding: 0; background: #000;}
+canvas { display: block; margin: 0 auto; background: #9198a3; image-rendering: -moz-crisp-edges; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
+</style>
+
+</head>
+
+<body>
+
+    <canvas> </canvas>
+
+    <script src="js/kontra.js"></script>
+    <script src="js/lvlData.js"></script>
+    <script src="js/resize.js"></script>
+    <script>
+   var ctx=canvas.getContext("2d");var characterOffsetX=20;var characterOffsetY=39;var currentLevel=0;var userTouching=false;let apex=25;let nadir=25;let deathPoint=170;kontra.init();let timer=0;let wobbleTimer=0;let hasPressed=false;function touching(value){userTouching=value;}
+let playerImg=new Image();playerImg.src="img/tropeCharWalk.png";let cursorActive=true;let cursor=kontra.sprite({x:0,y:0,width:1,height:1,color:"red",move:function(event){if(cursorActive){let mX=event.pageX;let mY=event.pageY;let scale=RESIZE.currentWidth / RESIZE.WIDTH;this.x=(mX-RESIZE.canvas.offsetLeft)/scale;this.y=(mY-RESIZE.canvas.offsetTop)/scale;};}});playerImg.onload=function(){let playerSpritesheet=kontra.spriteSheet({image:playerImg,frameWidth:40,frameHeight:40,animations:{walk:{frames:["2..4","0..2"],frameRate:30,loop:false},fall:{frames:"4..9",frameRate:15,loop:false},wobble:{frames:"10..12",frameRate:15,loop:true}}});let playerC=kontra.sprite({x:canvas.width/15,y:canvas.height/2+40,animations:playerSpritesheet.animations,move:function(){if(timer<=0){timer=0;hasPressed=false;}
+else{this.x+=2;}},hitBox:kontra.sprite({x:canvas.width/15,y:canvas.height/2,height:30,width:15,updatePos:function(){this.x=playerC.x+15;this.y=playerC.y+5;},color:"red",}),initialPosX:canvas.width/15,initialPosY:canvas.height/2+40});let dead=false;let win=false;let stamina={posX:(RESIZE.WIDTH/10)*8,posY:(RESIZE.HEIGHT/10)*1.2,current:3,max:3,loss:function(){stamina.current-=1;if(stamina.current<=0){fall();stamina.current=stamina.max;}},draw:function(){let offset=0;for(var i=0;i<stamina.max;i++){if(i<stamina.current){ctx.beginPath();ctx.arc(stamina.posX+offset,stamina.posY,15,0,2*Math.PI,false);ctx.fillStyle="rgba(242, 255, 0, 1)";ctx.fill();ctx.lineWidth=3;ctx.strokeStyle="rgba(0, 0, 0, 0.3)";ctx.stroke();offset+=35;}else{ctx.beginPath();ctx.arc(stamina.posX+offset,stamina.posY,15,0,2*Math.PI,false);ctx.fillStyle="rgba(242, 255, 0, 0.3)";ctx.fill();offset+=35;}}}}
+let distOffset=0;let dist=0;let updateScore=function(){dist=Math.floor((distOffset+(playerC.x-playerC.initialPosX)/10));}
+let drawScore=function(){let x=20;let y=50;let text="Distance:"+dist.toString()+"m";ctx.font="30px Helvetica";ctx.strokeStyle="black";ctx.lineWidth=4;if(win){ctx.strokeText("Congratulations!",130,100);ctx.fillStyle="white";ctx.fillText("Congratulations!",130,100);ctx.font="20px Helvetica";ctx.strokeStyle="black";ctx.lineWidth=4;ctx.strokeText("you beat classic mode",142,133);ctx.fillStyle="white";ctx.fillText("you beat classic mode",142,133);}
+if(dead){ctx.strokeText("You made it: "+dist.toString()+"m",120,90);ctx.fillStyle="white";ctx.fillText("You made it: "+dist.toString()+"m",120,90);}
+if(!dead&&!win){ctx.strokeText(text,x,y);ctx.fillStyle="white";ctx.fillText(text,x,y);}}
+let retryMessage=kontra.sprite({x:0,y:RESIZE.HEIGHT/2-50,width:RESIZE.WIDTH,height:100,color:"rgba(255,255,255,0.3)",buttonHome:kontra.sprite({x:0,y:5,width:RESIZE.WIDTH,height:50,color:"rgba(0,0,100,0.6)",drawTXT:function(){ctx.font="30px Helvetica";ctx.fillStyle="white";ctx.fillText("Back to Menu",canvas.width/2-90,35);}}),buttonRetry:kontra.sprite({x:0,y:RESIZE.HEIGHT/2-25,width:RESIZE.WIDTH,height:50,color:"rgba(255,255,255,0.7)",drawTXT:function(){ctx.font="40px Helvetica";ctx.fillStyle="black";ctx.fillText("Tap to retry",canvas.width/2-95,canvas.height/2+10);}})});let reset=function(){deathLoop.stop();mainLoop.start();if(isEndless){endLevels[0]={bkColour:"green",apex:70,nadir:70,bounce:1,obstructions:0,nOf:0}}
+loadLevel(0);currentLevel=0;distOffset=0;falling=false;hasPressed=false;dead=false;win=false;timer=0;playerC.playAnimation("walk");}
+let drawTightR=function(px,py){px+=characterOffsetX;py+=characterOffsetY;ctx.beginPath();ctx.moveTo(-100,canvas.height/2);ctx.lineTo(px-100,(py+150)/2);ctx.lineTo(px-10,py);ctx.lineTo(px+10,py);ctx.lineTo(px+100,(py+150)/2);ctx.lineTo(canvas.width+100,canvas.height/2);ctx.lineWidth=3;ctx.lineJoin="bevel";ctx.stroke();}
+let goingDirection=true;let bounceSpeed=0.5;let ropeMove=function(){if(playerC.y+40<=canvas.height/2-apex){goingDirection=false;}
+else if(playerC.y+40>=canvas.height/2+nadir){goingDirection=true;}
+if(goingDirection==true){playerC.y-=bounceSpeed;}
+else if(goingDirection==false){playerC.y+=bounceSpeed;}}
+let margin=4;let chk=function(){let yPos=playerC.y+40;let c=canvas.height/2;if(yPos==c-apex||yPos>=(c-apex)-margin&&yPos<=(c-apex)+margin){wobble();}
+if(yPos==c+nadir||yPos>=(c+nadir)-margin&&yPos<=(c+nadir)+margin){wobble();}}
+let falling=false;let fall=function(){falling=true;playerC.playAnimation("fall");deathPoint=playerC.y;cursorActive=true;mainLoop.stop();deathLoop.start();dead=true;}
+let wobbling=false;let wobble=function(){playerC.playAnimation("wobble");wobbleTimer=30;wobbling=true;stamina.loss();}
+let chkCollisions=function(obst){if(obst==1){for(var i=0;i<obstructions[1].pillars.length;i++){if(playerC.hitBox.collidesWith(obstructions[1].pillars[i])){fall();};};};if(obst==2){for(var i=0;i<obstructions[2].balls.length;i++){if(playerC.hitBox.collidesWith(obstructions[2].balls[i].hitBox)){fall();}}};if(obst==3){for(var i=0;i<obstructions[3].blocks.length;i++){if(playerC.hitBox.collidesWith(obstructions[3].blocks[i])){fall();}}}}
+let setBKColour=function(colour){canvas.style.background=colour;};var currentObstructions=0;let createObstructions=function(number){currentObstructions=number;};let loadLevel=function(level){if(isEndless){let newLevel=endLevels[level];setBKColour(newLevel.bkColour);apex=newLevel.apex;nadir=newLevel.nadir;bounceSpeed=newLevel.bounce;createObstructions(newLevel.obstructions);obstructions[currentObstructions].init(newLevel.nOf);playerC.x=playerC.initialPosX;playerC.y=playerC.initialPosY;distOffset=dist;stamina.current=stamina.max;}else{if(level<levels.length){let newLevel=levels[level];setBKColour(newLevel.bkColour);apex=newLevel.apex;nadir=newLevel.nadir;bounceSpeed=newLevel.bounce;createObstructions(newLevel.obstructions);obstructions[currentObstructions].init(newLevel.nOf);playerC.x=playerC.initialPosX;playerC.y=playerC.initialPosY;distOffset=dist;stamina.current=stamina.max;}else{mainLoop.stop();win=true;cursorActive=true;deathLoop.start();}}};let nxtLevel=function(){if(isEndless){currentLevel=0;genLevel(dist);}else{currentLevel+=1;}
+loadLevel(currentLevel);};let startButton=kontra.sprite({x:0,y:RESIZE.HEIGHT/2-140,width:RESIZE.WIDTH,height:RESIZE.HEIGHT/5,color:"rgba(0,0,100,0.6)",pressed:function(){menuLoop.stop();cursorActive=false;cursor.x=0;cursor.y=0;loadLevel(0);mainLoop.start();}});let startButtonText={x:startButton.x+canvas.width/2-100,y:startButton.y+45,draw:function(){ctx.font="40px Helvetica";ctx.fillStyle="#c2d5e8";ctx.fillText("Classic Mode",this.x,this.y);}}
+let isEndless=false;let endlessButton=kontra.sprite({x:0,y:RESIZE.HEIGHT/2+70,width:RESIZE.WIDTH,height:RESIZE.HEIGHT/5,color:"rgba(0,100,0,0.6)",pressed:function(){menuLoop.stop();cursorActive=false;cursor.x=0;cursor.y=0;isEndless=true;loadLevel(0);genLevel(dist);mainLoop.start();}});let endlessButtonText={x:endlessButton.x+canvas.width/2,y:endlessButton.y+45,draw:function(){ctx.font="40px Helvetica";ctx.fillStyle="#c2d5e8";ctx.fillText("Endless Mode",this.x,this.y);}}
+let menuLoop=kontra.gameLoop({fps:30,update:function(dt){startButton.update();if(cursor.collidesWith(startButton)){startButton.pressed();cursor.x=0;cursor.y=0;}
+if(cursor.collidesWith(endlessButton)){endlessButton.pressed();cursor.x=0;cursor.Y=0;}
+ropeMove();},render:function(){playerC.render();drawTightR(playerC.x,playerC.y);startButton.render();startButtonText.draw();endlessButton.render();endlessButtonText.draw();}});let mainLoop=kontra.gameLoop({fps:30,update:function(dt){if(hasPressed==true){playerC.move();};if(timer>=0){timer-=1;};if(wobbleTimer>0){wobbleTimer-=1;};if(wobbleTimer<=0){wobbleTimer=0;wobbling=false;};if(wobbling==false){if(kontra.keys.pressed("space")&&hasPressed==false||userTouching&&hasPressed==false){chk();if(falling==false&&wobbling==false){playerC.playAnimation("walk");hasPressed=true;timer=5;}}}
+ropeMove();obstructions[currentObstructions].updateAll();playerC.update();updateScore();playerC.hitBox.updatePos();chkCollisions(currentObstructions);if(playerC.x>=450){nxtLevel();}},render:function(){obstructions[currentObstructions].draw();playerC.render();drawTightR(playerC.x,playerC.y);if(!dead){stamina.draw();}
+drawScore();}});let nowFalling=false;let deathLoop=kontra.gameLoop({fps:30,update:function(dt){if(playerC.y>deathPoint-10){playerC.y-=1;}
+if(playerC.y<=deathPoint-10){nowFalling=true;}
+if(nowFalling&&playerC.y<=canvas.height){playerC.y+=3;}
+if(cursor.collidesWith(retryMessage.buttonRetry)&&!win){reset();cursor.x=0;cursor.y=0;}
+if(cursor.collidesWith(retryMessage.buttonHome)){cursor.x=0;cursor.y=0;deathLoop.stop();menuLoop.start();dead=false;win=false;if(isEndless){endLevels[0]={bkColour:"green",apex:70,nadir:70,bounce:1,obstructions:0,nOf:0}}
+currentLevel=0;distOffset=0;dist=0;falling=false;hasPressed=false;timer=0;playerC.playAnimation("walk");setBKColour("#9198a3");isEndless=false;apex=25;nadir=25;bounceSpeed=0.5
+playerC.x=playerC.initialPosX;playerC.y=playerC.initialPosY;}
+playerC.update();},render:function(){obstructions[currentObstructions].draw();if(!win){playerC.render();}
+drawTightR(150-characterOffsetX,150-characterOffsetY);drawScore();if(!win){retryMessage.render();retryMessage.buttonRetry.render();retryMessage.buttonRetry.drawTXT();}
+retryMessage.buttonHome.render();retryMessage.buttonHome.drawTXT();}})
+menuLoop.start();};canvas.addEventListener("click",function(event){cursor.move(event)});canvas.addEventListener("touchstart",function(event){touching(true);});canvas.addEventListener("touchend",function(event){touching(false);});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<style>
+  body {background: #090b0d}
+  canvas {width: 800px;margin: auto;display: block}
+  #editorC {
+    position: absolute;
+    right: 0;
+    background: #2b3034;
+    font-family: sans-serif;
+  }
+  .b{
+    width: 50px;
+    height: 50px;
+    background: none;
+    border: 1px solid #1793d8;
+    margin-top: 3px;
+    color:#1793d8;
+  }
+  #closeEB {
+    color:#fff;
+    background: none;
+    border: none;
+    position: absolute;
+    top:0;
+    right: 0;
+  }
+  .active {
+    background: #1799df;
+    color: #090b0d;
+  }
+  i {
+    font-style: normal;
+    color: #67727c;
+    display: inline-block;
+    width: 80px;
+  }
+  input {
+    border: none;
+    border-bottom: 2px #444 solid;
+    background: none;
+    padding: 6px;
+    color: #595959
+  }
+</style>
+<meta charset="UTF-8">
+<div id="editorC" style="display: none">
+  <button class="b" id="dataB">Data</button>
+  <button class="b" id="gateB">Gate</button>
+  <br>
+  <button class="b" id="startB">Start</button>
+  <button class="b" id="endB">End</button>
+  <br>
+  <button class="b" id="ttlB">TTL</button>
+  <br>
+  <i id="settingI"></i>
+  <input id="setting">
+  <br>
+  <i>TTL</i><input id="ttl">
+  <br>
+  <textarea id="mapData"></textarea>
+  <button id="closeEB">x</button>
+</div>
+<canvas id="c"></canvas>
+<script src="./dist/g.js?13"></script>

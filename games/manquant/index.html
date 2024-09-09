@@ -1,0 +1,143 @@
+<html>
+  <head>
+    	<script src="https://js13kgames.com/webxr-src/2020/aframe.js"></script>
+
+    <!-- <script src="jquery.min.js"></script> -->
+      <!-- <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script> -->
+
+  </head>
+  <body>
+  	<script type="text/javascript">
+  		AFRAME.registerShader('gradientshader', {
+	  schema: {
+	    topColor: {type: 'color', default: '1 0 0', is: 'uniform'},
+	    bottomColor: {type: 'color', default: '0 0 1', is: 'uniform'}
+	  },
+
+	  vertexShader: [
+	    'varying vec3 vWorldPosition;',
+	    'void main() {',
+	    ' vec4 worldPosition = modelMatrix * vec4( position, 1.0 );',
+	    ' vWorldPosition = worldPosition.xyz;',
+	    ' gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );',
+	    '}'
+	  ].join('\n'),
+
+	  fragmentShader: [
+	    'uniform vec3 bottomColor;',
+	    'uniform vec3 topColor;',
+	    'uniform float offset;',
+	    'varying vec3 vWorldPosition;',
+	    'void main() {',
+	    ' float h = normalize( vWorldPosition ).y;',
+	    ' gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max(h, 0.0 ), 0.8 ), 0.0 ) ), 1.0 );',
+	    '}'
+	  ].join('\n')
+	});
+		AFRAME.registerComponent('cursor-listener', {
+			init: function () {
+		    this.el.addEventListener('click', function (evt) {
+		      console.log("left");
+		    });
+		    this.el.addEventListener('mouseenter',function(evt){
+				console.log("leftDowns");
+				// var animation = document.createElement("a-animation");
+	   //          animation.setAttribute("attribute","position");
+	   //          animation.setAttribute("to","10 100 10");
+	   //          animation.setAttribute("dur","1000");
+	   //          animation.setAttribute("repeat","0");
+	            // animation.setAttribute("begin","start"); 
+	            var cam = document.querySelector('#player');
+	            // cam.appendChild(animation);
+	            cam.emit('start')
+		    });
+	  }
+	});
+  	</script>
+    <a-scene fog="color: #324173; far: 8; density: 10" inspector="" keyboard-shortcuts="" screenshot="" vr-mode-ui="" device-orientation-permission-ui="">
+    	<a-assets>
+	    <img id="tile" src="tile.png">
+	  </a-assets>
+	    <!-- <a-box src="https://i.imgur.com/mYmmbrp.jpg" position="0 2 -5" rotation="0 45 45" scale="2 2 2"
+         animation="property: object3D.position.y; to: 2.2; dir: alternate; dur: 2000; loop: true" 
+
+		animation__mouseenter="property: scale; to: 2.3 2.3 2.3; dur: 400; easing: easeInQuad; startEvents: mouseenter"
+		animation__mouseleave="property: scale; to: 2.0 2.0 2.0; dur: 200; easing: easeInQuad; startEvents: mouseleave"
+         ></a-box> -->
+	<a-light type="ambient" color="#445451" light=""></a-light>
+<!-- src="https://i.imgur.com/mYmmbrp.jpg" -->
+         <a-plane  material="src:url(tile.png); repeat: 200 200;roughness:1" rotation="-90 0 0" position="0 0.1 0" width="200" height="200" ></a-plane>
+
+         <a-box  position="0 0.5 -5" material="src:url(tile.png);" id="page-1" color="#00ffcc"
+
+         animation__mouseenter="property: scale; to: 1.1 1.1 1.1; dur: 400; easing: easeInQuad; startEvents: mouseenter"
+		animation__mouseleave="property: scale; to: 1.0 1.0 1.0; dur: 200; easing: easeInQuad; startEvents: mouseleave"
+		>
+		<a-text text="value: Page;" position="0 0.7 0" side="double"></a-text>
+		</a-box>
+         <a-box position="0 0.5 5" id="user-1" color="red" animation__mouseenter="startEvents: mouseenter">
+         	<a-text text="value: User;" position="0 0.7 0" side="double" rotation="180 0 180"></a-text>
+         </a-box>
+	             
+
+	      <a-entity environment="preset: tron; dressingAmount: 0; lighting: point; fog: 0.99; ground: flat" visible="">
+	      	<a-entity class="environment" position="0 50 0" light="type: hemisphere; color: #848d9c; intensity: 0.6; groundColor: #061123" visible="">
+	      		
+	      	</a-entity>
+	      	<a-entity class="environment" position="-0.72 0.62 0.4" light="intensity: 0.6; shadowCameraLeft: -10; shadowCameraBottom: -10; shadowCameraRight: 10; shadowCameraTop: 10; type: point" visible=""></a-entity>
+	      	<a-entity rotation="-90 0 0" class="environmentGround environment" visible="" scale="1 1 4.91" shadow="cast: false; receive: false"></a-entity>
+	      	<a-entity class="environmentDressing environment" visible=""></a-entity>
+	      	<!-- <a-sky radius="200" geometry="" theta-length="110" class="environment" material="shader: gradientshader; topColor: #091b39; bottomColor: #284a9e" visible=""></a-sky> -->
+	      </a-entity>
+
+	      <a-entity class="environment" position="" light="" visible=""></a-entity><a-entity rotation="" class="environmentGround environment" visible="" scale="" shadow=""></a-entity><a-entity class="environmentDressing environment" visible=""></a-entity><a-sky radius="200" geometry="" theta-length="110" class="environment" material="" visible="" scale="1 1 1"></a-sky><a-entity class="environment" position="0 50 0" light="type: hemisphere; color: #848d9c; intensity: 0.6; groundColor: #061123" visible=""></a-entity>
+	      <a-entity rotation="-90 0 0" class="environmentGround environment" visible="" scale="1 1 4.91" shadow="cast: false; receive: false"></a-entity><a-entity class="environmentDressing environment" visible=""></a-entity><a-sky radius="180" geometry="" theta-length="110" class="environment" material="shader: gradientshader; topColor: #091b39; bottomColor: #284a9e" visible=""></a-sky></a-entity>
+	     <!-- <a-light type="ambient" color="#445451" light=""></a-light> -->
+
+	     <!-- <a-light type="ambient" color="#445451"></a-light> -->
+	     <!-- <a-box class="left" position="3 1 -6" scale="0.9 0.4 0.3" id="left2" animation__mouseenter="property: scale; to: 100.0 1.0 1.0; dur: 400;" animation__mouseleave="property: scale; to: 0.9 100 0.3; dur: 400;" ></a-box> -->
+	     <!-- <a-box position="1 0 0" cursor-listener></a-box> -->
+	    <a-entity id="player">
+	    	<a-animation attribute="position" to="10 100 10" dur="1000" repeat="0" begin="start"></a-animation>
+			<a-camera wasd-controls-enabled="true"><!--  animation__click="startEvents: left" -->
+			    <a-cursor far="1">
+			    	<!-- <a-ring scale="0.1 0.1 0.1"></a-ring> -->
+			    	<a-entity geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.05"
+	          material="side: double"></a-entity>
+			    </a-cursor>
+		  	</a-camera>
+	  	</a-entity>
+	</a-scene>
+	<script>
+
+	  var boxEl = document.querySelector('#page-1');
+	  boxEl.file=false;
+	  // var key = $('#user-1');
+	  var carry = false;
+	  boxEl.addEventListener('mouseenter', function () {
+	  	// key.attr('visible','false');
+	  	boxEl.object3D.visible = false;
+	  	carry = true;
+	  	console.log("Entered!")
+	  });
+	  boxEl.addEventListener('mouseleave', function () {
+	    console.log("Leaved!")
+	  });
+
+	  var pageEl = document.querySelector('#user-1');
+	  pageEl.addEventListener('mouseenter',function(){
+	  	if(boxEl.file==true){
+	  		console.log("User already got the file");
+	  		return;
+	  	}
+	  	if(carry){
+	  		boxEl.file = true;
+	  		alert("User got the file!")
+	  	}else{
+	  		alert("Find the file!")
+	  	}
+	  });
+
+	</script>
+  </body>
+</html>

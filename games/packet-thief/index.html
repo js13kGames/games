@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><title>Packet Thief</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>* {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background: #DDDDDD;
+        }
+
+        .red {
+            color: #FF0000;
+            font-weight: bold;
+        }
+
+        .blue {
+            color: #0000FF;
+            font-weight: bold;
+        }
+
+        #intro-wrapper h1, #intro-wrapper h2 {
+            margin: 10px 0;
+        }
+
+        #intro-wrapper button {
+            padding: 10px;
+        }
+
+        .wrapper {
+            text-align:center;
+            width: 100%;
+        }
+
+        #game-wrapper {
+            display: none;
+        }
+
+        #hud h2 {
+            font-size: 20px;
+        }
+
+        #hud .inner {
+            border: black 4px solid;
+            padding: 10px 10px;
+        }
+
+        #hud span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        #score, #message {
+            width: 45%;
+        }
+
+        #message .zoom {
+            /* Webkit */
+            -webkit-animation-name: pulse;
+            -webkit-animation-duration: 4s;
+            -webkit-animation-iteration-count: infinite;
+
+            /* Mozilla */
+            -moz-animation-name: pulse;
+            -moz-animation-duration: 4s;
+            -moz-animation-iteration-count: infinite;
+
+            /* Opera */
+            -o-animation-name: pulse;
+            -o-animation-duration: 4s;
+            -o-animation-iteration-count: infinite;
+
+            animation-name: pulse;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+
+        @-webkit-keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50%  {
+                transform: scale(1.3);
+            }
+        }
+
+        @-moz-keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50%  {
+                transform: scale(1.3);
+            }
+        }
+
+        @-o-keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50%  {
+                transform: scale(1.3);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50%  {
+                transform: scale(1.3);
+            }
+        }
+
+        #before-capture, .after-capture {
+            height: 53px;
+            width: 150px;
+            display: inline-block;
+            background-image: url("help.png");
+            background-repeat: no-repeat;
+        }
+
+        #before-capture {
+            width: 150px;
+            background-position: left 50%;
+        }
+
+        .after-capture {
+            width: 50px;
+            background-position: left 50%;
+        }</style></head><body><div id="intro-wrapper" class="wrapper"><h1>Packet Thief</h1><div><p>The network mesh has gone offline.</p><p>Restore functionality and infect more nodes than your opponent.</p><br><p>Your nodes are <span class="blue">blue</span></p><p>Opponent nodes are <span class="red">red</span></p><br><p>To spread your malware infect a node either side of an opponent.</p><br><div id="before-capture"></div><p>Click or Tap to infect a free node.</p><div class="after-capture"></div><div class="after-capture"></div><div class="after-capture"></div><br><br></div><button id="find-human">Find Opponent</button> <button id="start-basic-ai">Play Basic Bot</button> <button id="start-better-ai">Play Smart Bot</button><div id="status"></div></div><div id="game-wrapper" class="wrapper"><canvas id="game"></canvas><div id="hud"><div class="inner"><span id="message"></span> <span id="score"></span></div></div></div><script src="/socket.io/socket.io.js"></script><script src="/shared.js"></script><script src="/client.js"></script></body></html>

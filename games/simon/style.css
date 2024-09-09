@@ -1,0 +1,201 @@
+body {
+ background-color:#2c3e50;   
+}
+.simon {
+
+  width:600px;
+  height:600px;
+  margin: auto;
+
+    -webkit-transition: all 10s ease-in-out;
+    -moz-transition: all 10s ease-in-out;
+    -o-transition: all 10s ease-in-out;
+    transition: all 10s ease-in-out;
+}
+
+#sound{
+	color:gray;
+	text-decoration:none;
+	font-family:"Arial", Helvetica, sans-serif;
+}
+
+.dialog {
+    background-color: #bdc3c7;
+    font-family:"Courier New", Courier, monospace;
+    width: 270px;
+    margin: 0 auto;
+    text-align: center;
+ 
+}
+
+#intro,#fail,#win {
+	padding-top:65px;
+	font-family:"Arial", Helvetica, sans-serif;
+    margin: 0 auto;   
+    width: 80%;
+    
+}
+
+#story {
+	font-size:40px;
+	height:430px;
+	text-align:center;
+}
+
+#winText, #failText {
+	font-size:45px;
+	min-height:250px;
+	text-align:center;
+}
+
+#play {
+	font-size:90px;
+	border-style:dashed;
+	border-width:5px;
+	border-color:#7f8c8d;
+}
+
+#lives {
+    color:white;
+    font-size: 3em;
+    font-family:"Courier New", Courier, monospace;
+}
+#circle {
+ height: 200px;
+ width: 200px;
+ border-radius: 300px 300px 300px 300px;   
+ margin: 200px;
+ position: absolute;
+ background-color:black;
+ color: white;
+ text-align: center;
+ line-height: 200px;
+ font-size: 5em;
+ font-family:"Courier New", Courier, monospace;
+}
+
+.tile {
+	opacity: .4;
+	-webkit-transition: opacity 250ms ease;
+	-moz-transition: opacity 250ms ease;
+	-ms-transition: opacity 250ms ease;
+	-o-transition: opacity 250ms ease;
+	transition: opacity 250ms ease;
+}
+
+#blue.tile.lit {
+	opacity: 1;
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 255, 1);
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 255, 1);
+}
+#green.tile.lit {
+	opacity: 1;
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 255, 0, 1);
+    box-shadow: 0px 0px 5px 5px rgba(0, 255, 0, 1);
+}
+#red.tile.lit {
+	opacity: 1;
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(255, 0, 0, 1);
+    box-shadow: 0px 0px 5px 5px rgba(255, 0, 0, 1);
+}
+#yellow.tile.lit {
+	opacity: 1;
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(255, 255, 0, 1);
+    box-shadow: 0px 0px 5px 5px rgba(255, 255, 0, 1);
+}
+
+
+#red, #blue, #yellow, #green {
+	height: 600px;
+    width: 600px;
+	border-radius: 300px 300px 300px 300px;
+	position:absolute;
+}
+
+#red:hover, #blue:hover, #yellow:hover, #green:hover {
+	border: 2px solid;
+    opacity: .6;
+}
+
+#red {
+    background-color:#e74c3c;
+    clip: rect(0px, 600px, 300px, 300px);
+	width: 600px;
+}
+#green {
+    background-color: #2ecc71;
+    clip: rect(300px,600px, 600px, 300px);
+	width: 600px;
+}
+#blue {
+    background-color: #3498db;
+    clip: rect(0px, 300px, 300px, 0px);
+	width: 600px;
+}
+#yellow {
+    background-color: #f1c40f;
+    clip: rect(300px, 300px, 600px, 0px);
+	width: 600px;
+}
+
+
+#space, .stars {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.stars {
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: zoom 5s infinite;
+  opacity: 0;
+}
+
+.stars:nth-child(1) {
+  background-position: 50% 50%;
+  animation-delay: 0s;
+}
+.stars:nth-child(2) {
+  background-position: 20% 60%;
+  animation-delay: 1s;
+}
+.stars:nth-child(3) {
+  background-position: -20% -30%;
+  animation-delay: 2s;
+}
+.stars:nth-child(4) {
+  background-position: 40% -80%;
+  animation-delay: 3s;
+}
+.stars:nth-child(5) {
+  background-position: -20% 30%;
+  animation-delay: 4s;
+}
+
+@keyframes zoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+    animation-timing-function: ease-in;
+  } 
+  85% {
+    opacity: 1;
+    transform: scale(2.8);
+    animation-timing-function: linear;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.5);
+  }
+}

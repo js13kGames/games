@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Donut Ride</title>
+    <link rel="stylesheet" href="./app.css">
+</head>
+
+<body>
+    <div class="js-game-start off">
+        <div class="score-card"><span>SCORE: </span><span class="js-score"> 0 </span></div>
+        <div class="cloud"></div>
+        <div class="cloud x2"></div>
+        <div class="cloud x3"></div>
+        <div class="cloud x4"></div>
+        <div class="cloud x5"></div>
+        <div class="doughnut-container" onclick="start()" style="transform: scale(0.7); bottom: 10px; position: absolute; z-index: 1;">
+            <div id="js-bounce-donut">
+                <div id="js-running-donut" class="donut classic" style="animation:roll 1s linear infinite;">
+                    <span class="icing"></span>
+                </div>
+            </div>
+            <div class="doughnut-shadow"></div>
+
+        </div>
+        <div id="road">
+            <div id="road-lane"></div>
+        </div>
+        <div class="car-container">
+            <div id="js-car" class="car">
+                <div class="car-top">
+                    <div class="front js-car-color">
+                    </div>
+                    <div class="body js-car-color">
+                        <span id="car-offline" class="car-offline off">Offilne <span class="heart"></span></span>
+                        <div class="window-1"></div>
+                        <div class="window-2"></div>
+                    </div>
+                    <div class="back js-car-color">
+
+                    </div>
+                </div>
+                <div class="whell">
+                    <div class="whell-1">
+                        <h1>+</h1>
+                    </div>
+                    <div class="whell-2">
+                        <h1>+</h1>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="js-game-stopped on">
+        <div class="title">
+            <h1> Donut's Road Trip</h1>
+            <div class="suptext">
+                To play press (Space / Up Arrow)
+            </div>
+        </div>
+        <div id="main-wrapper">
+            <div id="donuts">
+                <div class="doughnut-container" onclick="start(1)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-1">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+                <div class="doughnut-container" onclick="start(2)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-2">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+                <div class="doughnut-container" onclick="start(3)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-3">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+                <div class="doughnut-container" onclick="start(4)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-4">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+                <div class="doughnut-container" onclick="start(5)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-5">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+                <div class="doughnut-container" onclick="start(6)">
+                    <div class="donut-wrapper">
+                        <div class="donut classic donut-color-6">
+                            <span class="icing"></span>
+                        </div>
+                    </div>
+                    <div class="doughnut-shadow"></div>
+                </div>
+            </div>
+            <div id="game-over" class="off">
+                <h1>Game Over</h1>
+                <span>SCORE: </span><span class="js-score"> 0 </span>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="subtext">
+                Choose your's and let's hit the road :)<br/>
+            </div>
+            <button class="button button--secondary">
+                <span class="button__inner" onclick="start()">Start Random</span>
+            </button>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+
+</html>

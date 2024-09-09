@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Competitive Typoe Annihilation</title>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        text-align: center;
+        font-family: 'Helvetica Neue', 'Lato', 'Roboto', 'Helvetica', sans-serif;
+        color: darkslategray;
+        background-color: floralwhite;
+      }
+      #mega {
+        font-size: 1.5rem;
+      }
+      .half {
+        width: 50%;
+      }
+      #panels {
+        width: 80%;
+        max-width: 1000px;
+        margin: auto;
+      }
+      #leaderboard {
+        float: left;
+      }
+      #messages {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Competitive Typo<del>e</del> Annihilation</h1>
+    <input id="mega" autocomplete="off" type="text" autofocus inputmode="verbatim">
+    <div id="panels">
+      <div id="leaderboard" class="half"><ol></ol></div>
+      <div id="messages" class="half"><ul></ul></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js"></script>
+  </body>
+</html>

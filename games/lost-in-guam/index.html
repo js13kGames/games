@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lost In Guam's Woods</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/0.5.0/aframe.min.js"></script>
+</head>
+<body>
+   <a-scene>
+       <a-sky color="#000000"></a-sky>       
+       <a-entity id="camera">
+           <a-camera position="0 1.6 30" wasd-controls-enabled="false" look-controls>
+               <a-entity id="textBox" text="value:You Are Lost In Guam's Woods\n Avoid the trees and get to the exit\nCollect 5 Power Coins To Powerup The Portal\nLook Left To Go Left\nLook Right To Go Right; width:6; align:center" position="0 1.5 -3"></a-entity>
+               <a-entity id="coinTextBox" text="value:Coins: 0; width:6; align:center" position="0 0.5 -3"></a-entity>
+               <a-entity id="timerTextBox" text="value:Seconds Left: 10; width:6; align:center" position="0 0.2 -3"></a-entity>
+           </a-camera>      
+       </a-entity>
+        <!-- Border -->
+       <a-plane color="red" width="1600" position="-70 0 0" height="20" rotation="0 -90 0" side="double" opacity = "0.5"></a-plane>
+       <a-plane color="red" width="1600" position="70 0 0" height="20" rotation="0 -90 0" side="double" opacity = "0.5"></a-plane>
+       
+        <!-- Goal   -->
+       <a-plane id="goal" color="#00b8cc" visible = "false" rotation="0 0 -90" width="500" height="5" position="0 0 -730" opacity="0.5"></a-plane>
+        
+      <a-light id="ambientLight" type="ambient" color="#000000"></a-light>
+      <a-light  type="point" intensity="0.5" position="10 100 -100"></a-light> 
+   </a-scene> 
+   <script>
+    var obstacles=[],collisionOffset=1,moveLeft=!1,moveRight=!1,moveUp=!1,rotationOffset=70,canMove=!1,coins=[],waitingTime=15,escaped=!1,numCoins=0,clouds=[];window.onload=function(){for(var t=document.querySelector("a-scene"),e=document.querySelector("a-camera"),o=document.querySelector("#textBox"),i=document.querySelector("#goal"),n=document.querySelector("#coinTextBox"),r=document.querySelector("#timerTextBox"),a=document.querySelector("a-sky"),s=document.querySelector("#ambientLight"),u=(document.querySelector("#floor"),["#5a8213","#6e9a32","#6d4630","#d3ecaa","#516935","#382819","#467653"]),c=20,l=0,d=-10;10>d;d++)for(var b=0;40>b;b++){var h=document.createElement("a-plane");h.setAttribute("geometry",{height:c,width:c}),h.setAttribute("color",u[Math.floor(Math.random()*u.length)]),h.setAttribute("position",""+d*c+" 0 "+(-1*(b*c)+l)),h.setAttribute("rotation","-90 0 0"),t.appendChild(h)}for(var m=2,f=1,p=0,A="lime",v="crimson",x=1,y=.1,M=10,g=72,z=1.5,w=.6,d=0;70>d;d++){var C=document.createElement("a-entity"),O=document.createElement("a-cone"),E=document.createElement("a-cylinder");O.setAttribute("height",m),O.setAttribute("radius-bottom",f),O.setAttribute("radius-top",p),O.setAttribute("color",A),O.setAttribute("position","0 1 0"),E.setAttribute("color",v),E.setAttribute("height",x),E.setAttribute("radius",y),E.setAttribute("position","0 -0.5 0"),C.appendChild(O),C.appendChild(E),C.setAttribute("position",""+(Math.random()<=.5?-1:1)*Math.floor(Math.random()*g)+" 1 "+d*-M),obstacles.push(C),t.appendChild(C)}for(var d=0;70>d;d++){var T=document.createElement("a-ring");T.setAttribute("radius-inner","0.5"),T.setAttribute("radius-outer","0.8"),T.setAttribute("position",{x:(Math.random()<=.5?-1:1)*Math.floor(Math.random()*g),y:1,z:d*-M}),T.setAttribute("color","yellow"),T.setAttribute("opacity",.5),coins.push(T),t.appendChild(T)}cloudColors=["#748b90","#a29cb3","#00b8cc","#b8e2ee","#506d6f"];for(var d=0;70>d;d++){var S=document.createElement("a-box");S.setAttribute("width",Math.floor(6*Math.random())+2),S.setAttribute("height",Math.floor(8*Math.random())+6),S.setAttribute("rotation","-90 0 -90"),S.setAttribute("depth",Math.floor(4*Math.random())+2),S.setAttribute("color",cloudColors[Math.floor(Math.random()*cloudColors.length)]),S.setAttribute("position",{x:(Math.random()<=.5?-1:1)*Math.floor(Math.random()*g),y:Math.floor(70*Math.random())+50,z:d*-M}),clouds.push(S),t.appendChild(S)}var q=setInterval(function(){k(e),canMove&&F(),(I().x<=-70||I().x>=70)&&Y({x:0,y:I().y,z:I().z}),I().z<=-753.531339461689&&(canMove=!1,o.setAttribute("text",{value:"You Missed The Portal\nYou Are Lost Forever :(",width:6,align:"center"}),setTimeout(function(){clearInterval(q),location.reload()},2e3)),G(e,obstacles),R(i),B(coins),N()},60),I=function(){return e.getAttribute("position")},Y=function(t){e.setAttribute("position",{x:t.x,y:t.y,z:t.z})},L=function(t,e){return t.getAttribute(e)},G=function(t,e){e.forEach(function(t){var e=Math.abs(L(t,"position").x-I().x),i=Math.abs(L(t,"position").z-I().z);collisionOffset>=e&&collisionOffset>=i&&(console.log("hit a tree"),canMove=!1,o.setAttribute("text",{value:"Oh No! You Hit A tree\nGAME OVER",width:6,align:"center"}),setTimeout(function(){clearInterval(q),location.reload()},2e3))})},R=function(t){var e=Math.abs(I().x-L(t,"position").x),i=Math.abs(I().z-L(t,"position").z);collisionOffset+5>=e&&collisionOffset>=i&&1==t.getAttribute("visible")&&(o.setAttribute("text",{value:"Awesome!\n You Found Your Way Out!\nNow You Can Go Get Some Chicken Kelaguen :)",width:6,align:"center"}),canMove=!1,escaped=!0)},B=function(t){t.forEach(function(t){var e=Math.abs(I().x-L(t,"position").x),o=Math.abs(I().z-L(t,"position").z);collisionOffset+5>=e&&collisionOffset>=o&&(console.log("Hit coin"),t.getAttribute("visible")&&(t.setAttribute("visible",!1),numCoins++),n.setAttribute("text",{value:"Coins: "+numCoins,width:6,align:"center"}),numCoins>=5&&i.setAttribute("visible",!0))})},k=function(t){var e=t.getAttribute("rotation"),o=parseInt(e.y%=360);e.y<0&&(e.y+=360,o=parseInt(e.y%=360)),moveLeft=o>=30&&30+rotationOffset>=o?!0:!1,moveRight=340>=o&&o>=340-rotationOffset?!0:!1},F=function(){pos=I(),moveLeft&&Y({x:pos.x-=w,y:pos.y,z:pos.z}),moveRight&&Y({x:pos.x+=w,y:pos.y,z:pos.z}),Y({x:pos.x,y:pos.y,z:pos.z-=z})},H=setInterval(function(){waitingTime--,r.setAttribute("text",{value:"Go Time: "+waitingTime}),0==waitingTime&&(clearInterval(H),r.setAttribute("visible",!1),canMove=!0,o.setAttribute("text",{value:""}))},1e3),N=function(){clouds.forEach(function(t){pos=t.getAttribute("position"),t.setAttribute("position",{x:pos.x+=.3,y:pos.y,z:pos.z}),pos.x>=120&&t.setAttribute("position",{x:-120,y:pos.y,z:pos.z})})},K=setInterval(function(){random=Math.random(),random<=.2&&(a.setAttribute("color","white"),s.setAttribute("color","white")),setTimeout(function(){a.setAttribute("color","#000000"),s.setAttribute("color","#000000")},300)},1e3);K()};
+     
+   </script>
+</body>
+</html>

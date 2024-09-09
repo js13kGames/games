@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Defend</title>
+    <meta charset="utf-8">
+    <style type="text/css"> body{ background-color: #FFF; margin: 0px; overflow: hidden; } .information{ width: 800px; }</style>
+    <link href='//fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+  </head>
+  <body style='background:#CCC'  onkeydown='keyIsDown(event)' onkeyup='keyIsUp(event)' style="">
+    <div id="canvasContainer" style="width:100%;margin-left:auto;text-align:center;font-family: 'Orbitron', cursive; font-size:32px;color:#000">
+    <div class="information" style="margin:25px auto;">Shoot Those Spaceships!</div>
+    <div style="margin:10px auto 0px auto;" ><canvas id="canvas"></canvas></div>
+    <div class="information" style="margin:20px auto;font-size:20px" >How to play:</div>
+    <div class="information" style="margin:10px auto;" >&larr; left &rarr; right &uarr; up &darr; down</div>
+    <div class="information" style="margin:10px auto;" >CTRL: fire</div>
+    <div class="information" style="margin:10px auto;" >Space: bomb</div>
+    </div>
+  <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = document.getElementById('canvas').getContext('2d');
+
+    //me
+    var x, y;
+    var inertiaX = 0 ,	inertiaY = 0;
+
+    //weapons
+    var life = 100, muf = 0, firePower = 100, gotBonus = 0, bonusType = "", laser = 0,
+	bomb = 0, bombLife = 300, bombDuration = bombLife, bombAfterEffect = 0, bombOnFire = 0 , missileNumber = 3;
+    var level=2;
+    /*** LISTS ***/
+    var ennemies =      new Array(),    missiles =      new Array(),    explosions = new Array(), 
+        bonusList =     new Array(),    starField =     new Array();
+
+    /*** Graphic stuff ***/
+    var img = new Image() , imgEnnemy = new Image(), imgMissile = new Image();
+    var width, height, widthEnnemy, heightEnnemy, widthMissile, heightMissile;
+    var f = 1, k = 2;
+    var rSpiral = 0 , decalSpiral = 0, distArc = 0;
+    var sepia = 0;
+
+    /*** Game info ***/
+    var score = 0, userHighScore = 0;
+    var gameOverFrame = 0;
+    var nbEnnemKilled = 0, nbEnnemyWave = 1, ennemyCountDown = 640;
+
+    /*** Key codes ***/
+    var left, right , move , bombKey , fire;
+    (function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    }());
+
+    /*** Main structures ***/
+    var keyboard = {
+      top: 	0, right:	0, bottom: 0, 
+      left:	0, fire:	0, spiral: 0,
+      explode :	0, muf:		0, bomb:0
+    }
+
+    var me = { direction : Math.PI / 2 + Math.PI, energy : 100, fire : 0, speed : 1 }
+
+    /*** Main objects ***/
+    function Star(x,y){
+      this.x = x;
+      this.y = y;
+      this.speed = ~~(Math.random() * 255);
+      this.move = function(){
+		this.x -= this.speed / 80;
+		if (this.x <0){
+		  this.speed = ~~(Math.random() * 255);
+		  this.x = canvas.width;
+		  this.y = Math.random() * canvas.height;
+		}
+	}
+      }
+
+    function Ennemy(){
+      this.direction = 0;
+      this.x = canvas.width + 100;
+      this.y = ~~( (canvas.height - 60) * Math.random()) + 30;
+      this.energy = 120;
+      this.score = 100;
+      this.speed = 3 * Math.random();
+      this.nbOscill = 30 + Math.random() * 60;
+      this.oscill = 2 + Math.random() * 3;
+      while ( this. y < 100 || this.y > canvas.height - 100 )
+		this.y = 30 + ((canvas.height-60) * Math.random()) || 0;
+	  this.move = function(){	
+		this.x -= 1.5 + this.speed;
+		this.y += Math.cos(f / this.nbOscill*Math.PI) * this.oscill;
+      }
+    }
+
+    function Bonus(x,y){
+	this.x = x;
+	this.y = y;
+	this.alpha = 1;
+	var roulette = Math.random() * 11;
+	if (roulette < 6)
+		this.type = "L";
+	else if (roulette < 7)
+		this.type = "A";
+	else if (roulette < 8)
+		this.type = "+3";
+	else if (roulette < 9)
+		this.type = "+S";
+	else if (roulette < 10)
+	  this.type = "B";
+	else
+	  this.type="";
+	this.move = function(){
+	  this.x-=1;
+	  this.alpha-=0.005;
+	}
+    }
+    
+    function Missile(direction){
+	if (direction == null)
+	  this.direction = me.direction;
+	else
+	  this.direction = direction
+	  this.alpha=1;
+	  this.x = me.x;
+	  this.y = me.y;
+	  this.speed = 20 + me.speed;
+	  this.energy = 100;
+	  this.move = function(){	
+	    this.alpha-=0.025;
+	    this.x -= Math.cos(this.direction + Math.PI / 2 + Math.PI) * this.speed;
+	    this.y += Math.sin(this	.direction + Math.PI / 2 + Math.PI) * this.speed;
+      	}
+    }
+
+    function Explosion(x,y) {
+	this.x=x;
+	this.y=y;
+	this.alpha = 1;
+	this.direction = Math.random() * Math.PI * 2;
+	this.speed = 1 + Math.random() * 7.5;
+	this.lifeTime = 13 + Math.random() * 12;
+	this.subX = this.lifeTime * 0.0625 + (Math.random() * this.lifeTime * 0.0625) - this.lifeTime * 0.03625;
+	this.subY = this.lifeTime * 0.0625 + (Math.random() * this.lifeTime * 0.0625) - this.lifeTime * 0.03625;
+	var r = 200 + (Math.random()*55) | 0;
+	var g = 50 + (Math.random()*205) | 0;
+	this.color = "rgba(" + r + "," + g + ",0,0.9)";
+	this.move = function(){
+	  this.x += Math.cos(this.direction) * this.speed;
+	  this.y -= Math.sin(this.direction) * this.speed;
+	}
+    }
+    /*** KEYBOARD CONTROL ***/
+    function keyIsDown(event){
+      if(0 === bomb && event.keyCode == fire)
+		keyboard.fire = 1;
+      if(event.keyCode == bombKey && bombLife == bombDuration){
+		keyboard.bomb = 1;
+		bombLife = 0;
+      }
+      if(event.keyCode == move)
+		keyboard.top = 1;
+      if(event.keyCode == left)
+		keyboard.left = 1;
+      if(event.keyCode == right) 
+		keyboard.right = 1;
+      if (event.keyCode == bottom)
+		keyboard.bottom = 1;
+    }
+    function keyIsUp(event){
+      if (event.keyCode == bottom)
+		keyboard.bottom = 0;
+      if(event.keyCode == fire)
+		keyboard.fire = 0;
+      if(event.keyCode == move)
+		keyboard.top = 0;
+      if(event.keyCode == left)
+		keyboard.left = 0;
+      if(event.keyCode == right)
+		keyboard.right = 0;
+      if(event.keyCode == 71)
+		keyboard.muf = 0;
+    }
+    function input(){
+//     	var pads = [];//Gamepad.getStates();
+//             for (var i = 0; i < pads.length; ++i) {
+//                 var pad = pads[i];
+//                 if (pad) {
+//                     if (pad.leftStickX < -0.1){
+//                     	keyboard.left = pad.leftStickX;
+//                     	keyboard.right = 0;
+//                     }
+//                     else if (pad.leftStickX > 0.1){
+//                     	keyboard.right = pad.leftStickX;
+//                     	keyboard.left = 0;
+//                     }
+//                     else{
+//                     	keyboard.left = 0;
+//                     	keyboard.right = 0;	
+//                     }
+//                     if (pad.leftStickY < -0.1){
+//                     	keyboard.top = 1;
+//                     	keyboard.bottom = 0;
+//                     }
+//                     else if (pad.leftStickY > 0.1){
+//                     	keyboard.bottom = pad.leftStickY;
+//                     	keyboard.top = 0;
+//                     }
+//                     else{
+//                     	keyboard.bottom = 0;
+//                     	keyboard.top = 0;	
+//                     	
+//                     }
+//                     if (pad.faceButton0 > 0)
+//                     	keyboard.fire = 1;
+//                     else
+//                     	keyboard.fire = 0;
+//                     if (pad.faceButton1 > 0)
+//                     	keyboard.bomb = 1;
+//                 } 
+//                 else {
+//                 
+//                 }
+//             }
+	       	if (0 === keyboard.fire && firePower < 100)
+	    	 	firePower += 2;
+			if (keyboard.left && inertiaX < 4)
+				inertiaX += 0.4;
+			if (keyboard.right && inertiaX > - 4 )
+				inertiaX -= 0.4;
+			if (keyboard.top && inertiaY < 4)
+				inertiaY += 0.4 ;
+			if (keyboard.bottom && inertiaY > -4 )
+				inertiaY -= 0.4 ;
+			if (inertiaX>0)
+				inertiaX -= 0.02;
+			else if (inertiaX<0)
+				inertiaX += 0.02;       
+			if (inertiaY>0)
+				inertiaY -= 0.02;
+			else if (inertiaY<0)
+				inertiaY += 0.02;    
+			x-=inertiaX*me.speed;
+			y-=inertiaY*me.speed;
+			if (x < 0)
+				x=0;
+			if (y > canvas.height + img.height / 2)
+			y = canvas.height + img.height / 2;
+			if (y < 90)
+			y = 90;
+			if (0 === bomb && bombLife < bombDuration)
+				bombLife += 0.5;
+	    	} 
+
+    /**** HERE ARE THE MAIN RENDER FUNCTIONS => DURING GAME & GAMEOVER, TODO: welcome page ***/
+    function gameOver(){
+      for (var i = 0 ; i < explosions.length ; i++){
+		ctx.beginPath(); 
+		explosions[i].x += explosions[i].dx * explosions[i].speed  ;
+		explosions[i].y += explosions[i].dy * explosions[i].speed ;
+		explosions[i].lifeTime = explosions[i].lifeTime -1;
+		ctx.fillRect( explosions[i].x  , explosions[i].y, 1 , 1 );
+		ctx.fill();
+		ctx.closePath();	
+		if (0 === explosions[i].lifeTime)
+		  explosions.splice(i,1);
+		}
+		ctx.fillStyle = 'rgba(0,0,0,0.1)';
+		ctx.fillRect(0, 0 , canvas.width, canvas.height);
+		ctx.fillStyle = 'rgb(255,' + (255- ( rSpiral * 100 ) - ( 5-life ) * 50 ) + ',' + (255 - (rSpiral*100) - ((5-life) * 50)) + ')';
+		ctx.fillText("Game over", 		canvas.width / 2  -50, (canvas.height/2)-50 );
+		ctx.fillText("Your score: " + score,	canvas.width / 2  - 60, (canvas.height/2));
+		ctx.fillText("Click to restart",		canvas.width /2  -60, (canvas.height/2)+50);
+		canvas.onmousedown = function(){ 
+		document.location = document.location; 
+	  }
+    }
+    function update(){
+		if (0 !== keyboard.bomb || 0 === bombLife /*|| (0 !== keyboard.fire && bonusType == "L")*/){
+			ctx.fillStyle = 'rgba(0,0,0,0.8)';
+			ctx.globalCompositeOperation = "lighter";
+		}
+		else{
+			ctx.fillStyle = 'rgb(0,0,0)';
+			ctx.globalCompositeOperation = "source-over";
+		}
+		ctx.fillRect(0, 0, canvas.width,canvas.height);
+		for (var i = 0 ; i < starField.length ; i++){
+			var star = starField[i];
+			star.move();
+			ctx.fillStyle = 'rgb(' + star.speed + ',' + star.speed + ',' + star.speed + ')';
+			ctx.fillRect(star.x, star.y, star.speed / 70, star.speed / 70);
+		}
+		if ( f % ennemyCountDown < 160 && level > 2){
+		  ctx.fontSize = 32;
+		  ctx.fillStyle = "rgba('255,255,255,0.8')";
+		  ctx.fillText("Wave " + (level-2),	canvas.width / 2  - 43, (canvas.height/2)- 16);
+		  ctx.fontSize = "20px";
+		}
+		if (0 === f % ennemyCountDown){
+			for (var i=0; i < nbEnnemyWave; i+=1)
+				ennemies.push(new Ennemy());
+			nbEnnemyWave+=~~(Math.random()*3);
+			level++;
+		}
+		ctx.globalCompositeOperation = "source-over";
+		
+	if (0 !== keyboard.bomb){
+			missiles.length = 0;	
+			if (bombLife == bombDuration)
+				explosions=new Array();
+			if (bomb < 200){
+				ctx.beginPath();
+				ctx.lineWidth = 7;
+				ctx.globalCompositeOperation = "source-over";
+				ctx.strokeStyle = 'rgba(255' + (bomb * 2) + ',' + (bomb * 2) + ',0,0.9)';
+				ctx.beginPath();
+				ctx.bezierCurveTo(	50 + bomb * 4,	100 - bomb * 2,  
+						bomb * 4,		250,	
+						50 + bomb * 4,	400 + bomb*2);
+				ctx.stroke();  
+				ctx.strokeStyle = 'rgba(255' + ( (bomb * 1.5) || 0) + ',' + ( (bomb * 1.5) || 0 ) +',0.9)';
+				ctx.beginPath();
+				ctx.bezierCurveTo(	50 + bomb * 3,	100 - bomb * 1.5, 
+						bomb , 			250,
+						50 + bomb * 3,	400 + bomb*1.5);  
+				ctx.stroke();  
+				ctx.strokeStyle = 'rgba(255' + bomb + ',' + bomb + ',0.9)';
+				ctx.beginPath();
+				ctx.bezierCurveTo(	50+bomb*2,	100 - bomb,
+						350 + bomb,		250,
+						50 + bomb * 2,	400 + bomb);  
+				ctx.stroke();  
+				ctx.fillStyle = "rgb(255, 255, 255)";
+				ctx.lineWidth = 1;
+			      
+			}
+			bomb+=10;
+			if (bomb == 200){
+				muf = -10;
+				keyboard.bomb=0;
+				bomb=0;
+			}
+			if (bomb > 310){
+				bomb=0;
+			}
+		}
+		//am i on fire?
+		if (keyboard.fire && firePower > 1){
+ 		  if (f % 10 > 8){
+		    if (bonusType!="L"){
+			  var missile = new Missile(-Math.PI/2);
+			      missile.x = x + 10;
+			      missile.y = y ;
+			      missiles.push(missile);
+			      firePower -= 0.05 * missileNumber;
+			  for (var i=1; i < missileNumber ; i++){
+			      var missile = new Missile(( i % 2 == 0 ) ? (-(i-1) * Math.PI / 36)-Math.PI/2 : (i * Math.PI / 36)-Math.PI/2);
+			      missile.x = x + 10;
+			      missile.y = y ;
+			      missiles.push(missile);
+			      firePower -= 0.025 * missileNumber;
+			  }
+		      }
+ 		   }
+		}
+		//missiles collisions
+		for (var i = 0 ; i < ennemies.length ; i++){
+			var ennemy = ennemies[i];
+			if (keyboard.bomb){
+			  if (Math.random() * 5 > 4)
+				bonusList.push(new Bonus(ennemy.x,ennemy.y));
+			  score+=ennemy.score;
+			  ennemies.splice(i,1);
+			  i--;
+			  nbEnnemKilled++;
+			  break;
+			}
+			if (bonusType != "L"){
+				for (var j = 0 ; j < missiles.length ; j++){
+					var missile = missiles[j];
+					if ( i < ennemies.length && 
+						missile.x > ennemy.x  && 
+						missile.x + 14 < ennemy.x + 44 &&
+						missile.y > ennemy.y && 
+						missile.y + 12 < ennemy.y + 29 ){
+							// explose(ennemy, missile, i);
+							ennemy.energy-=90;
+							if (ennemy.energy < 0){
+								for (var k = 0 ; k < 7 && explosions.length < 40; k++){
+									var explosion = new Explosion(missile.x - img.width / 2 ,missile.y - img.height / 2);
+									explosions.push(explosion);
+								}
+								if (Math.random() * 10 > 8)
+									bonusList.push(new Bonus(ennemy.x,ennemy.y));
+								score+=ennemy.score;
+								ennemies.splice(i,1);
+								i--;
+								nbEnnemKilled++;
+								break;    	
+							}
+							else{
+								var explosion = new Explosion(missile.x - img.width / 2 ,missile.y - img.height / 2);
+								explosions.push(explosion);
+							}
+							missiles.splice(j, 1);
+							j--;
+					}
+				}
+			}
+			else{
+				if (ennemy.x > x && ennemy.y > me - 5 + img / 2 && ennemy.y < me + (img / 2) + 5){}
+			}
+		}
+		for (var j = 0 ; j < missiles.length ; j++){
+			if (missiles[j].alpha<0){
+			  missiles.splice(j,1);
+			  --j;
+			}
+			else{
+			  var xMissile = missiles[j].x;
+			  var yMissile = missiles[j].y;
+			  var missileDirection = missiles[j].direction;
+			  if (xMissile - img.width / 2 > canvas.width || yMissile < 0 || yMissile - img.height / 2> canvas.height)
+				  missiles.splice(j,1);
+			  else{
+			    ctx.translate(xMissile - img.width , yMissile - img.height );
+			    ctx.rotate(-(missileDirection + Math.PI / 2 ));
+			    ctx.globalAlpha = missiles[j].alpha;
+			    ctx.drawImage(imgMissile, (-widthMissile / 2) , -heightMissile / 2, widthMissile, heightMissile);
+			    ctx.rotate(missileDirection + Math.PI / 2  );
+			    ctx.translate(-(xMissile -img.width), -(yMissile-img.height));
+			    ctx.moveTo(50,canvas.width/2);
+			    missiles[j].move();
+			  }
+			}
+		}
+		ctx.globalAlpha=1;
+		for (var i = 0 ; i < ennemies.length ; i++){
+			if (ennemies[i] != null && ennemies[i].x < 0){
+				muf = 1;
+				life-=10;
+			  	ennemies.splice(i,1);
+			}
+			else{
+				ctx.drawImage(	imgEnnemy, 
+						ennemies[i].x , ennemies[i].y , 
+						widthEnnemy , heightEnnemy);
+				ennemies[i].move();
+			}
+		}
+		if (0 === bomb){
+			for(var i= 0 ; i < explosions.length  ; i++){
+				if (explosions[i].alpha < 0.2){
+					explosions.splice(i,1);
+					i--
+				}
+			
+			}
+			for(var i= 0 ; i < explosions.length  ; i++){
+				var explosion = explosions[i];
+				explosion.alpha-=0.02;
+				if (i%2==0){
+				  ctx.fillStyle = explosion.color;
+				  ctx.globalAlpha = explosion.alpha;
+				  explosion.move();
+				  ctx.beginPath();
+				  ctx.arc(        explosion.x , explosion.y,  
+						  explosion.lifeTime / 2.5, 
+						  0 ,Math.PI * 2, true);
+				  ctx.fill();
+				}
+			}
+			ctx.fillStyle = "rgb(0,0,0)";
+			ctx.globalAlpha = 1;
+			for(var i= 0 ; i < explosions.length  ; i++){
+				if (i%2==0){
+					var explosion = explosions[i];
+					explosion.subX-=0.02;
+					explosion.subY-=0.02;
+					ctx.beginPath();
+					ctx.arc(    explosion.x  + explosion.subX,
+						explosion.y + explosion.subY,  
+						explosion.lifeTime / 2 * explosion.lifeTime / 30, 
+						0 , Math.PI * 2, true);
+					ctx.fill();
+				}
+			}
+		}
+    
+    ctx.globalAlpha = 1;
+    if (0 === bomb){      
+        ctx.beginPath();
+        ctx.fillStyle = "rgb(255,255,255)";
+        ctx.fillText("Score: " + score + "     Highscore:" + userHighScore, 5,20);
+        ctx.fillText("Life: " , 5,46);
+        ctx.fillText("Ammo:" , 180,46);
+        ctx.fillText("Bomb:" , 380,46);
+        ctx.fillStyle = "rgb(" + ~~(255-(life*2.5)) + "," + ~~((life*2.5)) + ",0)";
+        ctx.fillRect(62, 29,life,20);
+        ctx.fillStyle = "rgb("+~~(255-(firePower*2.5))+","+~~((firePower*2.5))+",0)";
+        ctx.fillRect(260, 29,firePower,20);
+        if (bombLife == bombDuration)
+			ctx.fillStyle = "rgb(0,255,0)";
+        else
+	  		ctx.fillStyle = "rgb(255,0,0)";
+	ctx.fillRect(460, 29,bombLife,20);
+	ctx.fill();
+	ctx.closePath();
+	ctx.globalAlpha = 1;
+      }
+      else{
+		ctx.globalCompositeOperation = "lighter";
+		ctx.globalAlpha = 0.8;
+      }
+      if (0 !== muf && f % 2 == 0){
+		var myImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		for (var i = 0	; i < myImageData.data.length; i+=200){
+			var alpha = ~~(Math.random()*200);
+			for (var j = 0 ; j < 10 ; j++){
+				myImageData.data[i + (j*4)] = myImageData.data[i + 0] + (0 === bomb ? 0 : i / myImageData.data.length * 60);
+				myImageData.data[i + (j*4)+1] = myImageData.data[i + 1] + (0 === bomb ? 0 : i / myImageData.data.length * 7);
+				myImageData.data[i + (j*4)+2] = myImageData.data[i + 2] ;
+				myImageData.data[i + (j*4)+3] -= alpha * 2;
+			}
+		}
+		muf++;
+		ctx.putImageData(myImageData, 10 - ~~(Math.random() * 20), 10 - ~~(Math.random() * 20));
+		if (0 === muf % 10 )
+			muf = 0;
+		ctx.globalCompositeOperation = "xor";
+      }
+      //let's render bonus
+      for (var i = 0 ; 0 === bomb && i < bonusList.length ; i++){
+	    if (bonusList[i].alpha < 0){
+		bonusList.splice(i,1);
+		i--;
+	    }
+	    else{
+		//lets move & render missiles then ennemies
+		ctx.fillStyle = "rgba(255,255,255," + bonusList[i].alpha + ")";
+		ctx.fillText(bonusList[i].type, bonusList[i].x,bonusList[i].y);
+		bonusList[i].move();
+		if (	x > bonusList[i].x  && 
+			x < bonusList[i].x + 64 &&
+			y > bonusList[i].y && 
+			y < bonusList[i].y + 64 ){
+		  bonusType = bonusList[i].type;
+		  if (bonusType == "A"){
+		    firePower = 100;
+		  }
+		  else if (bonusType == "B"){
+		    bombLife = bombDuration;
+		  }
+		  else if (bonusType == "+3" && missileNumber < 9){
+		    missileNumber+=3
+		  }
+		  else if (bonusType == "L"){
+		   if (life+10 < 100)
+		    life+=10;
+		   else
+		      life=100;
+		    bonusType = "";
+		  }
+		  else if (bonusType == "S" && me.speed < 3){
+		      me.speed+=0.5;
+		  }
+		  bonusList.splice(i,1);
+		  gotBonus=20;
+		}
+	  }
+	  if (bonusList[i] && bonusList[i].x < 0)
+	      bonusList.splice(i,1);
+      }
+      if (gotBonus> 0){
+		gotBonus-=0.2;
+		if (gotBonus % 3 == 0)
+			ctx.globalCompositeOperation = "xor";
+		}
+      	if (keyboard.fire && firePower > 1){
+		  if (bonusType == "L"){
+		      ctx.fillStyle = "rgba(255,255,255,0.5)";
+		      cutIt(x - 65, y - 97 , canvas.width , 64);
+		      firePower -= 0.4;
+		  }
+      	}
+		//draw me
+		ctx.translate(x - img.width , y - img.height  );
+		ctx.rotate(-(me.direction + Math.PI / 2));
+		ctx.drawImage(img, (-width / 2) , -height / 2, width , height );
+		ctx.rotate(me.direction + Math.PI / 2 );
+		ctx.translate(-(x - img.width  ), -(y - img.height  ));
+		ctx.moveTo(50 , canvas.width/2);
+		if (bomb === 0 && muf === 0 && 0 !== sepia ){
+		  var myImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		  data = myImageData.data;
+		  for (var i = 0  ; i < data.length ; i += 4) {
+				  data[i] = 255 - data[i];
+				  data[i + 1] = 255 - data[i + 1];
+				  data[i + 2] = 255 - data[i + 2];
+		  }
+		  ctx.putImageData(myImageData,0,0);
+		}
+    } 
+	function explose(ennemy,missile,i){
+	}
+	
+    function cutIt(left,top,boxWidth,boxHeight){
+		var myImageData = ctx.getImageData(left+16,0,10,canvas.height); 
+		noiseIt(myImageData,left+16,0);
+		top += 70;
+		left = 0;
+		myImageData = ctx.getImageData(left,top,boxWidth,10);
+		noiseIt(myImageData,left,top);
+    }
+    function noiseIt(myImageData,left,top){
+	data = myImageData.data;
+    	for (var i = 0	; i < myImageData.data.length; i+=4){
+		    data[i] = 200 - data[i]; 
+		    data[i+1] = 200 - data[i+1];
+		    data[i+2] = 200 - data[i+2];
+		}
+		ctx.putImageData(myImageData, left, top);
+    }
+    window.requestAnimFrame = ( 
+      function(){
+	return  window.requestAnimationFrame || 
+	window.webkitRequestAnimationFrame || 
+	window.mozRequestAnimationFrame    || 
+	window.oRequestAnimationFrame      || 
+	window.msRequestAnimationFrame     || 
+	function(callback, element){
+	  window.setTimeout(callback, 1000 / 60);
+	};
+      }
+    )();
+    function run(){
+      if (0 === life ){
+	    gameOver();
+	    if (0 === gameOverFrame ){
+	      for (i=0;i < 500;i++)
+		explosions.push(new Explosion(50,canvas.height/2));
+	      forrest= new Array();
+	      if ( score > userHighScore){
+		localStorage['defendMeScore'] = score;
+		userHighScore = score;
+	      }
+	    }
+	    gameOverFrame +=1;
+      }
+      else{
+	input();
+	update();
+      }
+      requestAnimFrame(run);
+      f++;
+    }
+    function init() {
+      if (localStorage['defendMeScore'])
+	userHighScore = localStorage['defendMeScore'];
+      else
+	userHighScore  = 0;
+      ctx.strokeStyle = "rgb(255,255,255)";
+      ctx.lineWidth = 5;
+      ctx.canvas.width  = window.innerWidth  - 100;
+      ctx.canvas.height = 500;
+      ctx.font		= "normal 20px 'Orbitron'";
+      img.src		= "src/motha.gif";
+      imgEnnemy.src	= "src/ennemy.gif";
+      imgMissile.src	= "src/missile.gif";
+      img.onload	= function(){ 
+	width = img.w
+	x = 250;
+	y = ctx.canvas.height / 2 + 125 - img.height / 2;width=img.width			; height = img.height; }
+	imgEnnemy.onload	= function(){ widthEnnemy = imgEnnemy.width	; heightEnnemy = imgEnnemy.height; }
+	imgMissile.onload	= function(){ widthMissile = imgMissile.width	; heightMissile = imgMissile.height; 
+    }
+      if (localStorage['defendMeRight'])
+			right = localStorage['defendMeRight'];
+		  else{
+			right  = 39;
+			localStorage['defendMeRight'] = right;
+		  }
+		  if (localStorage['defendMeLeft'])
+		left = localStorage['defendMeLeft'];
+		  else{
+			left  = 37;
+			localStorage['defendMeLeft'] = left;
+		  }
+		  if (localStorage['defendMeMove'])
+			move = localStorage['defendMeMove'];
+		  else{
+			move  = 38;
+			localStorage['defendMeMove'] = move;
+		  }
+		  if (localStorage['defendMeBottom'])
+			bottom = localStorage['defendMeBottom'];
+		  else{
+			bottom  = 40;
+			localStorage['defendMeBottom'] = bottom;
+		  }
+		  if (localStorage['defendMeBomb'])
+			bombKey = localStorage['defendMeBomb'];
+		  else{
+			bombKey = 17;
+			localStorage['defendMeBomb'] = bombKey;
+		  }
+		  if (localStorage['defendMeFire'])
+			fire = localStorage['defendMeFire'];
+		  else{
+			fire  = 32;
+			localStorage['defendMeFire'] = fire;
+		  }
+		  for (i=0; i < 250 ; i++){
+			starField.push(new Star(Math.random()*canvas.width,Math.random()*canvas.height));
+      }
+    }
+    init();
+    run();
+  </script>
+</body>
+</html>
+     

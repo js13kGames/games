@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./derby.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <style>
+        html, body { margin:0; padding:0; overflow:hidden }
+        body { width: 100%; height: 100%; background: #346524}
+        .popup {
+            position: absolute;
+            font-family: Impact, Charcoal, sans-serif;
+            background: #DEEED6;
+            border: 4px solid #4E4A4E;
+            border-radius: 10px;
+            font-size: 3em;
+            padding: 40px;
+        }
+        #svg1 {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 100;
+        }
+        #mudCanvas {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 10;
+        }
+        #divHighScoreEntry {
+            display: none;
+            z-index: 200;
+        }
+        #tdHighScores {
+             font-size: 0.5em;
+        }
+        .bigInput {
+            font-family: Impact, Charcoal, sans-serif;
+            font-size: 1em;
+            margin: 20px;
+        }
+        #divSplash {
+            z-index: 200;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <canvas id="mudCanvas" width="256" height="256"></canvas>
+    <svg id="svg1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <radialGradient id="screen1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0" />
+                <stop offset="100%" style="stop-color:rgb(64,64,64);stop-opacity:1" />
+            </radialGradient>
+            <radialGradient id="smoke1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" style="stop-color:#4E4A4E;stop-opacity:1" />
+                <stop offset="30%" style="stop-color:#4E4A4E;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#757161;stop-opacity:0" />
+            </radialGradient>
+            <radialGradient id="fire1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" style="stop-color:#D04648;stop-opacity:1" />
+                <stop offset="70%" style="stop-color:#D27D2C;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#DAD45E;stop-opacity:0" />
+            </radialGradient>
+        </defs>
+    </svg>
+    <div id="divHighScoreEntry" class="popup">
+        <span>New high score!</span><br>
+        <input id="txtPlayerName" class="bigInput" placeholder="Your name" maxlength="20" /><br>
+        <button class="bigInput" onclick="postHighScore()">Submit</button>
+    </div>
+    <div id="divSplash" class="popup">
+        <table>
+            <tr>
+                <td align="center"><u>High Scores</u></td>
+                <td align="right" rowspan="2">
+                    <!--button class="bigInput" onclick="goFullScreen()">Fullscreen</button><br><br-->
+                    <button class="bigInput" onclick="startGame()">Start</button>
+                </td>
+            </tr>
+            <tr>
+                <td id="tdHighScores"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

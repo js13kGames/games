@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Cattlost</title>
+<style>
+	* { margin: 0; padding: 0; }
+	
+	html,body { 
+		height:100%;
+		font-family:Verdana, Geneva, sans-serif;
+		text-align:center;
+		background-color:#000000;
+	}
+	#entryScreen{
+		position:absolute;
+		color:#784b41;
+		font-weight:bold;
+		font-size:30px;
+		z-index: 100;
+		margin-left: 150px;
+	}
+	#win, #intr{
+		font-size:20px;
+	}
+	#hero{
+		position:absolute;
+		width:30px;
+		height:30px;
+		left:90px;
+		background: url(cattle30.png) -90px 0;
+		z-index:999;
+	}
+	.cattle{
+		position:absolute;
+		width:30px;
+		height:30px;
+		z-index: 50;
+	}
+	.cow{
+		left:0px;
+		background: url(cattle30.png) 0px 0;
+	}
+	.pig{
+		left:30px;
+		background: url(cattle30.png) -30px 0;
+	}
+	.sheep{
+		left:60px;
+		background: url(cattle30.png) -60px 0;
+	}
+	#farmField{
+		position:absolute;
+		width:900px;
+		height:600px;
+		background-color:#8cc355;
+		border:5px #784b41 solid;
+		z-index: 10;
+	}
+	#farmFieldExt{
+		position:absolute;
+		width:100px;
+		height:600px;
+		background-color:#784b41;
+		border:5px #784b41 solid;
+		z-index: 10;
+		margin-left: 910px;
+		color:#ffffff;
+		font-size: 13px;
+		font-weight: bold;
+	}
+	#farmFieldExt .cattle{
+		margin-top: 200px;
+		width:30px;
+		margin-left: 15px;
+		background-repeat:no-repeat; 
+	}
+	#farmFieldExt .cattle > div{
+		margin-top: 10px;
+		margin-left: 40px;
+	}
+	#farmFieldExt .pig{
+		margin-top: 245px;
+		margin-left: -15px;
+	}
+	#farmFieldExt .sheep{
+		margin-top: 285px;
+		margin-left: -45px;
+	}
+	#coverField{
+		position:absolute;
+		width:900px;
+		height:600px;
+		border:5px #784b41 solid;
+		z-index: 20;
+		opacity: 0;
+	}
+	.cover{
+		
+	}
+	#win{
+		display: none;
+	}
+	div#coverField {
+		opacity:0;
+	}
+	div#coverField.fade {
+		opacity:1;
+		transition: opacity 1s; 
+	}
+	div#entryScreen {
+		opacity:1;
+	}
+	div#entryScreen.fade {
+		opacity:0;
+		transition: opacity 1s; 
+	}
+	div.cattle {
+		opacity:1;
+		transition: opacity 1s; 
+	}
+	div.cattle.fade {
+		opacity:0;
+	}
+	#barn{
+		position:absolute;
+		width:80px;
+		height:77px;
+		background: url(barn.png) 80px 77px;
+		bottom: 0px;
+		margin-left: 8px;
+	}
+	#windmill{
+		position:absolute;
+		width:50px;
+		height:76px;
+		background: url(windmill.png) 50px 76px;
+		margin-left: 22px;
+		margin-top: 50px;
+	}
+	#fan{
+		position:absolute;
+		width:61px;
+		height:61px;
+		background: url(fan.png) 61px 61px;
+		margin-left: 17px;
+		margin-top: 25px;
+		animation-name: rotate; 
+	    animation-duration: 2s; 
+	    animation-iteration-count: infinite;
+	    animation-timing-function: linear;
+	}
+	#cowScore, #pigScore, #sheepScore{
+		-webkit-animation-duration: 1s;
+	    -webkit-animation-timing-function: linear;
+	}
+	@keyframes rotate {
+	    from {transform: rotate(0deg);}
+	    to {transform: rotate(360deg);}
+	}
+	@keyframes shake {
+	  10%, 90% {   transform: translate3d(-1px, 0, 0);	  }
+	  20%, 80% {   transform: translate3d(2px, 0, 0);	  }
+	  30%, 50%, 70% {   transform: translate3d(-4px, 0, 0);	  }
+	  40%, 60% {   transform: translate3d(4px, 0, 0);	  }
+	}
+</style>
+</head>
+<body onLoad="onLoad();">
+    <div id="farmField">
+    </div>
+    <div id="farmFieldExt"> 
+    	<div id="barn"></div>
+    	<div id="windmill"></div>
+    	<div id="fan"></div>
+    	<div id="cowScore" class="cattle cow"><div>0/7</div></div>
+    	<div id="pigScore" class="cattle pig"><div>0/6</div></div>
+    	<div id="sheepScore" class="cattle sheep"><div>0/7</div></div>
+    </div>
+    <div id="coverField"></div>
+    <div id="entryScreen">
+	    <div><br>Cattlost</div>  
+        <div id="intr">
+        	<br><br>Story
+            <br><br>You had a long day in farm
+            <br>And have left the cattle to graze in the open field
+            <br>Its evening time now, sun is about to call its day 
+            <br>You need to get your cattle back
+            <br><br><br>Game Play
+            <br><br>Use arrow keys to get yourself moving
+            <br>Press "Space" to start game
+            <br>Press "R" to reset game
+            <br>You have limited view area
+            <br>And the cattle will roam around the field
+            <br>You can't afford to <span style="color:#ff0000">LOSE</span> them
+        </div>
+        <div id="win">
+        	<br><br><br>Game Over
+            <br><br>Yes, you are a hero!
+            <br>You saved your cattle from losing in wild
+            <br>Press "R" to restart game
+        </div>
+    </div>
+    <script language="javascript">
+
+	var heroDiv, farmFieldDiv, entryScreenDiv, coverFieldDiv, cowScoreDiv, pigScoreDiv, sheepScoreDiv;
+	var cattleArr = new Array(), cattleX = new Array(), cattleY = new Array(), coverArr = new Array();
+	var heroX = 19, heroY = 29, score = 0, cowScore = 0, pigScore = 0, sheepScore = 0, cattleCount = 20;
+	var cattleTimer;
+	var flag;
+
+	function onLoad()
+	{
+		farmFieldDiv = document.getElementById('farmField');
+		coverFieldDiv = document.getElementById('coverField');
+		entryScreenDiv = document.getElementById('entryScreen');
+
+		cowScoreDiv = document.getElementById('cowScore');
+		pigScoreDiv = document.getElementById('pigScore');
+		sheepScoreDiv = document.getElementById('sheepScore');
+		
+		window.addEventListener("keydown", checkSpace, false);
+
+		for(var x=0; x<20; x++){
+			for(var y=0; y<30; y++){
+			   createCover(x,y);
+			}
+		}
+
+		resetGame();
+
+		for (var i = 0; i < cattleCount; ++i) 
+			createCattle(i);	
+
+		cowScoreDiv.addEventListener('webkitAnimationEnd', function(){
+		    this.style.webkitAnimationName = '';
+		}, false);
+		pigScoreDiv.addEventListener('webkitAnimationEnd', function(){
+		    this.style.webkitAnimationName = '';
+		}, false);
+		sheepScoreDiv.addEventListener('webkitAnimationEnd', function(){
+		    this.style.webkitAnimationName = '';
+		}, false);
+	}
+
+	function checkSpace(e)
+	{
+		if(e != null && e.keyCode == "32")
+			startGame();
+	}
+	function startGame()
+	{
+		entryScreenDiv.classList.toggle('fade');
+		coverFieldDiv.classList.toggle('fade');
+
+		window.removeEventListener("keydown", checkSpace, false);
+		window.addEventListener("keydown", checkKeyPressed, false);
+
+		checkKeyPressed(null);
+		cattleTimer = setInterval(changePos, 5000);
+	}
+	function checkKeyPressed(e) {
+		if(e != null)
+		{
+		
+			if (e.keyCode == "40" && parseInt(heroDiv.style.top) < 570) {
+			   	heroDiv.style.top = parseInt(heroDiv.style.top)+30+'px';
+			   	heroX++;
+			}
+			if (e.keyCode == "39" && parseInt(heroDiv.style.left) < 870) {
+				heroDiv.style.left = parseInt(heroDiv.style.left)+30+'px';
+				heroY++;
+			}
+			if (e.keyCode == "38" && parseInt(heroDiv.style.top) > 0) {
+			   heroDiv.style.top = parseInt(heroDiv.style.top)-30+'px';
+			   heroX--;
+			}
+			if (e.keyCode == "37" && parseInt(heroDiv.style.left) > 0) {
+				heroDiv.style.left = parseInt(heroDiv.style.left)-30+'px';
+				heroY--;
+			}
+			if (e.keyCode == "82") {
+				window.removeEventListener("keydown", checkKeyPressed, false);
+				flag = 'reset';
+				resetGame(flag);
+			}
+			else
+				flag = '';
+		}
+
+		setUserLight()
+		
+		for(var c=0; c<cattleArr.length; c++)
+		{
+			var cpos = cattleArr[c];
+			if(parseInt(heroDiv.style.left) == parseInt(cpos.style.left) && parseInt(heroDiv.style.top) == parseInt(cpos.style.top))
+			{	
+				if(cpos.classList.contains('cow'))
+				{	score+=3;   cowScore++;  cowScoreDiv.style.webkitAnimationName = 'shake';	}
+				if(cpos.classList.contains('sheep'))
+				{	score+=2;	sheepScore++;	sheepScoreDiv.style.webkitAnimationName = 'shake';	}
+				if(cpos.classList.contains('pig'))
+				{	score+=1;	pigScore++;		pigScoreDiv.style.webkitAnimationName = 'shake';	}
+				cpos.classList.toggle('fade');
+				cattleArr.splice(c,1);
+			}
+		}
+		cowScoreDiv.childNodes[0].innerHTML = cowScore+"/7";
+		pigScoreDiv.childNodes[0].innerHTML = pigScore+"/6";
+		sheepScoreDiv.childNodes[0].innerHTML = sheepScore+"/7";
+
+		if(cattleArr.length == 0 && flag != 'reset')
+		{
+			resetGame("win");
+		}
+	}
+	function setUserLight()
+	{
+		var nodes = coverFieldDiv.childNodes;
+		for(var i=0; i<nodes.length; i++) {
+		    nodes[i].style.visibility = 'visible';
+		}
+		
+		var cdiv0 = document.getElementById(heroX+'.'+heroY);
+		var cdiv1 = document.getElementById((heroX+1)+'.'+(heroY+1));
+		var cdiv2 = document.getElementById((heroX-1)+'.'+(heroY-1));
+		var cdiv3 = document.getElementById((heroX+1)+'.'+(heroY-1));
+		var cdiv4 = document.getElementById((heroX-1)+'.'+(heroY+1));
+		var cdiv5 = document.getElementById((heroX-1)+'.'+(heroY));
+		var cdiv6 = document.getElementById((heroX+1)+'.'+(heroY));
+		var cdiv7 = document.getElementById((heroX)+'.'+(heroY+1));
+		var cdiv8 = document.getElementById((heroX)+'.'+(heroY-1));
+		
+		if(cdiv0) cdiv0.style.visibility = 'hidden';
+		if(cdiv1) cdiv1.style.visibility = 'hidden';
+		if(cdiv2) cdiv2.style.visibility = 'hidden';
+		if(cdiv3) cdiv3.style.visibility = 'hidden';
+		if(cdiv4) cdiv4.style.visibility = 'hidden';
+		if(cdiv5) cdiv5.style.visibility = 'hidden';
+		if(cdiv6) cdiv6.style.visibility = 'hidden';
+		if(cdiv7) cdiv7.style.visibility = 'hidden';
+		if(cdiv8) cdiv8.style.visibility = 'hidden';
+	}
+	function createCattle(i)
+	{	
+		var cattleDiv = document.createElement("DIV");       
+		farmFieldDiv.appendChild(cattleDiv);
+		if(i < 7)
+			cattleDiv.className = 'cattle cow';
+		else if(i >= 7 && i < 13)
+			cattleDiv.className = 'cattle pig';
+		else
+			cattleDiv.className = 'cattle sheep';
+		cattleDiv.style.top = cattleY[i] * 30 + 'px';
+		cattleDiv.style.left = cattleX[i] * 30 + 'px';
+		cattleArr.push(cattleDiv);
+	}
+	function createCover(x,y)
+	{	
+		var coverDiv = document.createElement("DIV");       
+		coverFieldDiv.appendChild(coverDiv);
+		coverDiv.className = 'cover';
+		coverDiv.id = x+'.'+y;
+		coverDiv.setAttribute('data-attr', y);
+		coverDiv.style.width = coverDiv.style.height = '30px';
+		coverDiv.style.backgroundColor = '#000000';
+		coverDiv.style.cssFloat  = 'left';
+		coverDiv.style.zIndex  =  x*y + 900;
+		coverArr.push(coverDiv);
+	}
+	function changePos()
+	{
+		getNewPos();
+		for(var c=0; c<cattleArr.length; c++)
+		{
+			var cpos = cattleArr[c];
+			cpos.style.top = cattleY[c] * 30 + 'px';
+			cpos.style.left = cattleX[c] * 30 + 'px';
+		}
+	}
+	function getNewPos()
+	{
+		cattleX = new Array();
+		cattleY = new Array();
+		while(cattleX.length < cattleArr.length){
+		    var rX = Math.floor(Math.random()*30);
+		    if(cattleX.indexOf(rX) > -1) continue;
+		    cattleX[cattleX.length] = rX;
+		}
+		while(cattleY.length < cattleArr.length){
+		    var rY = Math.floor(Math.random()*20);
+		    if(cattleY.indexOf(rY) > -1) continue;
+		    cattleY[cattleY.length] = rY;
+		}
+	}
+	function resetGame(state)
+	{
+		if(state == "win")
+		{
+			flag = '';
+			entryScreenDiv.style.opacity = 1;
+			coverFieldDiv.style.opacity = 0;
+			document.getElementById("win").style.display = 'block';
+			document.getElementById("intr").style.display = 'none';
+			window.addEventListener("keydown", checkRestart, false);
+		}
+
+		window.removeEventListener("keydown", checkKeyPressed, false);
+		clearInterval(cattleTimer);
+		farmFieldDiv.innerHTML = '';
+
+		heroDiv = document.createElement("DIV");       
+		farmFieldDiv.appendChild(heroDiv);
+		heroDiv.id = "hero";
+		
+		heroDiv.style.left = 870+'px';
+		heroDiv.style.top = 570+'px';
+
+		cattleArr = new Array();
+		cattleX = new Array();
+		cattleY = new Array();
+		coverArr = new Array();
+		heroX = 19; heroY = 29; score = 0; cowScore = 0; pigScore = 0; sheepScore = 0; cattleCount = 20;
+		heroDiv.style.left = 870+'px';
+		heroDiv.style.top = 570+'px';
+		setUserLight();
+
+		while(cattleX.length < cattleCount){
+		    var rX = Math.floor(Math.random()*30);
+		    if(cattleX.indexOf(rX) > -1) continue;
+		    cattleX[cattleX.length] = rX;
+		}
+		while(cattleY.length < cattleCount){
+		    var rY = Math.floor(Math.random()*20);
+		    if(cattleY.indexOf(rY) > -1) continue;
+		    cattleY[cattleY.length] = rY;
+		}	
+
+
+		if(state == "reset")
+		{
+			flag = 'reset';
+			restartGame();		
+		}
+	}
+	function checkRestart(e)
+	{
+		if(e != null && e.keyCode == "82")
+		{
+			restartGame();
+		}	
+	}
+	function restartGame()
+	{
+		window.removeEventListener("keydown", checkRestart, false);
+		window.addEventListener("keydown", checkKeyPressed, false);
+		flag = '';
+
+		entryScreenDiv.style.opacity = 0;
+		coverFieldDiv.style.opacity = 1;
+
+		for (var i = 0; i < cattleCount; ++i) 
+			createCattle(i);
+
+		cattleTimer = setInterval(changePos, 5000);	
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+body, html{
+  background: #ececec;
+  font-family: monospace;
+  width: 500px;
+}
+/*evidenceStage work*/
+.evidenceTitle h3{
+  text-align: center;
+}
+.evidenceTitle p{
+  text-align: justify;
+}
+.evidenceTitle span{
+  font-weight: bold;
+  text-decoration: underline;
+}
+.anotherOne{
+  position: relative;
+  padding-left: 10px;
+  margin-top: 25px;
+}
+.anotherOne img{
+  width: 45px;
+}
+.eBar1{
+  width: 85%;
+  float: right;
+  padding-left: 10px;
+}
+.anotherOne:hover .clickMenu{
+  display: block;
+  position: absolute;
+  z-index: 1;
+}
+.clickMenu{
+  display: none;
+  z-index: 1;
+  position: absolute;
+}
+.clickMenu a{
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  padding: 0px 4px;
+  display: block;
+  z-index: 1;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  background: rgb(156, 153, 152);
+}
+.clickMenu a:hover{
+  background: rgb(92, 97, 91);
+}
+.clickMenu .borderOnly{
+  border-bottom: 1px solid black;
+}
+/*progress bar*/
+#fileDelete1, #fileDelete2, #fileDelete3{
+  width: 100%;
+  background-color: #b4b4b4;
+}
+#eBar1, #eBar2, #eBar3{
+  width: 1%;
+  height: 30px;
+  background-color: rgb(233, 169, 54);
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+/*progress bar*/

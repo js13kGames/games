@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Snake</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+    <script src="./components/allComponents.js"></script>
+
+  </head>
+  <body>
+    <div id="startScreen" class="startScreen">
+      <div class="startScreen-container">
+        <div class="startScreen__text">A-Snake</div>
+        <button id="startScreen__button" class="startScreen__button">Start</button>
+        <div id="startScreen__instructions" class="startScreen__instructions">Find and consume A-Snake's lost body parts. Avoid everything else.</div>
+      </div>
+    </div>
+    <div class="hud-text scoreOutput" id="scoreOutput">0</div>
+
+    <a-scene id="scene" fog="type: exponential; color: #87d9b3; density: .1">
+      <a-assets>
+        <a-mixin id="head" geometry="primitive: sphere; radius: 1.20" material="color: #000; shader: flat"></a-mixin>
+        <a-mixin id="body" grow-add geometry="primitive: sphere; radius: 1.20" material="color: #000"></a-mixin>
+        <a-mixin id="wall" geometry="primitive: box; depth: 3.5; height: 2; width: 46" material="color: #00ff13" hit-handler="emitEvent: bad-collision"></a-mixin>
+        <a-mixin id="apple" grow-add geometry="primitive: sphere; radius: 1.20" material="color: #fff" hit-handler="emitEvent: gobbled-apple"></a-mixin>
+      </a-assets>
+      <!-- sky -->
+      <a-sky id="sky" color="#ECECEC"></a-sky>
+      <!-- head -->
+      <a-entity id="headObj" mixin="head" position="0 1.25 0">
+        <a-entity light="type:point; intensity:1.05; color:#fff"></a-entity>
+        <a-animation attribute="scale" direction="alternate" to="1 1.2 1" begin="blob" repeat="1"></a-animation>
+      </a-entity>
+      <!-- objects to pick up -->
+      <a-entity random-position-entities="mixin: apple; classList: collidable; fixedY: 1.25"></a-entity>
+      <!-- surrounding walls -->
+      <a-entity class="collidable" mixin="wall" position="-23 1 0" rotation="0 90 0"></a-entity>
+      <a-entity class="collidable" mixin="wall" position="0 1 -23" rotation="0 0 0"></a-entity>
+      <a-entity class="collidable" mixin="wall" position="23 1 0" rotation="0 90 0"></a-entity>
+      <a-entity class="collidable" mixin="wall" position="0 1 23" rotation="0 0 0"></a-entity>
+      <!-- camera -->
+      <a-entity id="camera" position="0 1.6 10" follow="target: #headObj; speed: .5">
+        <a-camera></a-camera>
+      </a-entity>
+      <!-- lights -->
+      <a-entity light="color:#bce4c4; type:ambient; intensity:1.05"></a-entity>
+      <a-entity position="20 24.344 20" light="type:point; intensity:3.25; color:#c8ffcd"></a-entity>
+    </a-scene>
+  </body>
+  <script>
+  (function() {
+  let scene = document.querySelector("a-scene");
+  let startScreen = document.querySelector("#startScreen");
+  let inst = document.querySelector("#startScreen__instructions");
+  let button = document.querySelector("#startScreen__button");
+  inst.classList.add("load");
+  button.classList.add("load");
+  button.addEventListener("click", e => {
+    e.preventDefault();
+    startScreen.classList.add("hidden");
+    scene.setAttribute("initializer", true);
+  });
+})();
+</script>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zombie Fungus</title>
+    <script type="module" crossorigin src="./assets/index.b0abb7dd.js"></script>
+  </head>
+  <style>
+    *{
+      border: 0;
+      margin: 0;
+    }
+    canvas, .stat{
+      max-height: 100vh;
+      height: 900px;
+      max-width: 100vw;
+      width: 1600px;
+      display: block;
+      margin: auto;
+    }
+
+    .stat{
+      z-index: 2;
+      position: absolute;
+      top: 0;
+      left: calc(100vw/2);
+      transform: translateX(-50%);
+      color: white;
+      font-size: 2em;
+      display: flex;
+      flex-direction: column;
+    }
+    .stat div{
+      margin: 0.25em 1em;
+    }
+    #nums{
+      display: flex;
+      justify-content: flex-end;
+    }
+    #bc{
+      display: flex;
+      justify-content: center;
+    }
+    #but{
+      font-size: 1em;
+    }
+    .hid{
+      visibility: hidden;
+    }
+    #msg{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 2em 1em;
+    }
+    #msg p{
+      margin: 1em 0.5em;
+    }
+    body{
+      background-color: black;
+    }
+  </style>
+  <body>
+    <canvas id="canvas"></canvas>
+    <svg>
+      <filter id='rock' x='0%' y='0%' width='100%' height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency='0.01' result='noise' numOctaves="15" />
+        <feDiffuseLighting in='noise' lighting-color='#444433' surfaceScale='18'>
+          <feDistantLight azimuth='500' elevation='146' />
+        </feDiffuseLighting>
+      </filter>
+    </svg>
+    
+  </body>
+  <div class="stat">
+    <div id="nums">
+      <div id="hp"></div>
+      <div id="st"></div>
+    </div>
+    <div id="msg"></div>
+    <div id="bc">
+      <button id="but" class="hid"></button>
+    </div>
+  </div>
+</html>

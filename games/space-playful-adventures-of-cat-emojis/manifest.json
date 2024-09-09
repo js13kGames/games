@@ -1,0 +1,10 @@
+{
+  "short_name": "SPACE",
+  "name": "\uD83D\uDC31\uD83D\uDE80\uD83C\uDFB9 SPACE: Playful Adventures of Cat Emojis \uD83C\uDFB9\uD83D\uDE80\uD83D\uDC31",
+  "icons": [
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#000000"
+}

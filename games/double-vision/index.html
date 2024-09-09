@@ -1,0 +1,42 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><title>Double Vision</title><meta name="description" /><link rel="stylesheet" href="css/main.css" /><script src="js/game_engine.js"></script><script src="js/game.js"></script></head><body><div class="container"><div class="centered"><canvas id="game-canvas"></canvas><script>var __slice = Array.prototype.slice;var __hasProp = Object.prototype.hasOwnProperty;var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };var __extends = function(child, parent) {  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }  function ctor() { this.constructor = child; }  ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype;  return child; };var __indexOf = Array.prototype.indexOf || function(item) {  for (var i = 0, l = this.length; i < l; i++) {    if (this[i] === item) return i;  } return -1; };(function () {
+          var GAME, GAME_BEGIN, GAME_OVER, PRELOAD, STAGE, STORY, canvas, h, w;
+          canvas = document.getElementById('game-canvas');
+          w = 640;
+          h = 360;
+          GAME = new Game(w, h, function() {
+            this.backgroundColor('white');
+            return this.border('1px solid black');
+          }, canvas);
+          PRELOAD = new PreloaderStage(w, h);
+          GAME_BEGIN = new StartStage(w, h);
+          STORY = new StoryStage(w, h);
+          STAGE = new SplitStage(w, h);
+          GAME_OVER = new GameOverStage(w, h);
+          GAME.setStage(PRELOAD);
+          GAME.setStageTransition(function() {
+            if (GAME.stage instanceof PreloaderStage) {
+              if (GAME.stage.state === STATE.finished) {
+                GAME.setStage(GAME_BEGIN);
+              }
+            }
+            if (GAME.stage instanceof StartStage) {
+              if (GAME.stage.state === STATE.finished) {
+                GAME.setStage(STORY);
+              }
+            }
+            if (GAME.stage instanceof StoryStage) {
+              if (GAME.stage.state === STATE.finished) {
+                return GAME.setStage(STAGE);
+              }
+            } else if (GAME.stage instanceof SplitStage) {
+              if (GAME.stage.state === STATE.finished) {
+                return GAME.setStage(GAME_OVER);
+              }
+            } else if (GAME.stage instanceof GameOverStage) {
+              if (GAME.stage.state === STATE.finished) {
+                return GAME.setStage(STAGE);
+              }
+            }
+          });
+          return GAME.start();
+        }).call(this);</script></div></div></body></html>

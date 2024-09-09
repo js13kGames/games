@@ -1,0 +1,1 @@
+﻿{ "name": "FX404Seconds", "short_name": "js13k Server Entry", "description": "FX404Seconds", "icons": [{ "src": "i.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }], "start_url": "index.html", "display": "standalone", "background_color": "#2F4F4F", "theme_color": "#2F4F4F" }

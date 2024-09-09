@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+var myGamePiece;
+var myGamePiece2;
+var myGamePiece3;
+var wall1;
+var wall2;
+var wall3;
+var wall4;
+var lol=0;
+var lol2=0;
+var qwerty=0;
+
+// var myMusic;
+// var mySound;
+
+function startGame() {
+    myGameArea.start();
+    // mySound = new sound("bounce.mp3");
+    // myMusic = new sound("gametheme.mp3");
+    // myMusic.play();
+    myGamePiece = new component(10, 80, "red", 10, 100);
+    myGamePiece2 = new component2(10, 80, "pink", 460, 100);
+    myGamePiece3 = new component3(10, 10, "green", 60, 135);
+    wall1 = new component4(10, 480, "blue", 470, 0);
+    wall2 = new component5(10, 480, "blue", 0, 0);
+    wall3 = new component6(480, 5, "purple", 0, 0);
+    wall4 = new component7(480, 5, "purple ", 0, 265);
+
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('keydown', function (e) {
+            myGameArea.key = e.keyCode;
+        })
+        window.addEventListener('keyup', function (e) {
+            myGameArea.key = false;
+        })
+    },
+    clear : function(){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+
+function component(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+//              ctx.fillText('My text', 220, 130);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+//    this.crashWith = function(otherobj) {
+//        var myleft = this.x;
+//       var myright = this.x + (this.width);
+//        var mytop = this.y;
+//        var mybottom = this.y + (this.height);
+//        var otherleft = otherobj.x;
+//        var otherright = otherobj.x + (otherobj.width);
+//        var othertop = otherobj.y;
+//        var otherbottom = otherobj.y + (otherobj.height);
+//        var crash = true;
+//       if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+//            crash = false;
+//       }
+//       return crash;
+//   }
+}
+
+function component2(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+
+
+function component3(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) ||
+               (mytop > otherbottom) ||
+               (myright < otherleft) ||
+               (myleft > otherright)) {
+           crash = false;
+        }
+        return crash;
+    }
+}
+
+function component4(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+
+function component5(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+function component6(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+function component7(width, height, color, x, y) {
+    this.gamearea = myGameArea;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.update = function() {
+        ctx = myGameArea.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+
+
+function updateGameArea() {
+//----------------------------WORKING IF ELSE STATEMENTS--------------------------------------------------////////
+    // if (myGamePiece3.crashWith(myGamePiece)) {
+    //     myGameArea.stop();
+    //   } else
+    // if (myGamePiece3.crashWith(myGamePiece2)) {
+    //   myGameArea.stop();
+    // } else
+    var non = 1;
+
+    if((myGamePiece.x + myGamePiece.width <= myGamePiece2.x) && (myGamePiece.x > wall2.x + 9*non) && (myGamePiece2.x < wall1.x - 9*non)
+     && (myGamePiece.y >= wall3.y + 4*non) && (myGamePiece2.y >= wall3.y + 4*non)  && (myGamePiece.y + myGamePiece.height <= wall4.y) && (myGamePiece2.y + myGamePiece2.height <= wall4.y))
+    {
+    myGameArea.clear();
+    myGamePiece.speedX = 0;
+    myGamePiece.speedY = 0;
+    if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
+    if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
+    if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
+    if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
+    myGamePiece.newPos();
+ //   myGamePiece.x += myGamePiece.speedX;
+ // myGamePiece.y += myGamePiece.speedY;
+    myGamePiece.update();
+//myGamePiece.x += -1;
+
+
+    myGamePiece2.speedX = 0;
+    myGamePiece2.speedY = 0;
+    if (myGameArea.key && myGameArea.key == 65) {myGamePiece2.speedX = -1; }
+    if (myGameArea.key && myGameArea.key == 68) {myGamePiece2.speedX = 1; }
+    if (myGameArea.key && myGameArea.key == 87) {myGamePiece2.speedY = -1; }
+    if (myGameArea.key && myGameArea.key == 83 ) {myGamePiece2.speedY = 1; }
+    myGamePiece2.newPos();
+    myGamePiece2.update();
+
+    // myGamePiece3.speedX = 0;
+    // myGamePiece3.speedY = 0;
+    if ((myGamePiece.x + myGamePiece.width >= myGamePiece3.x) && (myGamePiece.x <= myGamePiece3.x) && (myGamePiece3.y < (myGamePiece.y + myGamePiece.height)) && (myGamePiece3.y + myGamePiece3.height > myGamePiece.y))
+      {
+        if(lol==0)
+        {
+        myGamePiece3.speedX = 1*(Math.abs(myGamePiece.speedX));
+        myGamePiece3.speedY = 2;//*myGamePiece.speedY;
+        myGamePiece3.x += 1;
+        lol+=1;
+        lol2+=1;
+        // if(myGamePiece3.speedY == 0)
+        //   { qwerty=0 ;}
+        //   else {
+        //     qwerty+=1;
+        //   }
+        }
+        else {
+          myGamePiece3.speedX = 1;//*(myGamePiece3.speedX);
+          if(myGamePiece3.x % 2 == 0)
+            {myGamePiece3.speedY = -2;}//*(myGamePiece3.speedY);
+          else {
+            myGamePiece3.speedY = 2;
+          }
+          // if(myGamePiece3.speedY == 0)
+          //   { qwerty=0; }
+          //   else {
+          //     myGamePiece3.speedY = 2*(myGamePiece.speedY);
+          //     qwerty+=1;
+          //   }
+        }
+    }
+    // if((myGamePiece3.x == myGamePiece.x + myGamePiece.width) || (myGamePiece3.x == myGamePiece.x + myGamePiece.width + non) || (myGamePiece3.x == myGamePiece.x + myGamePiece.width + 2*non) || (myGamePiece3.x == myGamePiece.x + myGamePiece.width + 3*non))
+    //   {myGamePiece3.speedX = 1*(Math.abs(myGamePiece3.speedX)); myGamePiece3.speedY = 2*myGamePiece3.speedY;}
+    if ((myGamePiece2.x <= myGamePiece3.x + myGamePiece3.width) && (myGamePiece2.x >= myGamePiece3.x ) && (myGamePiece3.y < (myGamePiece2.y + myGamePiece2.height)) && (myGamePiece3.y + myGamePiece3.height > myGamePiece2.y))
+      {
+        if(lol2==0)
+        {
+        myGamePiece3.speedX = -1*(Math.abs(myGamePiece2.speedX));
+        if(myGamePiece3.x % 2 == 0)
+          {myGamePiece3.speedY = -2;}//*(myGamePiece3.speedY);
+        else {
+          myGamePiece3.speedY = 2;
+        }
+        myGamePiece3.x -= 1;
+        lol+=1;
+        lol2+=1;
+      }
+      else {
+        myGamePiece3.speedX = -1;//*(myGamePiece3.speedX);
+        if(myGamePiece3.x % 2 == 0)
+          {myGamePiece3.speedY = -2;}//*(myGamePiece3.speedY);
+        else {
+          myGamePiece3.speedY = 2;
+        }
+      }
+    }
+    // if((myGamePiece3.x +myGamePiece3.width == myGamePiece2.x) || (myGamePiece3.x +myGamePiece3.width == myGamePiece2.x - non) || (myGamePiece3.x +myGamePiece3.width == myGamePiece2.x - 2*non) || (myGamePiece3.x +myGamePiece3.width == myGamePiece2.x - 3*non))
+    //   {myGamePiece3.speedX = 1*(Math.abs(myGamePiece3.speedX)); myGamePiece3.speedY = 2*myGamePiece3.speedY;}
+    if((myGamePiece3.y == wall3.height) || (myGamePiece3.y == wall3.height + non) || (myGamePiece3.y == wall3.height + 2*non) || (myGamePiece3.y == wall3.height + 3*non))
+      { myGamePiece3.speedY = -1*(myGamePiece3.speedY);}
+    if((myGamePiece3.y + myGamePiece3.height == wall4.y) || (myGamePiece3.y == wall4.y + non) || (myGamePiece3.y == wall4.y + 2*non) || (myGamePiece3.y == wall4.y + 3*non))
+      { myGamePiece3.speedY = -1*(myGamePiece3.speedY);}
+    if(myGamePiece3.x <= wall2.width)
+      { //mySound.play();
+        myGameArea.stop(); }
+    if(myGamePiece3.x + myGamePiece3.width >= wall1.x)
+      { //mySound.play();
+        myGameArea.stop(); }
+//    console.log(myGamePiece3.y);
+//    if((myGamePiece3.y + myGamePiece3.height == wall4.y) || (myGamePiece3.y + myGamePiece3.height == wall4.y + 1) || (myGamePiece3.y + myGamePiece3.height == wall4.y + 2) || (myGamePiece3.y + myGamePiece3.height == wall4.y + 3) || (myGamePiece3.y + myGamePiece3.height == wall4.y + 4)) { myGamePiece3.speedY = -1*(myGamePiece3.speedY);}
+//    if(myGamePiece3.y == wall3.height) { myGamePiece3.speedY = -1*(myGamePiece3.speedY);}
+    // if (myGameArea.key && myGameArea.key == 68) {myGamePiece3.speedX = 0; }
+    // if (myGameArea.key && myGameArea.key == 87) {myGamePiece3.speedY = 0; }
+    // if (myGameArea.key && myGameArea.key == 83 ) {myGamePiece3.speedY = 0; }
+    myGamePiece3.newPos();
+    myGamePiece3.update();
+
+    wall1.speedX = 0;
+    wall1.speedY = 0;
+//    if (myGameArea.key && myGameArea.key == 0) {wall1.speedX = 0; }
+//    if (myGameArea.key && myGameArea.key == 0) {wall1.speedX = 0; }
+//    if (myGameArea.key && myGameArea.key == 0) {wall1.speedY = 0; }
+//    if (myGameArea.key && myGameArea.key == 0 ) {wall1.speedY = 0; }
+    wall1.newPos();
+    wall1.update();
+
+    wall2.speedX = 0;
+    wall2.speedY = 0;
+//    if (myGameArea.key && myGameArea.key == 0) {wall2.speedX = 0; }
+//    if (myGameArea.key && myGameArea.key == 0) {wall2.speedX = 0; }
+//    if (myGameArea.key && myGameArea.key == 0) {wall2.speedY = 0; }
+//    if (myGameArea.key && myGameArea.key == 0 ) {wall2.speedY = 0; }
+    wall2.newPos();
+    wall2.update();
+
+    wall3.speedX = 0;
+    wall3.speedY = 0;
+    wall3.newPos();
+    wall3.update();
+
+    wall4.speedX = 0;
+    wall4.speedY = 0;
+    wall4.newPos();
+    wall4.update();
+}
+else {
+  if((myGamePiece.x <= wall2.x + 9*non))
+    { myGamePiece.x += 5;  }
+  if(myGamePiece2.x >= wall1.x - 9*non)
+  {  myGamePiece2.x -=5;  }
+
+  if(myGamePiece.y < wall3.y + 4*non)
+    { myGamePiece.y += 5 ; }
+  if(myGamePiece2.y < wall3.y + 4*non)
+    { myGamePiece2.y += 5 ;}
+  if(myGamePiece.y + myGamePiece.height > wall4.y)
+    { myGamePiece.y -= 5; }
+  if(myGamePiece2.y + myGamePiece2.height > wall4.y)
+    { myGamePiece2.y -= 5; }
+  if(myGamePiece.x <= wall2.x + 9*non)
+    { myGamePiece.x -= 1; }
+  if(myGamePiece2.x >= wall1.x - 9*non)
+  { myGamePiece2.x += 1; }
+  if(myGamePiece.x + myGamePiece.width > myGamePiece2.x)
+  { myGamePiece.x -= 1; }
+}
+//}
+}
+</script>
+<p>Player1 - controls game by w,a,s,d commands and <br/> Player2 - controls game by up,left,down,right arrow keys.
+  <br/>
+  Compete with one of you colleague that with one of you gets a key if you both are lost simantanously at a place.<br/><br/>
+  RULE:ONE WHO SCORE'S FIRST WIN........<br/><br/> ENJOY THE GAME!!! <br/> COMPETE WITH YOUR COLLEAGUE...
+<br/></p>
+</body>
+</html>

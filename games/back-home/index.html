@@ -1,0 +1,352 @@
+<!DOCTYPE html><head><meta charset="utf-8"><title>Back Home</title><meta name="description" content="My js13kGame Entry"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href=""><script src="../js/main.js"></script><script src="game.js"></script></head><body><canvas id="a" style="width: 100%; height: 100%"><script>x=a.getContext`2d`;
+            a.width = window.innerWidth;
+            a.height = window.innerHeight;
+            screen=0;
+            setInterval(e=>{ 
+                switch(screen) {
+                case 0: /* draw title screen */ 
+                    x.fillStyle = "#f00";
+                    x.fillRect(0,0,a.width,a.height);
+                    x.font = fnt;
+                    x.fillStyle = "#fff";
+                    
+                    //var ti = "Tips"
+                    x.fillText(text_new_game,(a.width/2)-(x.measureText(text_new_game).width/2),a.height*0.3)
+                    x.fillText(text_settings,(a.width/2)-(x.measureText(text_settings).width/2),a.height*0.5)
+                    //x.fillText(ti,(a.width/2)-(x.measureText(ti).width/2),a.height*0.7)
+
+                    break;
+                case 1: /* new game state */
+                    
+                    break;
+
+                case 2: /* running game state */ 
+                    /* movement */
+                    if (Key.isDown(Key.W)) 
+                    {
+                        if (car_speed < car_max_speed)
+                            car_speed +=2
+                    } else
+                    {
+                        if (car_speed>0)
+                        car_speed --
+                    }
+                    if (Key.isDown(Key.A))
+                    {
+                        if (car_x > (a.width*0.1))
+                        {
+                            car_x-=Math.floor(Math.sqrt(car_speed*2.5))
+                        } else
+                        car_x = a.width*0.1
+                    }
+                    if (Key.isDown(Key.D))
+                    {
+                        if (car_x  < a.width - (a.width*0.2))
+                        {
+                            car_x+=Math.floor(Math.sqrt(car_speed*2.5))
+                        }
+                    }
+                    if (Key.isDown(Key.S))
+                    {
+                        if(car_speed > 0)
+                        {
+                            car_speed -=4
+                            if (car_speed < 0)
+                                car_speed = 0
+                        }
+                    }
+                    // if random number is 0 do something
+                    if (car_speed > 0 )
+                    {
+                        // 1 in 10 chance
+                    
+                        if (car_x + road_direction > a.width*0.2 && car_x + road_direction < a.width*0.7)
+                        {
+                            car_x -= road_direction >0 ? 0.01 : road_direction <0 ? -0.01 : 0; //* (car_speed/2)
+                            car_y = 0
+                        } else
+                        {
+                            // car is in trouble
+                            if ( (car_speed >20))
+                            {
+                                health -= 0.3;
+                                car_speed -=3
+                                if (car_speed < 0)
+                                car_speed = 0
+                                car_y = Math.floor(Math.random() * 8) -4
+                            }
+                        }
+                    }
+                    // apply bend to car movement
+                    if (road_direction>0)
+                    car_x -= car_speed/8
+                    if (road_direction<0)
+                    car_x += car_speed/8
+
+                    // draw background
+                    x.fillStyle = "#99f";
+                    x.fillRect(0,0,a.width,a.height);
+                    x.font = fnt;
+                    // draw grass 
+                    x.fillStyle = "#2b2"
+                    x.fillRect(0,a.height*0.2,a.width,a.height *0.6)
+                    // draw road
+                    drawRoad()
+                    updateRoad()
+
+                     // draw car
+                     drawCar(x,car_x,a.height*0.5 + car_y,0,a.height*0.2,car_speed)
+                    
+                    // draw road entities
+                    //calcActualX(x,y)
+                    
+                    /*console.log("x : " + tdx)
+                    console.log("y : " + tdy)
+                    console.log('Virtual X : ' + (tdx + (a.width/2)))
+                    console.log("Actual X : " + calcActualX(tdx,tdy))*/
+
+                    //drawCactus(x,calcActualX(tdx,tdy),tdy,60+180*(((tdy-a.width*0.2)/a.width*0.6)))
+                    tdy += car_speed/4;
+                    if (tdy >a.height*0.8)
+                    {
+                        tdy = a.height*0.2
+                    }
+                    
+
+                    // draw car dash
+
+                    x.fillStyle = getGrad(x,0,0,0,170,'#222','#333');
+                    
+                    x.beginPath()
+                    x.moveTo(0,a.height*0.7+car_y)
+                    x.lineTo(0,a.height+car_y)
+                    x.lineTo(a.width,a.height+car_y)
+                    x.lineTo(a.width,a.height*0.7+car_y)
+                    x.bezierCurveTo(a.width,a.height*0.7+car_y,
+                                    a.width*0.9,a.height*0.6+car_y,
+                                    a.width*0.8,a.height*0.7+car_y)
+                    x.lineTo(a.width*0.2,a.height*0.7+car_y)
+                    x.bezierCurveTo(a.width*0.2,a.height*0.7+car_y,
+                                    a.width*0.1,a.height*0.6+car_y,
+                                    0,a.height*0.7+car_y)
+                    x.fill()
+
+                    x.fillStyle = "#111"
+                    x.beginPath()
+                    x.moveTo(a.width*0.01,a.height*0.75+car_y)
+                    x.bezierCurveTo(a.width*0.01,a.height*0.75+car_y,
+                                    -a.width*0.09,a.height*0.875+car_y,
+                                    a.width*0.03,a.height+car_y)
+                    //x.lineTo(a.width*0.03,a.height)
+                    x.lineTo(a.width*0.97,a.height+car_y)
+                    //x.lineTo(a.width*0.97,a.height*0.75)
+                    x.bezierCurveTo(a.width-a.width*0.03,a.height+car_y,
+                                    a.width+a.width*0.09,a.height*0.875+car_y,
+                                    a.width-a.width*0.01,a.height*0.75+car_y)
+
+                    x.bezierCurveTo(a.width*0.99,a.height*0.75+car_y,
+                                    a.width*0.9,a.height*0.65+car_y,
+                                    a.width*0.82,a.height*0.75+car_y)
+                    x.lineTo(a.width*0.23,a.height*0.75+car_y)
+                    x.bezierCurveTo(a.width*0.17,a.height*0.75+car_y,
+                                    a.width*0.1,a.height*0.65+car_y,
+                                    a.width*0.01,a.height*0.75+car_y)
+                    x.fill()
+                    
+
+                    
+                   
+                    //x.fillStyle = "#f00";
+                    //x.fillRect(car_x,a.height*0.5 + car_y,(a.width*0.1),a.height*0.1)
+                    // draw text
+                    x.fillStyle = "#fff";
+                    // x.fillText(sc + (score/1609).toFixed(2),getLineHeight(x),a.height-(getLineHeight(x)))
+                    //x.font = speedo
+                    //console.log(a.width - x.measureText(car_speed).width)
+                    //console.log(car_speed);
+                    //x.fillText("" + car_speed,a.width*0.05,a.height*0.82)
+                    x.shadowBlur = 10
+                    x.shadowColor = "#bbf"
+                    // draw speed
+                    drawDigit(x,a.width*0.075+36,a.height*0.75+car_y,Math.floor(car_speed % 10),32)
+                    drawDigit(x,a.width*0.075,a.height*0.75+car_y,Math.floor((car_speed/10) % 10),32)
+                    drawDigit(x,a.width*0.075-36,a.height*0.75+car_y,Math.floor((car_speed/100) % 10),32)
+                    // draw speed in graphical form.
+                    for(n=0;n<Math.floor(car_speed/10);n++)
+                    {
+                        // draw each element 1-12 max?
+                        x.fillStyle = speed_colors[Math.floor(n/4)];
+                        x.fillRect(a.width*0.025+n*24,a.height*0.75+100+32-8*(Math.floor(n/4)+1)+car_y,24,8*(Math.floor(n/4)+1))
+                        
+                    }
+                    // reset blur
+                    x.shadowBlur = 0
+
+                    score+=(car_speed/6)*10
+                    x.fillStyle = "#fff";
+                    //render odometer
+                    //console.log("score :" + (Math.floor(score/2000)))
+                    for(n=0;n<8;n++)
+                    {
+                        if (getdigit((Math.floor(score/2000)),8-n)<10)
+                        {
+                            // draw this digit
+                            drawDigit(x,(a.width/2)-68+n*17,a.height*0.8+car_y,getdigit((Math.floor(score/2000)),8-n),16)
+                        }
+                    }
+
+                    // draw oil guage - health left
+                    drawOilIcon(x,a.width*0.69,a.height*0.87+car_y)
+                    
+                    // draw fuel guage - fuel left
+                    drawFuelIcon(x,a.width*0.87,a.height*0.85+car_y)
+                    if (health<=0)
+                    {
+                        text_gameover = "Your car has broken down. Better luck next time!"
+                        screen = 3
+                    }
+
+                    if (fuel<=0)
+                    {
+                        text_gameover = "You ran out of fuel! Better luck next time!"
+                        screen = 3
+                    }
+                   
+                    if (score/2000>250)
+                    {
+                        text_gameover = "You Won! Well done!"
+                        screen  = 3
+                    }
+
+
+                    drawGuage(x,a.width*0.68,a.height*0.8+car_y,Math.floor(health))
+                    drawGuage(x,a.width*0.85,a.height*0.8+car_y,Math.floor(fuel))
+                    
+
+                    // draw horizon
+                    drawHorizon(x)
+                    // draw collidable entities
+                    position+=car_speed
+                    direction = Math.floor(direction - current_road*car_speed/4800)
+
+                    //text_direction = "Dir: " + direction
+                    //x.fillText(text_direction,(a.width*0.1),a.height*0.1)
+                    break;
+                case 3: /* game over state */ 
+                    // draw background
+                    resetUI()
+                    // display game over message
+                        x.fillText(text_gameover,(a.width/2)-(x.measureText(text_gameover).width/2),a.height*0.3)
+                        
+                    
+                    
+                    // high score stuff would go here
+
+                    for(n=0;n<8;n++)
+                    {
+                        if (getdigit((Math.floor(score/2000)),8-n)<10)
+                        {
+                            // draw this digit
+                            drawDigit(x,(a.width/2)-68+n*17,a.height*0.8+car_y,getdigit((Math.floor(score/2000)),8-n),16)
+                        }
+                    }
+
+                    // draw broken down car by side of road
+                    
+                    // draw score
+                    
+                    break;
+                case 4: /* win game state */ break;
+                case 5: /* settings */ 
+                    resetUI()
+                    
+                    //var ti = "Tips"
+                    x.fillText("Back",(a.width/2)-(x.measureText("Back").width/2),a.height*0.3)
+                    //x.fillText("Back",(a.width/2)-(x.measureText("Back").width/2),a.height*0.5)
+                    break;
+                }
+                gameTick++;
+                if (car_speed>0)
+                {
+                    fuel -= car_speed*0.0003;
+                }
+             },33);
+            onclick=e=>{ 
+                px = e.pageX;
+                py = e.pageY;
+                switch(screen) {
+                    case 0: /* mouse clicks title screen */ 
+
+                       
+                        if (checkBounds(e,
+                                (a.width/2)-(x.measureText(text_new_game).width/2),
+                                
+                                (a.height)*0.3-getLineHeight(x),
+                                (a.width/2)+(x.measureText(text_new_game).width/2),
+                                (a.height)*0.3
+                        )) 
+                        {
+                            screen = 2
+                            gameTick = 0
+                            resetGamestate()
+                            break;
+                        }
+                        if (checkBounds(e,
+                                (a.width/2)-(x.measureText(text_settings).width/2),
+                                
+                                (a.height)*0.5-getLineHeight(x),
+                                (a.width/2)+(x.measureText(text_settings).width/2),
+                                (a.height)*0.5
+                        )) 
+                        {
+                            screen = 5
+                            gameTick = 0
+                        }
+
+                        break;
+                    case 1: /* mouse clicks new game state */ break;
+                    case 2: /* mouse clicks running game state */ break;
+                    case 3: /* mouse clicks game over state */ 
+                        if (checkBounds(e,
+                                (a.width/2)-(x.measureText(text_gameover).width/2),
+                                
+                                (a.height)*0.3-getLineHeight(x,text_gameover),
+                                (a.width/2)+(x.measureText(text_gameover).width/2),
+                                (a.height)*0.3
+                        )) 
+                        {
+                            screen = 0
+                            gameTick = 0
+                            break;
+                        }
+                        break;
+                    case 4: /* mouse clicks win game state */ break;
+                    case 5: /* mouse clicks settings */ 
+                        if (checkBounds(e,
+                                (a.width/2)-(x.measureText(text_back).width/2),
+                                
+                                (a.height)*0.3-getLineHeight(x,text_back),
+                                (a.width/2)+(x.measureText(text_back).width/2),
+                                (a.height)*0.3
+                        )) 
+                        {
+                            screen = 0
+                            gameTick = 0
+                            break;
+                        }
+                        break;
+                }
+             }
+            oninput=e=>{ 
+                switch(screen) {
+                    case 0: /* check input title screen */ break;
+                    case 1: /* check input new game state */ break;
+                    case 2: /* check input running game state */ 
+                        // check game input. w = accelerate, a/d = turn
+                        
+                        break;
+                    case 3: /* check input game over state */ break;
+                    case 4: /* check input win game state */ break;
+                    case 5: /* check input settings */ break;
+                }
+             }</script><script src="" async defer="defer"></script></canvas></body>

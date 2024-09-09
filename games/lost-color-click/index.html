@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+.ball {
+    width: 5%;
+    border-radius: 15px;
+    float: left;
+    margin: 2%;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+var c1;
+var c2;
+var j;
+var x;
+var score=-1;
+alert("Choose lost odd color");
+function startGame() {
+    score+=1;
+    document.getElementById("score").innerHTML=score;
+    var c1 = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+    var c2 = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+    document.getElementById("game").innerHTML="";
+    j=Math.floor(20+80*Math.random());
+    x=Math.floor(j*Math.random());
+    for(var i=0;i<j;i++) {
+        if(i==x)
+        document.getElementById("game").innerHTML+="<div style='background-color:"+c1+"' class='ball' id="+i+" onclick='startGame()'><br /></div>"; 
+        else
+        document.getElementById("game").innerHTML+="<div style='background-color:"+c2+"' class='ball' id="+i+" onclick='end()'><br /></div>"; 
+    }
+}
+function end() {
+    alert("Your score : "+score);
+    location.reload();
+}
+</script>
+<h1><div><center>Score:<span id="score"></span></center></div></h1>
+<div id="game"></div>
+</body>
+</html>

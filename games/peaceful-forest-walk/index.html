@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Peaceful Forest Walk</title>
+<link rel="stylesheet" href="style.css?v=1.0" />
+<meta name="description" content="A JS13K video game development contest submission" />
+</head>
+<body>
+<div id="counter"></div>
+<div class="container">
+<canvas id="game" width=400 height=400>
+<noscript>Dude, this is a Javascript game. Javascript!</noscript>
+<p>You don't appear to support HTML5 Canvas.</p>
+</canvas>
+<div id="win" class="modal"><h1>Thanks for playing!</h1><p>You found all thirteen blue flowers.</p><p>I hope you had a peaceful experience!</p><p><a href="."><button>Again?</button></a></p></div>
+<div id="lose" class="modal"><h1>Ouch</h1><p>You wandered into brambles, away from the flowers.</p><p><a href="."><button>Again?</button></a></p></div>
+<div id="start" class="modal open">
+<h1>Peaceful forest walk</h1>
+<p>WASD or arrow keys to move.</p>
+<p>Touch left, right, and center on mobile.</p>
+<p>Find the thirteen blue flowers!</p>
+<button onclick="runGame()">Start</button>
+</div>
+<img id="left" src="arrow.svg" alt="arrowleft" />
+<img id="right" src="arrow.svg" alt="arrowright" />
+</div>
+<script src="fs.js?v=1.0"></script>
+<script src="main.min.js?v=1.0"></script>
+</body>
+</html>

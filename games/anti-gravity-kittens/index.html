@@ -1,0 +1,420 @@
+<html>
+<head>
+  <title>Anti Gravity Kittens</title>
+  <style>
+  * { margin: 0; padding: 0; }
+  body { overflow: hidden; text-align:center; background:#000; overflow:hidden; }
+  canvas { margin:0 auto; }
+  </style>
+</head>
+<body>
+
+<script>
+var canvas = document.createElement("canvas");
+var context = canvas.getContext("2d");
+
+var resized = true;
+window.addEventListener("resize", function() { resized = true; });
+
+var game = {
+    canvas: document.createElement("canvas"),
+    ctx: null,
+  background: null,
+    font: null,
+    fontSize: 0,
+    width: 320,
+    height: 480,
+    x: 0,
+    y: 0,
+    time: Date.now(),
+    elapsed: 0,
+    started: false,
+    score: 0,
+    health: 3,
+    kittens: [],
+    spawnInterval: 2000,
+    spawnTimer: 0,
+    spawnMode: 0,
+    spawnCount: 0,
+    animationFactor: 0,
+    spamCount: 0,
+    spamScore: 0,
+    gameover: false
+};
+document.body.appendChild(game.canvas);
+
+/* set context */
+game.ctx = game.canvas.getContext("2d");
+
+/* set smoothing */
+game.ctx.mozImageSmoothingEnabled = false;
+game.ctx.webkitImageSmoothingEnabled = false;
+game.ctx.msImageSmoothingEnabled = false;
+game.ctx.imageSmoothingEnabled = false;
+
+/* set size */
+canvas.width = game.width;
+canvas.height = game.height;
+
+/* get logo */
+var logo = new Image();
+    logo.src = './logo.png';
+
+/* get kitty */
+var kitty1 = new Image();
+    kitty1.src = './kitty.png';
+var kitty2 = new Image();
+    kitty2.src = './kitty2.png';
+var kitty3 = new Image();
+    kitty3.src = './kitty3.png';
+
+/* click handler */
+game.canvas.addEventListener("click", function(e) {
+
+    /* check game over */
+    if (game.gameover) {
+      game.gameover = false;
+      reset();
+      return;
+    }
+    
+    /* tap to start */
+    if (!game.started) {
+        game.started = true;
+        return;
+    }
+
+
+    var x = (e.pageX - game.x) / game.canvas.width * game.width | 0;
+    var y = (e.pageY - game.y) / game.canvas.height * game.height | 0;
+
+    for (var i = game.kittens.length - 1; i >= 0; i--) {
+      var kitty = game.kittens[i];
+      if((kitty.state === 0 /*|| (kitty.state === 3 && kitty.rotation < Math.PI * 0.5)*/) && hitTest(x, y, kitty.x, kitty.y - kitty1.height/2, kitty1.width, kitty1.height, kitty.rotation, kitty.scale)) {
+        kitty.state = 1;
+        kitty.animationTime = 0 ;//* kitty.rotation / Math.PI;
+        kitty.animate = kitty.rotation;
+        break;
+      }
+    }
+});
+
+/* reset game */
+function reset() {
+  game.started = false;
+    game.health = 3;
+    game.score = 0;
+    game.kittens = [];
+    game.spawnInterval = 2000;
+    game.spawnTimer = 0;
+    game.spawnMode = 0;
+    game.spawnCount = 0;
+}
+
+function generateTintImage(img, r, g, b) {
+  var canvas = document.createElement( "canvas" );
+  canvas.width  = img.width;
+  canvas.height = img.height;
+
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img,0,0);
+
+  var data = ctx.getImageData(0,0,canvas.width,canvas.height);
+  for (var i = 0; i < data.data.length; i += 4) {
+    if (data.data[i+3]) {
+      if (data.data[i+0] >= 200 && data.data[i+1] >= 200 && data.data[i+2] >= 200) {
+        data.data[i+0] = r;
+        data.data[i+1] = g;
+        data.data[i+2] = b;
+      }
+    }
+  }
+  ctx.putImageData(data, 0, 0);
+
+  return canvas;
+ }
+
+var TO_RADIANS = Math.PI/180;
+
+function hitTest(mx, my, x, y, w, h, angle, scale) {
+    var dx = mx - x, dy = my - y;
+    var h1 = Math.sqrt(dx*dx + dy*dy);
+    var currA = Math.atan2(dy,dx);
+    // Angle of point rotated around origin of rectangle in opposition
+    var newA = currA - angle;
+    // New position of mouse point when rotated
+    var x2 = Math.cos(newA) * h1;
+    var y2 = Math.sin(newA) * h1;
+    // Check relative to center of rectangle
+    if (x2 > -0.5 * w && x2 < 0.5 * w && y2 > -0.5 * h && y2 < 0.5 * h){
+        return true;
+    }
+}
+function drawRotatedImage(image, x, y, angle, scale, n) {
+    context.translate(x, y );
+    context.scale(scale * n, scale);
+    context.rotate(angle);
+    context.drawImage(image, -(image.width/2), -(image.height/2));
+    context.rotate(-angle);
+    context.scale(1/(scale*n), 1/scale);
+    context.translate(-x, -y);
+}
+
+/* spawn kitty */
+function spawn(weight, x) {
+    if (game.spawnMode === 0) {
+      if (++game.spawnCount < 50) {
+        game.spawnInterval = 2000 - game.spawnCount * 10;
+      }
+
+      if (game.spawnCount % 10 === 0) {
+        game.spawnMode = 1;
+        game.spamCount = 0;
+        game.spamScore = 0;
+      }
+    } else {
+      if (++game.spamCount === 30) {
+        game.spawnMode = 0;
+      }
+    }
+
+    var r = 150 + Math.floor(Math.random() * 106), 
+        g = 150 + Math.floor(Math.random() * 106), 
+        b = 150 + Math.floor(Math.random() * 106);
+    
+    game.kittens.push({
+        image: generateTintImage(kitty1, r, g, b ),
+        image2: generateTintImage(kitty2, r, g, b),
+        image3: generateTintImage(kitty3, r, g, b),
+        weight: weight,
+        x: x,
+        y: kitty1.height / 2,
+        tx: 0,
+        state: 0,
+        baseScale: 0.15 + weight / 40,
+        scale: 1,
+        rotation: 0,
+        animate: 0,
+        animationTime: 0,
+        done: 0
+    });
+}
+
+/* render game */
+function render() {
+    
+    var elapsed = Date.now() - game.time;
+    game.time += elapsed;
+    game.elapsed += elapsed;
+    
+    game.animationFactor = ((game.time / 32) % 16) / 8;
+    if (game.animationFactor > 1) {
+        game.animationFactor = 2 - game.animationFactor;
+    }
+    
+    /* update rect */
+    if (game.elapsed > 500 || resized) {
+      var rect = game.canvas.getBoundingClientRect();
+          game.x = rect.left;
+          game.y = rect.top;
+          game.elapsed = 0;
+    }
+    
+    /* handle resize */
+  if (resized) {
+      game.canvas.width = window.innerHeight * game.width / game.height | 0;
+      game.canvas.height = window.innerHeight;
+      
+      resized = false;
+      
+      /* update background */
+      game.background = context.createLinearGradient(0,0,0,game.height);
+      game.background.addColorStop(0.0, "rgba(161,219,255,1)");
+      game.background.addColorStop(0.4, "rgba(203,235,255,1)");
+      game.background.addColorStop(0.8, "rgba(240,249,255,1)");
+    }
+    
+    /* draw background */
+    context.fillStyle = game.background;
+    context.fillRect(0,0,game.width,game.height);
+    
+    /* draw ground */
+    context.fillStyle = "#d9c78b";
+    context.fillRect(0,game.height,game.width,- game.height*0.1|0);
+    context.fillStyle = "#24c124";
+    context.fillRect(0,game.height * 0.9 | 0,game.width,4);
+    
+    if (!game.started) {
+        
+      /* draw & animate logo */
+      context.drawImage(logo, Math.floor((game.width - logo.width) / 2), 50 + game.animationFactor * 4);
+      
+      /* tap to start */
+      context.font = 'bold 18pt Arial';
+      context.fillStyle = "#000";
+      context.textAlign = 'center';
+      context.fillText("TAP TO START", game.width / 2 + 0.5, game.height / 2 + 9);
+      context.font = 'bold 12pt Arial';
+      context.fillText("Tap kittens at the right time", game.width / 2 + 0.5, game.height / 2 + 50 + 9);
+      context.fillText("to make them land on their feet!", game.width / 2 + 0.5, game.height / 2 + 65 + 9);
+
+    } else {
+      
+        if (!game.gameover) {
+          game.spawnTimer += elapsed;
+          if (game.spawnMode === 0) {
+            if (game.spawnTimer >= game.spawnInterval) {
+              game.spawnTimer = 0;
+              
+              spawn(15 + Math.floor(Math.random() * 15), (kitty1.width/2 + (Math.random() * (game.width - kitty1.width))) | 0 );
+            }
+          } else {
+            if (game.spawnTimer >= 300) {
+              game.spawnTimer = 0;
+              spawn(5 + Math.floor(Math.random() * 5), (kitty1.width/2 + (Math.random() * (game.width - kitty1.width))) | 0 );
+            }
+          }
+        } else {
+          /* game over */
+          context.font = 'bold 18pt arial';
+          context.fillStyle = "#000";
+          context.textAlign = 'center';
+          context.fillText("Game Over :(", game.width/2, game.height/2 + 10);
+        }
+        
+        /* move kittens */
+        var groundY = Math.round(game.height * 0.9);
+        for (var i = game.kittens.length - 1; i >= 0; i--) {
+          var kitty = game.kittens[i];
+            
+          if (!kitty.done) {
+
+            /* drop speed relates to size */
+            kitty.y += (Math.floor(kitty.weight / 10) || 1) * elapsed / 16;
+            kitty.y = Math.min(kitty.y, groundY);
+            kitty.scale = kitty.baseScale + 0.02 * game.animationFactor;
+
+            switch (kitty.state) {
+              case 1:
+                kitty.animationTime += elapsed;
+                var factor = Math.min(1, kitty.animationTime / 500);
+                kitty.rotation = kitty.animate + (Math.PI * 1.1 - kitty.animate) * factor;
+                if (factor === 1) {
+                  kitty.state = 2;
+                  kitty.animationTime = 0;
+                }
+                break;
+              case 2:
+                kitty.animationTime += elapsed;
+                if (kitty.animationTime >= 350) {
+                  kitty.state = 3;
+                  kitty.animationTime = 0;
+                }
+                break;
+              case 3:
+                kitty.animationTime += elapsed;
+                var factor = Math.min(1, kitty.animationTime / 500);
+                kitty.rotation = Math.PI * 1.1 * (1 - factor);
+                if (factor === 1) {
+                  kitty.state = 0;
+                }
+                break;
+              default:
+                kitty.rotation = 15 * game.animationFactor * TO_RADIANS;
+            }
+            
+            /* draw */
+            drawRotatedImage(kitty.image, kitty.x, kitty.y - kitty1.height/2, kitty.rotation, kitty.scale);
+            
+            /* check death */
+            if (kitty.y === groundY) {
+
+              // mark as done
+              kitty.done = 1;
+              kitty.animationTime = 0;
+
+              if (kitty.state !== 0 && (kitty.state === 2 || kitty.rotation > Math.PI * 0.9)) {
+                game.score += Math.sqrt(kitty.weight) | 0;
+                kitty.done = 2 + Math.round(Math.random());
+                kitty.tx = kitty.x;
+              } else {
+                if (kitty.weight >= 15) {
+                  if (--game.health === 0) {
+                    game.kittens.length = 0;
+                    game.gameover = true;
+                    break;
+                  } 
+                } else {
+                   if (++game.spamScore === 10) {
+                    game.spamScore = 0;
+                    game.health = Math.min(game.health+1, 3);
+                   }
+                }
+              }
+            }
+          }
+          else
+          {
+            kitty.animationTime += elapsed;
+            var factor = Math.min(1, kitty.animationTime / 1500);
+            context.globalAlpha = 1 - factor;
+            if (kitty.done === 1) {
+              drawRotatedImage(kitty.image2, kitty.x, kitty.y, 0, kitty.scale);
+              // tears
+            }
+            else
+            {
+              if (kitty.done === 2) {
+                kitty.x = kitty.tx + 100 * factor;
+
+                var factor2 = (factor / 0.125) % 2;
+
+
+                drawRotatedImage(kitty.image3, kitty.x, kitty.y - kitty2.height/2 - (factor2 < 1 ? factor2 * 30 : (2 - factor2) * 30), 0, kitty.scale, -1);
+              }
+              else
+              {
+                kitty.x = kitty.tx - 100 * factor;
+                var factor2 = (factor / 0.125) % 2;
+                drawRotatedImage(kitty.image3, kitty.x, kitty.y - kitty2.height/2 - (factor2 < 1 ? factor2 * 30 : (2 - factor2) * 30), 0, kitty.scale);
+              }
+            }
+
+            if (factor === 1) {
+              game.kittens.splice(i, 1);
+            }
+
+            context.globalAlpha = 1;
+          }
+        }
+
+        /* draw score */
+        context.font = 'bold 9pt arial';
+        context.fillStyle = "#000";
+        context.textAlign = 'left';
+        context.fillText("Score: " + game.score, 5, 15);
+
+        /* draw health */
+        context.font = 'bold 9pt arial';
+        context.fillStyle = "#000";
+        context.textAlign = 'right';
+        context.fillText(game.health + " Health", game.width - 5, 15);
+
+
+    }
+    
+    /* copy scaled up */
+    game.ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, game.canvas.width, game.canvas.height);
+}
+
+/* gameloop */
+function loop() {
+    requestAnimationFrame(loop);
+    render();
+}
+
+loop();
+</script>
+
+</body>
+</html>

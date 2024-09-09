@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=600, user-scalable=0"/>
+    <meta charset="UTF-8">
+    <title>bhb</title>
+    <link href="game.css" rel="stylesheet" />
+    <script src="game.min.js"> </script>
+</head>
+<body>
+    <div id="holder">
+        <div class="overlay screen" id="start-screen">
+            <div class="title"> bhb </div>
+            <button onclick="startGame(true)"> tutorial </button>
+            <button onclick="startGame(false)"> play </button>
+            <div class="credits"> by vasuman </div>
+        </div>
+        <canvas class="overlay" id="game-canvas"></canvas>
+        <div class="overlay screen" id="end-screen">
+            <div class="title"> game over </div>
+            <div class="stats-info">
+                <div> score <span class="stats" id="end-score">0</span> </div>
+                <div> highscore <span class="stats" id="end-highscore">0</span> </div>
+            </div>
+            <div class="actions">
+                <button onclick="backToMenu()"> menu </button>
+                <button onclick="restartGame()"> restart </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

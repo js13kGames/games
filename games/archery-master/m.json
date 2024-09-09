@@ -1,0 +1,10 @@
+{
+  "short_name": "Archery Master",
+  "name": "Archery Master",
+  "icons": [{ "src": "icon.png", "type": "image/png", "sizes": "256x256" }],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#5e3231",
+  "background_color": "#5e3231",
+  "orientation": "portrait"
+}

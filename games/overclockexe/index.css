@@ -1,0 +1,45 @@
+* {
+    margin: 0;
+    padding: 0;
+    cursor: default;
+    user-select: none;
+    box-sizing: border-box;
+    image-rendering: pixelated;
+}
+
+html {
+    background-color: #111;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#frame {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    position: fixed;
+    overflow: hidden;
+
+    background-color: #2A2B2A;
+}
+
+@media(min-aspect-ratio: 9/16) {
+    #frame {
+        font-size: 6.25vh;
+        width: 56.25vh;
+        height: 100vh;
+    }
+}
+@media(max-aspect-ratio: 9/16) {
+    #frame {
+        font-size: 11.11vh;
+        width: 177.777778vh;
+        height: 100vh;
+    }
+}

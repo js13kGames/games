@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Sweeper</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+  <canvas></canvas>
+  <div class="statusBar" hidden></div>
+  <ul hidden>
+    <li><img src="point.png" /><span>Litter</span></li>
+    <li><img src="life.png" /><span>Extra life</span></li>
+    <li><img src="asteroid.png" /><span>Deadly asteroid</span></li>
+  </ul>
+  <h2 class="hidden">level 1</h2>
+  <div class="instructionsAndButton">
+    <div class="instructions">
+      <h1>SPACE SWEEPER</h1>
+      <p>You are a space sweeper. Your mission is to collect all the space litter you encounter on your way.<br /><br />
+        Just pay attention to the storm of deadly asteroids. You can control the ship by moving your phone.<br /><br />
+        Energy packs earn you an extra life.<br /><br />
+        Beware! The mission gets harder and harder as time goes by!
+      </p>
+    </div>
+    <h3 class="hidden">GAME OVER</h3>
+    <button>start</button>
+  </div>
+  <script src="sound.js" type="module"></script>
+  <script src="no-sleep.js" type="module"></script>
+  <script src="index.js" type="module"></script>
+</body>
+
+</html>

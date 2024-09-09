@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="background">
+    <header>
+      <div class="tot200">
+        <div>200</div>
+        <div class="counter200">0</div>
+      </div>
+      <div class="timer-wrapper">
+        <div class="timer"></div>
+        <div class="remaining">
+          <span>remaining turns: </span>
+          <span class="remaining-counter"></span>
+        </div>
+      </div>
+      <div class="tot404">
+        <div>404</div>
+        <div class="counter404">0</div>
+      </div>
+    </header>
+    <main>
+      <button class="btn-1"></button>
+      <button class="btn-2"></button>
+      <button class="btn-3"></button>
+      <div class="backdrop backdrop-go">
+        <div class="instructions">
+          <div class="title">|404|</div>
+          You will see 3 URLs:
+          <br />
+          one of them is correct and will result in a http
+          <span class="code200">200</span> response code.
+          <br />
+          One has a wrong path (the domain is always correct) and will result in
+          a http
+          <span class="code404">404</span> response code.
+          <br />
+          <br />
+          Try to click the right URL, avoid 404!
+        </div>
+        <button class="btn-go">go</button>
+      </div>
+      <div class="backdrop backdrop-game-over" hidden>
+        <div class="title">
+          <div>GAME OVER</div>
+          <div class="result"></div>
+        </div>
+        <button class="play-again">play again</button>
+      </div>
+    </main>
+    <script src="sound.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+  </body>
+</html>

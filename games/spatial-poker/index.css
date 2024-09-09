@@ -1,0 +1,32 @@
+html {
+  height: 100%;
+  background: lightcyan;
+  font-family: "Verdana", sans-serif;
+}
+.card-container {
+  display: inline-grid;
+  grid-gap: 0px;
+  grid-template-rows: repeat(1, 110px);
+  grid-template-columns: repeat(5, 100px);
+}
+
+.card-grid-item {
+  padding: 1em;
+  border: 1px solid green;
+  text-align: center;
+  font-size: 80px;
+  color: black;
+  background: goldenrod;
+  margin: 0;
+  padding: 0;
+}
+.start_button {
+  background-color: darkgreen;
+  border: 2px solid black;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+}

@@ -1,0 +1,83 @@
+<!--Do you like preparing candies? Well, this time we are going to use letters as ingredients and questions as a recipe. You are curious to know what I just said? Just concentrate, sharpen your eyes, play the game and discover it by yourself.
+--><!DOCTYPE html>
+<html>
+    <head>
+	    <script src="prefixes.js"></script>
+        <title>Feed With Words</title>
+		<link rel="stylesheet" href="fww.css" />
+		<script src="fww.js"></script>
+    </head>
+    <body>
+        <div id="header">
+            <p align="left">
+                <span id="name">Feed with Words</span>
+            </p><p id="result" align="right">
+                <span align="right">Total Letters: 
+                    <span id="score">0</span>
+                </span>
+            </p>
+        </div>
+        <div id="firstpage">
+            <div id="paper"><i><b style="font-size: 1.2em;">Feed with words (FwW)</b></i> is a game based on word finding. The game consists in: 
+                <hr>
+                <ul>
+                    <li>6 <b>questions</b> (the receipt of candy) with a hint to the right (number of neccesary candies to <i>feed</i> the pot);</li>
+                    <li>15 groups of 2 or 3 letters (called <b>candies</b>);</li>
+                    <li>Your sharp eyes to join the letters and collect those sweets;</li>
+					<li><b>Hints</b>(3 in the beginning of game) are there to help you any time. It shows one correct answer, but only if you pass a level, you get one chance to use it.</li>
+                    <li>And many different <b>levels</b>.</li>
+                </ul>
+                <hr>
+                <p>The purpose is to figure out all 6 <b>answers</b>, fill the <i>pot</i> with <i>candies(letters)</i> and <b>pass the level</b>.</p>
+                <div class="goon" id="stgame"><i><b>Start the game</b></i></div>
+            </div>
+        </div>
+        <div id="playground">
+            <ul id="quests">
+                <li id="task1">
+                    <span class="q" id="q1">1. </span><span class="a" id="a1"> letters</span>
+                </li>
+                <li id="task2">
+                    <span class="q" id="q2">2. </span><span class="a" id="a2"> letters</span>
+                </li>
+                <li id="task3">
+                    <span class="q" id="q3">3. </span><span class="a" id="a3"> letters</span>
+                </li>
+                <li id="task4">
+                    <span class="q" id="q4">4. </span><span class="a" id="a4"> letters</span>
+                </li>
+                <li id="task5">
+                    <span class="q" id="q5">5. </span><span class="a" id="a5"> letters</span>
+                </li>
+                <li id="task6">
+                    <span class="q" id="q6">6. </span><span class="a" id="a6"> letters</span>
+                </li>
+            </ul>
+            <div>
+                <div id="letters"></div>
+                <div id="drago">
+                    <div id="whatsin"></div>
+                    <div id="act">
+                        <span class="act" id="del">X</span><span class="act" id="corr">\/</span>
+                    </div>
+                    <div id="pot"><b>H<br>I<br>N<br>T<br>Hints left: <span id="hl">4</span></b></div><br>
+                </div>
+            </div>
+        </div>
+        <!--------------------------WORK ON-------------------------------------->
+        <div id="youwon">
+            <div id="pika"></div>
+            <div id="v" class="fishek"></div>
+            <div id="vl" class="fishek"></div>
+            <div id="l" class="fishek"></div>
+            <div id="jl" class="fishek"></div>
+            <div id="j" class="fishek"></div>
+            <div id="jp" class="fishek"></div>
+            <div id="p" class="fishek"></div>
+            <div id="vp" class="fishek"></div>
+            <h1 class="winner">You passed the level successfully!</h1>
+            <div class="goon" id="next">Next level</div>
+        </div>
+        <!--------------------------WORK ON-------------------------------------->
+    </body>
+</html>

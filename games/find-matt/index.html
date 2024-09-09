@@ -1,0 +1,570 @@
+<script src=https://js13kgames.com/webxr-src/2020/three.js></script><style>body{margin:0}canvas{display:block}</style><body><script src=music.js></script><script src=VRButton.js></script><script src=PickHelper.js></script><script src=MessageBox.js></script><script src=StaticMessageBox.js></script><script src=Enemy.js></script><script src=MattStarship.js></script><script type=module>let tick = 0;
+  			let camera, renderer, material;
+        let scene = new THREE.Scene();
+        let mouseX = 0, mouseY = 0;
+
+        // jumps
+        let jumpsAvailable = 10;
+        let jumpsMessage;
+
+        // game states
+        const GAME_STATES = {
+          IDLE: 0,
+          SCANNING: 1,
+          PAUSED: 2,
+          GAME_OVER: 3
+        };
+
+        // game progress
+        const GAME_PROGRESS = {
+          INTRO: 0,
+          FOLLOW_MATT_ITINERARY: 1,
+          FIND_FIRST_BEACON: 2,
+          MEET_THE_PLAGUE: 3,
+          FIND_SECOND_BEACON: 4,
+          FIND_THIRD_BEACON: 5,
+          CROSS_PLAGUE_TERRITORY: 6,
+          ANCIENT_CIV: 7,
+          CHASING_MATT: 8,
+          END: 9
+        };
+        let gameProgress = GAME_PROGRESS.INTRO;
+        let gameState;
+        let currentQuestCompleted = false;
+        let scansBeforeNextEvent; // systems the player needs to scan before the next event
+
+        // starship
+        let starship;
+        let starshipDirection;
+        let speed = 0;
+        const accel = 0.003;
+        const topSpeed = 1;
+        let destinationObject;
+        let distanceToDestination;
+        let orbitingSystemId;
+
+        let enemies = [];
+
+        // picking and targets
+        const MAX_INTERACTIVE_DISTANCE = 1500;
+        let pickHelper;
+        let selectedObject;
+        let target; // ex: hint about the next system to visit
+        let lockSelection; // blocks continuous selection of focused target
+        let enableSelection = true;
+        let searchAreaCenter; // the center of the next search area
+
+        let message;
+        let scanProgress = 0;
+        let mattStarship;
+
+
+  			init();
+  			animate();
+
+  			function init() {
+
+          scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
+
+
+          // our starship
+          starship = new THREE.Object3D();
+          scene.add(starship);
+
+  				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 2000 );
+  				// camera.position.set( 0, 1.6, 1000 );
+          starship.position.set(0, 1.6, 0);
+          starship.add(camera);
+
+          message = new MessageBox(scene, camera, starship.position);
+          jumpsMessage = new StaticMessageBox(scene, camera, starship.position);
+          jumpsMessage.render([`Jumps: ${String(jumpsAvailable)}`]);
+
+          pickHelper = new PickHelper(camera, MAX_INTERACTIVE_DISTANCE);
+
+          for ( let i = 0; i < 5000; i ++ ) {
+            const isSingularity = Math.random() > 0.95;
+
+            const x = 4000 * Math.random() - 2000;
+            const y = 4000 * Math.random() - 2000;
+            const z = 4000 * Math.random() - 2000;
+
+            const geometry = new THREE.CircleGeometry( isSingularity ? 7 : 10, 32 );
+            const material = new THREE.MeshBasicMaterial({ transparent: false });
+            const circle = new THREE.Mesh( geometry, material );
+            circle.position.x = x;
+            circle.position.y = y;
+            circle.position.z = z;
+            circle.kind = isSingularity ? "singularity" : "system";
+            circle.systemId = i;
+            circle.lookAt(starship.position);
+
+            if (isSingularity) {
+              circle.material.color.setHSL(0.6, 0.8, 0.3);
+            }
+            scene.add( circle );
+          }
+
+          renderer = new THREE.WebGLRenderer();
+          renderer.setPixelRatio( window.devicePixelRatio );
+          renderer.setSize( window.innerWidth, window.innerHeight );
+          renderer.xr.enabled = true;
+          // renderer.xr.setReferenceSpaceType( 'local' );
+          document.body.appendChild( renderer.domElement );
+          document.body.appendChild(VRButton.createButton(renderer));
+
+  				window.addEventListener( 'resize', onWindowResize, false );
+
+  				if ( typeof TESTING !== 'undefined'  ) { for ( var i = 0; i < 200; i ++ ) { render(); } };
+
+  			}
+
+        function resetSystem(system) {
+          system.material.color.setHSL( 0, 0, 1 );
+          system.inSearchArea = false;
+          system.inDangerArea = false,
+          system.isVisited = false;
+        }
+
+        function restartGame() {
+          location.reload();
+        }
+
+  			function onWindowResize() {
+
+  				camera.aspect = window.innerWidth / window.innerHeight;
+  				camera.updateProjectionMatrix();
+
+  				renderer.setSize( window.innerWidth, window.innerHeight );
+
+  			}
+
+  			function animate() {
+
+  				renderer.setAnimationLoop( render );
+
+          render();
+  			}
+
+        // system statuses
+
+        function setVisited(system) {
+          system.material.color.setHSL( 0.4, 1, 0.7 );
+          system.isVisited = true;
+        }
+        function setSystemInSearchArea(system, hsl) {
+          const h = hsl && hsl[0] || 0.2;
+          const s = hsl && hsl[1] || 0.9;
+          const l = hsl && hsl[2] || 0.6;
+          system.material.color.setHSL( h, s, l );
+          system.inSearchArea = true;
+        }
+        function setSystemInDangerArea(system, hsl) {
+          const h = hsl && hsl[0] || 1;
+          const s = hsl && hsl[1] || 0.5;
+          const l = hsl && hsl[2] || 0.5;
+          system.material.color.setHSL( h, s, l );
+          system.inDangerArea = true;
+        }
+        function setTarget(system) {
+          system.isNextTarget = true;
+          attachTargetSprite(system);
+        }
+        function unsetSystemInSearchArea(system) {
+          system.material.color.setHSL( 0, 0, 1 );
+          system.inSearchArea = false;
+        }
+        function unsetSystemInDangerArea(system) {
+          system.material.color.setHSL( 0, 0, 1 );
+          system.inDangerArea = false;
+        }
+        function unsetTarget(system) {
+          system.isNextTarget = false;
+          detachTargetSprite(system);
+        }
+
+        function goTo(selectedObject) {
+          if (jumpsAvailable > 0) {
+            jumpsAvailable -= 1;
+            jumpsMessage.updateText(String(`Jumps: ${jumpsAvailable}`));
+            speed = 0.1;
+            starshipDirection = new THREE.Vector3(selectedObject.position.x - starship.position.x,
+              selectedObject.position.y - starship.position.y,
+              selectedObject.position.z - starship.position.z);
+              starshipDirection = starshipDirection.normalize();
+              destinationObject = selectedObject;
+          }
+        }
+
+        function scanSystem(system) {
+          gameState = GAME_STATES.SCANNING;
+          message = new MessageBox(scene, camera, starship.position);
+        }
+
+        function getAllSystems() {
+          return scene.children.filter(obj => obj.kind === "system" || obj.kind === "singularity");
+        }
+
+        function getNearSystems(center, distance) {
+          const v1 = new THREE.Vector3(center.x, center.y, center.z);
+          const systems = getAllSystems();
+          return systems.filter(s => v1.distanceTo(new THREE.Vector3(s.position.x, s.position.y, s.position.z)) <= distance);
+        }
+
+        function getRandomSystemInFront(distance) {
+          // set default position in front of the camera
+          const raycaster = new THREE.Raycaster();
+          // cast a ray through the frustum
+          raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+          let t = new THREE.Vector3();
+          raycaster.ray.at(distance ? (distance - 100) : 400, t);
+          // get near systems
+          const nearSystems = getNearSystems(starship.position, distance || 500);
+          let nearFrontSystem = nearSystems[0];
+          let lastDistance;
+          nearSystems.forEach(s => {
+            const d = t.distanceTo(new THREE.Vector3(s.position.x, s.position.y, s.position.z));
+            if (lastDistance && d < lastDistance) {
+              nearFrontSystem = s;
+            }
+            lastDistance = d;
+          });
+          return nearFrontSystem;
+        }
+
+        function attachTargetSprite(target) {
+          const geometry = new THREE.RingGeometry( 20, 22, 32 );
+          const material = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide } );
+          const ring = new THREE.Mesh( geometry, material );
+          ring.kind = "indicator";
+          target.add( ring );
+        }
+
+        function detachTargetSprite(target) {
+          target.remove(target.children.find(c => c.kind === "indicator"));
+        }
+
+        function setDangerArea(center, radius, hsl) {
+          const nearSystems = getNearSystems(center, radius);
+          nearSystems.forEach(s => {
+            setSystemInDangerArea(s, hsl);
+          });
+        }
+
+        function setSearchArea(center, radius, hsl) {
+          const nearSystems = getNearSystems(center, radius);
+          nearSystems.forEach(s => {
+            setSystemInSearchArea(s, hsl);
+          });
+        }
+
+        function clearSearchArea() {
+          const allSystems = getAllSystems();
+          allSystems.forEach(s => {
+            unsetSystemInSearchArea(s);
+          });
+          searchAreaCenter = undefined;
+        }
+
+        function clearDangerArea() {
+          const allSystems = getAllSystems();
+          allSystems.forEach(s => {
+            unsetSystemInDangerArea(s);
+          });
+        }
+
+        function addRandomEnemy() {
+          const nearSystems = getNearSystems(starship.position, 500);
+          const randomNearSystem = nearSystems[Math.floor(Math.random()*nearSystems.length)-1];
+          enemies.push(new Enemy(randomNearSystem, scene, starship.position, () => {
+            message.render("Game Over");
+            gameState = GAME_STATES.GAME_OVER;
+          }));
+        }
+
+        function addMattStarship() {
+          const nearSystems = getNearSystems(starship.position, 500);
+          const randomNearSystem = nearSystems[Math.floor(Math.random()*nearSystems.length)-1];
+          mattStarship = new MattStarship(randomNearSystem, scene, starship.position, () => {
+            message.destroy();
+            scanProgress = 0; // reset any current scanning
+            message = new MessageBox(scene, camera, starship.position);
+            message.render(["I finally managed to\nintercept Matt's starship. He looked surprised.", "- I was losing hope - he said.\n- But now I'm sure we\nwill be successful\nin our mission", "- I went across a thousand\nstars for you - I said.", "- Then let's find The Paradise together", "My paradise is wherever you are.", "THE END"]);
+            gameState = GAME_STATES.GAME_OVER;
+          });
+        }
+
+        function recalculateBillboard() {
+          const systems = getAllSystems();
+          systems.forEach(system => {
+            system.lookAt(starship.position);
+          });
+        }
+
+  			function render() {
+          let time = Date.now() * 0.00005;
+
+          jumpsMessage.followCamera();
+
+  				// camera.position.x += ( mouseX - camera.position.x ) * 0.05;
+  				// camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
+          switch(gameProgress) {
+            case GAME_PROGRESS.INTRO:
+              message.render(["FIND MATT\nA JS13k 2020 game\nBy Eric Ros\n\nLook here to start.", "To play, just move your headset around.\nNo controllers required."]);
+            break;
+            case GAME_PROGRESS.FOLLOW_MATT_ITINERARY:
+              starship.position.set(0, 1.6, 0);
+              if (gameState !== GAME_STATES.PAUSED) {
+                gameState = GAME_STATES.PAUSED;
+                message = new MessageBox(scene, camera, starship.position);
+                message.render(["Matt left our planet years ago...\nHe was looking for a new home...\nBefore it's too late.",
+                "I marked in the map where he is\n supposed to be.\n Just look there."]);
+                gameProgress += 1;
+              }
+            break;
+            case GAME_PROGRESS.FIND_FIRST_BEACON:
+              if (!target) {
+                target = getRandomSystemInFront();
+                setTarget(target);
+              } else if (currentQuestCompleted) {
+                gameState = GAME_STATES.PAUSED;
+                message.render(["I've detected a signal...\nIt's a beacon...", "...but it doesn't contain any message.\nWhy?", "And where is Matt?\nOur new home is here...\nBut, wait.", "It has been devastated.\nThe Plague did this.\nI'm sure.", "If they are here, our home planet\nwill be destroyed within months,\nmaybe weeks.", "I must evade their ships, or I'm dead.", "I can calculate Matt's route\nbased on the beacon orientation.\n", "It's a risky guess\n but it's the only thing I have", "I only need to check\nthe dozens of systems\nin that sector.\nGood luck Amy..."]);
+                currentQuestCompleted = false;
+                gameProgress += 1;
+                unsetTarget(target);
+                setVisited(target);
+                target = undefined;
+              }
+            break;
+            case GAME_PROGRESS.MEET_THE_PLAGUE:
+              if (!searchAreaCenter) {
+                scansBeforeNextEvent = 2;
+                searchAreaCenter = getRandomSystemInFront(1300);
+                setSearchArea(searchAreaCenter.position, 400);
+              }
+
+              // message = new MessageBox(scene, camera, starship.position); // remove
+              if (currentQuestCompleted) {
+                gameState = GAME_STATES.PAUSED;
+                message.render(["I'm not alone in this sector\nI detect a near starship...", "The Plague is here!", "I marked its position on the map\nso I remember to stay away\n from them."]);
+                addRandomEnemy();
+                currentQuestCompleted = false;
+                gameProgress += 1;
+                scansBeforeNextEvent = 1;
+              }
+            break;
+            case GAME_PROGRESS.FIND_SECOND_BEACON:
+              if (currentQuestCompleted) {
+                gameState = GAME_STATES.PAUSED;
+                message.render(["It's my lucky day!\nI found another beacon!", "Matt is OK, and he\nis looking for black matter\nto power his starship.", "It can be found scanning singularities (blue).\nI need it to travel through\ninterestellar space.", "His ship's navigation system\nseems to be broken\nso I can only make aproximate\ncalculations about his route."]);
+                currentQuestCompleted = false;
+                gameProgress += 1;
+                clearSearchArea();
+              }
+            break;
+            case GAME_PROGRESS.FIND_THIRD_BEACON:
+              if (!searchAreaCenter) {
+                scansBeforeNextEvent = 2;
+                searchAreaCenter = getRandomSystemInFront(1000);
+                setSearchArea(searchAreaCenter.position, 500);
+              }
+              if (currentQuestCompleted) {
+                gameState = GAME_STATES.PAUSED;
+                message.render(["Bad news...", "His navigation system seems definitively broken", "He is heading to The Plague territory!", "I need to arrive to the\ndestination sector without\nbeing discovered."]);
+                currentQuestCompleted = false;
+                gameProgress += 1;
+                clearSearchArea();
+              }
+            break;
+            case GAME_PROGRESS.CROSS_PLAGUE_TERRITORY:
+            if (!searchAreaCenter) {
+              addRandomEnemy();
+              addRandomEnemy();
+              addRandomEnemy();
+              scansBeforeNextEvent = 2;
+              searchAreaCenter = getRandomSystemInFront(700);
+              setDangerArea(searchAreaCenter.position, 500);
+              searchAreaCenter = getRandomSystemInFront(1600);
+              setSearchArea(searchAreaCenter.position, 400);
+            }
+            if (currentQuestCompleted) {
+              // for the ancient civ you could add a new mechanic or a variation
+              gameState = GAME_STATES.PAUSED;
+              message.render(["I found another beacon.\nIf my calculations are correct\nthis is Matt's last beacon.", "It says that he received a strange signal from a system far away"]);
+              currentQuestCompleted = false;
+              gameProgress += 1;
+              clearSearchArea();
+              clearDangerArea();
+            }
+            break;
+            case GAME_PROGRESS.ANCIENT_CIV:
+            if (!target) {
+              target = getRandomSystemInFront(1500);
+              setTarget(target);
+            } else if (currentQuestCompleted) {
+              gameState = GAME_STATES.PAUSED;
+              message.render(["This is incredible...\nThere is an ancient civilization here.", "They have a sort of\ntelepathy ability they use to\ncomunicate with me.", "They were once an galactic civilization,\nuntil they were decimated by The Plague", "They planned to flee to a legendary planet\ncalled 'The Paradise'.\nBut they never could\nfind it.", "For my surprise, they\nrevealed me that\nthey had another visitor\njust some days ago", "It means that he is not far from here."]);
+              currentQuestCompleted = false;
+              gameProgress += 1;
+              unsetTarget(target);
+            }
+            break;
+            case GAME_PROGRESS.CHASING_MATT:
+            if (!searchAreaCenter) {
+              addRandomEnemy();
+              scansBeforeNextEvent = 3;
+              searchAreaCenter = getRandomSystemInFront(0);
+              setSearchArea(searchAreaCenter.position, 400);
+            }
+            currentQuestCompleted = true; // TODO: remove this. Just a bypass for now
+            if (currentQuestCompleted) {
+              gameState = GAME_STATES.PAUSED;
+              message.render(["I detected another signal today.\nBut this time is not a beacon.", "It's Matt's starship!\nI must hurry!"]);
+              currentQuestCompleted = false;
+              gameProgress += 1;
+              clearSearchArea();
+              addMattStarship();
+            }
+            break;
+            case GAME_PROGRESS.END:
+            default:
+            break;
+          }
+
+          // run a AI cycle for enemies/matt
+          if (tick % 40 === 0 && gameState !== GAME_STATES.PAUSED && gameState !== GAME_STATES.GAME_OVER) {
+            enemies.forEach(e => {
+              e.think();
+            });
+            if (mattStarship) {
+              mattStarship.think();
+            }
+          }
+
+          // move starship forward
+          if (speed > 0) {
+            // let direction = new THREE.Vector3(0, 0, 0);
+            // camera.getWorldDirection(direction);
+            starship.position.x += starshipDirection.x * speed;
+            starship.position.y += starshipDirection.y * speed;
+            starship.position.z += starshipDirection.z * speed;
+
+
+            // acceleration and slow down
+            if (distanceToDestination && distanceToDestination < 250) {
+              speed -= accel * 2;
+            } else if (speed < topSpeed) {
+              speed += accel;
+            }
+
+            if (speed < 0 || distanceToDestination < 50) { // just in case
+              enemies.forEach(e => {
+                e.setOrbitingSystemId(destinationObject.systemId);
+              });
+              if (mattStarship) {
+                mattStarship.setOrbitingSystemId(destinationObject.systemId);
+              }
+              speed = 0;
+              orbitingSystemId = destinationObject.systemId;
+              scanSystem(destinationObject);
+            }
+
+            // update distance every 10 ticks
+            if (tick % 10 === 0) {
+              distanceToDestination = Math.sqrt(Math.pow(destinationObject.position.x - starship.position.x, 2) +
+              Math.pow(destinationObject.position.y - starship.position.y, 2) +
+              Math.pow(destinationObject.position.z - starship.position.z, 2));
+            }
+
+
+            // rotate systems to look the starship
+            recalculateBillboard();
+          }
+
+          // scanning
+          if (gameState === GAME_STATES.SCANNING) {
+            scanProgress += 0.7;
+            message.render(`SCANNING...${scanProgress.toFixed(0)}%`);
+            if (scanProgress >= 100) {
+              message.reset();
+              gameState = GAME_STATES.IDLE;
+              scanProgress = 0;
+              // let's reveal what is in this system
+              if (destinationObject.inDangerArea) {
+                message.render("This is the last entry in my log\nThe Plague caught me\nMatt, forgive me.\n(GAME OVER)");
+                gameState = GAME_STATES.GAME_OVER;
+              } else if (!destinationObject.isNextTarget) {
+                setVisited(destinationObject);
+                if (destinationObject.inSearchArea && scansBeforeNextEvent > 0) {
+                  scansBeforeNextEvent -= 1;
+                  if (scansBeforeNextEvent === 0) {
+                    currentQuestCompleted = true; // trigger next event in the timeline
+                  }
+                }
+                if (!destinationObject.inSearchArea || (destinationObject.inSearchArea && scansBeforeNextEvent > 0)) {
+                  if (destinationObject.kind === "singularity") {
+                    const jumpsFound = Math.floor(Math.random()*6 + 1);
+                    jumpsAvailable += jumpsFound;
+                    jumpsMessage.updateText(String(`Jumps: ${jumpsAvailable}`));
+                    message.render(`Found black matter\nfor ${jumpsFound} jumps`);
+                  } else if (jumpsAvailable === 0) {
+                    message.render("I run out of black matter.\nI will end my days here.\n(GAME OVER)");
+                    gameState = GAME_STATES.GAME_OVER;
+                  } else {
+                    message.render("Nothing found");
+                  }
+                  setTimeout(() => {
+                    message.destroy();
+                  }, 1500);
+                }
+              } else {
+                message.reset();
+                currentQuestCompleted = true;
+              }
+            }
+          }
+
+          const selectedObject = pickHelper.pick({x: 0, y: 0}, scene, camera, time);
+
+          // if (!lockSelection) {
+          //   console.group("1");
+          //   console.groupEnd("1");
+          // }
+          if (selectedObject && speed === 0 && selectedObject.systemId !== orbitingSystemId &&
+            gameState !== GAME_STATES.PAUSED && (selectedObject.kind === "system" || selectedObject.kind === "singularity") && !selectedObject.isVisited) {
+
+            selectedObject.material.color.setHex(0xffff00);
+            goTo(selectedObject);
+          } else if (selectedObject && (gameState === GAME_STATES.PAUSED || gameState === GAME_STATES.GAME_OVER) &&
+            selectedObject.kind === "message" && !lockSelection) {
+            message.autoNext()
+            .then(() => {
+              if (gameState === GAME_STATES.GAME_OVER) {
+                restartGame();
+              } else {
+                gameState = GAME_STATES.IDLE;
+              }
+            });
+            // if (!lockSelection && !message.next()) {
+            //   gameProgress += 1;
+            //   gameState = GAME_STATES.IDLE;
+            // }
+          } else if (selectedObject && gameProgress === GAME_PROGRESS.INTRO && selectedObject.kind === "message" && !lockSelection) {
+            message.autoNext(5000)
+            .then(() => {
+              message.destroy();
+              gameState = GAME_STATES.IDLE;
+              speed = 0;
+              gameProgress += 1;
+            });
+          }
+          if (selectedObject) {
+            lockSelection = true;
+            // enableSelection = false;
+          } else {
+            lockSelection = false;
+          }
+
+  				renderer.render( scene, camera );
+          tick += 1;
+  			}</script>

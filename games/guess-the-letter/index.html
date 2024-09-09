@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the letter</title>
+
+  <link href="style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="play-screen screen">
+    <progress value="5" max="5"></progress>
+
+    <div class="controls">
+      <div class="control-btns">
+        <button class="mute-btn icon-btn btn">
+          <svg class="volume-off-icon icon" viewBox="0 0 24 24">
+            <path
+              d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z">
+            </path>
+          </svg>
+          <svg class="volume-up-icon icon" viewBox="0 0 24 24">
+            <path
+              d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z">
+            </path>
+          </svg>
+        </button>
+
+        <button class="pause-btn icon-btn btn">
+          <svg class="pause-icon icon" viewBox="0 0 24 24">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+          </svg>
+          <svg class="play-icon icon" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"></path>
+          </svg>
+        </button>
+
+        <button class="stats-btn icon-btn btn">
+          <svg class="stats-icon icon" viewBox="0 0 24 24">
+            <path
+              d="M19.88 18.47c.44-.7.7-1.51.7-2.39 0-2.49-2.01-4.5-4.5-4.5s-4.5 2.01-4.5 4.5 2.01 4.5 4.49 4.5c.88 0 1.7-.26 2.39-.7L21.58 23 23 21.58l-3.12-3.11zm-3.8.11c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zm-.36-8.5c-.74.02-1.45.18-2.1.45l-.55-.83-3.8 6.18-3.01-3.52-3.63 5.81L1 17l5-8 3 3.5L13 6l2.72 4.08zm2.59.5c-.64-.28-1.33-.45-2.05-.49L21.38 2 23 3.18l-4.69 7.4z">
+            </path>
+          </svg>
+        </button>
+      </div>
+      <div class="level">level <span>1</span></div>
+      <div class="score-board">
+        <div class="score-wrapper">
+          <small class="score-label">cur</small>
+          <div class="score">0</div>
+          <button class="clear-score">x</button>
+        </div>
+        <div class="max-score-wrapper">
+          <small class="score-label">max</small>
+          <div class="max-score">0</div>
+          <button class="clear-max-score">x</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="glasses-wrapper">
+      <div class="glasses">
+        <svg height="551.1803" width="800" version="1.1" viewBox="0 0 463 318.9956" xml:space="preserve"
+          xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+          <path style="stroke-width:1.72786"
+            d="M 68.78125,0.00390625 C 66.391054,-0.01987885 63.991356,0.08203715 61.589844,0.31054688 27.053343,3.6038514 0,34.487823 0,70.619141 V 358.52344 c 0,17.99741 11.772447,33.28816 28.019531,38.59961 l 7.849149,-0.0235 -0.18962,-29.92032 c 0,0 -7.167341,0.55752 -7.167341,-0.40578 -1.615128,-2.35693 -2.59375,-5.18426 -2.59375,-8.25 V 70.619141 c 0,-22.918359 16.74857,-42.468936 38.130859,-44.507813 12.139957,-1.161123 23.734698,2.677653 32.666016,10.796875 8.813826,8.012095 13.869136,19.432473 13.869136,31.333985 0,7.156802 5.80219,12.958984 12.95899,12.958984 7.1568,0 12.95898,-5.802182 12.95898,-12.958984 0,-19.186178 -8.14681,-37.595727 -22.35156,-50.509766 C 101.73182,6.4417095 85.512625,0.17040193 68.78125,0.00390625 Z m 662.4375,0 C 714.48903,0.1679215 698.26818,6.4417095 685.84961,17.732422 c -14.20302,12.912311 -22.35156,31.321861 -22.35156,50.509766 0,7.156802 5.80218,12.958984 12.95898,12.958984 7.1568,0 12.95899,-5.802182 12.95899,-12.958984 0,-11.901512 5.05509,-23.321665 13.86718,-31.332032 8.93132,-8.12095 20.53297,-11.959726 32.66602,-10.796875 21.38229,2.037149 38.13281,21.587501 38.13281,44.50586 V 358.52344 c 0,3.22764 -1.05902,6.20494 -2.83008,8.63086 l -3.50323,0.92966 h -4 l 0.44916,29.3527 7.78259,-0.31361 C 788.22583,391.8116 800,376.52085 800,358.52344 V 70.619141 C 800,34.487823 772.94666,3.6038514 738.41016,0.31054688 736.00908,0.0813892 733.60871,-0.0195245 731.21875,0.00390625 Z M 400,317.91797 c -19.32959,0 -36.79415,8.09159 -49.22266,21.04883 -0.96963,22.78086 6.89063,47.20312 6.89063,47.20312 0,-23.34168 18.99035,-42.33398 42.33203,-42.33398 23.34168,0 42.33203,18.9923 42.33203,42.33398 0,0 6.83203,-1.90445 6.83203,-47.26172 C 436.73749,325.98758 419.29985,317.91797 400,317.91797 Z"
+            transform="scale(0.57875)" />
+        </svg>
+
+        <div class="left-eye">
+          <div id="char" class="char">A</div>
+        </div>
+
+        <input type="text">
+      </div>
+    </div>
+
+    <p class="instructions">Type the letter (a to z) as soon as you can guess it to earn points.<br>Beware! If you are
+      wrong you get negative
+      points.
+    </p>
+  </div>
+
+  <div class="start-screen screen">
+    <p class="intro">
+      Eyeglasses were invented in Venice, Italy, in the 1280s
+      <br>
+      what if they were not?
+    </p>
+    <button class="start-btn btn">let's try out</button>
+  </div>
+
+  <dialog>
+    <div class="stats-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <td>rounds</td>
+            <td>right</td>
+            <td>wrong</td>
+            <td>average time (ms)</td>
+            <td>max time (ms)</td>
+            <td>min time (ms)</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="rounds"></td>
+            <td id="right"></td>
+            <td id="wrong"></td>
+            <td id="avg-time"></td>
+            <td id="max-time"></td>
+            <td id="min-time"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="graph"></div>
+    <form method="dialog">
+      <button class="btn">ok</button>
+    </form>
+  </dialog>
+
+  <script type="module" src="script.js"></script>
+  <script type="module" src="sound.js"></script>
+</body>
+
+</html>

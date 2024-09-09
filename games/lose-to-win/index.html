@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>Lose to win!</title>
+		<script type="text/javascript" language="JavaScript" src="script.js"></script>
+		<meta charset='utf-8' />
+	</head>
+	<body onkeypress="handleKeyPress(event)" onkeydown="handleKeyPress(event)" onload = 'loadGame()'>
+	<div id = 'game' style = 'display: none; width: 797px; height:600px; margin-left: auto;margin-right: auto;'>
+		<div style = 'border: 1px solid; white-space:pre; font-size: 16px; text-align: center;' id = 'status'> </div>
+		<table style = 'border: 1px solid; float: left; width: 155px; height: 480px; text-align: center;'>
+			<tr height = '178'><td width = '155'>
+				<span id = 'player_xp'><br></span><br>
+				<span id = 'playerLevel'>1</span><br>
+				<span style = 'font-size: 40px;' id = 'playerImage'>\o/</span><br>
+				<span id = 'player_hp'>100/100</span><br>
+				<span id = 'player_armor'>Armor: 0</span><br>
+				<span id = 'player_damage'>Damage: 1000</span></td></tr>
+			<tr height = '136'><td width = '155' style = 'font-size: 40px;' id = 'vs'>VS</td></tr>
+			<tr height = '158' id = 'target'><td width = '155'>
+				<span id = 'targetLevel'>1</span><br>
+				<span style = 'font-size: 40px;' id = 'targetImage'>\o/</span><br>
+				<span id = 'target_hp'>100/100</span><br>
+				<span id = 'target_armor'>Armor: 0</span><br>
+				<span id = 'target_damage'>Damage: 1000</span>
+			</td></tr>
+		</table>
+		<canvas style = 'border: 1px solid' height='480' width='640' id='canvas' onmousemove = 'handleMouseMove(event)' onmousedown = 'handleMouseClick(event)'>Your browser doesn't support HTML5. Update it please.</canvas>
+		<div id = 'spells'></div>
+	</div>
+	<div id = 'menu' style = 'display: block; width: 797px; height:600px; margin-left: auto;margin-right: auto;'>
+		<table width = "797" style = 'font-family: monospace;'>
+			<tr align = "center">
+				<td><pre>
+  _                      _                   _       
+ | |                    | |                 (_)      
+ | |     ___  ___  ___  | |_ ___   __      ___ _ __  
+ | |    / _ \/ __|/ _ \ | __/ _ \  \ \ /\ / / | '_ \ 
+ | |___| (_) \__ \  __/ | || (_) |  \ V  V /| | | | |
+ |______\___/|___/\___|  \__\___/    \_/\_/ |_|_| |_|
+</pre><script type="text/javascript" language="JavaScript">document.write(version)</script></td>
+			</tr>
+			<tr align = "center">
+				<td><pre onclick = "startNewGame()" style = 'cursor :pointer;'><script type="text/javascript">document.write(drawMenuButton('New game'))</script></pre></td>
+			</tr>
+			<tr align = "center">
+				<td><pre onclick = "showAchievements()" style = 'cursor :pointer;'><script type="text/javascript">document.write(drawMenuButton('Achievements'))</script></pre></td>
+			</tr>
+			<tr align = "center">
+				<td><pre onclick = "showHelp()" style = 'cursor :pointer;'><script type="text/javascript">document.write(drawMenuButton('Help'))</script></pre></td>
+			</tr>
+			<tr align = "center">
+				<td><pre onclick = "showAboutInfo()" style = 'cursor :pointer;'><script type="text/javascript">document.write(drawMenuButton(' About'))</script></pre></td>
+			</tr>
+		</table>
+	</div>
+	<div id = 'popupOverlay' style='position: fixed; top:0px; left:0px; width: 100vw; height:100vh; background-color: lightgrey; z-index:10; background: rgba(0, 0, 0, 0.4); display:none' onclick="hidePopup()">
+		<div id = 'popup' style = 'background: rgba(255, 255, 255, 1);text-align: center; width: 400px; height:300px; margin-left: auto;margin-right: auto;margin-top:40px; border:1px solid; padding : 10px; overflow : auto'>
+		Text!
+		</div>
+	</div>
+	
+	</body>
+</html>

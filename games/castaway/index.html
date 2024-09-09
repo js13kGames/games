@@ -1,0 +1,7 @@
+<html><head><meta charset="UTF-8"><title>Castaway</title><style>body{background:url(assets/grass.png);cursor:url(assets/small.png),auto}canvas{cursor:none;background:white;width:100%;max-width:480px;margin:auto;display:block;border:10px ridge #333;border-color:lightgray;margin-bottom:5}.test1{position:relative;border:1px solid black;margin:auto;padding:5px;width:500px;height:100px;background-color:rgba(55, 55, 55, .75);transition:width 0.2s ease;transition:height 0.2s ease}h3{text-transform:uppercase;position:relative;text-align:center;bottom:15px}p{position:relative;text-align:center;bottom:15px;opacity:1}.test1:hover{width:140;height:30}.test1:hover p{opacity:0}</style></head><body> <canvas id="game" width="600" height="600"></canvas><div class="test1"><h3>instructions</h3><p>Press the <em>arrow keys</em> to move around Press <em>"X"</em> to atack animals Press <em>"S"</em> again to go to the menu Press <em>"R"</em> to reload the game.</p></div> <script src="src/games.js"></script> <script>window.onload=function()
+{console.log("Thank you for playing my game!");console.log("Welcome to Castaway!")
+canvas=document.getElementById('game');canvasContext=canvas.getContext('2d');var framesPerSecond=30;setInterval(function()
+{drawT();hero();},150);setInterval(function()
+{console.log('animal moved!')
+buffX=Math.floor(Math.random()*536)+1;buffY=Math.floor(Math.random()*536)+1;count1++;},10000);setInterval(function()
+{collision();},1000/framesPerSecond);}</script> </body></html>

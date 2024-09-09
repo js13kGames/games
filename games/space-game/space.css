@@ -1,0 +1,169 @@
+.canvas {
+    background: transparent;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+body {
+    text-align: center;
+    color: white;
+    margin: 0;
+    background-color: black;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.timeAndPoints {
+    display: flex;
+    justify-content: center;
+}
+
+.time {
+    margin-right: 100px;
+}
+
+.gameOverPoints {
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+
+.circleCanvas {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.correctStatement, .sliderValue, .timeAndPoints {
+    font-size: 1.2rem;
+    font-weight: bolder;
+}
+
+.gameOverText {
+    color: #fdf4e3;
+}
+
+h1 {
+    font-weight: bolder;
+    font-size: 2.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+h1, .timeAndPoints {
+    color: #fdf4e3;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #0075ff;
+    border-color: #0075ff;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.modal {
+    color: black;
+}
+
+ul {
+    text-align: left;
+    padding-right: 1.4rem;
+}
+
+/* The Modal (background) */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* The Close Button */
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: rgb(197, 191, 191);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Header */
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Modal Body */
+
+.modal-body {
+    padding: 2px 16px;
+}
+
+/* Modal Footer */
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Modal Content */
+
+.modal-content {
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    position: relative;
+    background-color: #fefefe;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+    to {
+        top: 0;
+        opacity: 1
+    }
+}

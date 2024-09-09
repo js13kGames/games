@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="game.css"/>
+</head>
+<body>
+<div id="levels">
+  <div class="header">
+    <div id="h1">R</div>
+    <div id="h2">E</div>
+    <div id="h3">V</div>
+    <div id="h4">E</div>
+    <div id="h5">R</div>
+    <div id="h6">S</div>
+    <div id="h7">E</div>
+    <div id="helpIcon">?</div>
+    <div id="editIcon">&#x270E;</div>
+  </div>
+</div>
+<div id="help"><div id="helpClose">BACK</div></div>
+<canvas id="disc" width="1000" height="1000"></canvas>
+<canvas id="game" width="1000" height="1000"></canvas>
+<canvas id="edit" width="1000" height="1000"></canvas>
+<div id="speed">
+  <label>Practice<br><input type="radio" value="0" name="speed" autocomplete="off"></label>
+  <label>Easy<br><input type="radio" value="1" name="speed" autocomplete="off"></label>
+  <label>Normal<br><input type="radio" value="2" checked="true" name="speed" autocomplete="off"></label>
+  <label>Hard<br><input type="radio" value="3" name="speed" autocomplete="off"></label>
+  <button id="speedClose">Done</button>
+</div>
+<div id="help"></div>
+<div id="menu"></div>
+<div id="number"><select id="numberSelect"></select><button id="numberClose">Done</button></div>
+<div id="size">
+  <label>3x3<br><input type="radio" value="3" name="size" autocomplete="off"></label>
+  <label>4x4<br><input type="radio" value="4" name="size" autocomplete="off"></label>
+  <label>5x5<br><input type="radio" value="5" name="size" autocomplete="off" checked="true"></label>
+  <label>6x6<br><input type="radio" value="6" name="size" autocomplete="off"></label>
+  <label>7x7<br><input type="radio" value="7" name="size" autocomplete="off"></label>
+  <label>8x8<br><input type="radio" value="8" name="size" autocomplete="off"></label>
+  <button id="sizeClose">Done</button>
+</div>
+<script type="text/javascript" src="levels.js"></script>
+<script type="text/javascript" src="game.js"></script>
+</body>
+</html>

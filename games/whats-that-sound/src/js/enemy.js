@@ -1,0 +1,1 @@
+var Enemy=function(b,a){a=void 0===a?200:a;this.position=b;this.spriteAsset=createSprite("assets/img/sprites.png");this.sprite={x:0*TILE,y:1*TILE};this.startSpawnTime=null;this.onscreenTime=a;this.hideId=null};Enemy.prototype.spawn=function(b){this.position=b;var a=this;this.hideId=setTimeout(function(){a.position=OFFSCREEN},this.onscreenTime)};

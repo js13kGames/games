@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+<fox>15</fox>
+<goal>2</goal>
+
+<node>
+	<x>531</x><y>570</y><g>1</g>
+	<neighbor>26</neighbor><neighbor>2</neighbor>
+	<jump><b>2</b><c>23</c></jump><jump><b>26</b><c>32</c></jump><jump><b>2</b><c>3</c></jump>
+	<d>0</d><d>1</d><d>2</d><d>3</d><d>4</d><d>3</d><d>4</d><d>6</d><d>6</d><d>6</d><d>5</d><d>5</d><d>5</d><d>5</d><d>6</d><d>5</d><d>4</d><d>3</d><d>5</d><d>4</d><d>4</d><d>3</d><d>2</d><d>5</d><d>4</d><d>1</d><d>3</d><d>2</d><d>3</d><d>4</d><d>3</d><d>2</d>
+</node>
+
+<node>
+	<x>495</x><y>449</y><g>2</g>
+	<neighbor>1</neighbor><neighbor>23</neighbor><neighbor>3</neighbor>
+	<jump><b>1</b><c>26</c></jump><jump><b>23</b><c>32</c></jump><jump><b>3</b><c>4</c></jump><jump><b>3</b><c>6</c></jump>
+	<d>1</d><d>0</d><d>1</d><d>2</d><d>3</d><d>2</d><d>3</d><d>5</d><d>5</d><d>5</d><d>4</d><d>4</d><d>4</d><d>4</d><d>5</d><d>5</d><d>3</d><d>2</d><d>4</d><d>4</d><d>3</d><d>2</d><d>1</d><d>4</d><d>3</d><d>2</d><d>4</d><d>3</d><d>4</d><d>4</d><d>3</d><d>2</d>
+</node>
+
+<node>
+	<x>470</x><y>403</y><g>3</g>
+	<neighbor>2</neighbor><neighbor>4</neighbor><neighbor>6</neighbor>
+	<jump><b>4</b><c>5</c></jump><jump><b>2</b><c>1</c></jump><jump><b>6</b><c>18</c></jump>
+	<d>2</d><d>1</d><d>0</d><d>1</d><d>2</d><d>1</d><d>2</d><d>4</d><d>4</d><d>4</d><d>3</d><d>4</d><d>3</d><d>3</d><d>5</d><d>5</d><d>3</d><d>2</d><d>4</d><d>5</d><d>4</d><d>3</d><d>2</d><d>4</d><d>3</d><d>3</d><d>5</d><d>4</d><d>5</d><d>5</d><d>4</d><d>3</d>
+</node>
+
+<node>
+	<x>475</x><y>372</y><g>4</g>
+	<neighbor>3</neighbor><neighbor>5</neighbor><neighbor>6</neighbor>
+	<jump><b>3</b><c>2</c></jump><jump><b>5</b><c>14</c></jump><jump><b>6</b><c>7</c></jump>
+	<d>3</d><d>2</d><d>1</d><d>0</d><d>1</d><d>1</d><d>2</d><d>3</d><d>3</d><d>4</d><d>3</d><d>4</d><d>2</d><d>2</d><d>5</d><d>5</d><d>3</d><d>2</d><d>4</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d><d>3</d><d>4</d><d>6</d><d>5</d><d>6</d><d>6</d><d>5</d><d>4</d>
+</node>
+
+<node>
+	<x>493</x><y>341</y><g>5</g>
+	<neighbor>4</neighbor><neighbor>14</neighbor><neighbor>7</neighbor><neighbor>13</neighbor>
+	<jump><b>4</b><c>3</c></jump><jump><b>14</b><c>8</c></jump><jump><b>7</b><c>18</c></jump><jump><b>13</b><c>9</c></jump>
+	<d>4</d><d>3</d><d>2</d><d>1</d><d>0</d><d>2</d><d>1</d><d>2</d><d>2</d><d>3</d><d>2</d><d>4</d><d>1</d><d>1</d><d>5</d><d>5</d><d>3</d><d>2</d><d>4</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d><d>3</d><d>5</d><d>7</d><d>6</d><d>6</d><d>6</d><d>5</d><d>4</d>
+</node>
+
+<node>
+	<x>432</x><y>364</y><g>6</g>
+	<neighbor>4</neighbor><neighbor>7</neighbor><neighbor>3</neighbor><neighbor>18</neighbor>
+	<jump><b>7</b><c>11</c></jump><jump><b>3</b><c>2</c></jump><jump><b>18</b><c>17</c></jump>
+	<d>3</d><d>2</d><d>1</d><d>1</d><d>2</d><d>0</d><d>1</d><d>4</d><d>4</d><d>3</d><d>2</d><d>3</d><d>3</d><d>3</d><d>4</d><d>4</d><d>2</d><d>1</d><d>3</d><d>4</d><d>3</d><d>2</d><d>2</d><d>3</d><d>2</d><d>4</d><d>6</d><d>5</d><d>5</d><d>5</d><d>4</d><d>3</d>
+</node>
+
+<node>
+	<x>434</x><y>330</y><g>7</g>
+	<neighbor>18</neighbor><neighbor>5</neighbor><neighbor>6</neighbor><neighbor>11</neighbor>
+	<jump><b>18</b><c>22</c></jump><jump><b>5</b><c>13</c></jump><jump><b>6</b><c>4</c></jump><jump><b>11</b><c>10</c></jump>
+	<d>4</d><d>3</d><d>2</d><d>2</d><d>1</d><d>1</d><d>0</d><d>3</d><d>3</d><d>2</d><d>1</d><d>3</d><d>2</d><d>2</d><d>4</d><d>4</d><d>2</d><d>1</d><d>3</d><d>4</d><d>3</d><d>2</d><d>2</d><d>3</d><d>2</d><d>4</d><d>6</d><d>5</d><d>5</d><d>5</d><d>4</d><d>3</d>
+</node>
+
+<node>
+	<x>552</x><y>201</y><g>8</g>
+	<neighbor>9</neighbor><neighbor>14</neighbor>
+	<jump><b>9</b><c>10</c></jump><jump><b>14</b><c>5</c></jump>
+	<d>6</d><d>5</d><d>4</d><d>3</d><d>2</d><d>4</d><d>3</d><d>0</d><d>1</d><d>2</d><d>3</d><d>3</d><d>2</d><d>1</d><d>4</d><d>5</d><d>4</d><d>4</d><d>5</d><d>6</d><d>6</d><d>5</d><d>5</d><d>5</d><d>4</d><d>7</d><d>9</d><d>8</d><d>8</d><d>7</d><d>7</d><d>6</d>
+</node>
+
+<node>
+	<x>503</x><y>171</y><g>9</g>
+	<neighbor>10</neighbor><neighbor>8</neighbor><neighbor>13</neighbor>
+	<jump><b>10</b><c>12</c></jump><jump><b>13</b><c>5</c></jump>
+	<d>6</d><d>5</d><d>4</d><d>3</d><d>2</d><d>4</d><d>3</d><d>1</d><d>0</d><d>1</d><d>2</d><d>2</d><d>1</d><d>2</d><d>3</d><d>4</d><d>3</d><d>4</d><d>4</d><d>5</d><d>6</d><d>5</d><d>5</d><d>4</d><d>3</d><d>7</d><d>9</d><d>8</d><d>7</d><d>6</d><d>6</d><d>6</d>
+</node>
+
+<node>
+	<x>411</x><y>165</y><g>A</g>
+	<neighbor>12</neighbor><neighbor>9</neighbor><neighbor>11</neighbor>
+	<jump><b>12</b><c>17</c></jump><jump><b>9</b><c>8</c></jump><jump><b>11</b><c>7</c></jump>
+	<d>6</d><d>5</d><d>4</d><d>4</d><d>3</d><d>3</d><d>2</d><d>2</d><d>1</d><d>0</d><d>1</d><d>1</d><d>2</d><d>3</d><d>2</d><d>3</d><d>2</d><d>3</d><d>3</d><d>4</d><d>5</d><d>4</d><d>4</d><d>3</d><d>2</d><d>6</d><d>8</d><d>7</d><d>6</d><d>5</d><d>5</d><d>5</d>
+</node>
+
+<node>
+	<x>431</x><y>199</y><g>B</g>
+	<neighbor>13</neighbor><neighbor>25</neighbor><neighbor>7</neighbor><neighbor>10</neighbor>
+	<jump><b>13</b><c>14</c></jump><jump><b>25</b><c>17</c></jump><jump><b>7</b><c>6</c></jump>
+	<d>5</d><d>4</d><d>3</d><d>3</d><d>2</d><d>2</d><d>1</d><d>3</d><d>2</d><d>1</d><d>0</d><d>2</d><d>1</d><d>2</d><d>3</d><d>4</d><d>2</d><d>2</d><d>3</d><d>4</d><d>4</d><d>3</d><d>3</d><d>3</d><d>1</d><d>5</d><d>7</d><d>6</d><d>6</d><d>5</d><d>5</d><d>4</d>
+</node>
+
+<node>
+	<x>322</x><y>156</y><g>C</g>
+	<neighbor>17</neighbor><neighbor>10</neighbor><neighbor>15</neighbor><neighbor>25</neighbor>
+	<jump><b>17</b><c>19</c></jump><jump><b>10</b><c>9</c></jump><jump><b>15</b><c>16</c></jump><jump><b>25</b><c>18</c></jump>
+	<d>5</d><d>4</d><d>4</d><d>4</d><d>4</d><d>3</d><d>3</d><d>3</d><d>2</d><d>1</d><d>2</d><d>0</d><d>3</d><d>4</d><d>1</d><d>2</d><d>1</d><d>2</d><d>2</d><d>3</d><d>4</d><d>3</d><d>3</d><d>2</d><d>1</d><d>5</d><d>7</d><d>6</d><d>5</d><d>4</d><d>4</d><d>4</d>
+</node>
+
+<node>
+	<x>499</x><y>222</y><g>D</g>
+	<neighbor>14</neighbor><neighbor>11</neighbor><neighbor>5</neighbor><neighbor>9</neighbor>
+	<jump><b>11</b><c>25</c></jump><jump><b>5</b><c>7</c></jump>
+	<d>5</d><d>4</d><d>3</d><d>2</d><d>1</d><d>3</d><d>2</d><d>2</d><d>1</d><d>2</d><d>1</d><d>3</d><d>0</d><d>1</d><d>4</d><d>5</d><d>3</d><d>3</d><d>4</d><d>5</d><d>5</d><d>4</d><d>4</d><d>4</d><d>2</d><d>6</d><d>8</d><d>7</d><d>7</d><d>6</d><d>6</d><d>5</d>
+</node>
+
+<node>
+	<x>585</x><y>268</y><g>E</g>
+	<neighbor>5</neighbor><neighbor>8</neighbor><neighbor>13</neighbor>
+	<jump><b>5</b><c>4</c></jump><jump><b>13</b><c>11</c></jump>
+	<d>5</d><d>4</d><d>3</d><d>2</d><d>1</d><d>3</d><d>2</d><d>1</d><d>2</d><d>3</d><d>2</d><d>4</d><d>1</d><d>0</d><d>5</d><d>6</d><d>4</d><d>3</d><d>5</d><d>6</d><d>5</d><d>4</d><d>4</d><d>5</d><d>3</d><d>6</d><d>8</d><d>7</d><d>7</d><d>7</d><d>6</d><d>5</d>
+</node>
+
+<node>
+	<x>249</x><y>137</y><g>F</g>
+	<neighbor>16</neighbor><neighbor>12</neighbor>
+	<jump><b>16</b><c>20</c></jump><jump><b>12</b><c>25</c></jump>
+	<d>6</d><d>5</d><d>5</d><d>5</d><d>5</d><d>4</d><d>4</d><d>4</d><d>3</d><d>2</d><d>3</d><d>1</d><d>4</d><d>5</d><d>0</d><d>1</d><d>2</d><d>3</d><d>3</d><d>2</d><d>3</d><d>4</d><d>4</d><d>2</d><d>2</d><d>5</d><d>6</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d>
+</node>
+
+<node>
+	<x>219</x><y>158</y><g>G</g>
+	<neighbor>20</neighbor><neighbor>15</neighbor><neighbor>24</neighbor>
+	<jump><b>15</b><c>12</c></jump><jump><b>20</b><c>21</c></jump><jump><b>24</b><c>17</c></jump>
+	<d>5</d><d>5</d><d>5</d><d>5</d><d>5</d><d>4</d><d>4</d><d>5</d><d>4</d><d>3</d><d>4</d><d>2</d><d>5</d><d>6</d><d>1</d><d>0</d><d>2</d><d>3</d><d>2</d><d>1</d><d>2</d><d>3</d><d>4</d><d>1</d><d>3</d><d>4</d><d>5</d><d>4</d><d>3</d><d>2</d><d>2</d><d>3</d>
+</node>
+
+<node>
+	<x>287</x><y>222</y><g>H</g>
+	<neighbor>19</neighbor><neighbor>12</neighbor><neighbor>25</neighbor><neighbor>24</neighbor><neighbor>18</neighbor>
+	<jump><b>19</b><c>20</c></jump><jump><b>12</b><c>10</c></jump><jump><b>25</b><c>11</c></jump><jump><b>24</b><c>16</c></jump><jump><b>18</b><c>6</c></jump>
+	<d>4</d><d>3</d><d>3</d><d>3</d><d>3</d><d>2</d><d>2</d><d>4</d><d>3</d><d>2</d><d>2</d><d>1</d><d>3</d><d>4</d><d>2</d><d>2</d><d>0</d><d>1</d><d>1</d><d>2</d><d>3</d><d>2</d><d>2</d><d>1</d><d>1</d><d>4</d><d>6</d><d>5</d><d>4</d><d>3</d><d>3</d><d>3</d>
+</node>
+
+<node>
+	<x>345</x><y>297</y><g>I</g>
+	<neighbor>25</neighbor><neighbor>23</neighbor><neighbor>22</neighbor><neighbor>7</neighbor><neighbor>6</neighbor><neighbor>17</neighbor>
+	<jump><b>25</b><c>12</c></jump><jump><b>23</b><c>22</c></jump><jump><b>22</b><c>32</c></jump><jump><b>7</b><c>5</c></jump><jump><b>6</b><c>3</c></jump>
+	<d>3</d><d>2</d><d>2</d><d>2</d><d>2</d><d>1</d><d>1</d><d>4</d><d>4</d><d>3</d><d>2</d><d>2</d><d>3</d><d>3</d><d>3</d><d>3</d><d>1</d><d>0</d><d>2</d><d>3</d><d>2</d><d>1</d><d>1</d><d>2</d><d>1</d><d>3</d><d>5</d><d>4</d><d>4</d><d>4</d><d>3</d><d>2</d>
+</node>
+
+<node>
+	<x>240</x><y>266</y><g>J</g>
+	<neighbor>20</neighbor><neighbor>17</neighbor>
+	<jump><b>20</b><c>30</c></jump><jump><b>17</b><c>12</c></jump>
+	<d>5</d><d>4</d><d>4</d><d>4</d><d>4</d><d>3</d><d>3</d><d>5</d><d>4</d><d>3</d><d>3</d><d>2</d><d>4</d><d>5</d><d>3</d><d>2</d><d>1</d><d>2</d><d>0</d><d>1</d><d>2</d><d>3</d><d>3</d><d>2</d><d>2</d><d>4</d><d>5</d><d>4</d><d>3</d><d>2</d><d>2</d><d>3</d>
+</node>
+
+<node>
+	<x>196</x><y>322</y><g>K</g>
+	<neighbor>30</neighbor><neighbor>19</neighbor><neighbor>16</neighbor><neighbor>21</neighbor><neighbor>31</neighbor>
+	<jump><b>30</b><c>29</c></jump><jump><b>19</b><c>17</c></jump><jump><b>16</b><c>15</c></jump><jump><b>21</b><c>22</c></jump><jump><b>31</b><c>29</c></jump>
+	<d>4</d><d>4</d><d>5</d><d>5</d><d>5</d><d>4</d><d>4</d><d>6</d><d>5</d><d>4</d><d>4</d><d>3</d><d>5</d><d>6</d><d>2</d><d>1</d><d>2</d><d>3</d><d>1</d><d>0</d><d>1</d><d>2</d><d>3</d><d>2</d><d>3</d><d>3</d><d>4</d><d>3</d><d>2</d><d>1</d><d>1</d><d>2</d>
+</node>
+
+<node>
+	<x>240</x><y>380</y><g>L</g>
+	<neighbor>22</neighbor><neighbor>20</neighbor>
+	<jump><b>22</b><c>23</c></jump><jump><b>20</b><c>16</c></jump>
+	<d>4</d><d>3</d><d>4</d><d>4</d><d>4</d><d>3</d><d>3</d><d>6</d><d>6</d><d>5</d><d>4</d><d>4</d><d>5</d><d>5</d><d>3</d><d>2</d><d>3</d><d>2</d><d>2</d><d>1</d><d>0</d><d>1</d><d>2</d><d>3</d><d>3</d><d>3</d><d>5</d><d>4</d><d>3</d><d>2</d><d>2</d><d>2</d>
+</node>
+
+<node>
+	<x>279</x><y>399</y><g>M</g>
+	<neighbor>23</neighbor><neighbor>21</neighbor><neighbor>32</neighbor><neighbor>18</neighbor>
+	<jump><b>23</b><c>18</c></jump><jump><b>21</b><c>20</c></jump><jump><b>32</b><c>31</c></jump><jump><b>18</b><c>7</c></jump>
+	<d>3</d><d>2</d><d>3</d><d>3</d><d>3</d><d>2</d><d>2</d><d>5</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d><d>4</d><d>4</d><d>3</d><d>2</d><d>1</d><d>3</d><d>2</d><d>1</d><d>0</d><d>1</d><d>3</d><d>2</d><d>2</d><d>4</d><d>3</d><d>3</d><d>3</d><d>2</d><d>1</d>
+</node>
+
+<node>
+	<x>340</x><y>403</y><g>N</g>
+	<neighbor>18</neighbor><neighbor>22</neighbor><neighbor>2</neighbor><neighbor>32</neighbor>
+	<jump><b>18</b><c>25</c></jump><jump><b>22</b><c>21</c></jump><jump><b>2</b><c>1</c></jump><jump><b>32</b><c>26</c></jump>
+	<d>2</d><d>1</d><d>2</d><d>3</d><d>3</d><d>2</d><d>2</d><d>5</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d><d>4</d><d>4</d><d>4</d><d>2</d><d>1</d><d>3</d><d>3</d><d>2</d><d>1</d><d>0</d><d>3</d><d>2</d><d>2</d><d>4</d><d>3</d><d>3</d><d>3</d><d>2</d><d>1</d>
+</node>
+
+<node>
+	<x>249</x><y>200</y><g>O</g>
+	<neighbor>17</neighbor><neighbor>16</neighbor>
+	<jump><b>17</b><c>25</c></jump>
+	<d>5</d><d>4</d><d>4</d><d>4</d><d>4</d><d>3</d><d>3</d><d>5</d><d>4</d><d>3</d><d>3</d><d>2</d><d>4</d><d>5</d><d>2</d><d>1</d><d>1</d><d>2</d><d>2</d><d>2</d><d>3</d><d>3</d><d>3</d><d>0</d><d>2</d><d>5</d><d>6</d><d>5</d><d>4</d><d>3</d><d>3</d><d>4</d>
+</node>
+
+<node>
+	<x>328</x><y>205</y><g>P</g>
+	<neighbor>12</neighbor><neighbor>18</neighbor><neighbor>11</neighbor><neighbor>17</neighbor>
+	<jump><b>12</b><c>15</c></jump><jump><b>18</b><c>23</c></jump><jump><b>11</b><c>13</c></jump><jump><b>17</b><c>24</c></jump>
+	<d>4</d><d>3</d><d>3</d><d>3</d><d>3</d><d>2</d><d>2</d><d>4</d><d>3</d><d>2</d><d>1</d><d>1</d><d>2</d><d>3</d><d>2</d><d>3</d><d>1</d><d>1</d><d>2</d><d>3</d><d>3</d><d>2</d><d>2</d><d>2</d><d>0</d><d>4</d><d>6</d><d>5</d><d>5</d><d>4</d><d>4</d><d>3</d>
+</node>
+
+<node>
+	<x>23</x><y>559</y><g>Q</g>
+	<neighbor>1</neighbor><neighbor>32</neighbor><neighbor>28</neighbor>
+	<jump><b>1</b><c>2</c></jump><jump><b>32</b><c>23</c></jump><jump><b>28</b><c>29</c></jump>
+	<d>1</d><d>2</d><d>3</d><d>4</d><d>5</d><d>4</d><d>4</d><d>7</d><d>7</d><d>6</d><d>5</d><d>5</d><d>6</d><d>6</d><d>5</d><d>4</d><d>4</d><d>3</d><d>4</d><d>3</d><d>3</d><d>2</d><d>2</d><d>5</d><d>4</d><d>0</d><d>2</d><d>1</d><d>2</d><d>3</d><d>2</d><d>1</d>
+</node>
+
+<node>
+	<x>95</x><y>560</y><g>R</g>
+	<neighbor>28</neighbor>
+	<jump><b>28</b><c>29</c></jump>
+	<d>3</d><d>4</d><d>5</d><d>6</d><d>7</d><d>6</d><d>6</d><d>9</d><d>9</d><d>8</d><d>7</d><d>7</d><d>8</d><d>8</d><d>6</d><d>5</d><d>6</d><d>5</d><d>5</d><d>4</d><d>5</d><d>4</d><d>4</d><d>6</d><d>6</d><d>2</d><d>0</d><d>1</d><d>2</d><d>3</d><d>3</d><d>3</d>
+</node>
+
+<node>
+	<x>73</x><y>527</y><g>S</g>
+	<neighbor>27</neighbor><neighbor>29</neighbor><neighbor>26</neighbor>
+	<jump><b>29</b><c>30</c></jump><jump><b>29</b><c>31</c></jump>
+	<d>2</d><d>3</d><d>4</d><d>5</d><d>6</d><d>5</d><d>5</d><d>8</d><d>8</d><d>7</d><d>6</d><d>6</d><d>7</d><d>7</d><d>5</d><d>4</d><d>5</d><d>4</d><d>4</d><d>3</d><d>4</d><d>3</d><d>3</d><d>5</d><d>5</d><d>1</d><d>1</d><d>0</d><d>1</d><d>2</d><d>2</d><d>2</d>
+</node>
+
+<node>
+	<x>109</x><y>476</y><g>T</g>
+	<neighbor>28</neighbor><neighbor>30</neighbor><neighbor>31</neighbor>
+	<jump><b>28</b><c>27</c></jump><jump><b>30</b><c>20</c></jump><jump><b>28</b><c>26</c></jump><jump><b>31</b><c>20</c></jump>
+	<d>3</d><d>4</d><d>5</d><d>6</d><d>6</d><d>5</d><d>5</d><d>8</d><d>7</d><d>6</d><d>6</d><d>5</d><d>7</d><d>7</d><d>4</d><d>3</d><d>4</d><d>4</d><d>3</d><d>2</d><d>3</d><d>3</d><d>3</d><d>4</d><d>5</d><d>2</d><d>2</d><d>1</d><d>0</d><d>1</d><d>1</d><d>2</d>
+</node>
+
+<node>
+	<x>112</x><y>406</y><g>U</g>
+	<neighbor>29</neighbor><neighbor>20</neighbor><neighbor>31</neighbor>
+	<jump><b>29</b><c>28</c></jump><jump><b>20</b><c>19</c></jump><jump><b>31</b><c>32</c></jump>
+	<d>4</d><d>4</d><d>5</d><d>6</d><d>6</d><d>5</d><d>5</d><d>7</d><d>6</d><d>5</d><d>5</d><d>4</d><d>6</d><d>7</d><d>3</d><d>2</d><d>3</d><d>4</d><d>2</d><d>1</d><d>2</d><d>3</d><d>3</d><d>3</d><d>4</d><d>3</d><d>3</d><d>2</d><d>1</d><d>0</d><d>1</d><d>2</d>
+</node>
+
+<node>
+	<x>180</x><y>432</y><g>V</g>
+	<neighbor>30</neighbor><neighbor>32</neighbor><neighbor>29</neighbor><neighbor>20</neighbor>
+	<jump><b>32</b><c>22</c></jump><jump><b>29</b><c>28</c></jump>
+	<d>3</d><d>3</d><d>4</d><d>5</d><d>5</d><d>4</d><d>4</d><d>7</d><d>6</d><d>5</d><d>5</d><d>4</d><d>6</d><d>6</d><d>3</d><d>2</d><d>3</d><d>3</d><d>2</d><d>1</d><d>2</d><d>2</d><d>2</d><d>3</d><d>4</d><d>2</d><d>3</d><d>2</d><d>1</d><d>1</d><d>0</d><d>1</d>
+</node>
+
+<node>
+	<x>253</x><y>448</y><g>W</g>
+	<neighbor>23</neighbor><neighbor>26</neighbor><neighbor>31</neighbor><neighbor>22</neighbor>
+	<jump><b>23</b><c>2</c></jump><jump><b>26</b><c>1</c></jump><jump><b>31</b><c>30</c></jump><jump><b>22</b><c>18</c></jump>
+	<d>2</d><d>2</d><d>3</d><d>4</d><d>4</d><d>3</d><d>3</d><d>6</d><d>6</d><d>5</d><d>4</d><d>4</d><d>5</d><d>5</d><d>4</d><d>3</d><d>3</d><d>2</d><d>3</d><d>2</d><d>2</d><d>1</d><d>1</d><d>4</d><d>3</d><d>1</d><d>3</d><d>2</d><d>2</d><d>2</d><d>1</d><d>0</d>
+</node>
+
+<sixty>59</sixty>
+<sixty>58</sixty>
+<sixty>57</sixty>
+<sixty>56</sixty>
+<sixty>55</sixty>
+<sixty>54</sixty>
+<sixty>53</sixty>
+<sixty>52</sixty>
+<sixty>51</sixty>
+<sixty>50</sixty>
+<sixty>49</sixty>
+<sixty>48</sixty>
+<sixty>47</sixty>
+<sixty>46</sixty>
+<sixty>45</sixty>
+<sixty>44</sixty>
+<sixty>43</sixty>
+<sixty>42</sixty>
+<sixty>41</sixty>
+<sixty>40</sixty>
+<sixty>39</sixty>
+<sixty>38</sixty>
+<sixty>37</sixty>
+<sixty>36</sixty>
+<sixty>35</sixty>
+<sixty>34</sixty>
+<sixty>33</sixty>
+<sixty>32</sixty>
+<sixty>31</sixty>
+<sixty>30</sixty>
+<sixty>29</sixty>
+<sixty>28</sixty>
+<sixty>27</sixty>
+<sixty>26</sixty>
+<sixty>25</sixty>
+<sixty>24</sixty>
+<sixty>23</sixty>
+<sixty>22</sixty>
+<sixty>21</sixty>
+<sixty>20</sixty>
+<sixty>19</sixty>
+<sixty>18</sixty>
+<sixty>17</sixty>
+<sixty>16</sixty>
+<sixty>15</sixty>
+<sixty>14</sixty>
+<sixty>13</sixty>
+<sixty>12</sixty>
+<sixty>11</sixty>
+<sixty>10</sixty>
+<sixty>9</sixty>
+<sixty>8</sixty>
+<sixty>7</sixty>
+<sixty>6</sixty>
+<sixty>5</sixty>
+<sixty>4</sixty>
+<sixty>3</sixty>
+<sixty>2</sixty>
+<sixty>1</sixty>
+
+</main>

@@ -1,0 +1,61 @@
+/*background*/
+html, body{
+  background: rgb(40, 33, 37);
+  margin-top: 15px;
+}
+/*background*/
+/*gameWindow*/
+.gameArea{
+  height: 640px;
+  width: 780px;
+  background: #645e65;
+  display: block;
+  margin: auto;
+  position: relative;
+  box-shadow: 0px 4px 10px 0px rgba(75,195,60,0.4);
+}
+/*gameWindow*/
+/*desktop*/
+.desktop{
+  background: rgb(27, 100, 176);
+  display: block;
+  position: relative;
+  height: 640px;
+  width: 780px;
+}
+/*desktop*/
+/*formatting text area*/
+.textFormat{
+  display: block;
+  padding: 30px;
+  color: white;
+  font-family: monospace;
+  font-size: 17px;
+}
+.firstTip{
+  margin-top: 100px;
+}
+.secondTip{
+  text-decoration: underline;
+}
+/*formatting text area*/
+/*button customisation*/
+.startGame{
+  text-align: right;
+  margin-top: 90px;
+  margin-right: 50px;
+}
+a{
+  cursor: pointer;
+  text-decoration: none;
+  margin: 0;
+  padding: 5px 30px;
+  background: rgb(15, 121, 62);
+  color: rgb(196, 214, 67);
+  text-align: right;
+}
+a:hover{
+  color: #ffffff;
+  cursor: pointer;
+}
+/*button customisation*/

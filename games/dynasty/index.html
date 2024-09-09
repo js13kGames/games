@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en-en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Kamil Zurek">
+<title>Dynasty</title>
+<style>
+body {
+background: #330000;color: #ecd2a0;text-align: center;font-size: 22px;line-height: 32px;font-family:'Luminari',serif;padding-top: 10px;
+font-weight: 700;letter-spacing: 1px;
+background: url('data:image/gif;base64,R0lGODlhIAAQAJEAACEJDjAKERIHCkAKEiH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAIAAQAAACcxQQOTvpYpBiLsEzV8D7StZwQCQF2oaNkXMeiGpUiXtAq0yrbiW59j2b1TwyIQzIG/5KDtovhvMtd8on6XW0hSoejobZ/WxnRNC4swIZ0RxTA/UiTuDKdtMpjx7tvSofPlUEaGNnVAV1J0WIY0WYkzVFUwAAOw==');
+background-size: 512px;background-repeat: repeat;image-rendering: pixelated;}
+* { box-sizing: border-box;}
+.crt::before {
+content: " "; display: block;position: fixed;top: 0;left: 0;bottom: 0;right: 0;
+background:linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));z-index: 2;background-size: 100% 2px, 3px 100%;pointer-events: none;}
+.luck, .heart {width: 21px;height:21px;animation:pulse 1s ease infinite;margin-left: 10px;margin-right: 10px;display:inline-block;}
+.heart {fill: #ff0a0a;background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNTYgMjU2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPjxnPjxwYXRoIGZpbGw9IiNmZjBhMGEiIGQ9Ik0xMCw4Ni4xYzAsNzYuMSwxMTgsMTQ0LjYsMTE4LDE0NC42czExOC02OC41LDExOC0xNDQuNmMwLTMxLjUtMjIuOC02MC45LTU3LjEtNjAuOUMxNTcuNCwyNS4yLDEyOCw0NywxMjgsNzguNWMwLTMxLjUtMjkuNC01My4zLTYwLjktNTMuM0MzMi44LDI1LjIsMTAsNTQuNiwxMCw4Ni4xeiIvPjwvZz48L2c+DQo8L3N2Zz4=");}
+.luck {fill: #ab00ba;background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNTYgMjU2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPjxnPjxwYXRoIGZpbGw9IiNhYjAwYmEiIGQ9Ik0xMCw4Ni4xYzAsNzYuMSwxMTgsMTQ0LjYsMTE4LDE0NC42czExOC02OC41LDExOC0xNDQuNmMwLTMxLjUtMjIuOC02MC45LTU3LjEtNjAuOUMxNTcuNCwyNS4yLDEyOCw0NywxMjgsNzguNWMwLTMxLjUtMjkuNC01My4zLTYwLjktNTMuM0MzMi44LDI1LjIsMTAsNTQuNiwxMCw4Ni4xeiIvPjwvZz48L2c+DQo8L3N2Zz4=");}
+@keyframes pulse {0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);}}
+@keyframes anima {0% {opacity: 0; filter: contrast(100%);} 25% {opacity: 1;filter:contrast(100%);} 50% {opacity: 1;filter:contrast(150%);}75% {opacity:1;filter:contrast(100%);} 100% {opacity:0;filter: contrast(100%);}}
+.anima1 {animation: anima 4s infinite;}
+.anima2 {animation: anima 3s infinite;}
+.anima3 {animation: anima 5s infinite;}
+.anima4 {animation: anima 2s infinite;}
+.anima5 {animation: anima 6s infinite;}
+.emerald {width: 24px; height: 24px; background: #090; border: 3px solid #0c0; border-radius: 50%; display: inline-block; margin-right: 10px; margin-left: 10px;}
+.ruby {width: 24px; height: 24px; background: #a00; border: 3px solid #e00; border-radius: 50%; display: inline-block; margin-right: 10px; margin-left: 10px;}
+.sapphire {width: 24px; height: 24px; background: #00c; border: 3px solid #3b3bff; border-radius: 50%; display: inline-block; margin-right: 10px; margin-left: 10px;}
+.diamond {width: 24px; height: 24px; background: #888; border: 3px solid #ccc; border-radius: 50%; display: inline-block; margin-right: 10px; margin-left: 10px;}
+.heartcolor {color: #ff0a0a;}
+.luckcolor {color: #ab00ba;}
+.emeraldcolor {color: #090;}
+.rubycolor {color: #a00;}
+.sapphirecolor {color: #00c;}
+.diamondcolor {color: #888;}
+.sonsmall {display: inline-block; width: 15px; height: 15px; border: 3px solid #69c; border-radius: 50%; margin: 2px; background: #69c;}
+.daughtersmall {display: inline-block; width: 15px; height: 15px; border: 3px solid #c33; border-radius: 50%; margin: 2px; background: #c33;}
+.married {border: 2px solid #ffffcc;}
+.karta {flex-basis: 256px; height: 256px;}
+#kartaintro1 .karta, #kartaintro2 .karta {flex-basis: 192px; height: 192px;}
+#kartaintro1 {margin-top: 20px;}
+.karta.k1, .karta.k2, .karta.k3, .karta.m1, .karta.m2, .karta.m3 {image-rendering: pixelated; background-size: 100% 100%;}
+.karta.face {width: 256px; height: 256px; image-rendering: pixelated; background-size: cover !important; display: inline-block; border: 6px solid #944; margin: 0 auto auto;}
+.title {background:  url('data:image/gif;base64,R0lGODlhYAAgAKIAAP//zP/Mmf+ZmVsRAP9mZv//////mQAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAAHACwAAAAAYAAgAAAD/3i63P4wykmrvTjrzbv/YCiOZGmGwQIEbJueMOfOgtDGOCYMPOH7ggNrkMMQT7sBQSkUBghFyzPGIkwP1mtUUj0FBizFMQtdvMTbA7hs9rSUX/GOrDoK7YrzqnHbP1hBZVVvCgB2cRaGQAMCBmMKdHlhLmVgKYZdZjWWWkMtgk8Bcwcrk58VAktgjKJoWJlwXzyISjZKlmxiVmsLVjs2bHNasTyrFktfoWFYVpEHO1NgQXm8NWdtr2y7ugyhudBQ2xVrBNCIZc7JUKxmzWqMDqXukKKNxnnzCuCveFJ0AOgyPeMlToi7TXy8XcEki4ABNuoYzAqHSIcSQQG1pJpSMNDbQDy26Gn7kephOy3vOFa8ICsAgDukigXjxatXHEZ4xOUzaNDRySBHZolBOWHFxVlvfDjYSC2YQ6CAprECtuzOm05gHFWCdycXF6ULrBFlAA1YLkYPl9iq5DLWlCfWLjKwAiDVglk1wFbw2g4b2R4QnihVhIYwTzX4IqDswXfCWAhsADZ4KWIaS6+ULfSDgIcFgFKiqqZxAjr0NS6nl3qVxXhnGtZHHwdOvUKvxBoSG0dhZBmLhiStubTTveWM4C2/Rkuwq7y58+fQo0ufHiUBADs=');background-size: 432px 144px;image-rendering: pixelated;width: 432px;height: 144px;display: block;margin: 0 auto;}
+.title.wiekszy {background-size: 576px 192px;image-rendering: pixelated;width: 576px;height: 192px;margin-top: 10px;}
+.karty, .elementy {margin: 0px auto; display: flex; flex-direction: row; max-width: 1280px;justify-content: space-evenly;}
+#tutorial {margin: 0px auto; display: flex; flex-direction: column; max-width: 1280px;justify-content: space-evenly;}
+#wybranek.karty {flex-direction: column;}
+.horiz {flex-direction: row;display: flex;}
+#dismiss, #accept {width: 50%;padding: 5px;cursor: pointer; transition: all 500ms ease}
+#dismiss:hover, #accept:hover {background: #aa0000; color: #fff;}
+#dismiss, .dismiss {background: #333; color: #fff;}
+#accept, .accept {background: #ecc71b; color: #000}
+.dismiss, .accept, .malypad {padding: 1px 3px;}
+#dismiss {animation: accent1 1.5s linear infinite;}
+#accept {animation: accent1 1.6s linear infinite;}
+@keyframes accent1 {0% {filter: brightness(1.0);} 50% {filter: brightness(1.6);} 100% {filter: brightness(1.0);}}
+.cala, .encounter, #encounter, #gameover, #gameend {margin: 15px auto; display: flex; flex-direction: row; max-width: 1280px;justify-content: space-evenl;}
+#counselor, .komunikat {font-size: 15px;font-weight: 400;}
+.tuttext {font-size: 16px;font-weight: 400;color: #000;margin: 10px 20px 20px 20px;}
+.tutintro {font-size: 22px;font-weight: 700;color: #aa0000;border-bottom: 2px solid #aa0000;padding-bottom: 10px;margin-bottom: 10px;}
+.tutintro2 {font-size: 34px;font-weight: 700;color: #aa0000;}
+.elementyodstep {margin: 16px auto; display: flex; flex-direction: row; max-width: 1280px;justify-content: space-evenly;}
+.drzewo {flex-basis: 200px; flex-grow: 1; margin: 0 5px;}
+.cwierc {flex-basis: 300px; flex-grow: 1; margin: 0 5px;}
+.polowa {flex-basis: 600px; flex-grow: 2;margin: 0 5px;}
+#encounter, #gameover, #gameend {min-height: 431px;display: flex;flex-wrap: wrap;}
+.imie {color: #000;margin-bottom: 7px;font-size: 16px;line-height: 20px;}
+.children.son, .children.daughter, .children.coupleson, .children.coupledaughter {justify-content: center;align-items: center;width: 50%;border-bottom: 4px solid #c96;padding: 5px;margin: 0 5px;background: #522;}
+.startguzik {justify-content: center;align-items: center;width: 540px;border-bottom: 4px solid #c96;padding: 5px;margin: 20px auto 40px auto;background: #522;cursor: pointer;transition: all 500ms ease;-webkit-transition: all 500ms ease;}
+.startguzik:hover {border-bottom: 4px solid #522;background: #c96;color: #522;}
+#land, #strength, #wisdom, #diplomacy {justify-content: center;width: 25%;border-bottom: 4px solid #c96;padding: 5px;margin: 0 5px;background: #744;color: #fff;display: flex;align-items: center;}
+#next, #encounter1, #encounter2 {color: #5d3c1b; cursor: pointer; flex-basis: 46%; font-size: 17px; padding: 20px; background: #e1ccb8; margin: 2%; align-items: center; display: flex;}
+.bonus {display: flex;justify-content: center;align-items: center;margin-top: 10px;margin-bottom: 10px;}
+#land, .landop {background: #005020;color: #fff;}
+#strength, .strengthop {background: #600020;color: #fff;}
+#wisdom, .wisdomop {background: #002050;color: #fff;}
+#diplomacy, .diplomacyop {background: #555;color: #fff;}
+.sonhead, .daughterhead, .couplehead {background-size: cover !important;image-rendering: pixelated;width: 36px;display: flex;margin: 0 auto;height: 36px;display: flex;justify-content: space-evenly;margin: 2px 3px;border-radius: 50%;}
+.sonhead {border: 3px solid #6699cc;}
+.daughterhead {border: 3px solid #cc3333;}
+.couplehead {border: 3px solid #ffffcc;}
+.arrow {background-position: center center !important;background-repeat: no-repeat !important;background-size: 48px 36px !important;image-rendering: pixelated;width: 50%;display: flex;margin: 5px auto;height: 36px;color: #fff;}
+#sonheadcontainer, #daughterheadcontainer, #soncoupleheadcontainer, #daughtercoupleheadcontainer {flex-direction: row;display: flex;width: 50%;justify-content: center;}
+#rumors, #generation{flex-direction: row;display: flex;width: 50%;justify-content: center;align-items: center;}
+#time {flex-direction: row;display: flex;width: 100%;justify-content: center;align-items: center; font-size: 36px;margin-top:28px;letter-spacing: 3px;}
+#sonheadcontainer, #daughterheadcontainer, #soncoupleheadcontainer, #daughtercoupleheadcontainer {min-height: 40px;}
+#proposal, #tree, #encounterhead, #gameoverhead, #gameendhead, #treetutorial {justify-content: center;align-items: center;width: 100%;border-bottom: 4px solid #eee;padding: 5px;margin-bottom: 8px;background: #744;display: flex;height: 46px;}
+.sonhead, .daughterhead, .couplehead {display: flex;}
+.hide {display: none !important;}
+.passionandluck {display: flex;align-items: center;justify-content: center;margin-top: 20px;}
+#passion {flex-basis: 50%;background: #851000;color: #fff;border-bottom: 4px solid #c96;padding: 5px;margin: 0 5px;display: flex;align-items: center;justify-content: center;}
+.passionop {background: #851000;color: #fff;}
+#luck, .luckevent {flex-basis: 50%;background: #6c0075;color: #fff;border-bottom: 4px solid #c96;padding: 5px;margin: 0 5px;display: flex;align-items: center;justify-content: center;}
+.luckevent {flex-basis: 100%; margin-top: 10px;}
+.luckop {background: #6c0075;color: #fff;}
+.rumorop {background: #000;color: #fff;}
+#passion .heart, #luck .luck {position: relative;top: 3px;}
+.genstyl {font-size: 16px;color: #000;line-height: 16px;margin-bottom: 5px;font-weight: 400;}
+.papier {background: #ccac8d;}
+.stopka {font-size: 12px;margin-top: 20px;color: #c96;}
+.numerek {display: inline-block;background: #de8300;color: #fff;padding: 5px 10px;border-radius: 50%;line-height: 16px;margin-right: 10px;}
+#gameendtext, #gameendgen, #gameovertext, #gameovergen {flex-basis: 100%;margin-bottom: 20px;}
+#gameendtext, #gameovertext {color: #aa0000; font-size: 32px;margin-top: 10px;}
+#encounter1 > div {flex-basis: 100%;}
+.sonevent {background: #69c;color: #fff;padding: 2px 10px;border-radius: 50%;}
+.daughterevent {background: #cc3333;color: #fff;padding: 2px 10px;border-radius: 50%;}
+.arrow{background: url('data:image/gif;base64,R0lGODlhCAAIAKIAAP/MmcyZZplmZplmM2ZmM2YzADMzAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAAHACwAAAAACAAIAAADFli6a/MDKAflKdTeXI7HmncYgCgqYgIAOw==');}
+.sonhead {background: url('data:image/gif;base64,R0lGODlhDwAPALMAAP/MzMzMzMzMmcyZZpmZmZmZZplmM2ZmmWZmZmYzMzMzZjMzMzMzAP//////zP//mSH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAADwAPAAAEcDAghRZCzGLiHFkZuCThGADimAyAsbwLBzLMKgADCSKBWA+3hyHxYlRov8EAMYRhMkjDcJggHjNDoEBgQFSPI6mBNRhmCiLmVFAmJi47d0I6oC0KB1F1LiVlDgRQIHxVGQoHCjNIL3Mvh0V6VWNVLxEAOw==')}
+.daughterhead {background: url('data:image/gif;base64,R0lGODlhDwAPALMAAP/MzP/MmczMmcyZmcyZZsxmZsxmM5mZZplmZplmM2ZmM2YzM2YzADMzMzMzAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAADwAPAAAEhHAtlc5ZqZy0nEMLIyHDQARIIq4SkySEEBAhxirYEAiEmhgSh2RCGOA4DKAogUMIBqDXwkCTFGU6049AEC1OAFNWQR0YEghSwMw1nmYpxUBQQBS4CxOAUOgg+Gc0DlQAUg0/Ty8ODVQBdSM1DA0NVnsFDAwEIB4eGAIAShgICiwLCAEAEQA7')}
+.couplehead {background: url('data:image/gif;base64,R0lGODlhDwAPALMAAP//zP+ZmczMzMzMmcyZmcyZZsxmZpmZmZmZZplmM2YzMzMzADMAAP//////mf//ZiH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAADwAPAAAEfVA0ANpZDDOGgBCOABDLomToIQQDQRyHUs4ZUQzCkCBK32+KQoHQSuxMxoTMKCQSeAqEQblIEjwCHiNR6JkQhVyua3AZFa5CwlCYKgLt9pVoQOh6agW3UwisBARJbh8NbDhsSmtGBGV9Q24yPkp6YG0JDD2TSVVCCJg+oAoRADs=')}
+.k1 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP/MzP/MmczMzMzMmcyZmcyZZsxmM5mZZplmZplmM5kzM2ZmZmZmM2YzM2YzADNmZjMzMzMzAP//////zP//mf//Zv//M///AP/M///MZv/MM//MAP+Z//+ZzP+Zmf+ZZiH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/2AkjhHENOcJNSUEPa8rQiTtuozb2CWax6VgqwVxmBooRUKhMCR2shtR6mgsE4WCweBQVn9RGyRBYz6xmSy5ilrcwrRId9lwJAiDwdKuYCz+by5GEU0GWoaGWVxOCX9ubxEsXYYBAQVNCZlXSgiAkGUKBQATAB8GTHwMSgoIBwgQjzMOXRkBowCHXbN1DQcHj1AiswYBAsW4WwosvA0Lvzg5kVVYBAEDBgeaDkQOnY83dbNKCQNaCA0KHwpykX4LMOCzVSsIAAAEB1aWXSsL7mBI5GQaYOxWgERMTCzoBG+IHGIAKtmyVSCBkx2OHjyIxQNBNQKZ7FnShPGXRn/gaKY0KBAAZIEJE649QdIIgcaNb5StOHCtkDUtOgwwMPkHoKAErrQUIKAGBToIvv50krKCBoICHn8miJTAyEoC71DGkVGCJ56K6BgYQKIg6p8HSHa0WDeGpAMnh6iFXYBkrBUX465YqVjT1QM/DKr0iCSiAYJMSqxo8uPtT1wjcXo4RqCAD7UD+FoVVbWNhGZxSgoMuAX21wkry2aUYDNH9eoJEiYQQBACADs=')}
+.k2 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP//zP/MzP/MmczMzMzMmcyZmcyZZsxmZsxmM5mZmZlmZplmM2ZmZmZmM2YzMzMzZjMzMzMAAP//////mf//Zv//M///AP/M///MZv/MM//MAP+Z//+ZzP+Zmf+ZZv+ZMyH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/2AQDIQgnUM6FImSvAMgBbMEXAAQCKKgDgkGJAIZQhiMQgoQs40IO8Ir0XAoikUixGEl2CQxXaEkaBUbC2yE6Fi4FYOATCcoFARSR9FRHWrRCgsKBk09BQaHWFtuC3oQCpCBei4xPAQGBllFC1AIClwMfAxujgoAAgIGoUZbBnIGCIJXEA9oeg4MAwYKQpptJSKDu3uhXHwEfEZaVqiWkI1bXGcLCVtZREQKBCWXXH0QDauC1XpaRlwKeAuexopbkI7lbI0OBQHDEPTYRfDSylgOCIjZlUoem2J+9jkwQEaOnA6YHBlZtaZihAWo7nRwuOOAgXa0kOzLssCDgEAIeJzs6LDgY4OPR6q5G7KwgCAep1JFFFTkRbl2RBitQ2AAFSYBVdgckehoDakDUIveQ+TggbtPiiq2cUMU1aVd4RS1kZcwX0uBUQK1FGL1CFYta0hiGgPLjapQDx5EePCpETa4EdCsE2og3KwjsfyySriVlKQFDWg9YLBL0k/GjKoMAucobwFJ166xqdLgQEE9bR/5BWwxml0C8CQXCQEAOw==')}
+.k3 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP//zP/MzP/MmczMmcyZmcyZZsxmZsxmM8wzM5mZmZmZZplmZplmM5kzM2aZzGZmmWZmZmZmM2YzMzMzMzMAAP//////mf//Zv//M///AP/M///MZv/MM//MAP+Z//+ZzCH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/2AiJtCjQEkAqOvgDgVBQNNE3aJCPsmgBi6CYkEAEgqFxa1G4eV6vkDgWBgcpbACbRKRNBy6BOH1Gg8EgJagMKRJIhEnNIgsCO6qyrrASNbeO2ZjC3YqZxUVAC58hAoSbw8oY1QLeCtjaUBIfQQJExIPTjAKSHcCKmtYR6SsNQ4OYmx1Z5Zjp0gLDAcLCg8TrwmkfUhnxVkCi7oLEQuRwEl1kwMKDURHVnwMElyez4R8EkQDBg1w4VWbjzIQsLJ8XRIFQAsL23VIB+ViEyKyjjUTGEiZMibAPXASZvQT9ijCkVMrfhQwgITANgknYg3R1scKngCmChyoA+/NqiQMGMEYEEDgwIGVIO9UZMRmQQJZufiMzFYEALI9BSJ8GhJhlLsGwyjGcCETyRteJLK4e3RAAYMGBrISQFaHkBA5pGI4kpASq0umWUi5CDMg2AIYuR5le3vnSFUZCmQksMlLAVxtbzhx3ZRXiBUhwWTUZNCFAtkDulJqG5KFV9ubJ1LmskHhE1KyXnRMYpA32ImA9JZ9kkABsBcGMmQMYEBkSA0IEWjHjdD5kZdqu2aTIgRhy4TiuLfZWO3YJYIGSY6MSRACADs=')}
+.m1 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP//zP/MzP/MmczMzMzMmcyZmcyZZsxmM5mZmZmZZplmZplmM5kzAGZmZmYzM2YzADMzMzMAAP//////mf//Zv//M///AP/M///MZv/MM//MAP+Z//+ZzP+Zmf+ZZv+ZMyH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/yAQACQpASeqpuUYvER5zqs0FIN6icAQ+LmXDBVAIBoOCKSRGKRcolGOJik0lMorJIIYBEVA0ig1aJixDi3E0exFoaaAIq3QspURpYIAE3h7QlZ6ampZCkEEfAEFAiMKWGsJc0lrSmx8BAYGAwIGBS8NEXkQCwIAc6NYDQgBmQauBgICC6mxmQuQonudBgsGB7GyoXm+spkMDw94CQKuBwwMB4wCj0qlL50HDg8OSQUGHwcLCtC+Hr9JDpoEspoHDwtpBRgH4gsM6pqaDBCxlA4LAnJj4q4eMAWv9PViZyBJhHiW9vwSV08fgQYLgBnw0G4BswXJ8gU0eCCTgARrMqwqlCULJDyDxRQsaDXODMKEBjB0YPcMoEGAvUR2U1AgIAZNsiYxCOgzHhJfvgDO4abpqKZtHh0Qu5cEYcB4C66oQ1jvHrxHeZJA7JcgrIM6SXrpi8cNzxYICh41SBiwmi9tfJXhGdVtXAECBdpW29uLmzJRoiBlKYnYgKQkjHFBhrzmTDoI3wrINEMJy2bOSxrABZ0gHRLSb6/kGXXGEukj3UpXWpLGLmozZkIAADs=')}
+.m2 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP//zP/MZszMmcyZmcyZZsyZM8xmM5mZmZmZZplmZplmM5kzAGZmZmZmM2YzMzMzMzMzAP//////mf//Zv//M///AP/M///MzP/Mmf/MM//MAP+Z//+ZzP+Zmf+ZZv+ZMyH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/yAkQg/5nOjDrEzCpEzTknR6sscgIIyDNg1fQ1Qq3i4XQfICSL5QjsbDYTKdDoKIQCloNg8rlayRSJEaWMT2kNtetOWTg6HwFU2IhEIvRDAjAAJPZEEnVgp5Cop2DQNeWi8MiTZRCg2IlnKIAzpJPAkICA9SYgmXCQUEdaMJqohcB3lPZwyuBAV6dQq3igpdF5w8KQkHvL0KqcimDr6AAgMIhVeulYoFHgWLVANIzzxSJCtBzL0EGKpUDg4EsDF2rFSKrgHn2eoOCDoDBEHgKgnqGhioo07BQCpACEAjIEsBjDoNCKCDsMvELh0EYiHYE0UOggXIMJwjEKDDIjVboKjFWjaFBEBU1+h5wGCggAF2zyQiIJBAD5ASpg7YJODBg0SbBp7p2CER2sYiDHTUJImBYKotzwRI1JqLyg0BBqYSGKgoCRas+jC9Y3DgUtiwuhA4OJvymSIg7/gYzAaSwAmsgAWYumvIgYF4qQbGSRDYW684EBrYTAdBnVwSdLG6UvCCxN46NCrbYdtpy1GHJ5AhG1iiBmYBbLJK5AlOdQF7reXEUMF2SwgAOw==')}
+.m3 {background-image: url('data:image/gif;base64,R0lGODlhHAAcAMQAAP/MzP/MmczMzMzMmcyZmcyZZsxmM5mZZplmZplmM2ZmZmZmM2YzM2YzADNmZjMzMzMAAP//////zP//mf//Zv//M///AP/M///MZv/MM//MAP+Z//+ZzP+Zmf+ZZv+ZMyH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAHAAcAAAF/6AyEOQgnJIwmAIgSEDqmgMwIAdJ1AKJMI+FYsdz2YwChOIwahGUC4bi8VAoEEWTrZUYrkYHRHX6kFqxPFYgWRiNgNYHRP7ILZkqXgsbIByAY3RUVlc6JWsACwUFflRlQQsHBxBWCzhWOypciwSAVAwFAQABDAuDCAiRPGsIjGRADDmiAwkMc5VlBJoABwVic7B8AQEICXKlgAwDASvFpo5loaOjBQ0QDJ5YecWfVBAJbcy+xo4QwEQAOEBzc58JBtbm7IJeN7Vycw34CaT6gvJzSiQwZo5KAwYDQy3ydZBOOwQ7UDn8tjDUsAAFBgqi0oqAgXt03hEo4AHjsIwJGqfEY4Bj0TuN5hBi8MCgAT+MH9c9QBUmY055D8AVeHCQQAAMxWzNWeAHFThu5g5GsVkT1Ed8c3pVzKjkk8p3BgxESWCqYKmRBQws+hjG2z1w8Grii5Vj0QKwHxOICVos1L2D7Q70SIsN7rp22JBBaHir1Yi8YacAxeeN6MBSlgQngUeWXVR/i78O1GsJ4jgD2LDmO6jyIFcFXVJVukwGYE3WrmOHUQIoBAA7')}
+#encountertext {color: #000;flex-basis: 100%;}
+.mobile {display: none;}
+.ofe{pointer-events:none;background:#d4b69a !important;}
+@media only screen and (max-width: 1199px) {
+#gameui, #kartaintro1, #kartaintro2, #kartaintro3, #tutorial, #encounter {display: none !important;}
+.mobile .title {background-size: 216px 72px;image-rendering: pixelated;width: 216px;height: 72px;}
+.mobile {display: block;}}}
+</style>
+</head>
+<body class="crt">
+<div class="karty" id="kartaintro1">
+<div class="karta m3 anima1"></div>
+<div class="karta k3 anima2"></div>
+<div class="karta m2 anima3"></div>
+<div class="karta k2 anima4"></div>
+<div class="karta m1 anima5"></div>
+</div> 
+<div id="kartaintro3" onclick="startGame()">
+<div class="title wiekszy"></div>
+<div class="startguzik">Start Game</div>
+</div>
+<div class="karty" id="kartaintro2">
+<div class="karta k2 anima1"></div>
+<div class="karta m1 anima5"></div>
+<div class="karta k1 anima4"></div>
+<div class="karta m3 anima3"></div>
+<div class="karta k3 anima2"></div>
+</div> 
+<div id="tutorial" class="hide">
+<div class="title"></div>
+<div class="papier">
+<div id="treetutorial">The 13th century has come...</div>
+<div class="tuttext">
+<div class="tutintro">Navigate the complex web of alliances and rivalries- trying to establish a dynasty that will stand the test of time. Every decision you make will echo through the halls of history. <br /></div>
+<span class="numerek">1</span> Use the <span class="dismiss">Dismiss</span> and <span class="accept">Accept</span> buttons to arrange marriages. You have a limited number of turns in each generation.<br />
+<span class="numerek">2</span> Choose the proper marriage proposals to give your kingdom the best chances to develop.<br />
+<span class="numerek">3</span> Arranging marriages for Sons can give Your kingdom a bonus in <span class="strengthop malypad">Strength</span> and <span class="landop malypad">Land</span>. <br />
+<span class="numerek">4</span> Arranging marriages for Daughters can give Your kingdom a bonus in <span class="wisdomop malypad">Wisdom</span> and <span class="diplomacyop malypad">Diplomacy</span>.<br />
+<span class="numerek">5</span> The more <span class="passionop malypad">Passion</span> , the more chance of having descendants in the next generation (for Sons couples). Remember - the male line inherits.<br />
+<span class="numerek">6</span> The more <span class="luckop malypad">Luck</span> , the better chance of avoiding the negative event effects.<br />
+<span class="numerek">7</span> The color of the upcoming event in <span class="rumorop malypad">Rumors</span> corresponds to the type of points which will be needed to avoid negative effects. Be prepared! <br />
+<span class="numerek">8</span> Your dynasty must last until the beginning of the eighth generation. Make Your kingdom as powerful as possible.<br /> 
+<span class="numerek">9</span> The final score will be the sum of your kingdom's values: <span class="strengthop malypad">Strength</span> + <span class="landop malypad">Land</span> + <span class="wisdomop malypad">Wisdom</span> + <span class="diplomacyop malypad">Diplomacy</span>. <br />
+</div>
+<div class="startguzik" onclick="startGame2()">Let the story begin!</div>
+</div>
+</div>
+<div class="mobile">
+<div class="title"></div>
+<div>Please run the game on a screen with a resolution of at least 1200px.</div>
+</div>
+<div id="gameui" class="hide">
+<div class="title"></div>
+<div class="elementy">
+<div id="generation"></div>
+<div id="rumors"></div>
+</div>
+<div class="elementyodstep">
+<div id="strength"></div>
+<div id="land"></div>
+<div id="wisdom"></div>
+<div id="diplomacy"></div>
+</div>
+<div id="counselor"></div>
+<div id="game" class="cala">
+<div class="drzewo papier">
+<div id="tree">Family tree</div>
+<div id="genealogy"><span style="color: #000;font-size: 16px;line-height: 16px;margin-top: 16px;">History will be written soon...</span></div>
+</div>
+<div class="polowa">
+<div class="elementy">
+<div id="sons" class="children son"></div>
+<div id="daughters" class="children daughter"></div>
+</div>
+<div class="elementyodstep">
+<div id="sonheadcontainer"></div>
+<div id="daughterheadcontainer"></div>
+</div>
+<div class="elementyodstep">
+<div class="arrow"></div>
+<div class="arrow"></div>
+</div>
+<div class="elementy">
+<div id="coupless" class="children coupleson"></div>
+<div id="couplesd" class="children coupledaughter"></div>
+</div>
+<div class="elementyodstep">
+<div id="soncoupleheadcontainer"></div>
+<div id="daughtercoupleheadcontainer"></div>
+</div>
+<div class="passionandluck">
+<div id="passion"></div>
+<div id="luck"></div>
+</div>
+<div id="time"></div>
+<div id="children"></div>
+</div>
+<div class="cwierc papier">
+<div id="proposal">Marriage candidates</div>
+<div id="wybranek" class="karty">
+</div>
+<div class="horiz">
+<div id="dismiss" onclick="dismiss()">Dismiss</div>
+<div id="accept" onclick="accept()">Accept</div>
+</div>
+</div>
+</div>
+</div>
+<div id="encounter" class="hide papier">
+<div id="encounterhead"></div>
+<div id="encountertext"></div>
+<div id="encounter1" onclick="encounter1()"></div>
+<div id="encounter2" onclick="encounter2()"></div>
+</div>
+<div id="gameover" class="hide papier">
+<div id="gameoverhead">Game Over! You lost the game!</div>
+<div id="gameovertext"></div>
+<div id="gameovergen"></div>
+<br /><br />
+</div>
+<div id="gameend" class="hide papier">
+<div id="gameendhead">Game End! Congratulations!</div>
+<div id="gameendtext"></div>
+<div id="gameendgen"></div>
+<br /><br />
+</div>
+<div class="stopka">Game idea, graphics and programming by Kamil Zurek 2023. Game designed specially for JS13K contest.</div>
+<script>
+let generation = 1;
+let dzietnosc = 0;
+let plecDziecka = 1;
+let proba = 0;
+let rumors = 0;
+let rumorsstring = '';
+let game = 0;
+let score = 0;
+let counselor = 'Use the <span class="dismiss">Dismiss</span> and <span class="accept">Accept</span> buttons to arrange marriages. Level of traits will change the parameters of your kingdom.';
+let sons = 3;
+let daughters = 2;
+let couplesSons = 0;
+let couplesDaughters = 0;
+let children = 0;
+let wybranek = 1;
+let plec = 1;
+let time = 13;
+let date = 1201;
+let deltadate = 35;
+let newdate = 0;
+let eventCost = 0;
+let eventRandom = 0;
+let luckold = 0;
+let passion = 50;
+let deltaPassion = 0;
+let luck = 50;
+let deltaLuck = 0;
+let land = 1;
+let strength = 1;
+let wisdom = 0;
+let diplomacy = 0;
+let deltaLand = 1;
+let deltaStrength = 0;
+let deltaWisdom = 0;
+let deltaDiplomacy = 0;
+let sonstring = '';
+let daughterstring = '';
+let soncouplestring ='';
+let daughtercouplestring = '';
+let genealogystring ='';
+let maleNames = ["Arthur", "Bernard", "Edwin", "Edmund", "Geoffrey", "Lucius", "Matthew", "Percival", "Reginald", "Theobald", "William"]
+let femaleNames = ["Agnes", "Beatrice", "Cecily", "Eleanor", "Genevieve", "Isolda", "Isabella", "Leticia", "Marion", "Petronilla", "Viviane"]
+function sondisplay() {
+sonstring = '';
+for (i = 0; i < sons; i++) {
+sonstring += '<div class="sonhead" title="Son"></div>';}
+}
+function daughterdisplay() {
+daughterstring = '';
+for (i = 0; i < daughters; i++) {
+daughterstring += '<div class="daughterhead"  title="Daughter"></div>';}
+}
+function soncoupledisplay() {
+soncouplestring = '';
+for (i = 0; i < couplesSons; i++) {
+soncouplestring += '<div class="couplehead"  title="Son & Wife"></div>';}
+}
+function daughtercoupledisplay() {
+daughtercouplestring = '';
+for (i = 0; i < couplesDaughters; i++) {
+daughtercouplestring += '<div class="couplehead" title="Daughter & Husband"></div>';}
+}
+function numer(min, max) {
+return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function rumorsrandom() {
+rumors = numer(1,4);
+if (rumors == 1) {rumorsstring = '<span class="strengthop malypad" style="font-size:16px; line-height:24px; margin-left:5px">Enemy at the gates!</span>';
+} else if (rumors == 2) {rumorsstring = '<span class="landop malypad" style="font-size:16px; line-height:24px; margin-left:5px">Crusade!</span>';
+} else if (rumors ==3) {rumorsstring = '<span class="wisdomop malypad" style="font-size:16px; line-height:24px; margin-left:5px">Black death!</span>';
+} else {rumorsstring = '<span class="diplomacyop malypad" style="font-size:16px; line-height:24px; margin-left:5px">Court scandal!</span>';}
+document.getElementById("rumors").innerHTML = "Rumors: " + rumorsstring;
+}
+function eventInProgress() {
+document.getElementById("game").classList.add("hide");
+document.getElementById("encounter").classList.remove("hide");
+if (rumors == 1) {
+document.getElementById("encounterhead").innerHTML = 'Enemy at the gates!';
+enemyAtTheGates();
+} else if (rumors == 2) {
+document.getElementById("encounterhead").innerHTML = 'Crusade!';
+crusade();
+} else if (rumors ==3) {
+document.getElementById("encounterhead").innerHTML = 'Black death!';
+blackDeath();
+} else {
+document.getElementById("encounterhead").innerHTML = 'Court scandal!';
+courtScandal();
+}
+}
+function enemyAtTheGates() {
+document.getElementById("encountertext").innerHTML = 'Congratulations, <span class="sonevent">' + sons + '</span> sons and <span class="daughterevent">' + daughters + '</span> daughters were born in your dynasty.<br /><br />The enemy is approaching our borders!<br /><br /><span class="tutintro2">How will we solve this problem?</span>';
+eventCost = generation + numer(1,3) + numer(1,2);
+eventRandom = numer (1,100);
+if (eventCost <= strength) {document.getElementById("encounter1").innerHTML = '<div>We are mobilizing the army and sending <span class="strengthop malypad">Strength: ' + eventCost + '</span> to repel the enemy!</div>';} else {document.getElementById("encounter1").innerHTML = '<div>we do not have enough <span class="strengthop malypad">Strength</span> opportunities</div>';document.getElementById("encounter1").classList.add("ofe");}
+document.getElementById("encounter2").innerHTML = '<div onclick="rubyLuck()">We rely on luck! We send our son to war against the invaders! Let him lead our kingdom to victory! (He may die in the war).<div class="luckevent">Luck: ' + luckold +'% </div></div>';
+}
+function crusade() {
+document.getElementById("encountertext").innerHTML = 'Congratulations, <span class="sonevent">' + sons + '</span> sons and <span class="daughterevent">' + daughters + '</span> daughters were born in your dynasty.<br /><br />The Pope is pressing us to support the crusade against infidels.!<br /><br /><span class="tutintro2">How will we solve this problem?</span>';
+eventCost = generation + numer(1,3) + numer(1,2);
+eventRandom = numer (1,100);
+if (eventCost <= land) {document.getElementById("encounter1").innerHTML = '<div>We offer <span class="landop malypad">Land: ' + eventCost + '</span> to the religious orders as compensation!</div>';} else {document.getElementById("encounter1").innerHTML = '<div>we do not have enough <span class="landop malypad">Land</span> opportunities</div>';document.getElementById("encounter1").classList.add("ofe");}
+document.getElementById("encounter2").innerHTML = '<div onclick="emeraldLuck()">We rely on luck! We send our son to crusade! Let him lead our kingdom to glory! (He may die in the crusade).<div class="luckevent">Luck: ' + luckold +'% </div></div>';
+}
+function blackDeath() {
+document.getElementById("encountertext").innerHTML = 'Congratulations, <span class="sonevent">' + sons + '</span> sons and <span class="daughterevent">' + daughters + '</span> daughters were born in your dynasty.<br /><br />A new plague is spreading close to the borders of our kingdom.!<br /><br /><span class="tutintro2">How will we solve this problem?</span>';
+eventCost = generation + numer(1,3) + numer(1,2);
+eventRandom = numer (1,100);
+if (eventCost <= wisdom) {document.getElementById("encounter1").innerHTML = '<div>We use the accumulated <span class="wisdomop malypad">Wisdom: ' + eventCost + '</span> to get rid of the plague!</div>';} else {document.getElementById("encounter1").innerHTML = '<div>we do not have enough <span class="wisdomop malypad">Wisdom</span> opportunities</div>';document.getElementById("encounter1").classList.add("ofe");}
+document.getElementById("encounter2").innerHTML = '<div onclick="sapphireLuck()">We rely on luck! We send our son to ensure proper organization of anti-plague measures. (He may die from the plague).<div class="luckevent">Luck: ' + luckold +'% </div></div>';
+}
+function courtScandal() {
+document.getElementById("encountertext").innerHTML = 'Congratulations, <span class="sonevent">' + sons + '</span> sons and <span class="daughterevent">' + daughters + '</span> daughters were born in your dynasty.<br /><br />A new scandal broke out at court.!<br /><br /><span class="tutintro2">How will we solve this problem?</span>';
+eventCost = generation + numer(1,3) + numer(1,2);
+eventRandom = numer (1,100);
+if (eventCost <= diplomacy) {document.getElementById("encounter1").innerHTML = '<div>We are using <span class="diplomacyop malypad">Diplomacy: ' + eventCost + '</span> influence to solve the problem!</div>';} else {document.getElementById("encounter1").innerHTML = '<div>we do not have enough <span class="diplomacyop malypad">Diplomacy</span> opportunities</div>';document.getElementById("encounter1").classList.add("ofe");}
+document.getElementById("encounter2").innerHTML = '<div onclick="diamondLuck()">We rely on luck! We send our son to a duel to fight for the honor of our family! (He may die in the duel).<div class="luckevent">Luck: ' + luckold +'% </div></div>';
+}
+function encounter1() {
+if (rumors == 1) {strength = strength - eventCost;
+document.getElementById("strength").innerHTML = "<div class='ruby'></div>Strength: " + strength;} 
+else if (rumors == 2) {land = land - eventCost;
+document.getElementById("land").innerHTML = "<div class='emerald'></div>Land: " + land;} 
+else if (rumors == 3) {wisdom = wisdom - eventCost;
+document.getElementById("wisdom").innerHTML = "<div class='sapphire'></div>Wisdom: " + wisdom;} 
+else {diplomacy = diplomacy - eventCost;
+document.getElementById("diplomacy").innerHTML = "<div class='diamond'></div>Diplomacy: " + diplomacy;}
+rumorsrandom();
+document.getElementById("encounter1").classList.remove("ofe");
+document.getElementById("game").classList.remove("hide");
+document.getElementById("encounter").classList.add("hide");
+}
+function encounter2() {
+if (eventRandom > luckold) {
+sons = sons - 1;
+document.getElementById("counselor").innerHTML = 'One of sons died. He was not <span class="luckop malypad">Lucky</span> enough!'; document.getElementById("sons").innerHTML = "Sons: " + sons;
+sonstring = '';
+for (i = 0; i < sons; i++) {
+sonstring += '<div class="sonhead" title="Son"></div>';}
+document.getElementById("sonheadcontainer").innerHTML = sonstring;
+if (sons == 0) {
+document.getElementById("game").classList.add("hide");
+document.getElementById("gameover").classList.remove("hide");
+document.getElementById("time").innerHTML = "Remaining time: 0" ;
+document.getElementById("gameovergen").innerHTML = genealogystring;
+gameovert();}
+} else {document.getElementById("counselor").innerHTML = 'Son was <span class="luckop malypad">Lucky</span> and survived unfortunate circumstances!'}
+rumorsrandom();
+document.getElementById("encounter1").classList.remove("ofe");
+if (sons > 0) {document.getElementById("game").classList.remove("hide");}
+document.getElementById("encounter").classList.add("hide");
+}
+function genealogy() {
+for (i= 0; i < sons; i++) {genealogystring += '<div class="sonsmall" title="Son"></div>'; }
+for (i= 0; i < couplesSons; i++) {genealogystring += '<div class="sonsmall married" title="Son & Wife"></div>'; }
+for (i= 0; i < daughters; i++) {genealogystring += '<div class="daughtersmall" title="Daughter"></div>'; }
+for (i= 0; i < couplesDaughters; i++) {genealogystring += '<div class="daughtersmall married" title="Daughter & Husband"></div>'; }
+deltadate = 35 + numer(1,15);
+newdate = date + deltadate;
+genealogystring += '<div class="genstyl">Generation ' + (generation - 1) + ': (' + date + '-' + newdate + ')</div>';
+date = newdate + 1;
+document.getElementById("genealogy").innerHTML = genealogystring;
+}
+function losowanie() {
+console.log('losowanie');
+deltaLand = numer(0,3);
+deltaStrength = numer(0,3);
+deltaWisdom = numer(0,3);
+deltaDiplomacy = numer(0,3);
+deltaPassion = numer(10,90);
+deltaLuck = numer(10,90);
+wybranek = numer(1,3);
+if (daughters == 0 && sons == 0) {
+nowaepoka();
+} else if (daughters == 0 && sons > 0) {
+plec = 2;
+document.getElementById("wybranek").innerHTML = '<div class="imie">Lady ' + femaleNames[numer(0,10)] + '</div><div class="karta face k' + wybranek +'"></div><div class="bonus"><div class="ruby"></div><span class="rubycolor">+' + deltaStrength + ' </span><div class="emerald"></div><span class="emeraldcolor">+' + deltaLand + ' </span><div class="heart"></div><span class="heartcolor">' + deltaPassion + '%</span></div>';
+} else if (daughters > 0 && sons == 0) {
+plec = 1;
+document.getElementById("wybranek").innerHTML = '<div class="imie">Sir ' + maleNames[numer(0,10)] + '</div><div class="karta face m' + wybranek +'"></div><div class="bonus"><div class="sapphire"></div><span class="sapphirecolor">+' + deltaWisdom + ' </span><div class="diamond"></div><span class="diamondcolor">+' + deltaDiplomacy + ' </span><div class="luck"></div><span class="luckcolor">' + deltaLuck + '%</span></div>';
+} else {
+plec = numer(1,2);
+if (plec == 1 ) {document.getElementById("wybranek").innerHTML = '<div class="imie">Sir ' + maleNames[numer(0,10)] + '</div><div class="karta face m' + wybranek +'"></div><div class="bonus"><div class="sapphire"></div><span class="sapphirecolor">+' + deltaWisdom + ' </span><div class="diamond"></div><span class="diamondcolor">+' + deltaDiplomacy + ' </span><div class="luck"></div><span class="luckcolor">' + deltaLuck + '%</span></div>';
+} else if (plec == 2 ) {document.getElementById("wybranek").innerHTML = '<div class="imie">Lady ' + femaleNames[numer(0,10)] + '</div><div class="karta face k' + wybranek +'"></div><div class="bonus"><div class="ruby"></div><span class="rubycolor">+' + deltaStrength + ' </span><div class="emerald"></div><span class="emeraldcolor">+' + deltaLand + ' </span><div class="heart"></div><span class="heartcolor">' + deltaPassion + '%</span></div>';}
+}
+}
+function dismiss() {
+rysowaniePlanszy();
+}
+function startGame() {
+document.getElementById("tutorial").classList.remove("hide");
+document.getElementById("kartaintro1").classList.add("hide");
+document.getElementById("kartaintro2").classList.add("hide");
+document.getElementById("kartaintro3").classList.add("hide");
+}
+function startGame2() {
+document.getElementById("gameui").classList.remove("hide");
+document.getElementById("tutorial").classList.add("hide");
+}
+function accept() {
+if (plec == 1) {
+wisdom = wisdom + deltaWisdom;
+diplomacy = diplomacy + deltaDiplomacy;
+daughters = daughters - 1;
+couplesDaughters = couplesDaughters + 1;
+przeliczLuck();
+} else {
+strength = strength + deltaStrength;
+land = land + deltaLand;
+sons = sons - 1;
+couplesSons = couplesSons + 1;
+przeliczPassion();
+}
+rysowaniePlanszy();
+}
+function rysowaniePlanszy() {
+console.log('rysowanie planszy');
+time = time - 1;
+if (time < 1) {
+nowaepoka();
+} else {
+document.getElementById("sons").innerHTML = "Sons: " + sons;
+document.getElementById("daughters").innerHTML = "Daughters: " +daughters;
+document.getElementById("coupless").innerHTML = "Marriages: " +couplesSons;
+document.getElementById("couplesd").innerHTML = "Marriages: " +couplesDaughters;
+document.getElementById("generation").innerHTML="Generation: " +generation;
+document.getElementById("land").innerHTML="<div class='emerald'></div>Land: " +land;
+document.getElementById("strength").innerHTML="<div class='ruby'></div>Strength: " +strength;
+document.getElementById("wisdom").innerHTML="<div class='sapphire'></div>Wisdom: " +wisdom;
+document.getElementById("time").innerHTML="Remaining time: " +time;
+document.getElementById("diplomacy").innerHTML="<div class='diamond'></div>Diplomacy: " +diplomacy;
+document.getElementById("passion").innerHTML="<div>Passion: " +passion+ '% <div class="heart"></div></div>';
+document.getElementById("luck").innerHTML="<div>Luck: " +luck+ '% <div class="luck"></div></div>';
+document.getElementById("counselor").innerHTML=counselor;
+sondisplay();
+daughterdisplay();
+soncoupledisplay();
+daughtercoupledisplay();
+document.getElementById("sonheadcontainer").innerHTML=sonstring;
+document.getElementById("daughterheadcontainer").innerHTML=daughterstring;
+if (couplesSons < 1) {
+document.getElementById("soncoupleheadcontainer").innerHTML='<span class="komunikat">Arrange the first marriage.</span>';
+} else {
+document.getElementById("soncoupleheadcontainer").innerHTML=soncouplestring;
+}
+if (couplesDaughters < 1) {
+document.getElementById("daughtercoupleheadcontainer").innerHTML='<span class="komunikat">Arrange the first marriage.</span>';
+} else {
+document.getElementById("daughtercoupleheadcontainer").innerHTML=daughtercouplestring;
+}
+losowanie();
+}
+}
+function przeliczPassion() {
+passion = (passion + deltaPassion) / 2; 
+passion = Math.round(passion);
+document.getElementById("passion").innerHTML = "<div>Passion: "+passion+'% <div class="heart"></div></div>';
+}
+function przeliczLuck() {
+luck = (luck + deltaLuck) / 2; 
+luck = Math.round(luck);
+document.getElementById("luck").innerHTML = "<div>Luck: "+luck+'% <div class="luck"></div></div>';
+}
+function dzieci() {
+sons = 0;
+daughters = 0;
+dzietnosc = Math.round(couplesSons * 2.75);
+for (let i = 0; i < dzietnosc; i++) 
+{
+proba = numer(1,100);
+if (proba < passion) {
+plecDziecka = numer(1,10);
+console.log('plec ' + plecDziecka);
+if (plecDziecka < 7) {sons = sons + 1;}
+else {daughters = daughters + 1;}
+}
+}
+couplesSons = 0;
+couplesDaughters = 0;
+if (sons > 6) {sons = 6;}
+if (daughters > 6) {daughters = 6}
+if (sons < 1) {
+console.log('brak synow');
+document.getElementById("dismiss").classList.add("hide");
+document.getElementById("accept").classList.add("hide");
+}
+sondisplay();
+daughterdisplay();
+soncoupledisplay();
+daughtercoupledisplay();
+document.getElementById("sonheadcontainer").innerHTML=sonstring;
+document.getElementById("daughterheadcontainer").innerHTML=daughterstring;
+document.getElementById("soncoupleheadcontainer").innerHTML=soncouplestring;
+document.getElementById("daughtercoupleheadcontainer").innerHTML=daughtercouplestring;
+}
+function nowaepoka() {
+console.log('nowa epoka');
+time = 13;
+generation = generation + 1;
+genealogy(); 
+dzieci();
+passion = 50;
+luckold = luck;
+luck = 50;
+if (sons > 0 && generation < 8) {
+eventInProgress();
+rysowaniePlanszy();
+} else if (sons > 0 && generation > 7) {
+document.getElementById("game").classList.add("hide");
+document.getElementById("gameend").classList.remove("hide");
+document.getElementById("gameendgen").innerHTML = genealogystring;
+gameendt();
+rysowaniePlanszy();
+}
+else {
+document.getElementById("game").classList.add("hide");
+document.getElementById("gameover").classList.remove("hide");
+document.getElementById("time").innerHTML = "Remaining time: 0" ;
+document.getElementById("gameovergen").innerHTML = genealogystring;
+gameovert();
+}
+}
+function gameovert() {
+score = strength + land + wisdom + diplomacy;
+document.getElementById("gameovertext").innerHTML = 'You scored: ' + score + ' points, but Your dynasty has fallen.';
+}
+function gameendt() {
+score = strength + land + wisdom + diplomacy;
+document.getElementById("gameendtext").innerHTML = 'You scored: ' + score + ' points and Your dynasty has survived!';
+}
+rumorsrandom();
+rysowaniePlanszy();       
+</script>
+</body>
+</html>

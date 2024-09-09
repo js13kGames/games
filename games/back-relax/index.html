@@ -1,0 +1,552 @@
+<html>
+  <head>
+  	<title>BACK RELAX</title>
+  	<meta name="monetization" content="$twitter.xrptipbot.com/randytayler">
+    <script src="https://js13kgames.com/webxr-src/aframe.js"></script>
+    <script src="ZzFX.micro.js"></script>
+    <script>
+    var audio_ctx;
+	var selectedPieces = Array();
+    var throbspeed = .005;
+    var selectedBacksLeft, selectedBacksRight;
+	AFRAME.registerComponent('startbutton', {
+		init: function(){
+			this.el.addEventListener('click', function(){enterPhase('select')});
+		}
+	});
+	AFRAME.registerComponent('nextbutton', {
+		init: function(){
+			this.el.addEventListener('click', function(){
+				var ready = false;
+				for(var i=0;i<selectedBacksLeft.length;i++){
+					if(selectedBacksLeft[i])ready=true;
+				}
+				for(var i=0;i<selectedBacksRight.length;i++){
+					if(selectedBacksRight[i])ready=true;
+				}
+				if (ready) enterPhase('breathe');
+				else {
+					displayText('Select at least one area to continue.', 0, 4, -1.5, 4, 4, 4);
+				}
+			});
+		}
+	});
+	AFRAME.registerComponent('beginbutton', {
+		init: function(){
+			this.el.addEventListener('click', function(){enterPhase('play')});
+		}
+	});
+	AFRAME.registerComponent('homebutton', {
+		init: function(){
+			this.el.addEventListener('click', function(){enterPhase('menu')});
+		}
+	});
+	AFRAME.registerComponent('selector', {
+		schema: {
+			side: {type:'string',default:''},
+			num: {type:'number'},
+			previousColor: {type:'string',default:'white'}
+		},
+		init: function(){
+			var selected = false;
+			var el = this.el;
+			var data = this.data;
+			el.classList.toggle('selector');
+			el.addEventListener('mouseleave', function () {
+				el.setAttribute('material', {color:data.previousColor});
+			});
+			el.addEventListener('mouseenter', function () {
+				el.setAttribute('material', {color:'#99FF99'});
+			});
+			el.addEventListener('click', function(){
+				if (!selected) {
+					selected = true;
+					el.setAttribute('material', {color:'green'});
+					data.previousColor = 'green';
+					if (data.side == 'left') selectedBacksLeft[data.num] = true;
+					else selectedBacksRight[data.num] = true;
+				} else {
+					selected = false;
+					el.setAttribute('material', {color:'white'});
+					data.previousColor = 'white';
+					if (data.side == 'left') selectedBacksLeft[data.num] = false;
+					else selectedBacksRight[data.num] = false;
+				}
+			});
+		}
+	});
+    AFRAME.registerComponent('throb', {
+    	init: function(){
+    		var el = this.el;
+    		el.col = 0;
+    		el.min = .5;
+			el.max = 1;
+    		el.addEventListener('mouseleave', function () {
+    			el.healing=false;
+    		});
+	    	el.addEventListener('mouseenter', function () {
+	    		el.healing=true;
+			});
+    		this.dir = -1;
+    	},
+    	tick: function(){
+    		var el=this.el;
+    		var t=parseInt(el.id.replace(/throb/,''));
+    		if (el.healing) {
+				el.col+=.5;
+				var color=Math.round(el.col);
+				if(color>15)color=15;
+				el.setAttribute('material', {color:colors[color]});
+
+				radius = el.getAttribute('geometry').radius - .005;
+				if (radius <= .05) {
+					zzfx(.5,.1,700-throbs[t].r*8,.1,.11,0,0,8.2,.46);
+					el.parentNode.removeChild(el);
+					if (document.querySelector('#torso').children.length == 2) {
+						win();
+					}
+				} else {
+					el.setAttribute('geometry', {radius:radius});
+				}
+    		}
+    		if (el.object3D.scale.x >= throbs[t].max) {
+				this.dir = -1;
+			} else if (el.object3D.scale.x <= throbs[t].min) {
+				this.dir = 1;
+			}
+			el.object3D.scale.x += throbspeed * this.dir;
+			el.object3D.scale.y += throbspeed * this.dir;
+			el.object3D.scale.z += throbspeed * this.dir;
+    	}
+    });
+    var rad = Math.PI/180;
+    var maxDepth = 9;
+	var nerveLength = .035;
+	var angle=40;
+	var nervePoints = Array();
+	var counter = 0;
+	var speed = 1;
+	var branch2 = 0;
+	var throbs = Array();
+	var throbcounter = 0;
+	var throbcounter = 0;
+	var colors = Array();
+	var color = 0xFF0000;
+	var c=0;
+	var waveInterval;
+	var throbEls = Array();var s1, s2;
+	var s1=false;
+	var instr;
+	while (color != 0x1EF0FF){
+		color+=0x001011;
+		color-=0x0F0000;
+		c++;
+		colors[c] = '#' + color.toString(16);
+	}
+	messageCounter = 0;
+	var messages = ["How was your breathing?\nLet's go again, and remember\nto breathe deeply, in sync\nwith the waves.\n\nThere's no hurry.",
+		"Now imagine your pain\ndiminishing as you clear the\nred bubbles.\n\nLet the pain wash over you, then\nfloat away.",
+		"Imagine you are\nquieting the nerves that hurt.\nRemember to breathe deeply.",
+		"Now focus\non relaxing the muscles where\nyou hurt.\nAnd breathe.",
+		"Slow down now,\nremembering to breathe, relax,\nand smile.\n\nYes, smile. A fake one\nwill do.",
+		"You are in control.\nTake a break, or keep playing.\nGet up whenever you feel ready."
+	];
+	function init(){
+		selectedBacksLeft = [false,false,false,false,false,false,false,false];
+		selectedBacksRight = [false,false,false,false,false,false,false,false];
+	}
+	function buildSand(){
+		// this is fun: randomly generated sand to create a material for the island
+		var c=document.getElementById('sand');
+		var ctx=c.getContext('2d');
+
+		var dev = 6;
+		for (var row=0; row<1024; row++){
+			var lastR=parseInt('EE',16);
+			var lastG=parseInt('DD',16);
+			var lastB=parseInt('BB',16);
+			for (var col=0; col<1024; col++){
+				var change = Math.round(Math.random())*4;
+				if (change<2){ // I fiddle with this number. Only change color SOMEtimes
+					var r=Math.round(Math.random()*dev)-dev/1.5 + lastR;
+					var g=Math.round(Math.random()*dev)-dev/1.5 + lastG;
+					var b=Math.round(Math.random()*dev)-dev/1.5 + lastB;
+					if(r>230)r-=3;
+					if(g>210)g-=3;
+					if(b>180)b-=3;
+					if(r<210)r+=3;
+					if(g<190)g+=3;
+					if(b<160)b+=3;
+					lastR = r;
+					lastG = g;
+					lastB = b;
+				} else { // otherwise go back to our original color
+					lastR=parseInt('EE',16);
+					lastG=parseInt('DD',16);
+					lastB=parseInt('BB',16);
+				}
+				ctx.fillStyle = "rgba("+lastR+","+lastG+","+lastB+","+255+")";
+				ctx.fillRect(col, row, 1, 1);
+			}
+		}
+		var sandImage = c.toDataURL("image/png");
+		document.querySelector('#island').setAttribute('material',{src:sandImage});
+	}
+	function buildSky() {
+		// couldn't find a built-in gradient for the a-sky component, so I'm making a material of my own
+		var c=document.getElementById("gradient");
+		var ctx = c.getContext('2d');
+		var grd = ctx.createLinearGradient(0, 0, 0, 1024);
+		grd.addColorStop(.2, "#84C0FA");
+		grd.addColorStop(.5, "#B5D2E5");
+		grd.addColorStop(.5, "#77AAEE");//this is where the water starts
+		grd.addColorStop(.7, "#0C3ACC");
+
+		ctx.fillStyle = grd;
+		ctx.fillRect(0, 0, 1024, 1024);
+		var gradientImage = c.toDataURL("image/png");
+		var sky = document.createElement('a-sky');
+		sky.setAttribute('src',gradientImage);
+		document.querySelector('a-scene').appendChild(sky);
+	}
+	function displayText(text, x, y, z, sx, sy, sz){
+		var txt = document.createElement('a-entity');
+		txt.setAttribute('text',{align:'center',anchor:'center',value:text});
+		txt.setAttribute('scale', {x:sx, y:sy, z:sz});
+		txt.setAttribute('position', x + ' ' + y + ' ' +z);
+		txt.setAttribute('rotation', '70 0 0');
+		txt.setAttribute('material', {transparent: false, color: 'white'});
+		document.querySelector('#body').appendChild(txt);
+		return txt;
+	}
+
+	function enterPhase(phase){
+		switch (phase){
+			case 'select':
+				clearScreen();
+				buildSelector();
+				break;
+			case 'breathe':
+				clearScreen();
+				breathe();
+				break;
+			case 'play':
+				clearScreen();
+				play();
+				break;
+			case 'menu':
+			default:
+				clearScreen();
+				menu();
+				break;
+		}
+	}
+
+	function win(){
+		clearScreen();
+		displayText('Level cleared.', 0, 5, -1, 10, 10, 10);
+		if(messages[messageCounter+1]) displayText(messages[messageCounter++], 0, 4, -1.5, 4, 4, 4);
+		zzfx(1,.1,490,.8,.35,.7,2.9,.3,.3);
+		s1.stop();
+		s1=false;
+		buildNextButton('beginbutton','NEXT >',5);
+		buildHomeButton('homebutton','< HOME',5);
+		clearCursor();
+		buildSmallCursor();
+	}
+
+	function breathe(){
+		s1 = zzfx(.5,0,350,5,.4,.1,0,2555,.5);
+		s1.loop = true;
+		displayText('First, breathe.', 0, 5, -.8, 10, 10, 10);
+		displayText("Practice breathing in time\nwith the sound of the waves.\n\nWhen you feel your breathing\nin sync with the waves,\n click PLAY.", 0, 4.5, -1.5, 3, 3, 3);
+		buildNextButton('beginbutton','PLAY',5);
+	}
+
+	function clearCursor(){
+		var kids = document.querySelector('#camera').getChildren();
+		for (var i in kids){
+			document.querySelector('#camera').removeChild(kids[i]);
+		}
+	}
+
+	function buildSmallCursor(){
+		var cursor = document.createElement('a-cursor');
+		cursor.setAttribute('id','player');
+		cursor.setAttribute('raycaster', {objects:'.selector,#nextbutton,#beginbutton,#homebutton'});
+		cursor.setAttribute('position', '0 0 -3');
+		cursor.setAttribute('fuse',true);
+		cursor.setAttribute('fuseTimeout',1500);
+		cursor.setAttribute('animation__click',{property: 'scale', startEvents: 'click', easing: 'easeInCubic', dur: 150, from: '0.1 0.1 0.1', to: '1 1 1'});
+		cursor.setAttribute('animation__fusing', {property: 'scale', startEvents: 'fusing', easing: 'easeInCubic', dur: 1500, from: '1 1 1', to: '0.1 0.1 0.1'});
+		cursor.setAttribute('geometry', {primitive:'ring',radiusInner:.02,radiusOuter:.03});
+		document.querySelector('#camera').appendChild(cursor);
+	}
+
+	function buildBigCursor(){
+		// bigCursor has no animation or fusing
+		var cursor = document.createElement('a-cursor');
+		cursor.setAttribute('id','player');
+		cursor.setAttribute('raycaster', {objects:'.throb,#nextbutton,#beginbutton,#homebutton'});
+		cursor.setAttribute('position', '0 0 -3');
+		cursor.setAttribute('fuse',false);
+		cursor.setAttribute('geometry', {primitive:'ring',radiusInner:.05,radiusOuter:.07});
+		document.querySelector('#camera').appendChild(cursor);
+	}
+
+	function play(){
+		if (!s1){
+			s1 = zzfx(.5,0,350,5,.4,.1,0,2555,.5);
+			s1.loop = true;
+		}
+		clearCursor();
+		buildBigCursor();
+
+		instr = displayText('Hover over the center of\na pain bubble to shrink it.', 0, 5, -.25, 4, 4, 4);
+		instr.id = 'instr';
+		throbs = [];
+		throbEls = [];
+
+		var torso = document.createElement('a-entity');
+		torso.setAttribute('id', 'torso');
+		torso.setAttribute('position', '0 2.5 0');
+		document.querySelector('#body').appendChild(torso);
+
+		var el = document.createElement('a-entity');
+		el.setAttribute('id', 'torsoLeft');
+		el.setAttribute('obj-model', {obj:'#torso-obj', mtl:'#torso-mtl'});
+		torso.appendChild(el);
+
+		var el = document.createElement('a-entity');
+		el.setAttribute('id', 'torsoRight');
+		el.setAttribute('obj-model', {obj:'#torso-obj', mtl:'#torso-mtl'});
+		el.setAttribute('scale','-1 1 1');
+		torso.appendChild(el);
+
+		var pains = 0;
+		var painTotal = 0;
+		for(var num in selectedBacksLeft){
+			if (selectedBacksLeft[num]) {
+				var y = 7 - num;
+				pains++;
+				painTotal+=num-1.5;
+				makeNerve(0,0,y,0,1);
+			}
+		}
+		m = branch2 = counter;
+		for(var num in selectedBacksRight){
+			if (selectedBacksRight[num]) {
+				var y = 7 - num;
+				pains++;
+				painTotal+=num-1.5;
+				makeNerve(0,0,y,0,-1);
+			}
+		}
+		drawThrobs();
+		torso.setAttribute('position', '0 7 ' + (painTotal/pains-7.5).toString());
+		torso.setAttribute('rotation', '80 0 0');
+	}
+
+	function buildSelector(){
+		init();
+		if (s2) s2.stop();
+		s2 = zzfx(.1,50,100,600,.7,.1,0,2555,9);
+		s2.loop = true;
+
+		displayText('Select the area or areas\nwhere you feel pain now.',0, 5, -1, 5, 5, 5);
+
+		var torsoSelector = document.createElement('a-entity');
+		torsoSelector.setAttribute('id', 'torso-selector');
+		torsoSelector.setAttribute('position', '0 7 -7.5');
+		torsoSelector.setAttribute('rotation', '80 0 0');
+		torsoSelector.setAttribute('material', {color:'white'});
+		document.querySelector('#body').appendChild(torsoSelector);
+
+		for (var i=2; i<=7; i++){ // torso-1 is your neck, which I don't endorse using this app for, since it's all head movement
+			var el = document.createElement('a-entity');
+			el.setAttribute('id', 'torso-'+i+'-left');
+			el.setAttribute('selector',{side:'left',num:i});
+			el.setAttribute('obj-model', {obj:'#torso-'+i});
+			torsoSelector.appendChild(el);
+
+			var el = document.createElement('a-entity');
+			el.setAttribute('id', 'torso-'+i+'-right');
+			el.setAttribute('selector',{side:'right',num:i});
+			el.setAttribute('obj-model', {obj:'#torso-'+i});
+			el.setAttribute('scale','-1 1 1');
+			torsoSelector.appendChild(el);
+		}
+
+		var raycasterEl = AFRAME.scenes[0].querySelector('[raycaster]');
+		raycasterEl.components.raycaster.refreshObjects();
+		buildNextButton('nextbutton','NEXT >',5);
+
+		var torso = document.createElement('a-entity');
+		torso.setAttribute('id', 'torso');
+		torso.setAttribute('position', '0 2.5 0');
+		document.querySelector('#body').appendChild(torso);
+
+		var el = document.createElement('a-entity');
+		el.setAttribute('id', 'torsoLeft');
+		el.setAttribute('obj-model', {obj:'#torso-obj', mtl:'#torso-mtl'});
+		torso.appendChild(el);
+
+		var el = document.createElement('a-entity');
+		el.setAttribute('id', 'torsoRight');
+		el.setAttribute('obj-model', {obj:'#torso-obj', mtl:'#torso-mtl'});
+		el.setAttribute('scale','-1 1 1');
+		torso.appendChild(el);
+		torso.setAttribute('scale','.98 .98 .98');
+		torso.setAttribute('position', '0 7.1 -7.5');
+		torso.setAttribute('rotation', '80 0 0');
+	}
+
+	function buildNextButton(type,text,y){
+		// I'm ashamed I couldn't get a general version of this to work right. Hence two methods, NextButton and HomeButton
+		var nextbutton = document.createElement('a-box');
+		nextbutton.setAttribute('id','nextbutton');
+		nextbutton.setAttribute(type,'');
+		nextbutton.setAttribute('position','1.8 '+y+' -2');
+		nextbutton.setAttribute('width',.8);
+		nextbutton.setAttribute('height',.4);
+		nextbutton.setAttribute('depth',.01);
+		nextbutton.setAttribute('color','#9E9');
+		document.querySelector('#body').appendChild(nextbutton);
+
+		var nextText = document.createElement('a-text');
+		nextText.setAttribute('value', text);
+		nextText.setAttribute('font', 'monoid');
+		nextText.setAttribute('position', '0 0 .01');
+		nextText.setAttribute('align', 'center');
+		document.querySelector('#nextbutton').appendChild(nextText);
+		nextbutton.setAttribute('rotation','70 0 0');
+		return nextbutton;
+	}
+
+	function buildHomeButton(type,text,y){
+		var nextbutton = document.createElement('a-box');
+		nextbutton.setAttribute('id','homebutton');
+		nextbutton.setAttribute(type,'');
+		nextbutton.setAttribute('position','-2.2 '+y+' -2');
+		nextbutton.setAttribute('width',.8);
+		nextbutton.setAttribute('height',.4);
+		nextbutton.setAttribute('depth',.01);
+		nextbutton.setAttribute('color','#9E9');
+		document.querySelector('#body').appendChild(nextbutton);
+
+		var nextText = document.createElement('a-text');
+		nextText.setAttribute('value', text);
+		nextText.setAttribute('font', 'monoid');
+		nextText.setAttribute('position', '0 0 .01');
+		nextText.setAttribute('align', 'center');
+		document.querySelector('#homebutton').appendChild(nextText);
+		nextbutton.setAttribute('rotation','70 0 0');
+		return nextbutton;
+	}
+
+	function menu(){
+		var elTitle = document.createElement('a-entity');
+		elTitle.setAttribute('id', 'elTitle');
+		document.querySelector('#body').appendChild(elTitle);
+
+		var el1 = document.createElement('a-text');
+		el1.setAttribute('value', 'BACK RELAX');
+		el1.setAttribute('font', 'exo2semibold');
+		el1.setAttribute('scale', '3 3 3');
+		el1.setAttribute('position', '0 1.8 -3.5');
+		el1.setAttribute('align', 'center');
+		document.querySelector('#elTitle').appendChild(el1);
+
+		var el2 = document.createElement('a-text');
+		el2.setAttribute('value', 'A meditative game for\nrelief from back pain');
+		el2.setAttribute('font', 'exo2semibold');
+		el2.setAttribute('scale', '1.5 1.5 1.5');
+		el2.setAttribute('position', '0 .68 -3.5');
+		el2.setAttribute('align', 'center');
+		document.querySelector('#elTitle').appendChild(el2);
+
+		var el3 = document.createElement('a-text');
+		el3.setAttribute('value', 'Find a comfortable spot and lie down\nbefore entering VR mode.');
+		el3.setAttribute('font', 'exo2semibold');
+		el3.setAttribute('position', '0 -.25 -3.5');
+		el3.setAttribute('align', 'center');
+		document.querySelector('#elTitle').appendChild(el3);
+
+		var startbutton = buildNextButton('startbutton','START');
+		startbutton.setAttribute('position','0 5 -1');
+		startbutton.setAttribute('rotation','80 0 0');
+
+		var credits = displayText('CREDITS\n\nCreated by @randytayler\n\nTorso model adapted from low-poly male mesh by\nJulius Krischan Makowka (jkmakowka@yahoo.de),\nlicensed under\nCreative Commons Attribution Share-Alike 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0\n\nSounds by ZzFX - MIT License \n(c) 2019 Frank Force\nhttps://github.com/KilledByAPixel/ZzFX\n\nThanks aframe.io and js13kgames.com!',0,1,3,2,2,2);
+		credits.setAttribute('rotation', '0 180 0'); // credits are behind you, rotate them.
+	}
+
+	function clearScreen(){
+		var kids = document.querySelector('#body').getChildren();
+		for (var i in kids){
+			document.querySelector('#body').removeChild(kids[i]);
+		}
+	}
+
+	function makeNerve(depth, x, y, z, dir){
+		// originall, this was a recursive function to draw nerves. Now it just throws pain
+		// balls at spaced points, which previously were the branching points of nerves
+		if (depth == maxDepth) return;
+		if (depth%3 == 0) {
+			var branches = 2;
+		} else var branches = 1;
+		for (var i=0;i<branches;i++){
+			var rand = depth*angle;
+			var bangle = (Math.random()*rand-rand/2);
+			var rads = bangle * rad;
+			var length = (maxDepth-depth/2)*-nerveLength;
+			var dx = length * Math.cos(rads) * dir;
+			var dy = length* Math.sin(rads) * dir;
+			x2 = x + dx;
+			y2 = y + dy;
+			z2 = z;
+			if (depth%3 == 0) throbs[throbcounter++] = {x:x2, y:y2, z:z2, d:depth, r:(maxDepth - depth/2)/5, min:.5, max:1, col:0 };
+			makeNerve(depth+1, x2, y2, z2, dir);
+		}
+	}
+	function drawThrobs(){
+		for(var t in throbs){
+			if (t != 7) { // avoid duplicate throb hack
+				drawThrob(throbs[t].x,throbs[t].y,throbs[t].z,(maxDepth - throbs[t].d)/20,t);
+			}
+		}
+	}
+
+	function drawThrob(x,y,z,radius,t){
+		var el = document.createElement('a-entity');
+		el.setAttribute('throb','');
+		el.setAttribute('id','throb' + t);
+		el.setAttribute('geometry', {primitive: 'sphere', radius: radius}, true);
+		el.setAttribute('position', {x: x, y: y, z: z});
+		el.setAttribute('material', {transparent: false, color: 'red'});
+		document.querySelector('#torso').appendChild(el);
+		el.classList.toggle('throb');
+		throbEls[t] = el;
+	}
+	</script>
+  </head>
+  <body>
+    <a-scene background="color:#84C0FA">
+  		<a-circle color="#EDB" id="island" position="0 -3.5 0" radius="20" rotation="-90 0 0"></a-circle>
+		<a-asset-item id="torso-obj" src="torso_half.obj"></a-asset-item>
+		<a-asset-item id="torso-mtl" src="torso_half.mtl"></a-asset-item>
+		<a-asset-item id="torso-2" src="torso_piece_2.txt"></a-asset-item>
+		<a-asset-item id="torso-3" src="torso_piece_3.txt"></a-asset-item>
+		<a-asset-item id="torso-4" src="torso_piece_4.txt"></a-asset-item>
+		<a-asset-item id="torso-5" src="torso_piece_5.txt"></a-asset-item>
+		<a-asset-item id="torso-6" src="torso_piece_6.txt"></a-asset-item>
+		<a-asset-item id="torso-7" src="torso_piece_7.txt"></a-asset-item>
+		<a-entity light="type: ambient; color: #BBB"></a-entity>
+		<a-entity light="type: directional; color: #FFF; intensity: 0.6" position="1.5 1.5 0"></a-entity>
+		<a-entity camera id="camera" look-controls="reverseMouseDrag: true" ></a-entity>
+		<a-entity id="body"></a-entity>
+    </a-scene>
+    <canvas id="gradient" style="display:none" height=1024 width=1024></canvas>
+    <canvas id="sand" style="display:none" height=1024 width=1024></canvas>
+    <script>buildSky();buildSand();enterPhase('menu');buildSmallCursor();</script>
+  </body>
+</html>

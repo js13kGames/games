@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8"/>
+    <script type="module" src="bundle.js"></script>
+    <template id="game-over-template">
+        <div class="game-overlay">
+            <h2>CONGRATULATIONS!!!</h2>
+            <p>You made it to</p>
+            <h2>LEVEL <span id=lnum></span></h2>
+            <button>restart</button>
+        </div>
+    </template>
+    <template id="title-template">
+        <div class="game-overlay">
+            <h2>PIZZA UNDELIVERY</h2>
+            <p>In this game you have to pick up the pizzas and bring them <em>back</em> to the pizzeria!</p>
+            <p>Drive with the <em>arrow keys</em> or the <em>WASD</em> keys.</p>
+            <h2>LEVEL: <input type="number" value=1 name="level" min="1" max="15"></h2>
+            <p><button>generate new map</button></p>
+            <p><button><b>GO!!!</b></button></p>
+        </div>
+    </template>
+</head>
+<body>
+    <main>
+        <canvas width="192" height="108" class="game"></canvas>
+    </main>
+</body>
+<footer>
+    <p></p>
+</footer>

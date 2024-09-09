@@ -1,0 +1,37 @@
+body{
+    background-color: #1E1E1E;
+    color: #ffffff;
+    font-family: Consolas, monaco, monospace;
+    font-variant: small-caps;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+#gameWindow{
+    text-align: center;
+    margin-top: 10%;
+    height: 65%;
+    border: 2px solid white;
+}
+#gameWindow p{
+    font-size: 20px;
+}
+#buttons{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+a{
+    font-size: 18px;
+    border: 1px solid #ffffff;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 30px;
+    text-decoration: none;
+    color: #ffffff;
+}
+a:hover{
+    background-color: #ffffff;
+    color: #1E1E1E;
+}

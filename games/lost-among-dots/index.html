@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<h1 align="center"><u>LOST AMONG DOTS</u></h1>
+<h3>INSTRUCTIONS:</h3>
+1. This is a 2-player game in which each player gets alternate turns.<br/>
+2. There is a grid of dots which has 5 rows(numbered from 1 to 5 from top) and 5 columns(numbered from 1 to 5 from left).<br/>
+3. Each player makes a line connecting 2 consecutive dots(not diagonally), and the player who completes a square gets 1 point. In this way the player who scores the maximum number of points after making all the squares, wins the game.<br/>
+4. Each player has to write 2 numbers in the given text boxes, to draw a line between them.<br/>
+5. The dot must be written in the following way i.e if the player has to select the dot which is in the second row and third column then he/she has to write <b>23</b>.<br/>
+6. <b>ALWAYS REMEMBER THAT THE FIRST POINT MUST BE SMALLER THAN THE SECOND POINT(considering them as integers).</b><br/> 
+7. To start a new game , reload the screen.<br/>
+8. <b>ENJOY THE GAME :) </b><br/>
+<script type="text/javascript">
+// console.log($('form').serializeArray());
+p1 = 0; p2 = 0; chance = 0, cnt1 = 0, cnt2 = 0;
+/*var arr = new Array(70,70);
+for (var i=0;i<=70;i++)
+{
+    for (var j=0;j<=70;j++)
+        {arr[i,j]=0;}
+}*/
+var arr = [];
+for (var i=0;i<=70;i++)
+{
+    arr[i] = [];
+    for (var j=0;j<=70;j++)
+        {arr[i][j] = 0;}
+}
+
+var myGamePiece;
+
+
+function startGame() {
+    myGameArea.start();
+    document.getElementById("turn").innerHTML = "PLAYER 1 turn";
+    myGamePiece11 = new component(10, 10, "red", 10, 20);
+    myGamePiece12 = new component(10, 10, "red", 50, 20);
+    myGamePiece13 = new component(10, 10, "red", 90, 20);
+    myGamePiece14 = new component(10, 10, "red", 130, 20);
+    myGamePiece15 = new component(10, 10, "red", 170, 20);
+    myGamePiece21 = new component(10, 10, "red", 10, 50);
+    myGamePiece22 = new component(10, 10, "red", 50, 50);
+    myGamePiece23 = new component(10, 10, "red", 90, 50);
+    myGamePiece24 = new component(10, 10, "red", 130, 50);
+    myGamePiece25 = new component(10, 10, "red", 170, 50);
+    myGamePiece31 = new component(10, 10, "red", 10, 80);
+    myGamePiece32 = new component(10, 10, "red", 50, 80);
+    myGamePiece33 = new component(10, 10, "red", 90, 80);
+    myGamePiece34 = new component(10, 10, "red", 130, 80);
+    myGamePiece35 = new component(10, 10, "red", 170, 80);
+    myGamePiece41 = new component(10, 10, "red", 10, 110);
+    myGamePiece42 = new component(10, 10, "red", 50, 110);
+    myGamePiece43 = new component(10, 10, "red", 90, 110);
+    myGamePiece44 = new component(10, 10, "red", 130, 110);
+    myGamePiece45 = new component(10, 10, "red", 170, 110);
+    myGamePiece51 = new component(10, 10, "red", 10, 140);
+    myGamePiece52 = new component(10, 10, "red", 50, 140);
+    myGamePiece53 = new component(10, 10, "red", 90, 140);
+    myGamePiece54 = new component(10, 10, "red", 130, 140);
+    myGamePiece55 = new component(10, 10, "red", 170, 140);
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 200;
+        this.canvas.height = 170;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    }
+}
+
+function component(width, height, color, x, y) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;    
+    ctx = myGameArea.context;
+    ctx.fillStyle = color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+}
+
+
+function check(){
+flag = 0;
+x1 = parseInt(document.getElementById("first").value);
+x2 = parseInt(document.getElementById("second").value);
+if ((x1<11) || (x1>15 && x1<21) || (x1>25 && x1<31) || (x1>35 && x1<41) || (x1>45 && x1<51) || (x1>55))
+    {alert("Enter the first number correctly");flag=1;}
+if ((x2<11) || (x2>15 && x2<21) || (x2>25 && x2<31) || (x2>35 && x2<41) || (x2>45 && x2<51) || (x2>55))
+    {alert("Enter the second number correctly");flag=1;}
+mod1 = x1%10;
+mod2 = x2%10;
+div1 = Math.floor(x1/10);
+div2 = Math.floor(x2/10);
+// console.log(x1);
+if ((mod1!=mod2) && (div1!=div2))
+{alert("Diagonal lines are not allowed!!"); flag=1;}
+if ((Math.abs(mod1-mod2))>1 || (Math.abs(div1-div2))>1)
+{alert("Please draw a line which joins 2 consecutive points."); flag=1;}
+
+if (mod1==1)
+    {cord1 = 15;}
+else if (mod1==2)
+    {cord1 = 55;}
+else if (mod1==3)
+    {cord1 = 95;}
+else if (mod1==4)
+    {cord1 = 135;}
+else
+    {cord1 = 175;}
+
+if (mod2==1)
+    {cord2 = 15;}
+else if (mod2==2)
+    {cord2 = 55;}
+else if (mod2==3)
+    {cord2 = 95;}
+else if (mod2==4)
+    {cord2 = 135;}
+else
+    {cord2 = 175;}
+
+if (div1==1)
+    {cord3 = 25;}
+else if (div1==2)
+    {cord3 = 55;}
+else if (div1==3)
+    {cord3 = 85;}
+else if (div1==4)
+    {cord3 = 115;}
+else
+    {cord3 = 145;}
+
+if (div2==1)
+    {cord4 = 25;}
+else if (div2==2)
+    {cord4 = 55;}
+else if (div2==3)
+    {cord4 = 85;}
+else if (div2==4)
+    {cord4 = 115;}
+else
+    {cord4 = 145;}
+
+// console.log(arr[11,21]);
+if (flag!=1)
+{
+    if (chance%2!=0)
+        {document.getElementById("turn").innerHTML = "PLAYER 1 turn";}
+    else
+        {document.getElementById("turn").innerHTML = "PLAYER 2 turn";}
+    
+    chance++;
+    // console.log(arr[11,21]);
+    arr[x1][x2] = 1;
+    // console.log(x1);
+    // console.log(x2);
+    // console.log(arr[11][21]);
+    ctx.moveTo(cord1,cord3);
+    ctx.lineTo(cord2,cord4);
+    ctx.stroke();
+   /* for (i=0;i<=70;i++)
+    {
+        for (j=0;j<=70;j++)
+        {
+            console.log(arr[i,j]);
+        }
+    }*/
+
+    if (div1==div2)
+    {
+        if ((arr[x1-10][x2-10]==1) && (arr[x1-10][x1]==1) && (arr[x2-10][x2]==1))
+        {
+            // console.log("hi");
+            if (chance%2!=0)
+                {p1++; cnt1++;}
+            else
+                {p2++; cnt2++;}
+        }
+        if ((arr[x1+10][x2+10]==1) && (arr[x1][x1+10]==1) && (arr[x2][x2+10]==1))
+        {
+            // console.log("hat");
+            if (chance%2!=0)
+                {p1++; cnt1++;}
+            else
+                {p2++; cnt2++;}
+        }
+    }
+    if (mod1==mod2)
+    {
+        if ((arr[x1-1][x2-1]==1) && (arr[x1-1][x1]==1) && (arr[x2-1][x2]==1))
+        {
+            // console.log("yo");
+            if (chance%2!=0)
+                {p1++; cnt1++;}
+            else
+                {p2++; cnt2++;}
+        }
+        if ((arr[x1+1][x2+1]==1) && (arr[x1][x1+1]==1) && (arr[x2][x2+1]==1))
+        {
+            // console.log("yolo");
+            if (chance%2!=0)
+                {p1++; cnt1++;}
+            else
+                {p2++; cnt2++;}
+        }   
+    }
+    console.log(p1);
+    console.log(p2);
+    document.getElementById("player1").innerHTML = p1;
+    document.getElementById("player2").innerHTML = p2;
+    if ((cnt1+cnt2)==16)
+    {
+        if (cnt1>cnt2)
+            {alert("PLAYER1 WINS!!!");}
+        else if (cnt2>cnt1)
+            {alert("PLAYER2 WINS!!!");}
+        else
+            {alert("DRAW MATCH");}
+    }
+}       
+};
+</script>
+<br/>
+<button id="play" onclick="startGame()">PLAY</button>
+<br/>
+<p align="center" id="turn"></p>
+Enter the points to join:<br/>
+<form>
+Enter first point: <input type="text" name="first" id="first"/>
+Enter second point: <input type="text" name="second" id="second"/>
+<button id="draw" type="button" onclick="check()">DRAW LINE</button><br/>
+PLAYER1: <p id="player1"></p><br/>
+PLAYER2: <p id="player2"></p>
+</form>
+</body>
+</html>

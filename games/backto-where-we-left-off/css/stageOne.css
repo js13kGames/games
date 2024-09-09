@@ -1,0 +1,242 @@
+/*body settings*/
+html, body{
+    background-color: #1E1E1E;
+    margin: 0;
+    height: 100%;
+    font-family: Consolas, monaco, monospace;
+    font-size: 16px;
+    color: #ffffff;
+}
+/*body settings*/
+
+/*relay/ text feed info*/
+.relay{
+    width: 75%;
+    height: 80%;
+    float: left;
+    background: #262525;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-color:  #8D8D8D #1E1E1E;
+}
+#onestageone, #onestagetwo, #onestagethree, #onestagefour, #onestagefive, #onestagesix{
+    display: none;
+}
+span{
+    color: #262525;
+}
+pre{
+    font-family: Consolas, monaco, monospace;
+}
+b{
+    color: #F78D46;
+}
+p a{
+    cursor: pointer;
+    color: white;
+}
+#onestagesix{
+    margin: 50px 50px;
+    text-align: center;
+}#onestagesix a:hover{
+    color: #FE5C5C;
+}
+/*relay/ text feed info*/
+
+/*toggles/ right button area*/
+.toggles{
+    width: 25%;
+    height: 80%;
+    float: left;
+    background: #333333;
+    position: relative;
+}
+.homeMenu{
+    margin-top: 25px;
+    margin-left: 25px;
+}
+.homeMenu a{
+    font-size: 18px;
+    border: 1px solid #ffffff;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 30px;
+    text-decoration: none;
+    color: #ffffff;
+}
+.homeMenu a:hover{
+    background-color: #ffffff;
+    color: #1E1E1E;
+}
+.selectedServer select{
+    width: 200px;
+}
+select{
+    color: #ffffff;
+    background-color: #1E1E1E;
+    border: none;
+    padding: 3px 5px;
+    font-family: Consolas, monaco, monospace;
+    font-size: 16px;
+    margin-left: 25px;
+    margin-top: 50px;
+}
+.buttonOne, .buttonTwo, .buttonThree, .colorOne, .colorTwo, .colorThree{
+    padding-top: 25px;
+    padding-left: 25px;
+}
+.buttonOne p, .buttonTwo p, .buttonThree p, .colorOne p, .colorTwo p, .colorThree p{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.buttonOne .slider, .buttonTwo .slider, .buttonThree .slider{
+    background-color: #cccccc;
+}
+.colorOne .slider, .colorTwo .slider, .colorThree .slider{
+    background-color: #cccccc;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.buttonOne input:checked+.slider{
+    background-color: #FE5C5C;
+}
+.buttonTwo input:checked+.slider{
+    background-color: #8BE78B;
+}
+.buttonThree input:checked+.slider{
+    background-color: #0097DF;
+}
+.buttonOne input:focus+.slider, .buttonTwo input:focus+.slider, .buttonTwo input:focus+.slider {
+    box-shadow: 0 0 1px #000000;
+}
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+/*progress bar & button*/
+.clickMenu{
+    margin-top: 25px;
+    margin-left: 25px;
+    height: 30px;
+}
+#clickMenu1, #clickMenu2{
+    display: none;
+}
+.clickMenu a{
+    border: 1px solid #ffffff;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 30px;
+}
+.clickMenu a:hover{
+    background-color: #ffffff;
+    color: #1E1E1E;
+}
+#progressBar1, #progressBar2{
+    width: 1%;
+    height: 30px;
+    background-color: #1E1E1E;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+  }
+.pBar1, .pBar2{
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    width: 60%;
+    border: 1px solid #ffffff;
+    float: left;
+}
+/*progress bar & button*/
+#resultCheck1, #resultCheck2{
+    display: none;
+    margin-left: 25px;
+}
+.errorBox{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 40%;
+    width: 100%;
+    background: #262525;
+    scrollbar-color:  #8D8D8D #1E1E1E;
+}
+.errorBox li{
+  list-style-type: none;
+}
+/*toggles/ right button area*/
+
+/*console area*/
+.console{
+    width: 100%;
+    height: 20%;
+    float: left;
+    background-color: #1E1E1E;
+}
+textarea{
+    width: 100%;
+    height: 100%;
+    resize: none;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: Consolas, monaco, monospace;
+    font-size: 16px;
+}
+.console{
+    position: relative;
+}
+#node{
+    position: absolute;
+    right: 75px;
+    bottom: 15px;
+    border: 1px solid #ffffff;
+    padding: 12px;
+    font-size: 20px;
+}
+.squareColor{
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    background: #0097DF;
+    width: 50px;
+    height: 50px;
+}
+/*console area*/

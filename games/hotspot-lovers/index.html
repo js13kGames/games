@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>HOTSPOT LOVERS</title>
+    <style>
+      body { 
+        background: black;
+      }
+      canvas { 
+        background: white;
+        width: 100%;
+        max-width: 798px;
+        display: block;
+        margin: auto;
+        cursor: none;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" onmouseover="cursor.showCursor()" onmouseleave="cursor.hideCursor()"></canvas>
+    <p style="color: white; font-size:18px; width:100%; text-align:center;">Having trouble? Click here to learn how to play this game: <a href="https://github.com/xaterz/offline-lovers">https://github.com/xaterz/offline-lovers</a></p>
+    <script src="lib/kontra.min.js"></script>
+    <script src="lib/TinyMusic.min.js"></script>
+    <script src="src/setup.min.js"></script>
+    <script src="src/game.min.js"></script>
+  </body>
+</html>

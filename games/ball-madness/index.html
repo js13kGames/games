@@ -1,0 +1,172 @@
+<!doctype html>
+<!-- HTML AND CSS ARE A BIT MESSY. SORRY. -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Ball Madness - By @brunomarchi_js</title>
+	<link rel="stylesheet" href="css/style.css">
+	<style>
+body {
+	background: #000;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+canvas {
+	background: #ddd;
+	display: block;
+	margin: 100px auto 0;
+}
+
+span {
+	color: #B20000;
+}
+#interface {
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	height: 400px;
+	margin-left: -300px;
+	display: block;
+}
+
+#interface h1 {
+	font-family: sans-serif;
+	text-align: center;
+	font-size: 50px;
+}
+
+#interface h2 {
+	font-family: sans-serif;
+	text-align: right;
+	font-size: 15px;
+}
+
+#interface p {
+	font-weight: bold;
+	margin-top: 190px;
+	line-height: 25px;
+	text-align: center;
+	font-size: 18px;
+}
+
+#game {
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	height: 400px;
+	margin-left: -300px;
+	display: block;
+}
+
+#game p {
+	font-family: sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+}
+#game .timer {
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+#game .calories {
+	text-align: right;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+#game #phrases {
+	position: absolute;
+	top: 20px;
+	right: 10px;
+}
+
+#end {
+	font-family: sans-serif;
+	position: absolute;
+	left: 50%;
+	width: 600px;
+	height: 400px;
+	margin-left: -300px;
+	display: block;
+}
+
+#end h1 {
+	text-align: center;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#end h2 {
+	text-align: center;
+}
+
+#end h3 {
+	margin-top: 10px;
+	float: right;
+	text-decoration: none;
+	font-weight: normal;
+	text-align: right;
+	font-size: 14px;
+	margin-right: 10px;
+}
+#end h4 {
+	margin-top: 10px;
+	float: left;
+	text-decoration: none;
+	font-weight: normal;
+	text-align: left;
+	font-size: 14px;
+	margin-left: 10px;
+}
+#end p {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+	margin-bottom: 40px;
+}
+
+a{
+	text-decoration: none;
+	color: #4D7AFF;
+}
+		
+	</style>
+</head>
+<body>
+
+<div id="interface">
+	<h1>Ball <span>Madness</span>!</h1>
+
+
+	<p>PRESS <span>ENTER</span><br>
+	<span>WASD</span> or <span>arrow keys</span> to move <br>
+	Eat as much as you can, just be careful not to <span>lose control</span> of yourself.</p>
+
+</div>
+
+<div id="game" style="display:none">
+	<p class="timer">Time: <span id="timerScore"></span> seconds!</p>
+	<p class="calories">Calories: <span id="caloriesScore">0</span> calories!</p>
+	<p id="phrases"></p>
+</div>
+
+<div id="end" style="display:none">
+	<h1>You died ):</h1>
+	<p>You survived for <span id="finalTime"></span> seconds! <br>
+	You had <span id="finalCalories"></span> calories! <br>
+	Press "<span>R</span>" to retry!
+	</p>
+	<h2><span>The less you eat, the more you need.</span></h2>
+	<h3>Created by <a href="https://twitter.com/brunomarchi_js">@brunomarchi_js</a></h3>
+	<h4>Special thanks to: <br>
+	<a href="https://twitter.com/oneliojr">@oneliojr</a>, my brother, for helping me with coding tips <br>
+Gabriela, my girlfriend, for drawing all those delicious food.</h4>
+</div>
+
+<script>!function(){for(var a=0,b=["webkit","moz"],c=0;c<b.length&&!window.requestAnimationFrame;++c)window.requestAnimationFrame=window[b[c]+"RequestAnimationFrame"],window.cancelAnimationFrame=window[b[c]+"CancelAnimationFrame"]||window[b[c]+"CancelRequestAnimationFrame"];window.requestAnimationFrame||(window.requestAnimationFrame=function(b){var d=(new Date).getTime(),e=Math.max(0,16-(d-a)),f=window.setTimeout(function(){b(d+e)},e);return a=d+e,f}),window.cancelAnimationFrame||(window.cancelAnimationFrame=function(a){clearTimeout(a)})}();var ballMadness=_={},timer=0,onInitialScreen=!1;candy=new Image,candy.src="candy.png",candy.onload=function(){},truffle=new Image,truffle.src="truffle.png",truffle.onload=function(){},cookie=new Image,cookie.src="cookie.png",cookie.onload=function(){},_.rand=function(a,b){return~~(Math.random()*(b-a+1)+a)},_.createCanvas=function(){_.canvas=document.createElement("canvas"),_.cw=_.canvas.width=600,_.ch=_.canvas.height=400,_.ctx=_.canvas.getContext("2d"),document.body.appendChild(_.canvas)},_.createInterface=function(){return onInitialScreen=!0,_.ctx.clearRect(0,0,_.cw,_.ch),_.ctx.beginPath(),_.ctx.arc(300,200,50,0,2*Math.PI,!1),_.ctx.closePath(),_.ctx.fill(),_.key.enter?(document.getElementById("interface").style.display="none",onInitialScreen=!1,cancelAnimationFrame(_.createInterface),_.init(),!1):(requestAnimationFrame(_.createInterface),void 0)},_.createEndingScreen=function(){return _.ctx.clearRect(0,0,_.cw,_.ch),_.key.restart?(document.getElementById("end").style.display="none",timer=0,_.score.calories=0,document.getElementById("caloriesScore").innerHTML=0,cancelAnimationFrame(_.createEndingScreen),_.init(),!1):(requestAnimationFrame(_.createEndingScreen),void 0)},_.Player=function(){},_.Player.prototype={x:300,y:200,radius:50,vel:0,eaten:0,alive:!1,render:function(){_.ctx.fillStyle="hsla(70, 100%, 0%, 1)",_.ctx.beginPath(),_.ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,!1),_.ctx.closePath(),_.ctx.fill(),this.alive=!0},update:function(){_.key.up&&(this.y-this.radius<=0||this.y-this.radius-this.vel<=0?this.y=this.radius:this.y-=this.vel),_.key.down&&(this.y+this.radius>=_.ch||this.y+this.radius+this.vel>=_.ch?this.y=_.ch-this.radius:this.y+=this.vel),_.key.left&&(this.x-this.radius<=0||this.x-this.radius-this.vel<=0?this.x=this.radius:this.x-=this.vel),_.key.right&&(this.x+this.radius>=_.cw||this.x+this.radius+this.vel>=_.cw?this.x=_.cw-this.radius:this.x+=this.vel),this.radius-=.05,this.vel=200/this.radius,this.radius<=0&&(this.alive=!1,this.radius=0)},radiusUp:function(){this.eaten++,this.radius+=_.food.factor}},_.Food=function(a){this.type=a,1===a&&(this.radius=10,this.factor=3,this.score=3,this.image=candy),2===a&&(this.radius=20,this.factor=2,this.score=2,this.image=truffle),3===a&&(this.radius=30,this.factor=1,this.score=1,this.image=cookie),this.x=_.rand(this.radius,_.cw-this.radius),this.y=_.rand(this.radius,_.ch-this.radius)},_.Food.prototype={render:function(){_.ctx.fillStyle="hsla(0, 100%, 50%, 0)",_.ctx.beginPath(),_.ctx.arc(this.x,this.y,this.radius,0,2*Math.PI,!1),_.ctx.closePath(),_.ctx.fill(),_.ctx.drawImage(this.image,this.x-this.radius,this.y-this.radius)}},_.createFood=function(){var a=_.rand(1,3);_.food=new _.Food(a)},_.Score=function(){},_.Score.prototype={calories:0,phrase:"More calories, please!",updateCalories:function(a){calories=this.calories,this.calories+=a,document.getElementById("caloriesScore").innerHTML=this.calories},updatePhrases:function(){phrase=this.phrase,this.calories>=25&&(this.phrase="That was yummy!"),this.calories>=50&&(this.phrase="Why is it so good?!"),this.calories>=75&&(this.phrase="MORE, I NEED MORE!"),this.calories>=100&&(this.phrase="GIMME THAT CANDIES"),this.calories>=125&&(this.phrase="DON'T YOU RUN FROM ME, FOOD"),this.calories>=150&&(this.phrase="GOTTA EAT THEM ALL"),this.calories>=175&&(this.phrase="I SHOULD BE DEAD SOON BUT I DON'T CARE"),this.calories>=200&&(this.phrase="I HOPE HEAVEN HAS CANDIES"),this.calories>=225&&(this.phrase="WHERE'S THE FOOD, SKYLER"),this.calories>=250&&(this.phrase="TOMORROW I STOP, I SWEAR"),this.calories>=300&&(this.phrase="IF (FOOD) I EAT(ALOT)"),this.calories>=400&&(this.phrase="I'M A LIVING GOD"),document.getElementById("phrases").innerHTML=this.phrase}},_.handleCollision=function(){var a=Math.sqrt(Math.pow(_.food.x-_.player.x,2)+Math.pow(_.food.y-_.player.y,2));a<_.food.radius+_.player.radius&&(_.player.radiusUp(),_.createFood(),_.score.updateCalories(_.food.score))},_.handleFactor=function(){},_.key={up:!1,down:!1,left:!1,right:!1,enter:!1,restart:!1},_.keyHandler=function(a,b){(87===a||38===a)&&(_.key.up=b),(83===a||40===a)&&(_.key.down=b),(65===a||37===a)&&(_.key.left=b),(68===a||39===a)&&(_.key.right=b),13===a&&(_.key.enter=b),82===a&&(_.key.restart=b)},window.addEventListener("keydown",function(a){_.keyHandler(a.keyCode,!0)}),window.addEventListener("keyup",function(a){_.keyHandler(a.keyCode,!1)}),_.loop=function(){_.ctx.clearRect(0,0,_.cw,_.ch),_.player.render(),_.player.update(),_.food.render(),_.handleCollision(),_.score.updatePhrases(),document.getElementById("timerScore").innerHTML=timer.toFixed(1),onInitialScreen||_.player.alive||(document.getElementById("game").style.display="none",document.getElementById("end").style.display="block",document.getElementById("finalTime").innerHTML=timer.toFixed(1),document.getElementById("finalCalories").innerHTML=_.score.calories,_.createEndingScreen(),_.gameState=!1),_.timer++,6===_.timer&&(timer+=.1,_.timer=0),_.gameState&&requestAnimationFrame(_.loop)},_.init=function(){document.getElementById("game").style.display="block",_.timer=0,_.gameState=!0,_.player=new _.Player,_.createFood(),_.score=new _.Score,_.loop()},_.createCanvas(),_.createInterface();</script>
+
+</body>
+</html>
