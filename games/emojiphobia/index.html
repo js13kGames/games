@@ -1,0 +1,1450 @@
+﻿<!doctype html>
+<title>EMOJIPHOBIA</title>
+<link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>😱</text></svg>">
+<head>
+<style>
+/* RC6 */
+@font-face{font-family: emoji; src: url(//xem.github.io/unicode13/Twemoji.ttf)}
+@keyframes wobble { 0%, 100% { transform: rotate(-5deg) } 50% { transform: rotate(5deg) } }
+body { margin: 0; overflow: hidden; background: #fff; }
+* { cursor: pointer }
+#b { background: #eee; width: 95vmin; height: 95vmin; margin: 2.5vmin auto; border-radius: 30%; text-align: center; font-family: calibri,arial; overflow: hidden; box-shadow: 0 0 50vmin #ccc inset, 0 0 50vmin #888}
+.state0 h1 {animation: wobble 2s infinite; font: bold 14vmin emoji, calibri,arial; text-align: left; width: 105vmin; position: relative; top: 27vmin; left: 6vmin; letter-spacing: -.5vmin; overflow: hidden; color: #000; }
+.mobile .state0 h1 { font: bold 10vmin emoji, calibri; left: -4vmin; text-align: center;}
+.state0 h2#h201 {font: bold 5vmin calibri,arial; text-align: center; width: 95vmin; position: absolute; top: 62vmin; }
+.state0 h2#h202 {font: bold 5vmin calibri,arial; text-align: center; width: 95vmin; position: absolute; top: 70vmin; }
+.state0 h1 span { font-size: 9vmin;display: inline-block; width: 12.5vmin; height: 14.5vmin; overflow: visible; text-align:center; vertical-align: bottom; text-shadow: 0 0 1vmin #000; }
+.mobile .state0 h1 span { font-size: 7vmin; height: 11vmin; }
+.state99 h2 { position: absolute; top: 85vmin; font: bold 5vmin calibri,arial; text-align: center; width: 95vmin; position: absolute; }
+h2 { font: bold 5vmin/4.5vmin calibri,arial; }
+.circle {width: 3.5vmin; height: 3.5vmin; display: inline-block; border-radius: 50% }
+.pink { background: pink }
+.gray { background: gray }
+.bigemoji { font-size: 30vmin; line-height: 40vmin; text-shadow: 0 0 1vmin #000;}
+.bigtext { font-size: 10vmin; line-height: 55vmin; }
+button { background: #fff; font: 4vmin calibri,arial; border: 1px solid #888; border-bottom-width: 2px; 
+border-right-width: 2px; border-radius: 1vmin; margin: .5vmin; padding: 1vmin 2vmin; }
+.state2 button,.state6 button, .state11 button, .state12 button { font: 10vmin emoji, calibri,arial; line-height: 12vmin; height: 14vmin; vertical-align: middle; text-shadow: 0 0 .5vmin #000; }
+.state4 button, .state9 button { font: 5vmin emoji, calibri,arial; height: 10vmin; vertical-align: middle; margin: 0 0 3vmin;}
+br { font-size: 1px }
+#encyclo { font-size: 2.5vmin; text-align: left; padding: 5vmin 0vmin; height: 45vmin; overflow: auto; margin: 2vmin; width: 92vmin; font-family: calibri,arial; }
+#encyclo span { font-size: 4vmin; text-shadow: 0 0 .2vmin #000; font-family: emoji, calibri,arial; padding: 0 0 0 2vmin}
+.green { background: #5F5!important }
+.red { background: #F55!important }
+.state5 .bigemoji { font-size: 20vmin; line-height: 40vmin; }
+.state99 h1 { font-size: 8vmin; }
+.state99 h2 { font-size: 4vmin; }
+.state7 button { background: transparent; border: none; font-size: 10vmin; width: 13vmin; padding: 1vmin 0; }
+.state7 .bigtext { line-height: 30vmin; }
+.state7 button .circle { width: 10vmin; height: 10vmin; position: relative; top: 1.5vmin;}
+button div { pointer-events: none }
+.state10 .bigtext { line-height: 8vmin; padding: 18vmin 0; }
+.state10 input { height: 7vmin; vertical-align: bottom; font-size: 6vmin; width: 15vmin; }
+.state14 h2 { animation: wobble infinite 2s }
+.state15 .bigtext { font-size: 10vmin; line-height: 8vmin; padding: 15vmin 0; }
+.state14 .circle { width: 10vmin; height: 10vmin; }
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+</style>
+</head>
+<body>
+<div id=b class="state0">
+<h1>EM<span id=h11>😱</span>JIPH<span>😱</span>BIA</h1>
+<h2 id=h201>PLAY</h2>
+<h2 id=h202>ENCYCLOPHOBIA</h2>
+</div>
+</body>
+<script>
+// Mobile
+if(window.orientation>-1){
+  document.body.className = "mobile";
+}
+
+// Prevent long touch effect on mobile
+oncontextmenu = e => { e.preventDefault(); }
+    
+// Music
+
+track = [..."79:<>:> =9= <8< 79:<>:>CA>:>A  79:<>:> =9= <8< 79:<>:>CA>:>A  >@BCEBE FBF EBE >@BCEBE FBF E  >@BCEBE FBF EBE >@BCEBE FBF E  CEFHJFJ IEI HDH CEFHJFJOMJFJM  OQRTVRV[ZVZ][   >>BEE QQ NN >>BEC QQ OO ==@GG SS OO ==@GG SS NN >>BEJ VV QQ >>BEJ VV SS LLOSS  PQZ VNNLS QJ VUUSS SRRSS LLN L LLS Q VUUSS SUXVV PSS QP NN LE VUUSS SRRSS LLN L LLS Q VUUSS SUXVV PSS QP NJN LE   "].map(a=>a.codePointAt());
+
+note = 0;
+
+A = new (self.AudioContext||self.webkitAudioContext),
+m = A.createBuffer(1,1e6,44100);
+
+// Play a piano note
+piano = e => {
+  var V,v,p,c,b,w,r,D,i,s,u,D;
+  
+  for(
+  
+    // V: note length in seconds
+    V = 1.8,
+    
+    // Temp vars for guitar synthesis
+    v = [],
+    p = c = 0,
+    
+    // Modulation
+    // This function generates the i'th sample of a sinusoidal signal with a specific frequency and amplitude
+    b = (e,t,a,i) => Math.sin(e / t * 6.28 * a + i),
+    
+    // Instrument synthesis
+    w = (e,t) => Math.sin(e / 44100 * t * 6.28 + b(e,44100,t,0) ** 2 + .75 * b(e,44100,t,.25) + .1 * b(e,44100,t,.5)),
+    
+    // Sound samples
+    D = [],
+    
+    // Loop on all the samples
+    i = 0;
+    i < 44100 * V;
+    i++
+  ){
+  
+    // Fill the samples array
+    D[i] =
+    
+      // The first 88 samples represent the note's attack
+      i < 88 
+      ? i / 88.2 * w(i,e) / 19
+      
+      // The other samples represent the rest of the note
+      : (1 - (i - 88.2) / (44100 * (V - .002))) ** ((.5 * Math.log(1e4 * e / 44100)) ** 2) * w(i,e) / 19;
+  }
+  
+  // Play the note
+  
+  m.getChannelData(0).set(D),
+  s = A.createBufferSource(),
+  s.buffer = m,
+  s.connect(A.destination),
+  s.start()
+}
+
+play_note = n => {
+  if(n > 32) piano(440*1.06**(n - 80));
+}
+
+play_next_note = () => {
+  if(track[note]){
+    play_note(track[note]);
+    time = new Date();
+  }
+  //console.log(note, songs[song][note]);
+  note++;
+  note %= (track.length + 1);
+}
+
+
+// Sound
+coin = (f,t,A,m,b,s) => {
+
+  f = function(i){
+    var n=1.6e4;
+    var c=n/7;
+    if (i > n) return null;
+    var q=Math.pow(t(i,n),2.1);
+    return ((i<c ? ((i+Math.sin(-i/900)*10)&16) : i&13) ?q:-q)/9;
+  }
+
+  // Sound player
+  t=(i,n)=>(n-i)/n;
+  A=new AudioContext()
+  m=A.createBuffer(1,96e3,48e3)
+  b=m.getChannelData(0)
+  for(i=96e3;i--;)b[i]=f(i)
+  s=A.createBufferSource()
+  s.buffer=m
+  s.connect(A.destination)
+  s.start()
+
+}
+
+nudge = (f,t,A,m,b,s) => {
+
+  // Sound
+  f = function(i){
+    var n=6e3;
+    if (i > n) return null;
+    var q = t(i,n);
+    return (Math.sin(i*0.01*Math.sin(0.009*i+Math.sin(i/200))+Math.sin(i/100))*q*q)/9;
+  }
+
+  // Sound player
+  t=(i,n)=>(n-i)/n;
+  A=new AudioContext()
+  m=A.createBuffer(1,96e3,48e3)
+  b=m.getChannelData(0)
+  for(i=96e3;i--;)b[i]=f(i)
+  s=A.createBufferSource()
+  s.buffer=m
+  s.connect(A.destination)
+  s.start()
+}
+
+// Data
+// categories: Easy / medium / hard / colors / animals / numbers / countries
+// for each phobia => emoji / name / description 
+data = {
+  easy: [
+    ["📢", "Acousticophobia,Ligyrophobia", "fear of noise"],
+    ["🧗🏻", "Acrophobia", "fear of heights"],
+    ["✈️", "Aerophobia,Aviophobia,Aviatophobia", "fear of aircraft"],
+    ["👽", "Alienophobia", "fear of aliens"],
+    ["🚶", "Ambulophobia", "fear of walking"],
+    ["😠", "Angrophobia ", "fear of anger"],
+    ["🧍", "Anthropophobia", "fear of human beings"],
+    ["💦", "Aquaphobia,Hydrophobia", "fear of water"],
+    ["🔢", "Arithmophobia", "fear of numbers"],
+    ["✨", "Astrophobia,Siderophobia", "fear of stars"],
+    ["🥇", "Aurophobia", "fear of gold"],
+    ["🌌", "Auroraphobia", "fear of Northern lights"],
+    ["🦠", "Bacteriophobia", "fear of bacteria"],
+    ["🤿", "Bathophobia", "fear of depth"],
+    ["📖", "Bibliophobia", "fear of books"],
+    ["🌱", "Botanophobia", "fear of plants"],
+    ["❤️", "Cardiophobia", "fear of the heart"],
+    ["🍖", "Carnophobia", "fear of meat"],
+    ["⌛", "Chronophobia", "fear of time and time moving forward"],
+    ["🛗", "Claustrophobia", "fear of having no escape and being closed in"],
+    ["🥶", "Cryophobia,Frigophobia,Cheimaphobia,Psychrophobia", "fear of cold"],
+    ["💻", "Cyberphobia,Logizomechanophobia", "fear of computers"],
+    ["😈", "Demonophobia,Daemonophobia", "fear of demons"],
+    ["👩🏻‍⚕️🦷", "Dentophobia,Odontophobia", "fear of dentists"],
+    ["🚮", "Disposophobia", "fear of throwing stuff out"],
+    ["⛪", "Ecclesiophobia", "fear of church"],
+    ["🔌", "Electrophobia", "fear of electricity"],
+    ["🧎🏻", "Genuphobia", "fear of kneeling"],
+    ["👴", "Gerontophobia", "fear of growing old"],
+    ["✍", "Graphophobia", "fear of handwriting"],
+    ["🩸", "Hemophobia", "fear of blood"],
+    ["😴", "Somniphobia,Hypnophobia", "fear of sleep"],
+    ["🤔💡", "Ideophobia", "fear of ideas"],
+    ["🍄", "Mycophobia", "fear of mushrooms"],
+    ["💀", "Necrophobia", "fear of death or the dead"],
+    ["🍷", "Oenophobia", "fear of wines"],
+    ["👶🏻", "Pedophobia", "fear of babies or children"],
+    ["👨🏻‍🦲", "Peladophobia", "fear of bald people"],
+    ["💊", "Pharmacophobia", "fear of medications"],
+    ["😱️", "Phobophobia", "fear of phobias"],
+    ["🌧️", "Pluviophobia,Ombrophobia", "fear of rain or of being rained on"],
+    ["🎥🔞", "Pornophobia", "fear of pornography"],
+    ["🩻☢️", "Radiophobia", "fear of radioactivity or X-rays"],
+    ["🤖", "Robophobia", "fear of robots"],
+    ["🎬", "Theatrophobia", "fear of theaters"],
+    ["☄️", "Cometophobia,Meteorophobia", "fear of comets and meteors"],
+    ["😔", "Tristophobia,Maestophobia", "fear of sadness"],
+    ["🎅", "Santaphobia", "fear of Santa"],
+    ["👬", "Homophobia", "fear of homosexuals"],
+    ["🌵️", "Kactosophobia", "fear of cacti"],
+    ["🍏🍒", "Fructophobia", "fear of fruits"],
+    ["🍫", "Xocolataphobia", "fear of chocolates"],
+    ["🥛", "Crystallophobia,Nelophobia,Hyalophobia", "fear of glass"],
+  ],
+
+  medium: [
+    ["🛁", "Ablutophobia", "fear of bathing"],
+    ["🍋", "Acerophobia", "fear of sourness"],
+    ["🐻", "Agrizoophobia", "fear of wild animals"],
+    ["👨", "Androphobia,Arrhenphobia", "fear of adult men"],
+    ["🔥", "Arsonphobia", "fear of fire"],
+    ["☢️💣", "Atomosophobia", "fear of atomic explosions"],
+    ["🌩️", "Astraphobia,Brontophobia,Tonitrophobia", "fear of thunder and lightning"],
+    ["👩", "Venustraphobia,Caligynephobia", "fear of beautiful women"],
+    ["👉🧍", "Chiraptophobia,Haphephobia,Aphenphosmphobia", "fear of being touched"],
+    ["🕓", "Chronomentrophobia", "fear of clocks"],
+    ["🚲", "Cyclophobia", "fear of bicycles"],
+    ["🩹", "Dermatophobia", "fear of skin lesions"],
+    ["👙❌", "Dishabiliophobia", "fear of undressing in front of someone"],
+    ["🏠", "Domatophobia", "fear of houses"],
+    ["🤮", "Emetophobia", "fear of vomiting"],
+    ["😳", "Ereuthrophobia", "fear of blushing"],
+    ["🎈", "Globophobia", "fear of balloons"],
+    ["😇♱", "Hagiophobia,Staurophobia", "fear of saints, crosses or holy things"],
+    ["😶‍🌫️", "Nebulaphobia,Homichlophobia", "fear of fog"],
+    ["🧟", "Kinemortophobia", "fear of zombies"],
+    ["⬅️", "Sinistrophobia,Levophobia", "fear of things to the left"],
+    ["🎭", "Masklophobia", "fear of people in masks, costumes, and mascots"],
+    ["♫", "Melophobia", "fear of music"],
+    ["📴", "Nomophobia", "fear of being out of mobile phone"],
+    ["🏥", "Nosocomephobia", "fear of hospitals"],
+    ["🍻", "Methyphobia,Potophobia", "fear of alcohol"],
+    ["📜", "Papyrophobia", "fear of paper"],
+    ["👻", "Phasmophobia,Spectrophobia", "fear of ghosts"],
+    ["❤️", "Philophobia", "fear of love"],
+    ["💰", "Plutophobia,Chrometophobia,Chrematophobia", "fear of wealth, money"],
+    ["🎎", "Pupaphobia", "fear of puppets"],
+    ["💩", "Scatophobia,Rhypophobia", "fear of fecal matter"],
+    ["🧛‍♀️", "Sanguivoriphobia", "fear of vampires"],
+    ["🔥", "Pyrophobia", "fear of fire"],
+    ["🌙", "Selenophobia", "fear of the moon"],
+    ["🐂", "Taurophobia", "fear of bulls"],
+    ["☎️", "Telephobia", "fear of making or taking telephone calls"],
+    ["☠️", "Thanatophobia", "fear of dying"],
+    ["🤕", "Traumatophobia", "fear of having an injury"],
+    ["👕👖", "Vestiphobia", "fear of clothing"],
+    ["🪵", "Xylophobia", "fear of wooden objects or forests"],
+    ["🧳", "Valitsaphobia ", "fear of suitcases"],
+    ["🪨", "Petraphobia,Petrophobia", "fear of rocks"],
+    ["🗺", "Cartophobia,Mappophobia", "fear of maps"],
+    
+  ],
+
+  hard: [
+    ["🪐", "Tuxiphobia", "fear of Saturn"],
+    ["🌃", "Achluophobia", "fear of darkness"],
+    ["🤪", "Agateophobia", "fear of insanity"],
+    ["🤕", "Agliophobia,Algophobia", "fear of pain"],
+    ["🤬", "Kakologophobia", "fear of swear words"],
+    ["🚸", "Agyrophobia,Dromophobia", "fear of crossing streets"],
+    ["🔪", "Aichmophobia", "fear of sharp objects"],
+    ["🐔", "Alektorophobia", "fear of chickens"],
+    ["🧄", "Alliumphobia", "fear of garlic, onions, shallots"],
+    [".･:･🧹", "Amathophobia,Koniophobia", "fear of dust"],
+    ["🚗", "Amaxophobia", "fear of riding in a car"],
+    ["🙄", "Anablephobia", "fear of looking up"],
+    ["࿓༄", "Ancraophobia,Anemophobia", "fear of wind or drafts"],
+    ["🌷", "Anthrophobia,Anthophobia", "fear of flowers"],
+    ["🌊", "Antlophobia", "fear of floods"],
+    ["💔", "Anuptaphobia", "fear of staying single"],
+    ["🪈", "Aulophobia", "fear of flutes"],
+    ["𓊍", "Bathmophobia,Climacophobia", "fear of stairs"],
+    ["🏢", "Batophobia", "fear of heights or high buildings"],
+    ["🪡", "Belonephobia", "fear of needles or pins"],
+    ["🪑", "Cathisophobia", "fear of sitting"],
+    ["🪞", "Catoptrophobia,Eisoptrophobia", "fear of mirrors"],
+    ["🤔💡", "Cenophobia,Centophobia", "fear of new ideas"],
+    ["💇🏻‍♀️", "Chaetophobia", "fear of hair"],
+    ["😊", "Cherophobia", "fear of happiness"],
+    ["❄️", "Chionophobia", "fear of snow"],
+    ["🤲", "Chirophobia", "fear of hands"],
+    ["💃🏻🕺🏽", "Chorophobia", "fear of dancing"],
+    ["🍝", "Cibophobia", "fear of food"],
+    ["🛌🏻", "Clinophobia", "fear of going to bed"],
+    ["🪦", "Coimetrophobia", "fear of cemeteries"],
+    ["🥢", "Consecotaleophobia", "fear of chopsticks"],
+    ["💩❌", "Coprastasophobia", "fear of constipation"],
+    ["💩", "Coprophobia", "fear of feces or defecation"],
+    ["🤡", "Coulrophobia", "fear of clowns"],
+    ["🌊", "Cymophobia,Kymophobia", "fear of waves"],
+    ["🌳", "Dendrophobia", "fear of trees"],
+    ["➡️", "Dextrophobia", "fear of objects on the right"],
+    ["⚖️", "Dikephobia", "fear of justice"],
+    ["🌪️", "Dinophobia", "fear of whirlpools"],
+    ["🍻", "Dipsophobia", "fear of drinking"],
+    ["🚗💥🚗", "Dystychiphobia", "fear of accidents"],
+    ["📌", "Enetophobia", "fear of pins"],
+    ["🌅", "Eosophobia", "fear of dawn or daylight"],
+    ["🤧🩸", "Epistaxiophobia", "fear of nosebleeds"],
+    ["🎓📖", "Epistemophobia,Gnosiophobia", "fear of knowledge"],
+    ["🤒", "Febriphobia,Fibriphobia,Pyrexiophobia", "fear of fever"],
+    ["👰🏻🤵🏻", "Gamophobia", "fear of marriage"],
+    ["🌉", "Gephyrophobia", "fear of bridges"],
+    ["😈🔥", "Hadephobia", "fear of hell"],
+    ["👨🏻‍⚖️", "Hierophobia", "fear of priests or sacred things"],
+    ["🔫", "Hoplophobia", "fear of firearms"],
+    ["😵‍💫", "Illyngophobia", "fear of vertigo or feeling dizzy looking down"],
+    ["🥱", "Kopophobia", "fear of fatigue"],
+    ["🥕🥦", "Lachanophobia", "fear of vegetables"],
+    ["🗣️", "Laliophobia,Lalophobia", "fear of speaking"],
+    ["🌪️", "Lilapsophobia", "fear of tornadoes or hurricanes"],
+    ["🏞️", "Limnophobia", "fear of lakes"],
+    ["🧵", "Linonophobia", "fear of string"],
+    ["🍳", "Mageiricophobia", "fear of cooking"],
+    ["🐜", "Myrmecophobia", "fear of ants"],
+    ["☁️", "Nephophobia", "fear of clouds"],
+    ["👁️", "Ommetaphobia", "fear of eyes"],
+    ["🔆", "Phengophobia", "fear of daylight or sunshine"],
+    ["💋", "Philemaphobia,Philematophobia", "fear of kissing"],
+    ["🍃", "Phyllophobia", "fear of leaves"],
+    ["🪦", "Placophobia", "fear of tombstones"],
+    ["🧔🏻‍♀️", "Pogonophobia", "fear of beards"],
+    ["👣🪶", "Pteronophobia", "fear of being tickled by feathers"],
+    ["🎃", "Samhainophobia", "fear of Halloween"],
+    ["🏫", "Scolionophobia,Didaskaleinophobia", "fear of school"],
+    ["👨‍🦯", "Scotomaphobia", "fear of blindness"],
+    ["🦈", "Selachophobia", "fear of sharks"],
+    ["📸", "Selaphobia", "fear of light flashes"],
+    ["😈🔥", "Stygiophobia,Stigiophobia", "fear of hell"],
+    ["🤰🏻", "Tokophobia", "fear of childbirth or pregnancy"],
+    ["💉", "Trypanophobia", "fear of needles or injections"],
+    ["🎢", "Veloxrotaphobia", "fear of roller coasters"],
+    ["🪒", "Xyrophobia", "fear of razors"],
+    ["🧔🥸", "Pogonophobia", "fear of beards and mustaches"],
+    ["🤐", "Sedatephobia", "fear of silence"],
+    ["💅", "Onuxophobia", "fear of nails"],
+    ["👂", "Aftiphobia", "fear of ears"],
+    ["♾️", "Apeirophobia", "fear of infinity"],
+    
+    // animal hard:
+    ["🐢", "Chelonaphobia ","fear of turtles"],
+    ["🐇", "Leporiphobia","fear of rabbits"],
+    ["🦄", "Monokerophobia","fear of unicorns"],
+    ["🐒", "Pithecophobia","fear of monkeys"],
+    ["🐔", "Alektorophobia","fear of chickens"],
+    ["🦆", "Anatidaephobia","fear of ducks"],
+    ["🦎", "Scoliodentosaurophobia	","fear of lizards, geckos"],
+    ["🐻", "Arkoudaphobia","fear of bears"],
+    ["🐛", "Scoleciphobia,Helminthophobia","fear of worms"],
+    ["🐚", "Ostraconophobia","fear of shellfish"],
+    ["🐍", "Ophidiophobia","fear of snakes"],
+    ["🦋", "Lepidopterophobia","fear of butterflies and moths"],
+    ["🪳", "Katsaridaphobia","fear of cockroaches"],
+    ["🦇", "Chiroptophobia","fear of bats"],
+    ["🐟", "Ichthyophobia","fear of fish"],
+    ["🐊", "Herpetophobia", "fear of reptiles or amphibians"],
+    ["🦦", "Lutraphobia", "fear of otters"],
+  ],
+
+  color: [
+  
+    ["🔴", "Erythrophobia","fear of the color red"],
+    ["⚪", "Leukophobia","fear of the color white"],
+    ["⚫", "Melanophobia","fear of the color black"],
+    ["🟣", "Porphyrophobia","fear of the color purple"],
+    ["🟡", "Xanthophobia","fear of the color yellow"],
+    ["🟠", "Chrysophobia","fear of the color orange"],
+    ["🔵", "Cyanophobia", "fear of the color blue"],
+    ['<div class="circle gray"></div>',"Glaucophobia","fear of the color gray"],
+    ["🟤", "Kastanophobia","fear of the color brown"],
+    ["🟢", "Prasinophobia","fear of the color green"],
+    ['<div class="circle pink"></div>',"Rhodophobia", "fear of the color pink"],
+
+  ],
+
+  animaleasy: [
+    ["🐈", "Gatophobia,Ailurophobia,Galeophobia","fear of cats"],
+    ["🕷️", "Arachnophobia","fear of spiders"],
+    ["🐸", "Batrachophobia,Ranidaphobia","fear of frogs"],
+    ["🐶", "Cynophobia","fear of dogs"],
+    ["🕷️", "Insectophobia,Entomophobia","fear of insects"],
+    ["🐎", "Equinophobia,Hippophobia","fear of horses"],
+    ["🐝", "Apiphobia,Melissophobia", "fear of bees"],
+    ["🐌", "Molluscophobia","fear of snails and slugs"],
+    ["🐁", "Suriphobia,Musophobia","fear of mice or rats"],
+    ["🐦", "Ornithophobia","fear of birds"],
+    ["🐘", "Pachydermophobia","	fear of elephants"],
+    ["🪱", "Taeniophobia,Teniophobia","fear of tapeworms"],
+    ["🪰", "Pteronarcophobia","fear of flies"],
+    ["🐺", "Lupophobia","fear of wolves"],
+    ["🦊", "Fennecaphobia","fear of foxes"],
+    ["🐷", "Porcophobia,Swinophobia","fear of pigs"],
+    ["🦖", "Deinophobia,Ornithoscelidaphobia,Paleontophobia","fear of dinosaurs"],
+    ["🦓", "Zebraphobia,Zevraphobia","fear of zebras"],
+    ["🐊", "Krokodeilophobia","fear of crocodiles"],
+    ["🐉", "Dracophobia","fear of dragons"],
+    ["🦒", "Giraphobia","fear of giraffes"],
+    ["🦘", "Kagkourophobia","fear of kangaroos"],
+    ["🐿", "Sciurophobia","fear of squirrels"],
+    ["🐄", "Bovinophobia","fear of cows"],
+    ["🦙", "Llamaphobia","fear of llamas"],
+  ],
+
+  numbereasy: [
+    ["2️⃣", "Dyophobia", "fear of 2", "2"],
+    ["3️⃣", "Triskaphobia", "fear of 3", "3"],
+    ["4️⃣", "Tetraphobia", "fear of 4", "4"],
+    ["5️⃣", "Pentaphobia", "fear of 5", "5"],
+    ["6️⃣", "Hexaphobia", "fear of 6", "6"],
+    ["7️⃣", "Heptaphobia", "fear of 7", "7"],
+    ["8️⃣", "Octophobia", "fear of 8", "8"],
+    ["1️⃣0️⃣", "Decaphobia", "fear of 10", "10"],
+    ["1️⃣1️⃣", "Hendecaphobia", "fear of 11", "11"],
+    ["1️⃣2️⃣", "Dodecaphobia", "fear of 12", "12"],
+    ["1️⃣3️⃣", "Triskaidekaphobia", "fear of 13", "13"],
+    ["1️⃣4️⃣", "Tetradecaphobia", "fear of 14", "14"],
+    ["1️⃣5️⃣", "Dekapentophobia", "fear of 15", "15"],
+    ["1️⃣6️⃣", "Hexadecaphobia", "fear of 16", "16"],
+    ["1️⃣7️⃣", "Heptadecaphobia", "fear of 17", "17"],
+    ["1️⃣8️⃣", "Octodecaphobia", "fear of 18", "18"],
+    ["3️⃣0️⃣", "Trigintiphobia", "fear of 30", "30"],
+  ],
+  
+  numberhard: [
+    ["0️⃣", "Oudenophobia", "fear of 0", "0"],
+    ["2️⃣0️⃣", "Eikosiphobia", "fear of 20", "20"],
+    ["1️⃣9️⃣", "Enneadecaphobia", "fear of 19", "19"],
+    ["9️⃣", "Enneaphobia", "fear of 9", "9"],
+    ["1️⃣", "Henophobia", "fear of 1", "1"],
+    ["6️⃣9️⃣", "Hexekontennea- phobia", "fear of 69", "69"],
+    ["9️⃣9️⃣", "Enenekontennea- phobia", "fear of 99", "99"],
+    ["1️⃣0️⃣0️⃣", "Hekatophobia", "fear of 100", "100"],
+    ["6️⃣6️⃣6️⃣", "Hexakosioihexe- kontahexaphobia", "fear of 666", "666"],
+  ],
+
+  country: [
+    ["🇦🇱", "Albanophobia", "fear of Albanians"],
+    ["🇬🇧", "Anglophobia", "fear of England"],
+    ["🇩🇪", "Germanophobia", "fear of Germans"],
+    ["🇮🇪", "Hibernophobia", "fear of Irish people"],
+    ["🇪🇸", "Hispanophobia", "fear of Hispanic"],
+    ["🇭🇺", "Hungarophobia", "fear of Hungarians"],
+    ["🇮🇳", "Indophobia", "fear of India"],
+    ["🇮🇩", "Indonesiaphobia", "fear of Indonesia"],
+    ["🇮🇷", "Iranophobia", "fear of Iran"],
+    ["🇮🇹", "Italophobia", "fear of Italians"],
+    ["🇵🇹", "Lusophobia", "fear of the Portuguese"],
+    ["🇯🇵", "Nipponophobia", "fear of the Japanese"],
+    ["🇰🇷", "Koryophobia", "fear of the Koreans"],
+    ["🇵🇱", "Polonophobia", "fear of the Polish"],
+    ["🇷🇺", "Russophobia", "fear of Russians"],
+    ["🇨🇳", "Sinophobia", "fear of Chinese people"],
+    ["🇹🇷", "Turcophobia", "fear of Turks"],
+    ["🇺🇦", "Ukrainophobia", "fear of Ukrainians"],
+  ],
+  
+  wrong: [
+    
+    ["😤", "Nasumexhalophobia"],
+    ["👏", "Precophobia"],
+    ["🫵", "Ostendophobia"],
+    ["🤞", "Cruxodigitophobia"],
+    ["🧠", "Cerebrophobia"],
+    ["👣", "Vestigophobia"],
+    ["🧑‍🌾", "Agricophobia"],
+    ["🧞", "Geniephobia"],
+    ["🪢", "Nodumphobia"],
+    ["🧤", "Gloviphobia"],
+    ["☘️", "Cytisophobia"],
+    ["🎍", "Fermentophobia"],
+    ["🛰", "Satellophobia"],
+  ],
+
+};
+
+// State:
+// 0: title
+// 1: level 1
+// ...
+// 13: level 13
+// 99: encyclophobia
+state = 0;
+
+// Globals
+titleemoji = 0;
+answered = 0;
+points = 0;
+bonus = 0;
+answer = 0;
+suddendeathquestions = [];
+hsl = 0;
+
+// Game loop
+setInterval(()=>{
+
+  // Title
+  if(state == 0){
+    h11.innerHTML = String.fromCodePoint(127744+titleemoji);
+    titleemoji+=(Math.random()*3|0)+1;
+    if(titleemoji > 1024){
+      titleemoji = 0;
+    }
+  }
+  
+  // Score
+  else if(state == 15){
+    document.body.style.background = "hsl(" + hsl +",50%,50%)";
+    hsl+=3;
+  }
+
+  // Quiz
+},120);
+
+
+// Click handler 
+onclick = (e) => {
+  //console.log(e.target);
+  var delay = 0;
+  
+  var i;
+  
+  // Title
+  if(state == 0){
+    if(e.target.id == "h201"){
+      state = 1;
+      render();
+      I = setInterval(play_next_note,350);
+    }
+    if(e.target.id == "h202"){
+      state = 99;
+      render();
+    }
+  }
+  
+  // Level 1
+  else if(state == 1 && answered != 1 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 1;
+    setTimeout(()=>{
+      state = 2;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 2
+  else if(state == 2 && answered != 2 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 2;
+    setTimeout(()=>{
+      state = 3;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 3
+  else if(state == 3 && answered != 3 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 3;
+    setTimeout(()=>{
+      state = 4;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 4
+  else if(state == 4 && answered != 4 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 4;
+    setTimeout(()=>{
+      state = 5;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 5
+  else if(state == 5 && answered != 5 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 5;
+    setTimeout(()=>{
+      state = 6;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 6
+  else if(state == 6 && answered != 6 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 6;
+    setTimeout(()=>{
+      state = 7;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 7
+  else if(state == 7 && answered != 7 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 7;
+    setTimeout(()=>{
+      state = 8;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 8
+  else if(state == 8 && answered != 8 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 8;
+    setTimeout(()=>{
+      state = 9;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 9
+  else if(state == 9 && answered != 9 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerHTML, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 9;
+    setTimeout(()=>{
+      state = 10;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 10
+  else if(state == 10 && answered != 10 && e.target.tagName == "BUTTON"){
+    if(inp.value == answer){
+      ok.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      ok.className = "red";
+      nudge();
+      delay = 1000;
+      setTimeout(()=>{ee.innerHTML += "<br><sub>(answer: "+answer+")</sub><br><br><br><br><br>"}, 500);
+    }
+    answered = 10;
+    setTimeout(()=>{
+      state = 11;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 11
+  else if(state == 11 && answered != 11 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 11;
+    setTimeout(()=>{
+      state = 12;
+      render();
+    },1000+delay);
+  }
+  
+  // Level 12
+  else if(state == 12 && answered != 12 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 12;
+    setTimeout(()=>{
+      state = 13;
+      render();
+    },1000+delay);
+  }
+  
+  // 13
+  else if(state == 13 && answered != 13 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      points++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    answered = 13;
+    setTimeout(()=>{
+    
+      // Put all the remaiing questions in an array for the sudden death
+      // Easy:
+      suddendeathquestions.push(...[...data.easy, ...data.animaleasy, ...data.numbereasy].sort((a,b)=>0.5 - Math.random()))
+      suddendeathquestions.push(...[...data.medium, ...data.color, ...data.country].sort((a,b)=>0.5 - Math.random()))
+      suddendeathquestions.push(...[...data.hard, ...data.numberhard].sort((a,b)=>0.5 - Math.random()))
+      //console.log(suddendeathquestions);
+      document.body.style.background = "#000";
+      b.style.background = "#444";
+      state = 14;
+      render();
+    },1000+delay);
+  }
+  
+  // 14: sudden death
+  else if(state == 14 && e.target.tagName == "BUTTON"){
+    //console.log(answer, e.target.innerText, answered);
+    if(e.target.innerHTML == answer){
+      e.target.className = "green";
+      coin();
+      bonus++;
+    }
+    else {
+      e.target.className = "red";
+      nudge();
+      state = 15;
+      delay = 1000;
+      for(i of document.querySelectorAll("button")){
+        if(i.innerHTML == answer){
+          setTimeout(i.id + ".className = 'green'", 500);
+        }
+      }
+    }
+    // no more questions
+    if(suddendeathquestions.length < 3){ state=15 }
+    
+    setTimeout(()=>{
+      render();
+    },1000+delay);
+  }
+  
+  // Score / Encyclo
+  else if(state == 15 || state == 99){
+    if(e.target.id == "h299"){
+      location = location;
+    }
+    
+    // Leaderboards
+    else if(e.target.id == "h2991"){
+      name = prompt("Enter your name");
+      window.open("http://meuziere.free.fr/emojiphobia/leaderboards.php?score=%20%20%20"+name+"-"+points+"-"+bonus);
+    }
+  }
+  
+}
+
+// Render
+render = () => {
+  var questions;
+  var question, question2, question3;
+  var questionindex;
+  var emoji, names, emojis, name;
+  var i, j, k;
+  var phobias;
+  var html;
+  var right1, right2, right3, right4, wrong1, wrong2, wrong3, wrong4;
+  
+  b.innerHTML = "";
+  
+  b.className = "state" + state;
+  
+  // Title: ok
+  
+  // Question 1:
+  if(state == 1){
+    b.innerHTML = "<h2>Question 1 / 13:<br>Name that phobia (easy)</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = data.easy;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+
+    names = [question[1].split(",")[0], question2[1].split(",")[0], question3[1].split(",")[0]]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Question 2:
+  else if(state == 2){
+    b.innerHTML = "<h2>Question 2 / 13:<br>Find what scares me (easy)</h2><div class=bigtext id=e>.</div><br><button id=b1>.</button><button id=b2>.</button><button id=b3>.</button>";
+    questions = data.easy;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = name;
+
+    emojis = [question[0], question2[0], question3[0]]
+    //console.log(emojis);
+    answer = emojis[0];
+    emojis.sort((a,b)=>0.5 - Math.random());
+    //console.log(emojis);
+    //console.log(answer);
+    
+    b1.innerHTML = emojis[0];
+    b2.innerHTML = emojis[1];
+    b3.innerHTML = emojis[2];
+  }
+  
+  // Question 3:
+  else if(state == 3){
+    b.innerHTML = "<h2>Question 3 / 13:<br>What zoophobiac am I? (easy)</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = data.animaleasy;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+
+    names = [question[1].split(",")[0], question2[1].split(",")[0], question3[1].split(",")[0]]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Question 4:
+  else if(state == 4){
+    b.innerHTML = "<h2>Question 4 / 13:<br>Which phobia actually exists?</h2><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button><br><button id=b4>.</button><br><button id=b5>.</button>";
+    questions = data.hard;
+    questionindex = (questions.length * Math.random()) | 0;
+    right1 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questions = data.wrong;
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong1 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong4 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    names = [
+      right1[0] + " - " + right1[1].split(",")[0],
+      wrong1[0] + " - " + wrong1[1].split(",")[0],
+      wrong2[0] + " - " + wrong2[1].split(",")[0],
+      wrong3[0] + " - " + wrong3[1].split(",")[0],
+      wrong4[0] + " - " + wrong4[1].split(",")[0],
+    ]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+    b4.innerHTML = names[3];
+    b5.innerHTML = names[4];
+  }
+  
+  // Question 5
+  else if(state == 5){
+    b.innerHTML = "<h2>Question 5 / 13:<br>Arithmophobia! (easy)</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = data.numbereasy;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+
+    names = [question[1].split(",")[0], question2[1].split(",")[0], question3[1].split(",")[0]]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Question 6:
+  else if(state == 6){
+    b.innerHTML = "<h2>Question 6 / 13:<br>Find what scares me (medium)</h2><div class=bigtext id=e>.</div><br><button id=b1>.</button><button id=b2>.</button><button id=b3>.</button>";
+    questions = data.medium;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = name;
+
+    emojis = [question[0], question2[0], question3[0]]
+    //console.log(emojis);
+    answer = emojis[0];
+    emojis.sort((a,b)=>0.5 - Math.random());
+    //console.log(emojis);
+    //console.log(answer);
+    
+    b1.innerHTML = emojis[0];
+    b2.innerHTML = emojis[1];
+    b3.innerHTML = emojis[2];
+  }
+  
+  // Question 7:
+  else if(state == 7){
+    html = "<h2>Question 7 / 13:<br>Pick a color (if you dare)</h2><div class=bigtext id=e>.</div><br>";
+    questions = data.color;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+
+    for(i in questions){
+      if(i==6) html += "<br>";
+      html += "<button id=b"+i+">" + questions[i][0]+ "</button>"
+    }
+
+    questions.splice(questionindex, 1);
+    b.innerHTML = html;
+    e.innerHTML = name;
+    answer = question[0];
+  }
+  
+  // Question 8:
+  if(state == 8){
+    b.innerHTML = "<h2>Question 8 / 13:<br>Name that phobia (medium)</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = data.medium;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+
+    names = [question[1].split(",")[0], question2[1].split(",")[0], question3[1].split(",")[0]]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Question 9:
+  else if(state == 9){
+    b.innerHTML = "<h2>Question 9 / 13:<br>Which phobia does NOT exist?</h2><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button><br><button id=b4>.</button><br><button id=b5>.</button>";
+    questions = data.wrong;
+    questionindex = (questions.length * Math.random()) | 0;
+    right1 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questions = data.hard;
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong1 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    
+    questionindex = (questions.length * Math.random()) | 0;
+    wrong4 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    names = [
+      right1[0] + " - " + right1[1].split(",")[0],
+      wrong1[0] + " - " + wrong1[1].split(",")[0],
+      wrong2[0] + " - " + wrong2[1].split(",")[0],
+      wrong3[0] + " - " + wrong3[1].split(",")[0],
+      wrong4[0] + " - " + wrong4[1].split(",")[0],
+    ]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+    b4.innerHTML = names[3];
+    b5.innerHTML = names[4];
+  }
+  
+  // Question 10:
+  else if(state == 10){
+    b.innerHTML = "<h2>Question 10 / 13:<br>Numerophobia! (hard)<br>Type the number that I hate if I have...</h2><div class=bigtext id=ee>.</div><br><input id=inp type=number><button id=ok>OK</button>";
+    
+    questions = data.numberhard;
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+    answer = question[3];
+    questions.splice(questionindex, 1);
+
+    ee.innerHTML = name;
+  }
+  
+  // Question 11
+  else if(state == 11){
+    b.innerHTML = "<h2>Question 11 / 13:<br>Flag that xenophobia</h2><div class=bigtext id=e>.</div><br><button id=b1>.</button><button id=b2>.</button><button id=b3>.</button>";
+    questions = data.country;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = name;
+
+    emojis = [question[0], question2[0], question3[0]]
+    //console.log(emojis);
+    answer = emojis[0];
+    emojis.sort((a,b)=>0.5 - Math.random());
+    //console.log(emojis);
+    //console.log(answer);
+    
+    b1.innerHTML = emojis[0];
+    b2.innerHTML = emojis[1];
+    b3.innerHTML = emojis[2];
+  }
+  
+  // Question 12
+  else if(state == 12){
+    b.innerHTML = "<h2>Question 12 / 13:<br>Find what scares me (hard)</h2><div class=bigtext id=e>.</div><br><button id=b1>.</button><button id=b2>.</button><button id=b3>.</button>";
+    questions = data.hard;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    name = question[1].split(",")[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = name;
+
+    emojis = [question[0], question2[0], question3[0]]
+    //console.log(emojis);
+    answer = emojis[0];
+    emojis.sort((a,b)=>0.5 - Math.random());
+    //console.log(emojis);
+    //console.log(answer);
+    
+    b1.innerHTML = emojis[0];
+    b2.innerHTML = emojis[1];
+    b3.innerHTML = emojis[2];
+  }
+  
+  // Question 13:
+  else if(state == 13){
+    b.innerHTML = "<h2>Question 13 / 13:<br>Name that phobia (hard)</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = data.hard;
+    //console.log(questions);
+    questionindex = (questions.length * Math.random()) | 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = (questions.length * Math.random()) | 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+
+    names = [question[1].split(",")[0], question2[1].split(",")[0], question3[1].split(",")[0]]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Sudden death
+  else if(state == 14){
+    b.innerHTML = "<h2>SUDDEN DEATH<br>"+(bonus)+" bonus points</h2><div class=bigemoji id=e>.</div><br><button id=b1>.</button><br><button id=b2>.</button><br><button id=b3>.</button>";
+    questions = suddendeathquestions;
+    //console.log(questions);
+    questionindex = 0;
+    question = questions[questionindex];
+    emoji = question[0];
+    questions.splice(questionindex, 1);
+
+    questionindex = 0;
+    question2 = questions[questionindex];
+    questions.splice(questionindex, 1);
+
+    questionindex = 0;
+    question3 = questions[questionindex];
+    questions.splice(questionindex, 1);
+    //console.log(questions);
+
+    e.innerHTML = emoji;
+    if(emoji.length > 5){
+      e.style.fontSize = "20vmin";
+    }
+
+    names = [question[1].split(",")[0].replace("- ", ""), question2[1].split(",")[0].replace("- ", ""), question3[1].split(",")[0].replace("- ", "")]
+    //console.log(names);
+    answer = names[0];
+    names.sort((a,b)=>0.5 - Math.random());
+    //console.log(names);
+    //console.log(answer);
+    
+    b1.innerHTML = names[0];
+    b2.innerHTML = names[1];
+    b3.innerHTML = names[2];
+  }
+  
+  // Score
+  else if(state == 15){
+    b.style.background = "#fff";
+    b.innerHTML = "<h2>Score:</h2><br><div class=bigtext id=e>"+points+" / 13<br><sub>+ "+bonus+" bonus point" + (bonus == 1 ? "" : "s") + "</sub></div><h2 id=h2991>SUBMIT SCORE / SEE LEADERBOARDS</h2><h2 id=h299>MAIN MENU</h2>";
+  }
+  
+  // Encyclo
+  else if(state == 99){
+    phobias = [];
+    for(i in data){
+      if(i != "wrong"){
+        for(j in data[i]){
+          phobias.push(data[i][j]);
+        }
+      }
+    }
+    //console.log(phobias);
+    phobias.sort((a,b)=>a[1].localeCompare(b[1]));
+    html = "";
+    for(i in phobias){
+      html += "<span>"+phobias[i][0]+"</span> - "+phobias[i][1].replaceAll(",",", ") + " - " + phobias[i][2]+ "<br>";
+    }
+    b.innerHTML += "<h1>ENCYCLOPHOBIA</h1><div id=encyclo>"+html+"</div><h2 id=h299>MAIN MENU</h2>";
+  }
+}
+</script>
