@@ -1,0 +1,11 @@
+<svg width="100" height="100" viewBox="-50 -50 100 100" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <path id="heart" d="M0 100 v-100 h100 a50,50 45 0,1 0,100 a50,50 45 0,1 -100,0 z" />
+</defs>
+<g fill="white">
+  <use href="#heart" transform="translate(0 2) scale(0.25) rotate(45)" />
+  <use href="#heart" transform="translate(-2 0) scale(0.25) rotate(135)" />
+  <use href="#heart" transform="translate(0 -2) scale(0.25) rotate(225)" />
+  <use href="#heart" transform="translate(2 0) scale(0.25) rotate(315)" />
+</g>
+</svg>

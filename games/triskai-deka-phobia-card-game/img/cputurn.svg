@@ -1,0 +1,24 @@
+<svg width="80" height="35" xmlns="http://www.w3.org/2000/svg">
+<style>
+text {
+  font-size: 12px;
+  font-family: sans-serif;
+}
+
+#border {
+  animation: animBorder 3s infinite;
+}
+@keyframes animBorder {
+  0% { stroke-width: 0.75 }
+  50% { stroke-width: 1.75 }
+  100% { stroke-width: 0.75 }
+}
+</style>
+<defs>
+  <path id="sign" d="M 35 10 L 40 2 L 45 10 L 74 10 Q 78 10 78 14 L 78 26 Q 78 30 74 30 L 6 30 Q 2 30 2 26 L 2 14 Q 2 10 6 10 Z" />
+</defs>
+  <!--<rect x="0" y="0" width="80" height="80" fill="gray" />-->
+  <use href="#sign" fill="none" stroke="#00000055"  stroke-width="4" />
+  <use id="border" href="#sign" fill="#00000055" stroke="white" stroke-width="1" />
+  <text x="9" y="24" fill="white">CPU TURN</text>
+</svg>

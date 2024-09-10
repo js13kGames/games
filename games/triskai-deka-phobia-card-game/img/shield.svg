@@ -1,0 +1,10 @@
+<svg width="70" height="70" viewBox="-35 -35 70 70" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <path id="shield" d="M 0 -30 Q 15 -20 28 -20 L 25 -5 Q 22 20 0 30 Q -22 20 -25 -5 L -28 -20 Q -15 -20 0 -30 Z" />
+  <clipPath id="right">
+    <rect x="0" y="-35" width="35" height="70" />
+  </clipPath>
+</defs>
+  <use x="0" y="0" href="#shield" fill="none" stroke="white" stroke-width="4" />
+  <use x="0" y="0" href="#shield" fill="white" transform="scale(0.8)" clip-path="url(#right)" />
+</svg>

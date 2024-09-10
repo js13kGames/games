@@ -1,0 +1,63 @@
+<svg width="160" height="180" xmlns="http://www.w3.org/2000/svg">
+<style>
+#enemy { animation: floatAnim 3s ease-in-out infinite; }
+@keyframes floatAnim {
+  0% { transform: translate(14px,30px) scale(1); }
+  50% { transform: translate(0px,0px) scale(1.2); }
+  100% { transform: translate(14px,30px) scale(1); }
+}
+
+#shadow { animation: shadowAnim 3s ease-in-out infinite; }
+@keyframes shadowAnim {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(16px, 30px) scale(0.8); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+#themouth { animation: mouthAnim 3s ease-in-out infinite; }
+@keyframes mouthAnim {
+  0% { transform: translate(29px, 40px) scale(0.6); }
+  50% { transform: translate(0px, 0px) scale(1); }
+  100% { transform: translate(29px, 40px) scale(0.6); }
+}
+</style>
+<defs>
+  <clipPath id="outer-circle"><circle cx="70" cy="70" r="47" /></clipPath>
+  <clipPath id="inner-circle"><circle cx="70" cy="70" r="38" /></clipPath>
+  <clipPath id="tongue"><circle cx="70" cy="70" r="33" /></clipPath>
+  <clipPath id="mouth"><path d="M 47 97 L 47 85 Q 48 80 54 77 L 86 77 Q 92 80 93 85 L 93 97 Q 70 115 47 97 Z" /></clipPath>
+  <path id="spike1" d="M 30 70 L 7 55 L 30 53" />
+  <path id="spike2" d="M 40 97 L 14 97 L 30 83" />
+  <path id="horn" d="M 40 53 Q 25 25 40 6 Q 35 25 55 40 Q 50 50 40 53 Z" />
+</defs>
+<ellipse id="shadow" cx="84" cy="150" rx="40" ry="18" fill="#1f143688" />
+<g id="enemy">
+  <g fill="#86d740">
+    <use href="#spike1" />
+    <use href="#spike2" />
+    <use href="#spike1" transform="translate(140, 0) scale(-1, 1)" />
+    <use href="#spike2" transform="translate(140, 0) scale(-1, 1)" />
+    <circle cx="70" cy="70" r="47" />
+  </g>
+  <circle cx="70" cy="130" r="47" clip-path="url(#outer-circle)" fill="#59e597" />
+  <circle cx="70" cy="70" r="38" fill="#98ee29" />
+  <circle cx="70" cy="80" r="35" clip-path="url(#inner-circle)" fill="#3bd345" />
+  <ellipse cx="40" cy="72" rx="6" ry="9" fill="#04431b" stroke="#a9fd84" stroke-width="2" />
+  <ellipse cx="100" cy="72" rx="6" ry="9" fill="#04431b" stroke="#a9fd84" stroke-width="2" />
+  <g id="themouth">
+    <rect x="0" y="0" width="140" height="140" clip-path="url(#mouth)" fill="#09514c" />
+    <g clip-path="url(#tongue)" fill="#cc0000">
+      <circle cx="64" cy="96" r="10" />
+      <circle cx="77" cy="95" r="10" />
+    </g>
+    <path d="M 75 77 L 86 77 Q 77 90 75 77 Z" fill="#f0f3ca" />
+    <path d="M 75 77 L 86 77 Q 77 90 75 77 Z" fill="#f0f3ca" transform="translate(140, 0) scale(-1, 1)" />
+  </g>
+  <circle cx="61" cy="60" r="4" fill="#99ff89" />
+  <ellipse rx="6" ry="9" fill="#b8f676" transform="translate(83 52) rotate(-60)" />
+  <g fill="#f4efc5">
+    <use href="#horn" />
+    <use href="#horn" transform="translate(140, 0) scale(-1, 1)" />
+  </g>
+</g>
+</svg>

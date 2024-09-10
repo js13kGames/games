@@ -1,0 +1,14 @@
+<svg width="70" height="80" viewBox="-35 -40 70 80" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <g id="sword">
+    <path d="M 0 -40 L 5 -25 L 4 13 L 15 14 L 13 20 L 3 20 L 3 30 L -3 30 L -3 20 L -13 20 L -15 14 L -4 13 L -5 -25 Z" />
+    <circle cx="0" cy="30" r="5" />
+  </g>
+  <clipPath id="right">
+    <path d="M -35 -40 L 35 -35 L 35 -10 L -35 -20 Z" />
+    <path d="M -35 -4 L 35 3 L 35 35 L -35 35 Z" />
+  </clipPath>
+</defs>
+  <use x="0" y="0" href="#sword" fill="white" transform="translate(-5 0) rotate(40)" clip-path="url(#right)" />
+  <use x="0" y="0" href="#sword" fill="white" transform="translate(5 0) rotate(-40)" />
+</svg>

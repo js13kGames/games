@@ -1,0 +1,17 @@
+{
+  "name": "Triskai-deka-phobia",
+  "short_name": "Triskai-deka-phobia",
+  "description": "Card game with deadly 13th card.",
+  "icons": [
+      {
+          "src": "icon.svg",
+          "sizes": "32x32",
+          "type": "image/svg+xml"
+      }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "theme_color": "#3770ea",
+  "background_color": "#213684",
+  "orientation": "portrait"
+}

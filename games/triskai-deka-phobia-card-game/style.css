@@ -1,0 +1,250 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+}
+
+html {
+  background-image: linear-gradient(#3252d7, #213581);
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: repeating-conic-gradient(from 45deg, rgba(0,0,0, 0) 0 25%, #3770ea 0 50%);
+  background-size: 70px 70px;
+  overflow: hidden;
+}
+
+div, svg {
+  position: absolute;
+}
+
+#ctx {
+  background-color: #00000050;
+  left: 0px;
+  top: 0px;
+  width: 730px;
+  height: 1270px;
+  overflow: hidden;
+}
+
+
+text {
+  text-anchor: middle;
+  dominant-baseline: central;
+  fill: white;
+}
+
+
+.card {
+  position: absolute;
+  display: block;
+  width: 120px;
+  height: 160px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 5px;
+  filter: drop-shadow(8px 10px 2px #17171780);
+}
+
+.card .bg,
+.card .attackbg,
+.card .defensebg {
+  width: 120px;
+  height: 160px;
+  border-radius: 10px;
+}
+
+.card.attack .bg {
+  background: #ff679b;
+}
+
+.card.attack text,
+.card.attack .icon {
+  filter: drop-shadow(2px 2px 0 #af2563);
+}
+
+.card.defense .bg {
+  background: #ffe415;
+}
+
+.card.defense text,
+.card.defense .icon {
+  filter: drop-shadow(2px 2px 0 #e27f1b);
+}
+
+.card.shamrock .bg {
+  background: #48cc8b;
+}
+
+.card.shamrock text,
+.card.shamrock .icon {
+  filter: drop-shadow(2px 2px 0 #227a6d);
+}
+
+.card.death text,
+.card.death .icon {
+  filter: drop-shadow(2px 2px 0 #808080);
+}
+
+.card.death .bg {
+  background: #000;
+}
+
+.card .value {
+  font: bold 32px serif;
+  text-anchor: start;
+}
+
+.card.defense .value {
+  fill: #e27f1b;
+  filter: drop-shadow(2px 2px 0 #fff);
+}
+
+.card .numeral {
+  font: bold 48px serif;
+}
+
+.card .icon {
+  font-size: 64px;
+}
+
+.card .pattern {
+  width: 120px;
+  height: 160px;
+  border-radius: 10px;
+  
+}
+
+.card .attackbg {
+  background: #ff679b;
+}
+.card .defensebg {
+  background: #ffe415;
+}
+
+.card.back .bg {
+  display: none
+}
+
+.card.front .attackbg,
+.card.front .defensebg,
+.card.front .pattern {
+  display: none
+}
+
+.pattern.attack {
+  background: repeating-conic-gradient(from 45deg, rgba(0,0,0, 0) 0 25%, #af2563 0 50%);
+  background-size: 30px 34px;
+}
+
+.pattern.defense {
+  background: repeating-conic-gradient(from 45deg, rgba(0,0,0, 0) 0 25%, #e27f1b 0 50%);
+  background-size: 30px 34px;
+}
+
+.button {
+  position: absolute;
+  width: 200px;
+  height: 140px;
+  border: 3px solid #213581;
+  background: #213581;
+  border-radius: 15px;
+  filter: drop-shadow(8px 10px 2px #17171780);
+}
+
+.button.stage {
+  width: 540px;
+  height: 100px;
+}
+
+.button.stage text {
+  font-family: 'Arial', sans-serif;
+  font-size: 60px;
+  filter: drop-shadow(3px 3px 0 #3b7ebb);
+}
+
+.button .icon {
+  font-size: 96px;
+}
+
+.button .bg {
+  width: 100%;
+  height: 85%;
+  position: relative;
+  top: 15%;
+  border-radius: 15px;
+  background: #3b7ebb;
+}
+
+.button .surface {
+  width: 100%;
+  height: 85%;
+  background: #44cdff;
+  border-radius: 15px;
+  position: relative;
+  top: -85%;
+}
+
+.showcardAnim {
+  animation: 0.5s linear showcard forwards;
+  z-index: 100;
+}
+
+text.name {
+  font-family: 'Arial', sans-serif;
+  font-size: 48px;
+  text-anchor: start;
+  font-weight: bold;
+  stroke: none;
+  fill: #ffdb6b;
+  filter: drop-shadow(3px 3px 0 black);
+}
+
+text.info {
+  font-family: 'Arial', sans-serif;
+  font-size: 34px;
+  text-anchor: start;
+  font-weight: bold;
+  stroke: none;
+  fill: #fff;
+  filter: drop-shadow(3px 3px 0 black);
+}
+
+.spot {
+  width: 150px;
+  height: 190px;
+  border-radius: 15px;
+  background: #00000040;
+  border: 2px solid #fff;
+}
+
+.spot text {
+  fill: #fff;
+  font-size: 128px;
+}
+
+.hand {
+  position: absolute;
+  font-size: 100px;
+  color: white;
+  z-index: 200;
+  filter: drop-shadow(4px 15px 0 #000);
+  animation: 1s ease-in hand infinite;
+}
+
+@keyframes hand {
+  0% {translate: 40px 0px}
+  15% {translate: 0px 0px}
+  100% {translate: 40px 0px}
+}
+
+#cputurn,
+#playerturn {
+  display: none;
+}
+
+#cputurn.active,
+#playerturn.active {
+  display: block;
+}
