@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="Tredici Malefici (13 evils) is a missile defense javascript game where aliens have discovered your phobia of the number 13. To exploit your fear, they drop 13 bombs adorned with 13 spikes. Turn the tables and use this fear to your advantage. javascript, coding, competition, js13kgames, 2024, game, k3q8zr45a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tredici Malefici</title>
+</head>
+<body>
+<script>
+onload=()=>{
+
+/*
+Name: Tredici Malefici
+Description: Missile defense game
+Github: https://github.com/bacionejs/tredicimalefici
+License: GPL
+*/
+
+let floor=Math.floor,random=Math.random,pow=Math.pow,sin=Math.sin,cos=Math.cos,PI=Math.PI,hypot=Math.hypot,atan2=Math.atan2;
+let W,H;
+
+{
+let start=Date.now();
+(function waitforheight(){
+  if(innerHeight<screen.availHeight || Date.now()-start>3000){
+    W=innerWidth;
+    H=innerHeight;
+    game();
+  }else{
+    requestAnimationFrame(waitforheight);
+  }
+})();
+}
+
+let intro=`
+souls dancing
+lost in good memories
+with their brothers in arms
+blue light pulsing to the rhythm
+extending outward to the glass dome
+shimmering with a hint of cosmic rays
+`;
+
+
+
+
+
+
+
+
+
+function game(){
+let L=Library();
+let snd=L.Sound();
+let cb=L.canvas();
+let cf=L.canvas();
+let cs=L.canvas();
+let hitblue,hitred;
+let state=1;
+let togglesound=1;
+let blue=Blue();
+let red=Red();
+let base=Base();
+let phrases=[
+"Great job",
+"You were really good",
+];
+cs.canvas.addEventListener("click",click);
+cs.text("Start");
+
+function click(e){
+if(state==0){
+  blue.shoot(e);
+}else if(state==1){
+  cs.clear();
+  blue.reset();red.reset();
+  animation();
+  return;
+}else if(state==2){return;}else if(state==3){
+  if(e.pageY<100)togglesound^=1;
+  cs.clearRect(0,W/3,W,H);
+  state=0;
+  animation();
+  return;
+}else if(state==4){
+  base.stop();
+  cs.clear();
+  state=0;
+  animation();
+  return;
+}
+}
+
+function animation(){
+cf.clear();
+if(red.destroyed() && !blue.destroyed()){
+  blue.nextlevel();red.nextlevel();
+  state=2;setTimeout(()=>{state=3;
+    if(blue.getlevel()==1){
+      state=4;
+      cs.text(intro);
+      base.start();
+    }else{
+      cs.text("Level: "+blue.getlevel());
+      if(blue.getlevel()!=1 && random()<(1/13)){if(togglesound)L.speak((phrases[floor(random()*phrases.length)]));}
+    }
+  },1000);
+  return;
+}else if(blue.destroyed()){
+  blue.reset();red.reset();
+  state=2;setTimeout(()=>{state=4;
+    cs.text("GAME OVER");
+    if(togglesound)L.speak("Game over. Try again");
+  },1000);
+  return;
+}
+blue.update();red.update();blue.draw();red.draw();
+L.bars(cs,13,...blue.getbars());
+requestAnimationFrame(animation);
+}
+
+
+
+
+
+
+
+
+
+function Base(){
+let stopflag=false,b,n,c;
+
+function stop(){
+stopflag=true;
+dome(0.5);
+}
+
+function start(){
+stopflag=false;
+if(!c){c=new AudioContext();b=jam(c);}
+n=c.createBufferSource();
+n.buffer=b;
+n.loop=true;
+n.connect(c.destination);
+n.start();
+function animate(){
+  dome((Math.sin((Date.now()%500)/500*2*Math.PI)+1)/2);
+  if(stopflag){
+    if(n){n.stop();n.disconnect();}
+    return;
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+}
+
+function dome(pulse){
+let g=cb.createRadialGradient(W/2,H,0,W/2,H,W/8);
+g.addColorStop(0,`rgba(0,0,255,${pulse})`);
+g.addColorStop(0.5,"rgba(0,0,255,0)");
+g.addColorStop(0.68,"rgba(255,255,255,0.6)");
+g.addColorStop(0.7,"rgba(0,0,0,0.6)");
+g.addColorStop(1.0,"rgba(0,0,0,1)");
+cb.clear();
+cb.fillStyle=g;
+cb.fillRect(0,0,W,H);
+}
+
+return {start,stop}
+}//end base
+
+
+
+
+
+
+
+
+
+function Blue(){
+let blues=[];let health;let level;let count;
+hitblue=()=>health--;
+
+function getlevel(){
+return level;
+}
+
+function getbars(){
+return [health,count];
+}
+
+function reset(){
+while(blues.pop());
+level=0;
+health=13;
+}
+
+function nextlevel(){
+while(blues.pop());
+level++;
+count=13;
+}
+
+function destroyed(){
+return (health<1);
+}
+
+function shoot({pageX,pageY}){
+if(count<1)return;
+count--;
+blues.push({
+  state:0,
+  x:W/2,
+  y:H,
+  tx:pageX,
+  ty:pageY,
+  angle:atan2(pageY-H,pageX-W/2),
+  radius:50
+});
+if(togglesound)snd.rocket();
+}
+
+function update(){
+blues.forEach(o=>{
+  if(o.state==0){
+    o.x+=cos(o.angle)*5;
+    o.y+=sin(o.angle)*5;
+    if(hypot(o.x-o.tx,o.y-o.ty)<10){
+      o.state=1;setTimeout(()=>{o.state=2;},50);
+      if(togglesound)snd.explosion();
+      hitred(o.x,o.y,o.radius);
+    }
+  }
+});
+blues=blues.filter(o=>o.state!=2);
+}
+
+function draw(){
+blues.forEach(o=>{
+  if(o.state>0){//explode
+    let g=cf.createRadialGradient(o.x,o.y,0,o.x,o.y,o.radius);
+    g.addColorStop(0,"gold");g.addColorStop(1,"black");
+    cf.beginPath();
+    cf.arc(o.x,o.y,o.radius,0,PI*2);
+    cf.closePath();
+    cf.fillStyle=g;
+    cf.fill();
+  }else{//move
+    cf.save();
+    cf.translate(o.x,o.y);
+    cf.rotate(o.angle+PI/2);
+    cf.fillStyle="lime";
+    cf.fillRect(-1,-10,2,20);
+    cf.restore();
+  }
+});
+}
+
+return {getlevel,getbars,reset,nextlevel,destroyed,shoot,update,draw};
+
+}//end blue
+
+
+
+
+
+
+
+
+
+function Red(){
+let reds=[];let level;let speed;
+hitred=(x,y,r)=>reds=reds.filter(o=>hypot(x-o.x,y-o.y)>=r)
+
+function reset(){
+while(reds.pop());
+level=0;
+}
+
+function nextlevel(){
+while(reds.pop());
+level++;
+if(level>5 && random()<(1/13)){
+  speed=3;
+  for(let i=0;i<1;i++){reds.push(L.stars(4,W/30,H*0.2));}
+}else{
+  speed=L.fit(level,0.5,1.5,30,1);
+  for(let i=0;i<13;i++){reds.push(L.stars(13,W/50,H*0.2));}
+}
+}
+
+function destroyed(){
+return (reds.length<1);
+}
+
+function update(){
+reds.forEach(o=>{
+  o.y+=cos(o.angle)*speed;
+  o.x+=sin(o.angle)*speed;
+  o.rotation+=o.rotationspeed;
+  if(o.x<0)o.x=W;
+  if(o.x>W)o.x=0;
+  if(o.y>H){hitblue();o.state=1;}
+});
+reds=reds.filter(o=>o.state!==1);
+}
+
+function draw(){
+reds.forEach(o=>{
+  cf.save();
+  cf.translate(o.x,o.y);
+  cf.rotate(o.rotation);
+  cf.strokeStyle=o.color;
+  cf.stroke(o.path);
+  cf.restore();
+});
+}
+
+return {reset,nextlevel,destroyed,update,draw};
+}//end red
+
+
+
+
+
+
+
+
+
+}//end game
+
+
+
+
+
+
+
+
+
+function Library(){
+
+element("style").textContent=`
+body{background-color:black;}
+*{margin:0;padding:0;position:fixed;box-sizing:border-box;touch-action:none;user-select:none;}
+`;
+
+function Sound(){
+let auc=new AudioContext();
+let aubrocket=noise(0.2);
+let aubexplosion=noise(1);
+
+function noise(seconds){
+let b=auc.createBuffer(1,auc.sampleRate*seconds,auc.sampleRate);
+b.getChannelData(0).forEach((_,i,a)=>a[i]=random()*2-1);
+return b;
+}
+
+function rocket(){
+let s=auc.createBufferSource();
+s.buffer=aubrocket;
+let gain=auc.createGain();
+gain.gain.value=0.3;
+s.connect(gain);
+gain.connect(auc.destination);
+s.start(0,0,s.buffer.duration);
+s.onended=function(){
+  s.disconnect();
+  gain.disconnect();
+};
+}
+
+function explosion(){
+let s=auc.createBufferSource();
+s.buffer=aubexplosion;
+let gain=auc.createGain();gain.gain.value=3;
+let filter=auc.createBiquadFilter();filter.type="lowpass";filter.frequency.value=300;
+gain.gain.linearRampToValueAtTime(0,auc.currentTime+1);
+s.connect(filter);
+filter.connect(gain);
+gain.connect(auc.destination);
+s.start(0,0,s.buffer.duration);
+s.onended=function(){
+  s.disconnect();
+  gain.disconnect();
+  filter.disconnect();
+};
+}
+
+return {rocket,explosion};
+}//end sound
+
+function canvas(font=12){
+let c=element("canvas");
+c.width=W;c.height=H;
+let cn=c.getContext("2d")
+cn.textAlign="center";cn.textBaseline="middle";cn.font=font+"px monospace";
+
+cn.clear=function(){
+this.clearRect(0,0,this.canvas.width,this.canvas.height);
+}
+
+cn.text=function(t){
+let lines=t.split('\n');
+this.fillStyle="white";
+for(let i=0;i<lines.length;i++){
+  this.fillText(lines[i],W/2,H/2+i*20);
+}
+}
+
+return cn;
+}//end canvas
+
+function speak(text){
+if(!window.speechSynthesis) return;
+let synth=window.speechSynthesis;
+let utter=new SpeechSynthesisUtterance(text);
+utter.pitch=1;
+utter.rate=1;
+utter.volume=1;
+synth.speak(utter);
+}
+
+function bars(cn,cnt,left,right){
+let w=W/5;
+function draw(v,x,prev){
+  if(v===prev)return prev;
+  cn.clearRect(...(x<W/2?[0,0,W/2,20]:[W/2,0,W/2,20]));
+  cn.fillStyle=(v<=cnt*(2/3) && v>cnt*(1/3))?"yellow":(v<=cnt*(1/3))?"red":"green";
+  for(let i=0;i<cnt;i++){
+    if(i>=v)cn.fillStyle="gray";
+    cn.fillRect(x+i*(w/cnt),10,w/cnt-1,5);
+  }
+  return v;
+}
+bars.pl=draw(left,10,bars.pl);
+bars.pr=draw(right,W-w-10,bars.pr);
+}
+
+function fit(x,start,asymptote,x2,y2){
+return asymptote-(asymptote-start)*pow(((asymptote-y2)/(asymptote-start)),x/x2);
+}
+
+function stars(points,radius,at){
+let color=Array.from({length:3},()=>floor(random()*155)+100).reduce((a,v,i)=>a+(i>0?",":"")+v,"rgb(")+")";
+let x=random()*W;
+let y=random()*at;
+let rotation=random()*PI*2;
+let rotationspeed=random()*0.05-0.025;
+let angle=random()*(PI/3)-PI/6;
+let inner=random()*(2/3*radius);
+let path=new Path2D();
+path.moveTo(0,-radius);
+for(let i=1;i<points*2;i++){
+  let r=i%2===0?radius:inner;
+  let angle=i*PI/points;
+  let dx=r*sin(angle);
+  let dy=-r*cos(angle);
+  path.lineTo(dx,dy);
+}
+path.closePath();
+return {x:x,y:y,path:path,color:color,angle:angle,rotation:rotation,rotationspeed:rotationspeed};
+}
+
+function element(e){return document.body.appendChild(document.createElement(e));}
+
+return {Sound,canvas,speak,bars,fit,stars};
+};//end library
+
+
+
+
+
+
+
+
+
+function jam(c){
+let b=t=>((((t*((0x64>>((t>>13&15)*4))&15))/4)*((0x59>>(t>>11&63))&1))&64)|(t>>4)|((t*(42&(t>>10)))&32);
+let r,t,o=8000,u=4.1,v=o*u,w=new Float32Array(v);
+for(t=0;t<w.length;w[t++]=(b(t)&255)/128-1);
+let e=c.createBuffer(1,w.length,o);
+r=e.getChannelData(0);
+for(t=0;t<w.length;r[t++]=w[t]);
+return e;
+}
+
+}//end onload
+</script>
+</body>
+</html>
