@@ -1,0 +1,1 @@
+const random={nextDouble:function(t,n){return Math.random()*(n-t)+t},nextInt:function(t,n){return Math.floor(Math.random()*(Math.floor(n)-Math.ceil(t))+Math.ceil(t))},shuffle:function(t){let n=t.length;for(;0!=n;){let o=Math.floor(Math.random()*n);n--,[t[n],t[o]]=[t[o],t[n]]}}};

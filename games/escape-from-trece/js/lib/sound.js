@@ -1,0 +1,1 @@
+const sound={audioCtx:new AudioContext,loadAudio:async function(t){console.log("Will load "+t);const o=await fetch(t),a=await o.arrayBuffer();return await this.audioCtx.decodeAudioData(a)},playAudio:function(t){const o=this.audioCtx.createBufferSource();o.buffer=t,o.connect(this.audioCtx.destination),o.start(0)}};
