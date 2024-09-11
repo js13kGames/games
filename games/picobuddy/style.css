@@ -1,0 +1,309 @@
+:root {
+  --w: #dfdfdf;
+  --g: #6f6f6f;
+  --b: #0f0f0f;
+  --f: monospace;
+  --hi: #00b9d5;
+  --mi: #f6d91c;
+  --lo: #fa078d;
+  --1psb: 1.5px solid #0f0f0f;
+  --c: url(c.png), auto;
+}
+
+html {
+  filter: brightness(1);
+  transition: filter 8s ease-in;
+}
+
+.unbecame {
+  filter: brightness(0);
+}
+
+body {
+  background-color: var(--w);
+  background-image: linear-gradient(var(--hi) 1.5px, transparent 1.5px),
+    linear-gradient(to right, var(--hi) 1.5px, var(--w) 1.5px);
+  background-size: 45px 45px;
+  margin: 0;
+}
+
+.flip {
+  transform: scale(-1, 1);
+}
+
+.invisible {
+  opacity: 0;
+}
+
+main {
+  display: flex;
+  height: 90vh;
+  padding: 35px 0 15px 0;
+  font-family: var(--f);
+  justify-content: space-around;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 225px;
+}
+
+#modal {
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(37.5px);
+  -webkit-backdrop-filter: blur(37.5px);
+}
+
+#modal div {
+  text-align: center;
+  border: var(--1psb);
+  background: var(--w);
+  padding: 45px 105px;
+  margin-bottom: 37.5px;
+  font-family: var(--f);
+}
+
+h1 {
+  font-size: 36px;
+}
+
+#out {
+  height: 375px;
+  width: 300px;
+  background: skyblue;
+  border-radius: 48%;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 30px;
+  border: var(--1psb);
+}
+
+#out::before {
+  content: '';
+  position: absolute;
+  height: 375px;
+  width: 300px;
+  background: var(--g);
+  border-radius: 48%;
+  left: -15px;
+  z-index: -1;
+  border: var(--1psb);
+}
+
+#in {
+  width: 180px;
+  height: 180px;
+  background: var(--w);
+  margin-bottom: 30px;
+  border: var(--1psb);
+}
+
+#pb {
+  display: grid;
+  grid-template-columns: repeat(64, 1fr);
+  grid-template-rows: repeat(64, 1fr);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+}
+
+.sb {
+  animation: bounce 1.25s steps(2) infinite;
+}
+
+@keyframes bounce {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: -4.5px;
+  }
+}
+
+.bb {
+  animation: bigBounce 0.25s steps(2) 5;
+}
+
+@keyframes bigBounce {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: -9px;
+  }
+}
+
+#pb .p.fill {
+  background: var(--b);
+}
+
+.evolving {
+  animation: evolution 1.25s steps(4) infinite;
+}
+
+@keyframes evolution {
+  0% {
+    background: var(--w);
+  }
+  50% {
+    background: var(--b);
+  }
+  100% {
+    background: var(--w);
+  }
+}
+
+#bh {
+  display: flex;
+  justify-content: space-around;
+  width: 75%;
+}
+
+.b {
+  width: 22.5px;
+  height: 22.5px;
+  background: magenta;
+  border-radius: 100%;
+  border: 0;
+  border: var(--1psb);
+}
+
+.b:active {
+  background: purple;
+}
+
+.b p {
+  background: pink;
+  padding: 15px;
+  font-size: 36px;
+  transform: translate(-40%, -7.5px);
+  display: none;
+  width: fit-content;
+  border: var(--1psb);
+  font-family: var(--f);
+}
+
+.b:hover p {
+  display: block;
+}
+
+button {
+  cursor: var(--c);
+}
+
+#cd,
+#t {
+  overflow-y: auto;
+  background: var(--w);
+  border: var(--1psb);
+}
+
+#cd {
+  max-height: 225px;
+  padding: 30px 45px 15px 30px;
+  scrollbar-gutter: stable;
+}
+
+#cd h2 {
+  margin: 0 0 15px;
+  font-size: 30px;
+}
+
+#cd ol {
+  font-size: 18px;
+}
+
+.e {
+  color: darkgrey;
+}
+
+#t {
+  width: 450px;
+  height: 300px;
+  line-height: 2;
+  font-size: 26px;
+  flex-grow: 1;
+}
+
+#t div {
+  padding: 37.5px 30px;
+  border-bottom: var(--1psb);
+}
+
+button {
+  font-family: var(--f);
+  margin-bottom: 15px;
+}
+
+#day,
+#mb {
+  font-size: 18px;
+  padding: 12px;
+  background: var(--w);
+  border: var(--1psb);
+}
+
+#mb {
+  padding: 12px 24px;
+}
+
+#day:disabled {
+  border: 1.5px solid darkgrey;
+}
+
+.loud-button {
+  animation: loud 2s infinite;
+}
+
+@keyframes loud {
+  0% {
+    background: var(--w);
+  }
+  50% {
+    background: var(--mi);
+  }
+  100% {
+    background: var(--w);
+  }
+}
+
+#hm {
+  width: 45px;
+  flex-grow: 1;
+  background: linear-gradient(var(--lo), var(--mi), var(--hi));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--1psb);
+}
+
+#hmm {
+  font-size: 28px;
+  position: relative;
+  bottom: 0;
+  display: inline;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.c {
+  cursor: var(--c);
+}
+
+.nc {
+  cursor: none;
+}
