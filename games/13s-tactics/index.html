@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>13s Tactics</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            overflow: hidden;
+            position: fixed;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #main {
+            height: 100%;
+            width: 100%;
+            display: initial;
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main"></div>
+    <script src="main.js"></script>
+</body>
+
+</html>
