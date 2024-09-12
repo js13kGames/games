@@ -1,0 +1,680 @@
+<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Curse of the 13 Cats</title>
+<style>
+.crt::before {content: " ";display: block;position: fixed;top: 0;left: 0;bottom: 0;right: 0;
+background:linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));z-index: 2;background-size: 100% 2px, 3px 100%;pointer-events: none; filter: brightness(10);}
+body {
+font-family:'Impact',sans-serif;display: flex;flex-direction: column;align-items: center;background-color: #222;color: #fff;letter-spacing: 1px;font-size: 16px;line-height: 20px;background: url('data:image/gif;base64,R0lGODlhIAAQAJEAABMKDhwOFQsHCQAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEAAAAACwAAAAAIAAQAAACXxQQqRtix6I7lMEAHsLrZlop1QeFWKlF4JGeyEpuCcya8vqocK6Dkyzy/Xosh/GITCqTs40RFFE8RxtPyyK6NkeaS/DVteBgX0oX6Kp5Oz4ou43emtfyIq9spy/3fGQBADs=');background-size: 320px 160px;background-repeat: repeat;
+}
+* { box-sizing: border-box; image-rendering: pixelated;}
+button {font-family:'Impact',sans-serif;font-weight: 700;}
+#start-screen, #tut-screen, #game-container {
+display: flex;flex-direction: column;justify-content: center;align-items: center;height: 95vh;}
+h2 {
+font-size: 24px;letter-spacing: 6px;text-shadow: -1px 0 0 #598695,1px 1px 0 #184154;margin-bottom: 10px;margin-top: 10px;color: #bbf0e8; background: #184154;
+  padding: 6px 16px;
+}
+.neon{
+font-size:90px;line-height: 100px;color: #d1f0ec;letter-spacing: 8px;text-shadow: 1px 0px 4px #8fdcd1, 2px 0px 4px #8fdcd1, 3px 0px 4px #8fdcd1, 2px 0px 3px #598695, 2px 3px 15px #598695, 2px 0px 15px, 5px 0px 65px, 20px 0vw 100px #598695,40px 0vw 100px #598695;margin-bottom: 0;margin-top: 0;
+}
+.fli-slow{
+animation: fli 3s linear infinite;}
+.fli-fast{
+animation: fli 1s linear infinite;}
+@keyframes fli {
+0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {opacity: .99;}
+20%, 21.999%, 63%, 63.999%, 65%, 69.999% {opacity: 0.4;}
+}
+#start-button, #start-button2, #start-button3, #start-button4, .end-button, #tut-button {
+background-color: #fc2605;color: white;border: none;padding: 10px 50px;font-size: 20px;cursor: pointer;border-radius: 5px;margin-bottom: 5px;margin-left: 10px;margin-right: 10px;}
+#start-button4 {background: #184154; color: #fc2605;}
+#start-button:hover, #start-button2:hover, #start-button3:hover, #start-button4:hover, .end-button:hover, #tut-button:hover {
+color: #fc2605;background-color: white;transition: all 500ms ease;}
+#game-container {
+display: none;flex-direction: column;justify-content: center;align-items: center;position: relative;}
+#stacks {
+display: flex;margin: 0 0 7px 0;align-items: flex-start;border-top: 1px solid #fff;border-bottom: 1px solid #fff;padding: 7px 0;}
+.block {
+width: 50px;height: 50px;display: flex;justify-content: center;align-items: center;border: 2px solid #fff;margin: 5px;cursor: pointer;border-radius: 5px;color: white;font-size: 24px;}
+.block.hl {
+border: 3px solid yellow;box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);}
+.stack-container {
+display: flex;flex-direction: column;align-items: center;margin: 0 20px;}
+.stack, .stack2 {
+width: 60px;height: 236px;display: flex;flex-direction: column-reverse;justify-content: flex-start;align-items: center;border: 2px solid black;background-color: white;position: relative;overflow: hidden;animation: glow 2s infinite;}
+@keyframes glow {
+0% {box-shadow: 0 0 0px #fff;}
+50% {box-shadow: 0 0 10px #f58f7f;}
+100% {box-shadow: 0 0 0px #fff;}
+}
+.stack .block {
+margin: 2px 0;border: 2px solid #222;}
+.stack-button, .stack-button-ex {
+background-color: #184154;color: white;border: none;padding: 3px 8px;margin-top: 5px;cursor: pointer;border-radius: 5px;font-size: 15px;display: flex;align-items: center;justify-content: center;border: 2px solid #fff;}
+#scoreboard {
+font-size: 20px;margin: 10px 0;display: flex;justify-content: center;width: 512px;height: 80px;}
+.score {
+font-size: 36px;font-weight: bold;color: white;padding: 4px;border-radius: 5px;display: flex;align-items: center;justify-content: center;width: 68px;height: 68px;margin: 0 5px 0 5px;border: 2px solid #fff;}
+.black, #kotatak.black {
+background-color: #1f1319;}
+.blue, #kotatak.blue {
+background-color: #598695;}
+.red,#kotatak.red {
+background-color: #fc2605;}
+.green, #kotatak.green {
+background-color: #831302;}
+.white {
+background-color: #d1f0ec;color: black;animation: whitey 1.5s infinite;}
+#kotatak.black::after {content:'Prince attacks!'}
+#kotatak {
+width: 200px;height: 264px;display: flex;background-color: #000;margin-right: 80px;
+background: url('data:image/gif;base64,R0lGODlhJACaAJEAAPwmBR8TGRhBVFmGlSH5BAAAAAAALAAAAAAkAJoAAAL/TCSTw+3fkJnUpLWgZrL6u4WR9ymiKJAVdm6pOmWt9sIGN0O1nbt23NP8LEHdUFZUDANJyLD5OEJHNmTzZ00+p4wt1zuV6npiRza0pJEPvAfy3AVHzKK0+44uz/c+rFsGpySHgBO4A/OXwRRyqAKYQciopxCZguLHcVF5IAkDSYiAsdinEpGimRm50TZwAIoRaiKESMlJyeEKYlQa6mpymisb5dkLyxYrbFYlEXraAUpTpdTMlovqtsysfXyt7NhcDM6pSkUCfu78uvuN3t4sjOXu7itIPI8e3Lginx7eG/+KHxB9HyrJowDsyAVr51YsiYGw3b6H1fqJAwDAQocj/9U0MhSAkdoSYOkYAhgAQKTCFyzPmdqI5VhFcAxO/gNIkhsySjDtOXPFMMbNbNskMhnqE+hHZjwJRgy3NBZSdiX5TTVHTVs7niP9RW24sig+TU6fim2YNWxLidvUAmVbzJHQtEZ7FtTo7x4zdlG/5sq29Os/u3iDahXXFqveg1fxwrW6TLDVshqbThZJ+aPkuF0hg314WSXFzSVHz61LuPO9jhQnW2Dd2jNs0BbFyTS9duzskR7xmXb4Fu1viMFtD39dXPTwlsmPF6ztfOLh6MC1Upee+nq/69jjcIcY6btMVeKFltMerFZ5VdmXw/Ku/X2r75W8xZ+miPtgB/RvDcej3sss0RUjoHMd0AHfbxtxxd+AxJHj4Gs7JYjbXLY0sNxM3WBYYQ1SFdjaaVlkBtgZJPrUSYinpXgcOevg9g6LsdFEyowf0nCiWRPO0Z5iLgKiHm3vfPJSjr5AgkKPJRTyBle4FZJMKkquwCOQrzwZoynqkejhh7ooBxoQOE4JHBFWgKIgS7IYhIuCePFUpJvpDYnmaLk1JaWRuZFlVGw6CaSijn226E6QLQoW31+OAfgWQrt1KNeAHpZXEaVlVmGgpY4+RVEBADs=');
+background-repeat: no-repeat;background-size: 200px 264px;border: 2px solid #fff;border-radius: 5px;background-position: center center;
+}
+@keyframes attack {
+0% {filter: brightness(1);}
+0% {filter: brightness(1);}
+30% {filter: brightness(1.7);}
+40% {filter: brightness(1);}
+50% {filter: brightness(1);}
+60% {filter: brightness(1.4);}
+70% {filter: brightness(1);}
+100% {filter: brightness(1);}
+}
+#kotatak.black::after, #kotatak.blue::after, #kotatak.red::after, #kotatak.green::after, #kotatak.daisy::after, .gang {
+display: flex;align-items: center;justify-content: center;text-align: center;width: 100%;text-shadow: 2px 2px 0 #000;font-size: 14px;background-repeat: no-repeat !important;background-size: auto 264px !important;border-radius: 5px;animation: attack 5s infinite;background-position: center center;padding: 200px 10px 0 10px;width: 200px;font-size: 22px;text-align: center;
+background: url('data:image/gif;base64,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');
+}
+#kotatak::after {
+content:'Somewhere in the alley, THE CAT GANG needs Your help! Collect a sum of 13 points in one column and one color to attack the Catcher! White blocks are JOKERS!';
+padding: 45px 10px 0 10px;width: 200px;font-size: 16px;text-align: center;}
+#kotatak.black::after {
+content:'Prince attacks!';background-position-x: -600px;}
+#kotatak.green::after {
+content:'Hazel attacks!';background-position-x: -200px;}
+#kotatak.blue::after {
+content:'Silver attacks!';background-position-x: -400px;}
+#kotatak.red::after {
+content:'Ginger attacks!';background-position-x: 0;}
+#kotatak.daisy::after {
+content:'Daisy helps!';background-position-x: -800px;}
+@keyframes whitey {
+0% {background-color: #d1f0ec;}
+50% {background-color: #fff;}
+100% {background-color: #d1f0ec;}
+}
+#timer {
+font-size: 50px;font-weight: bold;margin-left: 10px;margin-right: 10px;text-align: right;color: #d1f0ec;min-width: 85px;min-height: 32px;}
+#selectTimer {
+display: none;}
+#timer-container {
+display: flex;align-items: end;height: 260px;width: 288px;}
+#timer-rect, #select-timer-rect {
+width: 90px;height: 0px;border: 2px solid black;}
+#timer-rect {
+background-color: #fc2605;margin-right: 10px;overflow: hidden;text-align: center;align-content: center;}
+#select-timer-rect {
+background-color: #184154;overflow: hidden;text-align: center;align-content: center;}
+#blocks {
+display: flex;flex-wrap: wrap;justify-content: center;align-items: center;margin-top: 5px;margin-bottom: 5px;}
+#info-box {
+font-size: 18px;font-weight: bold;color: black;background-color: #f9f9f9;border: 2px solid #ddd;padding: 4px 10px;margin-bottom: 0px;border-radius: 5px;display: none;}
+.info-height {
+min-height: 60px;}
+#end-screen, #game-over {
+display: none;flex-direction: column;justify-content: center;align-items: center;height: 100vh;}
+.startbuttons {margin-top: 15px; margin-bottom: 10px;}
+.villain, .villain2 {
+width: 768px;height: 312px;display: flex;margin-bottom: 30px;
+background: url('data:image/gif;base64,R0lGODlhQAA0AKIFAI/c0R8TGRhBVFmGlfwmBQAAAAAAAAAAACH5BAEAAAUALAAAAABAADQAAAP/WLrc/jDKSau9OOvN6+jgNgjCF54USZpo26gq67ajCowzJBByFQ8AgEBzw1l2vUlpBBwkUwECAUMQAC7OYNB4EU4zgsATktUKxw9nILBZY61mJ9ZNccoVBLGlvC1ZAGsmdiQNA2uBCoZohUA3K4sMigthhxBrQwp6HktRTn4UdAWUbBJ5JgGYdTtiYo8RH5IFhqGveQphHjVWamJ3jE48BYBSFlIfuHWKTbN2Vw1CJahqXxZusa9qWZ69vrJNh6hRErompmGLdkyKQtJNC4Y84JcSo3KzgWhliq3nNzfvh/KAe9cD0Jo8SwRKc5CuCBMVa4K42hbwUI2Fk0iNGhXI/xnBLdpI3IjYJ90shfIOpSIFMOUugnZIAgJCycyWLVFQHsy5I1GSKDlVLjFpExDHoo1SBmRg69c9neCaFZUHx+aInUBpZWKoNKvXXY3McKzaJ4xCKVFZUEuE9WweYrKGhpUY1SbHgGhVlotkNpM8KdTSLRHbSkycq38BK0zF4JyCYeAAL3A4VMu5S1q0xRQIV9S8BqFGvUXrc5BUdhZB0ozpNVJTBqhuRcYqOJvUsRKzrCAh70UV0I/FeU45KFpldlfBDrqEWGuB2LBlw04JkpJc1IasyL0E8TNTlrcyybi7qzu3byodIm7uPTrXQsQvWmw2Vi4lXiofgJ/E2C84GJZjpSMNKvYxR9UF/fn3H2//eWKdXvgxmN8RXLlkUVp3EUhRV/uNo5+FbqSl1G56KRVChhYNN2AgDY6iYCUg3JOSbOH8J1RzNA4UQlcZcSiUjhmeMGKPPhbmnTyQHNHbAkXa6B1HSSoJ44tNPqljC2H0V6VL00GXA2i9DcQjbAl++VyIpMBoopmgoMkkeG6yOYFzEtBZQQIAOw==');
+background-size: 768px 312px;background-position: 0px -20px;background-repeat: no-repeat;animation: vill 5s infinite;}
+.villain2 {margin-top: 2px;}
+@keyframes vill {
+0% {background-position: 0px -15px; }
+50% {background-position: 0px 0px;}
+100% {background-position: 0px -15px; }
+}
+#villainobejma {
+position: relative;
+}
+.udanyatak {
+animation: udatak 2s;animation-iteration-count: 2;animation-timing-function: linear;
+}
+@keyframes udatak {
+0% {left: 0; opacity: 1;}
+25% {left: 30px; opacity: 0.3;}
+50% {left: 0px; opacity: 1;}
+75% {left: -30px; opacity: 0.3;}
+100% {left: 0; opacity: 1;}
+}
+.villain2 {
+flex-direction: column;justify-content: flex-end;width: 512px;height: 260px;background-size: 512px 208px;animation: vill2 5s infinite;margin-bottom: -10px;
+}
+.catcherstitle {
+text-align: center;
+text-shadow: 2px 2px 0 #000;
+font-size: 24px;
+}
+@keyframes vill2 {
+0% {background-position: 0px -10px; }
+50% {background-position: 0px 0px; }
+100% {background-position: 0px -10px; }
+}
+.stopka {
+margin-top: 10px;
+}
+#tut-screen {display: none;}
+.gang {
+width: 1000px;height: 264px !important;background-size: contain !important;padding: 0;margin: 0 auto 0 auto;
+}
+.pr {pointer-events: none; width: auto; padding: 0 15px; font-size: 18px; height: 30px;}
+.horiz {flex-direction: row; display: flex; justify-content: center; align-items: center;}
+.horiz0 {flex-direction: row; display: flex; justify-content: space-around; align-items: center; margin-top: -26px; z-index: 10; position: relative;}
+.block.ex {font-size: 12px; width: 22px; height: 22px; pointer-events: none;}
+.stack2.ex {height: 28px; margin-left: 10px; margin-right: 10px; pointer-events: none;}
+.yesmobile {display: none;}
+.stack-button-ex {
+padding: 2px 5px;margin-top: 2px;pointer-events: none;border-radius: 5px;font-size: 12px;margin-right: 5px;margin-left: 5px;
+}
+.mniejszy {font-size: 45px; line-height: 50px;}
+@media only screen and (max-width: 950px) {
+.nomobile {display: none;}
+.yesmobile {display: flex; flex-direction: column; max-width: 100%; text-align: center;}
+}
+</style>
+</head>
+<body class="crt">
+<div class="yesmobile">
+<div class="villain2" style="max-width: 100%;background-size: contain;background-position:center !important; width: 100%;margin-bottom:20px;"></div>
+THE CURSE OF 13 CATS  is a desktop game only. Please use wider screen to help cats survive!
+</div>
+<div class="nomobile">
+<div id="start-screen">
+<div class="villain"></div>
+<h1 class="neon" data-text="U" class="fli-slow">THE <span class="fli-fast">CURSE </span><span class="fli-slow">OF 13 </span><span class="fli-fast">CATS</span></h1>
+<h2 style="background: none;">Kitty, kitty... where are You?? I'll catch you all...</h2>
+<div class="startbuttons">
+<button id="tut-button">START GAME</button>
+</div>
+<div class="stopka">Game idea, graphics, sounds and programming by Kamil Zurek 2024. Game designed specially for JS13K contest.</div>
+</div>
+<div id="tut-screen" style="text-align: center;">
+<div>
+Somewhere in an old alley - the Catcher is lurking for the homeless cats. Fortunately, the Catcher has <span style="background: #fc2605; padding: 2px 4px;">Triskaidekaphobia</span> <br />and is afraid of only one thing in the world: the number 13... so, the only way to save the GANG is to use the ancient <span style="color: #fc2605;">CURSE OF 13 CATS!</span>
+<h2>Let's meet the Gang:</h2>
+<div class="gang"></div>
+<div class="horiz0">
+<div class="block red pr">GINGER</div>
+<div class="block green pr">HAZEL</div>
+<div class="block blue pr">SILVER</div>
+<div class="block black pr">PRINCE</div>
+<div class="block white pr">DAISY</div>
+</div>
+<h2>Game rules:</h2>
+<div class="horiz">
+1) Click on the blocks with numbers: 
+<div class="block red ex">2</div>
+<div class="block green ex">3</div>
+<div class="block blue ex">5</div>
+<div class="block black ex">1</div>
+<div class="block white ex">4</div>
+</div>
+<div class="horiz" style="margin-top: 6px;">
+2) Click on the white stacks to put blocks in place: 
+<div class="stack2 ex"></div> ( if needed - <button class="stack-button-ex">X</button> clears the stack )!
+</div>
+<div class="horiz" style="margin-top: 5px;">
+3) Collect exact 13 points in <span style="color:#fc2605; margin: 0 5px;">ONE COLUMN</span> and <span style="color:#fc2605; margin: 0 5px;">ONE COLOR</span> using no more than 4 blocks to prepare a <span style="color:#fc2605; margin: 0 5px;">CURSE!</span> 
+</div>
+<div class="horiz" style="margin-top: 5px;">
+4) Reduce the Catcher health points to <span style="color:#fc2605; margin: 0 5px;">ZERO</span> to win a game. Watch out for time! After each 4 moves the block pool is reseted.
+</div>
+<div class="horiz" style="margin-top: 5px;">
+5) WHITE blocks are <span style="color:#fc2605; margin: 0 5px;">JOKERS</span> - they can be used with any previously assigned color in the stack!
+</div>
+</div>
+<span style="color: #f58f7f; margin-top: 5px;">Tips and Tricks: Even if you don't need to match a certain color to get a point - you'll gain bonus time that will help you survive :)</span>
+<div class="startbuttons">
+<button id="start-button">Level EASY</button>
+<button id="start-button2">Level NORMAL</button>
+<button id="start-button3">Level HARD</button>
+<button id="start-button4">Level EXTREME</button>
+</div>
+</div>
+<div id="end-screen">
+<h1 class="neon mniejszy" data-text="U" class="fli-slow"><span class="fli-slow">Congratulations!</span></h1>
+<h1 class="neon mniejszy" data-text="U" class="fli-slow"><span class="fli-fast">YOU </span><span class="fli-slow">DEFEATED </span> THE CATCHER</h1>
+<div><img src="data:image/gif;base64,R0lGODlhQAANAKIAAI/c0fWPf/wmBdHw7B8TGRhBVFmGlYMTAiH5BAAAAAAALAAAAABAAA0AAAPCSLrcVAq6R2e56+qIp/8g02WatFlS6ByHGI5PWVIBYBuPkarLIbCRAWDXOJV0hmRgSQAMnoEcEYRZslqFJ84jKyS/ycEyaniKObyZIfBrjQMt7hFcCEADF3M0xuNArCxvcRUkXmBJBQd3a3ZwMVMfFzp1cAJjAkUikl8AiAR2YkticTBpXhAHglQ5YJ06CqKhpJCmHYOZj4ZJN4gSQH59cr0zGWi6Bq7ISB3EFn0adKV+h3SHJ1zB05PSm8nbutcORAkAOw==" style="width: 640px; height: 130px; margin: 40px 0; z-index: 10;">
+</div>
+<span style="font-size: 24px; line-height: 30px; text-align: center;">Thank You! The alley cats will never forget Your help!<br />( You saved the Game Testers souls too! )</span>
+<button onclick="location.reload();" class="end-button" style="margin-top: 30px;">Restart game</button>
+</div>
+<div id="game-over">
+<h1 class="neon mniejszy" style="color: #fc2605;" data-text="U" class="fli-slow">Everything is lost! <span class="fli-fast">GAME </span><span class="fli-slow">OVER </span></h1>
+<button onclick="location.reload();" class="end-button" style="margin-top: 30px;">Restart game</button>
+</div>
+<div id="game-container">  
+<div id="villainobejma">
+<div class="villain2">
+<div class="catcherstitle">CATCHER HEALTH POINTS</div>
+<div id="scoreboard">
+<div id="blackScore" class="score black">0</div>
+<div id="blueScore" class="score blue">0</div>
+<div id="redScore" class="score red">0</div>
+<div id="greenScore" class="score green">0</div>
+</div>
+</div>
+</div>  
+<div id="stacks">
+<div id="kotatak"></div>
+<div class="stack-container">
+<div class="stack" data-index="0"></div>
+<button class="stack-button" data-index="0">X</button>
+</div>
+<div class="stack-container">
+<div class="stack" data-index="1"></div>
+<button class="stack-button" data-index="1">X</button>
+</div>
+<div class="stack-container">
+<div class="stack" data-index="2"></div>
+<button class="stack-button" data-index="2">X</button>
+</div>
+<div id="timer-container">
+<div id="timer"></div>
+<div id="timer-rect">Game<br />time</div>
+<div id="selectTimer"></div>
+<div id="select-timer-rect">Turn<br />time</div>
+</div>
+</div>
+<div style="text-align: center;">Click on a block below to select it - then click on the column above to insert it:</div>
+<div id="blocks"></div>
+<div class="info-height"><div id="info-box"></div></div> 
+</div>
+</div>
+<script>
+const colors = ['black', 'blue', 'red', 'green', 'white'];
+let selectTimerrect;
+let randomizerValue = 3;
+let selectedBlock = null;
+let turnCount = 0;
+let scores = {
+black: 0,
+blue: 0,
+red: 0,
+green: 0
+};
+let stacks = [
+{ color: null, sum: 0, blocks: [] },
+{ color: null, sum: 0, blocks: [] },
+{ color: null, sum: 0, blocks: [] }
+];
+let timeRemaining;
+let selectTimeRemaining;
+let selectTimerInterval;
+let turnTime;
+let gameplay = 1;
+let loopMelody;
+function getRandomValue() {
+return Math.floor(Math.random() * 5) + 1;
+}
+function getRandomColor() {
+return colors[Math.floor(Math.random() * colors.length)];
+}
+function getRandomPoints() {
+return Math.floor(Math.random() * randomizerValue) + 1;
+}
+function createBlock() {
+const value = getRandomValue();
+const color = getRandomColor();
+const block = document.createElement('div');
+block.classList.add('block', color);
+block.textContent = value;
+block.dataset.value = value;
+block.dataset.color = color;
+block.addEventListener('click', () => selectBlock(block));
+return block;
+}
+function populateBlocks() {
+const blocksContainer = document.getElementById('blocks');
+if (turnCount % 4 === 0 || blocksContainer.childElementCount === 0) {
+blocksContainer.innerHTML = ''; 
+for (let i = 0; i < 10; i++) {
+blocksContainer.appendChild(createBlock());}
+}
+}
+function selectBlock(block) {
+if (selectedBlock) {
+    selectedBlock.classList.remove('hl');
+}
+selectedBlock = block;
+selectedBlock.classList.add('hl');
+playLaser();
+}
+function handleStackClick(stackIndex) {
+if (!selectedBlock) return;
+const stack = stacks[stackIndex];
+const blockValue = parseInt(selectedBlock.dataset.value);
+const blockColor = selectedBlock.dataset.color;
+if (blockColor === 'white') {
+if (stack.color !== null) {
+stack.sum += blockValue;
+stack.blocks.push(selectedBlock);
+document.querySelector(`.stack[data-index="${stackIndex}"]`).appendChild(selectedBlock);
+selectedBlock.classList.remove('hl');
+selectedBlock.style.cursor = 'default';
+selectedBlock.removeEventListener('click', () => selectBlock(selectedBlock));
+checkStackConditions(stack, stackIndex);
+playPoint(); 
+if(stack.sum > 0) {
+document.getElementById('kotatak').classList.add('daisy');
+console.log(stack.sum);
+} else if (stack.sum == 0)
+{
+console.log(stack.sum + 'else');
+}
+selectedBlock = null;
+turnCount++;
+populateBlocks();
+resetSelectTimer();
+} else {
+showInfoBox("White blocks can only be used on stacks with a previously added color.");
+playJump()
+}
+} else {
+if (stack.color === null || stack.color === blockColor) {
+stack.color = blockColor;
+stack.sum += blockValue;
+stack.blocks.push(selectedBlock);
+playPoint(); 
+document.querySelector(`.stack[data-index="${stackIndex}"]`).appendChild(selectedBlock);
+selectedBlock.classList.remove('hl');
+selectedBlock.style.cursor = 'default';
+selectedBlock.removeEventListener('click', () => selectBlock(selectedBlock));
+checkStackConditions(stack, stackIndex);
+selectedBlock = null;
+turnCount++;
+populateBlocks();
+resetSelectTimer();
+} else {
+showInfoBox("You can only add blocks of one color or white JOKERS to one stack.");
+playJump()
+}
+}
+}
+function checkStackConditions(stack, stackIndex) {
+if (stack.sum === 13) {
+scores[stack.color] = Math.max(0, scores[stack.color] - 1);
+document.getElementById('kotatak').className = '';
+document.getElementById('kotatak').classList.add(stack.color);
+document.getElementById('villainobejma').classList.add('udanyatak');  
+setTimeout(function() {
+document.getElementById('villainobejma').classList.remove('udanyatak');
+}, 5000); 
+resetStack(stackIndex);
+addBonusTime();
+playPowerUp(); 
+} else if (stack.blocks.length === 4 && stack.sum !== 13) {
+resetStack(stackIndex);
+showInfoBox("You didn't make number 13 out of 4 blocks. The stack is reseted.");
+} else if (stack.sum > 13) {
+resetStack(stackIndex);
+showInfoBox("You have exceeded number 13. The stack is reseted."); 
+}
+updateScoreboard();
+checkWinCondition();
+}
+function resetStack(stackIndex) {
+const stack = stacks[stackIndex];
+stack.color = null;
+stack.sum = 0;
+stack.blocks = [];
+const stackElement = document.querySelector(`.stack[data-index="${stackIndex}"]`);
+stackElement.innerHTML = '';
+}
+function updateScoreboard() {
+document.getElementById('blackScore').textContent = scores.black;
+document.getElementById('blueScore').textContent = scores.blue;
+document.getElementById('redScore').textContent = scores.red;
+document.getElementById('greenScore').textContent = scores.green;
+}
+function checkWinCondition() {
+if (Object.values(scores).every(score => score === 0)) {
+    endGame();
+}
+}
+function addBonusTime() {
+timeRemaining += 10;
+document.getElementById('timer').textContent = timeRemaining;
+showInfoBox("13 points scored! You get a 10 second bonus.");
+}
+function startTimer() {
+const timerElement = document.getElementById('timer');
+const rectElement = document.getElementById('timer-rect');
+const timerInterval = setInterval(() => {
+timeRemaining--;
+timerElement.textContent = timeRemaining;
+const newHeight = (timeRemaining / 200) * 200; 
+rectElement.style.height = `${newHeight}px`;
+if (timeRemaining <= 0) {
+clearInterval(timerInterval);
+gameOver(); 
+}
+}, 1000);
+}
+function startSelectTimer() {
+const selectTimerElement = document.getElementById('selectTimer');
+const selectTimerrect = document.getElementById('select-timer-rect');
+selectTimerInterval = setInterval(() => {
+selectTimeRemaining--;
+selectTimerElement.textContent = selectTimeRemaining; 
+const newHeight = (selectTimeRemaining / turnTime) * 200; 
+selectTimerrect.style.height = `${newHeight}px`;
+if (selectTimeRemaining <= 0 && gameplay == 1) {
+timeRemaining = Math.max(0, timeRemaining - 20);
+selectTimeRemaining = turnTime;
+selectTimerElement.textContent = selectTimeRemaining;
+document.getElementById('timer').textContent = timeRemaining;
+showInfoBox("No block selected in time! You lost 20 seconds.");
+playGameOver();
+}
+}, 1000);
+}
+function resetSelectTimer() {
+selectTimeRemaining = turnTime;
+document.getElementById('selectTimer').textContent = selectTimeRemaining;
+const selectTimerrect = document.getElementById('select-timer-rect');
+const newHeight = (selectTimeRemaining / turnTime) * 200; 
+selectTimerrect.style.height = `${newHeight}px`;
+}
+function showInfoBox(message) {
+const infoBox = document.getElementById('info-box');
+infoBox.textContent = message;
+infoBox.style.display = 'block';
+setTimeout(() => {
+    infoBox.style.display = 'none';
+}, 4000);
+}
+function levelPoints() {
+scores = {
+black: getRandomPoints(),
+blue: getRandomPoints(),
+red: getRandomPoints(),
+green: getRandomPoints()
+};
+}
+document.querySelectorAll('.stack').forEach((stackElement, index) => {
+stackElement.addEventListener('click', () => handleStackClick(index));
+});
+document.querySelectorAll('.stack-button').forEach(button => {
+button.addEventListener('click', event => {
+event.stopPropagation();
+resetStack(button.dataset.index);
+updateScoreboard();
+});
+});
+function gameStart() {
+document.getElementById('tut-screen').style.display = 'none';
+document.getElementById('game-container').style.display = 'flex';
+levelPoints();
+populateBlocks();
+updateScoreboard();
+startTimer();
+startSelectTimer();
+playMelody();
+}
+function endGame() {
+document.getElementById('game-container').style.display = 'none';
+document.getElementById('end-screen').style.display = 'flex';
+gameplay = 0;
+}
+function gameOver() {
+document.getElementById('game-container').style.display = 'none';
+document.getElementById('game-over').style.display = 'flex';
+gameplay = 0;
+}
+document.getElementById('tut-button').addEventListener('click', () => {
+document.getElementById('start-screen').style.display = 'none';
+document.getElementById('tut-screen').style.display = 'flex';
+playIntro();
+});
+document.getElementById('start-button').addEventListener('click', () => {
+randomizerValue = 2;
+timeRemaining = 200;
+selectTimeRemaining = 20;
+turnTime = 20;
+gameStart();
+});
+document.getElementById('start-button2').addEventListener('click', () => {
+randomizerValue = 3;
+timeRemaining = 150;
+selectTimeRemaining = 15;
+turnTime = 15;
+gameStart();
+});
+document.getElementById('start-button3').addEventListener('click', () => {
+randomizerValue = 5;
+timeRemaining = 100;
+selectTimeRemaining = 10;
+turnTime = 10;
+gameStart();
+});
+document.getElementById('start-button4').addEventListener('click', () => {
+randomizerValue = 5;
+timeRemaining = 40;
+selectTimeRemaining = 8;
+turnTime = 8;
+gameStart();
+});
+function createReverbBuffer(context, duration = 0.5, decay = 0.5) {
+const sampleRate = context.sampleRate;
+const length = sampleRate * duration;
+const impulse = context.createBuffer(2, length, sampleRate);
+const impulseL = impulse.getChannelData(0);
+const impulseR = impulse.getChannelData(1);
+for (let i = 0; i < length; i++) {
+const n = length - i;
+impulseL[i] = (Math.random() * 2 - 1) * Math.pow(n / length, decay);
+impulseR[i] = (Math.random() * 2 - 1) * Math.pow(n / length, decay);
+}
+return impulse;
+}
+function createOscillator(context, frequency, type = 'sawtooth', duration = 0.5) {
+const oscillator = context.createOscillator();
+oscillator.type = type;
+oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+return oscillator;
+}
+function playTone(context, oscillator, duration, startTime = 0) {
+const gainNode = context.createGain();
+const convolver = context.createConvolver();
+convolver.buffer = createReverbBuffer(context);
+oscillator.connect(gainNode);
+gainNode.connect(convolver);
+convolver.connect(context.destination);
+gainNode.gain.setValueAtTime(0, context.currentTime + startTime);
+gainNode.gain.linearRampToValueAtTime(1, context.currentTime + startTime + 0.05);
+gainNode.gain.linearRampToValueAtTime(0, context.currentTime + startTime + duration);
+oscillator.start(context.currentTime + startTime);
+oscillator.stop(context.currentTime + startTime + duration);
+}
+function playMelody() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const melody = [
+{frequency: 261.63, duration: 0.45 }, 
+{frequency: 293.66, duration: 0.35 }, 
+{frequency: 311.13, duration: 0.6 }, 
+{frequency: 415.30, duration: 0.2 }, 
+{frequency: 392.00, duration: 0.2 }, 
+{frequency: 349.23, duration: 0.2 }, 
+{frequency: 293.66, duration: 0.8 },
+{frequency: 261.63, duration: 0.45 }, 
+{frequency: 293.66, duration: 0.35 }, 
+{frequency: 311.13, duration: 0.6 }, 
+{frequency: 415.30, duration: 0.2 }, 
+{frequency: 392.00, duration: 0.2 }, 
+{frequency: 349.23, duration: 0.2 }, 
+{frequency: 261.63, duration: 0.8 }
+];
+let startTime = 0;
+melody.forEach(note => {
+const oscillator = createOscillator(audioContext, note.frequency, 'sine');
+playTone(audioContext, oscillator, note.duration, startTime);
+startTime += note.duration;
+});
+startTime += 0;
+setTimeout(loopMelody, startTime * 100);
+}
+function playIntro() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const frequencies = [261.63, 261.63, 311.13, 293.66]; 
+let startTime = 0;
+frequencies.forEach((frequency, index) => {
+const oscillator = createOscillator(audioContext, frequency, 'sine', 0.4);
+playTone(audioContext, oscillator, 0.4, startTime);
+startTime += 0.4;
+});
+}
+function playLaser() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const oscillator = createOscillator(audioContext, 880, 'sawtooth', 0.1);
+playTone(audioContext, oscillator, 0.1);
+}
+function playExplosion() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const oscillator = createOscillator(audioContext, 55, 'sawtooth', 0.6);
+playTone(audioContext, oscillator, 0.6);
+}
+function playPoint() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const oscillator = createOscillator(audioContext, 523.25, 'square', 0.2); 
+playTone(audioContext, oscillator, 0.2);
+}
+function playGameOver() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const frequencies = [220, 196, 174.61, 164.81]; 
+let startTime = 0;
+frequencies.forEach((frequency, index) => {
+const oscillator = createOscillator(audioContext, frequency, 'sine', 0.4);
+playTone(audioContext, oscillator, 0.4, startTime);
+startTime += 0.4;
+});
+}
+function playPowerUp() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const frequencies = [261.63, 329.63, 392.00, 523.25]; 
+let startTime = 0;
+frequencies.forEach((frequency, index) => {
+const oscillator = createOscillator(audioContext, frequency, 'triangle', 0.15);
+playTone(audioContext, oscillator, 0.15, startTime);
+startTime += 0.15;
+});
+}
+function playJump() {
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const oscillator = createOscillator(audioContext, 440, 'sine', 0.2);
+oscillator.frequency.linearRampToValueAtTime(660, audioContext.currentTime + 0.2); 
+playTone(audioContext, oscillator, 0.2);
+}
+</script>
+</body>
+</html>
