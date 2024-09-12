@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS13KGames</title>
+  <script type="module" crossorigin>(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const s of document.querySelectorAll('link[rel="modulepreload"]'))l(s);new MutationObserver(s=>{for(const o of s)if(o.type==="childList")for(const d of o.addedNodes)d.tagName==="LINK"&&d.rel==="modulepreload"&&l(d)}).observe(document,{childList:!0,subtree:!0});function r(s){const o={};return s.integrity&&(o.integrity=s.integrity),s.referrerPolicy&&(o.referrerPolicy=s.referrerPolicy),s.crossOrigin==="use-credentials"?o.credentials="include":s.crossOrigin==="anonymous"?o.credentials="omit":o.credentials="same-origin",o}function l(s){if(s.ep)return;s.ep=!0;const o=r(s);fetch(s.href,o)}})();const n=[];let w=4e3,h="easy",v=0,O=!1,m=0,c=12;const q=["smoothies","bananas","apple","cookies","milk","bread","butter","eggs","cheese","yogurt","chicken","beef","pork","fish","shrimp","pasta","rice","potatoes","onions","garlic","tomatoes","carrots","lettuce","spinach","broccoli","mushrooms","peppers","zucchini","avocado","strawberries","blueberries","raspberries","blackberries","oranges","lemons","limes","grapes","watermelon","cantaloupe","peaches","plums","cherries","pineapple","kiwi","mango","papaya","water","juice","soda","coffee","tea","wine","beer","chips","crackers","cereal","popcorn","nuts","candy","chocolate","sugar","flour","baking soda","baking powder","salt","pepper","spices","herbs","olive oil","vegetable oil","butter","margarine","ketchup","mustard","mayonnaise","salsa","pickles","salad dressing","syrup","jam","peanut butter","honey","vinegar","soy sauce","hot sauce","barbecue sauce","soup","canned vegetables","canned fruit","canned beans","canned soup","frozen vegetables","frozen fruit","frozen pizza","frozen dinners","frozen breakfast","frozen dessert","bread","milk","eggs","cheese","yogurt","butter","chicken","beef","pork","fish","shrimp","pasta","rice","potatoes","onions","garlic","tomatoes","carrots","lettuce","spinach","broccoli","mushrooms","peppers","zucchini","avocado","strawberries","blueberries","raspberries"],C={easy:{minItem:1,maxItem:2},medium:{minItem:2,maxItem:4},hard:{minItem:3,maxItem:6}},a=e=>document.querySelector(e),H=e=>document.querySelectorAll(e),p=e=>document.createElement(e),u=a("#i");a("input[type='button']").addEventListener("click",()=>{N()});const g=a("div#listHorizontal");let T=null;function N(){a("div#startScreen").style.display="none",a("div#gameScreen").style.display="flex",a("div#stats").style.display="flex",i.focus(),T=setInterval(M,w),M()}function L(e){const t=a("div#stats>div#numberOfCurrentOrders");t.textContent=(e>1?"Orders: ":"Order :")+e+" / "+c}function k(e){messageDisplayer.style.animation="none",messageDisplayer.offsetHeight,messageDisplayer.style.display="flex",messageDisplayer.innerHTML=e,messageDisplayer.style.animation="gAnim 2s ease-in-out 0s 1 normal forwards",setTimeout(()=>{messageDisplayer.style.display="none"},2e3)}function I(){const e=a("#i");n.shift(),g==null||g.firstChild.remove(),e.value="",L(n.length),O=!1,listCustomers.removeChild(listCustomers.lastChild),listOrder.innerHTML="",n.length>0&&z()}function z(){if(typeof listOrder<"u")listOrder.innerHTML="";else{let e=p("div");e.id="dialogBubble";let t=p("ul");t.id="listOrder",e.append(t),listCustomers.lastChild.append(e)}n[0].order.forEach(e=>{const t=p("li");t.textContent=e,listOrder.append(t)})}function y(e){const t=a("div#score");m+=e,t.textContent="Score: "+m}function A(e){c=e,L(n.length)}u==null||u.addEventListener("keydown",e=>{if(e.key==="Enter"){const t=n[0];if(console.log(t.order),!t)return;const r=u.value.trim();if(t&&t.shouldEqual13&&r==="refuse order"){I(),y(20),u.value="";return}if(t.order.includes(r)&&!t.shouldEqual13){t.order.splice(t.order.indexOf(r),1),t.order.length===0&&(I(),y(O?10:30));const l=H("div#dialogBubble ul>li"),s=Array.from(l).find(o=>o.textContent===r);s&&(s.style.textDecoration="line-through"),v++}else A(c-1),t.shouldEqual13?k("Did you count correctly?"):k(`${c} life left`),D(),O=!0;u.value=""}});const b=(e,t)=>Math.floor(Math.random()*(t-e+1)+e),$=e=>{let t=Math.random()>.7,r=t?13:b(1,25);return t=r===13,{order:q.sort(()=>Math.random()-.5).slice(0,b(C[e].minItem,C[e].maxItem)).reduce((s,o,d,x)=>{let S=Math.max(1,r-x.length-d-1),f=b(1,S);return d===x.length-1&&t&&(f=r),r=r-f>0?r-f:1,o=f+" "+o,s.push(o),s},[]),shouldEqual13:t}};function P(){const e=p("div");e.classList.add("headCustomer");const t=p("div");t.classList.add("bodyCustomer");const r=p("div");r.classList.add("customer"),r.append(e),r.append(t),n.length<13&&listCustomers.append(r)}const V=e=>{console.log("add new order");const t=$(e);n.push(t),P(),L(n.length),D()};function D(){(c===0||n.length>c)&&E()}function M(){h=v<5?"easy":v<10?"medium":"hard",w=h==="easy"?4e3:h==="medium"?3e3:2e3,V(h),n.length===1&&z(),n.length===c&&E()}function E(){clearInterval(T),a("div#gameOverScreen").style.display="block";const e=`Oh no, you've lost! Your score is : ${m} <br/>`,t=a("div#gameOverScreen div#goText");t.append(e);const r=localStorage.getItem("never13_highscore");let l="";!r||m>r?(localStorage.setItem("never13_highscore",m),l=`<br/>Your new highscore is ${m}`):l=`Your highscore is ${r}`,t.innerHTML=e+l}
+</script>
+  <style rel="stylesheet" crossorigin>:root{--bg:#F5F7F8;--accent1: #14eff4;--accent2: #000000;--accent3: #45474B}*{margin:0;padding:0;box-sizing:border-box;font-family:monospace}html{width:100%;height:100%;overflow:hidden}body{width:100%;height:100%;background-color:var(--bg)}div#startScreen,div#gameOverScreen{position:absolute;width:100%;height:100%;z-index:100000;background:var(--bg);color:var(--accent2);top:0;left:0}div#gameScreen{height:100%;display:none;flex-direction:column;justify-content:space-between}div#messageDisplayer{position:absolute;top:20%;left:50%;transform:translate(-50%);border:4px solid #F49AA3;z-index:10;background-color:#fff;display:none;justify-content:center;align-items:center;height:40px;width:200px;border-radius:20px}div#gameOverScreen{display:none}div#startScreen>div,div#gameOverScreen>div{width:70%;margin:auto}div#startscreen>input{margin:auto}div#startScreen div h1,div#gameOverScreen div h1{text-align:center;margin:50px 0}div#startScreen h2{padding-top:30px;padding-bottom:15px}div#startScreen div input{margin:50px 0}div#stats{color:var(--accent2);display:none;flex-direction:row;justify-content:space-between;height:5%;align-items:center;margin:0 15px;font-size:25px}div#listHorizontal{display:flex;flex-direction:row-reverse;overflow-x:auto;height:50%;padding:10%}div#listHorizontal div.order{border:4px solid var(--accent3);border-radius:10px;color:var(--accent3);filter:drop-shadow(-12px 0px 4px var(--accent3));height:400px;width:250px;flex-shrink:0;background-color:var(--bg);padding-left:15px;margin-left:-150px;margin-right:10px}.withBG{background-color:var(--accent1)!important}div#listHorizontal div.order h3{color:var(--accent3);font-size:35px;text-align:center;margin-top:10px;margin-bottom:30px}div#orderInput{width:70%;margin:0 auto;background:transparent;border-radius:20px;font-size:30px;display:flex;flex-direction:column}div#orderInput p{font-size:15px;text-align:center;padding-bottom:15px;color:#2f4f4f}div#orderInput ul{display:flex;flex-direction:column;height:100%;overflow:auto}div#orderInput input{border:2px solid var(--accent2);width:100%;margin:auto auto 10px;background-color:transparent;height:90px;outline:none;padding:20px 40px;font-size:30px;color:var(--accent2);border-radius:90px}div ul li{list-style-type:none;font-size:20px;color:var(--accent2)}div#assets{position:relative}div#assets div#bg{width:80%;background:#b5d8ca;height:400px;border-radius:40px;margin:auto;position:relative}div#assets div#bg div.cloud1{position:absolute;top:50px;left:80px}div#assets div#bg div.cloud2{position:absolute;top:20px;right:200px}div.c1{width:92px;height:50px;background:#fff;top:50px;position:absolute;border-radius:86%}div.c2{width:100px;height:60px;background:#fff;border-radius:100%;top:30px;position:absolute;left:40px}div.c3{width:80px;height:50px;background:#fff;border-radius:100%;top:60px;position:absolute;left:100px}div#desk{width:90%;top:300px;position:absolute;left:50%;transform:translate(-50%)}div#desk div#upper{width:100%;height:60px;background:#e0e0e0;border-radius:20px;border:2px solid #AA8F9E;margin:auto;z-index:1;position:absolute}div#desk div#lower{width:90%;height:180px;position:absolute;transform:translate(-50%);left:50%;top:30px;z-index:0;background:#d7b5a6;border-radius:25px}div#darkest{height:70px;background-color:#d4aa98}div#computer{position:absolute;top:-130px;right:160px}div#screen{width:120px;height:80px;background-color:#124a47;border-radius:20px;border:1px solid #020202;position:relative;z-index:10}div#screenback{width:20px;height:70px;position:absolute;top:50px;left:55px;background:#124a47;border:1px solid #020202;border-radius:20px;z-index:20}div#plant{position:absolute;top:-140px;left:40px}div#plant #upperpot{height:30px;width:80px;background:#f49aa3;border-radius:10px;border:2px solid #9D4170;position:absolute;top:20px}div#plant #lowerpot{position:absolute;left:10px;top:30px;height:80px;width:60px;background:#f49aa3;border-radius:10px;border:2px solid #9D4170}div#leaf1{position:absolute;top:10px;left:10px;background:#8dc09d;border:2px solid #9D4170;width:30px;height:30px;border-radius:0 85px 40px 40px/40px 50px 10px 10px}div#leaf2{position:absolute;top:-20px;left:20px;background:#8dc09d;border:2px solid #9D4170;width:30px;height:60px;border-radius:40px 85px 40px 40px/40px 50px 10px 10px}div#shinny2{width:10px;height:4px;background:#fff;border-radius:30px;position:absolute;top:2px;left:4px;transform:rotate(8deg)}div#leaf3{position:absolute;top:-10px;left:40px;background:#8dc09d;border:2px solid #9D4170;width:30px;height:60px;border-radius:60px 25px 40px 40px/40px 50px 10px 10px}div#shinny3{width:10px;height:4px;background:#fff;border-radius:30px;position:absolute;top:2px;left:10px;transform:rotate(-14deg)}div#shinny4{width:15px;height:4px;background:#fff;z-index:10;border-radius:30px;position:absolute;top:-8px;left:-5px}div#shinny5{width:15px;height:4px;z-index:10;background:#fff;border-radius:30px;position:absolute;top:-5px;right:2px}div#vendor{position:absolute;top:-50px;left:20px}div#vendor div#headvendor{width:80px;height:80px;border:2px solid #914252;background:#fbeed2;border-radius:50%;position:relative;z-index:1}div#vendor div#bodyvendor{width:80px;height:100px;background:#fbeed2;position:relative;z-index:5;top:-20px;border-radius:40px 40px 50px 50px/90px 90px 100px 100px;border:2px solid #914252}div#vendor #eyes{position:absolute;display:flex;gap:20px;left:16px;top:16px}div#vendor .eye{width:8px;height:20px;background:#914252;border-radius:50px}div#orders ul#listCustomers{width:53%;display:flex;flex-direction:row-reverse;height:240px}div#orders div.customer{position:relative}div#orders div.customer div.headCustomer{width:100px;height:100px;border:2px solid #914252;background:#fbeed2;border-radius:50%;position:relative;z-index:1}div#orders div.customer div.bodyCustomer{width:95px;height:150px;background:#fbeed2;position:relative;z-index:5;top:-20px;border-radius:40px 40px 50px 50px/90px 90px 100px 100px;border:2px solid #914252}div#dialogBubble{width:300px;height:200px;background:#fff;border:2px solid #F49AA3;position:absolute;bottom:260px;left:80px;border-radius:20px;padding:20px}div#dialogBubble:before{content:"";position:absolute;width:20px;height:20px;background:#fff;top:99%;left:-4%;border-radius:20px;border:1px solid #F49AA3}@keyframes gAnim{0%{transform:scale(1) rotate(0);opacity:0}25%{transform:scale(1.5) rotate(-20deg);opacity:1}98%{transform:scale(1.5) rotate(-20deg);opacity:0}to{transform:scale(1.5) rotate(-20deg);opacity:0}}
+</style>
+</head>
+
+<body>
+    <div id="startScreen">
+        <div>
+            <h1>13th Restaurant Rush: A Test of Speed and Tradition</h1>
+            <br />
+            <p>In 13th Restaurant Rush, speed is key, but tradition is just as important! According to an old saying,
+                there should never be more than 12 people seated at a table.</p>
+            <p>This restaurant takes that very seriously, and it’s up to you to maintain the balance while typing orders
+                as fast as possible!</p>
+            <p>The challenge? Keep the line moving and don’t let more than 12 people wait for a seat, or face the
+                consequences. Every second counts!</p>
+
+            <h2>Here are the golden rules to remember:</h2>
+            <p>- No more than 12 customers can be in line at once! Serve them quickly or lose the game.</p>
+            <p>- Never serve an order if the total of its items equals thirteen!</p>
+
+            <h2>How to Play</h2>
+            <p>Type each element order in the input field and hit Enter. Example: "2 carrots"</p>
+            <p>Never serve an order if the total of its items equals thirteen!</p>
+
+            <br />
+            <p>Be sure to keep the flow moving and never let more than 12 customers wait!
+                It’s a fast-paced, number-crunching challenge that tests both your typing skills and your mental math.
+                How many orders can you serve before the line grows too long?</p>
+            <br />
+            <p>Have fun!</p>
+
+            <input type=button value="Start the game" />
+        </div>
+    </div>
+    <div id="gameScreen">
+        <div id="messageDisplayer"></div>
+        <div id="stats">
+            <div id="score">Score:</div>
+            <div id="numberOfCurrentOrders">Orders: </div>
+        </div>
+        <div id="assets">
+            <div id="bg">
+                <div class="cloud1">
+                    <div class="c1"></div>
+                    <div class="c2"></div>
+                    <div class="c3"></div>
+                </div>
+                <div class="cloud2">
+                    <div class="c1"></div>
+                    <div class="c2"></div>
+                    <div class="c3"></div>
+                </div>
+
+            </div>
+
+            <div id="desk">
+                <div id="upper">
+                </div>
+                <div id="lower">
+                    <div id="plant">
+                        <div id="leaf1">
+                        </div>
+                        <div id="leaf2">
+                            <div id="shinny2"></div>
+
+                        </div>
+                        <div id="leaf3">
+                            <div id="shinny3"></div>
+                        </div>
+                        <div id="lowerpot">
+                            <div id="shinny4"></div>
+                            <div id="shinny5"></div>
+                        </div>
+                        <div id="upperpot"></div>
+                    </div>
+                    <div id="computer">
+                        <div id="screen"></div>
+                        <div id="screenback"></div>
+                        <div id="vendor">
+                            <div id="headvendor">
+                                <div id="eyes">
+                                    <div class="eye"></div>
+                                    <div class="eye"></div>
+                                </div>
+                            </div>
+
+                            <div id="bodyvendor">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="darkest"></div>
+                </div>
+            </div>
+
+            <div id="orders">
+                <ul id="listCustomers"></ul>
+            </div>
+
+
+        </div>
+        <div id="orderInput">
+            <p>Write the different items of the command or "refuse order" if the count equal 13</p>
+            <input name="commandInput" type="text" id="i" autofocus autocomplete="off" />
+        </div>
+    </div>
+    <div id="gameOverScreen">
+        <div>
+            <h1>Game Over</h1>
+            <div id="goText" />
+        </div>
+    </div>
+
+</body>
+
+</html>
