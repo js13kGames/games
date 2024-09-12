@@ -1,0 +1,161 @@
+body {
+    text-align: center;
+    padding: 20px;
+    background-color: #F4F4F9;
+}
+
+h1 {
+    font-size: 64px;
+    color: #D9534F;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    perspective: 500px;
+    text-shadow: 5px 5px 0 #FECEA8, 10px 10px 0 #F4E557, 15px 15px 0 #C6CD78;
+    transition: all 0.4s ease;
+    font-family: 'Garamond', sans-serif;
+}
+h1:hover {
+    transform: rotateX(20deg);
+    text-shadow: 2px 2px 0 #FECEA8, 5px 5px 0 #F4E557, 8px 8px 0 #C6CD78;
+}
+
+a.link-3d-push {
+    display: inline-block;
+    padding: 10px 30px;
+    text-decoration: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 0 #F4E557, 0 10px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+a.link-3d-push:hover {
+    transform: translateY(5px);
+    box-shadow: 0 5px 0 #F4E557, 0 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+a.link-3d-perspective {
+    display: inline-block;
+    text-decoration: none;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+a.link-3d-perspective:hover {
+    transform: rotateX(10deg) scaleY(1.2);
+}
+
+.level-buttons {
+    margin: 20px;
+}
+.level-buttons button {
+    padding: 15px 30px;
+    display: block;
+    margin: 3% auto;
+    font-size: 20px;
+    background: linear-gradient(to bottom, #F1F08A, #C6CD78);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 5px 0px #999, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    text-shadow: 1px 1px 0px #FFF;
+}
+.level-buttons button:hover {
+    background: linear-gradient(to bottom, #FECEA8, #FF847C);
+    box-shadow: 0px 2px 0px #999, 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.level-buttons button:active {
+    background: linear-gradient(to bottom, #F4E557, #F5A855);
+    box-shadow: 0px 1px 0px #666;
+    transform: translateY(2px);
+}
+
+.story-button {
+    margin: 20px;
+}
+.story-button button {
+    padding : 15px 30px;
+    display: block;
+    margin: 3% auto;
+    font-size: 20px;
+    background: linear-gradient(to bottom, #DEE5D4, #D2E0FB);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 5px 0px #999, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    text-shadow: 1px 1px 0px #FFF;
+}
+.story-button button:hover {
+    background: linear-gradient(to bottom, #C4DAD2, #6A9C89);
+    box-shadow: 0px 2px 0px #999, 0px 8px 16px, rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.story-button button:active {
+    background: linear-gradient(to bottom, #78B7D0, #227B94);
+}
+
+#modeMenu button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    background-color: "#F1F08A";
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+#modeMenu button:hover {
+    background-color: #FECEA8;
+}
+
+#canvas {
+    display: none;
+    border: 2px solid #ABCDEF;
+    background-color: #D2E0FB;
+    margin-top: 20px auto;
+}
+
+#confettiCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through the canvas */
+    z-index: 999; /* Make sure it overlays the game UI */
+}
+
+.exit-button {
+    display: none;
+    margin-top: 20px;
+}
+.exit-button button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: linear-gradient(to bottom, #FF847C, #FECEA8);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 5px 0px #999, 0px 10px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    text-shadow: 1px 1px 0px #FFF;
+}
+.exit-button button:hover {
+    background: linear-gradient(to bottom, #F4E557, #F5A855);
+    box-shadow: 0px 2px 0px #999, 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+.exit-button button:active {
+    background: linear-gradient(to bottom, #FECEA8, #FF847C);
+    box-shadow: 0px 1px 0px #666;
+    transform: translateY(2px);
+}
+.exit-button button:disabled, button[disabled] {
+    border: 1px solid #999;
+    background-color: #CCC;
+    color: #666;
+}

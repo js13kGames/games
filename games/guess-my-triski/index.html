@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Square Number Sequence</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <h1>Guess My Triski!</h1>
+    <div class="level-buttons">
+        <button id="level1" title="You are just beginning your journey into the world of unlucky numbers.">Level 1 <span>The Dozen's Edge</span></button>
+        <button id="level2" title="The ominous signs of bad luck as the number 13 looms">Level 2 <span>Fortune's Fledgling</span></button>
+        <button id="level3" title="The full fear of Triskaidekaphobia is realized, and players must challenge their fate.">Level 3 <span>Final Reckoning</span></button>
+    </div>
+    <div class="story-button">
+        <button id="story" title="Read the story behind this game.">Story</button>
+        <button id="selectMode" title="Try a different mode setting to enjoy!">Mode: Fun</button>
+        <div id="modeMenu" style="display: none;">
+            <button id="modeChallenge">Challenge</button>
+            <button id="modeFun">Fun</button>
+            <button id="modeCompetitive">Competitive</button>
+        </div>
+    </div>
+    <div id="read-story"></div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <canvas id="confettiCanvas"></canvas>
+    <div class="exit-button">
+        <button id="exit">Exit</button>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
