@@ -1,0 +1,64 @@
+
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: green; /* Light green for the grass surroundings */
+    font-family: Arial, sans-serif;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
+    margin-top:60px;
+margin-left:560px;
+
+ 
+}
+h1{
+    margin-left:560px;
+    color:aliceblue
+}
+#lives{
+    margin-left:600px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color:aliceblue
+}
+#mines-count{
+    margin-left:600px;
+    padding-bottom: 20px;
+    color: aliceblue;
+}
+#flag-button{
+    margin-left:600px;
+    
+}
+#restart-button{
+    margin-top:20px;
+    margin-left:600px;
+
+}
+.tile {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(194, 178, 128);
+    text-align: center;
+    font-size: 20px;
+    line-height: 40px;
+}
+.tile-clicked {
+    background-color: lightgray;
+}
+.mine-hit {
+    background-color: red;
+}
+.treasure-found {
+    background-color: gold;
+}
+#flag-button {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+
