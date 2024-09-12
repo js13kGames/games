@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Triskatopia</title>
+
+	<style>
+		body {
+			margin: 0;
+			font-family: 'Courier New', monospace
+		}
+
+		.text {
+
+			background-color: white;
+			color: black;
+			font-size: 7vw;
+			font-weight: bold;
+			margin: 0 auto;
+			padding: 10px;
+			width: 50%;
+
+			text-align: center;
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			mix-blend-mode: screen;
+		}
+
+		.button {
+
+			border: none;
+			padding: 8px 32px;
+			text-align: center;
+			font-size: 25px;
+			transition-duration: 0.4s;
+			cursor: pointer;
+			background-color: white;
+			color: black;
+			border: 2px solid #111118;
+			font-family: inherit;
+			text-align: center;
+
+			z-index: 1;
+
+			position: absolute;
+			top: 85%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.button:hover {
+			background-color: #9595cb;
+			color: rgb(116, 18, 144);
+		}
+
+		.popUpClass {
+			visibility: hidden;
+			border: 2px solid #111118;
+			background-color: white;
+			padding: 10px;
+			/* text-align: left; */
+			width: 50%;
+			height: 60%;
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 2;
+
+		}
+
+		.buttonClose {
+
+			padding: 8px 32px;
+			text-align: center;
+			font-size: 25px;
+			/* transition-duration: 0.4s; */
+			cursor: pointer;
+			background-color: white;
+			color: black;
+			border: 2px solid #111118;
+			font-family: inherit;
+			text-align: center;
+			z-index: 1;
+
+		}
+
+		.buttonClose:hover {
+			background-color: #9595cb;
+			color: rgb(116, 18, 144);
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<div class="text" id="title">Triskatopia</div>
+
+	<button class="button" id='introButton' style="left:33%">Intro</button>
+
+	<button class="button" id='start' style="font-size:40px">Start</button>
+
+	<button class="button" id='aboutButton' style="left:66%">About</button>
+
+	<div class="popUpClass" id="introID">
+		<h3>Instructions</h3>
+		<p>1. Select Enter VR if available.</p>
+		<p>2. Control altitude of balloon with ⏫ ⏬ buttons.</p>
+		<p>3. Control tilt of balloon with ↩️ ↪️, must be over 3m to tilt.</p>
+		<p>4. Align helper with target.</p>
+		<p>5. Ensure balloon is high enough to clear obstacles; mountains, buildings, trees.</p>
+		<p>6. Reset position and rotation with 🏠 button</p>
+		<p>7. Hit Launch Button, must be over 3m to launch.</p>
+		<br>
+		<br>
+		<br>
+		<button class="buttonClose" id='close1' onclick="closeClicked()">Close ❌</button>
+
+	</div>
+
+	<div class="popUpClass" id="aboutID">
+		<h3>About</h3>
+		<p>Triskatopia created by Shauna Lynch.</p>
+		<br>
+		<p>September 2024 for js13k competition.</p>
+		<br>
+		<p>License details here;
+			<a href="https://www.lynchbyte.com/17_Trisk/license_Trisk.html" target="_blank" rel="noopener">
+				MIT and CC BY-SA 4.0 </a>
+		</p>
+		<br>
+		<p>For further information; <a href="https://www.lynchbyte.com/index.html" target="_blank" rel="noopener">
+				lynchbyte</a>
+		</p>
+		<br>
+		<br>
+		<br>
+		<button class="buttonClose" id='close2' onclick="closeClicked()">Close ❌</button>
+
+	</div>
+
+
+	<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+
+	<script type="importmap">
+	  {
+		"imports": {
+
+		  "three": "https://unpkg.com/three@0.167.0/build/three.module.js"
+		  
+		 
+		}
+	  }
+	</script>
+
+
+
+
+	<script type="module" src="js/script.js"></script>
+
+
+
+</body>
+
+</html>
