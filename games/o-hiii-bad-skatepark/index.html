@@ -1,0 +1,1411 @@
+﻿<!doctype html>
+<head>
+<title>O HIII BAD SKATEPARK</title>
+<link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%22-.1em%22 y=%22.9em%22 font-size=%2290%22>🛹</text></svg>">
+<style>
+@font-face{font-family: emoji; src: url(//xem.github.io/unicode13/Twemoji.ttf)}
+@font-face{font-family:i;src:local(impact),url(//xem.github.io/geoquiz2/i.ttf)}
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+html, body { overflow: hidden }
+body { background: #ccc; }
+canvas { background: radial-gradient(circle at 400px 0px, #fff 50%,#ddd 80%); display: block; margin: calc(50vh - 300px) auto; cursor: pointer; box-shadow: 5px 5px 50px #888; border-radius: 10px; }
+#buttons { position: absolute; top: -38px; left: -15px; width: 830px; text-align: center; margin: calc(50vh - 285px) calc(50vw - 400px); }
+button { background: #ddd; border: 2px solid #888; border-radius: 5px; font: bold 16px calibri; cursor: pointer; }
+.hidden { display: none!important }
+.active { background: #fff; }
+#buttons2 { position: absolute; top: 38px }
+#up, #left, #reset, #right, #down { background: transparent; border: none; font: 30px emoji; padding: 0; position: absolute; text-shadow: 0 0 2px #000; }
+#up { top: 480px; left: 735px }
+#left { top: 515px; left: 700px }
+#reset { top: 515px; left: 735px }
+#right { top: 515px; left: 770px }
+#down { top: 550px; left: 735px }
+#bghost { width: 100px }
+#challengepage { display: block; position: fixed; top: 50%; left: 50%; transform: translateX(-50%)translateY(-50%); cursor: pointer; box-shadow: 5px 5px 50px #888; border-radius: 10px; width: 720px; height: 430px; background: #fff; padding: 10px 20px 120px; font: 20px Calibri, Arial}
+#challengeok { display: block; position: fixed; bottom: 50%; left: 50%; transform: translateX(-50%)translateY(290px); cursor: pointer; box-shadow: 5px 5px 50px #888; border-radius: 10px; width: 730px; background: #fff; padding: 10px; font: 20px Calibri, Arial}
+#challengepage h3 { margin: 10px 0 20px }
+#challengepage button { top: 20px; right: 20px; position: absolute; }
+#challengepage p { margin: 15px 20px 10px; letter-spacing: -.5px; }
+#challengepage input { width: 20px; height: 20px; vertical-align: middle; pointer-events: none; }
+#timer { display: inline-block; width: 90px; font: bold 20px Calibri, Arial; height: 19px; overflow: visible; }
+h1 { margin: 0 }
+h3 { margin-top: 10px }
+</style>
+</head>
+<body>
+<canvas id=c width=800 height=600></canvas>
+<br>
+<div id=buttons class=hidden>
+<button id=add_line class=active>DRAW LINE</button>
+<button id=add_ball>DRAW BALL</button>
+<button id=del_line>ERASE</button>
+<button id=play>PLAY</button>
+<button id=share>SHARE</button>
+<button id=load>LOAD</button>
+<button id=clear>CLEAR</button>
+<button id=challenges>CHALLENGES</button>
+<button id=bghost>GHOST ON</button>
+<button id=editor class=hidden>RETURN TO EDITOR</button>
+<button id=bmusic class=hidden>MUSIC ON</button>
+<span id=timer>0 items</span>
+<div id=buttons2>
+<button id=up>⬆️</button>
+<button id=left>⬅️</button>
+<button id=reset>⏺</button>
+<button id=right>➡️</button>
+<button id=down>⬇️</button>
+</div>
+</div>
+
+<div id=challengepage class=hidden>
+  <h1><center>Triska deika challenges!</center></h1>
+  <h3><center>Do these stunts in less than <u>13 seconds</u> with a maximum of <u>13 items</u></center></h3>
+  <p><input type=checkbox id=ch5> Make the skater go lower than its skate
+  <p><input type=checkbox id=ch10> Make the skater touch 5 different balls
+  <p><input type=checkbox id=ch6> The skater must only touch balls and the skate must only touch lines
+  <br><p><input type=checkbox id=ch1> Separate the skater and the skate (at least 1 meter) then make them touch again
+  <p><input type=checkbox id=ch8> Make the skater touch 10 different balls
+  <p><input type=checkbox id=ch4> Make 5 full rotations with the skate 
+  <p><input type=checkbox id=ch7> The skater must only touch lines and the skate must only touch balls
+  <p><input type=checkbox id=ch3> Flip the skate upside-down then make the skater stand up on it
+  <p><input type=checkbox id=ch9> Make the skater touch 12 different balls
+  <p><input type=checkbox id=ch2> Get the skater higher than its starting point
+  <br><p><center><button onclick='challengepage.className="hidden";challengevisible=0'>CLOSE</button></center>
+</div>
+
+<div id=challengeok class=hidden>
+</div>
+<script>
+
+// Music
+musicon = 1;
+note = 0;
+A = new (self.AudioContext||self.webkitAudioContext),
+m = A.createBuffer(1,1e6,44100);
+track = [47,49,50,52,54,50,54,,53,49,53,,52,48,52,,47,49,50,52,54,50,54,59,57,54,50,54,57,,,42,44,46,47,49,46,49,,50,46,50,,49,46,49,,42,44,46,47,49,46,49,,50,46,50,,49,,,54,56,58,59,61,58,61,,62,58,62,,61,58,61,,54,56,58,59,61,58,61,,62,58,62,,61,,,47,49,50,52,54,50,54,,53,49,53,,52,48,52,,47,49,50,52,54,50,54,59,54,50,54,59,47,,];
+
+// Play a piano note
+piano = e => {
+  var V,v,p,c,b,w,r,D,i,s,u,D;
+  
+  for(
+  
+    // V: note length in seconds
+    V = 2,
+    
+    // Temp vars for guitar synthesis
+    v = [],
+    p = c = 0,
+    
+    // Modulation
+    // This function generates the i'th sample of a sinusoidal signal with a specific frequency and amplitude
+    b = (e,t,a,i) => Math.sin(e / t * 6.28 * a + i),
+    
+    // Instrument synthesis
+    w = (e,t) => Math.sin(e / 44100 * t * 6.28 + b(e,44100,t,0) ** 2 + .75 * b(e,44100,t,.25) + .1 * b(e,44100,t,.5)),
+    
+    // Sound samples
+    D = [],
+    
+    // Loop on all the samples
+    i = 0;
+    i < 44100 * V;
+    i++
+  ){
+  
+    // Fill the samples array
+    D[i] =
+    
+      // The first 88 samples represent the note's attack
+      i < 88 
+      ? i / 88.2 * w(i,e) / 19
+      
+      // The other samples represent the rest of the note
+      : (1 - (i - 88.2) / (44100 * (V - .002))) ** ((.5 * Math.log(1e4 * e / 44100)) ** 2) * w(i,e) / 9;
+  }
+  
+  // Play the note
+  
+  m.getChannelData(0).set(D),
+  s = A.createBufferSource(),
+  s.buffer = m,
+  s.connect(A.destination),
+  s.start()
+}
+
+
+play_note = n => {
+  if(musicon && n > 32) piano(440*1.06**(n - 80));
+}
+
+play_next_note = () => {
+  if(track[note]){
+    play_note(track[note]);
+    time = new Date();
+  }
+  //console.log(note, songs[song][note]);
+  note++;
+  note %= (track.length + 1);
+}
+
+// MINI 2D PHYSICS
+// ===============
+
+// 2D vector tools
+var Vec2 = (x,y) => ({x,y});
+var length = v => dot(v,v)**.5;
+var add = (v,w) => Vec2(v.x + w.x, v.y + w.y);
+var substract = (v,w) => add(v, scale(w, -1));
+var scale = (v,n) => Vec2(v.x * n, v.y * n);
+var dot = (v,w) => v.x * w.x + v.y * w.y;
+var cross = (v,w) => v.x * w.y - v.y * w.x;
+var rotate = (v, center, angle, x = v.x - center.x, y = v.y - center.y) => Vec2(x * Math.cos(angle) - y * Math.sin(angle) + center.x, x * Math.sin(angle) + y * Math.cos(angle) + center.y);
+var normalize = v => scale(v, 1 / (length(v) || 1));
+var distance = (v,w) => length(substract(v,w));
+
+// Gravity
+var mGravity = Vec2(0, 100);
+
+// All shapes
+var objects = [];
+
+// Collision info 
+var collisionInfo = {}; // final collision between two shapes
+var collisionInfoR1 = {}; // temp collision: rect 1 vs rect 2
+var collisionInfoR2 = {}; // temp collision: rect 2 vs rect 1
+
+// Collision info setter
+var setInfo = (collision, D, N, S) => {
+  collision.D = D; // depth
+  collision.N = N; // normal
+  collision.S = S; // start
+  collision.E = add(S, scale(N, D)); // end
+};
+
+// New shape
+var RigidShape = (C, mass, F, R, T, B, W, H, shape) => {
+  shape = {
+    T, // 0 circle / 1 rectangle
+    C, // center
+    F, // friction
+    R, // restitution (bouncing)
+    M: mass ? 1 / mass : 0, // inverseMass (0 if immobile)
+    V: Vec2(0, 0), // velocity (speed)
+    A: mass ? mGravity : Vec2(0, 0), // acceleration
+    G: 0, // angle
+    v: 0, // angle velocity
+    a: 0, // angle acceleration
+    B, // (bounds) radius
+    W, // width
+    H, // height
+    I: T // inertia
+      ? (Math.hypot(W, H) / 2, mass > 0 ? 1 / (mass * (W ** 2 + H ** 2) / 12) : 0) // rectangle
+      : (mass > 0 ? (mass * B ** 2) / 12 : 0), // circle
+    N: [], // face normals array (rectangles)
+    X: [ // Vertex: 0: TopLeft, 1: TopRight, 2: BottomRight, 3: BottomLeft (rectangles)
+      Vec2(C.x - W / 2, C.y - H / 2),
+      Vec2(C.x + W / 2, C.y - H / 2),
+      Vec2(C.x + W / 2, C.y + H / 2),
+      Vec2(C.x - W / 2, C.y + H / 2)
+    ]
+  };
+  
+  // Prepare rectangle
+  if(T /* == 1 */){
+    computeRectNormals(shape);
+  }
+  objects.push(shape);
+  return shape;
+};
+
+// Move a shape along a vector
+var moveShape = (shape, v, i) => {
+
+  // Center
+  shape.C = add(shape.C, v);
+  
+  // Rectangle (move vertex)
+  if(shape.T){
+    for(i = 4; i--;){
+      shape.X[i] = add(shape.X[i], v);
+    }
+  }
+}
+
+// Rotate a shape around its center
+var rotateShape = (shape, angle, i) => {
+
+  // Update angle
+  shape.G += angle;
+  
+  // Rectangle (rotate vertex)
+  if(shape.T){
+    for(i = 4; i--;){
+      shape.X[i] = rotate(shape.X[i], shape.C, angle);
+    }
+    computeRectNormals(shape);
+  }
+}
+
+// Test if two shapes have intersecting bounding circles
+var boundTest = (s1, s2) => length(substract(s2.C, s1.C)) <= s1.B + s2.B;
+
+// Compute face normals (for rectangles)
+var computeRectNormals = (shape, i) => {
+  
+  // N: normal of each face toward outside of rectangle
+  // 0: Top, 1: Right, 2: Bottom, 3: Left
+  for(i = 4; i--;){
+    shape.N[i] = normalize(substract(shape.X[(i+1) % 4], shape.X[(i+2) % 4]));
+  }
+}
+
+// Find the axis of least penetration between two rects
+var findAxisLeastPenetration = (rect, otherRect, collisionInfo) => {
+  var
+  n,
+  i,
+  j,
+  supportPoint,
+  bestDistance = 1e9,
+  bestIndex = -1,
+  hasSupport = 1,
+  tmpSupportPoint,
+  tmpSupportPointDist;
+
+  for(i = 4; hasSupport && i--;){
+    
+    // Retrieve a face normal from A
+    n = rect.N[i];
+
+    // use -n as direction and the vertex on edge i as point on edge
+    var
+    dir = scale(n, -1),
+    ptOnEdge = rect.X[i],
+    
+    // find the support on B
+    vToEdge,
+    projection;
+    tmpSupportPointDist = -1e9;
+    tmpSupportPoint = -1;
+    
+    // check each vector of other object
+    for(j = 4; j--;){
+      vToEdge = substract(otherRect.X[j], ptOnEdge);
+      projection = dot(vToEdge, dir);
+      
+      // find the longest distance with certain edge
+      // dir is -n direction, so the distance should be positive     
+      if(projection > 0 && projection > tmpSupportPointDist){
+        tmpSupportPoint = otherRect.X[j];
+        tmpSupportPointDist = projection;
+      }
+    }
+    hasSupport = (tmpSupportPoint !== -1);
+    
+    // get the shortest support point depth
+    if(hasSupport && tmpSupportPointDist < bestDistance){
+      bestDistance = tmpSupportPointDist;
+      bestIndex = i;
+      supportPoint = tmpSupportPoint;
+    }
+  }
+  
+  if(hasSupport){
+    
+    // all four directions have support point
+    setInfo(collisionInfo, bestDistance, rect.N[bestIndex], add(supportPoint, scale(rect.N[bestIndex], bestDistance)));
+  }
+  
+  return hasSupport;
+};
+
+// Test collision between two shapes
+var testCollision = (c1, c2, info) => {
+  
+  // Circle vs circle
+  if(!c1.T && !c2.T){
+    var
+    vFrom1to2 = substract(c2.C, c1.C),
+    rSum = c1.B + c2.B,
+    dist = length(vFrom1to2);
+    
+    if(dist <= Math.sqrt(rSum * rSum)){
+    
+    //if(dist){
+      
+      // overlapping but not same position
+      var
+      normalFrom2to1 = normalize(scale(vFrom1to2, -1)),
+      radiusC2 = scale(normalFrom2to1, c2.B);
+      setInfo(collisionInfo, rSum - dist, normalize(vFrom1to2), add(c2.C, radiusC2));
+    //}
+    
+    /*
+    // same position
+    else {
+      
+      if(c1.B > c2.B){
+        setInfo(collisionInfo, rSum, Vec2(0, -1), add(c1.C, Vec2(0, c1.B)));
+      }
+      
+      else {
+        setInfo(collisionInfo, rSum, Vec2(0, -1), add(c2.C, Vec2(0, c2.B)));
+      }
+    }
+    */
+    }
+    
+    return 1;
+  }
+  
+  // Rect vs Rect
+  if(c1.T /*== 1*/ && c2.T /*== 1*/){
+    var
+    status1 = 0,
+    status2 = 0;
+
+    // find Axis of Separation for both rectangles
+    status1 = findAxisLeastPenetration(c1, c2, collisionInfoR1);
+    if(status1){
+      status2 = findAxisLeastPenetration(c2, c1, collisionInfoR2);
+      if(status2){
+        
+        // if both of rectangles are overlapping, choose the shorter normal as the normal     
+        if(collisionInfoR1.D < collisionInfoR2.D){
+          setInfo(collisionInfo, collisionInfoR1.D, collisionInfoR1.N, substract(collisionInfoR1.S, scale(collisionInfoR1.N, collisionInfoR1.D)));
+        }
+        
+        else {
+          setInfo(collisionInfo, collisionInfoR2.D, scale(collisionInfoR2.N, -1), collisionInfoR2.S);
+        }
+      }
+    }
+    return status1 && status2;
+  }
+  
+  // Rectangle vs Circle
+  // (c1 is the rectangle and c2 is the circle, invert the two if needed)
+  if(!c1.T && c2.T /*== 1*/){
+    [c1, c2] = [c2, c1];
+  }
+  
+  if(c1.T /*== 1*/ && !c2.T){
+    var
+    inside = 1,
+    bestDistance = -1e9,
+    nearestEdge = 0,
+    i, v,
+    circ2Pos, projection;
+    for(i = 4; i--;){
+    
+      // find the nearest face for center of circle    
+      circ2Pos = c2.C;
+      v = substract(circ2Pos, c1.X[i]);
+      projection = dot(v, c1.N[i]);
+      if(projection > 0){
+      
+        // if the center of circle is outside of c1angle
+        bestDistance = projection;
+        nearestEdge = i;
+        inside = 0;
+        break;
+      }
+      
+      if(projection > bestDistance){
+        bestDistance = projection;
+        nearestEdge = i;
+      }
+    }
+    var dis, normal;
+    
+    if(inside){
+    
+      // the center of circle is inside of c1angle
+      setInfo(collisionInfo, c2.B - bestDistance, c1.N[nearestEdge], substract(circ2Pos, scale(c1.N[nearestEdge], c2.B)));
+    }
+    else {
+      
+      // the center of circle is outside of c1angle
+      // v1 is from left vertex of face to center of circle 
+      // v2 is from left vertex of face to right vertex of face
+      var
+      v1 = substract(circ2Pos, c1.X[nearestEdge]),
+      v2 = substract(c1.X[(nearestEdge + 1) % 4], c1.X[nearestEdge]),
+      dotp = dot(v1, v2);
+      if(dotp < 0){
+        
+        // the center of circle is in corner region of X[nearestEdge]
+        dis = length(v1);
+        
+        // compare the distance with radium to decide collision
+        if(dis > c2.B){
+          return;
+        }
+        normal = normalize(v1);
+        setInfo(collisionInfo, c2.B - dis, normal, add(circ2Pos, scale(normal, -c2.B)));
+      }
+      else {
+        
+        // the center of circle is in corner region of X[nearestEdge+1]
+        // v1 is from right vertex of face to center of circle 
+        // v2 is from right vertex of face to left vertex of face
+        v1 = substract(circ2Pos, c1.X[(nearestEdge + 1) % 4]);
+        v2 = scale(v2, -1);
+        dotp = dot(v1, v2); 
+        if(dotp < 0){
+          dis = length(v1);
+          
+          // compare the distance with radium to decide collision
+          if(dis > c2.B){
+            return;
+          }
+          normal = normalize(v1);
+          setInfo(collisionInfo, c2.B - dis, normal, add(circ2Pos, scale(normal, -c2.B)));
+        }
+        
+        else {
+          
+          // the center of circle is in face region of face[nearestEdge]
+          if(bestDistance < c2.B){
+            setInfo(collisionInfo, c2.B - bestDistance, c1.N[nearestEdge], substract(circ2Pos, scale(c1.N[nearestEdge], c2.B)));
+          }
+          
+          else {
+            return;
+          }
+        }
+      }
+    }
+    return 1;
+  }
+};
+
+var resolveCollision = (s1, s2, collisionInfo, skate) => {
+
+  //if(collisionInfo.cs) console.log(collisionInfo.cs)
+  if(!s1.M && !s2.M){
+    return;
+  }
+
+  // correct positions
+  var
+  num = collisionInfo.D / (s1.M + s2.M) * .8, // .8 = poscorrectionrate = percentage of separation to project objects
+  correctionAmount = scale(collisionInfo.N, num),
+  n = collisionInfo.N;
+  moveShape(s1, scale(correctionAmount, -s1.M));
+  moveShape(s2, scale(correctionAmount, s2.M));
+
+  // the direction of collisionInfo is always from s1 to s2
+  // but the Mass is inversed, so start scale with s2 and end scale with s1
+  var
+  start = scale(collisionInfo.S, s2.M / (s1.M + s2.M)),
+  end = scale(collisionInfo.E, s1.M / (s1.M + s2.M)),
+  p = add(start, end),
+  // r is vector from center of object to collision point
+  r1 = substract(p, s1.C),
+  r2 = substract(p, s2.C),
+
+  // newV = V + v cross R
+  v1 = add(s1.V, Vec2(-1 * s1.v * r1.y, s1.v * r1.x)),
+  v2 = add(s2.V, Vec2(-1 * s2.v * r2.y, s2.v * r2.x)),
+  relativeVelocity = substract(v2, v1),
+
+  // Relative velocity in normal direction
+  rVelocityInNormal = dot(relativeVelocity, n);
+
+  // if objects moving apart ignore
+  if(rVelocityInNormal > 0){
+    //if(skate){
+      
+    //}
+    //else {
+      return;
+    //}
+  }
+
+  // compute and apply response impulses for each object  
+  var
+  newRestituion = Math.min(s1.R, s2.R),
+  newFriction = Math.min(s1.F, s2.F),
+
+  // R cross N
+  R1crossN = cross(r1, n),
+  R2crossN = cross(r2, n),
+
+  // Calc impulse scalar
+  // the formula of jN can be found in http://www.myphysicslab.com/collision.html
+  jN = (-(1 + newRestituion) * rVelocityInNormal) / (s1.M + s2.M + R1crossN * R1crossN * s1.I + R2crossN * R2crossN * s2.I),
+
+  // impulse is in direction of normal (from s1 to s2)
+  impulse = scale(n, jN);
+  
+  // impulse = F dt = m * ?v
+  // ?v = impulse / m
+  s1.V = substract(s1.V, scale(impulse, s1.M));
+  s2.V = add(s2.V, scale(impulse, s2.M));
+  s1.v -= R1crossN * jN * s1.I;
+  s2.v += R2crossN * jN * s2.I;
+  var
+  tangent = scale(normalize(substract(relativeVelocity, scale(n, dot(relativeVelocity, n)))), -1),
+  R1crossT = cross(r1, tangent),
+  R2crossT = cross(r2, tangent),
+  jT = (-(1 + newRestituion) * dot(relativeVelocity, tangent) * newFriction) / (s1.M + s2.M + R1crossT * R1crossT * s1.I + R2crossT * R2crossT * s2.I);
+
+  // friction should less than force in normal direction
+  if(jT > jN){
+    jT = jN;
+  }
+
+  // impulse is from s1 to s2 (in opposite direction of velocity)
+  if(!skate){
+  impulse = scale(tangent, jT);
+  s1.V = substract(s1.V, scale(impulse, s1.M));
+  s2.V = add(s2.V, scale(impulse,s2.M));
+  s1.v -= R1crossT * jT * s1.I;
+  s2.v += R2crossT * jT * s2.I;
+  }
+  else{
+  impulse = scale(tangent, jT*5);
+  s1.V = substract(s1.V, scale(impulse, s1.M));
+  s2.V = add(s2.V, scale(impulse,s2.M));
+  s1.v -= R1crossT * jT * s1.I;
+  s2.v += R2crossT * jT * s2.I;
+  }
+};
+
+// New circle
+var Circle = (center, radius, mass, friction, restitution) => RigidShape(center, mass, friction, restitution, 0, radius);
+
+// New rectangle
+var Rectangle = (center, width, height, mass, friction, restitution) => RigidShape(center, mass, friction, restitution, 1, Math.hypot(width, height)/2, width, height);
+
+// Helpers
+lerp = (start, end, amt) => {
+  if(amt > 1) amt = 1;
+  return (1-amt)*start+amt*end
+}
+
+easeInOutQuad = (x) => {
+  if(x > 1) x = 1;
+  return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
+
+// Globals
+state = 0; // 0: title, 1: editor, 2: play
+action = "add" // or move or delete
+mousedown = 0;
+line = [0,0,0,0];
+lines = [];
+x = c.getContext("2d");
+x.fillStyle = "#000";
+offsets1 = [20,60,110,140,187,240,290,320,370,410,460,510,555,605,655,705,735];
+offset = 10;
+title=["T","R","I","S","K","A","I","D","E","K","A","P","H","O","B","I","A"]
+offsets2 = [515,682,130,380,425,475,155,315,555,730,270,590,80,20,220,180,635];
+amt = 0;
+letter = -4;
+X = 0,
+Y = 200;
+amt2 = -450;
+mousex = 0;
+mousey = 0;
+editordx = 0;
+editordy = 0;
+playerdx = 0;
+playerdy = 0;
+editorpressed = null; 
+erasetarget = -1;
+ghost = [];
+frame = 0;
+ghostvisible = 1;
+challengevisible = 0;
+rcx = null;
+rcy = null;
+challenge1 = localStorage.hiii_1 || 0;
+if(challenge1) ch1.setAttribute("checked", "true");
+challenge2 = localStorage.hiii_2 || 0;
+if(challenge2) ch2.setAttribute("checked", "true");
+challenge3 = localStorage.hiii_3 || 0;
+if(challenge3) ch3.setAttribute("checked", "true");
+challenge4turns = 0;
+challenge4 = localStorage.hiii_4 || 0;
+if(challenge4) ch4.setAttribute("checked", "true");
+challenge5 = localStorage.hiii_5 || 0;
+if(challenge5) ch5.setAttribute("checked", "true");
+challenge6 = localStorage.hiii_6 || 0;
+if(challenge6) ch6.setAttribute("checked", "true");
+challenge6fail = 0;
+challenge7 = localStorage.hiii_7 || 0;
+if(challenge7) ch7.setAttribute("checked", "true");
+challenge8 = localStorage.hiii_8 || 0;
+if(challenge8) ch8.setAttribute("checked", "true");
+challenge9 = localStorage.hiii_9 || 0;
+if(challenge9) ch9.setAttribute("checked", "true");
+challenge10 = localStorage.hiii_10 || 0;
+if(challenge10) ch10.setAttribute("checked", "true");
+challenge7fail = 0;
+skatertouchedaball = 0;
+skatertouchedaline = 0;
+skatetouchedaball = 0;
+skatetouchedaline = 0;
+ballstouched = [];
+delay = 0;
+
+onload = () => {
+
+  //setTimeout(()=> {
+  
+// Render / Game loop
+I = setInterval(()=>{
+  delay+=16;
+  c.width ^= 0;
+  x.save();
+  
+  // Title
+  if(state == 0){
+    for(i in title){
+      x.font = "90px i, impact, calibri, arial";
+      x.fillStyle = "#000";
+      if(i == letter){
+        x.fillText(title[i], X=lerp(offsets1[i],offsets2[i],easeInOutQuad(amt)), Y=lerp(150,250,easeInOutQuad(amt)));
+      }
+      else if(i < letter){
+        x.fillText(title[i], X=offsets2[i], Y=250);
+      }
+      else if(i > letter){
+        x.fillText(title[i], X=offsets1[i], Y=150);
+      }
+      if(title[i] == "I") {
+        x.fillStyle = "#fff";
+        x.fillRect(X, Y - 60, 25, 5);
+      }
+    }
+    if(amt >= 1){
+      amt = 0;
+      letter ++;
+      y = 0;
+    }
+    if(delay > 500) amt += .1;
+    if(delay > 500) amt2 += 4;
+    x.font = "50px i, impact, calibri, arial";
+    x.fillText("PLAY",350,530);
+
+    if(amt2 < 1000){
+      x.fillRect(0,155,amt2+250,5);
+      x.font = "120px emoji";
+      x.fillText("✏️",amt2+135,145);
+      x.fillText("🕺️",amt2-30,110);
+      x.font = "100px emoji";
+      x.translate(amt2-40,130);
+      x.rotate(.5);
+      x.fillText("🛹",0,0);
+      
+    }
+    else {
+      x.fillRect(0,155,amt2+70,5);
+      x.fillRect(2200-amt2-320,465,1200,5);
+      x.translate(2200-amt2-40,440);
+      x.scale(-1,1);
+      x.font = "150px emoji";
+      x.fillText("✏",140,10);
+      x.fillText("🕺",10,-20);
+      x.rotate(.5);
+      x.font = "120px emoji";
+      x.fillText("🛹",0,-5);
+      amt2+=2;
+    }
+  
+    if(amt2>2100 && !navigator.userAgent.includes("Firefox")){
+      x.restore();
+      for(i = 0; i < 90; i++){
+        x.globalAlpha = ((100-(2200-amt2))/100/9/((100-i)/15));
+        x.drawImage(c, 0, 160+i, 1000, 1, (-90+i)*2, 340-i, 1000+(90-i)*5, 1); 
+        x.drawImage(c, 0, 470+i, 1000, 1, (-90+i)*2+40, 590-i, 1000+(70-i)*5, 1); 
+      }
+    }
+    if(amt2>2200){
+      amt2 = 2200;
+      //clearInterval(I);
+    }
+  }
+  
+  // Editor
+  else if(state == 1){
+  
+    x.lineWidth = 8;
+    erasetarget = -1;
+    
+    // All lines / balls
+    for(i = 0; i < lines.length; i++){
+      x.fillStyle = "#000";
+      if(lines[i].length == 4){
+        x.save();
+        x.beginPath();
+        x.translate((lines[i][0] + lines[i][2]) / 2+editordx, (lines[i][1] + lines[i][3]) / 2+editordy);
+        x.rotate(Math.atan2(lines[i][3]-lines[i][1], lines[i][2]-lines[i][0]));
+        x.rect(-distance(Vec2(lines[i][0],lines[i][1]), Vec2(lines[i][2],lines[i][3]))/2, -4, distance(Vec2(lines[i][0],lines[i][1]), Vec2(lines[i][2],lines[i][3])), 8);
+        if(x.isPointInPath(mousex, mousey) && action == "erase"){
+          x.fillStyle = "#F00";
+          erasetarget = i;
+        }
+        if(x.isPointInPath(rcx, rcy)){
+          x.fillStyle = "#F00";
+          erasetarget = i;
+          lines.splice(erasetarget, 1);
+          timer.innerHTML = "0 items";
+          if(lines.length > 0) timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+          i--;
+          rcx = null;
+          rcy = null;
+        }
+        x.fill()
+        x.closePath();
+        x.restore();
+      }
+      else if(lines[i].length == 3){
+        x.beginPath();
+        if(lines[i][2] > 0) x.arc(lines[i][0]+editordx, lines[i][1]+editordy, lines[i][2], 0, 7);
+        if(x.isPointInPath(mousex, mousey) && action == "erase"){
+          x.fillStyle = "#F00";
+          erasetarget = i;
+        }
+        if(x.isPointInPath(rcx, rcy)){
+          x.fillStyle = "#F00";
+          erasetarget = i;
+          lines.splice(erasetarget, 1);
+          timer.innerHTML = "0 items";
+          if(lines.length > 0) timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+          i--;
+          rcx = null;
+          rcy = null;
+        }
+        x.fill();
+        x.closePath();
+      }
+    }
+    
+    // Current line/ball
+    if(line[2]){
+      if(line.length == 4){
+        x.beginPath();
+        x.strokeStyle = "#000";
+        x.moveTo(line[0]+editordx, line[1]+editordy);
+        x.lineTo(line[2]+editordx, line[3]+editordy);
+        x.stroke();
+        x.closePath();
+      }
+      
+      else if(line.length == 3){
+        x.beginPath();
+        x.fillStyle = "#000";
+        if(line[2] > 0) x.arc(line[0]+editordx, line[1]+editordy, line[2], 0, 7);
+        x.fill();
+        x.closePath();
+      }
+    }
+    
+    
+    // man
+    x.beginPath();
+    x.font = "40px emoji";
+    x.fillText("🕺",400-20+editordx,300-8+editordy);
+    x.fillStyle = "#a01";
+    x.fillRect(400-25+editordx, 300-5+editordy, 50, 5);
+    x.fillStyle = "#38c";
+    x.arc(400-15+editordx,300+3+editordy,5,0,7);
+    x.arc(400+15+editordx,300+3+editordy,5,0,7);
+    x.fill();
+    x.closePath();
+    
+    // crayon
+    x.font = "40px emoji";
+    x.fillText("✏️",mousex-38,mousey-2);
+    
+    if(editorpressed == "up"){ editordy+=3; }
+    else if(editorpressed == "left"){ editordx+=3; }
+    else if(editorpressed == "reset"){ editordx = editordy = 0; }
+    else if(editorpressed == "right"){ editordx-=3; }
+    else if(editorpressed == "down"){ editordy-=3; }
+    
+    if(keys.u){ editordy += 6 }
+    else if(keys.l){ editordx += 6 }
+    else if(keys.r){ editordx -= 6 }
+    else if(keys.d){ editordy -= 6 }
+    
+    // Ghost
+    if(ghostvisible){
+      for(i of ghost){
+        x.save();
+        x.translate(editordx+i[0].x+0,editordy+i[0].y+0);
+        x.rotate(i[1]);
+        x.globalAlpha = .1;
+        x.beginPath();
+        x.font = "40px emoji";
+        x.fillText("🕺",-23,13);
+        x.closePath();
+        x.restore();
+        
+        
+        x.save();
+        x.translate(editordx+i[2].x,editordy+i[2].y);
+        x.rotate(i[3]);
+        x.globalAlpha = .1;
+        x.beginPath();
+        x.fillStyle = "#a01";
+        x.fillRect(-25, 0, 50, -6);
+        x.fillStyle = "#38c";
+        x.arc(-15,0,5,0,7);
+        x.arc(15,0,5,0,7);
+        x.fill();
+        x.closePath();
+        x.restore();
+      }
+    }
+  }
+
+  // Play
+  else if(state == 2){
+  
+    frame++;
+    
+    // Compute collisions
+    for(k = 9; k--;){
+      for(i = objects.length; i--;){
+        for(j = objects.length; j-- > i;){
+        
+        
+          
+          // Test bounds
+          if(boundTest(objects[i], objects[j])){
+            
+            // Test collision
+            if(testCollision(objects[i], objects[j], collisionInfo)){
+              
+              
+              // Make sure the normal is always from object[i] to object[j]
+              if(dot(collisionInfo.N, substract(objects[j].C, objects[i].C)) < 0){
+                collisionInfo = {
+                  D: collisionInfo.D,
+                  N: scale(collisionInfo.N, -1),
+                  S: collisionInfo.E,
+                  E: collisionInfo.S,
+                };
+              }
+              
+              // Resolve collision
+              resolveCollision(objects[i], objects[j], collisionInfo,i==0&&j==1);
+              
+              // Skater touched a ball
+              if(i == 1 && j > 1 && objects[j].T == 0){
+                //console.log("skater ball");
+                skatertouchedaball = 1;
+                if(!ballstouched.includes(j)){
+                  ballstouched.push(j);
+                  //console.log(ballstouched);
+                }
+              }
+              
+              // Skater touched a line
+              if(!skatertouchedaline && i == 1 && j > 1 && objects[j].T == 1){
+                //console.log("skater line");
+                skatertouchedaline = 1;
+              }
+              
+              // Skate touched a ball
+              if(!skatetouchedaball && i == 0 && j > 1 && objects[j].T == 0){
+                //console.log("skate ball");
+                skatetouchedaball = 1;
+              }
+              
+              // Skate touched a line
+              if(!skatetouchedaline && i == 0 && j > 1 && objects[j].T == 1){
+                //console.log("skate line");
+                skatetouchedaline = 1;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    playerdx = objects[1].C.x;
+    playerdy = objects[1].C.y;
+    
+    //console.log(playerdx, playerdy);
+  
+    // Draw / Update scene
+    for(i = objects.length; i--;){
+      
+      // Draw
+      // ----
+      
+      x.save();
+      x.translate(objects[i].C.x+400-playerdx, objects[i].C.y+300-playerdy);
+      x.rotate(objects[i].G);
+      
+      // Circle
+      if(!objects[i].T){
+        if(ballstouched.includes(i)){
+          x.fillStyle = "#00F";
+        }
+        else {
+          x.fillStyle = "#000";
+        }
+        x.beginPath();
+        x.arc(0, 0, objects[i].B, 0, 7);
+        x.lineTo(0, 0);
+        x.closePath();
+        x.fill();
+      }
+      
+  
+      // Rectangle
+      else { //if(objects[i].T == 1)
+        x.beginPath();
+        x.fillStyle = "#000";
+        if(i > 1){
+          x.fillRect(-objects[i].W / 2, -objects[i].H / 2, objects[i].W, objects[i].H);
+        }
+        else if(i == 1){
+          //x.strokeRect(-objects[i].W / 2, -objects[i].H / 2, objects[i].W, objects[i].H);
+          x.font = "40px emoji";
+          x.fillText("🕺",-20,18);
+        }
+        else {
+          x.fillStyle = "#a01";
+          x.fillRect(-objects[i].W / 2, -objects[i].H / 2, objects[i].W, objects[i].H/2);
+          x.fillStyle = "#38c";
+          x.arc(-15,3,5,0,7);
+          x.arc(15,3,5,0,7);
+          x.fill();
+        }
+        x.closePath();
+      }
+      
+      x.restore();
+      
+      // Update position/rotation
+      objects[i].V = add(objects[i].V, scale(objects[i].A, 1/60));
+      moveShape(objects[i], scale(objects[i].V, 1/60));
+      objects[i].v += objects[i].a * 1/60;
+      rotateShape(objects[i], objects[i].v * 1/60);
+      
+
+    }
+    
+    if(frame % 60 == 0){
+      ghost.push([objects[1].C, objects[1].G, objects[0].C, objects[0].G]);
+      //console.log(objects[0].C, objects[0].G, objects[1].C, objects[1].G);
+      
+      
+      //console.log(objects[1].C.y < objects[0].C.y)
+    }
+    
+    // Skate: Count turns, keep angle between 0 and 2 Pi
+    if(objects[0].G > 2 * Math.PI){ objects[0].G -= 2*Math.PI; challenge4turns-- }
+    if(objects[0].G < 0){ objects[0].G += 2*Math.PI; challenge4turns++ }
+    
+    // Skater: keep angle between 0 and 2 Pi
+    if(objects[1].G > 2 * Math.PI){ objects[1].G -= 2*Math.PI;}
+    if(objects[1].G < 0){ objects[1].G += 2*Math.PI;}
+    
+    
+    // Challenge 1
+    
+    if(challenge1 == 0 && objects.length <= 15 && frame < 13*60 && distance(Vec2(objects[0].C.x, objects[0].C.y), Vec2(objects[1].C.x, objects[1].C.y)) > 60){
+      challenge1 = 0.5;
+      //console.log(.5);
+    }
+    if(challenge1 == 0.5 && objects.length <= 15 && frame < 13*60 && distance(Vec2(objects[0].C.x, objects[0].C.y), Vec2(objects[1].C.x, objects[1].C.y)) < 30){
+      challenge1 = 1;
+      localStorage.hiii_1 = 1;
+      ch1.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: separate the skater and the skate, then make them touch again</b>";
+      //console.log(1);
+    }
+    
+    // Challenge 2 
+    
+    if(challenge2 == 0 && objects.length <= 15 && frame < 13*60 && objects[1].C.y < 270){
+      challenge2 = 1;
+      localStorage.hiii_2 = 1;
+      ch2.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: get the skater higher than its starting point</b>";
+    }
+    
+    // Challenge 3
+    
+    if(challenge3 == 0 && objects.length <= 15 && frame < 13*60 && objects[0].G > 2.7 && objects[0].G < 3.5 && (objects[1].G > 5.5 || objects[1].G < .5) && distance(Vec2(objects[0].C.x, objects[0].C.y), Vec2(objects[1].C.x, objects[1].C.y)) < 35 && objects[1].C.y < objects[0].C.y){
+      challenge3 = 1;
+      localStorage.hiii_3 = 1;
+      ch3.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: flip the skate upside-down then make the skater stand up on it</b>";
+      //console.log(3);
+    }
+    
+    // Challenge 4
+    
+    if(challenge4 == 0 && objects.length <= 15 && frame < 13*60 && (challenge4turns >= 5 || challenge4turns <= -5)){
+      challenge4 = 1;
+      localStorage.hiii_4 = 1;
+      ch4.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: make 5 full rotations with the skate</b>";
+      //console.log(1);
+    }
+    
+    // Challenge 5
+    
+    if(challenge5 == 0 && objects.length <= 15 && frame < 13*60 && objects[1].C.y > objects[0].C.y){
+      challenge5 = 1;
+      localStorage.hiii_5 = 1;
+      ch5.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: make the skater go lower than its skate</b>";
+    }
+    
+    // Challenge 6
+    
+    if(challenge6 == 0 && objects.length <= 15 && frame == 13*60 && skatertouchedaball == 1 && skatertouchedaline == 0 && skatetouchedaball == 0 && skatetouchedaline == 1){
+      challenge6 = 1;
+      localStorage.hiii_6 = 1;
+      ch6.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: the skater must only touch balls and the skate must only touch lines</b>";
+    }
+    
+    // Challenge 7
+    
+    if(challenge7 == 0 && objects.length <= 15 && frame == 13*60 && skatertouchedaball == 0 && skatertouchedaline == 1 && skatetouchedaball == 1 && skatetouchedaline == 0){
+      challenge7 = 1;
+      localStorage.hiii_7 = 1;
+      ch7.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: the skater must only touch lines and the skate must only touch balls</b>";
+    }
+    
+    // Challenge 8
+    
+    if(challenge8 == 0 && objects.length <= 15 && frame < 13*60 && ballstouched.length >= 10){
+      challenge8 = 1;
+      localStorage.hiii_8 = 1;
+      ch8.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: make the skater touch 10 different balls</b>";
+    }
+    
+    // Challenge 9
+    
+    if(challenge9 == 0 && objects.length <= 15 && frame < 13*60 && ballstouched.length >= 12){
+      challenge9 = 1;
+      localStorage.hiii_9 = 1;
+      ch9.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: make the skater touch 12 different balls</b>";
+    }
+    
+    // Challenge 10
+    
+    if(challenge10 == 0 && objects.length <= 15 && frame < 13*60 && ballstouched.length >= 5){
+      challenge10 = 1;
+      localStorage.hiii_10 = 1;
+      ch10.setAttribute("checked", "true");
+      challengeok.className = "";
+      challengeok.innerHTML += "<div><b>Challenge cleared: make the skater touch 5 different balls</b>";
+    }
+    
+    
+    timer.innerHTML = (frame/60).toFixed(2);
+    //console.log(objects[1].G)
+  }
+}, 16)
+
+  //},1000);
+}
+
+
+// Click
+onclick = (e) => {
+  if(state == 0 && e.target.id == "c"){
+    state = 1;
+    buttons.classList.remove("hidden");
+    c.style.cursor = "none";
+    mousex = e.offsetX;
+    mousey = e.offsetY;
+  }
+  else {
+    if(action == "erase" && erasetarget > -1){
+      lines.splice(erasetarget, 1);
+      timer.innerHTML = "0 items";
+      if(lines.length > 0) timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+    }
+    
+    //console.log(e.target.id);
+    if(e.target.id == "add_line"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      action = "add";
+      add_line.classList.add("active");
+      add_ball.classList.remove("active");
+      del_line.classList.remove("active");
+      play.classList.remove("active");
+    }
+    if(e.target.id == "add_ball"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      action = "addball";
+      add_line.classList.remove("active");
+      add_ball.classList.add("active");
+      del_line.classList.remove("active");
+      play.classList.remove("active");
+    }
+    else if(e.target.id == "del_line"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      action = "erase";
+      add_line.classList.remove("active");
+      add_ball.classList.remove("active");
+      del_line.classList.add("active");
+      play.classList.remove("active");
+    }
+    else if(e.target.id == "play"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      if(challenge1 < 1) challenge1 = 0;
+      challenge4turns = 0;
+      skatertouchedaball = 0;
+      skatertouchedaline = 0;
+      skatetouchedaball = 0;
+      skatetouchedaline = 0;
+      ballstouched = [];
+      ghost = [];
+      c.style.cursor = "pointer";
+      musicint = setInterval(play_next_note,380);
+      note = 0;
+      buttons2.className = "hidden";
+      state = 2;
+      add_line.classList.add("hidden");
+      add_ball.classList.add("hidden");
+      del_line.classList.add("hidden");
+      play.classList.add("hidden");
+      share.classList.add("hidden");
+      load.classList.add("hidden");
+      editor.classList.remove("hidden");
+      bmusic.classList.remove("hidden");
+      //timer.classList.remove("hidden");
+      clear.classList.add("hidden");
+      bghost.classList.add("hidden");
+      challenges.classList.add("hidden");
+      objects = [];
+      Rectangle(Vec2(400, 300), 50, 10, 20, 1, 0); // skate
+      Rectangle(Vec2(400, 280), 25, 40, 10, 1, 0); // man
+      for(i of lines){
+        if(i.length == 4){
+          r = Rectangle(
+            Vec2((i[0] + i[2]) / 2, (i[1] + i[3]) / 2), // center
+            distance(Vec2(i[0],i[1]), Vec2(i[2],i[3])), // w
+            8, // h
+            0, // mass
+            0, // friction 
+            0  // restitution
+          );
+          rotateShape(r, Math.atan2(i[3]-i[1], i[2]-i[0])); // angle
+        }
+        else if(i.length == 3){
+          r = Circle(
+            Vec2(i[0], i[1]), // center
+            i[2], // r
+            i[2], // mass
+            0, // friction 
+            0  // restitution
+          );
+          rotateShape(r, Math.atan2(i[3]-i[1], i[2]-i[0])); // angle
+        }
+      }
+      //console.log(objects[0].C, objects[0].G, objects[1].C, objects[1].G)
+    }
+    else if(e.target.id == "editor"){
+      timer.innerHTML = "";
+      if(lines.length > 0) timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+      frame = 0;
+      c.style.cursor = "none";
+      bghost.classList.remove("hidden");
+      challengeok.classList.add("hidden");
+      challengeok.innerHTML = "";
+      clearInterval(musicint)
+      //action = "editor";
+      state = 1;
+      buttons2.className = "";
+      add_line.classList.remove("hidden");
+      add_ball.classList.remove("hidden");
+      del_line.classList.remove("hidden");
+      play.classList.remove("hidden");
+      share.classList.remove("hidden");
+      load.classList.remove("hidden");
+      editor.classList.add("hidden");
+      bmusic.classList.add("hidden");
+      //timer.classList.add("hidden");
+      clear.classList.remove("hidden");
+      challenges.classList.remove("hidden");
+    }
+    else if(e.target.id == "share"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      prompt("Here's your creation",JSON.stringify(lines));
+    }
+    else if(e.target.id == "clear"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      if(confirm("Are you sure?")) { lines = []; timer.innerHTML = "";timer.innerHTML = ""; line = []; ghost = []; editordx = 0; editordy = 0; }
+    }
+    else if(e.target.id == "load"){
+      challengevisible = 0;
+      challengepage.className = "hidden";
+      if(lines.length == 0 || confirm("This will erase existing data. Are you sure?")) { 
+        code = prompt("Enter creation code here");
+        if(code.length > 0){
+          lines = JSON.parse(code);
+          timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+          line = [];
+          ghost = [];
+          editordx = 0;
+          editordy = 0;
+        }
+      }
+    }
+    
+    else if(e.target.id == "bmusic"){
+      musicon = 1 - musicon;
+      bmusic.innerHTML = musicon ? "MUSIC ON" : "MUSIC OFF";
+    }
+    
+    else if(e.target.id == "bghost"){
+      ghostvisible = 1 - ghostvisible;
+      bghost.innerHTML = ghostvisible ? "GHOST ON" : "GHOST OFF";
+      challengevisible = 0;
+      challengepage.className = "hidden";
+    }
+    
+    else if(e.target.id == "challenges"){
+      challengevisible = 1 - challengevisible;
+      challengepage.className = challengevisible ? "" : "hidden";
+    }
+  }
+}
+
+// Mousemove
+onmousemove = e => {
+  
+  if(e.target.id == "c" && state == 1){
+  
+    mousex = e.offsetX;
+    mousey = e.offsetY;
+    if(action == "add" && state == 1 && mousedown){
+      line[2] = mousex-editordx;
+      line[3] = mousey-editordy;
+    }
+    else if(action == "addball" && state == 1 && mousedown){
+      line[2] = Math.min(distance(Vec2(mousex-editordx, mousey-editordy), Vec2(line[0],line[1])), distance(Vec2(line[0],line[1]),Vec2(400,280))-30);
+      line.length = 3;
+    }
+  }
+  else {
+    mousex = mousey = -100;
+  }
+}
+
+// Mousedown / up
+onmousedown = e => {
+  if(e.which != 1) return;
+  if(e.target.id == "c" && state == 1){
+    mousedown = 1;
+    if(action == "add" && state == 1){
+      line[0] = mousex-editordx;
+      line[1] = mousey-editordy;
+      //console.log(line);
+    }
+    else if(action == "addball" && state == 1){
+      line[0] = mousex-editordx;
+      line[1] = mousey-editordy;
+      //console.log(line);
+    }
+  }
+  else {
+    editorpressed = e.target.id;
+  }
+}
+
+onmouseup = e => {
+  if(e.which != 1) return;
+  mousedown = 0;
+  if(e.target.id == "c" && line[0] && line[1]){
+    if(action == "add" && state == 1){
+      line[2] = mousex-editordx;
+      line[3] = mousey-editordy;
+      //console.log(line);
+      //console.log((line[0] + line[2])/2);
+      //console.log((line[1] + line[3])/2);
+      //console.log(-Math.atan2(line[3]-line[1], line[2]-line[0]));
+      if(line[0] != line[2] || line[1] != line[3]) {
+        lines.push(line);
+        timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+      }
+      line = [0,0,0,0];
+    }
+    else if(action == "addball" && state == 1){
+      line[2] = Math.round(line[2]);
+      line.length = 3;
+      //console.log(line);
+      //console.log((line[0] + line[2])/2);
+      //console.log((line[1] + line[3])/2);
+      //console.log(-Math.atan2(line[3]-line[1], line[2]-line[0]));
+      if(line[2] > 1) {
+        lines.push(line);
+        timer.innerHTML = lines.length + (lines.length == 1 ? " item" : " items");
+      }
+      line = [0,0,0];
+    }
+  }
+  else {
+    editorpressed = null;
+  }
+}
+
+// Keyboard
+keys = {};
+onkeydown=onkeyup = e => {
+  keys['E**S***************s****lurd************************lBCr*F***J***N**lRdT*VuXYu'[e.which-13]]=e.type[5]
+}
+
+// Wheel
+onwheel = e => {
+  if(state == 1){
+    if(e.deltaY < 0){
+      editordy += 50;
+    }
+    else if(e.deltaY > 0){
+      editordy -= 50;
+    }
+  }
+}
+
+// Right click
+oncontextmenu = e => {
+  e.preventDefault();
+  rcx = e.offsetX;
+  rcy = e.offsetY;
+  //console.log(rcx, rcy);
+  return false;
+}
+</script>
+</body>
