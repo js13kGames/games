@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wave Roller Coaster</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: black;
+        }
+        canvas {
+            width: 100vw; /* Full width of the viewport */
+            height: 100vh; /* Full height of the viewport */
+            display: block; /* Remove gaps below canvas */
+            position: absolute; /* Position canvases on top of each other */
+            top: 0;
+            left: 0;
+        }
+        #polygonCanvas {
+            z-index: 1; /* Lower z-index for the polygon canvas */
+        }
+        #gameCanvas {
+            z-index: 2; /* Higher z-index for the game canvas */
+        }
+        #controls {
+            position: relative;
+            z-index: 3; /* Controls above both canvases */
+            padding: 10px;
+            //background-color: rgba(0, 255, 255, 0.8);
+            color: darkgrey; 
+        }
+    </style>
+</head>
+<body>
+    <canvas id="polygonCanvas"></canvas> <!-- Polygon canvas for background animation -->
+    <canvas id="gameCanvas"></canvas> <!-- Game canvas -->
+    
+    <div id="controls">
+        <button id="bounceButton">Bounce Followers</button>
+        <button id="clearButton">Clear Trail</button>
+        <button id="startButton">Audio</button> 
+        <button id="toggleButton">Train</button>
+        <label for="speedSlider">Follower Speed: </label>
+        <span id="speedValue">4</span>x
+        <input type="range" id="speedSlider" min="1" max="14" value="4" step="1">        
+        <label for="blackCircleSpeedSlider">&nbsp;Big 13 Speed: </label>
+        <span id="blackCircleSpeedValue">4</span>
+        <input type="range" id="blackCircleSpeedSlider" min="1" max="20" value="4" step="1">        
+        <label for="trailDistanceSlider">&nbsp;13 Trail Distance: </label>
+        <span id="trailDistanceValue">150</span> px&nbsp;
+        <input type="range" id="trailDistanceSlider" min="1" max="300" value="150" step="1">
+        
+        
+        <div id="totalsDisplay">Total Followers: 0, Currently Following: 0, Total Collisions: 0</div>
+    </div>
+
+    <script>
+        // Background Animation
+        var polygonCanvas = document.getElementById('polygonCanvas');
+        var polygonContext = polygonCanvas.getContext('2d');
+
+        // Set canvas dimensions to match the viewport
+        function resizeCanvases() {
+            polygonCanvas.width = window.innerWidth;
+            polygonCanvas.height = window.innerHeight;
+        }
+        resizeCanvases(); // Initial resize
+
+        // Polygon Animation Variables
+        var animationTime = 0;
+        var polygonData = [];
+        var animationDuration = 1352; // Duration of the animation in frames
+
+        // Create polygons
+        for (var row = 0; row < 80; ++row) {
+            for (var column = 0; column < 256; ++column) {
+                polygonData.push(column - 100, row - 40, 10 * Math.random(), 1);
+            }
+        }
+
+        function projectPolygon(xPosition, radius, deltaTime, initialRadius) {
+            let angleY = 1.4 * (animationTime < 60 ? -1 : (animationTime < 515 ? Math.min(0, Math.sin((animationTime - 60) / 300) - 1) : 0));
+            let theta = Math.max(0, deltaTime * (500 - animationTime) / 1000);
+            let yPosition = radius * Math.cos(theta);
+            let zPosition = radius * Math.sin(theta);
+            let verticalOffset = Math.max(0, animationTime / 10 - 70 - initialRadius - deltaTime) / 4; 
+            let deltaX = xPosition * Math.cos(angleY) - zPosition * Math.sin(angleY);
+            let deltaY = yPosition + verticalOffset * verticalOffset; 
+            return [polygonCanvas.width / 2 + 8 * deltaX, polygonCanvas.height / 2 + 8 * deltaY]; 
+        }
+
+        function drawPolygon(xPosition, yPosition, size, sidesCount) {
+            polygonContext.beginPath();
+            for (let i = 0; i < sidesCount; i++) {
+                let angle = (2 * Math.PI / sidesCount) * i; 
+                let xOffset = size * Math.cos(angle);
+                let yOffset = size * Math.sin(angle);
+                if (i === 0) {
+                    polygonContext.moveTo(xPosition + xOffset, yPosition + yOffset);
+                } else {
+                    polygonContext.lineTo(xPosition + xOffset, yPosition + yOffset);
+                }
+            }
+            polygonContext.closePath();
+            polygonContext.fill();
+        }
+
+        function animatePolygons() {
+            polygonContext.clearRect(0, 0, polygonCanvas.width, polygonCanvas.height); 
+            polygonContext.fillStyle = "rgba(0, 0, 0, 0.8)"; 
+            polygonContext.fillRect(0, 0, polygonCanvas.width, polygonCanvas.height); 
+
+            let dynamicRadius = Math.max(0, 500 - animationTime) / 10; //10 works too
+            let toggle = 0;
+            for (let i = 0; i < polygonData.length;) {
+                let xPosition = polygonData[i++];
+                let radius = polygonData[i++] + dynamicRadius;
+                let deltaTime = polygonData[i++];
+                if (polygonData[i++]) {
+                    let verticalOffset = Math.max(0, animationTime / 10 - 70 - radius - deltaTime) / 4; 
+                    polygonContext.fillStyle = "hsl(" + (180 + verticalOffset * 6) + ", 100%, 50%)"; 
+
+                    drawPolygon(...projectPolygon(xPosition, radius + toggle, deltaTime, radius), radius, 13); 
+                }
+                toggle = 1 - toggle;
+            }
+
+            animationTime += 2; 
+
+            if (animationTime >= animationDuration) {
+                animationTime = 0; 
+            }
+
+            requestAnimationFrame(animatePolygons); 
+        }
+
+        // Start the polygon animation
+        animatePolygons(); 
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvases);
+
+        // Audio context setup for sound effects
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let loopInterval;
+        let isPlaying = false;
+
+        // Function to play a single note
+        function playNote(frequency, duration) {
+            if (!isPlaying) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime + duration);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Convert MIDI note numbers to frequencies
+        function midiToFrequency(noteNumber) {
+            return 440 * Math.pow(2, (noteNumber - 69) / 12);
+        }
+
+        // Array to store note sequences (future use)
+        const notes = [];
+
+        // Function to play a sequence of notes
+        function playSequence() {
+            if (!isPlaying) return;
+            let totalDuration = 0;
+
+            notes.forEach(({ note, duration, start }) => {
+                setTimeout(() => {
+                    playNote(midiToFrequency(note), duration);
+                }, totalDuration + start);
+            });
+
+            totalDuration += notes[notes.length - 1].start + notes[notes.length - 1].duration;
+            return totalDuration;
+        }
+
+        // Start the audio loop
+        function startLoop() {
+            if (isPlaying) return;
+            const loopDuration = playSequence();
+            loopInterval = setInterval(playSequence, loopDuration);
+        }
+
+        // Stop the audio loop
+        function stopLoop() {
+            clearInterval(loopInterval);
+        }
+
+        // Play a note based on collision frequency
+        function getRandomMidiNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function playCollisionNote() {
+            let midiNumber;
+            if (avgCollisionsPer5Seconds <= 10) {
+                //midiNumber = getRandomMidiNumber(40, 50);
+                midiNumber = 70,71,72,73,74,75,76,77,78,79,80,81
+            } else if (avgCollisionsPer5Seconds <= 20) {
+                midiNumber = getRandomMidiNumber(40, 50);
+            } else if (avgCollisionsPer5Seconds <= 30) {
+                midiNumber = getRandomMidiNumber(40, 60);
+            } else if (avgCollisionsPer5Seconds <= 40) {
+                midiNumber = getRandomMidiNumber(40, 60);
+            } else if (avgCollisionsPer5Seconds <= 50) {
+                midiNumber = getRandomMidiNumber(41, 50);
+            } else if (avgCollisionsPer5Seconds <= 60) {
+                midiNumber = getRandomMidiNumber(51, 60);
+            } else if (avgCollisionsPer5Seconds <= 70) {
+                midiNumber = getRandomMidiNumber(61, 70);
+            } else if (avgCollisionsPer5Seconds <= 80) {
+                midiNumber = getRandomMidiNumber(71, 80);
+            } else if (avgCollisionsPer5Seconds <= 90) {
+                midiNumber = getRandomMidiNumber(81, 90);
+            } else if (avgCollisionsPer5Seconds <= 100) {
+                midiNumber = getRandomMidiNumber(91, 100);
+            } else if (avgCollisionsPer5Seconds <= 110) {
+                midiNumber = getRandomMidiNumber(101, 110);
+            } else if (avgCollisionsPer5Seconds <= 120) {
+                midiNumber = getRandomMidiNumber(111, 120);
+            } else if (avgCollisionsPer5Seconds <= 130) {
+                midiNumber = getRandomMidiNumber(121, 127);
+            } else {
+                midiNumber = 60, 50,70,20,21,22,23,24,25,26;
+            }
+            playNote(midiToFrequency(midiNumber), 0.05);
+        }
+
+        // Variables for tracking collisions
+        let totalCollisions = 0;
+        let startTime = Date.now();
+        let collisionsLast5Seconds = [];
+        let avgCollisionsPer5Seconds = 0;
+        let isTrain = false; // Toggle state
+
+        // Get the canvas element and its 2D rendering context
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+    	
+
+        // Function to resize the canvas when the window size changes
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - document.getElementById('controls').offsetHeight;
+        }
+
+        // Add event listener for window resize
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Define game objects
+        const masterCircle = { x: canvas.width / 2, y: canvas.height / 2, radius: 30, color: 'red' };
+        const blackCircle = { 
+            x: Math.random() * canvas.width, 
+            y: Math.random() * canvas.height, 
+            radius: 20, 
+            color: 'black', 
+            speed: 4, 
+            direction: Math.random() * 2 * Math.PI, 
+            sliding: false, 
+            slideDuration: 0, 
+            velocityX: 0, 
+            velocityY: 0 
+        };
+        const followers = [];
+        const followerCount = 25;
+        const maxFollowerRadius = 30;
+        const minFollowerRadius = 3;
+        const baseDistance = 10;
+        let followSpeed = 4;
+
+        // Calculate follower size based on position
+        function calculateFollowerSize(x, y) {
+            const distanceX = Math.min(x, canvas.width - x) / (canvas.width / 2);
+            const distanceY = Math.min(y, canvas.height - y) / (canvas.height / 2);
+            const distance = Math.min(distanceX, distanceY);
+            return minFollowerRadius + (maxFollowerRadius - minFollowerRadius) * distance;
+        }
+
+        // Create follower objects
+        for (let i = 0; i < followerCount; i += 1) {
+            const x = masterCircle.x;
+            const y = masterCircle.y;
+            followers.push({
+                x: x,
+                y: y,
+                radius: calculateFollowerSize(x, y),
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                following: true,
+                direction: Math.random() * 2 * Math.PI,
+                speed: followSpeed,
+                sliding: false,
+                slideDuration: 0,
+                velocityX: 0,
+                velocityY: 0
+            });
+        }
+
+        // Array to store trail points
+        const trails = [];
+        const trailWidth = blackCircle.radius * 0.5;
+        let trailDistance = 150;
+
+        // Event listeners for UI controls
+        document.getElementById('trailDistanceSlider').addEventListener('input', (event) => {
+            trailDistance = event.target.value;
+            document.getElementById('trailDistanceValue').textContent = event.target.value;
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', (event) => {
+            followSpeed = event.target.value;
+            document.getElementById('speedValue').textContent = event.target.value;
+            followers.forEach(follower => {
+                follower.speed = followSpeed;
+            });
+        });
+
+        document.getElementById('blackCircleSpeedSlider').addEventListener('input', (event) => {
+            blackCircle.speed = event.target.value;
+            document.getElementById('blackCircleSpeedValue').textContent = event.target.value;
+        });
+
+        // Function to update trail points
+        function updateTrails() {
+            if (trails.length > 0) {
+                const lastTrail = trails[trails.length - 1];
+                const dx = blackCircle.x - lastTrail.x;
+                const dy = blackCircle.y - lastTrail.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance >= trailDistance) {
+                    trails.push({ x: blackCircle.x, y: blackCircle.y });
+                }
+            } else {
+                trails.push({ x: blackCircle.x, y: blackCircle.y });
+            }
+        }
+
+        // Function to draw trail points
+        function drawTrails() {
+            trails.forEach(trail => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0)'; // Set follower color to transparent
+                ctx.beginPath();
+                ctx.arc(trail.x, trail.y, trailWidth, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('13', trail.x, trail.y);
+            });
+        }
+
+        // Function to clear all trails and reset collision counters
+        function clearTrails() {
+            trails.length = 0;
+            totalCollisions = 0;
+            startTime = Date.now();
+            collisionsLast5Seconds = [];
+        }
+
+        // Function to check for collisions between game objects
+        function checkCollisions() {
+            // Check collisions between followers and trails
+            followers.forEach(follower => {
+                trails.forEach((trail) => {
+                    const dx = follower.x - trail.x;
+                    const dy = follower.y - trail.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < follower.radius + trailWidth) {
+                        const angle = Math.atan2(dy, dx);
+                        follower.sliding = true;
+                        follower.slideDuration = 3;
+                        follower.velocityX = Math.cos(angle) * 10;
+                        follower.velocityY = Math.sin(angle) * 10;
+                        totalCollisions++;
+                        playCollisionNote();
+                        trail.x -= Math.cos(angle) * 20;
+                        trail.y -= Math.sin(angle) * 20;
+                        
+                    }
+                });
+            });
+
+            // Check collisions between followers and black circle
+            followers.forEach(follower => {
+                const dx = follower.x - blackCircle.x;
+                const dy = follower.y - blackCircle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < follower.radius + blackCircle.radius && !follower.sliding) {
+                    const angle = Math.atan2(dy, dx);
+                    follower.sliding = true;
+                    follower.slideDuration = 3;
+                    follower.velocityX = Math.cos(angle) * 10;
+                    follower.velocityY = Math.sin(angle) * 10;
+                    totalCollisions++;
+                    playCollisionNote();
+                    blackCircle.x -= Math.cos(angle) * 20;
+                    blackCircle.y -= Math.sin(angle) * 20;
+                }
+            });
+
+            // Check collisions between trails and followers/master circle
+            trails.forEach((trail, index) => {
+                followers.forEach(follower => {
+                    const dx = follower.x - trail.x;
+                    const dy = follower.y - trail.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < follower.radius + trailWidth) {
+                        totalCollisions++;
+                        playCollisionNote();
+                        const angle = Math.atan2(dy, dx);
+                        trail.x -= Math.cos(angle) * 1;
+                        trail.y -= Math.sin(angle) * 1;
+                    }
+                });
+
+                const dx = masterCircle.x - trail.x;
+                const dy = masterCircle.y - trail.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < masterCircle.radius + trailWidth) {
+                    trails.splice(index, 1);
+                }
+            });
+        }
+
+        // Main update function for game logic
+        function update() {
+            let totalFollowing = 0;
+            
+            // Update black circle position
+            if (!blackCircle.sliding) {
+                blackCircle.x += Math.cos(blackCircle.direction) * blackCircle.speed;
+                blackCircle.y += Math.sin(blackCircle.direction) * blackCircle.speed;
+                
+                // Bounce black circle off canvas edges
+                if (blackCircle.x - blackCircle.radius < 0) {
+                    blackCircle.x = blackCircle.radius;
+                    blackCircle.direction = Math.PI - blackCircle.direction + (Math.random() * 0.5 - 0.25);
+                }
+                if (blackCircle.x + blackCircle.radius > canvas.width) {
+                    blackCircle.x = canvas.width - blackCircle.radius;
+                    blackCircle.direction = Math.PI - blackCircle.direction + (Math.random() * 0.5 - 0.25);
+                }
+                if (blackCircle.y - blackCircle.radius < 0) {
+                    blackCircle.y = blackCircle.radius;
+                    blackCircle.direction = -blackCircle.direction + (Math.random() * 0.5 - 0.25);
+                }
+                if (blackCircle.y + blackCircle.radius > canvas.height) {
+                    blackCircle.y = canvas.height - blackCircle.radius;
+                    blackCircle.direction = -blackCircle.direction + (Math.random() * 0.5 - 0.25);
+                }
+            }
+
+            // Update followers
+            for (let i = 0; i < followers.length; i += 1) {
+                const follower = followers[i];
+                if (!follower.following) {
+                    // Check if the follower should start following the master circle
+                    const dx = masterCircle.x - follower.x;
+                    const dy = masterCircle.y - follower.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < masterCircle.radius + follower.radius) {
+                        follower.following = true;
+                        follower.x = masterCircle.x - Math.cos(Math.atan2(dy, dx)) * baseDistance;
+                                                follower.y = masterCircle.y - Math.sin(Math.atan2(dy, dx)) * baseDistance;
+                    }
+                }
+                if (follower.following) {
+                    totalFollowing += 1;
+                    // Calculate target position (either master circle or previous follower)
+                    const targetX = (i === 0) ? masterCircle.x : followers[i - 1].x;
+                    const targetY = (i === 0) ? masterCircle.y : followers[i - 1].y;
+                    const dx = targetX - follower.x;
+                    const dy = targetY - follower.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance > 0) {
+                        // Move follower towards target
+                        const angle = Math.atan2(dy, dx);
+                        const moveDistance = Math.min(distance, follower.speed);
+                        follower.x += Math.cos(angle) * moveDistance;
+                        follower.y += Math.sin(angle) * moveDistance;
+                        // Maintain minimum distance between followers
+                        if (i > 0 && distance < baseDistance) {
+                            follower.x = targetX - Math.cos(angle) * baseDistance;
+                            follower.y = targetY - Math.sin(angle) * baseDistance;
+                        }
+                    }
+                } else {
+                    // Move non-following followers randomly
+                    follower.x += Math.cos(follower.direction) * follower.speed;
+                    follower.y += Math.sin(follower.direction) * follower.speed;
+                    // Bounce off canvas edges
+                    if (follower.x - follower.radius < 0 || follower.x + follower.radius > canvas.width) {
+                        follower.direction = Math.PI - follower.direction;
+                    }
+                    if (follower.y - follower.radius < 0 || follower.y + follower.radius > canvas.height) {
+                        follower.direction = -follower.direction;
+                    }
+                }
+                // Handle sliding behavior after collisions
+                if (follower.sliding) {
+                    follower.slideDuration -= 1 / 60;
+                    if (follower.slideDuration <= 0) {
+                        follower.sliding = false;
+                        //follower.following = true; 
+                    } else {
+                        follower.x += follower.velocityX;
+                        follower.y += follower.velocityY;
+                        // Bounce off canvas edges while sliding
+                        if (follower.x - follower.radius < 0 || follower.x + follower.radius > canvas.width) {
+                            follower.velocityX = -follower.velocityX;
+                        }
+                        if (follower.y - follower.radius < 0 || follower.y + follower.radius > canvas.height) {
+                            follower.velocityY = -follower.velocityY;
+                        }
+                    }
+                }
+                // Update follower size based on position
+                follower.radius = calculateFollowerSize(follower.x, follower.y);
+            }
+
+            // Update trails and check for collisions
+            updateTrails();
+            checkCollisions();
+
+            // Calculate average collisions per second
+            const currentTime = Date.now();
+            const fiveSecondsAgo = currentTime - 5000;
+            
+            collisionsLast5Seconds.push({time: currentTime, count: totalCollisions});
+            
+            // Remove collision data older than 5 seconds
+            while (collisionsLast5Seconds.length > 0 && collisionsLast5Seconds[0].time < fiveSecondsAgo) {
+                collisionsLast5Seconds.shift();
+            }
+
+            // Calculate average collisions per 5 seconds
+            if (collisionsLast5Seconds.length > 1) {
+                const oldestCount = collisionsLast5Seconds[0].count;
+                const newestCount = collisionsLast5Seconds[collisionsLast5Seconds.length - 1].count;
+                avgCollisionsPer5Seconds = (newestCount - oldestCount) / 5;
+            }
+
+            // Update display with game statistics
+            document.getElementById('totalsDisplay').textContent = 
+                `Total: ${followers.length}, Following: ${totalFollowing}, ` +
+                `Total Collisions: ${totalCollisions} 
+                (${avgCollisionsPer5Seconds.toFixed(0)}/s)`;
+        }
+
+        // Function to draw all game objects
+       function draw() {
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw master circle 
+    ctx.fillStyle = 'rgba(0, 0, 0, 0)'; 
+    ctx.beginPath();
+    ctx.arc(masterCircle.x, masterCircle.y, masterCircle.radius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Draw SVG truck on master circle
+
+                if (isTrain) {
+                    const truckSize = masterCircle.radius * 2;
+    ctx.save();
+    ctx.translate(masterCircle.x - truckSize / 2, masterCircle.y - truckSize / 4);
+    ctx.scale(truckSize / 400, truckSize / 200);
+                drawSVGTruck(ctx); // Draw truck
+            } else {
+            const truckSize = masterCircle.radius * 3; // Adjust truck size based on master circle radius
+ctx.save();
+ctx.translate(masterCircle.x - truckSize , masterCircle.y - truckSize ); // Center the truck on the circle
+ctx.scale(truckSize / 200, truckSize / 200); // Scale the truck appropriately
+                drawSVGShark1(ctx); // Draw shark 1
+            }
+    ctx.restore();
+
+    // Draw black circle
+    ctx.fillStyle = 'rgba(0, 0, 0, 0)'; 
+    ctx.beginPath();
+    ctx.arc(blackCircle.x, blackCircle.y, blackCircle.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw rotating "13" text on black circle
+    const angle = performance.now() / 1000;
+    ctx.save();
+    ctx.translate(blackCircle.x, blackCircle.y);
+    ctx.rotate(angle);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('13', 0, 0);
+    ctx.restore();
+
+    // Draw followers
+    for (const follower of followers) {
+        ctx.fillStyle = follower.following ? 'rgba(0, 0, 0, 0)' : follower.color;
+        ctx.beginPath();
+        ctx.arc(follower.x, follower.y, follower.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw SVG train car
+        if (isTrain) {
+        const svgSize = Math.max(10, Math.min(70, follower.radius * 2));
+        ctx.save();
+        ctx.translate(follower.x, follower.y);
+        ctx.scale(svgSize / 200, svgSize / 100);
+        ctx.translate(-100, -50);
+        // Draw train car or shark 2 based on toggle state
+                        
+                    drawSVGTrainCar(ctx); // Draw train car
+                } else {
+                const svgSize = Math.max(10, Math.min(70, follower.radius * 2));
+ctx.save();
+ctx.translate(follower.x - svgSize * 2.2, follower.y - svgSize * 3); // Center the shark on the circle
+ctx.scale(svgSize / 100, svgSize / 100);
+         
+                    drawSVGShark2(ctx); // Draw shark 2
+                }
+        ctx.restore();
+         
+         
+         
+         
+               
+    }
+    
+    // Draw trails
+    drawTrails();
+}
+
+function drawSVGTruck(ctx) {
+    // Truck Bed (angled at 45 degrees)
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(50, 150);
+    ctx.lineTo(20, 100);
+    ctx.lineTo(20, 80);
+    ctx.lineTo(50, 80);
+    ctx.lineTo(250, 80);
+    ctx.lineTo(280, 100);
+    ctx.lineTo(280, 150);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cab
+    ctx.fillRect(200, 50, 100, 50);
+
+    // Windows
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(210, 55, 30, 20);
+    ctx.fillRect(250, 55, 30, 20);
+
+    // Smokestack
+    ctx.fillStyle = 'white';
+    ctx.fillRect(70, 52, 20, 40);
+
+    // Wheels
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(100, 150, 20, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(270, 150, 20, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+        function drawSVGTrainCar(ctx) {
+            // Train car body
+            ctx.fillStyle = "#FF6F33";
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.fillRect(20, 30, 160, 40);
+            ctx.strokeRect(20, 30, 160, 40);
+
+            // Train car roof
+            ctx.fillStyle = "#C70039";
+            ctx.fillRect(30, 20, 140, 20);
+            ctx.strokeRect(30, 20, 140, 20);
+
+            // Windows
+            ctx.fillStyle = "#FFFFFF";
+            ctx.lineWidth = 1;
+            ctx.fillRect(40, 35, 30, 15);
+            ctx.strokeRect(40, 35, 30, 15);
+            ctx.fillRect(80, 35, 30, 15);
+            ctx.strokeRect(80, 35, 30, 15);
+            ctx.fillRect(120, 35, 30, 15);
+            ctx.strokeRect(120, 35, 30, 15);
+
+            // Wheels
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(40, 80, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(160, 80, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+
+
+        // Function to draw Shark 1
+        function drawSVGShark1(ctx) {
+ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 0, 0)';
+	ctx.moveTo(105.395050, 302.362820);
+	ctx.lineTo(196.967790, 282.205300);
+	ctx.lineTo(228.067960, 253.984770);
+	ctx.lineTo(244.193980, 284.509010);
+	ctx.lineTo(291.996100, 286.812730);
+	ctx.lineTo(308.122120, 279.901580);
+	ctx.lineTo(314.457340, 291.420160);
+	ctx.lineTo(327.127790, 291.996090);
+	ctx.lineTo(350.740880, 270.686710);
+	ctx.lineTo(384.720700, 260.895920);
+	ctx.lineTo(355.348320, 294.299810);
+	ctx.lineTo(353.620530, 319.064760);
+	ctx.lineTo(351.892740, 323.096270);
+	ctx.lineTo(336.918580, 317.336980);
+	ctx.lineTo(325.400000, 306.970250);
+	ctx.lineTo(305.818410, 308.698040);
+	ctx.lineTo(309.273980, 323.096270);
+	ctx.lineTo(288.540530, 317.336980);
+	ctx.lineTo(227.492040, 331.159280);
+	ctx.lineTo(210.214160, 347.861220);
+	ctx.lineTo(193.512210, 332.887070);
+	ctx.lineTo(150.317520, 327.127770);
+	ctx.lineTo(138.223010, 319.640690);
+	ctx.lineTo(153.197170, 313.881400);
+	ctx.lineTo(130.160000, 311.577690);
+	ctx.lineTo(115.185840, 310.425830);
+	ctx.closePath();
+	ctx.fill();
+	
+// #layer4
+	
+// #path59
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 255, 0)';
+	ctx.moveTo(329.431500, 291.996100);
+	ctx.lineTo(351.316810, 274.142300);
+	ctx.lineTo(369.170610, 269.534860);
+	ctx.lineTo(349.589020, 289.116450);
+	ctx.lineTo(349.013090, 314.457340);
+	ctx.lineTo(336.918580, 310.425830);
+	ctx.lineTo(327.127780, 300.635040);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path60
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 255, 0)';
+	ctx.moveTo(203.985700, 282.760670);
+	ctx.lineTo(223.886750, 262.859630);
+	ctx.lineTo(237.154110, 283.589880);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path61
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(0, 255, 0)';
+	ctx.lineWidth = 3.776060;
+	ctx.moveTo(148.457170, 305.946240);
+	ctx.lineTo(156.934470, 295.504310);
+	ctx.lineTo(164.469830, 302.875080);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path63
+	ctx.beginPath();
+	ctx.strokeStyle = 'rgb(255, 255, 255)';
+	ctx.lineWidth = 2.900000;
+	ctx.lineCap = 'butt';
+	ctx.lineJoin = 'miter';
+	ctx.moveTo(325.253060, 295.913220);
+	ctx.lineTo(312.678840, 295.074940);
+	ctx.lineTo(305.553450, 283.339010);
+	ctx.lineTo(292.140960, 290.045250);
+	ctx.lineTo(241.424950, 286.692130);
+	ctx.lineTo(226.335890, 259.028850);
+	ctx.lineTo(196.996050, 284.596430);
+	ctx.lineTo(108.138260, 303.038610);
+	ctx.lineTo(115.263650, 307.230020);
+	ctx.lineTo(157.596840, 311.840560);
+	ctx.lineTo(143.765210, 318.546810);
+	ctx.lineTo(143.346070, 318.965950);
+	ctx.lineTo(152.148020, 322.738220);
+	ctx.lineTo(191.966370, 327.348760);
+	ctx.lineTo(209.151130, 342.437820);
+	ctx.lineTo(223.401910, 326.929620);
+	ctx.lineTo(286.272990, 312.259700);
+	ctx.lineTo(305.553450, 318.546810);
+	ctx.lineTo(302.200330, 307.230020);
+	ctx.lineTo(320.642510, 304.296030);
+	ctx.closePath();
+	ctx.stroke();
+}
+
+        // Function to draw Shark 2
+        function drawSVGShark2(ctx) {
+ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 0, 0)';
+	ctx.moveTo(105.395050, 302.362820);
+	ctx.lineTo(196.967790, 282.205300);
+	ctx.lineTo(228.067960, 253.984770);
+	ctx.lineTo(244.193980, 284.509010);
+	ctx.lineTo(291.996100, 286.812730);
+	ctx.lineTo(308.122120, 279.901580);
+	ctx.lineTo(314.457340, 291.420160);
+	ctx.lineTo(327.127790, 291.996090);
+	ctx.lineTo(350.740880, 270.686710);
+	ctx.lineTo(384.720700, 260.895920);
+	ctx.lineTo(355.348320, 294.299810);
+	ctx.lineTo(353.620530, 319.064760);
+	ctx.lineTo(351.892740, 323.096270);
+	ctx.lineTo(336.918580, 317.336980);
+	ctx.lineTo(325.400000, 306.970250);
+	ctx.lineTo(305.818410, 308.698040);
+	ctx.lineTo(309.273980, 323.096270);
+	ctx.lineTo(288.540530, 317.336980);
+	ctx.lineTo(227.492040, 331.159280);
+	ctx.lineTo(210.214160, 347.861220);
+	ctx.lineTo(193.512210, 332.887070);
+	ctx.lineTo(150.317520, 327.127770);
+	ctx.lineTo(138.223010, 319.640690);
+	ctx.lineTo(153.197170, 313.881400);
+	ctx.lineTo(130.160000, 311.577690);
+	ctx.lineTo(115.185840, 310.425830);
+	ctx.closePath();
+	ctx.fill();
+	
+// #layer4
+	
+// #path59
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 255, 0)';
+	ctx.moveTo(329.431500, 291.996100);
+	ctx.lineTo(351.316810, 274.142300);
+	ctx.lineTo(369.170610, 269.534860);
+	ctx.lineTo(349.589020, 289.116450);
+	ctx.lineTo(349.013090, 314.457340);
+	ctx.lineTo(336.918580, 310.425830);
+	ctx.lineTo(327.127780, 300.635040);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path60
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(255, 255, 0)';
+	ctx.moveTo(203.985700, 282.760670);
+	ctx.lineTo(223.886750, 262.859630);
+	ctx.lineTo(237.154110, 283.589880);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path61
+	ctx.beginPath();
+	ctx.fillStyle = 'rgb(0, 255, 0)';
+	ctx.lineWidth = 3.776060;
+	ctx.moveTo(148.457170, 305.946240);
+	ctx.lineTo(156.934470, 295.504310);
+	ctx.lineTo(164.469830, 302.875080);
+	ctx.closePath();
+	ctx.fill();
+	
+// #path63
+	ctx.beginPath();
+	ctx.strokeStyle = 'rgb(255, 255, 255)';
+	ctx.lineWidth = 2.900000;
+	ctx.lineCap = 'butt';
+	ctx.lineJoin = 'miter';
+	ctx.moveTo(325.253060, 295.913220);
+	ctx.lineTo(312.678840, 295.074940);
+	ctx.lineTo(305.553450, 283.339010);
+	ctx.lineTo(292.140960, 290.045250);
+	ctx.lineTo(241.424950, 286.692130);
+	ctx.lineTo(226.335890, 259.028850);
+	ctx.lineTo(196.996050, 284.596430);
+	ctx.lineTo(108.138260, 303.038610);
+	ctx.lineTo(115.263650, 307.230020);
+	ctx.lineTo(157.596840, 311.840560);
+	ctx.lineTo(143.765210, 318.546810);
+	ctx.lineTo(143.346070, 318.965950);
+	ctx.lineTo(152.148020, 322.738220);
+	ctx.lineTo(191.966370, 327.348760);
+	ctx.lineTo(209.151130, 342.437820);
+	ctx.lineTo(223.401910, 326.929620);
+	ctx.lineTo(286.272990, 312.259700);
+	ctx.lineTo(305.553450, 318.546810);
+	ctx.lineTo(302.200330, 307.230020);
+	ctx.lineTo(320.642510, 304.296030);
+	ctx.closePath();
+	ctx.stroke();
+}
+
+
+
+
+
+
+        // Main game loop
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event listener for audio button
+        document.getElementById('startButton').addEventListener('click', () => {
+            audioContext.resume().then(() => {
+                if (!isPlaying) {
+                    startLoop();
+                    isPlaying = true;
+                    document.getElementById('startButton').textContent = 'Mute';
+                } else {
+                    stopLoop();
+                    isPlaying = false;
+                    document.getElementById('startButton').textContent = 'Audio';
+                }
+            });
+        });
+
+        // Event listener for clear button
+        document.getElementById('clearButton').addEventListener('click', clearTrails);
+
+        // Event listener for mouse movement (controls master circle)
+        canvas.addEventListener('mousemove', (event) => {
+            masterCircle.x = event.clientX;
+            masterCircle.y = event.clientY - document.getElementById('controls').offsetHeight;
+        });
+        
+        // Event listener for bounce button (resets followers)
+        document.getElementById('bounceButton').addEventListener('click', () => {
+            for (const follower of followers) {
+                follower.following = false;
+                follower.direction = Math.random() * 2 * Math.PI;
+                follower.speed = Math.random() * 2 + 2;
+                follower.color = 'blue';
+                follower.x = Math.random() * canvas.width;
+                follower.y = Math.random() * canvas.height;
+            }
+            totalCollisions = 0;
+            startTime = Date.now();
+            collisionsLast5Seconds = [];
+            update();
+        });
+
+        // Event listener for touch movement (for mobile devices)
+        canvas.addEventListener('touchmove', (event) => {
+            const touch = event.touches[0];
+            masterCircle.x = touch.clientX;
+            masterCircle.y = touch.clientY - document.getElementById('controls').offsetHeight;
+            event.preventDefault();
+        });
+
+// Toggle button for Train/Shark
+        document.getElementById('toggleButton').addEventListener('click', () => {
+            isTrain = !isTrain; // Toggle state
+            document.getElementById('toggleButton').textContent = isTrain ? 'Sharks' : 'Train'; // Update button text
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear the canvas to redraw
+        });
+
+
+
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>
