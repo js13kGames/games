@@ -1,0 +1,274 @@
+:root {
+  --bg-color: #2d3436;
+  --border-color: #636e72;
+  --bg-card-color: #ffeaa7;
+  --bg-life-color: #ff7675;
+  --radius: 4px;
+  --card-border-color: #363636;
+  --text-color: #f8f8f8;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.board {
+  width: 74%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin: 1rem auto;
+  background-color: var(--bg-color);
+}
+
+.card-slot {
+  width: 125px;
+  height: 150px;
+  border: 4px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+
+.card-slot::after {
+  content: "";
+  width: 100px;
+  height: 125px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  position: absolute;
+}
+
+.card {
+  width: 125px;
+  height: 150px;
+  background-color: var(--bg-card-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  z-index: 99;
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  width: 100px;
+  height: 125px;
+  border: 4px solid var(--card-border-color);
+  border-radius: var(--radius);
+  position: absolute;
+}
+
+.card::before {
+  content: "";
+  width: 80px;
+  height: 3px;
+  background-color: var(--bg-color);
+  position: absolute;
+  bottom: 1.6rem;
+  border-radius: var(--radius);
+}
+
+.card-bg {
+  position: absolute;
+  z-index: -1;
+}
+
+.card-bg:nth-child(2) {
+  left: 1rem;
+  top: 1.5rem;
+}
+
+.card-bg:nth-child(3) {
+  right: 1rem;
+  top: 3rem;
+}
+
+.card-bg:nth-child(4) {
+  left: 0.5rem;
+  top: 5rem;
+}
+
+.sidebar {
+  width: 8rem;
+  height: 100vh;
+  background-color: var(--bg-color);
+  position: absolute;
+  top: 0;
+}
+
+.sidebar--left {
+  border-right: 4px solid var(--border-color);
+  left: 0;
+}
+
+.sidebar--right {
+  border-left: 4px solid var(--border-color);
+  right: 0;
+}
+
+.center {
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  height: 8rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  padding: 0rem 2rem;
+  box-sizing: border-box;
+}
+
+.container-cards {
+  width: 90%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.draggable {
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+}
+
+.draggable:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+}
+
+@keyframes transition {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.level-transition {
+  width: 100%;
+  height: 100vh;
+  background-color: #2d3436;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  font-size: 3rem;
+  opacity: 0;
+  animation: transition 0.3s ease-in-out forwards;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  75% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+#player,
+.zombie {
+  width: 80px;
+  height: 100px;
+  position: absolute;
+  z-index: 9999;
+  animation: jump 0.3s ease-in-out;
+}
+
+#player img {
+  width: 100%;
+  position: absolute;
+}
+
+#player-ui {
+  width: 100px;
+  height: 100px;
+  color: var(--text-color);
+  background: var(--bg-life-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 4px solid var(--card-border-color); */
+  border-radius: var(--radius);
+  font-size: 3rem;
+}
+
+h4,
+p {
+  margin: 0;
+}
+
+#player-ui p {
+  font-size: 1.2rem;
+}
+
+.start-container,
+.gameover-container {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  animation: transition 0.3s ease-in-out forwards;
+}
+
+.tutorial-container {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  animation: transition 0.3s ease-in-out forwards;
+}
+
+li {
+  margin: 1rem auto;
+  font-size: 1.2rem;
+}
+
+button {
+  width: 300px;
+  padding: 1rem;
+  background-color: var(--bg-life-color);
+  color: var(--text-color);
+  border: none;
+  font-size: 1.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}

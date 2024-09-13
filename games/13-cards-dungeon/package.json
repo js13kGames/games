@@ -1,0 +1,20 @@
+{
+  "name": "13-cards-dungeon",
+  "version": "1.0.0",
+  "description": "A micro card game rougue like based.",
+  "type": "module",
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build index.html"
+  },
+  "keywords": [],
+  "author": "Michel Silvestre Dev",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.12.0"
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  }
+}
