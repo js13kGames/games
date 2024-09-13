@@ -1,0 +1,99 @@
+* {
+	box-sizing: border-box;
+	font-family: Bahnschrift, "DIN Alternate", "Franklin Gothic Medium", "Nimbus Sans Narrow", sans-serif-condensed, sans-serif;
+	text-transform: uppercase;
+	user-select: none;
+}
+
+body {
+	background: #111;
+	margin: 0;
+	overflow: hidden;
+}
+
+canvas {
+	position: absolute;
+	touch-action: none;
+	box-shadow: 2vmin 2vmin 4vmin rgba(0, 0, 0, 0.3);
+	animation: 1s ease-out 1 fadeIn;
+}
+
+#overlay {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	color: #fff8;
+	background: #0000;
+	transition: background-color 1s;
+	pointer-events: none;
+}
+
+canvas,
+#overlay {
+	border-radius: 5%;
+}
+
+#hud {
+	display: flex;
+	justify-content: space-between;
+	padding: 4%;
+}
+
+p {
+	margin: 0;
+}
+
+b {
+	font-weight: normal;
+	color: #fff;
+}
+
+#message {
+	text-align: right;
+}
+
+#menu {
+	flex-grow: 1;
+	align-content: center;
+	text-align: center;
+	animation: 1s ease-out 1 fadeIn;
+}
+
+button {
+	color: #000;
+	background: #fff;
+	border: none;
+	border-radius: 2vmin;
+	padding: 4%;
+	font-size: 180%;
+	cursor: pointer;
+	transition: background-color 100ms;
+	pointer-events: all;
+}
+
+button:active {
+	background: #000;
+	color: #fff;
+}
+
+#gameover {
+	text-align: center;
+	color: #fff;
+	animation: 5s ease-out 1 fadeIn;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	body {
+		background: #ddd;
+	}
+}

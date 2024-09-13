@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>GOLFROG</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+	<div id="overlay">
+		<div id="hud">
+			<p>
+				Hole <b id="hole"></b><br>
+				Jumps <b id="jumps"></b><br>
+				Stars <b id="stars"></b>
+			</p>
+			<p id="message"></p>
+		</div>
+		<div id="menu">
+			<button onclick="retryHole()">↺ Retry</button><br>
+			<br>
+			<button onclick="nextHole()">➜ Continue</button>
+		</div>
+		<div id="gameover">Thanks for playing!</div>
+	</div>
+	<script src="vec.js"></script>
+	<script src="script.js"></script>
+</body>
+
+</html>
