@@ -1,0 +1,1 @@
+c.width=c.height=1080;x=c.getContext`2d`,F=M=0,onload=U=e=>{requestAnimationFrame(U);if(F&&e<M-2)return;M=Math.max(M+1e3/60,e);T=F/60;if(T*60|0!=F++)T+=1e-6;E(T)}
