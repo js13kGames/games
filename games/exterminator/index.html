@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="The Exterminator scans for the number 13 hidden within the patterns of your room so you can eliminate them. But you have to hurry or they will overload the device.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exterminator</title>
+</head>
+<body>
+<script>
+onload=()=>{
+function element(e){return document.body.appendChild(document.createElement(e));}
+element("style").textContent=`
+*{margin:0;padding:0;position:fixed;box-sizing:border-box;touch-action:none;user-select:none;}
+body {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+`;
+
+let W;
+let H;
+let abs=Math.abs,min=Math.min,sqrt=Math.sqrt,floor=Math.floor,random=Math.random,sin=Math.sin,cos=Math.cos,PI=Math.PI;
+
+{
+let start=Date.now();
+(function waitforheight(){
+  if(innerHeight<screen.availHeight || Date.now()-start>3000){
+    W=innerWidth;
+    H=innerHeight;
+//    alert(W);
+    game();
+  }else{
+    requestAnimationFrame(waitforheight);
+  }
+})();
+}
+
+function game(){
+
+scope();
+
+let CG=element('canvas');
+CG.width=W;
+CG.height=H;
+
+let CV=element('canvas');
+CV.width=W;
+CV.height=H;
+CV.style.display='none';
+
+let G=CG.getContext('2d');
+let V=CV.getContext('2d');
+
+let threshold=100;
+let frequency=10;
+let delay=100;
+let state=1;
+let cnt=0;
+let q=0;
+let newby=0;
+let scoperadius=W/2.5;
+let enemies=[];
+let running=false;
+let overload=0;
+let time;
+let camera=document.createElement('video');
+
+text("Click to Scan");
+
+addEventListener('click',(event)=>{
+if(state==1){
+  state=2;
+  detector();
+}else if(state==2){
+  state=3;
+  if(cnt<1){
+    state=2;
+    return;
+  }
+  gameclick(event);
+}else if(state==3){
+  gameclick(event);
+}else if(state==4){
+  return;
+}else if(state==5){
+  state=1;
+  G.clearRect(0,0,W,H);
+  text("Click to Scan");
+}
+
+});//end handler
+
+
+
+
+
+
+
+
+
+function text(t,relax=false){
+let lines=t.split('\n');
+G.fillStyle="white";
+//let font=20;
+let font=W/30;
+G.textAlign="center";G.textBaseline="middle";G.font="bold "+font+"px monospace";
+if(relax){
+  G.fillText(lines.at(-1),W/2,H/2+lines.length*20);
+}else{
+  for(let i=0;i<lines.length;i++){
+    G.fillText(lines[i],W/2,H/2+i*20);
+  }
+}
+}
+
+
+
+
+
+
+
+
+
+navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then((j)=>{
+  camera.width=W;
+  camera.height=H;
+  camera.srcObject=j;
+  camera.autoplay=true;
+}).catch((error)=>{
+  if(error.name==="NotAllowedError"){
+    alert("Camera access denied. Please enable camera permissions in Chrome or Android settings.");
+  }else if(error.name==="NotFoundError"){
+    alert("No camera found on this device.");
+  }else{
+    alert("An error occurred while trying to access the camera: "+error.message);
+  }
+});
+
+
+
+
+
+
+
+
+
+function detector(){(function animation(){
+if(state!=2){
+  return;
+}
+let m=new Date().getTime();
+let n=window.o||0;
+V.drawImage(camera,0,0,W,H);
+let p=V.getImageData(0,0,W,H);
+q=fake(p);
+cnt=q.length;
+G.clearRect(0,0,W,H);
+if(q.length>0&&m-n>delay){
+  window.o=m;
+  q.forEach(({x:r,y:s})=>{
+    G.save();
+    G.translate(r,s);
+//    G.font='bold 20 px Arial';
+    G.font='bold '+(W/30)+'px Arial';
+    G.fillStyle='rgba(0,255,0,0.8)';
+    G.fillText('13',-15,10);
+    G.restore();
+  });
+}
+text("Click to Capture");
+setTimeout(()=>animation(),1000/frequency);
+})();}
+
+
+
+
+
+
+
+
+
+function fake(p){
+let w=p.width;
+let x=p.height;
+let y=p.data;
+let z=[];
+let A=floor(w/3);
+let B=floor(2*w/3);
+let C=floor(x/3);
+let D=floor(2*x/3);
+for(let E=C;E<D-1;E++){
+  for(let F=A;F<B-1;F++){
+    let G=(E*w+F)*4;
+    let H=(y[G]+y[G+1]+y[G+2])/3;
+    let I=((E)*w+(F+1))*4;
+    let J=((E+1)*w+F)*4;
+    let K=(y[I]+y[I+1]+y[I+2])/3;
+    let L=(y[J]+y[J+1]+y[J+2])/3;
+    if(abs(H-K)>threshold || abs(H-L)>threshold){
+      z.push({x:F,y:E});
+    }
+  }
+}
+return z;
+}
+
+
+
+
+
+
+
+
+
+class Enemy{
+
+constructor(){
+//this.radius=10;
+this.radius=W/70;
+let angle=random()*PI*2;
+let distanceFromCenter=random()*(scoperadius-this.radius);
+this.x=W/2+cos(angle)*distanceFromCenter;
+this.y=H/2+sin(angle)*distanceFromCenter;
+this.sx=(random()*1.5+0.5)*(random()<0.5?1:-1);
+this.sy=(random()*1.5+0.5)*(random()<0.5?1:-1);
+}
+
+draw(){
+G.save();
+G.translate(this.x,this.y);
+G.font='bold '+(W/30)+'px Arial';
+G.fillStyle='lime';
+G.fillText('13',-15,10);
+G.restore();
+}
+
+move(){
+let speed=sqrt(this.sx*this.sx+this.sy*this.sy);
+overload=speed;
+this.sx+=0.01*(this.sx/speed);
+this.sy+=0.01*(this.sy/speed);
+this.x+=this.sx;
+this.y+=this.sy;
+let dx=this.x-W/2;
+let dy=this.y-H/2;
+let distance=sqrt(dx*dx+dy*dy);
+if(distance+this.radius>=scoperadius){
+  let normx=dx/distance;
+  let normy=dy/distance;
+  let dot=this.sx*normx+this.sy*normy;
+  this.sx-=2*dot*normx;
+  this.sy-=2*dot*normy;
+}
+}
+
+hit(x,y){
+let dx=this.x-x;
+let dy=this.y-y;
+let distance=sqrt(dx*dx+dy*dy);
+//return distance<this.radius*10;
+return distance<this.radius*8;
+}
+
+}//enemy
+
+
+
+
+
+
+
+
+
+function spawnEnemies(){
+enemies=[];
+for(let i=0;i<cnt;i++){
+//for(let i=0;i<1;i++){
+  enemies.push(new Enemy());
+}
+}
+
+function updateGame(){
+G.clearRect(0,0,W,H);
+enemies.forEach((enemy)=>{
+  enemy.move();
+  enemy.draw();
+});
+}
+
+function resetGame(){
+spawnEnemies();
+running=true;
+newby++;
+time=Date.now();
+gameLoop();
+}
+
+function gameLoop(){
+if(running){
+  if(overload>8){
+    overload=0;
+    running=false;
+    G.clearRect(0,0,W,H);
+    brokenglass(W/2, H/2, W/2.1)
+    text("Scanner Overload");
+    let b=0;
+    let a=setInterval(()=>{
+      text("Scanner Overload\n"+".".repeat(b++),true);
+    },500);
+    state=4; setTimeout(()=>{ clearInterval(a); state=5; },2000);
+    return;
+  }
+  updateGame();
+  if(newby<2 && Date.now()-time<2000){
+    text("HURRY and SMASH them\nbefore the circuits OVERLOAD");
+  }
+  requestAnimationFrame(gameLoop);
+}
+}
+
+function gameclick(event){
+if(!running){
+  resetGame();
+  return;
+}
+let rect=CV.getBoundingClientRect();
+let x=event.clientX-rect.left;
+let y=event.clientY-rect.top;
+let hit=false;
+enemies=enemies.filter(enemy=>{
+  if(enemy.hit(x,y)){
+    hit=true;
+    return false;
+  }
+  return true;
+});
+if(hit && enemies.length===0){
+  overload=0;
+  running=false;
+  G.clearRect(0,0,W,H);
+  let b=0;
+  text("EXTERMINATED");
+  let a=setInterval(()=>{
+    text("EXTERMINATED\n"+".".repeat(b++),true);
+  },500);
+  state=4; setTimeout(()=>{ clearInterval(a); state=5; },2000);
+  return;
+}
+}
+
+
+
+
+
+
+
+
+
+function brokenglass(x,y,radius){
+G.clearRect(0,0,W,H);
+for(let i=0;i<10;i++){
+  let p1=rnd(x,y,radius);
+  let p2=rnd(x,y,radius);
+  let p3=rnd(x,y,radius);
+  shard(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y);
+}
+
+function shard(x1,y1,x2,y2,x3,y3){
+let gradientDirection=random()*2*PI;
+let g=G.createLinearGradient(
+  (x1+x2+x3)/3,(y1+y2+y3)/3,
+  (x1+x2+x3)/3+cos(gradientDirection)*100,
+  (y1+y2+y3)/3+sin(gradientDirection)*100
+);
+g.addColorStop(0,'rgba(173,216,230,0.7)');
+g.addColorStop(1,'rgba(255,255,255,0.1)');
+G.beginPath();
+G.moveTo(x1,y1);
+G.lineTo(x2,y2);
+G.lineTo(x3,y3);
+G.closePath();
+G.fillStyle=g;
+G.fill();
+G.strokeStyle='rgba(255,255,255,0.3)';
+G.lineWidth=1;
+G.stroke();
+}
+
+function rnd(x,y,radius){
+let angle=random()*2*PI;
+let r=radius*sqrt(random());
+return{
+  x:x+r*cos(angle),
+  y:y+r*sin(angle)
+};
+}
+
+}//brokenglass
+
+
+
+
+
+
+
+
+
+function scope(){
+let leac=element('canvas');
+leac.width=W;
+leac.height=H;
+let lea=leac.getContext('2d');
+let radius=min(W,H)/2;
+let x=W/2;
+let y=H/2;
+let g=lea.createRadialGradient(x,y,0,x,y,radius);
+g.addColorStop(0,'black');
+g.addColorStop(0.93,'black');
+g.addColorStop(0.95,'white');
+g.addColorStop(1,'transparent');
+lea.fillStyle=g;
+lea.beginPath();
+lea.arc(x,y,radius,0,2*PI);
+lea.fill();
+lea.strokeStyle='gold';
+lea.lineWidth=2;
+let z=0.9;
+//let tickLength=10;
+let tickLength=W/70;
+let increment=radius*z/10;
+for(let i=-radius*z;i<=radius*z+0.01;i+=increment){
+  lea.beginPath();
+  lea.moveTo(x-tickLength,y+i);
+  lea.lineTo(x+tickLength,y+i);
+  lea.stroke();
+}
+for(let i=-radius*z;i<=radius*z+0.01;i+=increment){
+  lea.beginPath();
+  lea.moveTo(x+i,y-tickLength);
+  lea.lineTo(x+i,y+tickLength);
+  lea.stroke();
+}
+}
+
+
+
+
+
+
+
+
+
+
+}//end game
+}//end onload
+</script>
+</body>
+</html>
