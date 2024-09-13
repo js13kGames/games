@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Hole Number 6174</title>
+    <style>
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .step {
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+        .step.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Black Hole Number 6174 Game</h1>
+    <input type="text" id="numberInput" placeholder="Enter a four-digit number" onkeypress="checkEnter(event)">
+    <button onclick="calculateKaprekar()">Calculate</button>
+    <div id="result"></div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById("numberInput").focus(); // Automatically focus on the input field
+        };
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                calculateKaprekar();
+            }
+        }
+
+        function calculateKaprekar() {
+            let num = document.getElementById("numberInput").value;
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = ""; // Clear previous results
+
+            if (num.length !== 4 || !/^\d+$/.test(num) || new Set(num).size === 1) {
+                resultDiv.innerHTML = "Please enter a valid four-digit number, and the digits cannot be all the same!";
+                return;
+            }
+
+            let steps = [];
+            let stepDivs = [];
+
+            while (num !== "6174") {
+                let asc = num.split('').sort().join('');
+                let desc = asc.split('').reverse().join('');
+                let difference = (parseInt(desc) - parseInt(asc)).toString().padStart(4, '0');
+                steps.push({ asc, desc, difference });
+                num = difference;
+            }
+
+            steps.forEach((step, index) => {
+                let stepDiv = document.createElement("div");
+                stepDiv.className = "step";
+                stepDiv.innerHTML = `Step ${index + 1}: ${step.desc} - ${step.asc} = ${step.difference}`;
+                resultDiv.appendChild(stepDiv);
+                stepDivs.push(stepDiv);
+            });
+
+            // Animate steps
+            setTimeout(() => {
+                stepDivs.forEach((div, index) => {
+                    setTimeout(() => {
+                        div.classList.add("show");
+                    }, index * 1000); // Show each step with a delay
+                });
+            }, 100);
+            
+            // Show final result
+            setTimeout(() => {
+                let finalDiv = document.createElement("div");
+                finalDiv.innerHTML = "Final Result: 6174";
+                resultDiv.appendChild(finalDiv);
+            }, steps.length * 1000 + 1000);
+        }
+    </script>
+</body>
+</html>
