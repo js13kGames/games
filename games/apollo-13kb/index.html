@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Apollo 13kb</title>
+	<meta charset="utf-8">
+	<meta name="description" content="A Game">
+	<meta name="author" content="Morph Games">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link href="./space.css" rel="stylesheet" />
+	<script type="module" src="./game.js"></script>
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+	
+</head>
+<body>
+	<main>
+		<b id="splash">
+			<h1>Apollo-13<i>kb</i></h1>
+			<i class="sub">A spacecraft button simulation game in &lt;13kb</i>
+			<p>
+				On April 11, 1970 at 13:13, the 13th<br/>
+				Apollo mission was launched.
+			</p>
+			<p>
+				Two days later the three astronauts<br/>
+				are headed towards the moon...
+			</p>
+			<button id="begin">Begin<br/>April 13th</button>
+		</b>
+		<div id="scene">
+			<svg id="svg" version="1.1" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+				<g id="map">
+					<circle cx="20" cy="20" r="10" />
+					<text x="20" y="40">Earth</text>
+					<path d="M30,20 h344" id="course" />
+					<g id="a13">
+						<circle cx="30" cy="20" r="4" />
+						<text x="30" y="10">Apollo-13</text>
+					</g>
+					<circle cx="380" cy="20" r="7" />
+					<text x="380" y="40">Moon</text>
+				</g>
+				<g id="scene-g"></g>
+			</svg>
+		</div>
+		<b id="panel"></b>
+		<b id="btm">
+			<b id="bark"></b>
+			<b id="settings">
+				<b id="pause">⏸️</b>
+				<b id="ff">⏩</b>
+				<b id="sound-tog">🔊</b>
+			</b>
+		</b>
+	</main>
+</body>
+</html>

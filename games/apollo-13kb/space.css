@@ -1,0 +1,270 @@
+body {
+	padding: 0;
+	margin: 0;
+	background: #060606;
+	overflow: hidden;
+	color: #dff;
+	font-family: 'Courier New', Courier, monospace;
+	text-align: center;
+}
+svg {
+	width: 100vmin;
+	height: 100vmin;
+	margin: 0 auto;
+}
+b {
+	font-style: normal;
+	display: block;
+}
+g {
+	transform-origin: center center;
+	stroke: #dff;
+	transition: ease-in-out 1s all;
+}
+circle, rect, polygon, path {
+	stroke: inherit;
+	stroke-width: 1.5px;
+	stroke-opacity: 0.7;
+	fill: #666;
+	fill-opacity: 0.7;
+}
+#LM > polygon, #CM > polygon, #SM > polygon {
+	fill: #333;
+	fill-opacity: 1;
+}
+path.o-p {
+	fill: transparent;
+}
+.err {
+	stroke: red;
+}
+text {
+	fill: #ffffff55;
+	font-family: 'Courier New', monospace;
+	text-anchor: middle;
+}
+#ship {
+	transform: translate(100, 10); /* rotate(40deg); */
+}
+.guide {
+	stroke: #fff;
+	stroke-width: 2px;
+	stroke-opacity: 0.2;
+	fill: transparent;
+}
+.focused {
+	stroke: #ffff00;
+}
+.disconnected {
+	opacity: 0;
+}
+.packed,
+.hidden {
+	visibility: hidden;
+	opacity: 0;
+	transform: scale(0);
+}
+
+#scene {
+	background-repeat: repeat;
+}
+.sky {
+	background-position: 0;
+	background-image: linear-gradient(#59f, #8ff);
+}
+#scene canvas {
+	position: absolute;
+}
+#scene-g {
+	transition: ease-in-out 0.4s all;
+}
+#LM-crew path, #CM-crew path {
+	fill: #222;
+}
+
+#explosion1 {
+	animation: leak 1.4s linear infinite;
+}
+#explosion2 { 
+	animation: leak2 1.3s linear infinite;
+}
+#explosion3 { 
+	animation: leak3 1s linear infinite;
+}
+#flame, #flame > path {
+	fill: #fd5;
+	stroke: #f55;
+}
+#deployed-chutes > path {
+	fill: #faa;
+	stroke: #fff;
+}
+
+#panel {
+	position: absolute;
+	font-size: calc(10px + 1vmin);
+	top: 30vh;
+	right: 5vw;
+	padding: 5vmin;
+	min-width: calc(10em + 5vw);
+	max-width: 50vw;
+	background: #242424;
+	border: solid 2px #dff;
+	opacity: 0;
+	transform: scale(0.6);
+	transition: 0.2s ease-in-out all;
+	margin: 0 auto;
+	max-width: 20em;
+	box-shadow: 0 1em 2em #0004;
+}
+#panel.p-o {
+	opacity: 1;
+	transform: scale(1);
+}
+.status {
+	margin: 1em 0;
+	padding: .5em;
+	background: #dff6;
+}
+#back-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: .5em 1em;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+#back-btn:hover {
+	background: #dff;
+	color: #000;
+}
+
+#btm {
+	position: absolute;
+	bottom: 0;
+	width: 100vw;
+	padding: 5vh 0;
+	color: #39f;
+}
+#bark {
+	background: #000c;
+	max-width: 60em;
+	margin: 0 auto;
+	padding: 1em;
+	border-radius: 1em;
+}
+#settings b {
+	display: inline-block;
+	padding: 0.2em;
+	cursor: pointer;
+}
+#settings b:hover {
+	background: #fff3;
+}
+#settings b:active {
+	transform: scale(0.95);
+}
+
+button {
+	display: inline-block;
+	padding: 0.5em 1em;
+	font-size: inherit;
+	font-weight: bold;
+	font-family: inherit;
+	border: outset .5em #666;
+	background: #444;
+	color: #dff;
+	margin: 1vmin;
+	cursor: pointer;
+	max-width: 10em;
+	box-shadow: 0 0 .5em #0009;
+}
+button:active {
+	border-style: inset;
+	transform: scale(0.97) translate(0, .1em);
+	background: #333;
+}
+button:hover {
+	background: #666;
+}
+
+#map text, .label text {
+	font-size: 9px;
+	stroke: transparent;
+	fill: #dffd;
+}
+.label text {
+	font-size: 15px;
+	fill: #dff;
+	opacity: 0.5;
+}
+#course {
+	stroke-opacity: 0.3;
+}
+
+#splash {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	position: absolute;
+	box-sizing: border-box;
+	padding: 2vw 2vh;
+	width: 60vw;
+	/* height: 40vmin; */
+	background: #000c;
+	top: 40vmin;
+	left: calc(50% - 30vw);
+	border: solid 3px #dff;
+}
+.sub {
+	display: block;
+	color: #677;
+	font-size: 90%;
+	display: block;
+	margin: 1em 0;
+}
+#splash h1 {
+	margin: 0;
+}
+#splash i {
+	color: #677;
+}
+#begin {
+	margin: 1em auto;
+}
+#ff, #pause {
+	visibility: hidden;
+}
+
+@keyframes leak {
+	0% {
+		transform: translate(0, 0);
+		opacity: 1;
+	}
+	100% {
+		transform: translate(400px, 100px);
+		opacity: 0;
+	}
+}
+@keyframes leak2 {
+	0% {
+		transform: translate(0, 0);
+		opacity: 1;
+	}
+	100% {
+		transform: translate(500px, -150px);
+		opacity: 0;
+	}
+}
+@keyframes leak3 {
+	0% {
+		transform: translate(0, 0);
+		opacity: 1;
+	}
+	100% {
+		transform: translate(500px, -20px);
+		opacity: 0;
+	}
+}
