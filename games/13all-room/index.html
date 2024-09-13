@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-witdth, initial-scale=1.0, minimum-scale=1.0,
+    maximum-scale=1.0, user-scalable=no" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      display: flex;
+      height: 100dvh;
+    }
+
+    canvas {
+      height: 100%;
+      image-rendering: pixelated;
+      touch-action: none;
+      width: 100%;
+    }
+  </style>
+  <link rel="icon" href="#">
+  <title>13all Room</title>
+</head>
+
+<body>
+  <canvas></canvas>
+</body>
+
+</html>
+
+<script>
+  'use strict'
+
+  const gImgs = {
+    riko: 'wBAMAAAClLOS0AAAAGFBMVEX22am+cVf35NVwi6LmuJLZlm7+/v5LRlliQKl9AAACjUlEQVQ4y2XUsXLbMAwAUFgHpWuZmPWqsLLmpErOK8VAmilVcFafzue5PqXH3y9IOXHa6jzYeCYAgrThdH1MZq4f4OPdREQ8Vv/BhADYMnf/wFQAABEqrv6GGJenYVp/hsktcfRIffcJvj8DGChA6tA4XqF4eQIJL+natvoA++IlkpkFaP8OB6gXSJRb/w4F7OxS3IigHd8ByvoCAM6gT0UEJovz0qy8hoLGtruAK8+ywgLFAki63S9wdPcKI3jAUTai2+ECWaMsJWjtCMTteoESWFuZBoy5K2UmzBcAAYLc40iGAKllvYBFZqLeYx/OJBtvWVURDhabFXLjcTOHNyS35T5BCZa32Hrxze0abbbVYwLp9OsxB4GSO2PMRukhwkG2++2Qs0fISOL39bl3EYoC8q7Ax7G0TgZsVuszH2JXWQlUFbiGYnSFrJCRjPF6wQ0gngD758JZE6HR6zRdOWicBM4uKyPQSul0HgCeZCvqyWYxbmyjVAKbe3cEVBpdgqLR+U2CxjqZkFqbCDSA4iwdFOQybIHBYPx+Vt5xl6UVW/DSsnKm9FH6n7yfIgylbDm3SmI8GNPoHbsE+yOUchhjLKBcrpUSiCPZS9qi+RWhVRJVvXaTtCUHnQFuAgvI1lQv4KcuFpf7kd/Vj9Lsl9+ae8WasUs7b2Ez1/WDMa9hbLln3fcxldylRuJ1bYoQ1jyS1jodLbXNJsbrH2UIZ/adpMtjKmJ1l6AuX0PQVPWa3a2A9JjCu90DyxJ/ajQPuYD0vksS3mgTQnUqNHNeRbhkCrNrQpDLL/8C8jdwBcmFccUk1Xkfob5AeILXMJ9OPfc0fIIwz7iaZYmkus0rUJvdBcKMpt7NVfwdbLs/3xr/Q+vU/5QAAAAASUVORK5CYII=',
+    jimin: 'wBAMAAAClLOS0AAAALVBMVEX82cj3wLb5ybz70cJZPVbqd4DvnJryrafhiI02IkTNP2Tfa3vZV3CWZXOZNVmsYsVnAAADV0lEQVQ4y3XSQY/bRBQA4NmM1OWYsdWkElSyM2J3JS7jGYlwr6XWCJB6mGzYlEN2ycQqVEoCsS11eyitE1OgJ1+sanPaSuANlRDdghJ64NA2ZHNgEYJWVThxaST4DR070S6VyrvYM5/njfXeA+h/AiBUeEnoEhQCFmG4rrZ4pRIwTb/JC7vMeac1PyFBYWnKvM8rDzjn+810qepAMeST4XYllvsBr3BFOQaMi3zjgJdqwubjzzA7AgLb4sZ+wO26KPOywvQFqGC55GwMO77o1IV94XtsLICAtbrYiO8JGa5T+4HROaiUCNeuxCPRbOarjj9kxEiBYNhBl+N+yXUNxRX+oIFxAgxrxU7+VElxkbtaFTV/sAU0JgEQ6JVcrwFyTccVts1/2mQAJMBorlSvZcFKV9Tbvs8PruokhQzKlUWgyX+2/RrnB+NRVU0A0pzNgxIBy2Wfy4L1472qkkJGFpBLOCEfvDKO40coBVl75PN1AJzccFiJZXw3B6gnMKoCzx9W9sb9Qbw5h0wBoY8noyC71gnqYvxwO24hRhJQDfRqXJ5uGc7vD9GNe9u3kQoTgBijk5PgZgtQr8kuB699rZMUACVGbqgaNBkCeFJs/6wCjaRFBBDZGkgBtLvb5zUM52UnzPCyMJuCp3zZZJAtOkjZagNWUTJUnndbpYtGIQWS5U9gWWShvGPwiB21FuFMRgWoIC9j7fE1CI+mRIEakpsSoD/JYno8cAQYxAs2AThRGlGiH4NKV7OOaAF4qrOeZDoCRFFrqU7Aki/uP9b/CwjlCgqAH3H0JDp8Ea78CsDawbrxfnh2AUsFhHW0Yt1C6ML+Fv0wfFfuYwlv/Hi11kWno97uOw94A34eWr/NG7XiuqIuU+8M9mTnX7HM6KyOtWQSi/mGvhaZt+QsbK7cfBaaO0qaihl5xbgeWjuO414ZzCzTjP7EyYgahTy6ZJnWe8H08K/JbmiaZnhYkFBE6IMoNK237/97bjb+W+6bUXiOyhP5u5b8LBxMJXy7m4BlRV0Jn0bJomdL+Kd7NwV5BihvWXOoXp8+vVZ8kkLUuwOUi7NnKaAp+oK9HqZ39PoTUOzH3ySr3tZX7h/0UvJqhbMhBxf7kzvyp8ze+eD0mTd/SRPN9jh/DlA5Pf2WIXMpAAAAAElFTkSuQmCC',
+    kenny: 'wBAMAAAClLOS0AAAAGFBMVEULDBAYGRtFREGhoYHLyLYmLSvr8fJyZ1k2zTjyAAACVUlEQVQ4y12TQXObMBCFV2k6uaJ0mFxtOYRrajHmnKLIV4tW43thyDWVMtm/390FPEn2gMR+vPc0QoLpQ42dbdpkTNBaw/S53NAaE8NHQJ97Hgdjqhg1+KU/VLq4kwl59SZcwGMZ4+meJh0iobhajZGr9OSYCaFZwUvJIPwhRTO0+S2Bd2TWNk+iiJTix2l0TQvcnwZNzfOeHrPeHxNYN4pTUDGR14HzrLUIuWPJX9VvtVpAZ22LYHk6QNknXegyeunTssA2NB+OJWJQhb4VIxQgGzG2iFuz0TcM2g9goheTNuq6Y2AxUzh5jX7gj8wJHra8mWxGwDrnBKSt8q2E86qQBkKiSNdj9S4Km2bQMEiYHp7Lb50lk5ygvgCDafezvGNBxkoUjXMtmhqx3msBmGZA6fvaoIAzR6cqAmLDoGv2Eq9/MzAMMvcJHDm/xh1ZJQZZIpxrhhpT0HXmBBMjbWJnZw2mAuBG+hUDavOJGnM6Ka2+s5HhU2Kl/DRgAXT+oEbumwoM0o4ROPKB1QVciRFZpZj3mcC+1EIU2Sxgl7I9DP/0XEXPIGgw4UxL9LMTgyu2YqBv0TZTWoFWBPgaVAwOQ3UBILcgQFWeMU8vce0XM9AQ4hnfp2dek1ICOH0B3j+KyQrYl8H9OG2kBbPVCvrs/UYUAAU9cL6DQfe196+yT1QCooDY7yijAFiBmUHsTeP88woKBmIVTe2cf/oEWEIDg1dajZqRMiIhkOm/nvQSQXeHFYHAjn/44nRLzTNff8owb1/Aj19sFaDmvjst/j2BTtL/Az2WE+urYCu6AAAAAElFTkSuQmCC',
+  }
+
+  const gSnds = {
+    logo: '',
+  }
+
+  const canvas = document.querySelector('canvas')
+
+  const ctx = canvas.getContext('2d')
+
+  const cam = {x: null, y: null}
+
+  const clrs = {
+    0: 'rgba(0,0,0,0)',
+    1: 'rgb(255,255,255)',
+    2: 'rgb(255,0,0)',
+    3: 'rgb(255,164,0)',
+    4: 'rgb(255,255,0)',
+    5: 'rgb(0,255,0)',
+    6: 'rgb(0,0,255)',
+    7: 'rgb(127,0,127)',
+    8: 'rgb(0,0,0)',
+    9: 'rgba(255,255,255,0.5)',
+    10: 'rgba(255,255,255,0.25)',
+    11: 'rgba(0,0,0,0.5)',
+    12: 'rgba(0,0,0,0.25)',
+    13: 'rgb(255,104,179)',
+    14: 'rgb(0,0,139)',
+  }
+
+  const gLogic = {
+    activeUnit: 'riko',
+    balls: 0,
+    coins: 0,
+    hasKey: {
+      jimin: false,
+      riko: false,
+      kenny: false,
+    },
+    inGameTimer: 780,
+  }
+
+  let gTimer60 = 0
+  let gTimer120 = 0
+
+  class Renderer {
+    constructor() {
+      this.gW = 320
+      this.gH = 320
+      this.massS = 32
+      this.massL = 10
+      this.rndr()
+      window.addEventListener('resize', () => this.rndr())
+    }
+
+    calcRes(os1, os2) {
+      return os1 / (os2 / this.massL) * this.massS
+    }
+
+    rndr() {
+      canvas.width = canvas.offsetWidth < canvas.offsetHeight ? this.gW : this.calcRes(canvas.offsetWidth, canvas.offsetHeight)
+      canvas.height = canvas.offsetWidth >= canvas.offsetHeight ? this.gH : this.calcRes(canvas.offsetHeight, canvas.offsetWidth)
+      cam.x = Math.floor(canvas.width / 2)
+      cam.y = Math.floor(canvas.height / 2)
+    }
+  }
+
+  class baseObj {
+    constructor(dx, dy, dw, dh) {
+      this.dx = dx
+      this.dy = dy
+      this.dw = dw || 0
+      this.dh = dh || 0
+    }
+    rndr() { }
+    rndr2() { }
+    update() { }
+  }
+
+  class Coin extends baseObj {
+    constructor(dx, dy) {
+      super(dx, dy, 16, 16)
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      ctx.fillStyle = `rgb(${sine(0, 255, gTimer60 / 60)},${sine(0, 164, gTimer60 / 60)},0)`
+      ctx.fillRect(pan.x + this.dx + 2, pan.y + this.dy, 12, 1)
+      ctx.fillRect(pan.x + this.dx + 1, pan.y + this.dy + 1, 14, 1)
+      ctx.fillRect(pan.x + this.dx, pan.y + this.dy + 2, 16, 12)
+      ctx.fillRect(pan.x + this.dx + 1, pan.y + this.dy + 14, 14, 1)
+      ctx.fillRect(pan.x + this.dx + 2, pan.y + this.dy + 15, 12, 1)
+      ctx.fillStyle = `rgb(255,${sine(164, 255, gTimer60 / 60)},${sine(0, 255, gTimer60 / 60)})`
+      ctx.fillRect(pan.x + this.dx + 4, pan.y + this.dy + 2, 8, 12)
+    }
+  }
+
+  class RoomBlock {
+    constructor() {
+      this.r = clrRng()
+      this.g = clrRng()
+      this.b = clrRng()
+      this.dw = Math.floor(Math.random() * 64) + 1
+      this.dh = Math.floor(Math.random() * 64) + 1
+      this.dx = Math.floor(Math.random() * canvas.width)
+      this.dy = -this.dh
+      this.speed = Math.floor(Math.random() * 6) + 1
+    }
+
+    rndr() {
+      ctx.fillStyle = `rgb(${lerp(this.r, 0, this.dy / canvas.height)},${lerp(this.g, 0, this.dy / canvas.height)},${lerp(this.b, 0, this.dy / canvas.height)})`
+      ctx.fillRect(this.dx, this.dy, this.dw, this.dh)
+    }
+
+    update() {
+      this.dy += this.speed
+
+      if (this.dy > canvas.height) {
+        this.dw = Math.floor(Math.random() * 64) + 1
+        this.dh = Math.floor(Math.random() * 64) + 1
+        this.dx = Math.floor(Math.random() * canvas.width)
+        this.dy = -this.dh
+        this.r = clrRng()
+        this.g = clrRng()
+        this.b = clrRng()
+        this.speed = Math.floor(Math.random() * 6) + 1
+        if (this.dx + this.dw > canvas.width) this.dx = canvas.width - this.dw
+      }
+    }
+  }
+
+  class DPad {
+    constructor() {
+      this.dir = null
+    }
+
+    rndr() {
+      ctx.fillStyle = clrs[11]
+      ctx.beginPath()
+      ctx.arc(64, canvas.height - 64, 48, 0, 2 * Math.PI)
+      ctx.fill()
+      this.rndrBlock('up', 48, 112, 32, 32)
+      this.rndrBlock('down', 48, 48, 32, 32)
+      this.rndrBlock('left', 16, 80, 32, 32)
+      this.rndrBlock('right', 80, 80, 32, 32)
+      this.dir = null
+    }
+
+    update(sm, rm) {
+      const pt = sm.pointer
+      const pt2 = sm.pointer2
+
+      if (
+        checkPntCol(pt.dx + 16, 48, 80, pt.dy + 16, canvas.height - 112, canvas.height - 80) ||
+        checkPntCol(pt2.dx + 16, 48, 80, pt2.dy + 16, canvas.height - 112, canvas.height - 80)
+      ) {
+        this.dir = 'up'
+        rm.plr.body.dy -= rm.plr.body.speed
+      } else if (
+        checkPntCol(pt.dx + 16, 48, 80, pt.dy + 16, canvas.height - 48, canvas.height - 16) ||
+        checkPntCol(pt2.dx + 16, 48, 80, pt2.dy + 16, canvas.height - 48, canvas.height - 16)
+      ) {
+        this.dir = 'down'
+        rm.plr.body.dy += rm.plr.body.speed
+      } else if (
+        checkPntCol(pt.dx + 16, 16, 48, pt.dy + 16, canvas.height - 80, canvas.height - 48) ||
+        checkPntCol(pt2.dx + 16, 16, 48, pt2.dy + 16, canvas.height - 80, canvas.height - 48)
+      ) {
+        this.dir = 'left'
+        rm.plr.body.dx -= rm.plr.body.speed
+      } else if (
+        checkPntCol(pt.dx + 16, 80, 112, pt.dy + 16, canvas.height - 80, canvas.height - 48) ||
+        checkPntCol(pt2.dx + 16, 80, 112, pt2.dy + 16, canvas.height - 80, canvas.height - 48)
+      ) {
+        this.dir = 'right'
+        rm.plr.body.dx += rm.plr.body.speed
+      }
+    }
+
+    rndrBlock(dir, x, my, w, h) {
+      ctx.fillStyle = this.dir === dir ? clrs[1] : clrs[10]
+      ctx.fillRect(x, canvas.height - my, w, h)
+    }
+  }
+
+  class HUD {
+    rndr() {
+      ctx.fillStyle = clrs[11]
+      this.rndrPic('jimin', 16, 16)
+      this.rndrPic('riko', 68, 16)
+      this.rndrPic('kenny', 120, 16)
+      ctx.fillRect(16, 68, 152, 60)
+      ctx.fillStyle = clrs[1]
+      ctx.font = '16px Arial'
+      ctx.textAlign = 'start'
+      ctx.textBaseline = 'top'
+      ctx.fillText(`Unit: ${gLogic.activeUnit} `, 20, 72)
+      ctx.fillText(`Balls: ${gLogic.balls} /12`, 20, 92)
+      ctx.fillText(`Coins: ${gLogic.coins}/169`, 20, 112)
+      ctx.fillText(`Time: ${Math.floor(gLogic.inGameTimer / 60)}:${(gLogic.inGameTimer - (Math.floor(gLogic.inGameTimer / 60)) * 60).toString().padStart(2, '0')}`, 20, 132)
+      ctx.fillText(`${gLogic.activeUnit} ${gLogic.hasKey[gLogic.activeUnit] ? 'does' : 'doesn`t'} have a key.`, 20, 152)
+    }
+
+    rndrPic(name, dx, dy) {
+      ctx.drawImage(gImgs[name], dx, dy)
+      if (gLogic.activeUnit != name) ctx.fillRect(dx, dy, 48, 48)
+    }
+
+    update(sm) {
+      const pt = sm.pointer
+      const pt2 = sm.pointer2
+      if (checkPntCol(pt.dx, 16, 64, pt.dy, 16, 64) || checkPntCol(pt2.dx, 16, 64, pt2.dy, 16, 64)) gLogic.activeUnit = 'jimin'
+      if (checkPntCol(pt.dx, 68, 116, pt.dy, 16, 64) || checkPntCol(pt2.dx, 68, 116, pt2.dy, 16, 64)) gLogic.activeUnit = 'riko'
+      if (checkPntCol(pt.dx, 120, 168, pt.dy, 16, 64) || checkPntCol(pt2.dx, 120, 168, pt2.dy, 16, 64)) gLogic.activeUnit = 'kenny'
+    }
+  }
+
+  class Plr {
+    constructor(config) {
+      this.body = {dx: config?.dx || 0, dy: config?.dy || 0, dw: 32, dh: 48, speed: 2}
+      this.hitBox = {dx: 0, dy: 16, dw: 32, dh: 32}
+    }
+
+    rndr() {
+      if (gLogic.activeUnit === 'jimin') ctx.fillStyle = clrs[13]
+      if (gLogic.activeUnit === 'riko') ctx.fillStyle = clrs[6]
+      if (gLogic.activeUnit === 'kenny') ctx.fillStyle = clrs[5]
+      ctx.fillRect(cam.x, cam.y, this.body.dw, this.body.dh)
+    }
+
+    update(sm, rm) {
+      const dPad = rm.dPad
+      checkObjCol(this, rm.walls, dPad, sm)
+      checkObjCol(this, rm.warps, dPad, sm)
+      checkObjCol(this, rm.gObjs, dPad, sm)
+    }
+  }
+
+  class Warp extends baseObj {
+    constructor(dx, dy, dw, dh, rn, rx, ry) {
+      super(dx, dy, dw, dh)
+      this.rn = rn
+      this.rx = rx
+      this.ry = ry
+    }
+  }
+
+  class Brick extends baseObj {
+    constructor(dx, dy) {
+      super(dx, dy)
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+
+      const path = new Path2D(`
+      M ${pan.x + this.dx + 0},${pan.y + this.dy + 1}
+      l 32,0z
+      M ${pan.x + this.dx + 15},${pan.y + this.dy + 1}
+      l 0,16z
+      M ${pan.x + this.dx + 16},${pan.y + this.dy + 1}
+      l 0,16z
+      M ${pan.x + this.dx + 0}, ${pan.y + this.dy + 16}
+      l 32,0z 
+      M ${pan.x + this.dx + 1},${pan.y + this.dy + 16}
+      l 0,16z
+      M ${pan.x + this.dx + 31},${pan.y + this.dy + 16}
+      l 0,16z
+      M ${pan.x + this.dx + 0}, ${pan.y + this.dy + 31}
+      l 32,0z`)
+
+      ctx.lineWidth = 2
+      ctx.strokeStyle = clrs[9]
+      // ctx.strokeRect(pan.x + this.dx + 1, pan.y + this.dy + 1, 30, 30)
+      ctx.beginPath()
+      ctx.stroke(path)
+    }
+  }
+
+  class CursedBall extends baseObj {
+    constructor(dx, dy) {
+      super(dx, dy)
+    }
+
+    dr = 32
+
+    rndr(plr) {
+      if (gLogic.balls < 12) {
+        const pan = calcPan(plr)
+        const grd = ctx.createRadialGradient(pan.x + this.dx, pan.y + this.dy - 16, 4, pan.x + this.dx, pan.y + this.dy - 16, this.dr)
+        grd.addColorStop(0.0, clrs[1])
+        grd.addColorStop(1, `rgba(0, 0, ${sine(0, 255, gTimer120 / 120)}, 1)`)
+        ctx.fillStyle = grd
+        ctx.beginPath()
+        ctx.arc(pan.x + this.dx, pan.y + this.dy, this.dr - 4, 0, 2 * Math.PI)
+        ctx.fill()
+      }
+    }
+  }
+
+  class RoomBall extends baseObj {
+    constructor(dx, dy) {
+      super(dx + 16, dy + 16)
+    }
+
+    dr = 16
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      const grd = ctx.createRadialGradient(pan.x + this.dx, pan.y + this.dy - 8, 4, pan.x + this.dx, pan.y + this.dy - 8, this.dr)
+      grd.addColorStop(0.0, clrs[1])
+      grd.addColorStop(1, `rgb(${sine(0, 255, gTimer120 / 120)}, 0, 0)`)
+      ctx.fillStyle = grd
+      ctx.beginPath()
+      ctx.arc(pan.x + this.dx, pan.y + this.dy, this.dr - 2, 0, 2 * Math.PI)
+      ctx.fill()
+    }
+  }
+
+  class BallHolder extends baseObj {
+    constructor(dx, dy, id) {
+      super(dx, dy)
+      this.id = id
+    }
+
+    dr = 16
+
+    rndr(plr) {
+      if (gLogic.balls > this.id) {
+        const pan = calcPan(plr)
+        const grd = ctx.createRadialGradient(pan.x + this.dx - 16, pan.y + this.dy - 16 - 8, 4, pan.x + this.dx - 16, pan.y + this.dy - 16 - 8, this.dr)
+        grd.addColorStop(0.0, clrs[1])
+        grd.addColorStop(1, `rgba(0, 0, ${sine(0, 255, gTimer120 / 120)}, 1)`)
+        ctx.fillStyle = grd
+        ctx.beginPath()
+        ctx.arc(pan.x + this.dx - 16, pan.y + this.dy - 16, this.dr - 2, 0, 2 * Math.PI)
+        ctx.fill()
+      } else {
+        const pan = calcPan(plr)
+        ctx.fillStyle = clrs[12]
+        ctx.beginPath()
+        ctx.arc(pan.x + this.dx - 16, pan.y + this.dy - 16, this.dr - 2, 0, 2 * Math.PI)
+        ctx.fill()
+      }
+    }
+  }
+
+  class Ground extends baseObj {
+    constructor(clr, dx, dy, dw, dh, clr2) {
+      super(dx, dy, dw, dh)
+      this.clr = clr || 'brown'
+      this.clr2 = clr2
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+
+      if (this.clr2) {
+        const grd = ctx.createLinearGradient(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+        grd.addColorStop(0.0, this.clr)
+        grd.addColorStop(0.8, this.clr2)
+        ctx.fillStyle = grd
+        ctx.fillRect(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+      } else {
+        ctx.fillStyle = this.clr
+        ctx.fillRect(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+      }
+    }
+  }
+
+  class RoomLock extends baseObj {
+    constructor(n = 'jimin', dx, dy) {
+      super(dx, dy, 32, 32)
+      this.n = n
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      const path = new Path2D(`M ${pan.x + this.dx + 16},${pan.y + this.dy} l 16,0 0,4 -16,0 0,4 8,0 0,4 -8,0 0,8 10,0 0,10 -20,0 0,-10 6,0, 0,-20 z`)
+      ctx.fillStyle = `rgb(${this.n === 'jimin' ? 255 : 0},${this.n === 'kenny' ? 255 : 0},${this.n === 'riko' ? 255 : 0})`
+      ctx.fillRect(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+      ctx.fillStyle = `rgb(${this.n === 'jimin' ? 255 : sine(255, 0, gTimer120 / 120)}, ${this.n === 'kenny' ? 255 : sine(255, 0, gTimer120 / 120)}, ${this.n === 'riko' ? 255 : sine(255, 0, gTimer120 / 120)})`
+      ctx.beginPath()
+      ctx.fill(path)
+    }
+  }
+
+  class RoomKey extends baseObj {
+    constructor(n = 'jimin', dx, dy) {
+      super(dx, dy, 32, 32)
+      this.n = n
+    }
+
+    rndr(plr) {
+      if (gLogic.activeUnit === this.n) {
+        const pan = calcPan(plr)
+        const path = new Path2D(`M ${pan.x + this.dx + 16},${pan.y + this.dy + sine(0, 4, gTimer60 / 60)} l 16,0 0,4 -16,0 0,4 8,0 0,4 -8,0 0,8 10,0 0,10 -20,0 0,-10 6,0, 0,-20 z`)
+        ctx.fillStyle = `rgb(${this.n === 'jimin' ? 255 : sine(255, 0, gTimer120 / 120)}, ${this.n === 'kenny' ? 255 : sine(255, 0, gTimer120 / 120)}, ${this.n === 'riko' ? 255 : sine(255, 0, gTimer120 / 120)})`
+        ctx.beginPath()
+        ctx.fill(path)
+      }
+    }
+  }
+
+  class Wall extends baseObj {
+    constructor(clr, dx, dy, dw, dh, solid = true, seeable = true) {
+      super(dx, dy, dw, dh)
+      this.clr = clr
+      this.solid = solid
+      this.seeable = seeable
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      ctx.fillStyle = this.clr
+      if (!this.seeable && gLogic.activeUnit != 'jimin') return
+      ctx.fillRect(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+    }
+  }
+
+  class EndGameMessage extends baseObj {
+    constructor(dx, dy) {
+      super(dx, dy, 32, 32)
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      ctx.font = '43px Arial'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'top'
+      ctx.fillStyle = clrs[8]
+      if (gLogic.balls === 12 && gLogic.inGameTimer > 0) {
+        ctx.fillText('You Win', pan.x + this.dx, pan.y + this.dy)
+      } else {
+        ctx.fillText('You Lose', pan.x + this.dx, pan.y + this.dy)
+      }
+    }
+  }
+
+  class Kabin extends baseObj {
+    constructor(dx, dy) {
+      super(dx, dy, 32, 32)
+    }
+
+    rndr(plr) {
+      const pan = calcPan(plr)
+      ctx.fillStyle = clrs[1]
+      ctx.fillRect(pan.x + this.dx, pan.y + this.dy, this.dw, this.dh)
+      ctx.fillStyle = clrs[5]
+      ctx.fillRect(pan.x + this.dx + 4, pan.y + this.dy + 4, this.dw - 8, this.dh - 16)
+      ctx.fillStyle = clrs[11]
+      ctx.fillRect(pan.x + this.dx + 4, pan.y + this.dy + 4, this.dw - 8, this.dh - 26)
+      ctx.fillStyle = clrs[11]
+      ctx.fillRect(pan.x + this.dx, pan.y + this.dy + 24, this.dw, this.dh - 24)
+    }
+  }
+
+  class TitleScene {
+    constructor() {
+      this.gObjs = []
+      for (let i = 0; i < 39; i++) this.gObjs.push(new RoomBlock())
+    }
+
+    rndr() {
+      this.gObjs.forEach(gObj => gObj.rndr())
+      const dx = canvas.width / 2
+      const dy = canvas.height / 2
+      ctx.fillStyle = clrs[9]
+      ctx.fillRect(0, dy - 48, canvas.width, 43)
+      ctx.font = '43px Arial'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'top'
+      ctx.fillStyle = clrs[8]
+      ctx.fillText('3ALL ROOM', dx, dy - 46)
+      ctx.fillText('1', dx - 117, dy - 46)
+      ctx.fillStyle = clrs[9]
+      ctx.font = '24px Arial'
+      ctx.textAlign = 'center'
+      ctx.fillText('Tap or Click to Start', dx, dy + 24)
+      ctx.font = '16px Arial'
+      ctx.textAlign = 'start'
+      ctx.textBaseline = 'top'
+      ctx.fillText('#js13k 2024', 4, 4)
+      ctx.textAlign = 'end'
+      ctx.textBaseline = 'bottom'
+      ctx.fillText('Made by: Kenny Fully', canvas.width - 4, canvas.height - 4)
+    };
+
+    update(sm) {
+      if (sm.isTapped) {
+        sm.isTapped = false
+        countDown()
+        return sm.currentScene = 'start'
+      }
+
+      this.gObjs.forEach(gObj => gObj.update())
+    }
+  }
+
+  class Room {
+    constructor(grounds, walls, warps, gObjs, plr) {
+      this.grounds = grounds
+      this.walls = walls
+      this.warps = warps
+      this.gObjs = gObjs
+      this.plr = plr || new Plr()
+      this.hud = new HUD()
+      this.dPad = new DPad()
+      for (let i = 0; i < this.grounds.length; i++) this.grounds[i] = new Ground(...this.grounds[i])
+      for (let i = 0; i < this.walls.length; i++) this.walls[i] = new Wall(...this.walls[i])
+      for (let i = 0; i < this.warps.length; i++) this.warps[i] = new Warp(...this.warps[i])
+      for (let i = 0; i < this.gObjs.length; i++) {
+        if (this.gObjs[i][0] === 'bh') this.gObjs[i] = new BallHolder(this.gObjs[i][1], this.gObjs[i][2], this.gObjs[i][3])
+        if (this.gObjs[i][0] === 'br') this.gObjs[i] = new Brick(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'c') this.gObjs[i] = new Coin(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'cb') this.gObjs[i] = new CursedBall(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'eg') this.gObjs[i] = new EndGameMessage(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'kb') this.gObjs[i] = new Kabin(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'rb') this.gObjs[i] = new RoomBall(this.gObjs[i][1], this.gObjs[i][2])
+        if (this.gObjs[i][0] === 'rk') this.gObjs[i] = new RoomKey(this.gObjs[i][1], this.gObjs[i][2], this.gObjs[i][3])
+        if (this.gObjs[i][0] === 'rl') this.gObjs[i] = new RoomLock(this.gObjs[i][1], this.gObjs[i][2], this.gObjs[i][3])
+      }
+    }
+
+    rndr() {
+      const camX = cam.x - this.plr.body.dx
+      const camY = cam.y - this.plr.body.dy
+      this.grounds.forEach(ground => ground.rndr(this.plr))
+      this.walls.forEach(wall => wall.rndr(this.plr))
+      this.gObjs.forEach(gObj => gObj.rndr(this.plr))
+      this.plr.rndr()
+      this.hud.rndr()
+      this.dPad.rndr()
+    }
+
+    update(sm) {
+      this.hud.update(sm)
+      this.dPad.update(sm, this)
+      this.gObjs.forEach(gObj => gObj.update(sm, this))
+      this.plr.update(sm, this)
+    }
+  }
+
+  class StartRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[14], 0, 0, 320, 352],
+          [clrs[1], 32, 32, 256, 256, clrs[0]],
+        ],
+        [
+          [clrs[11], 32, 0, 96, 32],
+          [clrs[11], 192, 0, 96, 32],
+          [clrs[9], 0, 0, 32, 320],
+          [clrs[12], 32, 32, 4, 256, false],
+          [clrs[9], 288, 0, 32, 320],
+          [clrs[9], 32, 288, 96, 32],
+          [clrs[12], 128, 304, 4, 48, false],
+          [clrs[9], 192, 288, 96, 32],
+          [clrs[11], 0, 320, 128, 32],
+          [clrs[11], 192, 320, 128, 32],
+        ],
+        [
+          [128, 0, 64, 32, 'end', 144, 272],
+          [128, 320, 64, 32, 'main', 464, -16],
+        ],
+        [
+          ['cb', 160, 32],
+          ['bh', 64, 64, 0],
+          ['bh', 96, 64, 1],
+          ['bh', 128, 64, 2],
+          ['bh', 224, 64, 3],
+          ['bh', 256, 64, 4],
+          ['bh', 288, 64, 5],
+          ['bh', 80, 96, 6],
+          ['bh', 112, 96, 7],
+          ['bh', 144, 96, 8],
+          ['bh', 208, 96, 9],
+          ['bh', 240, 96, 10],
+          ['bh', 272, 96, 11],
+          ['kb', 96, 128, 12],
+          ['kb', 192, 128],
+          ['c', 152, 72],
+          ['c', 48, 192],
+          ['c', 80, 160],
+          ['c', 112, 192],
+          ['c', 192, 192],
+          ['c', 224, 160],
+          ['c', 256, 192],
+          ['c', 48, 224],
+          ['c', 80, 256],
+          ['c', 112, 224],
+          ['c', 192, 224],
+          ['c', 224, 256],
+          ['c', 256, 224],
+        ],
+        new Plr({dx: 144, dy: 160}),
+      )
+
+      rndrBricks(this.walls, 3, 1, 0)
+      rndrBricks(this.walls, 3, 6, 0)
+      rndrBricks(this.walls, 4, 0, 10)
+      rndrBricks(this.walls, 4, 6, 10)
+    }
+  }
+
+  class MainRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[7], 0, 0, 960, 640],
+        ],
+        [
+          [clrs[14], 0, -32, 448, 32],
+          [clrs[14], 512, -32, 448, 32],
+          [clrs[3], -32, 0, 32, 320],
+          [clrs[3], -32, 384, 32, 256],
+          [clrs[3], 960, 0, 32, 640],
+          [clrs[3], 96, 576, 832 - 64, 32, true, false],
+          [clrs[3], 64, 640, 832, 32],
+          [clrs[9], 288, 0, 32, 160],
+          [clrs[9], 640, 0, 32, 160],
+        ],
+        [
+          [448, -32, 64, 32, 'start', 144, 272],
+          [-32, 320, 32, 64, 'r6', 592, 304],
+          [0, 640, 64, 32, 'r7', 16, 0],
+          [896, 640, 64, 32, 'r8', 304, 0],
+        ],
+        [
+          ['rb', 0, 0],
+          ['rb', 960 - 32, 0],
+          ['rb', 480, 640 - 32],
+          ['kb', 96, 128],
+          ['c', 32, 32],
+          ['c', 48, 64],
+          ['c', 64, 32],
+          ['c', 80, 64],
+          ['c', 96, 32],
+          ['c', 112, 64],
+          ['c', 128, 32],
+          ['c', 144, 64],
+          ['c', 160, 32],
+          ['c', 176, 64],
+          ['c', 196, 32],
+          ['c', 212, 64],
+          ['c', 228, 32],
+          ['rl', 'riko', 896, 0],
+          ['rl', 'riko', 896, 32],
+          ['rl', 'riko', 928, 32],
+        ],
+      )
+
+      rndrBricks(this.walls, 14, 0, -1)
+      rndrBricks(this.walls, 14, 16, -1)
+    }
+  }
+
+  class JiminRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[13], 0, 0, 640, 640, clrs[1]],
+        ],
+        [
+          [clrs[2], 0, -32, 640, 32],
+          [clrs[2], -32, 0, 32, 640],
+          [clrs[2], 640, 0, 32, 640],
+          [clrs[2], 64, 640, 576, 32],
+        ],
+        [
+          [0, 640, 64, 32, 'r6', 16, 0],
+        ],
+        [
+          ['rb', 0, 0],
+          ['c', 542, 0],
+          ['c', 574, 0],
+          ['c', 608, 0],
+          ['c', 542, 32],
+          ['c', 574, 32],
+          ['c', 608, 32],
+          ['c', 542, 64],
+          ['c', 574, 64],
+          ['c', 608, 64],
+          ['c', 542, 96],
+          ['c', 574, 96],
+          ['c', 608, 96],
+          ['c', 574, 128],
+          ['rk', 'jimin', Math.floor(Math.random() * 604), Math.floor(Math.random() * 604)]
+        ],
+      )
+    }
+  }
+
+  class RikoRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[6], 0, 0, 640, 640],
+          [clrs[11], 0, 0, 640, 640],
+        ],
+        [
+          [clrs[6], 0, -32, 576, 32],
+          [clrs[6], -32, 0, 32, 640],
+          [clrs[6], 640, 0, 32, 576],
+          [clrs[6], 0, 640, 640, 32],
+        ],
+        [
+          [576, -32, 64, 32, 'r7', 272, 592],
+          [640, 576, 32, 64, 'r9', 0, 256],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 608), Math.floor(Math.random() * 608)],
+          ['rk', 'riko', Math.floor(Math.random() * 608), Math.floor(Math.random() * 608)],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 13, Math.floor(Math.random() * 628), Math.floor(Math.random() * 628))
+    }
+  }
+
+  class KennyRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[5], 0, 0, 640, 640],
+          [clrs[12], 0, 0, 640, 640],
+        ],
+        [
+          [clrs[5], 0, -32, 576, 32],
+          [clrs[5], -32, 0, 32, 640],
+          [clrs[5], 640, 0, 32, 640],
+          [clrs[5], 0, 640, 256, 32],
+          [clrs[5], 320, 640, 320, 32],
+        ],
+        [
+          [576, -32, 64, 32, 'r11', 272, 256],
+          [256, 640, 64, 32, 'r8', 912, 0],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 576), Math.floor(Math.random() * 608)],
+          ['rk', 'kenny', Math.floor(Math.random() * 576), Math.floor(Math.random() * 288)],
+          ['rl', 'kenny', 608, 0],
+          ['rl', 'kenny', 576, 0],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 13, 576, 608)
+    }
+  }
+
+  class R6Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[2], 0, 0, 320, 320, clrs[6]],
+          [clrs[6], 0, 320, 640, 320, clrs[2]],
+        ],
+        [
+          [clrs[13], 64, -32, 256, 32],
+          [clrs[13], -32, 0, 32, 640],
+          [clrs[13], 320, 0, 32, 320],
+          [clrs[13], 352, 320 - 32, 320 - 32, 32],
+          [clrs[13], 640, 384, 32, 256],
+          [clrs[13], 64, 640, 576, 32],
+        ],
+        [
+          [0, -32, 64, 32, 'jimin', 16, 592],
+          [640, 320, 32, 64, 'main', 0, 304],
+          [0, 640, 64, 32, 'r10', 16, 0],
+        ],
+        [
+          ['rb', 128, 64],
+          ['rl', 'jimin', 0, 608],
+          ['rl', 'jimin', 32, 608],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 6, 304, 304)
+      rdmCoins(this.gObjs, 7, 608, 304, 0, 320)
+    }
+  }
+
+  class R7Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[6], 0, 0, 320, 640],
+          [clrs[11], 0, 0, 320, 640],
+          [clrs[11], 0, 320, 320, 320],
+        ],
+        [
+          [clrs[6], 64, -32, 256, 32],
+          [clrs[6], -32, 0, 32, 640],
+          [clrs[6], 320, 0, 32, 640],
+          [clrs[6], 0, 640, 256, 32],
+        ],
+        [
+          [0, -32, 64, 32, 'main', 16, 592],
+          [256, 640, 64, 32, 'riko', 592, 0],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 304), Math.floor(Math.random() * 624)],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 13, 304, 624)
+    }
+  }
+
+  class R8Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[5], 0, 0, 960, 320],
+          [clrs[12], 0, 0, 960, 320],
+        ],
+        [
+          [clrs[5], 0, -32, 288, 32],
+          [clrs[5], 352, -32, 544, 32],
+          [clrs[5], -32, 0, 32, 320],
+          [clrs[5], 960, 0, 32, 320],
+          [clrs[5], 0, 320, 960, 32],
+        ],
+        [
+          [288, -32, 64, 32, 'main', 912, 592],
+          [896, -32, 64, 32, 'kenny', 272, 592],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 928), Math.floor(Math.random() * 288)],
+        ],
+      )
+
+      for (let i = 0; i < 96; i++) {
+        this.grounds.push(new Ground(clrs[4], Math.floor(Math.random() * 896), Math.floor(Math.random() * 256), 64, 64))
+      }
+
+      rdmCoins(this.gObjs, 13, 944, 304)
+    }
+  }
+
+  class R9Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[6], 0, 0, 960, 320],
+          [clrs[11], 0, 0, 960, 320],
+          [clrs[11], 0, 0, 960, 320],
+          [clrs[11], 640, 0, 320, 320],
+          [clrs[6], 960, 256, 32, 64],
+        ],
+        [
+          [clrs[6], 0, -32, 960, 32],
+          [clrs[6], -32, 0, 32, 256],
+          [clrs[6], 960, 0, 32, 256],
+          [clrs[6], 0, 320, 960, 32],
+        ],
+        [
+          [-32, 256, 32, 64, 'riko', 592, 576],
+          [960, 256, 32, 64, 'r12', 0, 576],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 928), Math.floor(Math.random() * 288)],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 13, 944, 304)
+    }
+  }
+
+  class R10Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[8], 0, 0, 320, 320],
+        ],
+        [
+          [clrs[13], 64, -32, 256, 32],
+          [clrs[13], -32, 0, 32, 320],
+          [clrs[13], 320, 0, 32, 320],
+          [clrs[13], 0, 320, 320, 32],
+          [clrs[7], 0, 64, 256, 32, true, false],
+          [clrs[7], 64, 128, 256, 32, true, false],
+          [clrs[7], 160, 192, 32, 128, true, false],
+        ],
+        [
+          [0, -32, 64, 32, 'r6', 16, 592],
+        ],
+        [
+          ['rb', 0, 288],
+          ['c', 0, 200],
+          ['c', 0, 216],
+          ['c', 0, 232],
+          ['c', 0, 248],
+          ['c', 0, 264],
+          ['c', 40, 304],
+          ['c', 56, 304],
+          ['c', 72, 304],
+          ['c', 88, 304],
+          ['c', 104, 304],
+          ['c', 304, 304],
+          ['c', 304, 288],
+          ['c', 288, 304],
+        ],
+      )
+    }
+  }
+
+  class R11Room extends Room {
+    constructor() {
+      super(
+        [],
+        [
+          [clrs[5], 0, -32, 320, 32],
+          [clrs[5], -32, 0, 32, 320],
+          [clrs[5], 320, 0, 32, 320],
+          [clrs[5], 0, 320, 256, 32],
+        ],
+        [
+          [256, 320, 64, 32, 'kenny', 592, 0],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 288), Math.floor(Math.random() * 288)],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 13, 304, 304)
+    }
+  }
+
+  class R12Room extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[6], -32, 320 + 320 - 64, 32, 64],
+        ],
+        [
+          [clrs[6], 320, -32, 320, 32],
+          [clrs[6], 320 - 32, 0, 32, 320],
+          [clrs[6], 640, 0, 32, 640],
+          [clrs[6], 0, 320 - 32, 320 - 32, 32],
+          [clrs[6], -32, 320, 32, 256],
+          [clrs[6], 0, 640, 640, 32],
+        ],
+        [
+          [-32, 576, 32, 64, 'r9', 928, 256],
+        ],
+        [
+          ['rb', Math.floor(Math.random() * 608), Math.floor(Math.random() * 288) + 320],
+        ],
+      )
+
+      rdmCoins(this.gObjs, 6, 304, 304, 320, 0)
+      rdmCoins(this.gObjs, 7, 608, 304, 0, 320)
+    }
+  }
+
+  class EndRoom extends Room {
+    constructor() {
+      super(
+        [
+          [clrs[1], 0, 0, 640, 320],
+        ],
+        [
+          [clrs[4], 0, -32, 640, 32],
+          [clrs[4], -32, 0, 32, 320],
+          [clrs[4], 640, 0, 32, 320],
+          [clrs[4], 0, 320, 128, 32],
+          [clrs[4], 256 - 64, 320, 256 + 256 - 64, 32],
+        ],
+        [
+          [128, 320, 64, 32, 'start', 144, 32],
+        ],
+        [
+          ['eg', 128, 64]
+        ],
+      )
+      rdmCoins(this.gObjs, 13, 628, 304)
+    }
+  }
+
+  class SceneManager {
+    constructor() {
+      this.scenes = {
+        title: new TitleScene(),
+        start: new StartRoom(),
+        main: new MainRoom(),
+        jimin: new JiminRoom(),
+        riko: new RikoRoom(),
+        kenny: new KennyRoom(),
+        r6: new R6Room(),
+        r7: new R7Room(),
+        r8: new R8Room(),
+        r9: new R9Room(),
+        r10: new R10Room(),
+        r11: new R11Room(),
+        r12: new R12Room(),
+        end: new EndRoom(),
+      }
+
+      this.currentScene = 'title'
+      this.isTapped = false
+      this.pointer = {id: null, clr: '', dx: null, dy: null}
+      this.pointer2 = {id: null, clr: '', dx: null, dy: null}
+
+      canvas.addEventListener('pointerdown', e => {
+        if (this.pointer.id === null) {
+          this.pointer.id = e.pointerId
+          this.setPntr(e, this.pointer, 'rgba(255,255,255,0.25)')
+        } else if (this.pointer2.id === null) {
+          this.pointer2.id = e.pointerId
+          this.setPntr(e, this.pointer2, 'rgba(255,255,255,0.25)')
+        } else {
+          return
+        }
+      })
+
+      canvas.addEventListener('pointermove', e => {
+        if (this.pointer.id === e.pointerId) {
+          this.setPntr(e, this.pointer, 'rgb(0,255,0,0.25)')
+        } else if (this.pointer2.id === e.pointerId) {
+          this.setPntr(e, this.pointer2, 'rgb(0,255,0,0.25)')
+        } else {
+          return
+        }
+      })
+
+      canvas.addEventListener('pointerup', e => {
+        if (this.pointer.id === e.pointerId) {
+          this.isTapped = true
+          this.unsetPntr(this.pointer)
+        } else if (this.pointer2.id === e.pointerId) {
+          this.isTapped = true
+          this.unsetPntr(this.pointer2)
+        }
+      })
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'r') {
+          this.pointer.id = null
+          this.pointer2.id = null
+        }
+      })
+    }
+
+    setPntr(e, pntr, clr) {
+      const pos = getPntrPos(e)
+      pntr.clr = clr
+      pntr.dx = pos.x
+      pntr.dy = pos.y
+    }
+
+    unsetPntr(pntr) {
+      pntr.id = null
+      pntr.dx = null
+      pntr.dy = null
+    }
+
+    rndr() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      this.scenes[this.currentScene].rndr()
+
+      if (this.pointer.id != null) {
+        ctx.fillStyle = this.pointer.clr
+        ctx.fillRect(this.pointer.dx, this.pointer.dy, 32, 32)
+      }
+
+      if (this.pointer2.id != null) {
+        ctx.fillStyle = this.pointer2.clr
+        ctx.fillRect(this.pointer2.dx, this.pointer2.dy, 32, 32)
+      }
+
+      this.update()
+    }
+
+    update() {
+      this.scenes[this.currentScene].update(this)
+
+      if (gTimer60 > 59) {
+        gTimer60 = 0
+      } else {
+        gTimer60++
+      }
+
+      if (gTimer120 > 119) {
+        gTimer120 = 0
+      } else {
+        gTimer120++
+      }
+
+      requestAnimationFrame(() => this.rndr())
+    }
+  }
+
+  const countDown = () => {
+    setInterval(() => {
+      gLogic.inGameTimer--
+    }, 1000)
+  }
+
+  const getPntrPos = (e) => {
+    const rect = e.target.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.right * canvas.width - 16
+    const y = (e.clientY - rect.top) / rect.bottom * canvas.height - 16
+    return {x: x, y: y}
+  }
+
+  const calcPan = (plr = {body: {dx: 1, dy: 1}}) => ({x: cam.x - plr.body.dx, y: cam.y - plr.body.dy})
+
+  const lerp = (a, b, t) => a + (b - a) * t
+
+  const sine = (a, b, t) => a + (b - a) * (Math.sin(Math.PI * (t * 2)))
+
+  const clrRng = () => Math.floor(Math.random() * 256)
+
+  const rdmCoins = (gObjs, n, w, h, xw = 0, xh = 0) => {
+    for (let i = 0; i < n; i++) {
+      gObjs.push(new Coin(Math.floor(Math.random() * w) + xw, Math.floor(Math.random() * h) + xh))
+    }
+  }
+
+  const rndrBricks = (walls, n, dtx = 0, dty = 0) => {
+    for (let i = 0; i < n; i++) {
+      walls.push(new Brick((32 * dtx) + (32 * i), (32 * dty)))
+    }
+  }
+
+  const checkPntCol = (dx, dx2, dx2pw, dy, dy2, dy2ph) => dx > dx2 && dx < dx2pw && dy > dy2 && dy < dy2ph
+
+  const checkObjCol = (a, b, dPad, sm) => {
+    const pushBack = () => {
+      if (dPad.dir === 'up') {
+        a.body.dy += a.body.speed
+      } else if (dPad.dir === 'down') {
+        a.body.dy -= a.body.speed
+      } else if (dPad.dir === 'left') {
+        a.body.dx += a.body.speed
+      } else if (dPad.dir === 'right') {
+        a.body.dx -= a.body.speed
+      }
+    }
+
+    for (let i = 0; i < b.length; i++) {
+      if (
+        a.body.dx + a.body.dw > b[i].dx &&
+        a.body.dx < b[i].dx + b[i].dw &&
+        a.body.dy + a.body.dh > b[i].dy &&
+        a.body.dy + 16 < b[i].dy + b[i].dh ||
+        a.body.dx + a.body.dw > b[i].dx - b[i].dr &&
+        a.body.dx < b[i].dx + b[i].dr &&
+        a.body.dy + a.body.dh > b[i].dy - b[i].dr &&
+        a.body.dy + 16 < b[i].dy + b[i].dr
+      ) {
+        if (b[i] instanceof Wall && b[i].solid || b[i] instanceof CursedBall && gLogic.balls < 12 || b[i] instanceof Kabin) {
+          pushBack()
+        } else if (b[i] instanceof Warp) {
+          sm.scenes[b[i].rn].plr.body.dx = b[i]['rx']
+          sm.scenes[b[i].rn].plr.body.dy = b[i]['ry']
+          sm.currentScene = b[i]['rn']
+        } else if (b[i] instanceof RoomBall) {
+          b.splice(b.indexOf(b[i]), 1)
+          gLogic.balls++
+        } else if (b[i] instanceof Coin) {
+          b.splice(b.indexOf(b[i]), 1)
+          gLogic.coins++
+        } else if (b[i] instanceof RoomKey && b[i].n === gLogic.activeUnit) {
+          b.splice(b.indexOf(b[i]), 1)
+          gLogic.hasKey[gLogic.activeUnit] = true
+        } else if (b[i] instanceof RoomLock) {
+          if (gLogic.hasKey[b[i].n]) {
+            b.splice(b.indexOf(b[i]), 1)
+          } else {
+            pushBack()
+          }
+        }
+      }
+    }
+  }
+
+  const renderer = new Renderer()
+
+  const sceneManager = new SceneManager()
+
+  Object.entries(gImgs).forEach(imgSet => {
+    const gImg = new Image()
+    gImg.src = `data: image / png; base64, ${imgSet[0] === 'logo' ? '' : 'iVBORw0KGgoAAAANSUhEUgAAADAAAAA'}${imgSet[1]}`
+    gImgs[imgSet[0]] = gImg
+  })
+
+  Object.entries(gSnds).forEach(sndSet => {
+    // todo get sounds
+  })
+
+  document.querySelector('link').href = gImgs.riko.src
+
+  sceneManager.rndr()
+
+  console.log('May God Bless Us!')
+</script>
