@@ -1,0 +1,60 @@
+<html>
+
+<head>
+	<style>
+		:root {
+			--scale: 1;
+
+			@media screen and (min-width: 512px) and (min-height: 480px) {
+				--scale: 2;
+			}
+
+			@media screen and (min-width: 768px) and (min-height: 720px) {
+				--scale: 3;
+			}
+
+			@media screen and (min-width: 1024px) and (min-height: 960px) {
+				--scale: 4;
+			}
+
+			@media screen and (min-width: 1280px) and (min-height: 1200px) {
+				--scale: 5;
+			}
+		}
+
+		body {
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: #222;
+		}
+
+		canvas {
+			background-color: #000;
+			transform: scale(var(--scale));
+			image-rendering: optimizeSpeed;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: -o-crisp-edges;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+
+		svg {
+			position: absolute;
+			z-index: -1;
+			width: 0;
+			height: 0;
+		}
+	</style>
+	<title>MICRO SHOOTER</title>
+</head>
+
+<body>
+	<canvas id="c" width="256" height="240"></canvas>
+	<script src="game.js"></script>
+</body>
+
+</html>
