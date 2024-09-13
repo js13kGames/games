@@ -1,0 +1,15 @@
+:root {
+	color-scheme: light dark;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+
+canvas {
+	width: 100lvw;
+	height: 100lvh;
+	display: block;
+}
