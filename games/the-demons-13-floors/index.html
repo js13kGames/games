@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Demons 13 Floors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="gameTitle">The Demons 13 Floors</h1>
+        <div class="rain"></div>
+        <div id=player class="instructions">
+            <h2>How to Play</h2>
+            <p>Use the arrow keys to move:</p>
+            <ul>
+                <li><strong>⬅:</strong> Move Left</li>
+                <li><strong>➡:</strong> Move Right</li>
+                <li><strong>⬆:</strong> Move Up</li>
+                <li><strong>⬇:</strong> Move Down</li>
+                <li><strong>Shift:</strong> Move Slow</li>
+                <li><strong>Escape:</strong> Pause The Game</li>
+            </ul>
+            <strong style="color: red;">Tips: SHIFT is useful!</strong>
+        </div>
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
+        <div class="hud">
+            <h2>Game Info</h2>
+            <p id="lives">HP: 13</p>
+            <p id="level">Level: 1</p>
+            <p id="score">Score: 0</p>
+            <strong style="color: rgb(92, 10, 245);">Tips: Every 130 score, get 1 more life!</strong>
+        </div>
+    </div>
+    
+    <script src="stg-game-min.js"></script>
+</body>
+</html>
