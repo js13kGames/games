@@ -1,0 +1,1304 @@
+@charset "UTF-8";
+
+:root {
+  font-size: 2dvmin;
+  font-family: Arial, "Liberation Sans", sans-serif;
+  --game-width: calc(45 * 1rem);
+  --size: calc(var(--game-width) / 9);
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
+  background: #444;
+  color: #FFF;
+  user-select: none;
+  * {
+    box-sizing: border-box;
+  }
+  *::before, *::after {
+    display: block;
+    box-sizing: border-box;
+  }
+  &::after {
+    content: "Yes, this game logic is written in pure CSS, there is no JS on this page.";
+    font-size: .8em;
+    display: block;
+    position: absolute;
+    right: 2em;
+    bottom: 1em;
+    color: rgba(255,255,255,.3);
+    animation: 30s linear 0s infinite pulsate-footer;
+  }
+}
+
+@keyframes pulsate-footer {
+  0% {
+    color: rgba(255,255,255,.2)
+  }
+  40% {
+    color: rgba(255,255,255,.3);
+    text-shadow: 0 0 0 transparent,
+                 0 0 0 transparent;
+  }
+  50% {
+    color: rgba(255,255,255,.9);
+    text-shadow: 1em -1em .1em rgba(255,200,0,.5),
+                 -1em 1em .1em rgba(255,200,0,.5);
+  }
+  60% {
+    color: rgba(255,255,255,.3);
+    text-shadow: 2em -2em .2em transparent,
+                 -2em 2em .2em transparent;
+  }
+  100% {
+    color: rgba(255,255,255,.2)
+  }
+}
+
+@media only screen and (orientation: portrait) {
+  body::after {
+    font-size: 1.4em;
+  }
+}
+
+body {
+  --g1x: 15%;
+  --g1y: 25%;
+  --g2x: -5%;
+  --g2y: 78%;
+  background: #730;
+  background-image:
+    radial-gradient(at var(--g1x) var(--g1y),
+      #420 00%, transparent 01%,
+      #420 05%, transparent 05.1%,
+      #420 10%, transparent 10.1%,
+      #420 15%, transparent 15.1%,
+      #420 20%, transparent 20.1%,
+      #420 25%, transparent 25.1%
+    ),
+    radial-gradient(at var(--g2x) var(--g2y),
+      #420 00%, transparent 01%,
+      #420 05%, transparent 05.1%,
+      #420 10%, transparent 10.1%,
+      #420 15%, transparent 15.1%,
+      #420 20%, transparent 20.1%,
+      #420 25%, transparent 25.1%
+    );
+  background-size: 500dvw 50dvh;
+}
+
+h1 {
+  position: absolute;
+  top: 4em;
+  left: calc( (100dvw - 90dvh) / 3 - 3.5em );
+  transform: rotate(-45deg);
+  user-select: none;
+  font-size: 2.5em;
+  white-space: nowrap;
+  color: #999;
+  margin: 0;
+  padding: .1em;
+  overflow: hidden;
+  background: #808080;
+  color: #666;
+  text-shadow: .03em .03em 0 #444, -.03em -.03em 0 #DDD;
+  filter: blur(.01em);
+  mix-blend-mode: overlay;
+  div {
+    font-size: 2em;
+    transform: scale(1.55, 1);
+    line-height: .8em;
+  }
+}
+
+#pre-info {
+  position: relative;
+  left: 0;
+  transform: rotate(0deg);
+  font-size: 1.75rem;
+  line-height: 2rem;
+  max-width: 40rem;
+  grid-area: info;
+  text-align: left;
+  padding: 4dvh 2rem;
+  margin: 0 1rem 20dvh 1rem;
+  background: linear-gradient(#FF8, #BB0);
+  color: #225;
+  box-shadow: .1rem .1rem .8rem #000;
+  z-index: 5;
+  span {
+    margin-top: 1.5rem;
+    display: block;
+    /* font-size: 80%; */
+  }
+  #start {
+    display: inline-block;
+    line-height: 1em;
+    padding: .2em .4em;
+    border-radius: .4em;
+    background: #07D;
+    box-shadow: 0 0 .6em rgba(30,10,0,.8);
+    text-shadow: 0 0 .2em #048;
+    input { display: none }
+    cursor: pointer;
+  }
+  &:has(#start :checked) {
+    left: -100dvw;
+    transform: rotate(-90deg);
+    font-size: .01rem;
+    opacity: 0;
+    transition: 1s 1s, left 1s ease-in, transform 1s ease-in;
+  }
+}
+
+@media only screen and (orientation: portrait) {
+  body {
+    --g1x: 25%;
+    --g1y: 18%;
+    --g2x: 78%;
+    --g2y:  0%;
+    background-size: 50dvw 500dvh;
+  }
+
+  h1 {
+    position: static;
+    transform: rotate(0deg);
+    font-size: 12dvw;
+  }
+
+  #pre-info {
+    font-size: 1.8em;
+    line-height: 3rem;
+    min-height: 18rem;
+    max-width: 75dvw;
+    margin: 0 1em;
+    transform: rotate(15deg);
+    #start {
+      font-size: 1.2em;
+      padding: .2em .1em;
+    }
+  }
+}
+
+@media only screen and (orientation: landscape) {
+  body {
+    display: grid;
+    grid-template-areas:
+      "pad1 game pad2"
+      "info game pad2";
+  }
+  main {
+    grid-area: game;
+    margin-right: 2em;
+  }
+}
+
+main {
+  width: var(--game-width);
+  height: var(--game-width);
+  --main-radius: calc(var(--size) / 4.25);
+  border-radius: var(--main-radius);
+  box-shadow: 0 0 1em #000;
+  background: #888;
+  --N:  0;
+  --S:  0;
+  --W:  0;
+  --E:  0;
+  --NW: 0;
+  --NE: 0;
+  --SW: 0;
+  --SE: 0;
+  p {
+    display: flex;
+    margin: 0;
+    &:first-child b {
+      &::before { top: 0 }
+      &:first-child::before { border-radius: var(--main-radius) 0 0 0 }
+      &:last-child::before { border-radius: 0 var(--main-radius) 0 0 }
+    }
+    &:last-child b {
+      border-bottom: none;
+      &::before { bottom: 0 }
+      &:first-child::before { border-radius: 0 0 0 var(--main-radius) }
+      &:last-child::before { border-radius: 0 0 var(--main-radius) 0 }
+    }
+  }
+  b {
+    position: relative;
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    /* background: #888; */
+    border: 4px dotted rgba(0,0,0,.5);
+    border-top: none;
+    border-left: none;
+    transform: scale(1);
+    transition: .5s;
+    &:first-child {
+      &::before { left: 0 }
+    }
+    &:last-child {
+      border-right: none;
+      &::before { right: 0 }
+    }
+    &::before {
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      left: -5px;
+      right: -5px;
+      font-size: 2.5em;
+      line-height: calc(var(--size) + 10px);
+      /* background: rgba(255,0,0,.4); */
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      bottom: var(--size);
+      left: 3px;
+      right: 3px;
+      background: #666 linear-gradient(#888 20%, #666);
+      border-radius: calc(var(--size) / 5);
+      pointer-events: none;
+      transition: 1s linear;
+    }
+    &:not(:has(.bomb:checked))::before { /* This shows the number of neighbour bombs */
+      counter-reset: count calc(
+        var(--N)  + var(--S)  + var(--W)  + var(--E) +
+        var(--NW) + var(--NE) + var(--SW) + var(--SE)
+      );
+      content: counter(count);
+    }
+    &:has(.bomb:checked)::before {
+      content: "💣";
+    }
+    &:has(.open :checked) {
+      &::before {
+        font-size: calc(var(--size) - 12px);
+        background: #888;
+        /* box-shadow: 0 0 6px #888, 0 0 6px #888, 0 0 6px #888; */
+      }
+      &:has(.bomb:checked)::before {
+        font-size: calc( var(--size) * .75 );
+      }
+    }
+    &:not(:has(.open :checked)):has(.flag :checked) {
+      &::after {
+        border-radius: calc(var(--size) / 6);
+        left: 0px;
+        right: 0px;
+        background:
+          linear-gradient(
+            90deg,
+            #888,
+            rgba(127,127,127,0) 30%, rgba(127,127,127,0) 70%,
+            #888
+          ),
+          linear-gradient(
+            15deg,
+            #888 25%, #444 40%,
+            rgba(0,0,0,.5) 41%, rgba(0,0,0,.0) 60%,
+            #888 61%
+          ),
+          linear-gradient(
+            -45deg,
+            #333 10.00%,#FD0 11.00%,#FD0 20.00%,#333 21.00%,#333 30.00%,#FD0 31.00%,#FD0 40.00%,#333 41.00%,#333 50.00%,#FD0 51.00%,#FD0 60.00%,#333 61.00%,#333 70.00%,#FD0 71.00%,#FD0 80.00%,#333 81.00%,#333 90.00%,#FD0 91.00%
+          ) !important;
+      }
+    }
+    .bomb { /* Before start */
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      input { display: none }
+    }
+    span {
+      position: absolute;
+      display: block;
+      top: 50%;
+      left: 50%;
+      font-size: 1.333rem;
+      width: 7.3em;
+      height: 7.3em;
+      border-radius: 1em;
+      transform: translate(-50%, -50%) scale(.1);
+      background: rgba(255,255,255,0.4);
+      text-align: left;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+      transition: .5s;
+      label {
+        position: absolute;
+        left: .3em;
+        right: .3em;
+        display: block;
+        white-space: nowrap;
+        font-size: 1.5em;
+        line-height: 1.2em;
+        padding: .4em .6em;
+        background: #05A;
+        border-radius: .5em;
+        color: #FFF;
+        opacity: .666;
+        transition: .5s;
+        &:hover { opacity: 1 }
+        &.open { top: -2em }
+        &.flag, &.unflag { bottom: -2em }
+        input { display: none }
+      }
+      .flag:has(:checked) {
+        display: none;
+      }
+      .flag:has(:not(:checked)) {
+        ~ .unflag { display: none }
+      }
+    }
+  }
+
+  /* * * BOMB Neighbour Calculator */
+  b:has(.bomb:checked) + b { --W: 1 }
+  b:has(+ b .bomb:checked) { --E: 1 }
+  p:has(b:nth-child(1) .bomb:checked) {
+    + p b:nth-child(0) { --NW: 1 }
+    + p b:nth-child(1) { --N:  1 }
+    + p b:nth-child(2) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(1) .bomb:checked) {
+    b:nth-child(0) { --SE: 1 }
+    b:nth-child(1) { --S:  1 }
+    b:nth-child(2) { --SW: 1 }
+  }
+  p:has(b:nth-child(2) .bomb:checked) {
+    + p b:nth-child(1) { --NW: 1 }
+    + p b:nth-child(2) { --N:  1 }
+    + p b:nth-child(3) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(2) .bomb:checked) {
+    b:nth-child(1) { --SE: 1 }
+    b:nth-child(2) { --S:  1 }
+    b:nth-child(3) { --SW: 1 }
+  }
+  p:has(b:nth-child(3) .bomb:checked) {
+    + p b:nth-child(2) { --NW: 1 }
+    + p b:nth-child(3) { --N:  1 }
+    + p b:nth-child(4) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(3) .bomb:checked) {
+    b:nth-child(2) { --SE: 1 }
+    b:nth-child(3) { --S:  1 }
+    b:nth-child(4) { --SW: 1 }
+  }
+  p:has(b:nth-child(4) .bomb:checked) {
+    + p b:nth-child(3) { --NW: 1 }
+    + p b:nth-child(4) { --N:  1 }
+    + p b:nth-child(5) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(4) .bomb:checked) {
+    b:nth-child(3) { --SE: 1 }
+    b:nth-child(4) { --S:  1 }
+    b:nth-child(5) { --SW: 1 }
+  }
+  p:has(b:nth-child(5) .bomb:checked) {
+    + p b:nth-child(4) { --NW: 1 }
+    + p b:nth-child(5) { --N:  1 }
+    + p b:nth-child(6) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(5) .bomb:checked) {
+    b:nth-child(4) { --SE: 1 }
+    b:nth-child(5) { --S:  1 }
+    b:nth-child(6) { --SW: 1 }
+  }
+  p:has(b:nth-child(6) .bomb:checked) {
+    + p b:nth-child(5) { --NW: 1 }
+    + p b:nth-child(6) { --N:  1 }
+    + p b:nth-child(7) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(6) .bomb:checked) {
+    b:nth-child(5) { --SE: 1 }
+    b:nth-child(6) { --S:  1 }
+    b:nth-child(7) { --SW: 1 }
+  }
+  p:has(b:nth-child(7) .bomb:checked) {
+    + p b:nth-child(6) { --NW: 1 }
+    + p b:nth-child(7) { --N:  1 }
+    + p b:nth-child(8) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(7) .bomb:checked) {
+    b:nth-child(6) { --SE: 1 }
+    b:nth-child(7) { --S:  1 }
+    b:nth-child(8) { --SW: 1 }
+  }
+  p:has(b:nth-child(8) .bomb:checked) {
+    + p b:nth-child(7) { --NW: 1 }
+    + p b:nth-child(8) { --N:  1 }
+    + p b:nth-child(9) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(8) .bomb:checked) {
+    b:nth-child(7) { --SE: 1 }
+    b:nth-child(8) { --S:  1 }
+    b:nth-child(9) { --SW: 1 }
+  }
+  p:has(b:nth-child(9) .bomb:checked) {
+    + p b:nth-child(8) { --NW: 1 }
+    + p b:nth-child(9) { --N:  1 }
+    + p b:nth-child(10) { --NE: 1 }
+  }
+  p:has(+ p b:nth-child(9) .bomb:checked) {
+    b:nth-child(8) { --SE: 1 }
+    b:nth-child(9) { --S:  1 }
+    b:nth-child(10) { --SW: 1 }
+  }
+
+  /* * * STARTED! * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  &:has(~ p #start :checked) {
+    margin-right: 0;
+    .bomb {
+      display: none;
+    }
+    b:not(:has(.open :checked)) {
+      &::after {
+        bottom: 3px;
+        background: #666 linear-gradient(135deg, #BBB, #555);
+      }
+      &:not(:focus)::after {
+      }
+      &:focus {
+        position: relative;
+        transform: scale(1.5);
+        border: 0px dashed rgba(128,128,128,0);
+        box-shadow: 0 0 1em #000, 0 0 1em #000, 0 0 1em #000;
+        border-radius: 1em;
+        outline: none;
+        z-index: 2;
+        span {
+          pointer-events: all;
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+          *.open { top: .3em }
+          *.flag, *.unflag { bottom: .3em }
+        }
+      }
+    }
+  }
+}
+
+#gameover {
+  display: flex;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 10rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(transparent, rgba(255,200,0,.2), rgba(240,100,0,.5), #900);
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
+  g, o {
+    display: block;
+    font-weight: bold;
+    line-height: .84em;
+    text-shadow: 0 0 .1em #E00, 0 0 .1em #F90, 0 0 .1em #F90,
+                 0 0 .1em #A00, 0 0 .1em #A00, 0 0 .1em #A00,
+                 0 0 .1em #A00, 0 0 .1em #A00, 0 0 .1em #A00,
+                 0 0 .1em #A00, 0 0 .1em #A00, 0 0 .1em #A00;
+    opacity: 1;
+    /* Nice timing bezier editor: https://cubic-bezier.com/#.55,.2,.6,1.4 */
+    transition: 1.5s 2s cubic-bezier(.55,.2,.6,1.4), opacity 4s 4s;
+  }
+  g {
+    margin: 0 0 98vh 0;
+  }
+}
+
+body:has(b .bomb:checked ~ span .open :checked) {
+  main p b {
+    &::before {
+      background: transparent;
+      font-size: calc( var(--size) * .75 );
+      animation: .6s ease-in-out infinite alternate balance;
+    }
+    &::after {
+      background: radial-gradient(transparent, transparent, #000) !important;
+      opacity: .4;
+    }
+  }
+  #gameover {
+    transition: 2s;
+    opacity: 1;
+    pointer-events: all;
+    g, o {
+      margin: 0 0 0 0;
+      opacity: .7;
+    }
+  }
+}
+
+@keyframes balance {
+  from { transform: rotate(-20deg) }
+  to   { transform: rotate(20deg)  }
+}
+
+#winner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: radial-gradient(transparent, transparent, rgba(255,140,0,.3), rgba(255,160,0,.9));
+  pointer-events: none;
+  opacity: 0;
+  --pos-i: -1;
+  --pos-u: -1;
+  i { --pos-i: calc(var(--pos-u) + 4); --pos: var(--pos-i) }
+  u { --pos-u: calc(var(--pos-i) + 4); --pos: var(--pos-u) }
+  i, u, :is(i,u)::before, :is(i,u)::after {
+    content: "";
+    position: fixed;
+    top: -2vh;
+    --p: var(--pos);
+    left: calc(var(--pos) * 1vw);
+    display: block;
+    width: 1.2em;
+    height: .6em;
+    border-radius: 50%;
+    background: hsl(calc(var(--p)*211.5) 70% 50%);
+    transition: ease-in 4s calc(mod(var(--p) * 29s, .71s) * 3);
+  }
+  i, u {
+    animation: .8s ease-in-out infinite alternate pulse;
+  }
+  :is(i,u)::before, :is(i,u)::after {
+    animation: .8s linear infinite rotate;
+  }
+  :is(i,u)::before {
+    --p: calc(var(--pos) - 1);
+    left: calc(var(--pos) * 1vw - 1.333vw);
+  }
+  :is(i,u)::after {
+    --p: calc(var(--pos) + 1);
+    left: calc(var(--pos) * 1vw + 1.333vw);
+  }
+  h2 {
+    position: absolute;
+    font-size: 1rem;
+    line-height: .1em;
+    top: calc(100vh + 3em);
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%) rotate(90deg);
+    color: transparent;
+    white-space: nowrap;
+    text-shadow:
+      0 0 .5rem #4FF, /* Hight inner light */
+      -.5rem 0 .0em #0AF,  .5rem 0 .0em #0AF, /* Sharp letter contour */
+      /* Shadow */
+      0 0 0 #08F, 0 0 0 #08F, 0 0 0 #08F,
+      0 0 0 #08F, 0 0 0 #08F, 0 0 0 #08F;
+  }
+}
+
+main:has(
+      p:nth-child(1) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(1) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(2) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(3) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(4) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(5) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(6) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(7) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(8) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(1) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(2) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(3) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(4) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(5) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(6) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(7) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(8) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    ):has(
+      p:nth-child(9) b:nth-child(9) :is(
+        .bomb:not(:checked) ~ * .open :checked,
+        .bomb:checked ~ * .flag :checked
+      )
+    )
+~ #winner, .win #winner {
+  transition: 2s;
+  pointer-events: all;
+  opacity: 1;
+  i, u, :is(i,u)::before, :is(i,u)::after {
+    top: 101vh;
+  }
+  h2 {
+    transition: 2s 4s, text-shadow 3s 6s;
+    font-size: 10rem;
+    top: 0;
+    line-height: 98vh;
+    transform: translateX(-50%) rotate(0deg);
+    letter-spacing: 0;
+    text-shadow:
+      0 0 .1em #AFF, /* Hight inner light */
+      -.055em 0 .0em #0AF,  .055em 0 .0em #0AF, /* Sharp letter contour */
+      /* Shadow */
+      -.2em  0 .3em #08F, -.2em  0 .3em #08F, 0 -.2em .3em #08F,
+       .2em  0 .3em #08F,  .2em  0 .3em #08F, 0  .2em .3em #08F;
+  }
+}
+
+@keyframes pulse {
+  from { height: .5em }
+  to   { height: 1em  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg)   }
+  to   { transform: rotate(360deg) }
+}
+
+#bug {
+  position: absolute;
+  top: 10vh;
+  left: 10vw;
+  display: block;
+  background: #111;
+  font-size: .8rem;
+  width: 3em;
+  height: 4em;
+  border-radius: 50%;
+  box-shadow: 0 0 1em #000;
+  z-index: 1;
+  * {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  :is(&, & *)::before, :is(&, & *)::after {
+    content: "";
+    position: absolute;
+    display: block;
+    background: #111;
+    border-radius: 50%;
+  }
+
+  h { /* head */
+    top: -.5em;
+    bottom: 3.5em;
+    left: .7em;
+    right: .7em;
+    border-radius: 50%;
+    background: #111;
+    box-shadow: 0 0 1em #000;
+    z-index: 5;
+    &::before, &::after { /* antennas */
+      width: 1em;
+      height: .2em;
+      border-radius: .1em;
+      top: -.3em;
+      animation: 1.5s ease-in-out infinite alternate swing;
+    }
+    &::before {
+      right: 1em;
+      --inc: 10deg;
+      --angle: 30deg;
+    }
+    &::after {
+      left: 1em;
+      --inc: -10deg;
+      --angle: -30deg;
+    }
+  }
+
+  l { /* legs */
+    top: .8em;
+    &::before, &::after { /* left and right */
+      width: 2em;
+      height: .3em;
+      border-radius: .2em;
+      top: 0;
+      animation: .3s linear infinite alternate walk;
+    }
+    &::before {
+      left: -1em;
+    }
+    &::after {
+      right: -1em;
+    }
+    > l { /* middle legs */
+      &::before, &::after {
+        animation: .3s linear infinite alternate-reverse walk;
+      }
+      > l { /* bottom legs */
+        &::before, &::after {
+          animation: .3s linear infinite alternate walk;
+        }
+      }
+    }
+  }
+
+  &::before, &::after { /* hidden wings */
+    background: rgba(200,200,200,.3);
+    /* box-shadow: inset 0 0 .4em rgba(0,0,0,.5); */
+    border-radius: 50%;
+    width: 2em;
+    height: 4em;
+    transform-origin: top center;
+    transform: rotate(0);
+    z-index: 2;
+    transition: .5s;
+  }
+  &::before {
+    left: .2em;
+  }
+  &::after {
+    right: .2em;
+  }
+
+  w { /* wing shells */
+    background: radial-gradient(circle at 1em 1.5em, #F22, #A00 40%, #300);
+    z-index: 3;
+    transition: 1s;
+    &[data-l] {
+      transform-origin: top right;
+      left: -.5em;
+      right: 1.5em;
+      border-radius: 2em 0 0 2em;
+      box-shadow: -.4em 0 .4em rgba(0,0,0,.5);
+      border-right: 1px solid rgba(0,0,0,.2);
+      &::before {
+        box-shadow:
+          0.8em 0.7em 0 #311,
+          -.1em 1.1em 0 #311,
+          0.5em 2.0em 0 #311;
+      }
+    }
+    &[data-r] {
+      transform-origin: top left;
+      left: 1.5em;
+      right: -.5em;
+      border-radius: 0 2em 2em 0;
+      box-shadow: .4em 0 .4em rgba(0,0,0,.5);
+      border-left: 1px solid rgba(0,0,0,.2);
+      &::before {
+        box-shadow:
+          0.7em 0.6em 0 #311,
+          -.3em 1.1em 0 #311,
+          0.2em 2.0em 0 #311;
+      }
+    }
+    &::before {
+      top: .8em;
+      left: .5em;
+      width: .6em;
+      height: .6em;
+      border-radius: 50%;
+      background: #311;
+    }
+  }
+  &:hover {
+    &::before, &::after { /* hidden wings */
+      animation: .1s linear infinite alternate swing;
+    }
+    &::before {
+      --angle: 14deg;
+      --inc: 16deg;
+    }
+    &::after {
+      --angle: -14deg;
+      --inc: -16deg;
+    }
+    w { /* wing shells */
+      &[data-l] {
+        transform: rotate(45deg) translateY(.4em);
+      }
+      &[data-r] {
+        transform: rotate(-45deg) translateY(.4em);
+      }
+    }
+  }
+}
+
+@keyframes swing {
+  from { transform: translateY(.1em) rotate(calc(var(--angle) - var(--inc))) }
+  to   { transform: translateY(.0em) rotate(calc(var(--angle) + var(--inc)))  }
+}
+
+@keyframes walk {
+  from { transform: rotate(-20deg) }
+  to   { transform: rotate(20deg)  }
+}
+
+#bug { animation: 120s linear infinite bug-path }
+@media only screen and (orientation: portrait) {
+  #bug { animation: 120s linear infinite bug-path-portrait }
+}
+
+@keyframes bug-path {
+  0% {
+    top: 50vh;
+    left: 50vw;
+    transform: rotate(-90deg) translate(-80vw, 0);
+  }
+  2% {
+    top: 50vh;
+    left: 90vw;
+    transform: rotate(-35deg) translate(-80vw, 0);
+  }
+  48% {
+    top: 50vh;
+    left: 90vw;
+    transform: rotate(35deg) translate(-80vw, 0);
+  }
+  52% {
+    top: 50vh;
+    left: 10vw;
+    transform: rotate(145deg) translate(-80vw, 0);
+  }
+  98% {
+    top: 50vh;
+    left: 10vw;
+    transform: rotate(215deg) translate(-80vw, 0);
+  }
+  100% {
+    top: 50vh;
+    left: 50vw;
+    transform: rotate(270deg) translate(-80vw, 0);
+  }
+}
+
+@keyframes bug-path-portrait {
+  0% {
+    top: 50vh;
+    left: 50vw;
+    transform: rotate(-90deg) translate(-100vh, 0);
+  }
+  2% {
+    top: 50vh;
+    left: 102vh;
+    transform: rotate(-35deg) translate(-100vh, 0);
+  }
+  48% {
+    top: 50vh;
+    left: 102vh;
+    transform: rotate(35deg) translate(-100vh, 0);
+  }
+  52% {
+    top: 50vh;
+    left: calc(100vw - 105vh);
+    transform: rotate(145deg) translate(-100vh, 0);
+  }
+  98% {
+    top: 50vh;
+    left: calc(100vw - 105vh);
+    transform: rotate(215deg) translate(-100vh, 0);
+  }
+  100% {
+    top: 50vh;
+    left: 50vw;
+    transform: rotate(270deg) translate(-100vh, 0);
+  }
+}
