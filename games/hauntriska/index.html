@@ -1,0 +1,992 @@
+<html><head><meta charset="utf-8"><title>js13k2024 by gheja</title>
+<style>
+html{font-family:bahnschrift,sans-serif;font-stretch:semi-condensed;font-size:2.5vh;user-select:none}
+body{background:#291414;color:#ccc;overflow:hidden}
+*{image-rendering:pixelated;cursor:default}
+b{color:#fff}
+#d{transform-origin:0px 0px 0px}
+#d,#d *{transform-style:preserve-3d;position:absolute}
+#b{width:400px;height:800px;transform:translateY(0) rotateX(90deg) translateX(-200px) translateY(0px)}
+#g *{width:40px;height:40px;position:absolute}
+#f1,#f2,#f3,#f4{width:400px;height:200px;background:#29141488;transform:translateX(-200px) translateY(200px) translateZ(-100px)}
+#f2{transform:translateX(-200px) translateY(200px) translateZ(-150px)}
+#f3{transform:translateX(-200px) translateY(200px) translateZ(-200px)}
+#f4{transform:translateX(-200px) translateY(200px) translateZ(-250px)}
+#s{position:fixed;top:0.3rem;left:0;right:0;text-align:center}
+#s *{padding:0.2rem 0.5rem;transition:all 0.33s}
+#m{position:fixed;top:2rem;left:2rem;right:2rem;background:#0008;padding:1rem;text-align:center;transition:all 0.15s;opacity:0}
+#mb{position:fixed;top:6rem;right:2rem;width:10rem;background:#000c;text-align:center;padding:0.5rem;transition:all 0.15s;opacity:0}
+#w{position:fixed;top:0;left:0;height:1.75rem;width:0%;background:#f008;animation:w 0.3s infinite}
+@keyframes w{0%{background:#f008}
+50%{background:#ff0a}
+100%{background:#f008}
+}
+#o,#r{position:fixed;top:0;right:0;bottom:0;left:0;background:#fff6;opacity:0}
+@keyframes o{0%{opacity:1}
+100%{opacity:0}
+}
+#r{opacity:1;transition:all 1s;animation:r 30s linear infinite}
+@keyframes r{0%{background-position:0% 0% }
+100%{background-position:300% -100% }
+}
+#q{position:fixed;top:0;right:0;left:0;padding:30%;text-align:center}
+</style>
+<script>
+// ZzFX - Zuper Zmall Zound Zynth - Micro Edition
+// MIT License - Copyright 2019 Frank Force
+// https://github.com/KilledByAPixel/ZzFX
+
+// This is a tiny build of zzfx with only a zzfx function to play sounds.
+// You can use zzfxV to set volume.
+// Feel free to minify it further for your own needs!
+
+'use strict';let zzfx,zzfxV,zzfxX
+
+// ZzFXMicro - Zuper Zmall Zound Zynth - v1.1.8 ~ 884 bytes minified
+zzfxV=.3    // volume
+zzfx=       // play sound
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0)=>{let
+M=Math,R=44100,d=2*M.PI,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,g=0,H=0,a=0,n=1,I=0
+,J=0,f=0,x,h;e=R*e+9;m*=R;r*=R;t*=R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;for(h=e+m+
+r+t+c|0;a<h;k[a++]=f)++J%(100*F|0)||(f=q?1<q?2<q?3<q?M.sin((g%d)**3):M.max(M.min(M.tan(g),1)
+,-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.round(g/d)-g/d):M.sin(g),f=(l?1-B+B*M.sin(d*a/l):1)*(0<f?1:
+-1)*M.abs(f)**D*p*zzfxV*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/
+2+(c>a?0:(a<h-c?1:(h-a)/c)*k[a-c|0]/2):f),x=(b+=u+=y)*M.cos(A*H++),g+=x-x*E*(1-1E9*(M.sin(a)
++1)%2),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n=n||1);p=zzfxX.createBuffer(1,h,R);p.
+getChannelData(0).set(k);b=zzfxX.createBufferSource();b.buffer=p;b.connect(zzfxX.destination
+);b.start();return b};zzfxX=new (window.AudioContext) // audio context
+const GFX_SPRITES = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAAICAYAAAAx3fd+AAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kTtIw0Acxr8+pD4qDhYRcchQneyiIrqVKhbBQmkrtOpgcukLmjQkKS6OgmvBwcdi1cHFWVcHV0EQfIA4OzgpukiJ/0sKLWI8OO7Hd/d93H0HeBsVphj+KKCopp6Kx4RsblUIvKIHfRjCHPwiM7REejED1/F1Dw9f7yI8y/3cn6NfzhsM8AjEUabpJvEG8cymqXHeJw6xkigTnxNP6HRB4keuSw6/cS7a7OWZIT2TmicOEQvFDpY6mJV0hXiaOCwrKuV7sw7LnLc4K5Uaa92TvzCYV1fSXKc5ijiWkEASAiTUUEYFJiK0qqQYSNF+zMU/YvuT5JLIVQYjxwKqUCDafvA/+N2tUZiadJKCMaDrxbI+xoDALtCsW9b3sWU1TwDfM3Cltv3VBjD7SXq9rYWPgIFt4OK6rUl7wOUOMPykibpoSz6a3kIBeD+jb8oBg7dA75rTW2sfpw9AhrpavgEODoHxImWvu7y7u7O3f8+0+vsBv1tyxbOW4jcAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfoCQ0FAwmdg6BvAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAMpJREFUWMPtVkEOwzAIK9Mezs/ZoYvUWcahazRpG740QW2T2IZg2w8hImKMzcy2xhSGxL1L4AryI8Kf37tah/1/doY2B8edEceIzghUgkAcRXUmftVkLG5mNtbN3m284sYyAudIpsq2JLtcxVB8Mo/jmjMj4LOwv/82wFWBjwKhWEvuKVHyUeSBT+7v6w2gyFOEq4yalP8sVjKB2mfjZHKpbBgkn2mwLjSRDt97pQGcZTM7Q5uncG+yOzerAitLbKUZzAyAY3WGxo4HNjsIueWCRoYAAAAASUVORK5CYII="
+const GFX_BACKGROUND = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kTtIw0Acxr8+pD4qDhYRcchQneyiIrqVKhbBQmkrtOpgcukLmjQkKS6OgmvBwcdi1cHFWVcHV0EQfIA4OzgpukiJ/0sKLWI8OO7Hd/d93H0HeBsVphj+KKCopp6Kx4RsblUIvKIHfRjCHPwiM7REejED1/F1Dw9f7yI8y/3cn6NfzhsM8AjEUabpJvEG8cymqXHeJw6xkigTnxNP6HRB4keuSw6/cS7a7OWZIT2TmicOEQvFDpY6mJV0hXiaOCwrKuV7sw7LnLc4K5Uaa92TvzCYV1fSXKc5ijiWkEASAiTUUEYFJiK0qqQYSNF+zMU/YvuT5JLIVQYjxwKqUCDafvA/+N2tUZiadJKCMaDrxbI+xoDALtCsW9b3sWU1TwDfM3Cltv3VBjD7SXq9rYWPgIFt4OK6rUl7wOUOMPykibpoSz6a3kIBeD+jb8oBg7dA75rTW2sfpw9AhrpavgEODoHxImWvu7y7u7O3f8+0+vsBv1tyxbOW4jcAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfoCQ0BARNV3pNLAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAK1JREFUSMfVVkkOgCAQ04bMhRfwD///Ky+cPGgiEbfB1ihnaDstM9APKXXOFc3GnG9uRidekMp3E3jR3QRe9JUgmkUzRQahrXBhyJ8kGHMWBbBWMHMoaFBewUuaBgWobzrXMRw1VAPH7hEQ58SuLLBmzkt9UBcBlj+OCp77UxbBHxUbcZDKX8b1wyelhi5BAustm9HrbdC5zyQ4SQ6UJMmd/POf3c+/jg1dIrdoAuHzV8NhhRBIAAAAAElFTkSuQmCC"
+const GFX_COVER = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kTtIw0Acxr8+pD4qDhYRcchQneyiIrqVKhbBQmkrtOpgcukLmjQkKS6OgmvBwcdi1cHFWVcHV0EQfIA4OzgpukiJ/0sKLWI8OO7Hd/d93H0HeBsVphj+KKCopp6Kx4RsblUIvKIHfRjCHPwiM7REejED1/F1Dw9f7yI8y/3cn6NfzhsM8AjEUabpJvEG8cymqXHeJw6xkigTnxNP6HRB4keuSw6/cS7a7OWZIT2TmicOEQvFDpY6mJV0hXiaOCwrKuV7sw7LnLc4K5Uaa92TvzCYV1fSXKc5ijiWkEASAiTUUEYFJiK0qqQYSNF+zMU/YvuT5JLIVQYjxwKqUCDafvA/+N2tUZiadJKCMaDrxbI+xoDALtCsW9b3sWU1TwDfM3Cltv3VBjD7SXq9rYWPgIFt4OK6rUl7wOUOMPykibpoSz6a3kIBeD+jb8oBg7dA75rTW2sfpw9AhrpavgEODoHxImWvu7y7u7O3f8+0+vsBv1tyxbOW4jcAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQfoCQ0FKRyfNYisAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAKxJREFUeNrt2kEOQDAQBdBqbOwkTuD+h3IFN2BVIbGmyX+zUit94yMxwzJNRwmuWsJrbAfrPF8nt33PugPum39bR0SgdT2p+w+A1vWk7nsIikApg+8AEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhNTYy4X8NZ9Qe9v82zoiAn/9nK29ReDr+QRvgfQImA8QAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkFMnt9Qh7nxcaRYAAAAASUVORK5CYII="
+"use strict";
+
+const SOUNDS = [
+//    [.8,0,226,.01,2,.5,1,1.1,-4,,,,.13,,,,.11,.5,.01,,-1268], // Pickup 5 - loop
+    [.6,0,226,.01,.5,.5,1,1.1,-4,,,,.13,,,,.11,.5,.01,,-1268],
+    [1.1,.3,31,.06,.1,.2,1,1.6,-7,2,,,.14,1.2,,.1,,.31,.1,.2], // Explosion 906
+    [.8,0,387,.02,,.25,,2.7,16.8,6,,,.02,.3,,.1,,.6,.1,.06], // Shoot 29 - warning
+    [1.8,0,336,.03,.1,.27,2,1.7,12,20,,,,,,.3,.25,.97,.1], // Shoot 36 - oof
+    [.8,0,523.2511,.02,,.2,1,3,,,400,.1,,,,,,.7], // Pickup 813 - message
+]
+const LEVELS = [
+    /*
+    [ 
+        0: level step interval min,
+        1: level step interval max,
+        2: start speed,
+        3: end speed,
+        4: random seed, 
+        5: [ intro texts ], 
+        6: [ outro texts ],
+        7: [ enemy1 chances ],
+        8: [ enemy1 goal counts ],
+        9: [ group chances ],
+        10: beam life time,
+        11: human chance
+    ]
+    */
+
+    [ 20, 40, 40, 80, 961, [ "Oh no, someone left the portal open. Quick, help me!", "First, catch three ghosts!" ], [ "Nice job!" ], [ 1, 0, 0, 0, 0, 0 ], [ 3, 0, 0, 0, 0, 0 ], [ 1, 0, 0, 0 ], 1.2, 0],
+    [ 12, 25, 40, 80, 432, [ "Let's catch some more! But uh-oh...", "It looks like your storage unit is a bit funky.", "It can't hold exactly 13 ghosts, so...", "Good luck!" ], [ "Phew, great job! I knew you could do it!" ], [ 1, 0, 0, 0, 0, 0 ], [ 15, 0, 0, 0, 0, 0 ], [ 4, 1, 0, 0 ], 1.0, 0 ],
+    [ 9, 20, 60, 100, 123, [ "Oh and beware of the multiplies of 13, too...", "Catch them!" ], [ "Great!" ], [ 5, 3, 0, 0, 0, 0 ], [ 18, 12, 0, 0, 0, 0 ], [ 3, 1, 0, 0 ], 1.0, 0 ],
+    [ 6, 25, 60, 100, 112, [ "You know the drill.", ], [ "Amazing!" ], [ 20, 15, 5, 2, 0, 0 ], [ 25, 20, 2, 1, 0, 0 ], [ 10, 2, 1, 0 ], 0.9, 0 ],
+    [ 8, 25, 70, 110, 493, [ "Some of your colleagues are on the field.", "Please avoid them if you can." ], [ "Well done!" ], [ 25, 21, 0, 1, 0, 0 ], [ 9, 14, 0, 1, 0, 0 ], [ 8, 2, 1, 0 ], 0.9, 0.07 ],
+    [ 6, 20, 70, 110, 371, [ "Oh no! The beam is getting weaker...", ], [ "Great job!", "Well, I think you caught enough of them.", "And this was all I got for the jam :)", "Thank you very much for playing!" ], [ 25, 20, 0, 1, 1, 0 ], [ 10, 10, 0, 3, 1, 0 ], [ 7, 2, 1, 0 ], 0.55, 0.042 ],
+]
+"use strict"
+
+function _z(x)
+{
+	return x
+}
+
+function _zz(x)
+{
+	return x
+}
+
+// cache the sprites so there's no need to process them every time
+let _spriteCache = []
+
+function clamp(x, min, max)
+{
+	return (x < min ? min : (x > max ? max : x))
+}
+
+function getSprite(x, y, width, height, color)
+{
+	let a = [x, y, width, height, color].join(",")
+
+	if (!_spriteCache[a])
+	{
+		let canvas = document.createElement("canvas")
+		canvas.width = _z(width)
+		canvas.height = _z(height)
+
+		let ctx = canvas.getContext("2d")
+		ctx.imageSmoothingEnabled = false
+		ctx.drawImage(_sprites, x, y, width, height, 0, 0, _z(width), _z(height))
+
+        // modulation
+		ctx.globalCompositeOperation = "source-atop"
+		ctx.fillStyle = color
+		ctx.fillRect(0, 0, 8, 8)
+
+		_spriteCache[a] = canvas.toDataURL()
+	}
+
+	return _spriteCache[a]
+}
+
+function createDomElement(index, color)
+{
+	var tmp = document.createElement("img")
+	tmp.src = getSprite(index * 8, 0, 8, 8, color)
+	_root.appendChild(tmp)
+	return tmp
+}
+
+function updatePositionRotation(obj, x, y, z, r)
+{
+	// translateY() here is #b's height / 2
+	// obj.style.transform = "translateX(" + _zz(x - 20) + "px) translateY(" + (floor ? 379.9 : 360) + "px) translateZ(" + _zz(y * 3) + "px) rotate(" + r + "deg) rotateX(" + (floor ? 90 : 0) + "deg)"
+	obj.style.transform = "translateX(" + _zz(x - 20) + "px) translateY(" + (360 + _zz(z)) + "px) translateZ(" + _zz(y * 3) + "px) rotate(" + r + "deg) rotateX(0deg)"
+}
+
+function dist(obj1, obj2)
+{
+	// Manhattan distance - close enough
+	// return Math.abs(obj1[IDX_POSITION_X] - obj2[IDX_POSITION_X]) + Math.abs(obj1[IDX_POSITION_Y] - obj2[IDX_POSITION_Y])
+	return Math.abs((obj1[IDX_POSITION_X] + obj1[IDX_POSITION_WOBBLE_X]) - (obj2[IDX_POSITION_X] + obj2[IDX_POSITION_WOBBLE_X])) + Math.abs(obj1[IDX_POSITION_Y] - obj2[IDX_POSITION_Y])
+}
+
+function arrayPick(arr)
+{
+	return arr[Math.floor(Math.random() * arr.length)]
+}
+"use strict"
+
+let _randomSeed = 0
+
+function getRandomFloat()
+{
+    _randomSeed = (_randomSeed * 26031 + 35803270) % 5886503
+
+    return (_randomSeed % 73727) / 73727;
+}
+
+function getRandomInt(min, max)
+{
+    return (getRandomFloat() * (max - min) + min) | 0;
+}
+
+function getRandomPick(arr)
+{
+    return arr[getRandomInt(0, arr.length)]
+}
+
+// arr is an array with the weights like [ 10, 10, 5, 5, 0, 0, 10 ]
+// returns the index that was picked by the given chances/weights
+// at least one item must be non-zero
+function getRandomIndexWeighted(arr)
+{
+	var total = 0
+
+	for (var a of arr)
+	{
+		total += a
+	}
+
+	var n = getRandomInt(0, total)
+
+	for (var i = 0; i < arr.length; i++)
+	{
+		n -= arr[i]
+
+		if (n < 0)
+		{
+			return i
+		}
+	}
+}
+"use strict";
+
+function soundLoopWarning()
+{
+    if (_oofActive)
+    {
+        zzfx(...SOUNDS[2])
+    }
+}
+
+function soundLoopBeam()
+{
+    if (_state == STATE_RUNNING && !_dialogOpen)
+    {
+        zzfx(...SOUNDS[0])
+    }
+}
+
+function soundManagerInit()
+{
+    window.setInterval(soundLoopWarning, 600)
+    window.setInterval(soundLoopBeam, 500)
+}
+"use strict"
+
+const ENEMY_DEFINITIONS = [
+	[ 1, "#faa032", 0, 0 ],
+	[ 1, "#c40c2e", 50, 0 ],
+	[ 0, "#d94c8e", 80, 20 ],
+	[ 0, "#55b33b", 70, 20 ],
+	[ 6, "#1793e6", 100, 100 ],
+	[ 0, "#b58c7f", 100, 100 ],
+]
+
+const STATE_INIT = 0
+const STATE_RUNNING = 2
+const STATE_WON = 3
+
+const EIDX_SPRITE_INDEX = 0
+const EIDX_COLOR = 1
+const EIDX_WOBBLE_X = 2
+const EIDX_SPEED_Y = 3
+
+const IDX_DOM_OBJECT = 0
+const IDX_POSITION_X = 1
+const IDX_POSITION_Y = 2
+const IDX_SPRITE_INDEX = 3
+const IDX_OBJECT_TYPE = 4
+const IDX_PHASE = 5
+const IDX_TIME_LEFT = 6
+const IDX_SPEED_X = 7
+const IDX_SPEED_Y = 8
+const IDX_WOBBLE_X = 9
+const IDX_POSITION_WOBBLE_X = 10
+const IDX_ENEMY_DEFINITION_INDEX = 11
+const IDX_ENEMY_GROUP_LEADER = 12
+const IDX_ENEMY_GROUP_SHIFT_X = 13
+const IDX_POSITION_Z = 14
+const IDX_SPEED_Z = 15
+
+const OBJECT_TYPE_PLAYER = 1
+const OBJECT_TYPE_ENEMY = 2
+const OBJECT_TYPE_BEAM = 3
+const OBJECT_TYPE_PARTICLE = 4
+const OBJECT_TYPE_HUMAN = 5
+
+const PLAYER_MAX_SPEED = 75
+const MAX_OBJECT_Y_COORD = 150
+const BEAM_SPEED = 60
+const BEAM_CATCH_DISTANCE = 5
+const BEAM_INTERVAL_SEC = 0.0166
+const HUMAN_COLOR = "#9df"
+
+const LEVEL_STEP_INTERVAL_SEC = 0.1
+
+const OOF_TIME_MAX = 2.5
+
+let _state = STATE_INIT
+let _dialogOpen = false
+let _oofActive = false
+let _scrollSpeed = 80
+let _width = 800
+let _scale
+let _mousePosition = 0
+let _t = 0
+let a, b, c, d, e
+let _enemiesCaught
+let _oofTimeLeft
+
+// [ domElement, x, y, spriteIndex ]
+
+let objects = []
+
+function createGameObject(objectType, spriteIndex, color, x, y)
+{
+	return [ createDomElement(spriteIndex, color), x, y, spriteIndex, objectType, 0, 0, 0, 0, 0, 0, 0, null, 0, 0, 0 ]
+}
+
+function deleteGameObject(obj)
+{
+	obj[IDX_DOM_OBJECT].parentNode.removeChild(obj[IDX_DOM_OBJECT])
+}
+
+function cleanupObjects()
+{
+	for (var i=objects.length - 1; i>=0; i--)
+	{
+		var obj = objects[i]
+		if (obj[IDX_POSITION_Y] > MAX_OBJECT_Y_COORD || ((obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_BEAM || obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_PARTICLE) && obj[IDX_TIME_LEFT] < 0))
+		{
+			deleteGameObject(obj)
+			objects.splice(i, 1)
+		}
+	}
+}
+
+function updateGameObject(obj, dt)
+{
+	var r = 0
+	if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_BEAM)
+	{
+		r = obj[IDX_PHASE] * 360 * 2
+		obj[IDX_DOM_OBJECT].style.opacity = obj[IDX_TIME_LEFT]
+	}
+
+	if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_PARTICLE)
+	{
+		r = obj[IDX_PHASE] * 360 * -0.5
+		obj[IDX_DOM_OBJECT].style.opacity = obj[IDX_TIME_LEFT]
+	}
+	updatePositionRotation(obj[IDX_DOM_OBJECT], obj[IDX_POSITION_X] + obj[IDX_POSITION_WOBBLE_X], obj[IDX_POSITION_Y], obj[IDX_POSITION_Z], r)
+}
+
+function stepPlayerObject(obj, dt)
+{
+	var targetPosition = clamp(_mousePosition, -0.9, 0.9) * 1.098 * 200 // 1.098 is to compensate for the character not being at the very bottom
+	var direction = targetPosition > obj[IDX_POSITION_X] ? 1 : -1
+	var speed = Math.min(Math.abs(targetPosition - obj[IDX_POSITION_X]), PLAYER_MAX_SPEED)
+
+	obj[IDX_POSITION_X] = obj[IDX_POSITION_X] + speed * direction * 8 * dt
+}
+
+function enemyCaught(obj)
+{
+	// a particle effect
+	var tmp = createGameObject(OBJECT_TYPE_PARTICLE, 5, "#fff", obj[IDX_POSITION_X], obj[IDX_POSITION_Y])
+	tmp[IDX_PHASE] = Math.random()
+	tmp[IDX_TIME_LEFT] = 0.4
+	tmp[IDX_SPEED_Y] = _scrollSpeed * 1.75
+	objects.push(tmp)
+
+	// make sure it will be cleaned up
+	obj[IDX_POSITION_Y] = MAX_OBJECT_Y_COORD
+
+	_enemiesCaught[obj[IDX_ENEMY_DEFINITION_INDEX]] += 1
+	
+	updateScores()
+}
+
+function enemyGroupCaught(obj)
+{
+	var leader = obj[IDX_ENEMY_GROUP_LEADER]
+
+	zzfx(...SOUNDS[1])
+
+	if (leader)
+	{
+		enemyGroupCaught(leader)
+		return
+	}
+
+	enemyCaught(obj)
+
+	for (var obj2 of objects)
+	{
+		if (obj2[IDX_ENEMY_GROUP_LEADER] && obj == obj2[IDX_ENEMY_GROUP_LEADER])
+		{
+			enemyCaught(obj2)
+		}
+	}
+}
+
+function humanCaught(obj)
+{
+	// make sure it will be cleaned up
+	obj[IDX_POSITION_Y] = MAX_OBJECT_Y_COORD
+
+	oofExecute()
+	throwHumanAsParticle()
+}
+
+function stepEnemyObject(obj, dt)
+{
+	if (obj[IDX_ENEMY_GROUP_LEADER])
+	{
+		var leader = obj[IDX_ENEMY_GROUP_LEADER]
+		obj[IDX_POSITION_X] = leader[IDX_POSITION_X] + obj[IDX_ENEMY_GROUP_SHIFT_X]
+		obj[IDX_POSITION_Y] = leader[IDX_POSITION_Y]
+		obj[IDX_POSITION_WOBBLE_X] = leader[IDX_POSITION_WOBBLE_X]
+		obj[IDX_PHASE] = leader[IDX_PHASE]
+	}
+	else
+	{
+		obj[IDX_POSITION_Y] += _scrollSpeed * dt
+		obj[IDX_POSITION_Y] += obj[IDX_SPEED_Y] * dt
+		obj[IDX_PHASE] += dt
+		obj[IDX_POSITION_WOBBLE_X] = obj[IDX_WOBBLE_X] * Math.sin(obj[IDX_PHASE])
+	}
+
+	for (var obj2 of objects)
+	{
+		if (obj2[IDX_OBJECT_TYPE] == OBJECT_TYPE_BEAM)
+		{
+			if (obj2[IDX_TIME_LEFT] > 0.2 && dist(obj, obj2) < BEAM_CATCH_DISTANCE)
+			{
+				enemyGroupCaught(obj)
+			}
+		}
+	}	
+}
+
+var _nextBeamObjectTime = 0
+
+function createBeamObjects()
+{
+	while (_nextBeamObjectTime < _t)
+	{
+		var tmp = createGameObject(OBJECT_TYPE_BEAM, 4, arrayPick([ "#07f", "#4af", "#09f", "#a3f" ]), objects[0][IDX_POSITION_X], objects[0][IDX_POSITION_Y] - 1)
+		tmp[IDX_PHASE] = Math.random()
+		tmp[IDX_TIME_LEFT] = _levelData[10]
+		tmp[IDX_SPEED_X] = Math.random() * 150 - 75
+		objects.push(tmp)
+
+		_nextBeamObjectTime += BEAM_INTERVAL_SEC
+	}
+}
+
+function stepBeamObject(obj, dt)
+{
+	obj[IDX_TIME_LEFT] -= dt
+	obj[IDX_PHASE] += dt
+	obj[IDX_POSITION_Y] -= BEAM_SPEED * dt
+	obj[IDX_POSITION_X] += obj[IDX_SPEED_X] * dt
+}
+
+function stepParticleObject(obj, dt)
+{
+	obj[IDX_POSITION_X] += obj[IDX_SPEED_X] * dt
+	obj[IDX_POSITION_Y] += obj[IDX_SPEED_Y] * dt
+	obj[IDX_POSITION_Z] += obj[IDX_SPEED_Z] * dt
+	obj[IDX_PHASE] += dt
+	obj[IDX_TIME_LEFT] -= dt
+}
+
+function stepHumanObject(obj, dt)
+{
+	obj[IDX_POSITION_Y] += _scrollSpeed * dt
+	obj[IDX_POSITION_Y] += obj[IDX_SPEED_Y] * dt
+	obj[IDX_PHASE] += dt
+	obj[IDX_POSITION_WOBBLE_X] = obj[IDX_WOBBLE_X] * Math.sin(obj[IDX_PHASE])
+
+	for (var obj2 of objects)
+	{
+		if (obj2[IDX_OBJECT_TYPE] == OBJECT_TYPE_BEAM)
+		{
+			if (obj2[IDX_TIME_LEFT] > 0.2 && dist(obj, obj2) < BEAM_CATCH_DISTANCE)
+			{
+				humanCaught(obj)
+			}
+		}
+	}	
+}
+
+
+let _currentLevelIndex = -1
+let _levelData
+let _levelStepCount = 0
+let _nextLevelStepTime = 0
+let _levelStepSkip = 0
+
+function levelStep()
+{
+	function create()
+	{
+		var i = getRandomIndexWeighted(_levelData[7])
+		var e = ENEMY_DEFINITIONS[i]
+		var tmp = createGameObject(OBJECT_TYPE_ENEMY, e[EIDX_SPRITE_INDEX], e[EIDX_COLOR], getRandomInt(-100, 100), -130)
+		tmp[IDX_WOBBLE_X] = e[EIDX_WOBBLE_X]
+		tmp[IDX_SPEED_Y] = e[EIDX_SPEED_Y]
+		tmp[IDX_ENEMY_DEFINITION_INDEX] = i
+		objects.push(tmp)
+
+		return tmp
+	}
+
+	while (_nextLevelStepTime < _t)
+	{
+		_levelStepCount += 1
+
+		// interpolate between the min and max level speed, limit to 60 sec
+		_scrollSpeed = _levelData[2] + (clamp(_t, 0, 60) / 60) * (_levelData[3] - _levelData[2])
+
+		if (_levelStepSkip <= 0)
+		{
+			// create a human
+			if (getRandomFloat() < _levelData[11])
+			{
+				var tmp = createGameObject(OBJECT_TYPE_HUMAN, 7, HUMAN_COLOR, getRandomInt(-110, 110), -110)
+				tmp[IDX_WOBBLE_X] = 90
+				tmp[IDX_SPEED_Y] = 0
+				objects.push(tmp)
+			}
+
+			var leader = create()
+			var group = getRandomIndexWeighted(_levelData[9])
+
+			while (group > 0)
+			{
+				var follower = create()
+				follower[IDX_ENEMY_GROUP_LEADER] = leader
+				follower[IDX_ENEMY_GROUP_SHIFT_X] = group * 40
+				group -= 1
+			}
+
+			_levelStepSkip = getRandomInt(_levelData[0], _levelData[1])
+		}
+
+		_nextLevelStepTime += LEVEL_STEP_INTERVAL_SEC
+		_levelStepSkip -= 1
+	}
+}
+
+function levelInit(levelIndex)
+{
+	_t = 0
+	_nextBeamObjectTime = 0
+	_nextLevelStepTime = 0
+
+	_levelData = LEVELS[levelIndex]
+
+	_scrollSpeed = _levelData[2]
+	_randomSeed = _levelData[4]
+	_enemiesCaught =  [ 0, 0, 0, 0, 0, 0 ]
+
+	// TODO? should the level step be tied to scroll speed?
+
+	// delete all child objects the hacky way
+	_root.innerHTML = ""
+
+	objects = []
+	objects.push(createGameObject(OBJECT_TYPE_PLAYER, 2, HUMAN_COLOR, 0, 120))
+
+	_state = STATE_RUNNING
+	_dialogOpen = true
+
+	window.setTimeout(levelStartMessages, 1500)
+}
+
+function levelStartMessages()
+{
+	popUpMessages(_levelData[5])
+}
+
+function loadNextLevel()
+{
+	_currentLevelIndex += 1
+	if (_currentLevelIndex >= LEVELS.length)
+	{
+		_currentLevelIndex = 0
+	}
+
+	levelInit(_currentLevelIndex)
+	updateScores()
+	setCover(false)
+}
+
+function gameInit()
+{
+	loadNextLevel()
+	setCover(false)
+
+	// popUpMessages([ "Welcome!" ])
+	window.setInterval(step, 1000/60)
+	window.addEventListener("mousemove", onMouseMove)
+	window.addEventListener("touchstart", onMouseMove);
+	window.addEventListener("touchend", onMouseMove);
+	window.addEventListener("touchcancel", onMouseMove);
+	window.addEventListener("touchmove", onMouseMove);
+	_mb.addEventListener("click", dismissDialog)
+}
+
+function onMouseMove(event)
+{
+	let e
+	if (event.touches && event.touches.length > 0)
+	{
+		e = event.touches[0]
+	}
+	else
+	{
+		e = event
+	}
+
+	if (e.clientX === undefined)
+	{
+		return
+	}
+
+	let a = e.clientX - document.body.clientWidth / 2
+	a = a / _scale
+	a = a / (_width / 2)
+
+	if (a === undefined || isNaN(a))
+	{
+		return
+	}
+
+	_mousePosition = a
+}
+
+function throwEnemyAsParticle(e)
+{
+	var tmp = createGameObject(OBJECT_TYPE_PARTICLE, ENEMY_DEFINITIONS[e][EIDX_SPRITE_INDEX], ENEMY_DEFINITIONS[e][EIDX_COLOR], objects[0][IDX_POSITION_X], objects[0][IDX_POSITION_Y] - 1)
+	tmp[IDX_PHASE] = Math.random()
+	tmp[IDX_TIME_LEFT] = 1.0
+	tmp[IDX_SPEED_X] = Math.random() * 600 - 300
+	tmp[IDX_SPEED_Z] = Math.random() * -300
+	objects.push(tmp)
+}
+
+function throwHumanAsParticle()
+{
+	var tmp = createGameObject(OBJECT_TYPE_PARTICLE, 7, HUMAN_COLOR, objects[0][IDX_POSITION_X], objects[0][IDX_POSITION_Y] - 1)
+	tmp[IDX_PHASE] = Math.random()
+	tmp[IDX_TIME_LEFT] = 1.0
+	tmp[IDX_SPEED_X] = Math.random() * 600 - 300
+	tmp[IDX_SPEED_Z] = Math.random() * -300
+	objects.push(tmp)
+}
+
+function oofExecute()
+{
+	var totalCatches = 0
+	for (var i=0; i<ENEMY_DEFINITIONS.length; i++)
+	{
+		totalCatches += _enemiesCaught[i]
+	}
+
+	var catchesToSteal = Math.floor(Math.max(5, totalCatches * 0.3))
+
+	while (catchesToSteal > 0 && totalCatches > 0)
+	{
+		a = Math.floor(Math.random() * ENEMY_DEFINITIONS.length)
+		if (_enemiesCaught[a] == 0)
+		{
+			continue
+		}
+
+		throwEnemyAsParticle(a)
+		_enemiesCaught[a] -= 1
+		catchesToSteal -= 1
+		totalCatches -= 1
+
+		// make sure it won't happen again right away
+		if (_enemiesCaught[a] > 0 && _enemiesCaught[a] % 13 == 0)
+		{
+			throwEnemyAsParticle(a)
+			_enemiesCaught[a] -= 1
+			catchesToSteal -= 1
+			totalCatches -= 1
+		}
+	}
+
+	_o.style.animation = "o 0.33s forwards"
+	_time_scale = 0.0
+	zzfx(...SOUNDS[3])
+
+	updateScores()
+}
+
+function oofStart()
+{
+	if (_oofActive)
+	{
+		return
+	}
+
+	_oofActive = true
+	_oofTimeLeft = OOF_TIME_MAX
+}
+
+function oofStop()
+{
+	_oofActive = false
+}
+
+function oofStep(dt)
+{
+	if (!_oofActive)
+	{
+		_w.style.width = 0
+		return
+	}
+
+	_oofTimeLeft = clamp(_oofTimeLeft - dt, 0, OOF_TIME_MAX)
+	_w.style.width = ((1 - (_oofTimeLeft / OOF_TIME_MAX)) * 100) + "%"
+
+	if (_oofTimeLeft == 0)
+	{
+		oofExecute()
+		_oofActive = false
+	}
+}
+
+function updateScores()
+{
+	var total1 = 0
+	var total2 = 0
+	var oof = false
+
+	for (var i=0; i<ENEMY_DEFINITIONS.length; i++)
+	{
+		var obj = document.getElementById("s" + i)
+		obj.style.display = (_levelData[8][i] == 0 ? "none" : "")
+		obj.style.color = ENEMY_DEFINITIONS[i][EIDX_COLOR]
+		obj.innerHTML = _enemiesCaught[i] + " / " + _levelData[8][i]
+		total1 += _enemiesCaught[i]
+		total2 += _levelData[8][i]
+		obj.style.background = ""
+
+		if (_enemiesCaught[i] > 0)
+		{
+			if (_enemiesCaught[i] % 13 == 12)
+			{
+				obj.style.background = "#ea08"
+			}
+			else if (_enemiesCaught[i] % 13 == 0)
+			{
+				obj.style.background = "#f008"
+				oof = true
+			}
+			else if (_enemiesCaught[i] >= _levelData[8][i])
+			{
+				obj.style.background = "#0f05"
+			}
+		}
+	}
+
+	var obj = document.getElementById("st")
+	obj.innerHTML = "Total: " + total1 + " / " + total2
+	obj.style.background = ""
+
+	if (total1 > 0)
+	{
+		if (total1 % 13 == 12)
+		{
+			obj.style.background = "#ea08"
+		}
+		else if (total1 % 13 == 0)
+		{
+			obj.style.background = "#f008"
+			oof = true
+		}
+	}
+
+	if (oof)
+	{
+		oofStart()
+	}
+	else
+	{
+		oofStop()
+	}
+}
+
+function checkWinCondition()
+{
+	for (var i=0; i<ENEMY_DEFINITIONS.length; i++)
+	{
+		if (_enemiesCaught[i] < _levelData[8][i])
+		{
+			return false
+		}
+	}
+
+	return true
+}
+
+function queueLoadNextLevel()
+{
+	setCover(true)
+	window.setTimeout(loadNextLevel, 2000)
+}
+
+var _messages = []
+
+function popupNextMessage()
+{
+	if (_messages.length == 0)
+	{
+		_dialogOpen = false
+		return
+	}
+
+	zzfx(...SOUNDS[4])
+
+	_dialogOpen = true
+
+	_m.innerHTML = _messages.shift()
+	_m.style.opacity = 1
+	_mb.style.opacity = 1
+}
+
+function popUpMessages(messages)
+{
+	_messages = messages
+
+	popupNextMessage()
+}
+
+function dismissDialog()
+{
+	_m.style.opacity = 0
+	_mb.style.opacity = 0
+
+	if (_messages.length == 0)
+	{
+		_dialogOpen = false
+		if (_state == STATE_INIT || _state == STATE_WON)
+		{
+			queueLoadNextLevel()
+		}
+	}
+	else
+	{
+		window.setTimeout(popupNextMessage, 200)
+	}
+}
+
+function setCover(on)
+{
+	_r.style.bottom = on ? "0vh" : "100vh"
+	_r.style.top = on ? "0vh" : "-100vh"
+}
+
+function timescaleStep()
+{
+	var target = 0.1
+
+	if (_dialogOpen)
+	{
+		target = 0
+	}
+	else
+	{
+		if (_state == STATE_RUNNING)
+		{
+			target = 1.0
+		}
+	}
+
+	_time_scale += (target - _time_scale) * 0.03
+}
+
+var _bgPositionY = 0
+
+function step()
+{
+	var dt = 1/60 * _time_scale
+
+	_t += dt
+
+	timescaleStep()
+	levelStep()
+	createBeamObjects()
+
+	for (var i=0; i<objects.length; i++)
+	{
+		var obj = objects[i]
+
+		if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_PLAYER)
+		{
+			stepPlayerObject(obj, dt)
+		}
+		else if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_ENEMY)
+		{
+			stepEnemyObject(obj, dt)
+		}
+		else if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_BEAM)
+		{
+			stepBeamObject(obj, dt)
+		}
+		else if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_PARTICLE)
+		{
+			stepParticleObject(obj, dt)
+		}
+		else if (obj[IDX_OBJECT_TYPE] == OBJECT_TYPE_HUMAN)
+		{
+			stepHumanObject(obj, dt)
+		}
+					
+		updateGameObject(obj, dt)
+	}
+
+	cleanupObjects()
+
+	oofStep(dt)
+
+	if (_state == STATE_RUNNING)
+	{
+		if (checkWinCondition())
+		{
+			_state = STATE_WON
+			popUpMessages(_levelData[6])
+		}
+	}
+
+	// road scrolling
+	_bgPositionY += _scrollSpeed * dt
+	_bg.style.backgroundPosition = "0px " + (_bgPositionY * 3) + "px"
+
+	// scaling and centering the play area
+	_scale = Math.min(document.body.clientHeight / _width, document.body.clientWidth / _width)
+	_d.style.transform = "scale(" + _scale + ") perspective(800px)"
+	_d.style.left = (document.body.clientWidth / 2) + "px"
+}
+"use strict"
+
+let _d     // the base for the 3d scene
+let _root  // conatiner for the objects
+let _bg    // background layer
+let _m     // message div
+let _mb    // message button
+let _w     // warning bar at top
+let _o     // overlay
+let _q     // "click to start" overlay
+let _r     // cover overlay
+let _sprites  // decoded from the const
+let _time_scale = 0.0
+
+function init()
+{
+	_sprites = new Image()
+	_sprites.addEventListener("load", init2)
+	_sprites.src = GFX_SPRITES
+}
+
+function init2()
+{
+	_d = document.getElementById("d")
+	_root = document.getElementById("g")
+	_bg = document.getElementById("b")
+	_m = document.getElementById("m")
+	_mb = document.getElementById("mb")
+	_w = document.getElementById("w")
+	_o = document.getElementById("o")
+	_q = document.getElementById("q")
+	_r = document.getElementById("r")
+
+	_o.addEventListener("animationend", function() { this.style.animation = "none" })
+
+	_bg.style.background = "url(" + GFX_BACKGROUND + ")"
+	_bg.style.backgroundSize = "30%"
+
+	_r.style.background = "url(" + GFX_COVER + ")"
+	_r.style.backgroundSize = "30%"
+
+	_q.innerHTML = "Click to start"
+	_q.addEventListener("click", init3)
+}
+
+function init3()
+{
+	_q.parentNode.removeChild(_q)
+	gameInit()
+	soundManagerInit()
+}
+
+window.addEventListener("load", init)
+</script>
+</head><body><div id="d"><div id="b"></div><div id="g"></div><div id="f1"></div><div id="f2"></div><div id="f3"></div><div id="f4"></div></div><div id="o"></div><div id="w"></div><div id="s"><span id="s0"></span><span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span><span id="s5"></span><span id="st"></span></div><div id="r"></div><div id="m"></div><div id="mb">Continue</div><div id="q"></div></body></html>
