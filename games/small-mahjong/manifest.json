@@ -1,0 +1,8 @@
+{
+  "name": "Small Mahjong",
+  "short_name": "Small Mahjong",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#060",
+  "background_color": "#060"
+}
