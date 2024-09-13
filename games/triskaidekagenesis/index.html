@@ -1,0 +1,273 @@
+<style>
+  * {
+    text-align: center;
+    font-family: Verdana;
+    color: #220;
+  }
+
+  body {
+    background:#fff;
+    background-image: repeating-linear-gradient(45deg,
+        #eab59580,
+        #eab59580 50px,
+        #d87f8180 50px,
+        #d87f8180 100px),
+      repeating-linear-gradient(-45deg,
+        #eab59580,
+        #eab59580 50px,
+        #d87f8180 50px,
+        #d87f8180 100px);
+  }
+
+  body.afraid {   
+      animation: bodyrot 10s infinite alternate;
+  }
+
+  .sml{
+    font-size: 80%;
+  }
+
+  .round {
+    font-size: 2rem;
+    width: 10rem;
+    position: fixed;
+    right: 0;
+  }
+
+  #T {
+    font-size: 2rem;
+    position: fixed;
+    left: 0;
+    padding: 0rem 1rem;
+  }
+
+  #T:empty {
+    display: none;
+  }
+
+  #t {
+    position: fixed;
+  }
+
+  p {
+    text-align: left;
+    margin: 0.2rem;
+  }
+
+  p:nth-child(even) {
+    background: #d87f8140;
+  }
+
+  .ft {
+    border: solid 1px #000;
+    font-size: 1.5rem;
+    width: 6rem;
+    background: #fff;
+  }
+
+  .scary .IB {
+    font-weight: bold;
+    animation: blink 0.5s infinite alternate, shake 0.03s infinite alternate;
+    position: relative;
+    display: inline-block;
+  }
+
+  .scary.final .IB {
+    animation: none;
+    color: red;
+    transform: scale(1.2);
+  }
+
+  .scary .safe {
+    filter: blur(2px);
+  }
+
+  .scary.final .safe {
+    filter: none;
+  }
+
+  .scary h4 {
+    animation: shake 0.03s infinite alternate;
+  }
+
+
+  .scary.final h4 {
+    animation: none;
+  }
+
+  .variants {
+    columns: 5;
+  }
+
+
+  .story,
+  .variants {
+    text-align: left;
+    padding: 0.5rem;
+  }
+
+  .story,
+  .variants,
+  .round,
+  .cards,
+  #T,
+  h4 {
+    border: solid 0.2rem #8880;
+    box-shadow: 0 0.1rem 0.25rem #0008;
+    background: #fffc;
+  }
+
+  .story {
+    max-width: 40rem;
+    margin: auto;
+  }
+
+  .note {
+    padding-top: 2rem;
+  }
+
+
+  button {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    border: solid 1px #000;
+    box-shadow: 0 0.1rem 0.25rem #0008;
+    animation: grow 0.5s infinite alternate;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .variants:empty {
+    border: none;
+    box-shadow: none;
+  }
+
+  .card {
+    display: inline-block;
+    border-radius: 1rem;
+    font-size: 5rem;
+    margin: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    border: solid 0.5px #0008;
+    box-shadow: 0 0.1rem 0.1rem #0008;
+    user-select: none;
+    background: #fff;
+  }
+
+  .card:hover {
+    transform: scale(1.1) translateY(-0.2rem);
+    box-shadow: 0 0.2rem 0.2rem #0008;
+  }
+
+  .bottom {
+    position: absolute;
+    bottom: 0;
+    width: 99%;
+  }
+
+
+  .cards {
+    margin-top: 5rem;
+  }
+
+  .sel {
+    transform: translateY(-3rem);
+  }
+
+  .card.sel:hover {
+    transform: scale(1.1) translateY(-3.2rem);
+  }
+
+  @keyframes grow {
+    to {
+      transform: scale(1.03);
+    }
+  }
+
+  @keyframes blink {
+    to {
+      color: #f00;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes bodyrot {
+    0%,100%{
+      transform: none;
+    }
+    25% {
+      transform: rotate(-.5deg)
+    }
+    75% {
+      transform: rotate(.5deg)
+    }
+    30%, 30.4% {
+      filter: blur(0);
+    }
+    30.2% {
+      filter: blur(10px);
+    }
+  }
+
+
+  @keyframes border1 {
+    to {
+      border-color: #f00;
+    }
+  }
+
+
+  @keyframes shake {
+    to {
+      transform: rotate(0.3deg);
+    }
+  }
+</style>
+
+<script>
+  var _audC = new (window.AudioContext || window.webkitAudioContext);
+  var _aud_MV = 1; //master volumne
+
+  function tone(length, type) {
+    if ((!_audC) || (!_aud_MV)) return { //a null note
+      f: function () { return this; },
+      v: function () { return this; }
+    };
+    var current = _audC.currentTime;
+    var oscillator = _audC.createOscillator();
+    var gain = _audC.createGain();
+
+    if (type) oscillator.type = type;
+    oscillator.frequency.value = 0;
+    gain.gain.value = 0;
+    oscillator.connect(gain);
+    gain.connect(_audC.destination);
+
+    oscillator.start(0);
+    oscillator.stop(current + length);
+
+    return {
+      f: function () {
+        if (arguments.length == 1) { oscillator.frequency.value = arguments[0]; return this; }
+        for (var i = 0; i < arguments.length; i += 1)
+          oscillator.frequency.linearRampToValueAtTime(arguments[i], current + i / (arguments.length - 1) * length);
+        return this;
+      },
+      v: function () {
+        if (arguments.length == 1) { gain.gain.value = arguments[0] * _aud_MV; return this; }
+        for (var i = 0; i < arguments.length; i += 1)
+          gain.gain.linearRampToValueAtTime(arguments[i] * _aud_MV, current + i / (arguments.length - 1) * length);
+        return this;
+      }
+    };
+  }
+
+  window.tone = tone
+</script>
+
+
+<div id=T></div>
+<div id=M></div>
+<script src="bundle.js"></script>
