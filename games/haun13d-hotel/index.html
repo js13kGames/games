@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <title>Haun13d Hotel</title>
+    <script src="https://js13kgames.com/webxr-src/2024/babylon.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #c {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        #r {
+            display: none;
+            background-color: #000000A0;
+            position: absolute;
+            cursor: pointer;
+            top: 50%;
+            transform: translateY(150px);
+            text-shadow: #088 0 0 3px;
+            color: #586069;
+            font: bold 88px monospace;
+            width:400px;
+            text-align:center;
+        }
+        #r:hover {
+            background-color: #008080A0;
+            color: #00f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        style="position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+        <div id="r">RESTART</div>
+    </div>
+    <canvas id="c"></canvas>
+    <script src="index.js"></script>
+</body>
+
+</html>
