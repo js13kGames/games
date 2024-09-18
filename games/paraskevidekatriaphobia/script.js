@@ -487,6 +487,9 @@ const fs = loadShader(gl.FRAGMENT_SHADER, fsSource);
 const shaderProgram = gl.createProgram();
 gl.attachShader(shaderProgram, vs);
 gl.attachShader(shaderProgram, fs);
+gl.bindAttribLocation(shaderProgram, 0, "vertex_position");
+gl.bindAttribLocation(shaderProgram, 1, "vertex_normal");
+gl.bindAttribLocation(shaderProgram, 1, "uv");
 gl.linkProgram(shaderProgram);
 if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
 alert(`GPU program error: ${gl.getProgramInfoLog(shaderProgram)}`);
