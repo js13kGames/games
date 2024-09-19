@@ -13,7 +13,7 @@ hand.addChild(o)}
 mPanel.addChild(meter);stTime=null;started=!1;sStI=0;sSts=[];players=[new Player(),new Player()];p1=players[0];p2=players[1];if(server){p1.socket=opts.players[0].socket;p2.socket=opts.players[1].socket}
 gameEnded=!1;endSound=!1;quitting=!1;players.forEach(p=>{p.played={};p.confirmed={}})
 if(server||oneP){p1.pInd=0;p2.pInd=1;p1.eInd=1;p2.eInd=0;p2.towers=[Unit(p2,100,60,0),Unit(p2,380,60,0)];p1.towers=[Unit(p1,100,420,0),Unit(p1,380,420,0)]}
-lsrs=ObjectPool(Laser,[0,0]);if(!server){window.mobile=!1;if(typeof window.orientation!=='undefined'){mobile=!0;window.top.scrollTo(0,1)}
+lsrs=ObjectPool(Laser,[0,0]);if(!server){window.mobile=!1;if(typeof window.orientation!=='undefined'){mobile=!0;scrollTo(0,1)}
 touch=new Obj();this.tDown=!1;sCard=null;let pInd=opts.pI;p1.pInd=pInd?1:0;p2.pInd=pInd?0:1;p1.eInd=1;p2.eInd=0;expls=ObjectPool(Explosion,[0,0]);this.canvas=Cnv(2,2);this.rsz(this.canvas);document.body.appendChild(this.canvas);let ctx=this.canvas.ctx;ctx.imageSmoothingEnabled=!1;this.ctx=ctx;ID=0;p1.spSh=assets.images[0];p2.spSh=assets.images[1];this.MainLoop.setDraw(this.render)}
 dO=opts.dO||deckOrder();p1.deck.push(Card(0),Card(1),Card(2),Card(3),Card(4),Card(5),Card(6),Card(7));p2.deck.push(Card(0),Card(1),Card(2),Card(3),Card(4),Card(5),Card(6),Card(7));players.forEach((p,j)=>{let i,c,o=server?dO[p.pInd]:dO;for(i=0;i<4;i++){c=p.deck[o[i]];if(!server&&!j)
 hand.children[i].addChild(c);p.hand.push(c)}
