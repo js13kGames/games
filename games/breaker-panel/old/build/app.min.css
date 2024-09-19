@@ -1,1 +1,0 @@
-body{background:#a9a9a9;width:300px;height:100%;margin:0 auto}#wrap{background:#fff;color:#000;margin:1%}#game{margin-left:-1%;margin-right:-1%}svg circle,svg path{fill:#FFF;stroke:#000}svg path{stroke-width:1}@keyframes live{to{stroke-dashoffset:300}}#game svg .live{stroke-dasharray:5;animation:live 5s linear reverse}.explain svg{float:left;margin-right:.5em}

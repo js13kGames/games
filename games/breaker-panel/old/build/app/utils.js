@@ -1,1 +1,0 @@
-define(function(){"use strict";var a;return a=function(a,b){var c;return c=function(){},function(a,b){c.prototype=b.prototype,a.prototype=new c,a.superior=b.prototype,a.prototype.constructor=a}(a,b)},{inherit:a}});
