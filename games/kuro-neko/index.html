@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuro Neko</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="asset/neko.png">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Kuro Neko</h1>
+        <p class="subtitle">Protect your owner from approaching dangers!</p>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="hud">
+            <div class="score">Score: <span id="scoreValue">0</span></div>
+            <div class="highscore">High Score: <span id="highScoreValue">0</span></div>
+            <div class="lives">Lives: <span id="livesValue">9</span></div>
+        </div>
+        <div class="controls">
+            Use WASD or Arrow Keys to move the cat • Protect your owner from ghost enemies
+        </div>
+    </div>
+
+    <div class="game-over" id="gameOver">
+        <h2>Game Over!</h2>
+        <p>Your owner is now possessed!</p>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <button class="restart-btn" onclick="restartGame()">Play Again</button>
+    </div>
+
+    <div class="start-screen" id="startScreen">
+        <h2>Welcome to Kuro Neko</h2>
+        <p>Protect your owner from the ghosts!</p>
+        <p class="instructions">Use WASD or Arrow Keys to move</p>
+        <button class="start-btn" onclick="startGame()">Start Game</button>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
