@@ -1,0 +1,407 @@
+* {
+    font-family: monospace;
+}
+
+body {
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    background-color: #04050D;
+      -webkit-user-select: none;  /* Chrome all / Safari all */
+      -moz-user-select: none;     /* Firefox all */
+      -ms-user-select: none;      /* IE 10+ */
+      user-select: none;          /* Likely future */   
+}
+
+.actor {
+    position: absolute;
+    left: 1%;
+    top: 96%;
+    width: 40px;
+    height: 40px;
+    font-size: 15pt;
+    color:#ffe4b9;
+    /* font-family: "lucida console"; */
+}
+
+.rotator {
+    /* -webkit-transform-origin-x: 24px;
+    -webkit-transform-origin-y: 19px; */
+    transform-origin: 24px 19px;
+    /* border-left: 2.5px #c3c3c3 solid;
+    border-right: 2.5px #c3c3c3 solid; */
+}
+
+.forklift {
+    border-left: 2px #000000 solid;
+    border-right: 2px #000000 solid;
+    border-bottom: 2px #000000 solid;
+    /* padding-top: 10px; */
+    /* border-bottom: 3px rgba(195, 195, 195, .3) dotted; */
+    left: 4.5px;
+    top: -12.5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-top: 19px;
+}
+
+.forklift-sample {
+    border-left: 2px #000000 solid;
+    border-right: 2px #000000 solid;
+    border-bottom: 2px #000000 solid;
+    /* padding-top: 10px; */
+    /* border-bottom: 3px rgba(195, 195, 195, .3) dotted; */
+    left: 20.5px;
+    top: -14.5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-top: 19px;
+    margin-top: -30px;
+    width: 45px;
+    margin-left: -10px;
+    color: #ffe4b9;
+}
+
+.forklift-sample-2 {
+    border-left: 2px #000000 solid;
+    border-right: 2px #000000 solid;
+    border-bottom: 2px #000000 solid;
+    /* padding-top: 10px; */
+    /* border-bottom: 3px rgba(195, 195, 195, .3) dotted; */
+    left: 260.5px;
+    top: -43.5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-top: 19px;
+    margin-top: -30px;
+    width: 44px;
+    margin-left: -10px;
+    color: #ffe4b9;
+}
+
+.ears-cat {
+    position: relative;
+    top: -21.5px;
+    margin-left: -16px;
+    margin-right: -16px;
+    color: #000000;
+}
+
+.ears-cat-sample {
+    position: relative;
+    top: -23.5px;
+    margin-left: -25px;
+    margin-right: -25px;
+    color: #000000;
+}
+.ears-kitten {
+    position: relative;
+    top: -3px;  
+    margin-left: -12.5px;
+    margin-right: -12.5px;
+    display: inline;
+}
+
+.ears-kitten-sample {
+    position: relative;
+    top: -11px;  
+    margin-left: -12.5px;
+    margin-right: -12.5px;
+    display: inline;
+}
+
+.face-kitten {
+    align-content: end;
+}
+
+.face-kitten-sample {
+    margin-bottom: -10px;
+}
+
+.game {
+    position: absolute;
+    background-color: #000000;
+    /* left: 0%;
+    top: 0%; */
+    width: 820px;
+    height: 820px;
+    /* transform: scale(1); */
+    transform-origin: 0% 0%;
+    animation: color-change 15s infinite;
+    top: 47.5%;
+    left: 50%;
+    transform: translate(-50%, -47.5%);
+}
+
+.crate {
+    position: absolute;
+    color: #c3c3c3;
+    /* font-family: "lucida console"; */
+    font-size: 11pt;
+    opacity: .5;
+    border-left: 1.5px solid;
+    border-right: 1.5px solid;
+    border-bottom: 1.5px solid;
+    padding-top: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.whiskers-kitten {
+    position: relative;
+    top: 12px;  
+    font-size: 12.5px;
+}
+
+.whiskers-kitten-sample {
+    position: relative;
+    top: 2px;  
+    font-size: 12.5px;
+}
+
+.whiskers-cat {
+    position: relative;
+    top: 2px;  
+    font-size: 17.5px;
+}
+
+@keyframes glow {
+    0% {opacity: .5}
+    50% {opacity: 1}
+    100% {opacity: .5}
+}
+
+@keyframes glow2 {
+    0% {opacity: .25}
+    50% {opacity: .50}
+    100% {opacity: .25}
+}
+
+@keyframes beacon {
+    0% { background-color: red; }
+    15% { background-color:orange; }
+    30% { background-color: yellow; }
+    45% { background-color: green; }
+    60% { background-color: blue; }
+    75% { background-color: indigo; }
+    90% { background-color: violet; }
+}
+
+.hit-bar {
+    position: absolute;
+    /* transform-origin: 0% 0%; */
+    bottom: -2.5%;
+    left: 0%;
+    width: 100%;
+    height: 2.5%;
+    z-index: 99;
+    /* font-family: "Consolas"; */
+    opacity: .8;
+    border-radius: 0px 0px 30px 30px;
+}
+
+
+/* .mobile-controls-1, .mobile-controls-2{
+    display: block;
+    position: absolute;
+    color: grey;
+    bottom: 5%;
+    transform: translate(-50%, 0%);
+} */
+
+.message-container {
+    position: absolute;
+    background-color: rgba(195, 195, 195, .65);
+    opacity: 1;
+    display: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color:black;
+    /* font-family: "lucida console"; */
+    z-index: 100;
+    width: 600px;
+}
+
+.message {
+    padding: 25px;
+}
+
+.instructions-progress {
+    display: none;
+    position: relative;
+    height: 10px;
+}
+
+.skip-instructions {
+    position: absolute;
+    background-color: rgba(143, 143, 143, 0.65);
+    opacity: 1;
+    display: none;
+    padding: 15px;
+    left: 50%;
+    bottom: 150px;
+    transform: translateX(-50%);
+    font-size: 20px;
+    color:black;
+    /* font-family: "lucida console"; */
+    z-index: 100;
+    width: 600px;
+    animation: glow 1s infinite;
+}
+
+
+.crate-sample {
+    position: relative;
+    /* font-family: "lucida console"; */
+    font-size: 12pt;
+    opacity: 1;
+    border-left: 1.5px solid;
+    border-right: 1.5px solid;
+    border-bottom: 1.5px solid;
+    width: 27.5px;
+    height: 27.5px;
+    color: #fff;
+    align-content: end;
+    animation: glow 1s infinite;
+    z-index: 99;
+}
+
+.shelf-sample {
+    position: relative;
+    /* font-family: "lucida console"; */
+    font-size: 20pt;
+    opacity: 1;
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+}
+
+.hit-bar-sample {
+    position: relative;
+    background-color: hsl(100%, 70%, 35%);
+    /* font-family: "lucida console"; */
+    font-size: 20pt;
+    opacity: 1;
+    width: 150px;
+    height: 18px;
+    border-radius: 0 0 15px 15px;
+}
+
+/*controls*/
+
+@media (orientation: portrait) {
+    .mobile-controls-1 {
+        /* visibility: hidden; */
+        display: block;
+        position: absolute;
+        color: grey;
+        font-size: 10vw;
+        left: 12.5%;
+        bottom: 5%;
+    }
+    
+    .mobile-controls-2 {
+        /* visibility: hidden; */
+        display: block;
+        position: absolute;
+        color: grey;
+        font-size: 10vw;
+        right: 10%;
+        bottom: 5%;
+    }
+}
+
+@media (orientation: landscape) {
+    .mobile-controls-1{
+        /* visibility: hidden; */
+        display: block;
+        position: absolute;
+        color: grey;
+        font-size: 15vh;
+        left: 7.5%;
+        top: 50%;
+        transform: translate(0%, -50%);
+    }
+    
+    .mobile-controls-2{
+        /* visibility: hidden; */
+        display: block;
+        position: absolute;
+        color: grey;
+        font-size: 15vh;
+        right: 5%;
+        top: 50%;
+        transform: translate(0%, -50%);
+    }
+  }
+
+.level-indicator{
+    position: absolute;
+    top: -4.5%;
+    left: 0;
+    /* top: 4%;
+    left: 4%; */
+    /* font-family: "Consolas"; */
+    font-size: 30px;
+    color: #c3c3c3;
+}
+
+
+.toggle-onscreen-controls{
+    position: absolute;
+    top: -8%;
+    right: 0;
+    /* top: 4%;
+    right: 4%; */
+    text-align: right;
+    /* font-family: "Consolas"; */
+    font-size: 20px;
+    /* color: #c3c3c3; */
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.mobile-controls-forward, .mobile-controls-backward, .mobile-controls-left, .mobile-controls-right {
+    padding: 20px;
+}
+
+.mobile-controls-backward {
+    transform: rotate(180deg);
+}
+
+.mobile-controls-right {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+.mobile-controls-left {
+    display: inline-block;
+    transform: rotate(-90deg);
+}
+
+.mobile-controls-all {
+    display: none;
+    opacity: .7;
+}
+
+.start-box {
+    position: absolute;
+    background-color: rgba(195, 195, 195, .65);
+    opacity: 1;
+    display: none;
+    padding: 25px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color:rgb(0, 0, 0);
+    /* font-family: "lucida console"; */
+    z-index: 100;
+    width: 600px;
+    animation: glow 2s infinite;
+}
