@@ -110,7 +110,7 @@ const randomPlayerName = (length) => {
     reset();
     const playerName = getPlayerName();
     console.log('playerName:- ', playerName)
-    const sock = io();
+    const sock = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]})
     sock.emit('message', `${playerName}#Joined!`);
 
     const onClick = (e) => {

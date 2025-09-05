@@ -200,7 +200,7 @@ function init(c) {
     sDiv = getE("score");
     cDiv = getE("chat");
     cIn = getE("chatI");
-    socket = io({ upgrade: false, transports: ["websocket"] });
+    socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
     loadSprites();
     
     c = can(MapW,MapH);

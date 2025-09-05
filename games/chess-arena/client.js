@@ -112,7 +112,7 @@ let rClass=(c)=>{
 
 window.addEventListener("load", 
     ()=> {
-        sck = io();
+        sck = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
 
         div.onclick = (e)=>{
             let t = e.target;

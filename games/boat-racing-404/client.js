@@ -420,7 +420,7 @@ player = addPlayer(track);
  * Client module init
  */
 function init() {
-    socket = io({ upgrade: false, transports: ['websocket'] });
+    socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
     bind();
 }
 

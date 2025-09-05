@@ -1,2 +1,47 @@
-eval(Function("[M='{?s|PF[~MkPNDkh]BfeiOnOqRnfndD^~aC`wbLSr`y~DkuJ`^EDVCid[tbzJI|xHks{b{_GIZI`xyFcGevF?q[^`SzM]Srm?Wq~?mffy~EUMtXZ]hsDcV[PbUjI@bNijoqdaaPkjrGT@oaY]d@G]lTkrqeiRZXF_bkpPq_?tt^W@QqRhA@dgXDh@F?JVzMNUoWmbniM?PCGuGexkY}zRj}LotD?NXwu~_QlYxRjXmFs[Bvl|SsVmBryntH}~rw[zu[^V{k^Ggik[IfDxJN^{~WU}nuXI}a_oNiqBmFIDviMxZFzLzbVdzEC{_B{l`{JCgxCybImUmiXieqlEhYoJxugegfb{QIphiaqHh^OQTCKz`C^VbgIlTG^}BuZXWcFrQCcAOuI_P{mYeJ]YTfbWBgbhwFAn|?@J_~XoxkHIrQdy_^QZ~efu`xjKFc]|an`wyBvsRJd_NC{UG~C]qQt{cXv`kziWGWmUuqHlKoW{VsCd}CD_?_J[gJoozsNhsOwqjCJUkPrsLe]]ImJgGkNPbTJy|}`?`mnix{qLjq{E{_Z_^|GFJAEil``pm|JFOJJsPQYuoTF``vV@uXP`cka}~waYrOgqT~}wlm|_p`fKGkPjJBJnKvwHQr[]UW{OrZucX}]sSiE^oNFQJdi`eihDUWPaPmDRttY{w}{}K_hwMyzW}KYHYpybwPj`HQeHw|hoiEq{fA?mIkF~]WpzZiLKDsqX}}dgVetf{aT@YmguMrHa|mM_F|XQQ`cmUL?]UC@XjbFzxfesfrMOOvIaIOKOGixzZBD?HSOt|{}SLCws{ZkdynzEIlU]zLpL~MhNlLMoPdLX}_JRXuuoqrpits}UuXdF`jc@xotkXPqF?`TmN?fRd~qEBj_F?H~~yZB|OGoUA?}qIRUcw@WfTl~icHST@idnS}Q^e{zP}p^hXe^J]CeKHwsJhuXH[D@R{]bc~fun{oykeJ@qU`i{l{j[]VBoEcZu@_i}Jhr_D`VE}I^SsTFl_tp[VSjwY@E?^ZsphzLiIDEqKfcgIDEsy}mscNk}PyxydpX_[NKPBZBcm_AHZrNeY~LH}HQyJcTpTfePLntN_UXoFz|KBDGLYi?tZ[lTQlUr`?jRSqNdEiNSnHX`xpdtnCgHKur_L]Is~gx?AceadS[i|@LRKQuLA@GHdtH{Zfj~O`XgFqdEVTN^`wNxVWo^HbVutxnqOkkmGAKSOfomrWITlRMcKxtOAy]t}gOVur||Q{RA}|JX^H^}as`apHYgzWnNjX@I~KppwqgDsYVhGz`wF]TcSTcN_GKSy|KouEDWtHs~OY]bHfWdCnDmyMS'"
-,...']charCodeAtUinyxp',"for(;e<3152;c[e++]=x-128)for(x=1;x<128;p.map((i,y)=>(t=C[i]+=(U*a/2-C[i]<<13)/((o[i]+=o[i]<5)+1/20)>>13,r[y]+=n[y]*(U-A/a))),x=x*2+U)for(p='010202103203210431053105410642065206541'.split(A=0).map((i,y)=>(t=0,[...i].map((i,y)=>(t=t*997+(c[e-i]|0)|0)),a*32-1&t*997+x)*12+y),n=p.map((i,y)=>(t=C[i]*2+1,t=Math.log(t/(a-t)),A-=r[y]*t,t/500)),A=~-a/(1+Math.exp(A))|1,U=h%a<A,h=h%a+(U?A:a-A)*(h>>17)-!U*A;h<a*32;h=h*64|M.charCodeAt(d++)&63);return String.fromCharCode(...c)")([],[],104695625,1<<17,[0,0,0,0,0,0,0,0,0,0,0,0],new Uint16Array(12<<22).fill(1<<15),new Uint8Array(12<<22),0,0))
+"use strict";const users=[];const zones=[];const combatSQRs=[]
+function configUser(user,val){for(let i=0;i<users.length;i++){if(user!==users[i]){if(val==0){users[i].setUser(user.socket.id,val,0,0,0)}else if(val==1){users[i].setUser(user.socket.id,val,user.x,user.y,user.attRad);user.setUser(users[i].socket.id,val,users[i].x,users[i].y,user.attRad)}}}
+  if(val==0){removeUser(user);console.log("removal of user: "+user.socket.id)}else if(val==1){users.push(user);console.log("addition of user: "+user.socket.id)}}
+function removeUser(user){users.splice(users.indexOf(user),1)}
+function updateUserLocation(user){var pos=user.returnLoc();for(let i=0;i<users.length;i++){if(user!==users[i]){console.log("sending updated coords to "+users[i].socket.id+" for "+user.socket.id+" : "+pos[0]+', '+pos[1]);users[i].updateUserLoc(user.socket.id,pos[0],pos[1])}}}
+function updateConnectedCount(){for(let i=0;i<users.length;i++){users[i].updateCount()}}
+function setRandomStart(user){var randX=Math.floor(getRandomArbitrary(1,16));var randY=Math.floor(getRandomArbitrary(1,16));console.log("spawn loc X:"+randX+', Y:'+randY);if(randX!=null&&randY!=null){user.updateLoc(randX,randY)}else{console.log("ERROR, RANDOM LOCATION GENERATED NULL")}}
+function getRandomArbitrary(min,max){return Math.random()*(max-min)+min}
+class User{constructor(socket){this.socket=socket;this.game=null;this.guess=GUESS_NO;this.x=0;this.y=0;this.attRad=5;this.combat=!1}
+  setCombat(bo){this.combat=bo}
+  setMove(move){if(move==1){this.y--;this.updateLoc(this.x,this.y);updateUserLocation(this)}else if(move==2){this.x--;this.updateLoc(this.x,this.y);updateUserLocation(this)}else if(move==3){this.x++;this.updateLoc(this.x,this.y);updateUserLocation(this)}else if(move==4){this.y++;this.updateLoc(this.x,this.y);updateUserLocation(this)}else{console.log("Unknown input: "+move)}
+    return!0}
+  returnLoc(){return[this.x,this.y]}
+  updateCount(){this.socket.emit("updateCount",users.length)}
+  setUser(id,val,x,y,rad){console.log("...sending... setUser "+id+" x::"+x+", y::"+y);this.socket.emit("setUser",id,val,x,y,rad)}
+  updateLoc(x,y){this.x=x;this.y=y;this.socket.emit("updateLoc",this.socket.id,this.x,this.y)}
+  updateUserLoc(id,x,y){this.socket.emit("updateUserLoc",id,x,y)}}
+
+/**
+ * Socket.IO on connect event
+ * @param {Socket} socket
+ */
+module.exports = {
+
+  io: (socket) => {
+
+    const user = new User(socket);
+    setRandomStart(user);
+
+    configUser(user, 1); //add new
+
+    updateConnectedCount();
+
+
+    socket.on("disconnect",()=>{console.log("Disconnected: "+socket.id);configUser(user,0);updateConnectedCount()
+      console.log("Currently connected: "+users.length+" users \n")})
+
+    // socket.on("updateCount", () => {
+    // 	console.log("User has connected, currently connected: " + users.length + " users");
+    socket.on("move",(move)=>{console.log("Move Player: "+socket.id);for(var i=0;i<users.length;i++){if(users[i].socket.id==socket.id){users[i].setMove(move);return}}})
+
+    console.log("Connected: " + socket.id);
+    console.log("Currently connected: " + users.length + " users \n");
+  },
+  stat:(req,res)=>{storage.get('games',0).then(games=>{res.send(`<h1>Rounds played: ${games}</h1>`)})}
+
+};

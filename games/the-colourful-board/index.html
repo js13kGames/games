@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MyGame</title>
+  <link rel="icon" href="img/favicon.png">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div class="game-wrapper">
+  <div class="canvas-wrapper">
+    <div class="canvas-board">
+      <canvas height="500" width="500"></canvas>
+    </div>
+  </div>
+  <div class="controllers-wrapper">
+    <ul id="events"></ul>
+    <div class="controls">
+      <div class="chat-wrappers">
+        <form id="chat-form">
+          <input id="chat" autocomplete="off" title="chat"/>
+          <button id="say">Say</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="socket.io/socket.io.js"></script>
+<script src="src/client.js"></script>
+</body>
+</html>
