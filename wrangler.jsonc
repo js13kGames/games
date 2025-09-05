@@ -1,0 +1,14 @@
+{
+  "name": "js13kgames-play",
+  "main": "index.ts",
+  "compatibility_date": "2025-05-23",
+  "assets": {
+    "directory": "games"
+  },
+  "services": [
+    {
+      "binding": "RUNTIME_SANDBOX",
+      "service": "js13kgames-runtime"
+    }
+  ]
+}
