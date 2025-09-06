@@ -1,20 +1,3 @@
-/**
- * Create a canvas shape
- * @type {Shape}
- * @param params
- *      - colour {string}
- *      - fill {boolean}
- *      - length {number}
- *      - width {number}
- *      - edges {number}
- *      - offsetX {number}
- *      - offsetY {number}
- *      - offsetRotation {number}
- *      - border {number} - Border thickness
- *      - point {number} - Size of point
- *
- * @author Jarred Mack, Steve Kane
- */
 var Shape = function() {
     var canvas, ctx;
 
@@ -39,9 +22,6 @@ var Shape = function() {
             point: params.point || 0
         }
 
-        /**
-         * Calculate the vertices to be drawn
-         */
         this.calculateVertices = function() {
             self.data.vertices = [];
             for(var i = 1; i <= self.data.edges; i++) {
@@ -52,33 +32,17 @@ var Shape = function() {
             }
         }
 
-        /**
-         * Set the object colour
-         * @param {string} colour
-         * @returns {Shape}
-         */
         this.setColour = function(colour) {
             self.data.colour = colour;
             return this;
         }
 
-        /**
-         * Set the object length
-         * @param {number} length
-         * @returns {Shape}
-         */
         this.setLength = function(length) {
             self.data.length = length;
             self.calculateVertices();
             return this;
         }
 
-        /**
-         * Draw the shape
-         * @param {number} x
-         * @param {number} y
-         * @param {number} rotation
-         */
         this.draw = function(x, y, rotation) {
             //Save canvas state
             ctx.save();
@@ -128,15 +92,9 @@ var Shape = function() {
             ctx.restore();
         }
 
-        //Initialise
         self.calculateVertices();
     }
 
-    /**
-     * Invert a colour
-     * @param {string} colour
-     * @returns {string}
-     */
     function invert(colour) {
         var colourString = colour.split(',');
         colourString[0] = 255 - colourString[0];

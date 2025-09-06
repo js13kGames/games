@@ -1,47 +1,26 @@
-/**
- * Bingo Object : initialize the game
- */
 var Bingo = {
-    
     container : null,
-    
     itemPerCollum : 4,
-    
     itemPerRow : 4,
-    
     json : null,
-    
     socket : null,
-    
     ui : null,
-    
     wrapper : null,
-    
     join : null,
-    
     create : null,
-    
     hasTerms : false,
-    
-    server : 'http://ic.adfab.fr:8888/', // local home
-    //server : 'http://ic.adfab.fr:88/' // server IC
-    
+
     isConnected : false,
     
-    getElement : function ()
-    {
+    getElement : function () {
     	Bingo.wrapper = document.querySelector('.wrapper');
     	Bingo.ui = document.querySelector('.ui');
     	Bingo.join = document.getElementById('join');
     	Bingo.create = document.getElementById('create');
     	Bingo.popin = document.getElementById('popin');
     },
-    
-    /**
-     * 
-     */
-    init : function ()
-    {
+
+    init : function () {
         setTimeout(function(){
             // Hide the address bar!
             window.scrollTo(0, 1);
@@ -91,8 +70,8 @@ var Bingo = {
     	if(typeof Bingo.socket !== "undefined" && Bingo.socket !== null && !Bingo.socket.socket.connected){
             Bingo.socket.socket.reconnect();
     	}
-    	else{
-	    	Bingo.socket = io.connect(Bingo.server);
+    	else {
+	    	Bingo.socket = io.connect({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
     	}
     	
 	    Bingo.socket.on('connect', function ()

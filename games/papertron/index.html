@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>PAPERTRON</title>
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="style.css">
 <script id="vert" type="text/plain">
 attribute vec3 aNorm, aPos, aColor;
 uniform mat4 uModel, uCam;
@@ -30,9 +30,9 @@ void main() {
 gl_FragColor = vec4(vColor * vLight, 1.0);
 }
 </script>
-<script src="/socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script>
 <script src="jsfxr.js"></script>
-<script src="game.js"></script>
+<script src="shared.js"></script>
 <script src="client.js"></script>
 </head>
 <body>

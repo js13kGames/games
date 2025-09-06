@@ -1,9 +1,3 @@
-/**
- * Create a ship
- * @type {Ship}
- *
- * @author Jarred Mack
- */
 var Ship = function() {
     function cls(params) {
         var self = this;

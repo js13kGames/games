@@ -39,7 +39,7 @@ class GameClient {
 
   setUpWebsocketAndInitiateMatchmaking() {
     this.outside.showFullPageMessage({ message: 'Waiting for opponent...' });
-    let socket = this.socket = io({ upgrade: false, transports: ["websocket"], reconnection: false });
+    let socket = this.socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"],reconnection:false});
 
     socket.on("disconnect", () => {
       this.isGameRunning = false;

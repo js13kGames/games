@@ -3,11 +3,14 @@ export default {
   'critter-defense': 1,
   'senshi': 1,
   'world-is-falling': 1,
+  // TODO(alcore) Needs quite a bit of time due to poor bundling in the source.
   'runrun-rabbit': 1,
   'pixel-quest': 1,
   'untitled13': 1,
   'stalinebingo': 1,
+  // TODO(alcore) Unbundled and :effort:
   'tanks': 1,
+  // TODO(alcore) Broken. Possibly net-related (missing socketId?)
   'outaluq': 1,
 
   // 2014
@@ -74,12 +77,16 @@ export default {
   // 2019
   'backsteroid': 1,
   'back-to-the-battle-ship': 1,
+  // TODO(alcore) Not actually an Online game (no server at all)
   'dodge-that-shit': 1,
   'backshot-tactics': 1,
   'backionary': 1,
   'godai-is-back': 1,
+  // TODO(alcore) Console error(s)
   'game-of-backstabbers': 1,
+  // TODO(alcore) Highscore-only (and implemented through WS instead of req/res)
   'beat-bricks': 1,
+  // TODO(alcore) Unknown issue.
   'slipstream-13k': 1,
   'fallback': 1,
   'throw-back': 1,

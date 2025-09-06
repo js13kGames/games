@@ -110,13 +110,11 @@ g.Game = {
         players = newState.players,
         laserAction;
     for (let movement of movements) {
-      console.log('src/shared/Game.js:41:18:\'computeMovements\',movement', 'computeMovements', movement);
       // ohh my old node without json destructuring
       let position = movement.position;
       // dead are not allowed to move
       if (players[position].s === g.Player.statuses.dead) continue;
       let result = g.Player.handleAction(players[position], movement);
-      console.log('src/shared/Game.js:47:18:\'computeMovements\',result', 'computeMovements', result);
       let playerMoved = { player: result.player, position: position };
       // Let's do all the pushing (in case we don't stumble to a wall)
       let playersToMove = [playerMoved];
@@ -133,7 +131,6 @@ g.Game = {
           // TODO compute holes
         }
       }
-      console.log('src/shared/Game.js:64:18:playersToMove.length', playersToMove.length);
       for (let pl of playersToMove) {
         players[pl.position] = pl.player;
       }
@@ -191,7 +188,6 @@ g.Game = {
       if (g.Game.computeMovementObstruction(playerProjection, state)) return false;
       for (let i = 0; i < players.length; i++) {
         if (g.Player.collide(playerProjection, players[i])) {
-          console.log('src/shared/Game.js:122:22:\'colliding\',playerProjection,i,players[i]', 'colliding', playerProjection, i, players[i]);
           return { type: 'laser', player: player, oplayer: players[i], oposition: i };
         }
       }
@@ -580,7 +576,6 @@ g.store = {
     var remainingTime = (g.store.inputTime - (new Date() - new Date(g.store.input.time))) / g.store.inputTime;
     if (remainingTime < 0) {
       document.removeEventListener('keydown', g.store.handleKeyDown);
-      console.log('src/client/Store.js:40:18:\'Remaining time is over\'', 'Remaining time is over');
       g.store.input = g.Input.fillInput(g.store.input);
       g.Input.render(g.store.input, -1);
       g.store.sendMovements(g.store.input.actions);
@@ -611,7 +606,6 @@ g.store = {
     g.store.render(state, newState);
   },
   sendMovements(actions) {
-    console.log('src/client/Store.js:69:16:\'Moving\',actions,{actions: g.store.input.actions}', 'Moving', actions, { actions: g.store.input.actions });
     socket.emit('move', actions);
   },
   render(oldState, newState, time) {
@@ -653,7 +647,6 @@ g.store = {
     // Handle post actions from previous movement
     if (postActions.length) {
       for (let postAction of postActions) {
-        console.log('src/client/Store.js:105:20:postAction', postAction);
         g.store.handleAction(newState, postAction);
       }
       newState.postActions = [];
@@ -662,7 +655,6 @@ g.store = {
     } else {
       // Handle actions
       if (!remainingActions.length) {
-        console.log('src/client/Store.js:114:20:\'acceptInput\'', 'acceptInput');
         g.store.acceptInput();
         return;
       }
@@ -684,14 +676,12 @@ g.store = {
   handleAction(state, action) {
     if (action.type === g.Actions.types.laser) {
       Object.assign(state.players[action.oposition], action.oplayer);
-      console.log('src/client/Store.js:136:18:action.oplayer.h,state.players[action.oposition].h', action.oplayer.h, state.players[action.oposition].h);
       g.store.renderHealth(state.players);
       g.Laser.showLaser(state.game, action.player, action.oplayer);
       g.Sounds.play('shoot');
       return;
     }
     if (action.type === g.Actions.types.death) {
-      console.log('src/client/Store.js:143:18:\'death\'', 'death');
       g.store.handleDeath(action.oposition, state);
       return;
     }
@@ -721,18 +711,14 @@ g.store = {
   handleDeath(position, state) {
     g.Sounds.play('death');
     if (position === state.position) {
-      console.log('src/client/Store.js:169:18:\'You are dead\'', 'You are dead');
       g.store.dead = true;
       g.message.textContent = 'You are dead';
-    } else {
-      console.log('src/client/Store.js:173:18:`Player ${position} is dead`', `Player ${ position } is dead`);
     }
   },
   handleWin(position, state) {
     if (position === state.position) {
       g.won = true;
       g.message.textContent = 'You WON';
-      console.log('src/client/Store.js:180:18:\'You won\'', 'You won');
     }
   }
 };
@@ -778,41 +764,20 @@ for (let img in g.Tiles) {
   image.src = g.Tiles[img];
   g.images[img] = image;
 }
-/**
- * Bind Socket.IO and button events
- */
-function bind() {
 
+function bind() {
   socket.on('actions', function (actions) {
     g.store.acceptActions(actions);
-    console.log('src/client/init.js:26:16:actions', actions);
-  });
+  })
   socket.on('start', function (state) {
-    console.log('src/client/init.js:29:16:\'starting\'', 'starting');
     g.store.startGame(JSON.parse(state));
-    //console.log(state, position)
-  });
-  socket.on("end", function () {
-    console.log('src/client/init.js:34:16:"Waiting for opponent..."', "Waiting for opponent...");
-  });
-
-  socket.on("connect", function () {
-    console.log('src/client/init.js:38:16:"Waiting for opponent..."', "Waiting for opponent...");
-  });
-
-  socket.on("disconnect", function () {
-    console.error('src/client/init.js:42:18:"Connection lost!"', "Connection lost!");
-  });
+  })
   socket.on('winner', function (position) {
     g.store.handleWin(position, g.store.state);
-  });
-
-  socket.on("error", function () {
-    console.error('src/client/init.js:49:18:"Connection error!"', "Connection error!");
-  });
+  })
 }
 function init() {
-  socket = io({ upgrade: false, transports: ["websocket"] });
+  socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
   bind();
 }
 
@@ -938,17 +903,14 @@ Game.prototype.acceptMove = function (actions, position) {
 	for (let action of actions) {
 		this.movements.push(Object.assign({ position: position }, action));
 	}
-	console.log('src/server/server.js:66:13:this.alive', this.alive);
 	if (this.played === this.alive) {
 		this.played = 0;
-		console.log('src/server/server.js:69:14:this.movements', this.movements);
 		this.move();
 	}
 };
 
 Game.prototype.move = function () {
 	var movements = this.movements.sort((m1, m2) => m2.remainingTime - m1.remainingTime);
-	console.log('src/server/server.js:76:13:\'Start moving\'', 'Start moving');
 	var stateAndActions = g.Game.computeMovements(this.state, movements);
 	this.state = stateAndActions.state;
 	this.movements = [];
@@ -957,12 +919,10 @@ Game.prototype.move = function () {
 			this.alive = this.alive - 1;
 			user.die();
 		}
-		console.log('src/server/server.js:85:14:\'sendActions\'', 'sendActions');
 		user.sendActions(stateAndActions.actions);
 	}
 };
 Game.prototype.removeUser = function (user) {
-	console.log('src/server/server.js:90:13:user.alive', user.alive);
 	// When reconnecting the same socket is used and this can lead to weird errors
 	if (user.alive) {
 		user.alive = false;
@@ -994,13 +954,11 @@ User.prototype.start = function (game, position) {
 	this.game = game;
 	this.started = true;
 	this.position = position;
-	console.log('src/server/server.js:125:13:\'Starting\'', 'Starting');
 	this.socket.emit("start", JSON.stringify(Object.assign(game.state, { position: position })));
 };
 
 User.prototype.die = function () {
 	this.alive = false;
-	// TODO, maybe close connection
 };
 User.prototype.move = function (actions) {
 	if (this.alive && this.game) this.game.acceptMove(actions, this.position);
@@ -1010,19 +968,16 @@ User.prototype.announceDeath = function () {
 };
 
 User.prototype.announceWinner = function (position) {
-	console.log('src/server/server.js:141:13:\'We have a winner\'', 'We have a winner');
 	this.socket.emit('winner', position);
 };
 // In case there are not a lot of users we take what we have
 User.prototype.startCount = function () {
 	var user = this;
 	this.timeout = setTimeout(function () {
-		console.log('src/server/server.js:148:14:\'start game without enough players\'', 'start game without enough players');
 		new Game([user].concat(user.opponents)).start();
 	}, 30000);
 };
 User.prototype.removeCount = function () {
-	console.log('src/server/server.js:153:13:\'removeCount\',this.timeout', 'removeCount', this.timeout);
 	clearTimeout(this.timeout);
 };
 User.prototype.sendActions = function (actions) {
@@ -1032,25 +987,15 @@ User.prototype.removeOpponent = function (user) {
 	this.opponents.splice(users.indexOf(user), 1);
 };
 
-/**
- * Socket.IO on connect event
- * @param {Socket} socket
- */
 module.exports = function (socket) {
 	var user = new User(socket);
 	users.push(user);
-	console.log('src/server/server.js:170:13:users.length', users.length);
 	findOpponent(user);
 
 	socket.on("disconnect", function () {
-		console.log('src/server/server.js:174:14:"Disconnected: " + socket.id', "Disconnected: " + socket.id);
 		removeUser(user);
 	});
 	socket.on("move", function (input) {
-		console.log('src/server/server.js:178:14:\'user move\'', 'user move');
-		// TODO check input
 		user.move(input);
 	});
-
-	console.log('src/server/server.js:183:13:"Connected: " + socket.id', "Connected: " + socket.id);
 };})()}})()

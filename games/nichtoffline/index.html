@@ -93,14 +93,13 @@
     </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script>
 <script>
-    let socket = io();
+    let socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]})
 </script>
 <script src="Dino.js"></script>
 <script src="client.js"></script>
 <script src="render.js"></script>
 <script src="control.js"></script>
-
 </body>
 </html>

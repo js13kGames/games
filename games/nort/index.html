@@ -6,7 +6,7 @@
       canvas{position:absolute;top:0;left:50%;height:100%;margin-left:-25%;}
       #news{border:1px solid black;}
     </style>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.io/socket.io.js"></script>
   </head>
   <body>
     <canvas id="game" width="120" height="120"></canvas>
@@ -16,14 +16,6 @@
 
     <p id="news"></p>
     <script>
-
-      window.requestAnimationFrame =
-      window.requestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      function(fn){ setTimeout(fn, 20); };
-
       var gameCanvas = document.getElementById('game');
       var gameContext = gameCanvas.getContext("2d");
       gameContext.fillStyle = "#F6E1B5";
@@ -48,10 +40,10 @@
           who: '',
           lastPixel: 0
           };
-      
+
       function connect() {
         console.log('connecting');
-        socket = io(document.location.href);
+        socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
         socket.emit('playerInfo',{ name: player.ID } );
         socket.on('news', onNews);
         socket.on('config', onConfig);
@@ -60,11 +52,10 @@
         setTimeout(tic, 20);
       }
 
-      function tic (data) {
-      //loogic    
+      function tic() {
         if(!playing){
-          window.requestAnimationFrame(tic);
-          return;
+          requestAnimationFrame(tic)
+          return
         } 
         if(player.RequestDirection){
           socket.emit('canIHasChange', player.RequestDirection);
@@ -131,7 +122,7 @@
           gameContext.fillRect(enemy.posX, enemy.posY, 1, 1);
         }
 
-        window.requestAnimationFrame(tic);
+        requestAnimationFrame(tic)
       }
 
       function onTic ( data ) {

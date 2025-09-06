@@ -1,1 +1,74 @@
-_='s=[]; *for(b=0;b<length;b++)a!==&&4===9(53$)).( %splice(iexOf,131=a2=b};31/31/==a;};g=a#=b"/e=e"/module.exports={io:b=5;push7*(b$c){	a,c8	8adisc-nect%7	e(};functi-6.pp-entuser.emit(".prototype.(6,match	b9b.#.User);a.-("#=g=4(a)var ame)}(){counts[b]=$b){2)2.movs.ndsocket=1.",{;#o$(a,%ree*fiO-on/;3G4null5new 6this7(b);8dmg9.#&&';for(Y in $='9876543/-*%$#	')with(_.split($[Y]))_=join(pop());eval(_)
+"use strict";
+
+const users = [];
+
+function findOpponent(user) {
+  for (let i = 0; i < users.length; i++) {
+    if (user !== users[i] && users[i].opponent === null) {
+      new Game(user, users[i]).match();
+    }
+  }
+}
+
+function removeUser(user) {
+  users.splice(users.indexOf(user), 1);
+}
+
+class Game {
+  constructor(user1, user2) {
+    this.user1 = user1;
+    this.user2 = user2;
+  }
+
+  match() {
+    this.user1.match(this, this.user2);
+    this.user2.match(this, this.user1);
+  }
+
+  count() {
+    this.user1.count(this, this.user2);
+    this.user2.count(this, this.user1);
+  }
+}
+
+class User {
+  constructor(socket) {
+    this.socket = socket;
+    this.game = null;
+    this.opponent = null;
+  }
+
+  match(game, opponent) {
+    this.game = game;
+    this.opponent = opponent;
+    this.socket.emit("match");
+  }
+
+  end() {
+    this.game = null;
+    this.opponent = null;
+    this.socket.emit("end");
+  }
+}
+
+module.exports = {
+  io: (socket) => {
+    const user = new User(socket);
+    users.push(user);
+    findOpponent(user);
+
+    socket.on("mov", (ev, pos)=> {
+      if (user.opponent) user.opponent.socket.emit("mov", ev, pos);
+    });
+    socket.on("dmg", (q)=> {
+      if (user.opponent) user.opponent.socket.emit("dmg", q);
+    });
+
+    socket.on("disconnect", () => {
+      removeUser(user);
+      if (user.opponent) {
+        user.opponent.end();
+      }
+    });
+  }
+}

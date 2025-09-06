@@ -144,11 +144,11 @@
   </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script>
 <script src="sprite.js"></script>
 <script>
 
-var socket = io(document.location.href, { reconnection: false });
+var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
 var playerId = 0;
 var players = {};
 var playerList = [];

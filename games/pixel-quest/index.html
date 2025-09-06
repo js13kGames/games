@@ -2,16 +2,14 @@
 <html>
   <head>
     <title>Pixel Quest</title>
-    <link rel="stylesheet" type="text/css" href="/pixel-quest.css">
-
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-
-    <script type="text/javascript">
+    <link rel="stylesheet" type="text/css" href="client.css">
+    <script src="socket.io/socket.io.js"></script>
+    <script>
       window.onload = function() {
         new PixelQuest().start()
       }
     </script>
-    <script src="/pixel-quest.js"></script>
+    <script src="client.js"></script>
   </head>
   <body>
     <canvas></canvas>

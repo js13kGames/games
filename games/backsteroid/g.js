@@ -622,7 +622,7 @@ function startGame(startAsLocal) {
 		loop = gameLoop;
 	} else {
 		if(!socket) {
-			socket = io();
+			socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
 			startServerEvents();
 			// loop = multiGameLoop;
 			menuId = 0;

@@ -1,152 +1,0 @@
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-<script src="/socket.io/socket.io.js"></script>
-  
-<style>
-body {
-  background: #BDC3C7;
-  font-family: "Courier New", Courier, monospace;
-  font-weight: bold;
-}
-#game {
-  position: relative;
-  margin: 15px auto;
-  width: 1004px;
-  color: #C0392B;
-}
-#overlay {
-  position: absolute;
-  top: 100px;
-  left: 30px;
-  color: #2C3E50;
-  background: #BDC3C7;
-  padding: 20px;
-  /* debug*/
-  /*display: none;*/
-}
-#c {
-  height: 600px;
-  width: 800px;
-  float: left;
-  background: #000;
-}
-#red {
-  color: #C0392B;
-  margin-left: 50px;
-  visibility: hidden;
-}
-#title {
-  font-size: 60px;
-}
-#scores {
-  margin: 0px 2px 1px 2px;
-  height: 300px;
-  float:right;
-  width: 200px;
-  background: #7F8C8D;
-  text-align: center;
-  color: #fff;
-}
-h3 {
-  margin: 10px;
-}
-h5 {
-  margin: 8px;
-}
-#chatBox {
-  height: 261px;
-  width: 194px;
-  background: #95A5A6;
-  float: right;
-  overflow: auto;
-  font-size: 13px;
-  padding: 3px;
-  color: #fff;
-  margin: 0px 2px;
-}
-#name, #msg {
-  height: 30px;
-  padding: 8px 5px;
-  text-indent: 2px;
-  width: 206px;
-  vertical-align: middle;
-  border: 2px solid #ECF0F1;
-  font-family: "Courier New", Courier, monospace;
-  background: #fff;
-}
-#name:focus, #msg:focus {
-    outline: 0;
-    border-color: #95A5A6;
-}
-#msg {
-  font-size: 13px;
-  width: 151px;
-  margin: 2px;
-}
-input[type="submit"] {
-  vertical-align: middle;
-  background: #C0392B;
-  border: 0;
-  color: #fff;
-  padding: 7px 5px;
-  font-family: "Courier New", Courier, monospace;
-  font-weight: bold;
-}
-input[type="submit"]:hover {
-  background: #E74C3C;  
-}
-#join {
-  margin:0px;
-}
-#chatInput {
-  margin-bottom: 0;
-}
-#audio {
-  font-size: 20px;
-  cursor:pointer;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
-</style>
-<script id='audioworker' type='text/js-worker'>
-// audio
-// song 1
-//_=' `eT t(eTvar t=DPI;var n=Dceil((e+t)/(2*t));var r=(e-n*2*t+2*t)/t;r}X=Dfloor(11025/2);s=e&nTZ=nQeT=[];je[1];@=e[0];=0;Gif(j==01>0?1:-1<=12<2T=tR@)<3T=Dabs(Js%@-@)/@}.push()}})&tTtQt,nTe[n]?[t].concat(e[n]):[t]})},[])QeTe&tTe+t},0)/e})Qe,tTt=X-t;e*127+128})&tTe+Nt)},"");if(Z===0TGZ+=N128)}}e+Z},"");Jaudio="9\\0"+s}Jr=[[[LLLLFFFFFFFFVzzVYVzKKKKkKkKkKkKV[U1^1]$U1]$U1]|||	,#W2]YVzKKK[V!!!!$V	[LV	[~~~~[[[$$$$]];`Jr)],[33]174.61,,BO261.63,33]196,][Uk3]$U#H$U#V3	293.66$U#B2^#O2]$#1^1]$#|YOH$kWH$WH23^#H$U#3]$U#V3]VYVz]Y	,OH$kB[#BW3V	,B2]$$	,[[	,261.63[220,k[B#Yzk[W2]functionV	YOH$k#[WH$VzzVJbytereturn !$OzzO#1$[&.reduce((e,<}else if(j=@JfreqB349.23,DMath.F	[Gfor(Js=X;Js--;TH3]Ja_K[LNString.fromCharCode(O392,Q.map((R(Js/44100*T){U0VW440,XJsamplesY$#ZJtone^]$U`playExported(jJwave=k#z[|	,#~sArr$U#T=DsinR.length*DPI*@)';for(Y in $='~|zkj`^ZYXWVUTRQONLKJHGFDB@<&$#!	')with(_.split($[Y]))_=join(pop());eval(_)
-
-// song 2
-_=' keW t(eWvar t=<PI;var n=<ceil((e+t)/(2*t));var r=(e-n*2*t+2*t)/t;r}`=<floor(11025/2);s=e!nWj=nNeW=[];e[1];&=e[0];=0;Bif(==01>0?1:-1$=12$2W=tO&)$3W=<abs(Fs%&-&)/&}.push()}})!tWtNt,nWe[n]?[t].concat(e[n]):[t]})},[])NeWe!tWe+t},0)/e})Ne,tWt=`-t;e*127+128})!tWe+Gt)},"");if(j===0WBj+=G128)}}e+j},"");Faudio="9\\0"+s}Fr=[[|K|J|D|J|K|1XXXXKZZ[1LRKDRJRKz,RR	LHYTTT	Q[@T@T	@@QY@T@T	@LLKZJ1D1JZKZ1DZJZDZHQLL[z@T	@@^,TL]];kFr)2RJZDZ,@3z,R],[~,U3,V3,[^,	[z,174.61,J1D1[^#3@440@V#	@U3[@^011DZT[392,KZJZz,RJRDRRfunctionFbyte440,return []	T	T	T	[1[^,[z[^[U3[~[V3!.reduce((e,#3@~$}else if(=&Ffreq<Math.@0Bfor(Fs=`;Fs--;WD[Fa_GString.fromCharCode(H[JK	LN.map((O(Fs/44100*QR3TU261.6V349.2W){XYZ1^220`FsamplesjFtonekplayExported(z196|1~293.66Fwave=[@392[[	sArrW=<sinOZT	@T@	@U#[@V.length*<PI*&)[RR^,RK';for(Y in $='~|zkj`^ZYXWVUTRQONLKJHGFDB@<&$#!	')with(_.split($[Y]))_=join(pop());eval(_)
-
-postMessage({'setAudio': a_audio})
-</script>
-  
-<div id='game'>
-  <div id='title'>戦士 - Senshi</div>
-  <canvas id='c'></canvas>
-  <div id='overlay'>
-    <h1>Spectating</h1>
-    <!-- name input -->
-    <form id='join'>
-      <input id='name' placeholder='Name'><input type='submit' value='Join'>
-      <div id='red'><span id='taken'>&nbsp;</span></div>
-    </form>
-    <!-- controls --><br>
-    <div style='font-size:21px;margin-bottom:10px;'>Controls:</div>
-    Move - Arrow Keys<br>
-    Attack - Spacebar or Z<br>
-    <!-- about --><br><br>
-    <a href='http://www.zolmeister.com/2013/09/senshi-mmo-battle-royale-inspired-html5.html'>About</a>
-  </div>
-  <div id='scores'>
-    <h3>Top 10</h3>
-  </div>
-  <div id='chatBox'></div>
-  <form id='chatInput'>
-    <input id='msg'><input type='submit' value='Send' style='width: 45px'>
-  </form>
-  <span id='audio'>♫</span>
-</div>
-
-<script src="main.js"></script>

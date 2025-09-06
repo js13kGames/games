@@ -1,21 +1,4 @@
-var app = require('http').createServer(handler),
-    io = require('socket.io').listen(app),
-    fs = require('fs');
-
 io.set('log level', 1);
-
-function handler (req, res) {
-    fs.readFile(__dirname + '/index.html',
-        function (err, data) {
-            if (err) {
-                res.writeHead(500);
-                return res.end('Error loading index.html');
-            }
-            res.writeHead(200);
-            res.end(data);
-        }
-    );
-}
 
 var players = [],
     updateInterval = 1000/4,
@@ -24,9 +7,7 @@ var players = [],
     },
     readyCount = 0;
 
-app.listen(8000);
-
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
     socket.emit('welcome', {msg: 'Hi, there! Welcome.', id: socket.id});
 
     socket.on('disconnect', function () {
@@ -96,8 +77,7 @@ function stopGame () {
     clearTimeout(levelTimeout);
 }
 
-var targetNum = 0,
-    level = 0,
+var level = 0,
     currentLevelData = null,
     levelTimeout,
     levelTime = 4000;
@@ -105,10 +85,10 @@ var targetNum = 0,
 function startLevel () {
     reset();
     currentLevelData = generateLevel();
-    io.sockets.emit('level-start', {
+    io.emit('level-start', {
         level: level,
         data: currentLevelData.splits
-    });
+    })
     levelTimeout = setTimeout(endLevel, levelTime);
 }
 
@@ -138,7 +118,7 @@ function resolveLevel () {
 
     var all_players = getAllPlayers().sort(function (a, b) {
         return b.score - a.score;
-    });;
+    });
 
     players.forEach(function (socket) {
         socket.emit('level-end', {
@@ -170,24 +150,13 @@ function reset () {
     readyCount = 0;
 }
 
-function sendUpdates () {
-    players.forEach(function (socket) {
-        socket.emit('update-players', players.map(function (p) {
-            return p.data;
-        }));
-    });
-}
-
-setInterval(sendUpdates, updateInterval);
-
-function save () {
-    fs.exists('scores.json', function (exists) {
-    });
-
-    fs.writeFile('scores.json', JSON.stringify(getAllPlayers()), function () {
-        console.log('saving done...............');
-    });
-}
+setInterval(_ => {
+  players.forEach(function (socket) {
+    socket.emit('update-players', players.map(function (p) {
+      return p.data;
+    }));
+  });
+}, updateInterval)
 
 _ = {};
 _.extend = function (obj) {

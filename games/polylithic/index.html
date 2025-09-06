@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <title>PolyLithic</title>
   <meta charset="UTF-8">
@@ -90,23 +89,19 @@
     }
   </style>
 </head>
-
 <body oncontextmenu="return false;">
   <div id="fps">00</div>
   <canvas id="canvas" width="1280" height="720" style="display: none;" oncontextmenu="return false;"></canvas>
   <div id="menu">
-
-    <!--  intro - start -->
     <div id="intro">
       <div id="title">PolyLithic</div>
-      <p>PolyLithic is a fast paced, skill based, sci-fi MOBA.</p>
+      <p>PolyLithic is a fast-paced, skill based, sci-fi MOBA.</p>
       <p>Your
-        <b>mothership</b>'s power core is
-        <b>offline</b>. You must create
-        <b>drones</b> and gather
-        <b>uranium stones</b> jumping in and out of existence.</p>
+        <b>mothership</b>'s power core is <b>offline</b>. You must create <b>drones</b> and gather <b>uranium stones</b>
+        jumping in and out of existence.
+      </p>
       <p>Your opponent is trying to do the exact same thing. Either beat him to a <b>350 stone reserves</b> or <b>destroy his mothership</b>.</p>
-      <b lass="big">Rules</b>
+      <b class="big">Rules</b>
       <ul>
         <li>Drones pick up uranium stones on touch. They have to carry them back to the mothership.</li>
         <li>Opposing drones get destroyed when they clash.</li>
@@ -122,24 +117,14 @@
         <a>Join the game!</a>
       </div>
     </div>
-    <!--  intro - end -->
-
-    <!--  message-box - start -->
-    <div id="message-box" style="display: none;">
+    <div id="message-box" style="display:none">
       <div id="message">...</div>
       <div id="big-message">...</div>
       <div id="reload-hint" onclick="window.location.reload()">Click here or reload this page to start anew</div>
     </div>
-    <!--  message-box - start -->
-
   </div>
-
-
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/shared.js"></script>
-  <script src="/client.js"></script>
-
+  <script src="socket.io/socket.io.js"></script>
+  <script src="shared.js"></script>
+  <script src="client.js"></script>
 </body>
-
 </html>

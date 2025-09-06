@@ -108,7 +108,7 @@
         border: 1px solid #DDD;
     }
 </style>
-<script src="/socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -190,7 +190,7 @@
     el_join_form.addEventListener('submit', function (e) {
         name = el_name.value;
         if (name) {
-            socket = io.connect('/');
+            socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
             initSocketListeners();
         }
         e.preventDefault();

@@ -1,9 +1,476 @@
-var r=require("sandbox-io");
-(function(){function C(a){for(var b in a)return!1;return!0}function D(){var a=24,b=20;function l(e){function f(a){1==d[a]&&(d[a]=m,h.push(a))}for(var c=0;c<b;c++)for(var g=0;g<a;g++){var l=a*c+g;d[l]&&(d[l]=1)}for(c=0;c<e.length;c++)d[e[c]]=10;for(var h=e.slice(),m;h.length;)l=h.shift(),m=d[l]+1,f(l+1),f(l-1),f(l+a),f(l-a)}var g={},d=[],c,e,f,n=[],h,m,q,p,t=[0,1,0,-1,1,0,1,0,1,0,-1,0,-1,0,-1,0];for(e=0;e<b;e++)for(f=0;2>f;f++)for(c=0;c<a;c++)g[c+","+e]=1,d.push(0),d.push(0);f=Math.random()*a|0;y0=
-Math.random()*b|0;c=f;e=y0;a*=2;for(b*=2;!g[c+","+e]||(delete g[c+","+e],d[a*e*2+2*c]=1,!C(g));)for(q=t.slice();;){if(0==q.length){e=n.pop().split(",");c=+e[0];e=+e[1];break}p=q.splice(2*(q.length/2*Math.random()|0),2);h=c+p[0];m=e+p[1];if(g[h+","+m]){d[a*(2*e+p[1])+2*c+p[0]]=1;n.push(c+","+e);c=h;e=m;break}}l([a*y0+f]);for(g=0;5>g;g++)for(n=Math.random()*d.length|0;;){c=n%a;if(1<c&&c<a-1&&!d[n]&&d[n+1]&&d[n-1]&&!d[n-a]&&!d[n+a]&&20<Math.abs(d[n+1]-d[n-1])){d[n]=1;l([n]);break}n=(n+1)%d.length}d.m=
-l;d.l=function(){for(var e={i:[],g:[]},c=0,f=0;f<b;f++)for(var l=0;l<a;l++)!d[c]||d[c+1]&&d[c-1]||(d[c+1]||d[c-1]?d[c+a]||d[c-a]||e.i.push(c):d[c+a]&&d[c-a]||d[c-a]&&e.g.push(c)),c++;return e}();return d}function A(a){for(var b=0;b<h.length;b++)if(h[b].id==a.id)return h[b]}function B(){var a={state:f,f:h,h:p};if(t){var b=(t-new Date)/1E3|0;b!=v&&(v=b,b=1==u?"<h2><span class='blue'>Blue</span> ":"<h2><span class='red'>Red</span> ",0==v?(b+=" TEAM WON!!!</h2>",r.b(m).a("news",{message:b}),f=0,a.state=
-f,a.o=b):r.b(m).a("news",{message:b+"team winning in "+v+" !</h2>"}))}r.b(m).a("state",a)}function F(a){function b(){if(1==f){l--;if(0>=l&&5<g.length){f=2;var a=2*Math.random()|0;x=g[1-a];y=g[a];r.b(m).a("state",{state:f,u:48,v:40,s:q,red:x,blue:y,h:p});setTimeout(function E(){2==f&&(B(),setTimeout(E,33))},33)}else r.b(m).a("news",{message:"Game starting in "+l+"!"});setTimeout(b,1E3)}}f=1;t=0;r.b(m).a("news",{message:a.name+" started the game!"}).a("state",{state:f,f:h});var l=4,g=[];b();for(a=[];11>
-a.length;)q=D(),a=q.l.g.concat(q.l.i);var d=Math.random()*a.length|0;for(g.push(a.splice(d,1)[0]);7>g.length;){q.m(g);for(var c=0,e=0;e<a.length;e++)q[a[e]]>c&&(c=q[a[e]],d=e);g.push(a.splice(d,1)[0])}p={};for(e=2;e<g.length;e++)p[g[e]]=0}function G(a){var b=A(a);b&&(h.splice(h.indexOf(b),1),z[a.id].disconnect(),delete z[a.id],b="",2>h.length&&(b=a.name+" left the game,<br> not enough players remained -<br> THE END",f=0,r.b(m).a("state",{state:f,f:h,o:b})),r.b(m).a("news",{message:a.name+" left the game"}))}
-function H(a){p[a.j]=a.color;a=[0,0,0];for(var b in p)a[p[b]]++;r.b(m).a("news",{message:"<h3><span class='blue'><span style='font-size:x-large'>"+a[1]+"</span> blue</span> <span style='font-size:x-large'>"+a[0]+"</span> white <span class='red'><span style='font-size:x-large'>"+a[2]+"</span> red</span></h3>"});3<=a[1]?1!=u&&(t=+new Date+3E4,u=1):3<=a[2]?2!=u&&(t=+new Date+3E4,u=2):t=v=u=0}var h=[],p={},z={},x=-1,y=-1,t,u,v,q=[],m="g"+Math.random(),f=0,w=1;r.c("connection",function(a){w=3-w;var b=
-{id:"p"+Math.random(),color:w};z[b.id]=a;a.c("playerInfo",function(a){for(k in a)b[k]=a[k];A(b)||(h.push(b),r.b(m).a("news",{message:b.name+" joined the game",A:b}));r.b(m).a("state",{state:f,f:h})});a.c("startGame",function(){F(b)});a.c("update",function(a){if(2==f){for(k in a)b[k]=a[k];a.w&&B()}});a.c("bulbUpdate",H);a.c("disconnect",G.bind(0,b));a.c("wallDestroyed",function(a){q[a.j]=1;r.b(m).a("onWallDestroyed",{B:a.j})});a.a("yourId",{id:b.id,color:w});2==f?(a.a("news",{message:"Game already started, join or wait?"}),
-a.a("state",{state:3,u:48,v:40,s:q,red:x,blue:y,h:p,f:h})):a.a("state",{state:f,f:h})})})();
+'use strict';
+(function() {
+  function isEmpty(obj) {
+    for(var i in obj) { return false; }
+    return true;
+  }
+  function room(x,y) {
+    return x+","+y;
+  }
+
+  function rndInt(mx) {
+    return Math.random() * mx | 0;
+  }
+
+  function Maze(MAZE_X, MAZE_Y) {
+    var unvisitedCells = {},
+      maze = [],
+      WALL = 0,
+      AIR = 1,
+      x,y,t,
+      stack=[],
+      nx,ny,neighborsDup,dir,
+      popcell,
+      // pairs of (dx,dy)
+      // duplicate horizontal to give more chance for horizontal pathes
+      neighbors = [0,1, 0,-1, 1,0,1,0,1,0,   -1,0,-1,0,-1,0];
+
+
+    // TODO: Floyd Marshal for all pairs
+    //       https://mgechev.github.io/javascript-algorithms/graphs_shortest-path_floyd-warshall.js.html
+    // zeroDist = array of offsets of cells which will have min distance
+    // result = maze of distance from the
+    // BFS is used to find far away places (eg. to place bulbs and players far apart)
+    function BFS(zeroDist) {
+      // reset
+      for (var y=0; y<MAZE_Y; y++) {
+        for (var x=0; x<MAZE_X; x++) {
+          var ofs = MAZE_X*y+x;
+          if (maze[ofs]) {
+            maze[ofs] = 1;
+          }
+        }
+      }
+      for (var i=0; i<zeroDist.length; i++) {
+        maze[zeroDist[i]] = 10;
+      }
+      var ofs,
+        stack = zeroDist.slice(),
+        d,
+        fu = function(ofs) {
+          if (maze[ofs]==1) {
+            maze[ofs]=d;
+            stack.push(ofs)
+          }
+        };
+
+      while (stack.length) {
+        ofs = stack.shift();
+        d = maze[ofs]+1;
+        fu(ofs+1);
+        fu(ofs-1);
+        fu(ofs+MAZE_X);
+        fu(ofs-MAZE_X);
+      }
+    }
+
+    // GENERATE MAZE:
+// maze is 4 times bigger than MAZE_X x MAZE_Y - so do twice each row, and add two cells for each X
+
+    for (y=0; y<MAZE_Y; y++) {
+      for (t=0; t<2; t++) {
+        for (x=0; x<MAZE_X; x++) {
+          unvisitedCells[room(x,y)] = 1;
+          maze.push(WALL);
+          maze.push(WALL);
+        }
+      }
+    }
+
+    var
+      x0=rndInt(MAZE_X),
+      y0=rndInt(MAZE_Y);
+    x=x0;
+    y=y0;
+
+    MAZE_X *= 2;
+    MAZE_Y *= 2;
+
+    while (1) {
+      // visit x,y (unless we've been here before and this is a backtrack)
+      if (unvisitedCells[room(x,y)]) {
+        delete unvisitedCells[room(x,y)];
+        maze[MAZE_X*y*2+x*2] = AIR;
+        if (isEmpty(unvisitedCells)) {
+          // all done
+          break;
+        }
+      }
+      // look for a direction to move
+      neighborsDup = neighbors.slice();
+      while (1) {
+
+        if (neighborsDup.length == 0) {
+          // reached a deadend - backtrack to someplace not dead
+          popcell = stack.pop().split(',');
+          x = +popcell[0];
+          y = +popcell[1];
+          break; // try again from earlier point in the stack
+        }
+        dir = neighborsDup.splice(2*rndInt(neighborsDup.length/2), 2); // pick a direction
+
+        nx = x + dir[0];
+        ny = y + dir[1];
+        // check if already visited = not unvisited
+        // incidently, this also captures the out of maze edge scenario,
+        // since "-1,4" will be undefined so understood as visited already
+        if (!unvisitedCells[room(nx,ny)]) {
+          continue;
+        }
+        // found a good direction!
+        maze[MAZE_X*(2*y+dir[1])+2*x+dir[0]] = AIR;
+
+        // save this location in case we reach a dead end later and need to backtrack
+        stack.push(room(x,y));
+
+        // move to new location
+        x = nx;
+        y = ny;
+        break;
+      }
+    }
+
+    BFS([MAZE_X*y0+x0]);
+
+    //maze.cycles = []; // TODO remove
+    // add a few cycles
+    for (var cycles=0; cycles<5; cycles++) {
+      var ofs = rndInt(maze.length);
+      while(1) {
+        var x = ofs%MAZE_X;
+        if (x > 1 && x < MAZE_X-1 &&
+          !maze[ofs] && maze[ofs+1] && maze[ofs-1] && !maze[ofs-MAZE_X] && !maze[ofs+MAZE_X]) {
+          // found a vertical wall, check if the locations on the sides are far away to travel
+          // - if so a good place to insert a cycle
+          if (Math.abs(maze[ofs+1] - maze[ofs-1]) > 20) {
+            // found a good place to add a cycle
+            maze[ofs] = AIR;
+            BFS([ofs]);
+            //  maze.cycles.push(ofs);
+            break;
+          }
+        }
+        // not found try next offset
+        ofs = (ofs+1)%maze.length;
+      }
+    }
+
+
+    function findPlaces() {
+      // maybe instead of maps use array and binary search in case need to check contains?
+      //  http://oli.me.uk/2013/06/08/searching-javascript-arrays-with-a-binary-search/
+      var places = {
+        horizDE: [],  // DE = dead end
+        // topDE: [],
+        // hallway: [],
+        // chute: [],
+        bottomDE: []
+      };
+
+      var ofs =0;
+      for (var y=0; y<MAZE_Y; y++ ) {
+        for (var x=0; x<MAZE_X; x++ ) {
+          if (maze[ofs]) {
+            if (maze[ofs+1] && maze[ofs-1]) { // both left and right
+              // if (maze[ofs+2] && maze[ofs-2] && !maze[ofs+MAZE_X])
+              // places.hallway.push(ofs);
+            }
+            else if (maze[ofs+1] || maze[ofs-1]) {  // only left or only right
+              // check not corner
+              if (!maze[ofs+MAZE_X] && !maze[ofs-MAZE_X])
+                places.horizDE.push(ofs);
+            }
+            else if (maze[ofs+MAZE_X] && maze[ofs-MAZE_X]) {
+              // places.chute.push(ofs); // both up and down
+            }
+            else if (maze[ofs-MAZE_X]) {
+              places.bottomDE.push(ofs);
+            }
+            // else if (maze[ofs+MAZE_X]) {
+            //   places.topDE.push(ofs);
+            // }
+          }
+          ofs++
+        }
+      }
+      return places;
+    }
+
+    maze.BFS = BFS;
+    maze.places = findPlaces();
+    return maze;
+  }
+
+
+
+  /*********
+   1. player 1 connect - get game state, join game if possible
+   - game state:  waiting for more players
+   2. player 2..N opens game - join game
+   - game state:  can Start
+   3. player 1..N change color/name - update server, server updates 1..N
+   3. player X starts game
+   - game state: started, level created
+   4. player 1..N updates server every 33ms
+   5. server moves NPCs and updates 1..N players every 33ms
+   6. game ends - goes back to waiting for users
+   **********/
+
+
+  var
+    WAITING_FOR_GAME_START = 0,
+    GAME_STARTING = 1,
+    GAME_STARTED = 2,
+    ALREADY_STARTED = 3,
+
+    NUM_OF_BULBS=5,
+
+    MAZE_X = 48, // must be divisible by 2
+    MAZE_Y = 40,// must be divisible by 2
+    players= [],
+    bulbs = {},
+    sockets={},
+    redStart=-1,
+    blueStart=-1,
+    winTimestamp, winningTeam, winInSec,
+    maze= [],
+    id = 'g'+Math.random(),  // TODO: support multiple games
+    state = WAITING_FOR_GAME_START;
+
+  function findPlayer(player) {
+    for (var i=0; i<players.length; i++) {
+      if (players[i].id == player.id) {
+        return players[i];
+      }
+    }
+  }
+
+  function updatePlayers() {
+    var data = {
+      state:state,
+      players:players,
+      bulbs: bulbs
+    };
+    if (winTimestamp) {
+      var winIn = (winTimestamp - new Date()) / 1000 |0;
+      if (winIn != winInSec) {
+        winInSec = winIn;
+        var winMsg = winningTeam == 1 ? "<h2><span class='blue'>Blue</span> " : "<h2><span class='red'>Red</span> ";
+        if (winInSec == 0) {
+          winMsg +=  " TEAM WON!!!</h2>";
+          io.to(id).emit('news', {message: winMsg});
+          state = WAITING_FOR_GAME_START;
+          data.state = state;
+          data.endMsg = winMsg;
+          // log(winMsg);
+        }
+        else  {
+          io.to(id).emit('news', {message: winMsg+ "team winning in "+winInSec+' !</h2>'});
+        }
+      }
+    }
+    io.to(id).emit('state', data);
+  }
+
+  function playerStarted(player,data) {
+    // log("Game starting!");
+    state = GAME_STARTING;
+    winTimestamp = 0;
+
+    io.to(id)
+      .emit('news', { message: player.name+' started the game!' })
+      .emit('state', { state: state, players: players });
+
+    // repeat "game starting in X seconds, for 'repeat' times, then start the game"
+    var repeat = 4;
+    var bulbsOfs = [];
+
+    var repeater = function() {
+      if (state != GAME_STARTING) {
+        return;
+      }
+      repeat--;
+      if (repeat <= 0 && bulbsOfs.length > 5) {
+        state = GAME_STARTED;
+        var blueInd = Math.random()*2|0;
+        redStart = bulbsOfs[1-blueInd];
+        blueStart = bulbsOfs[blueInd];
+        io.to(id).emit('state', {
+          state: state,
+          mazeX:MAZE_X, mazeY:MAZE_Y, maze:maze,
+          //places: maze.places,
+          red: redStart, blue:blueStart,
+          bulbs:bulbs });
+
+        // start updating the game state -
+        setTimeout(function gameTick() {
+          if (state != GAME_STARTED) return;
+          updatePlayers();
+          setTimeout(gameTick, 33);
+        }, 33);
+
+      }
+      else {
+        io.to(id).emit('news', { message: 'Game starting in '+repeat+'!' });
+      }
+      setTimeout(repeater, 1000);
+    };
+    repeater();
+
+    // generate a maze with enough potential places for bulb lights
+    var potentials = [];
+    while (potentials.length < 11) {
+      // log("Generating Maze");
+      maze = Maze(MAZE_X/2,MAZE_Y/2);
+      potentials = maze.places.bottomDE.concat(maze.places.horizDE);
+    }
+    // find places for bulb lights - farthest places of the potentials starting with from the first
+    var maxOfs= Math.random()*potentials.length|0;
+    bulbsOfs.push(potentials.splice(maxOfs,1)[0]);
+    while (bulbsOfs.length < NUM_OF_BULBS+2) {
+      maze.BFS(bulbsOfs); // calculate distance from bulbs so far
+      // find the farthest potential place, add repeat
+      var max=0;
+      for (var i=0; i<potentials.length; i++) {
+        if (maze[potentials[i]] > max) {
+          max = maze[potentials[i]];
+          maxOfs = i;
+        }
+      }
+      bulbsOfs.push(potentials.splice(maxOfs,1)[0]);
+    }
+    // found 7 distant places with bulbs - 1st place will be blue team, 2nd place will be red team
+    bulbs = {}
+    for (var i=2; i<bulbsOfs.length; i++) {
+      bulbs[bulbsOfs[i]] = 0; // color white
+    }
+    // for (var i=0; i<maze.cycles.length; i++) {
+    //   bulbs[maze.cycles[i]] = 1;
+    // }
+  }
+
+  function playerUpdate(player, data) {
+    if (state != GAME_STARTED) {
+      // expect player updates when game is ongoing
+      return;
+    }
+    for (k in data) {
+      player[k] = data[k];
+    }
+    if (data.instant) {
+      //log("instant update!");
+      updatePlayers();
+    }
+  }
+
+  function playerInfo(player,data) {
+    // if (state == WAITING_FOR_GAME_START) {
+    //   // allow changing player name/color only before game start
+    //   return;
+    // }
+    for (k in data) {
+      player[k] = data[k];
+    }
+
+    var found = findPlayer(player);
+    if (!found) {
+      players.push(player);
+      // log('Player connected', { name: player.name });
+      sockets[player.id].join(id);
+      io.to(id).emit('news', { message: player.name+' joined the game', player: player });
+    }
+    // else {
+    //   log('Player updated', data);
+    // }
+
+    io.to(id)
+      .emit('state', { state: state, players: players });
+
+  }
+
+  function onExit(player) {
+    // log('Player exit', { name: player.name, color: player.color });
+    var found = findPlayer(player);
+    if (found) {
+      players.splice(players.indexOf(found),1);
+      sockets[player.id].disconnect();
+      delete sockets[player.id];
+      var msg = '';
+      if (players.length < 2) {
+        msg = player.name+' left the game,<br> not enough players remained -<br> THE END';
+        // log(msg);
+        state = WAITING_FOR_GAME_START;
+        io.to(id)
+          .emit('state', { state: state, players: players, endMsg:msg });
+      }
+      io.to(id)
+        .emit('news', { message: player.name+' left the game'})
+    }
+  }
+
+  function bulbUpdate(d) {
+    // log("bulb "+d.ofs+" updated to "+d.color);
+    bulbs[d.ofs] = d.color;
+    var counts=[0,0,0];
+    for (var b in bulbs) {
+      counts[bulbs[b]]++;
+    }
+
+    io.to(id).emit('news', {message: "<h3><span class='blue'><span style='font-size:x-large'>"+ counts[1]+
+        "</span> blue</span> <span style='font-size:x-large'>"+counts[0]+
+        "</span> white <span class='red'><span style='font-size:x-large'>"+counts[2]+"</span> red</span></h3>"});
+
+    if (counts[1] >= NUM_OF_BULBS-2) {
+      if (winningTeam != 1) {
+        winTimestamp= +new Date() + 30000;
+        winningTeam = 1;
+      }
+    }
+    else if (counts[2] >= NUM_OF_BULBS-2) {
+      if (winningTeam != 2) {
+        winTimestamp= +new Date() + 30000;
+        winningTeam = 2;
+      }
+    }
+    else {
+      winTimestamp = winInSec =winningTeam= 0;
+    }
+
+  }
+
+  var color = 1;
+  io.on('connection', function(socket) {
+    color = 3-color; // toggle 1,2
+    var player = {
+      id: 'p'+Math.random(),
+      color: color
+    };
+    sockets[player.id] = socket;
+    socket.on('playerInfo', function(d) { playerInfo(player,d)});
+    socket.on('startGame', function(d) { playerStarted(player,d)});
+    socket.on('update', function(d) { playerUpdate(player,d)});
+    socket.on('bulbUpdate', bulbUpdate);
+    socket.on('disconnect', onExit.bind(0,player));
+    socket.on('wallDestroyed', function(o) {
+      maze[o.ofs] = 1;
+      io.to(id).emit('onWallDestroyed', {
+        wallDestroyed: o.ofs
+      });
+    });
+
+    socket.emit('yourId', {id: player.id, color: color});
+
+    if (state == GAME_STARTED) {
+      socket.emit('news', {message: "Game already started, join or wait?"})
+      socket.emit('state', {
+        state: ALREADY_STARTED,
+        mazeX:MAZE_X, mazeY:MAZE_Y, maze:maze,
+        red: redStart, blue:blueStart,
+        bulbs:bulbs,
+        players:players });
+    }
+    else {
+      socket.emit('state', { state: state, players: players });
+    }
+  });
+})();

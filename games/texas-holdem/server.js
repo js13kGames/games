@@ -1,5 +1,4 @@
-var io = require('sandbox-io'),//require("socket.io")(),
-    tables = [];
+var tables = [];
 
 var labels = {
   0: "Ace",
@@ -608,8 +607,7 @@ function Table() {
 }
 
 var playerId = 0;
-io.on("connect", function (socket) {
-  
+io.on("connection", function (socket) {
   if (++playerId > 2147483647) {
     playerId = 1;
   }

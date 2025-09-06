@@ -1,18 +1,12 @@
-/**
- * Created by jonas on 2015-09-08.
- */
-
-var socketio = require('sandbox-io');
-log('Loaded sandbox-io', socketio);
-
 var players = 0;
-var highScores = db('highScores') || [];
+// var highScores = db('highScores') || [];
+var highScores = []
 
-socketio.on('connection', function(socket){
+io.on('connection', function(socket){
 
 	players++;
 
-	socketio.emit('players', players);
+	io.emit('players', players);
 	socket.emit('leaders', highScores);
 
 	socket.on('disconnect', function(){
@@ -27,11 +21,10 @@ socketio.on('connection', function(socket){
 
 	socket.on('clearScores', function(){
 		highScores = [];
-		db('highScores', highScores);
+		// db('highScores', highScores);
 	});
 
 	socket.on('score', function(data){
-
 		for (var i=0; i<highScores.length; i++) {
 			if (highScores[i].name === data.name) {
 				if (data.score > highScores[i].score) {
@@ -52,7 +45,7 @@ socketio.on('connection', function(socket){
 			highScores.pop();
 		}
 
-		db('highScores', highScores);
+		// db('highScores', highScores);
 		socket.broadcast.emit('leaders', highScores);
-	});
-});
+	})
+})
