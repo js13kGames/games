@@ -636,13 +636,7 @@ onload = function() {
     return obj;
   }
 
-  // DEBUG BEGIN
-  A.log = function(s)
-  {
-    console.log("[" + A.tick_number + "] " + s);
-  }
-  // DEBUG END
-
+  A.log = function(s) {}
   A._generate_uid = function()
   {
     var i, result = "";

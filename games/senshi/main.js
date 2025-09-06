@@ -118,7 +118,6 @@ function join(e) {
   e.preventDefault()
   var name = $('#name').value
   if (/^[a-zA-Z]+$/.test(name)) {
-    console.log('joining as', name)
     socket.emit('join', name)
     return
   }

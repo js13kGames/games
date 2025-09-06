@@ -2,7 +2,7 @@ var connection=function(){function e(e,a){return e.filter(function(e){return-1==
 var l=e(L,o),d=e(o,L)
 L=o
 for(var t=0;t<l.length;t++)n(l[t])
-for(var t=0;t<d.length;t++)r(d[t])}function r(){console.log("gamepad connected"),y++,input.allowPlayerOneToSwitch(P())}function n(e){console.log("gamepad disconnected"),y--,o(e)&&t(e),input.allowPlayerOneToSwitch(P())}function o(e){return-1===e?!0:helper.contains(x,e)}function t(e){return 0===c(e).localId?(d(),!1):(server.serverReady&&server.removePlayer(c(e).remoteId),ui.remove(ui.getLocalPlayer(c(e).localId)),f(e),o(e)&&helper.removeFromArray(x,e),void 0)}function l(e){void 0===e&&(e=-1)
+for(var t=0;t<d.length;t++)r(d[t])}function r(){y++,input.allowPlayerOneToSwitch(P())}function n(e){y--,o(e)&&t(e),input.allowPlayerOneToSwitch(P())}function o(e){return-1===e?!0:helper.contains(x,e)}function t(e){return 0===c(e).localId?(d(),!1):(server.serverReady&&server.removePlayer(c(e).remoteId),ui.remove(ui.getLocalPlayer(c(e).localId)),f(e),o(e)&&helper.removeFromArray(x,e),void 0)}function l(e){void 0===e&&(e=-1)
 var a=m(e)
 s.push(a),ui.addLocalPlayer(a.localId,e),o(e)||x.push(e),w&&server.addPlayer(a.localId)}function d(){if(-1!==s[0].gamePadId)return o(s[0].gamePadId)&&helper.removeFromArray(x,s[0].gamePadId),s[0].gamePadId=-1,connection.playerOneUsingGamepad=!1,ui.changePlayer(ui.getLocalPlayer(s[0].localId),"controllerId",s[0].gamePadId),!0
 for(var e=0;e<gamePad.gamepads.length;e++)if(!o(gamePad.gamepads[e].index))return s[0].gamePadId=gamePad.gamepads[e].index,x.push(gamePad.gamepads[e].index),connection.playerOneUsingGamepad=!0,ui.changePlayer(ui.getLocalPlayer(s[0].localId),"controllerId",s[0].gamePadId),!0}function i(e){var a=c(e)

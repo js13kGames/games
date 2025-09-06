@@ -47,7 +47,6 @@ class Game {
 	}
 
 	populateMovement(user, movement) {
-		console.log(movement);
 		this.users.filter(u => u.id !== user.id).forEach((u) => {
 			u.socket.emit('movement', user.id, movement);
 		});
@@ -62,7 +61,6 @@ class Game {
 	}
 
 	end() {
-		console.log('Sending the highscores!');
 		const highscore = this.racingUsers.map(u => ({
 			id: u.id,
 			name: u.name,
@@ -75,9 +73,6 @@ class Game {
 }
 
 class User {
-	/**
-	 * @param {Socket} socket
-	 */
 	constructor(socket) {
 		this.socket = socket;
 		this.id = socket.id;
@@ -114,45 +109,34 @@ class User {
 	}
 }
 
-/**
- * Socket.IO on connect event
- * @param {Socket} socket
- */
 module.exports = {
-
 	io: (socket) => {
 		const user = new User(socket);
 		findGame(user);
 
 		socket.on("disconnect", () => {
 			game.removeUser(user);
-			console.log("Disconnected: " + socket.id);
 		});
 
 		socket.on("restart", () => {
-			console.log("Restarted: " + socket.id);
 			user.game.start();
 		});
 
 		socket.on("movement", (event) => {
-			console.log("Movement: " + socket.id);
 			user.addMovementEvent(event);
 		});
 
 		socket.on("changeSkin", (skinId) => {
-			console.log("Change skin: " + socket.id);
 			user.changeSkin(skinId);
 		});
 
 		socket.on("finish", (time) => {
-			console.log("Finished: " + socket.id);
 			user.finish(time);
 			if (game.racingUsers.every(u => !!u.finishTime)) {
 				user.game.end();
 			}
 		});
 
-		console.log("Connected: " + socket.id);
 		socket.emit('you', socket.id, user.name);
 	},
 
@@ -161,7 +145,6 @@ module.exports = {
 			res.send(`<h1>Games played: ${games}</h1>`);
 		});
 	}
+}
 
-};
-
-const game = new Game();
+const game = new Game()

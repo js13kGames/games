@@ -15,7 +15,6 @@ module.exports = {
 		sck.emit("board",{B:B,W:W});
 
 		sck.on("disconnect", () => {
-			console.log("Disonnected: " + sck.id);
 			if(user.c){
 				B[user.c] = 0;
 			} else if (user.p){
@@ -111,7 +110,6 @@ module.exports = {
 				if(oc) {
 					io.emit("msg",oc.n+" has been killed by "+user.n);
 					oc.c = null;
-					console.log("kill "+oc.n);
 					oc.p = null;
 					io.to(oc.i).emit("choose",oc.cl);
 				}
@@ -131,11 +129,8 @@ module.exports = {
 			io.emit("board",{B:B,W:W,T:t});
 		});
 
-		console.log("Connected: " + sck.id);
-
 		sck.on("monetization",()=>{
 			sU(sck,"$",0.5);
-			console.log("monetization",sck.id);
 		});
 	}
 

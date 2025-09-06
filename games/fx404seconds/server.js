@@ -76,8 +76,6 @@ module.exports = {
   io: sck => {
     players_count++;
     io.emit("count", players_count);
-    console.log(sck.id);
-
     sck.on("player", (msg) => {
       players_add(msg, sck.id);
 

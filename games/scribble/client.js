@@ -49,7 +49,6 @@
 
     function bindGameEvents() {
         socket.on('gameStart', function (payload) {
-            console.log(payload);
             var guessers = [];
             var drawer;
             var playerDetails = document.getElementById('playerDetails');             
@@ -74,17 +73,14 @@
 
         var remoteMousePressed = false;
         socket.on('draw-mousedown', function (evt) {
-            console.log('draw event', evt);
             remoteMousePressed = true;
             ctx.beginPath();
             ctx.moveTo(evt.clientX, evt.clientY);
         });
         socket.on('draw-mouseup', function (evt) {
-            console.log('draw event', evt);
             remoteMousePressed = false;
         });
         socket.on('draw-mousemove', function (evt) {
-            console.log('draw event', evt);
             if (remoteMousePressed) {
                 ctx.lineTo(evt.clientX, evt.clientY);
                 ctx.moveTo(evt.clientX, evt.clientY);
@@ -92,14 +88,12 @@
             }
         });
         socket.on('guess-correct', function (payload) {
-            console.log('correct', payload);
             var ele = document.createElement('li');
             ele.innerHTML = payload.by  + ' found the lost object (+1)';
             guessLogList.appendChild(ele);
             setVisibility(document.getElementById('guessComponent'), 'none');
         });
         socket.on('guess-wrong', function (payload) {
-            console.log('wrong', payload);
             var ele = document.createElement('li');
             ele.innerHTML = 'Wrong guess <b>' + payload.word + '</b> by ' + payload.by;
             guessLogList.appendChild(ele);
@@ -107,7 +101,6 @@
             document.getElementById('guessBox').value = '';
         });
         socket.on('game-end', function (payload) {
-            console.log('game-end', payload);
             setCurrentView('Result'); 
             var drawer;
             var guessers = [];           
@@ -136,7 +129,6 @@
     };
     
     canvas.addEventListener('mousedown', function (evt) {
-      console.log('event mousedown', evt);
       if (drawLock) return;
       canvasPressed = true;
       ctx.beginPath();
@@ -145,14 +137,12 @@
     });
     
     canvas.addEventListener('mouseup', function (evt) {
-      console.log('event mouseup', evt);
       if (drawLock) return;
       canvasPressed = false;
       socket.emit('draw-mouseup', {});
     });
     
     canvas.addEventListener('mousemove', function (evt) {
-      console.log('event mousemove', evt);
       if (drawLock) return;
       if (canvasPressed) {
         ctx.lineTo(evt.clientX, evt.clientY);

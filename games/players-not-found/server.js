@@ -19,7 +19,6 @@ module.exports = {
 		if(players.length==1) createMap();
 
 		socket.on("disconnect", () => {
-			console.log("Disconnected: " + socket.id);
 			removeUser(user);
 		});
 
@@ -34,14 +33,10 @@ module.exports = {
 		})
 
 		socket.on("name", (n,h) => {
-			console.log("name",socket.id);
-			console.log("	user",user);
-			console.log("	players.indexOf(user)",players.indexOf(user));
 			user.n = strip(n); // name
 			if(h) user.hat = h;
 			if(user.id!= socket.id) user.id = socket.id;
 			if(players.indexOf(user)==-1) {
-				console.log("	push player");
 				players.push(user);
 				io.emit('players',players);
 			}
@@ -51,7 +46,6 @@ module.exports = {
 		});
 
 		socket.on("hiding", (p) => {
-			console.log("hiding",p.id,user.id,socket.id);
 			if(p.id==user.id) {
 				user.x = p.x;
 				user.y = p.y;

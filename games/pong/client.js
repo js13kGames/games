@@ -7,7 +7,6 @@ var playerName = 'Player '+Math.random().toString().replace(/.*\./,'');
 
 function connect() {
   connected = true;
-  console.log('connecting');
   if (!socket.connected) socket = io(document.location.href);
   socket.on('news', onNews);
   socket.on('config', onConfig);
@@ -33,7 +32,6 @@ function tic() {
 };
 
 function onNews(data) {
-  console.log(data);
   var msg = document.createElement('p');
   msg.className = 'show';
   msg.innerHTML = data.message;
@@ -58,7 +56,6 @@ function onConfig(data) {
 
 function onDisconnect(data) {
   connected = false;
-  console.log('disconnected', data);
   openDialog(
     'Disconnected', endGameMsg+'<br>Do you want to reconnect?',
     'Reconnect', function() {
@@ -85,13 +82,11 @@ function getName() {
 }
 
 function openDialog(title, content, btLabel, btFunc) {
-  console.log('open dialog', title, dialog);
   dialog.style.display = 'block';
   dialogTitle.innerHTML = title;
   dialogContent.innerHTML = content;
   dialogBtFunc.innerHTML = btLabel;
   dialogBtFunc.onclick = btFunc;
-  console.log('open dialog done');
 }
 
 var lastY = 0;

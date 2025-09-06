@@ -1,12 +1,12 @@
 const{init,GameLoop,Scene,GameObject,Button,Sprite,initPointer,track,bindKeys,Text}=kontra;const{canvas,context}=init();initPointer();kontra.initKeys();gameState=0;stateInit=!1;preSetup=!1;initProcessing=!1;load=null;titleObj=null;conObj=null;cntObj=null;startObj=null;sceneChange=-1;timer=0;cPlayer=null;helth=5;cPlayerID=null;players=[];opponents=[];pX=-10;pY=-10;gridX=16;gridY=16;isoX=16;isoY=9;scene=null;chunks=[];isoCells=[];isoHLT=null;cCVS=document.getElementById('compileIMG');blocks=[];blocksB=[];mX=10;mZ=15;tX=0
 tZ=0;gX=!1;gZ=!1;cR=["#FFF","#000","","","","",""]
-chunk0=Sprite({x:150,y:10,width:gridX*(isoX*2),height:gridY*(isoY*2),});cPlayer=Sprite({x:pX,y:pY,});fstTm=2;console.log(Rand(0,12)|0);function CreateStarBlock(array,d,s){let rY=Math.random()*1+s;const block=Sprite({type:'block',x:Math.floor(Math.random()*(canvas.width*2-0))+0,y:Math.floor(Math.random()*canvas.width)+1,color:'white',width:d,height:d,dy:rY/1.75,dx:-rY,});array.push(block)}
+chunk0=Sprite({x:150,y:10,width:gridX*(isoX*2),height:gridY*(isoY*2),});cPlayer=Sprite({x:pX,y:pY,});fstTm=2;function CreateStarBlock(array,d,s){let rY=Math.random()*1+s;const block=Sprite({type:'block',x:Math.floor(Math.random()*(canvas.width*2-0))+0,y:Math.floor(Math.random()*canvas.width)+1,color:'white',width:d,height:d,dy:rY/1.75,dx:-rY,});array.push(block)}
 function TitleGlitch(){x=~~mX;x==x%6&&x&1&&CrT();mX<=0?(gX=!gX,gX?(tX=Rand(0,12)|0,mX=Rand(0.3,10)):(mX=Rand(5,10),tX=-1,CrT())):(mX-=0.05);z=~~mZ;z==z%6&&z&1&&CrT();mZ<=0?(gZ=!gZ,gZ?(tZ=Rand(0,12)|0,mZ=Rand(0.3,10)):(mZ=Rand(5,10),tZ=-1,CrT())):(mZ-=0.05)}
 function CrT(){titleObj=null;InitTitle(tX,tZ)}
 function Loading(){load=Text({x:6,y:10,text:'Loading...',color:'#FFFFFF',font:'16px Verdana, bold, sans-serif'})}
 function SceneSwitch(){stateInit=!1;if(sceneChange==0){gameState=0}else if(sceneChange==1){gameState=1}else if(sceneChange==2){gameState=2}else if(sceneChange==3){gameState=3}else if(sceneChange==4){gameState=0}
   sceneChange=-1}
-function InitStartState(){console.log('Init Game State');InitTitle(-1,-1);InitStart();MKTxt("13",414,300,sm);MKTxt("by alex delderfield for js  k",196,300,sm);for(let i=0;i<8;i++){CreateStarBlock(blocks,4,2)}
+function InitStartState(){InitTitle(-1,-1);InitStart();MKTxt("13",414,300,sm);MKTxt("by alex delderfield for js  k",196,300,sm);for(let i=0;i<8;i++){CreateStarBlock(blocks,4,2)}
   for(let i=0;i<10;i++){CreateStarBlock(blocksB,2,0.2)}}
 function InitSetupState(){MKSqr(30,30,canvas.width-60,canvas.height-60,'#444');MKBt(500,250,95,32,'#666',2,"drop")
   MKTxt("setup for subspace drop",30,40,sm);MKTxt("connection active",450,40,sm);MKTxt("set id",28,100,md);MKTxt("xxx",140,100,md);MKTxt("set sector",28,140,md);MKTxt("00",230,140,md)}
@@ -22,7 +22,7 @@ canvas.addEventListener('mousemove',event=>{if(gameState==2){let bound=canvas.ge
 
 function InitGameState(){MKTxt("subspace sector  00",4,30,sm);MKBt(10,280,32,32,'#666',69,"q")
   MKGr(36,60,50,md);isoHLT=Sprite({x:0,y:0,image:smLT[47],});addRQSP(isoHLT)}
-function CreateUserObj(xIn,yIn){var p=ConvertISOToScreenPos(chunk0,xIn-0.5,yIn-0.5);const userObj=Sprite({x:p[0],y:p[1],image:smLT[50],});chunk0.addChild(userObj);opponents.push(userObj);console.log("new player object created, x:"+xIn+", "+yIn)}
+function CreateUserObj(xIn,yIn){var p=ConvertISOToScreenPos(chunk0,xIn-0.5,yIn-0.5);const userObj=Sprite({x:p[0],y:p[1],image:smLT[50],});chunk0.addChild(userObj);opponents.push(userObj)}
 function RefreshOnConnection(){for(let i=0;i<players.length;i++){players[i].isActive=!1}
   players.length=0;players=[];RefreshPlayers()}
 //Functions called by CLIENT
@@ -30,7 +30,6 @@ function SetClientPosition(id, x, y) {
   //init creation
   if(cPlayerID == null) {
     cPlayerID = id; //set ID
-    console.log("Setup Client " + cPlayerID + " at pos: " + x + ", " + y);
     const user = new User(id, x, y, 5);
 
     cPlayerUsr = user;
@@ -43,35 +42,24 @@ function SetClientPosition(id, x, y) {
   var p = ConvertISOToScreenPos(chunk0, cPlayerUsr.x -0.5, cPlayerUsr.y -0.5);
   pX= p[0];
   pY= p[1];
-  console.log("pX, pY: " + pX + ", " + pY);
-
-
 }
 function RefreshPlayers(){for(let i=0;i<opponents.length;i++){opponents[i].isActive=!1;chunk0.removeChild(opponents[i])}
   opponents.length=0;opponents=[]
-  console.log("rebuilding "+players.length+" user objects:");for(let i=0;i<players.length;i++){if(players[i].id!=cPlayerID){console.log("listing user obj #"+i+": "+players[i].id);CreateUserObj(players[i].x,players[i].y)}}}
+  for(let i=0;i<players.length;i++){if(players[i].id!=cPlayerID){CreateUserObj(players[i].x,players[i].y)}}}
 //for updating opponent positions
-function SetOpponentPosition(id,x,y){for(let i=0;i<players.length;i++){if(players[i].id==id){players[i].x=x;players[i].y=y;console.log("Moving player "+id+" to pos: "+x+", "+y);RefreshPlayers()
+function SetOpponentPosition(id,x,y){for(let i=0;i<players.length;i++){if(players[i].id==id){players[i].x=x;players[i].y=y;RefreshPlayers()
   return}}
-  console.log("opponent not found: "+id)}
 //Create/Remove opponents
 function SetUser(id, val, x, y, rad) {
   if (val == 0) {
-    console.log("Remove opponent: " + id);
     players.splice(players.indexOf(id), 1);
-    //console.log("player object deleted");
 
     RefreshPlayers();
 
   } else if (val == 1) {
-    console.log("Adding new opponent: " + id);
-
     const user = new User(id, x, y, rad);
     players.push(user);
-    //console.log("new player object created, x:" + x + ", " + y);
-
     RefreshPlayers();
-
   }
 }
 const loop=GameLoop({update:()=>{if(sceneChange!=-1){if(timer>0){timer-=0.1}else{SceneSwitch();clearRenderQ()}}
@@ -88,4 +76,4 @@ const loop=GameLoop({update:()=>{if(sceneChange!=-1){if(timer>0){timer-=0.1}else
     blocks.map(block=>block.render())}else if(gameState==3){}
     rQ.ui.forEach(element=>{element.obj.render()})}});loop.start()
 class User{constructor(id,x,y,rad){this.id=id;this.x=x;this.y=y;this.combat=!1;this.attRad=rad}}
-bindKeys(['left','a'],function(e){document.getElementById("left").click()},'keyup');bindKeys(['right','d'],function(e){document.getElementById("right").click()},'keyup');bindKeys(['up','w'],function(e){document.getElementById("up").click()},'keyup');bindKeys(['down','s'],function(e){document.getElementById("down").click()},'keyup')
+bindKeys(['left','a'],function(e){document.getElementById("left").click()},'keyup');bindKeys(['right','d'],function(e){document.getElementById("right").click()},'keyup');bindKeys(['up','w'],function(e){document.getElementById("up").click()},'keyup');bindKeys(['down','s'],function(e){document.getElementById("down").click()},'keyup')}

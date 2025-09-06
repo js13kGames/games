@@ -56,7 +56,6 @@ class GameClient {
     });
 
     socket.on("game-data", (data) => {
-      // console.log("game-data", data)
       if (!this.isGameRunning) {
         this.isGameRunning = true;
         this.outside.notifyGameStart();

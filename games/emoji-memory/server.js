@@ -98,8 +98,6 @@ class Game {
 					user2: this.user2.guessed
 				}
 				this.user1.score++
-				console.log(this.user1.player, this.user1.score)
-
 				this.user1.matched({...result});
 				this.user2.matched({...result});
 			} else if (this.turn === this.user2.player) {
@@ -109,8 +107,6 @@ class Game {
 					user2: this.user2.guessed
 				}
 				this.user2.score++
-				console.log(this.user2.player, this.user2.score)
-
 				this.user1.matched({...result});
 				this.user2.matched({...result});
 			}
@@ -222,7 +218,6 @@ module.exports = {
 		findOpponent(user);
 
 		socket.on("disconnect", () => {
-			console.log("Disconnected: " + socket.id);
 			removeUser(user);
 			if (user.opponent) {
 				user.opponent.end();
@@ -248,9 +243,7 @@ module.exports = {
 					user.game.endRound();
 				}
 			}
-
-		});
-		console.log("Connected: " + socket.id);
+		})
 	},
 
 	stat: (req, res) => {

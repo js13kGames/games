@@ -9,18 +9,9 @@ const STORAGE_KEY = "l";
 const LEADERBOARD_MAX_ENTRIES = 10;
 const LEVEL_INDEX_MAX = 9;
 
-let leaderboards = null;
 let players = 0;
 
-function log(a, b)
-{
-	// this is useful to recover the leaderboard if the storage
-	// gets corrupted or anything unexpected happens
-	console.log(Date.now() + ":" + a + ":" + JSON.stringify(b));
-}
-
-function cleanupScores(array)
-{
+function cleanupScores(array) {
 	let n, a, b, r, i;
 	
 	array.sort((a, b) => b[5] - a[5]);
@@ -35,8 +26,7 @@ function cleanupScores(array)
 			{
 				n++;
 				r.push(a);
-				if (n >= LEADERBOARD_MAX_ENTRIES)
-				{
+				if (n >= LEADERBOARD_MAX_ENTRIES) {
 					break;
 				}
 			}
@@ -46,8 +36,7 @@ function cleanupScores(array)
 	return r;
 }
 
-async function submitEntry(socket_id, entry)
-{
+async function submitEntry(socket_id, entry) {
 	let a;
 	
 	// format:
@@ -68,44 +57,30 @@ async function submitEntry(socket_id, entry)
 	a.push(entry);
 	a = cleanupScores(a);
 	await storage.set(STORAGE_KEY, a);
-	
-	log("a", a);
-	log("b", entry);
 }
 
-async function setName(socket_id, name)
-{
+async function setName(socket_id, name) {
 	let a = (await storage.get(STORAGE_KEY)) || [];
-	
-	log("c",[ socket_id, name ]);
-	
-	for (let b of a)
-	{
+	for (let b of a) {
 		if (b[7] == socket_id)
 		{
 			b[6] = name;
 		}
 	}
-	
+
 	await storage.set(STORAGE_KEY, a);
 }
 
-async function sendBoard(socket)
-{
+async function sendBoard(socket) {
 	socket.emit(MESSAGE_BOARD_DATA, await storage.get(STORAGE_KEY));
 }
 
 module.exports = {
-	io: (socket) => {
-		socket.on("disconnect", () => {
-			players--;
-			log("e", players);
-		});
+	io: socket => {
+		socket.on("disconnect", _ => players--)
 		socket.on(MESSAGE_ENTRY, (entry) => submitEntry(socket.id, entry));
 		socket.on(MESSAGE_NEW_NAME, (name) => setName(socket.id, name));
 		socket.on(MESSAGE_REQUEST_BOARD, () => sendBoard(socket));
-		
-		players++;
-		log("d", players);
-	},
-};
+		players++
+	}
+}

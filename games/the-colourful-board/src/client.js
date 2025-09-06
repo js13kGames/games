@@ -1,8 +1,3 @@
-console.log('hello world');
-
-const renderPlayerNames = (players) => {
-    console.log('players: ', players);
-}
 const log = (text) => {
     const parent = document.querySelector('#events');
     const el = document.createElement('li');
@@ -109,7 +104,6 @@ const randomPlayerName = (length) => {
 
     reset();
     const playerName = getPlayerName();
-    console.log('playerName:- ', playerName)
     const sock = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]})
     sock.emit('message', `${playerName}#Joined!`);
 
@@ -119,9 +113,7 @@ const randomPlayerName = (length) => {
     }
 
     sock.on('board', (board) => {
-        console.log('board:- ', board);
         reset(board);
-        //renderPlayerNames(gameInfo.players);
     });
     sock.on('message', log);
     sock.on('turn', ({x,y, color}) =>fillCell(x,y, color));

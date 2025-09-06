@@ -42,7 +42,6 @@
           };
 
       function connect() {
-        console.log('connecting');
         socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
         socket.emit('playerInfo',{ name: player.ID } );
         socket.on('news', onNews);

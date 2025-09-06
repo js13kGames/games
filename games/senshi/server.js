@@ -1,6 +1,5 @@
 var taken = []
 var dead = []
-io.set('log level', 2)
 io.on('connection', function (socket) {
   var p;
 
@@ -465,9 +464,6 @@ setInterval(function () {
   if (!diff.reduce(function (total, x) {
     return total + x.length
   }, 0)) return
-
-  //console.log(diff)
-  // send game state data
 
   var found = false
   var i = diff.length - 1

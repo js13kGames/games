@@ -162,8 +162,7 @@ function writeLine(line,w,x,y,justify,fill) {
 	var wTot = getWidthText(line, w);
 	var txt;
 	y-=w;
-	
-	// console.log("writeLine", line);
+
 	if(justify == CENTER) x -= wTot/2;
 	if (justify == RIGHT) x -= wTot;
 
@@ -543,9 +542,6 @@ function nameLoop() {
 		var letters = Object.keys(alphabet).join("").replace(/[a-z \/,…']/g,"");
 		var id = letters.indexOf(name[menuId]);
 
-		console.log("id",id)
-		console.log((id-keys.ArrowDown+keys.ArrowUp+letters.length)%letters.length);
-
 		name = name.slice(0,menuId)+letters[(id+keys.ArrowDown-keys.ArrowUp+letters.length)%letters.length]+name.slice(menuId+1);
 	}
 
@@ -641,7 +637,6 @@ function startStats() {
 	fetch(req)
 	  .then(function(response) { return response.json(); })
 	  .then(function(data) {
-	  	console.log("leaderBoard",data);
 	    leaderBoard = data;
 	  });
 }
@@ -668,7 +663,6 @@ function keyUp(e) {
 
 function startServerEvents() {
 	socket.on("connect", () => {
-        console.log("connected");
     });
     socket.on("id",(id)=>{
     	shipId=id;
@@ -683,7 +677,6 @@ function startServerEvents() {
     	currentFps = fps.getFPS();
 
     	if (errorMsg) errorMsg = null; // we get data, error end ?
-        // console.log("loop",data);
         for(var key in data) {
         	window[key] = data[key];
         }
@@ -691,7 +684,6 @@ function startServerEvents() {
         // draw();
     });
     socket.on("highscoreID", (id) => {
-    	console.log("new highscoreID",id);
     	highscoreID = id;
         localStorage.setItem('highscoreID',id);
     });

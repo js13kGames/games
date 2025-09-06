@@ -20,9 +20,7 @@ const utils = {
     return result
   },
 
-  log: function(s) {
-    console.log(new Date().toISOString() + ":", s)
-  },
+  log: function(s) {},
 
   generateIdentifier: function() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -593,7 +591,6 @@ WebSocket.prototype.listen = function() {
     socket.emit('uuid', Utils.lzw_encode(uuid))
     self.observeEvents(uuid, socket)
   })
-  this.io.set('log level', 1)
 
   setInterval(function() {
     self.checkForDisconnectedClients()
@@ -693,7 +690,6 @@ WebSocket.prototype.observeEvents = function(uuid, socket) {
 
   Object.keys(this.events).forEach(function(eventName) {
     self.sockets[uuid].on(eventName, function() {
-      // console.log('Received event', eventName, 'with the following arguments', arguments)
       self.events[eventName].apply(self, arguments)
     })
   })
@@ -748,8 +744,6 @@ WebSocket.prototype.syncWorld = function() {
         }
       }
     }
-
-    // console.log('Emitting world#sync with the following arguments', players)
 
     Object.keys(data).forEach(function(klass) {
       socket.emit('world#sync', Utils.lzw_encode(klass), Utils.lzw_encode(JSON.stringify(data[klass])))

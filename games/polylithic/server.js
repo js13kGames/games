@@ -99,8 +99,6 @@ class Game {
   }
 
   publishGameData() {
-    // console.log('RAW DATA', this.data);
-
     let { playerList, stoneList, startDatetimeStamp } = this.data;
     let duration = Date.now() - startDatetimeStamp;
     stoneList = stoneList.map(stone => {
@@ -204,7 +202,6 @@ class Game {
           this.data.playerList[playerNumber].droneList.splice(droneIndex, 1);
           let damage = (DRONE_PURCHASE_COST + drone.carryingStone);
           opponent.mothership.health -= damage;
-          console.log(`Player ${playerNumber} does ${damage} damage`);
         }
       });
     });
@@ -216,7 +213,6 @@ class Game {
       let player = this.data.playerList[playerNumber];
       let opponent = this.data.playerList[this.opponentOf(playerNumber)];
       if (player.mothership.health <= 0) {
-        console.log(`Player ${this.opponentOf(playerNumber)} wins`);
         this.isOngoing = false;
         this.eventHandler('game-end', playerNumber, { verdict: 'defeat', message: 'You ran out of health' });
         this.eventHandler('game-end', this.opponentOf(playerNumber), { verdict: 'victory', message: 'You destroyed your opponent' });
@@ -227,7 +223,6 @@ class Game {
       let player = this.data.playerList[playerNumber];
       let opponent = this.data.playerList[this.opponentOf(playerNumber)];
       if (opponent.stoneReserve >= WINNING_RESERVES) {
-        console.log(`Player ${this.opponentOf(playerNumber)} wins (stones)`);
         this.isOngoing = false;
         this.eventHandler('game-end', playerNumber, { verdict: 'defeat', message: 'Your opponent beat you to 1000 stones' });
         this.eventHandler('game-end', this.opponentOf(playerNumber), { verdict: 'victory', message: 'Your mothership is back online.' });
@@ -272,33 +267,20 @@ class Game {
 let pendingPlayer = null;
 
 module.exports = {
-
   io: (socket) => {
-    console.log(`${socket.id} - Connected.`);
-
     socket.once('disconnect', () => {
-      console.log(`${socket.id} - Disconnected.`);
       socket.removeAllListeners();
       if (pendingPlayer && (socket.id === pendingPlayer.id)) {
-        console.log(`${socket.id} - Leaves after waiting.`);
         pendingPlayer = null;
-      } else if (!socket.game) {
-        console.log(`${socket.id} - Leaves before joining a game or waiting.`);
-      } else if (socket.game.isOngoing) {
-        console.log(`${socket.id} - Forfeits.`);
+      } else if (socket.game?.isOngoing) {
         socket.game.forfeit(socket.playerNumber, 'disconnect');
-      } else {
-        console.log(`${socket.id} - Leaves as winner.`);
       }
-    });
+    })
 
     if (!pendingPlayer) {
       pendingPlayer = socket;
-      console.log(`${socket.id} - Waiting.`);
       return;
     }
-
-    console.log('New game:', socket.id, 'vs', pendingPlayer.id);
 
     let playerList = [socket, pendingPlayer];
     pendingPlayer = null;
@@ -306,7 +288,6 @@ module.exports = {
     let game = new Game({
       playerList,
       eventHandler: (event, playerNumber, data) => {
-        // console.log(event, playerNumber, data);
         playerList[playerNumber].emit(event, data);
       }
     });

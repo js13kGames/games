@@ -15,8 +15,6 @@ lgLT = [];
 //sprite array
 spRT = [];
 
-console.log("//Need to load " + tl.length*3 + " graphics sprites//");
-
 //Setup all generated letters and images
 function InitPreLoad() {
   for(var i=0; i< tl.length; i++) {
@@ -36,7 +34,6 @@ function ProcessLetters(){
         }catch(err) {
           lgLT.length=0;
           lgLT=[];
-          console.log("it broke, trying again: " + err);
           return;
         }
       } else if(lgLT.length==tl.length) {
@@ -45,7 +42,6 @@ function ProcessLetters(){
           }catch(err) {
             mdLT.length = 0;
             mdLt = [];
-            console.log("it broke, trying again: " + err);
             return;
           }
         } else if (mdLT.length == tl.length) {
@@ -54,12 +50,10 @@ function ProcessLetters(){
             }catch(err) {
               smLT.length = 0;
               smLT = [];
-              console.log("it broke, trying again: " + err);
               return;
             }
           } else if (smLT.length == tl.length) {
             initProcessing = true;
-            console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
           }
         }
       }
@@ -94,7 +88,6 @@ function GenStr(str, x, y, obj, sz, rnd, rnd2) {
   sz==sm ? ar = smLT : sz==md ? ar = mdLT : sz==lg ? ar = lgLT : null
 
   if(Number.isInteger(str)) { //graphic?
-    console.log("graphic request detected");
     CreateLetter(ar[str], obj, s + x, y)
   } else { //else string
 
@@ -102,8 +95,6 @@ function GenStr(str, x, y, obj, sz, rnd, rnd2) {
     for(var i=0; i<str.length;i++) {
       var n = str.charCodeAt(i) - 97;
       if(ar[n]) { s += ar[n].width + sz;
-        //console.log("Rendering " + str[i]
-        //    + " width is " + ar[n].width + " position: " + s);
         (i == rnd || i == rnd2) ?
           CreateLetter(ar[Math.floor(Rand(0, 35))], obj, s + x, y):
           CreateLetter(ar[n], obj, s + x, y)
@@ -111,13 +102,10 @@ function GenStr(str, x, y, obj, sz, rnd, rnd2) {
       } else {
         var t = parseInt(str[i]);
         if(Number.isInteger(t)) {
-          //console.log("its a number: " + t);
-          //console.log("adding space: " + ar[t+26].width + sz*4);
           CreateLetter(ar[t+26], obj, s + x, y);
           s += ar[t+26].width + sz;
         } else {
           s += sz*4;//blank or unknown
-          //console.log("symbol not found "+ str[i] + " charCodeAt: " + n);
         }
       }
     }
@@ -150,7 +138,6 @@ function InitTitle(rnd, rnd2) {
 
 function SetMessageConnect(text) {
   if(gameState == 2) {
-    console.log("updating count!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     cntObj=null;
     cntObj=GameObject({
       x: 200,
@@ -176,7 +163,6 @@ function SetMessage(text) {
     y: 10,
   });
   if(text==null) {
-    console.log("set message running from ui.js");
     GenStr("session not connected", 0, 0, conObj, sm, -1, -1);
   } else {
     GenStr(text, 0, 0, conObj, sm, -1, -1);

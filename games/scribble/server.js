@@ -57,7 +57,6 @@ Game.prototype.start = function (playerId) {
 	this.word = words[getRandomInt(0, words.length - 1)];
 	this.guessedCorrectPlayers = 0;
 	for (var i=0; i < this.users.length; i++) {
-		console.log('users[i]', this.users[i].socket);
 		var startPayload = {players: this.getUsers(), drawingPlayerId: this.drawingUser};
 		if (i === this.drawingUser) {
 			startPayload.word = this.word;
@@ -119,23 +118,11 @@ User.prototype.broadcastToOthers = function (event, payload) {
 
 module.exports = function (socket) {
 	var connectedUser = new User(socket);
-
-	socket.on('disconnect', function () {
-		//connectedUser.game.leave(connectedUser);
-		console.log('Disconnected: ' + socket.id);
-	});
-
 	socket.on('join', function (payload) {
-		console.log(payload);
 		connectedUser.name = payload.username;
 		var game = findGame();
-		console.log(game);
-		console.log('before join')
 		game.join(connectedUser);
-		console.log('after join')
 		connectedUser.game = game;
-		console.log('end of  join')
-		console.log(game);
 	});
 
 	socket.on('draw-mousedown', function (payload) {
@@ -178,5 +165,4 @@ module.exports = function (socket) {
 			}
 		}
 	});
-	console.log('Connected: ' + socket.id);
 }

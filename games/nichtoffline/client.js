@@ -37,7 +37,6 @@ document.getElementById("msg").addEventListener("keyup", function(event) {
 
 function init(id) {
     me = new Dino(id, "unknown", 0);
-    console.log(me);
     socket.emit("born", me);
     window.requestAnimationFrame(cycle);
 }

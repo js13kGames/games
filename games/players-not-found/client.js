@@ -88,7 +88,6 @@ function bind() {
     });
 
     socket.on("player", function (p) {
-        console.log("player",p);
         players = [p];
         nIn.style.color = p.c;
         id = p.id;
@@ -135,22 +134,6 @@ function bind() {
         }
     });
 
-    socket.on("end", function () {
-        
-    });
-
-    socket.on("connect", function () {
-        
-    });
-
-    socket.on("disconnect", function () {
-        console.log("Connection lost!");
-    });
-
-    socket.on("error", function () {
-        console.log("Connection error!");
-    });
-
     cBtn.onclick = function() {
         socket.emit("color");
     };
@@ -182,7 +165,6 @@ function bind() {
             p = getP()||{c:"black"};
             if(!p.n) p.n = nIn.value.trim() || "unknown";
 
-            console.log({m:cIn.value.trim(),c:p.c,n:p.n});
             socket.emit("msg",{m:cIn.value.trim(),c:p.c,n:p.n});
             cIn.value = "";
         }
@@ -410,7 +392,6 @@ function getP() {
 function chase (p,c) {
     if(state==CHASING) {
         let pixData = ctxTarget.getImageData(mX, mY, 1, 1).data;
-        console.log(pixData);
         for (var i=0;i<players.length;i++) {
             p=players[i];
             c=p.cs;
