@@ -7,7 +7,7 @@ var playerName = 'Player '+Math.random().toString().replace(/.*\./,'');
 
 function connect() {
   connected = true;
-  if (!socket.connected) socket = io(document.location.href);
+  if (!socket.connected) socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]})
   socket.on('news', onNews);
   socket.on('config', onConfig);
   socket.on('disconnect', onDisconnect);

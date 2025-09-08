@@ -71,7 +71,7 @@ var Bingo = {
             Bingo.socket.socket.reconnect();
     	}
     	else {
-	    	Bingo.socket = io.connect({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+	    	Bingo.socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
     	}
     	
 	    Bingo.socket.on('connect', function ()

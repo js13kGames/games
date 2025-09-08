@@ -42,12 +42,7 @@ function gameUpdate() {
     if (timer == null) timer = setInterval(gameUpdate, 5000);
 }
 
-/**
- * Socket.IO on connect event
- * @param {Socket} socket
- */
 module.exports = {
-
     io: (socket) => {
         gameUpdate();
 

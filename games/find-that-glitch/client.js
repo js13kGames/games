@@ -1,6 +1,6 @@
 "use strict";
 var moveLocked = true;
-var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+var socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
 var screen = document.getElementById("screen");
 var rotX = Math.PI*.5;
 var rotZ = 0;

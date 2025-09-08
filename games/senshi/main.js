@@ -1,4 +1,4 @@
-var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]}),
+var socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]}),
   $ = document.querySelector.bind(document),
   name, arena;
 

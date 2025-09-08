@@ -190,7 +190,7 @@
     el_join_form.addEventListener('submit', function (e) {
         name = el_name.value;
         if (name) {
-            socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+            socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
             initSocketListeners();
         }
         e.preventDefault();

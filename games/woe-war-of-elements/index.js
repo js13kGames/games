@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-	var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+	var socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
 	socket.on("newRoom", function(room) {
 		window.location.href += "host/host.html?id=" + room.id;
 	});

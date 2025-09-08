@@ -18,7 +18,7 @@
 	var playerId = null;
 	var lastFire = 0;
 
-	var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]})
+	var socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]})
 
 	socket.on("connect", function() {
 		socket.emit("playerConnect", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20"))||null);

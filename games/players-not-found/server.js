@@ -5,12 +5,7 @@ const newMapTime = 1000*60*5;
 let gMap;
 let mapTimeout;
 
-/**
- * Socket.IO on connect event
- * @param {Socket} socket
- */
 module.exports = {
-
 	io: (socket) => {
 		let user = createPlayer(socket.id);
 		

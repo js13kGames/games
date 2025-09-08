@@ -1,4 +1,4 @@
-socket = io(document.location.href);
+socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]})
 
 var player = 0;
 var level;

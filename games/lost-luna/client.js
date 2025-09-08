@@ -25,5 +25,5 @@ function controls(e){switch(e.type){case 'mousedown':mouse(e);game.tDown=!0;brea
 break;case 'touchstart':mouse(e.changedTouches[0]);game.tDown=!0;break;case 'touchend':game.tDown=!1;break}}
 function mouse(e){game.touch(e.clientX,e.clientY)}
 function init(){btns=document.getElementsByTagName("button");for(var i=0;i<btns.length;i++){(function(btn,callbacks){btn.addEventListener("click",callbacks[i],!1)})(btns[i],[battle,oneP])}
-if(online){socket=io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});bind()}}
+if(online){socket=io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});bind()}}
 window.addEventListener("load",init,!1)})()

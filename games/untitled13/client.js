@@ -224,12 +224,9 @@ onload = function() {
       }
     }
 
-    obj.on_enemy_click = function()
-    {
-    }
+    obj.on_enemy_click = function() {}
 
-    obj.on_click = function()
-    {
+    obj.on_click = function() {
       if (A.current_player == this.owner_player)
       {
         this.on_owner_click();
@@ -240,14 +237,10 @@ onload = function() {
       }
     }
 
-    obj.on_collision = function(obj2, id, distance)
-    {
-    }
+    obj.on_collision = function(obj2, id, distance) {}
 
     // object is just passing by the middle of the object
-    obj.on_collision_middle = function(obj2, id, distance)
-    {
-    }
+    obj.on_collision_middle = function(obj2, id, distance) {}
 
     obj.collision_check = function()
     {
@@ -284,14 +277,11 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer1Base = function(display_name, position, speed, direction, health, sprites)
-  {
+  A.ObjectPlayer1Base = function(display_name, position, speed, direction, health, sprites) {
     var obj = new A.ObjectBase(display_name, 1, position, speed, direction, health, sprites);
     return obj;
   }
 
-  /** @constructor */
   A.ObjectPlayer2Base = function(display_name, position, health, ammo, shoot_cycle_time, reload_time, sprites)
   {
     var obj = new A.ObjectBase(display_name, 2, position, 0, 0, health, sprites);
@@ -395,7 +385,6 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
   A.ObjectPlayer1Switch = function(position, valid_directions, direction)
   {
     var obj = new A.ObjectPlayer1Base("Switch", position, 0, 0, -1, []);
@@ -476,7 +465,6 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
   A.ObjectPlayer1Destination = function(position, valid_directions, direction)
   {
     var obj = new A.ObjectPlayer1Base("The mark", position, 0, 0, -1, [ [ 13, -32, -16 ] ] );
@@ -502,9 +490,7 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer2Tower1 = function(position)
-  {
+  A.ObjectPlayer2Tower1 = function(position) {
     var obj = new A.ObjectPlayer2Base("Tower one", position, 100, 40, 0.1, 2, [ [ 20, -32, -48 ], [ 21, -32, -48 ] ]);
 
     obj.attack_damage = 5;
@@ -527,9 +513,7 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer2Tower2 = function(position)
-  {
+  A.ObjectPlayer2Tower2 = function(position) {
     var obj = new A.ObjectPlayer2Base("Flame tower", position, 100, 100, 0, 2, [ [ 20, -32, -48 ], [ 22, -32, -48 ] ]);
 
     obj.attack_damage = 1;
@@ -545,7 +529,6 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
   A.ObjectPlayer2Tower3 = function(position)
   {
     var obj = new A.ObjectPlayer2Base("Tower two", position, 200, 75, 0, 2, [ [ 20, -32, -48 ], [ 23, -32, -48 ] ]);
@@ -574,9 +557,7 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer2Crystal = function(position)
-  {
+  A.ObjectPlayer2Crystal = function(position) {
     var obj = new A.ObjectPlayer2Base("Crystal", position, 50, 0, 0, 0, [ [ 20, -32, -48 ], [ (A.objects.length % 2) ? "d1" : "d2", -32, -58 ] ]);
 
     obj.goal_object = 1;
@@ -601,9 +582,7 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer1Ghost2 = function(position, direction)
-  {
+  A.ObjectPlayer1Ghost2 = function(position, direction) {
     var obj = new A.ObjectPlayer1Base("Runner", position, 1.5, direction, 75, [ [ 16, -16, -32, 2, 1 ], [ 15, -16, -34, 0, 3 ], [ 14, -16, -32, 2, 2 ] ]);
     obj.shake_size = 2.5;
 
@@ -619,9 +598,7 @@ onload = function() {
     return obj;
   }
 
-  /** @constructor */
-  A.ObjectPlayer1Ghost3 = function(position, direction)
-  {
+  A.ObjectPlayer1Ghost3 = function(position, direction) {
     var obj = new A.ObjectPlayer1Base("Badaboom", position, 0.75, direction, 225, [ [ 5, -16, -32, 2, 2 ], [ 4, -16, -32, 2, 2 ], [ 18, -16, -32, 2, 2 ] ]);
 
     // candy for the eye!
@@ -636,7 +613,6 @@ onload = function() {
     return obj;
   }
 
-  A.log = function(s) {}
   A._generate_uid = function()
   {
     var i, result = "";
@@ -1004,13 +980,10 @@ onload = function() {
 
   A.alter_gold = function(amount)
   {
-    if (A.golds[A.current_player-1] + amount < 0)
-    {
-      A.log("not enough golds (tried to alter by " + amount + ")");
+    if (A.golds[A.current_player-1] + amount < 0) {
       return false;
     }
 
-    A.log("golds altered by " + (amount > 0 ? "+" : "") + amount);
     A.golds[A.current_player-1] += amount;
     return true;
   }
@@ -1033,7 +1006,6 @@ onload = function() {
         {
           A.tooltip_object = { display_name: "toolbar" };
         }
-        // A.tooltip_object = new A.object_classes();
         return;
       }
     }
@@ -1857,24 +1829,16 @@ onload = function() {
         A.cv.ctx.fillRect(p[0]-1, p[1]-1, 3, 3);
       }
       // DEBUG END
-    }
-    catch (e)
-    {
-      A.log("Exception in render_canvas(), part1: " + e);
-    }
+    } catch {}
 
     // even if the drawing of world fails, try to draw the toolbar and other gui items
-    try
-    {
+    try {
       A.cv.ctx.restore();
 
       // fixed to the screen not to the world
       A.render_layer3();
     }
-    catch (e)
-    {
-      A.log("Exception in render_canvas(), part2: " + e);
-    }
+    catch (e) {}
   }
 
   A.render_layer2 = function()
@@ -1886,10 +1850,8 @@ onload = function() {
     A.gfx_render_fog();
 
     /* TODO: replace this ugly tile-by-tile and always-loop-through-all-objects-and-skip-the-ones-we-don't-need thing with a single sort of object/fire/shot ids into arrays by tile and loop through them */
-    for (x=0; x<A.config.world_width; x++)
-    {
-      for (y=0; y<A.config.world_height; y++)
-      {
+    for (x=0; x<A.config.world_width; x++) {
+      for (y=0; y<A.config.world_height; y++) {
         try
         {
           p = [ x - 0.5, y - 0.5 ];
@@ -1903,10 +1865,7 @@ onload = function() {
           A.gfx_render_fire(a, b);
           A.gfx_render_shots(a, b);
         }
-        catch (e)
-        {
-          A.log("Exception in render_layer2(): " + e);
-        }
+        catch {}
       }
     }
   }
@@ -2553,14 +2512,12 @@ onload = function() {
     {
       A.set_status(A.GAME_STATUS_WIN_DELAY);
       B.send("game_status", A.GAME_STATUS_PLAYER1_WON);
-      A.log("player 1 won");
     }
     // check the queues and player 1 objects if the time is up, also check for the bonus time
     else if ((A.game_time > A.config.game_duration && player1_object_count == 0 && player1_queue_length == 0) || A.game_time > A.config.game_duration + A.config.overtime_duration)
     {
       A.set_status(A.GAME_STATUS_WIN_DELAY);
       B.send("game_status", A.GAME_STATUS_PLAYER2_WON);
-      A.log("player 2 won");
     }
   }
 
@@ -2595,8 +2552,6 @@ onload = function() {
 
     if (A.tick_number % 100 == 0)
     {
-      A.log("ticks: " + A.tick_number + ", frames: " + A.frame_number + ", game_time*1000: " + Math.round(A.game_time * 1000) + ", objects: " + A.objects.length + ", shots: " + A.shots.length + ", fire particles: " + A.gfx_effect_fire.length);
-
       // do interleaved pinging
       if (A.tick_number / 100 % 2 == (A.current_player - 1))
       {
@@ -2740,18 +2695,9 @@ onload = function() {
 
   /* TODO: add pings, auto correction of delay based on pings (ie. good -1, normal +0, bad +5), warning about slow network */
 
-  // DEBUG BEGIN
-  B.log = function(s)
-  {
-    A.log("[net] " + s);
-  }
-  // DEBUG END
-
   B.send = function(command, args)
   {
     var message = JSON.stringify([ (A.tick_number + B.delay), command, args ]);
-
-    B.log("sending: " + message);
 
     B.receive(message);
     B.socket.emit("message", message);
@@ -2759,8 +2705,6 @@ onload = function() {
 
   B.receive = function(message)
   {
-    B.log("received: " + message);
-
     B.message_queue.push(JSON.parse(message));
   }
 
@@ -2772,40 +2716,23 @@ onload = function() {
     {
       if (B.message_queue[i][0] <= tick_number)
       {
-        // DEBUG BEGIN
-        if (B.message_queue[i][0] < tick_number)
-        {
-          B.log("WARNING: late message processing");
-        }
-        B.log("processing: " + JSON.stringify(B.message_queue[i]));
-        // DEBUG END
-
         // we DO NOT want direct function calls here based on the message just came from the other half of the Earth...
-        if (B.message_queue[i][1] == "object_create")
-        {
+        if (B.message_queue[i][1] == "object_create") {
           A.object_create(B.message_queue[i][2]);
         }
-        else if (B.message_queue[i][1] == "object_destroy")
-        {
+        else if (B.message_queue[i][1] == "object_destroy") {
           A.object_destroy(B.message_queue[i][2]);
         }
-        else if (B.message_queue[i][1] == "player1_switch_toggle")
-        {
+        else if (B.message_queue[i][1] == "player1_switch_toggle") {
           A.player1_switch_toggle(B.message_queue[i][2]);
         }
-        else if (B.message_queue[i][1] == "game_status")
-        {
+        else if (B.message_queue[i][1] == "game_status") {
           A.set_status(B.message_queue[i][2]);
         }
 
         B.message_queue = A._array_remove_item(B.message_queue, i);
       }
     }
-  }
-
-  B.init = function()
-  {
-    A.server_url = location.href
   }
 
   B.ping = function()
@@ -2815,9 +2742,7 @@ onload = function() {
     B.socket.emit("ping");
   }
 
-  B.disconnect = function()
-  {
-    B.log("disconnected");
+  B.disconnect = function() {
     A.set_status(A.GAME_STATUS_DISCONNECTED);
   }
 
@@ -2828,15 +2753,12 @@ onload = function() {
 
   B.start = function()
   {
-    B.log("connecting to server: " + A.server_url);
-    try
-    {
-      B.socket = io.connect({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]})
+    try {
+      B.socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]})
     }
-    catch (e)
-    {
+    catch {
       B.disconnect();
-      return;
+      return
     }
 
     B.socket.on("disconnect", B.disconnect);
@@ -2845,46 +2767,36 @@ onload = function() {
     B.socket.on("welcome", function(data) {
       var match;
 
-      B.log("connected to server, player uid: " + data.uid + ", version: " + data.version);
-
       A.player_uid = data[0];
 
       // check if we find a "?game=xxx" string in the URL
       // if so, try to join to that game
       if (match = document.URL.match(new RegExp('[?&]game=([0-9a-zA-Z\-\_]{20})')))
       {
-        B.log("trying to connect to " + match[1] + "...");
         A.overlay_message("Joining to game...");
         B.socket.emit("game_join", match[1]);
       }
       else
       {
-        B.log("creating a new game...");
         A.overlay_message("Starting a new game...");
         B.socket.emit("game_create");
       }
     });
 
-    B.socket.on("game_created", function(data) {
-      B.log("new game created successfully, URL is ?game=" + A.player_uid);
-      A.overlay_message("Game created, give this URL to the other player:<br/><input type=\"text\" value=\"" + A.server_url + "?game=" + A.player_uid + "\" readonly=\"readonly\" />");
+    B.socket.on("game_created", function() {
+      A.overlay_message("Game created, give this URL to the other player:<br/><input type=\"text\" value=\"" + location.href + "?game=" + A.player_uid + "\" readonly=\"readonly\" />");
     });
 
 
-    B.socket.on("menu", function(data) {
+    B.socket.on("menu", function() {
       A.set_status(A.GAME_STATUS_MENU);
     });
 
     B.socket.on("game_started", function(data) {
-      B.log("game started!");
-
       // data is the game array: [ player1_uid, player2_uid, players_swapped, map, map_seed ]
-      if (data[2] == 0)
-      {
+      if (data[2] == 0) {
         A.set_player(data[0] == A.player_uid ? 1 : 2);
-      }
-      else
-      {
+      } else {
         A.set_player(data[1] == A.player_uid ? 1 : 2);
       }
 
@@ -2892,20 +2804,8 @@ onload = function() {
       A.set_status(A.GAME_STATUS_RUNNING);
     });
 
-    B.socket.on("message", function(data) {
-      B.receive(data);
-    });
-
-    B.socket.on("options_update", function(data) {
-      A.options_update_remote(data);
-    });
-
-    // DEBUG BEGIN
-    B.socket.on("debug_log", function(data)
-    {
-      B.log("[server] " + data);
-    });
-    // DEBUG END
+    B.socket.on("message", B.receive);
+    B.socket.on("options_update", A.options_update_remote);
 
     B.socket.on("ping_request", function(data) {
       B.socket.emit("ping_response", data);
@@ -2913,8 +2813,5 @@ onload = function() {
   }
 
   A.init();
-  B.init();
-
-  // A.start();
   B.start();
 }

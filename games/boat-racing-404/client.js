@@ -335,11 +335,7 @@ function displayHighscore(highscore) {
   highscoreDiv.style = '';
 }
 
-/**
- * Binde Socket.IO and button events
- */
 function bind() {
-
   socket.on('start', (length) => {
     track = new Track(length);
     raceStartTime = Date.now() + 5000;
@@ -414,7 +410,7 @@ setMessage('Waiting for the next race to start…');
 player = addPlayer(track);
 
 function init() {
-  socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+  socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
   bind();
 }
 

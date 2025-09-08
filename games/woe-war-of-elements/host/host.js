@@ -112,7 +112,7 @@
 		window.requestAnimationFrame(draw);
 	};
 
-	var socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+	var socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
 
 	socket.on("update", function(room) {
 		isGameRunning = true;

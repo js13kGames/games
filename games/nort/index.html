@@ -42,7 +42,7 @@
           };
 
       function connect() {
-        socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+        socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
         socket.emit('playerInfo',{ name: player.ID } );
         socket.on('news', onNews);
         socket.on('config', onConfig);

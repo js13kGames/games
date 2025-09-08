@@ -1,7 +1,7 @@
 var server=function(e){function n(n){if(n!==w)for(var o=0;o<f.length;o++){var a=v[o]+"Script",s=ui.get(a)
 s&&ui.remove(s)
 var i=ui.createElement("script")
-i.onload="server"===v[o]?server.serverLoad:t,i.onerror=server.serverFail,ui.setAttribute(i,["id",a,"src","http://"+n+f[o]]),e.body.appendChild(i)}}function t(){y++,i()}function o(){ui.setAttribute(m,"style","border:1px solid green;background:rgba(0,255,0,0.1)"),ui.get("score").setAttribute("src","http://"+m.value+"/score.html"),s(function(){g=io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]}),g.on("message",function(e,n){messages.parse(e,n,g)}),g.on("disconnect",function(){location.reload()}),g.on("pong",function(e,n,t){a(e,n,t)})
+i.onload="server"===v[o]?server.serverLoad:t,i.onerror=server.serverFail,ui.setAttribute(i,["id",a,"src","http://"+n+f[o]]),e.body.appendChild(i)}}function t(){y++,i()}function o(){ui.setAttribute(m,"style","border:1px solid green;background:rgba(0,255,0,0.1)"),ui.get("score").setAttribute("src","http://"+m.value+"/score.html"),s(function(){g=io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]}),g.on("message",function(e,n){messages.parse(e,n,g)}),g.on("disconnect",function(){location.reload()}),g.on("pong",function(e,n,t){a(e,n,t)})
 var e=(new Date).valueOf()
 ui.get("name").value&&g.emit("name",ui.get("name").value),messages.newMessage("getServerTime",g,e),connection.joinServer()}),t()}function a(e,n,t){time.parse(e,n,t,function(){var e=n
 connection.forEach(function(n){n.ping=e,ui.changePlayer(ui.getRemotePlayer(n.remoteId),"ping",e)})})}function s(e){y!==f.length?p.push(e):e()}function i(){h=!0

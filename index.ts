@@ -1,12 +1,18 @@
 import sandboxed from './sandboxed'
 
 export default {
-  async fetch(req: Request, env: Record<string, any>, ctx: any) {
+  async fetch(req: Request, env: Record<string, any>) {
     const
       url = new URL(req.url),
-      uri = url.pathname.slice(1),
-      i = uri.indexOf('/')
+      uri = url.pathname.slice(1)
 
+    // Naively filter out all requests for URIs with dots. Legit, existing files would've been already served
+    // one level higher (before hitting the Worker) and we don't want every single scanner to trigger boots.
+    if (uri.indexOf('.') >= 0) {
+      return new Response(null, { status: 404 })
+    }
+
+    const i = uri.indexOf('/')
     if (i < 0) {
       // If a game with this slug exists, append trailing slash and redirect.
       if (sandboxed[uri]) {

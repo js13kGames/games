@@ -1,7 +1,7 @@
 "use strict";
 
 var
-  socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]}),
+  socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]}),
   blaster = document.querySelector("#mega"), ldr = document.querySelector("#leaderboard ol"),
   msgs = document.querySelector("#messages ul")
 socket.on("newWord", function (word) {

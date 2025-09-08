@@ -777,7 +777,7 @@ function bind() {
   })
 }
 function init() {
-  socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+  socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
   bind();
 }
 

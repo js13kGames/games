@@ -126,7 +126,7 @@
           kontra.canvas.addEventListener("click", function() {
             if (gameState == STATE_CLICK) {
               gameState = STATE_INTRO;
-              socket = io({path:location.pathname+'socket.io',upgrade:!1,transports:["websocket"]});
+              socket = io({path:location.pathname+'io',upgrade:!1,transports:["websocket"]});
               bindSocket();
             }
           }.bind(this));
