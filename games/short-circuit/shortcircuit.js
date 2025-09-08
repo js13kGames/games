@@ -1,5 +1,5 @@
 /*
-    SHORT CIRCUIT  - created for http://js13kgames.com/
+    SHORT CIRCUIT  - created for https://js13kgames.com/
     Author: Vincent Le Quang
 */
 

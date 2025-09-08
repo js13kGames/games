@@ -1,5 +1,5 @@
 ## Parlez13k
-A dumb dirty stupid simple messaging app game for [js13k gamejam](http://js13kgames.com/)
+A dumb dirty stupid simple messaging app game for [js13k gamejam](https://js13kgames.com/)
 
  - Keep passing messages until the computer wants to go out with you!
  - You can type anything and click send

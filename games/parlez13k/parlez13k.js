@@ -1,6 +1,6 @@
 // @author zmertens
 // @brief A message passing game for js13k game jam 2018
-// @link http://js13kgames.com/
+// @link https://js13kgames.com/
 // The trick in the game is to get the computer to
 // want to go out with you.
 // Basically, just keep asking it questions and eventually

@@ -114,7 +114,7 @@ button {
       Find the hidden pixel (<div class="p target" style="position:static;display:inline-block"></div>) and click it within 5 seconds!
     </div>
     <div class="panel" style="margin-top:80px">
-      <small>A <a href="http://js13kgames.com/" target="_blank">JS13KGames</a> compo entry (made in 2 hours) by <a target="_blank" href="https://twitter.com/chinchang457">Kushagra Gour</a></small>
+      <small>A <a href="https://js13kgames.com/" target="_blank">JS13KGames</a> compo entry (made in 2 hours) by <a target="_blank" href="https://twitter.com/chinchang457">Kushagra Gour</a></small>
     </div>
   </div>
   <div class="overlay"></div>
@@ -167,7 +167,7 @@ function gameOver() {
   document.body.classList.remove('super-level');
   document.body.classList.add('game-over');
   const difficulty = hardRadio.checked ? 'hard' : 'easy';
-  const url = `https://twitter.com/intent/tweet?text=I reached level ${currentLevel} on ${difficulty} mode in "The Lost Pixel" game!&url=http://js13kgames.com/games/the-lost-pixel/index.html&hashtags=js13kgames,js13k,gamedev&related=chinchang457`;
+  const url = `https://twitter.com/intent/tweet?text=I reached level ${currentLevel} on ${difficulty} mode in "The Lost Pixel" game!&url=https://js13kgames.com/games/the-lost-pixel/index.html&hashtags=js13kgames,js13k,gamedev&related=chinchang457`;
   window.open(url, 'The Lost Pixel', 'width=420,height=230,resizable');
 }
 startBtn.onclick = startGame;

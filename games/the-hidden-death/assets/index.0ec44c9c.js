@@ -47,7 +47,7 @@ void main() {
                 </div>
             </form>
         </dialog>
-    `;oe.innerHTML=t;const n=document.getElementById("game-menu"),s=document.getElementById("start");setTimeout(()=>{n.show(),s.focus()},50);const o=document.getElementById("sound");o.onchange=a=>{e.dispatch({type:"SET_SOUND",sound:a.target.checked})},s.onclick=()=>{e.dispatch({type:"RUN_START_ANIMATION"}),n.close()}},Le=e=>`http://twitter.com/intent/tweet?text=${encodeURI(e)}&hashtags=js13k,js13k2022&url=https://js13kgames.com/entries/2022`,Zt=(e,t,n)=>{const s=`I reached level ${t} ${n>1?`but died ${n} times along the way`:"and just died once"} in @jarvispact 's js13k entry for 2022: "The hidden Death". Can you do better?`,o=n>1?`but died ${n} times along the way`:"and just died once",a=`
+    `;oe.innerHTML=t;const n=document.getElementById("game-menu"),s=document.getElementById("start");setTimeout(()=>{n.show(),s.focus()},50);const o=document.getElementById("sound");o.onchange=a=>{e.dispatch({type:"SET_SOUND",sound:a.target.checked})},s.onclick=()=>{e.dispatch({type:"RUN_START_ANIMATION"}),n.close()}},Le=e=>`http://twitter.com/intent/tweet?text=${encodeURI(e)}&hashtags=js13k,js13k2022&url=https://js13kgames.com/games/2022`,Zt=(e,t,n)=>{const s=`I reached level ${t} ${n>1?`but died ${n} times along the way`:"and just died once"} in @jarvispact 's js13k entry for 2022: "The hidden Death". Can you do better?`,o=n>1?`but died ${n} times along the way`:"and just died once",a=`
         <dialog id="game-menu">
             <form method="dialog">
                 <h1>
