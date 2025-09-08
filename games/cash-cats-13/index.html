@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Cats - Full Version</title>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font: 14px system-ui;
+            background: #0e1120;
+            color: #e8ecff;
+            overflow-x: hidden;
+        }
+
+        /* Main App Container */
+        #app {
+            padding: 8px;
+        }
+
+        #layout {
+            display: grid;
+            align-items: start;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        /* Game Window */
+        #gameWindow {
+            position: relative;
+            width: 780px;
+            height: 460px;
+            border: 1px solid #23264b;
+            border-radius: 12px;
+            background: #101330;
+            overflow: hidden;
+        }
+
+        /* Title */
+        #title {
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            color: #cfe0ff;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Base Station */
+        #base {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            width: 170px;
+            height: 100px;
+            border: 1px solid #2b3569;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #151a39;
+        }
+
+        #baseLabel {
+            position: absolute;
+            left: 8px;
+            top: 6px;
+        }
+
+        #waterArea {
+            position: absolute;
+            right: 6px;
+            bottom: 6px;
+            font-size: 22px;
+        }
+
+        /* Coins */
+        .coin {
+            position: absolute;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Cat Container */
+        .cat {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            touch-action: manipulation;
+        }
+
+        .catSprite {
+            font-size: 30px;
+            line-height: 1;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Cat Status Badge */
+        .badge {
+            position: absolute;
+            top: -26px;
+            right: -10px;
+            font-size: 12px;
+            border: 1px solid #384177;
+            border-radius: 10px;
+            padding: 2px 5px;
+            background: #1a2044;
+            color: #cfe0ff;
+            white-space: nowrap;
+            transform: translateY(-10px);
+            display: none;
+        }
+
+        .catName {
+            font-size: 11px;
+            color: #cbd4ff;
+        }
+
+        /* Status Bars */
+        .bars {
+            display: flex;
+            gap: 6px;
+        }
+
+        .bar {
+            width: 46px;
+            height: 6px;
+            background: #232845;
+            border: 1px solid #2b3569;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .barFill {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #45d483, #39b36e);
+        }
+
+        .barLabel {
+            font-size: 11px;
+            color: #9aa3c7;
+            margin-top: 2px;
+            user-select: none;
+        }
+
+        /* Heart Animation */
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: heartFloat 0.9s ease-out forwards;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translate(-50%, -50%) translateY(0) scale(0.7);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) translateY(-34px) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        /* Upgrade Panel */
+        .upgradePanel {
+            border: 1px solid #262d55;
+            border-radius: 12px;
+            padding: 8px;
+            background: #121737;
+            margin-bottom: 8px;
+        }
+
+        .upgradeButton {
+            border: 1px solid #384177;
+            background: #1a2044;
+            color: #cfe0ff;
+            padding: 2px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 9px;
+        }
+
+        /* Stats Display */
+        #stats {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: #cfe0ff;
+            font-weight: 600;
+        }
+
+        /* Fish Drag */
+        #fish {
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            font-size: 22px;
+            cursor: grab;
+            user-select: none;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* Gold Display */
+        #gold {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(26, 32, 68, 0.8);
+            border: 1px solid #2b3569;
+            border-radius: 8px;
+            padding: 4px 8px;
+            color: #cfe0ff;
+            font-weight: 600;
+        }
+
+        /* Upgrades Panel */
+        #upgrades {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(26, 32, 68, 0.8);
+            border: 1px solid #2b3569;
+            border-radius: 8px;
+            padding: 6px;
+            color: #cfe0ff;
+            font-weight: 600;
+            max-width: 600px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            font-size: 11px;
+            display: none;
+        }
+
+        /* Grid Layout for Cats */
+        #upgrades > div:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        #upgrades > div:nth-child(2),
+        #upgrades > div:nth-child(3),
+        #upgrades > div:nth-child(4) {
+            grid-column: 2;
+        }
+
+        #upgrades > div:nth-child(5),
+        #upgrades > div:nth-child(6),
+        #upgrades > div:nth-child(7) {
+            grid-column: 3;
+        }
+
+        #upgrades > div:nth-child(8),
+        #upgrades > div:nth-child(9),
+        #upgrades > div:nth-child(10) {
+            grid-column: 4;
+        }
+
+        #upgrades > div:nth-child(11),
+        #upgrades > div:nth-child(12),
+        #upgrades > div:nth-child(13) {
+            grid-column: 5;
+        }
+
+        #upgrades > div:nth-child(2) { grid-row: 1; }
+        #upgrades > div:nth-child(3) { grid-row: 2; }
+        #upgrades > div:nth-child(4) { grid-row: 3; }
+        #upgrades > div:nth-child(5) { grid-row: 1; }
+        #upgrades > div:nth-child(6) { grid-row: 2; }
+        #upgrades > div:nth-child(7) { grid-row: 3; }
+        #upgrades > div:nth-child(8) { grid-row: 1; }
+        #upgrades > div:nth-child(9) { grid-row: 2; }
+        #upgrades > div:nth-child(10) { grid-row: 3; }
+        #upgrades > div:nth-child(11) { grid-row: 1; }
+        #upgrades > div:nth-child(12) { grid-row: 2; }
+        #upgrades > div:nth-child(13) { grid-row: 3; }
+
+        /* Toggle Button */
+        #toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 20;
+            user-select: none;
+        }
+
+        #toggle.hidden {
+            display: none;
+        }
+
+        #toggleButton {
+            font-size: 24px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            padding: 4px;
+        }
+
+        #toggleButton:hover {
+            opacity: 0.7;
+        }
+
+        /* Instructions */
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: #9aa3c7;
+            text-align: right;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Touch-friendly styles for mobile */
+        .coin {
+            min-width: 32px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .upgradeButton {
+            min-height: 32px;
+            min-width: 60px;
+            padding: 6px 8px;
+            font-size: 10px;
+            touch-action: manipulation;
+        }
+
+        #fish {
+            min-width: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            touch-action: manipulation;
+        }
+
+        .cat {
+            min-width: 60px;
+            min-height: 60px;
+        }
+
+        .catSprite {
+            font-size: 36px;
+            min-width: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bars {
+            gap: 8px;
+        }
+
+        .bar {
+            width: 52px;
+            height: 8px;
+        }
+
+        .barLabel {
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1000px) {
+            #layout {
+                grid-template-columns: 1fr;
+            }
+
+            #gameWindow {
+                width: 100%;
+                max-width: 780px;
+                height: auto;
+                min-height: 360px;
+            }
+
+            #instructions {
+                font-size: 9px;
+                bottom: 8px;
+                right: 8px;
+            }
+
+            #upgrades {
+                max-width: 500px;
+                font-size: 10px;
+                gap: 6px;
+                padding: 4px;
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .upgradeButton {
+                min-height: 28px;
+                min-width: 50px;
+                padding: 4px 6px;
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 600px) and (orientation: portrait) {
+            #gameWindow {
+                height: 400px;
+                min-height: 400px;
+                margin-bottom: 60px;
+            }
+
+            #instructions {
+                position: fixed;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                font-size: 10px;
+                color: #9aa3c7;
+                z-index: 30;
+                display: block;
+                background: rgba(14, 17, 32, 0.9);
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #2b3569;
+            }
+
+            .coin {
+                min-width: 40px;
+                min-height: 40px;
+                font-size: 32px;
+            }
+
+            .upgradeButton {
+                min-height: 36px;
+                min-width: 70px;
+                padding: 8px 10px;
+                font-size: 11px;
+                margin: 2px;
+            }
+
+            .cat {
+                min-width: 70px;
+                min-height: 70px;
+            }
+
+            .catSprite {
+                font-size: 42px;
+                min-width: 50px;
+                min-height: 50px;
+            }
+
+            .bars {
+                gap: 10px;
+            }
+
+            .bar {
+                width: 60px;
+                height: 10px;
+            }
+
+            .barLabel {
+                font-size: 14px;
+                margin-top: 4px;
+            }
+
+            #fish {
+                min-width: 50px;
+                min-height: 50px;
+                font-size: 32px;
+            }
+
+            #upgrades {
+                position: relative;
+                top: auto;
+                right: auto;
+                max-width: 100%;
+                margin: 10px;
+                grid-template-columns: repeat(5, 1fr);
+                font-size: 12px;
+                gap: 10px;
+            }
+
+            #toggle {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            #toggleButton {
+                font-size: 28px;
+            }
+
+            #gold {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+
+            #base {
+                width: 140px;
+                height: 80px;
+            }
+
+            #baseLabel {
+                font-size: 12px;
+            }
+
+            #waterArea {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #gameWindow {
+                height: 350px;
+                min-height: 350px;
+                margin-bottom: 60px;
+            }
+
+            #instructions {
+                position: fixed;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                font-size: 9px;
+                color: #9aa3c7;
+                z-index: 30;
+                display: block;
+                background: rgba(14, 17, 32, 0.9);
+                padding: 6px 10px;
+                border-radius: 6px;
+                border: 1px solid #2b3569;
+            }
+
+            .coin {
+                min-width: 36px;
+                min-height: 36px;
+                font-size: 28px;
+            }
+
+            .upgradeButton {
+                min-height: 32px;
+                min-width: 60px;
+                padding: 6px 8px;
+                font-size: 10px;
+            }
+
+            .cat {
+                min-width: 60px;
+                min-height: 60px;
+            }
+
+            .catSprite {
+                font-size: 36px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            .bars {
+                gap: 8px;
+            }
+
+            .bar {
+                width: 52px;
+                height: 8px;
+            }
+
+            .barLabel {
+                font-size: 12px;
+                margin-top: 3px;
+            }
+
+            #fish {
+                min-width: 44px;
+                min-height: 44px;
+                font-size: 28px;
+            }
+
+            #upgrades {
+                font-size: 11px;
+                gap: 8px;
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            #gold {
+                font-size: 13px;
+                padding: 5px 8px;
+            }
+
+            #base {
+                width: 120px;
+                height: 70px;
+            }
+
+            #baseLabel {
+                font-size: 11px;
+            }
+
+            #waterArea {
+                font-size: 18px;
+            }
+
+            #toggle {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            #toggleButton {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 600px) and (orientation: landscape) {
+            #gameWindow {
+                height: 250px;
+                min-height: 250px;
+                margin-bottom: 40px;
+            }
+
+            #instructions {
+                position: fixed;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                font-size: 8px;
+                color: #9aa3c7;
+                z-index: 30;
+                display: block;
+                background: rgba(14, 17, 32, 0.9);
+                padding: 4px 8px;
+                border-radius: 4px;
+                border: 1px solid #2b3569;
+            }
+
+            .coin {
+                min-width: 32px;
+                min-height: 32px;
+                font-size: 24px;
+            }
+
+            .upgradeButton {
+                min-height: 28px;
+                min-width: 50px;
+                padding: 4px 6px;
+                font-size: 9px;
+            }
+
+            .cat {
+                min-width: 50px;
+                min-height: 50px;
+            }
+
+            .catSprite {
+                font-size: 30px;
+                min-width: 35px;
+                min-height: 35px;
+            }
+
+            .bars {
+                gap: 6px;
+            }
+
+            .bar {
+                width: 45px;
+                height: 6px;
+            }
+
+            .barLabel {
+                font-size: 10px;
+                margin-top: 2px;
+            }
+
+            #fish {
+                min-width: 38px;
+                min-height: 38px;
+                font-size: 24px;
+            }
+
+            #upgrades {
+                position: relative;
+                top: auto;
+                right: auto;
+                max-width: 100%;
+                margin: 10px;
+                grid-template-columns: repeat(5, 1fr);
+                font-size: 10px;
+                gap: 6px;
+                display: grid;
+            }
+
+            #gold {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            #base {
+                width: 100px;
+                height: 60px;
+            }
+
+            #baseLabel {
+                font-size: 10px;
+            }
+
+            #waterArea {
+                font-size: 16px;
+            }
+
+            #toggle {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            #toggleButton {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) and (orientation: landscape) {
+            #gameWindow {
+                height: 200px;
+                min-height: 200px;
+                margin-bottom: 30px;
+            }
+
+            #instructions {
+                position: fixed;
+                bottom: 3px;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                font-size: 7px;
+                color: #9aa3c7;
+                z-index: 30;
+                display: block;
+                background: rgba(14, 17, 32, 0.9);
+                padding: 3px 6px;
+                border-radius: 3px;
+                border: 1px solid #2b3569;
+            }
+
+            .coin {
+                min-width: 28px;
+                min-height: 28px;
+                font-size: 20px;
+            }
+
+            .upgradeButton {
+                min-height: 24px;
+                min-width: 40px;
+                padding: 3px 5px;
+                font-size: 8px;
+            }
+
+            .cat {
+                min-width: 45px;
+                min-height: 45px;
+            }
+
+            .catSprite {
+                font-size: 26px;
+                min-width: 30px;
+                min-height: 30px;
+            }
+
+            .bars {
+                gap: 4px;
+            }
+
+            .bar {
+                width: 40px;
+                height: 5px;
+            }
+
+            .barLabel {
+                font-size: 9px;
+                margin-top: 1px;
+            }
+
+            #fish {
+                min-width: 32px;
+                min-height: 32px;
+                font-size: 20px;
+            }
+
+            #upgrades {
+                position: relative;
+                top: auto;
+                right: auto;
+                max-width: 100%;
+                margin: 8px;
+                grid-template-columns: repeat(5, 1fr);
+                font-size: 9px;
+                gap: 4px;
+                display: grid;
+            }
+
+            #gold {
+                font-size: 11px;
+                padding: 3px 5px;
+            }
+
+            #base {
+                width: 80px;
+                height: 50px;
+            }
+
+            #baseLabel {
+                font-size: 9px;
+            }
+
+            #waterArea {
+                font-size: 14px;
+            }
+
+            #toggle {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            #toggleButton {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="layout">
+            <section>
+                <div id="gameWindow">
+                    <div id="title"></div>
+                    <div id="base">
+                        <div id="baseLabel">🏦 Base</div>
+                        <div id="waterArea">💧</div>
+                        <div id="fish">🐟</div>
+                    </div>
+                    <div id="gameArea"></div>
+                    <div id="gold">💰 0</div>
+                    <div id="upgrades"></div>
+                    <div id="toggle">
+                        <span id="toggleButton">➕</span>
+                    </div>
+                    <div id="instructions">
+                        Feed the cat 🐟, pet the cat 💖, upgrade the cat ➕<br>
+                        Help the cats, touch the 💰. Kitty13k is special!
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Game Variables
+        let gameGold = 0;
+        let coinArray = [];
+        let catArray = [];
+
+        // Constants
+        const PADDING_WIDTH = 6;
+        const MAX_COINS = 13;
+
+        // DOM Element References
+        const getElementById = (id) => document.getElementById(id);
+        const createElement = document.createElement.bind(document);
+        const getBoundingRect = (element) => element.getBoundingClientRect();
+
+        // Main DOM Elements
+        const gameWindow = getElementById('gameWindow');
+        const gameArea = getElementById('gameArea');
+        const baseStation = getElementById('base');
+        const waterArea = getElementById('waterArea');
+        const goldDisplay = getElementById('gold');
+        const upgradesPanel = getElementById('upgrades');
+        const fishElement = getElementById('fish');
+        const layoutContainer = getElementById('layout');
+        const toggleButton = getElementById('toggle');
+        const toggleButtonElement = getElementById('toggleButton');
+
+        // Utility Functions
+        const randomFloat = (min, max) => Math.random() * (max - min) + min;
+        const randomInt = (min, max) => Math.floor(randomFloat(min, max + 1));
+        const calculateDistance = (x1, y1, x2, y2) => Math.hypot(x1 - x2, y1 - y2);
+
+        // Get game window bounds
+        const getWindowBounds = () => {
+            const rect = getBoundingRect(gameWindow);
+            return {
+                x: PADDING_WIDTH,
+                y: PADDING_WIDTH,
+                width: rect.width - PADDING_WIDTH * 2,
+                height: rect.height - PADDING_WIDTH * 2
+            };
+        };
+
+        // Resize handler
+        const resizeGame = () => {
+            const width = Math.max(420, Math.min(innerWidth, 1180) - 8 - 2);
+            gameWindow.style.width = width + 'px';
+            layoutContainer.style.width = width + 'px';
+            gameWindow.style.height = Math.max(360, Math.min(innerHeight, 720) - 8 * 2 - 4) + 'px';
+        };
+
+        window.onresize = resizeGame;
+
+        // Coin Management
+        const spawnCoin = () => {
+            if (coinArray.length >= MAX_COINS) return;
+
+            const bounds = getWindowBounds();
+            const coinElement = createElement('div');
+            coinElement.className = 'coin';
+            coinElement.textContent = '💰';
+
+            const x = randomInt(bounds.x + 20, bounds.width - 20);
+            const y = randomInt(bounds.y + 20, bounds.height - 20);
+
+            coinElement.style.left = x + 'px';
+            coinElement.style.top = y + 'px';
+            coinElement.dataset.value = String(randomInt(1, 3));
+
+            coinElement.onclick = () => {
+                gameGold += +coinElement.dataset.value;
+                goldDisplay.textContent = '💰 ' + gameGold;
+                coinElement.remove();
+                coinArray = coinArray.filter(coin => coin.element !== coinElement);
+                spawnCoin();
+            };
+
+            gameArea.appendChild(coinElement);
+            coinArray.push({ element: coinElement, x: x, y: y });
+        };
+
+        // Spawn coins periodically
+        setInterval(spawnCoin, 1100);
+
+        // Cat Class
+        class Cat {
+            constructor(name, x, y) {
+                this.name = name;
+                this.x = x;
+                this.y = y;
+                this.baseSpeed = 65;
+                this.currentSpeed = this.baseSpeed;
+                this.carryCapacity = 6;
+                this.currentCarry = 0;
+                this.loveLevel = 1.0;
+                this.thirstLevel = 1.0;
+                this.currentState = 'idle';
+                this.targetPosition = null;
+                this.petBoostEndTime = 0;
+                this.speedUpgradeCost = 13;
+                this.capacityUpgradeCost = 13;
+                this.buildCatElement();
+            }
+
+            buildCatElement() {
+                const catElement = this.catElement = createElement('div');
+                catElement.className = 'cat';
+                catElement.style.left = this.x + 'px';
+                catElement.style.top = this.y + 'px';
+
+                // Badge for carrying coins
+                const badge = this.badge = createElement('div');
+                badge.className = 'badge';
+                badge.textContent = '💰 x0';
+                catElement.appendChild(badge);
+
+                // Button for needs
+                const button = this.button = createElement('div');
+                button.className = 'button';
+                catElement.appendChild(button);
+
+                // Cat sprite
+                const sprite = this.sprite = createElement('div');
+                sprite.className = 'catSprite';
+                sprite.textContent = '🐈‍⬛';
+                catElement.appendChild(sprite);
+
+                // Cat name
+                const nameElement = createElement('div');
+                nameElement.className = 'catName';
+                nameElement.textContent = this.name;
+                catElement.appendChild(nameElement);
+
+                // Status bars
+                const barsContainer = createElement('div');
+                barsContainer.className = 'bars';
+
+                const createBar = (emoji) => {
+                    const barContainer = createElement('div');
+                    const bar = createElement('div');
+                    const barFill = createElement('div');
+                    const barLabel = createElement('div');
+
+                    barContainer.style.display = 'flex';
+                    barContainer.style.flexDirection = 'column';
+                    barContainer.style.alignItems = 'center';
+
+                    bar.className = 'bar';
+                    barFill.className = 'barFill';
+                    bar.appendChild(barFill);
+
+                    barLabel.className = 'barLabel';
+                    barLabel.textContent = emoji;
+
+                    barContainer.appendChild(bar);
+                    barContainer.appendChild(barLabel);
+
+                    return { fill: barFill, container: barContainer, label: barLabel };
+                };
+
+                const loveBar = createBar('💖');
+                const thirstBar = createBar('💧');
+                const hungerBar = createBar('🐟');
+                barsContainer.appendChild(loveBar.container);
+                barsContainer.appendChild(thirstBar.container);
+                catElement.appendChild(barsContainer);
+
+                // Click to pet
+                catElement.onclick = () => this.petCat(0.25);
+
+                gameArea.appendChild(catElement);
+                this.statusBars = {
+                    love: loveBar.fill,
+                    thirst: thirstBar.fill,
+                    loveLabel: loveBar.label
+                };
+            }
+
+            setState(newState) {
+                this.currentState = newState;
+                this.button.style.display = (newState === 'hungry' || newState === 'thirsty' || newState === 'sad') ? 'block' : 'none';
+                this.button.textContent = newState === 'hungry' ? '🐟' : newState === 'thirsty' ? '💧' : newState === 'sad' ? '💖' : '';
+            }
+
+            goToPosition(x, y) {
+                this.targetPosition = { x: x, y: y };
+            }
+
+            isAtTarget(threshold = 8) {
+                return this.targetPosition && calculateDistance(this.x, this.y, this.targetPosition.x, this.targetPosition.y) <= threshold;
+            }
+
+            isNearBase(threshold = 28) {
+                const baseRect = getBoundingRect(baseStation);
+                const windowRect = getBoundingRect(gameWindow);
+                const baseX = baseRect.left - windowRect.left + baseRect.width * 0.45;
+                const baseY = baseRect.top - windowRect.top + baseRect.height * 0.6;
+                return calculateDistance(this.x, this.y, baseX, baseY) < threshold;
+            }
+
+            findNearestCoin() {
+                let nearestCoin = null;
+                let bestDistance = 1e9;
+
+                for (const coin of coinArray) {
+                    const distance = calculateDistance(this.x, this.y, coin.x, coin.y);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        nearestCoin = coin;
+                    }
+                }
+
+                return nearestCoin;
+            }
+
+            petCat(amount) {
+                this.loveLevel = Math.min(1, this.loveLevel + amount);
+                if (this.currentState === 'sad') {
+                    this.setState('idle');
+                }
+                this.petBoostEndTime = performance.now() + 7000;
+
+                const heartElement = createElement('div');
+                heartElement.className = 'heart';
+                heartElement.textContent = '💖';
+                heartElement.style.left = this.x + 'px';
+                heartElement.style.top = (this.y - 8) + 'px';
+                gameArea.appendChild(heartElement);
+
+                setTimeout(() => heartElement.remove(), 900);
+            }
+
+            moveCat(deltaTime) {
+                if (!this.targetPosition) return;
+
+                const deltaX = this.targetPosition.x - this.x;
+                const deltaY = this.targetPosition.y - this.y;
+                const distance = Math.hypot(deltaX, deltaY);
+
+                if (distance < 0.001) return;
+
+                const moveDistance = Math.min(this.currentSpeed * deltaTime, distance);
+                this.x += (deltaX / distance) * moveDistance;
+                this.y += (deltaY / distance) * moveDistance;
+            }
+
+            returnToBase() {
+                const baseRect = getBoundingRect(baseStation);
+                const windowRect = getBoundingRect(gameWindow);
+                const baseX = baseRect.left - windowRect.left + baseRect.width * 0.45;
+                const baseY = baseRect.top - windowRect.top + baseRect.height * 0.6;
+                this.goToPosition(baseX, baseY);
+                this.moveCat(1 / 60);
+            }
+
+            updateCat(deltaTime, currentTime) {
+                // Decrease needs over time
+                // Update thirst only if not in sad or hungry state
+                if (this.currentState !== 'sad' && this.currentState !== 'hungry') {
+                    this.thirstLevel = Math.max(0, this.thirstLevel - deltaTime * 0.012);
+                }
+                this.loveLevel = Math.max(0, this.loveLevel - deltaTime * 0.012);
+
+                // Calculate current speed based on love and pet boost
+                this.currentSpeed = this.baseSpeed * (1 + this.loveLevel * 0.2) * (currentTime < this.petBoostEndTime ? 1.15 : 1);
+
+                // Check for sad state (low love)
+                if (this.loveLevel <= 0 && this.currentState !== 'sad') {
+                    this.setState('sad');
+                    this.targetPosition = null;
+                }
+
+                // Check for hungry state (not for Kitty13k)
+
+                // Check for thirsty state
+                if (this.thirstLevel < 0.22 && this.currentState !== 'hungry' && this.currentState !== 'drink' && this.currentState !== 'sad') {
+                    const waterRect = getBoundingRect(waterArea);
+                    const windowRect = getBoundingRect(gameWindow);
+                    this.setState('thirsty');
+                    this.goToPosition(waterRect.left - windowRect.left + 8, waterRect.top - windowRect.top + 8);
+                }
+
+                // If cat is sad, don't move
+                if (this.currentState === 'sad') {
+                    return;
+                }
+
+                // Handle different states
+                if (this.currentState === 'thirsty' || this.currentState === 'drink') {
+                    if (this.isAtTarget()) {
+                        this.setState('drink');
+                        this.thirstLevel = Math.min(1, this.thirstLevel + deltaTime * 0.25);
+                        if (this.thirstLevel > 0.95) {
+                            this.setState('idle');
+                            this.targetPosition = null;
+                        }
+                    } else {
+                        this.moveCat(deltaTime);
+                    }
+                } else {
+                    if (this.currentCarry >= this.carryCapacity) {
+                        this.returnToBase();
+                    } else {
+                        const nearestCoin = this.findNearestCoin();
+                        if (nearestCoin) {
+                            this.goToPosition(nearestCoin.x, nearestCoin.y);
+                        if (this.isAtTarget()) {
+                            this.currentCarry += +(nearestCoin.element.dataset.value || 1);
+                            this.loveLevel = Math.max(0, this.loveLevel - 0.01);
+                            nearestCoin.element.remove();
+                            coinArray = coinArray.filter(coin => coin !== nearestCoin);
+                            spawnCoin();
+                        } else {
+                                this.moveCat(deltaTime);
+                            }
+                        } else {
+                            if (!this.targetPosition || this.isAtTarget(12)) {
+                                const bounds = getWindowBounds();
+                                this.goToPosition(randomFloat(bounds.x + 30, bounds.width - 30), randomFloat(bounds.y + 30, bounds.height - 30));
+                            }
+                            this.moveCat(deltaTime);
+                        }
+                    }
+                }
+
+                // Deposit coins at base
+                if (this.currentState !== 'drink' && this.currentCarry > 0 && this.isNearBase()) {
+                    gameGold += this.currentCarry;
+                    this.currentCarry = 0;
+                    goldDisplay.textContent = '💰 ' + gameGold;
+                }
+
+                // Update UI elements
+                this.badge.style.display = this.currentCarry > 0 ? 'block' : 'none';
+                this.badge.textContent = '💰 x' + this.currentCarry;
+
+                this.statusBars.love.style.width = (this.loveLevel * 100 | 0) + '%';
+                this.statusBars.thirst.style.width = (this.thirstLevel * 100 | 0) + '%';
+
+
+                this.catElement.style.left = this.x + 'px';
+                this.catElement.style.top = this.y + 'px';
+            }
+        }
+
+        // Build all cats
+        const buildAllCats = () => {
+            const rect = getBoundingRect(gameWindow);
+            catArray = [
+                new Cat('Kitty13k', 300, rect.height - 200),
+                new Cat('Whiskers', 150, rect.height - 100),
+                new Cat('Mittens', 150, rect.height - 150),
+                new Cat('Paws', 150, rect.height - 200),
+                new Cat('Luna', 150, rect.height - 250),
+                new Cat('Shadow', 150, rect.height - 300),
+                new Cat('Bella', 150, rect.height - 350),
+                new Cat('Max', 450, rect.height - 100),
+                new Cat('Lily', 450, rect.height - 150),
+                new Cat('Tiger', 450, rect.height - 200),
+                new Cat('Milo', 450, rect.height - 250),
+                new Cat('Nala', 450, rect.height - 300),
+                new Cat('Oreo', 450, rect.height - 350)
+            ];
+            
+
+            // Make Kitty13k special
+            catArray[0].baseSpeed = 180;
+            catArray[0].carryCapacity = 18;
+            catArray[0].speedUpgradeCost = 13;
+            catArray[0].capacityUpgradeCost = 13;
+        };
+
+        // Update upgrades UI
+        const updateUpgradesUI = () => {
+            upgradesPanel.innerHTML = '';
+
+            catArray.forEach((cat, index) => {
+                const catUpgradeDiv = createElement('div');
+                catUpgradeDiv.style.margin = '3px 0';
+                catUpgradeDiv.style.textAlign = 'center';
+
+                catUpgradeDiv.innerHTML = `
+                    <b>🐈‍⬛ ${cat.name}</b><br>
+                    ⚡${cat.baseSpeed | 0}px/s 👜${cat.carryCapacity}<br>
+                    <button class="upgradeButton" id="speedUpgrade${index}">⚡+15(${cat.speedUpgradeCost}g)</button>
+                    <button class="upgradeButton" id="capacityUpgrade${index}">👜+4(${cat.capacityUpgradeCost}g)</button>
+                `;
+
+                const speedButton = catUpgradeDiv.querySelector('#speedUpgrade' + index);
+                const capacityButton = catUpgradeDiv.querySelector('#capacityUpgrade' + index);
+
+                speedButton.onclick = () => {
+                    if (gameGold < cat.speedUpgradeCost) return;
+                    gameGold -= cat.speedUpgradeCost;
+                    goldDisplay.textContent = '💰 ' + gameGold;
+                    cat.baseSpeed += 15;
+                    if (index !== 0) cat.speedUpgradeCost += 13; // Keep Kitty13k costs constant
+                    updateUpgradesUI();
+                };
+
+                capacityButton.onclick = () => {
+                    if (gameGold < cat.capacityUpgradeCost) return;
+                    gameGold -= cat.capacityUpgradeCost;
+                    goldDisplay.textContent = '💰 ' + gameGold;
+                    cat.carryCapacity += 4;
+                    if (index !== 0) cat.capacityUpgradeCost += 13; // Keep Kitty13k costs constant
+                    updateUpgradesUI();
+                };
+
+                upgradesPanel.appendChild(catUpgradeDiv);
+            });
+        };
+
+        // Toggle upgrades panel
+        const toggleUpgradesPanel = () => {
+            if (upgradesPanel.style.display === 'none') {
+                upgradesPanel.style.display = 'grid';
+                toggleButtonElement.textContent = '➖';
+            } else {
+                upgradesPanel.style.display = 'none';
+                toggleButtonElement.textContent = '➕';
+            }
+        };
+
+        toggleButtonElement.onclick = toggleUpgradesPanel;
+
+        // Fish drag functionality
+        const setupFishDrag = () => {
+            let draggedFish = null;
+
+            const moveFish = (event) => {
+                if (!draggedFish) return;
+                event.preventDefault();
+
+                const x = event.clientX || (event.touches && event.touches[0].clientX) || 0;
+                const y = event.clientY || (event.touches && event.touches[0].clientY) || 0;
+
+                draggedFish.style.position = 'fixed';
+                draggedFish.style.left = x + 'px';
+                draggedFish.style.top = y + 'px';
+                draggedFish.style.transform = 'translate(-50%, -50%)';
+                draggedFish.style.pointerEvents = 'none';
+                draggedFish.style.fontSize = '40px';
+                draggedFish.style.zIndex = '1000';
+                draggedFish.style.opacity = '0.8';
+            };
+
+            const releaseFish = () => {
+                if (!draggedFish) return;
+
+                const x = parseFloat(draggedFish.style.left);
+                const y = parseFloat(draggedFish.style.top);
+
+                for (const cat of catArray) {
+                    const catRect = getBoundingRect(cat.catElement);
+                    const catCenterX = catRect.left + catRect.width / 2;
+                    const catCenterY = catRect.top + catRect.height / 2;
+
+                    if (calculateDistance(x, y, catCenterX, catCenterY) < 60) {
+                        cat.loveLevel = 1.0; // Llenar completamente la barra de amor
+                        cat.petBoostEndTime = performance.now() + 7000; // Activar boost de mascota
+                        if (cat.currentState === 'sad') {
+                            cat.setState('idle');
+                        }
+                        
+                        // Actualizar inmediatamente la barra visual de amor
+                        cat.statusBars.love.style.width = '100%';
+                        
+                        // Mostrar efecto visual del corazón
+                        const heartElement = createElement('div');
+                        heartElement.className = 'heart';
+                        heartElement.textContent = '💖';
+                        heartElement.style.left = cat.x + 'px';
+                        heartElement.style.top = (cat.y - 8) + 'px';
+                        gameArea.appendChild(heartElement);
+                        setTimeout(() => heartElement.remove(), 900);
+                        
+                        break;
+                    }
+                }
+
+                draggedFish.remove();
+                draggedFish = null;
+                window.removeEventListener('pointermove', moveFish);
+                window.removeEventListener('pointerup', releaseFish);
+                window.removeEventListener('touchend', releaseFish);
+            };
+
+            const startFishDrag = (event) => {
+                event.preventDefault();
+                if (draggedFish) return;
+
+                const fishElement = createElement('div');
+                fishElement.textContent = '🐟';
+                fishElement.style.position = 'fixed';
+                fishElement.style.fontSize = '40px';
+                fishElement.style.zIndex = '1000';
+                fishElement.style.pointerEvents = 'none';
+                fishElement.style.opacity = '0.8';
+
+                document.body.appendChild(fishElement);
+                draggedFish = fishElement;
+                moveFish(event);
+
+                window.addEventListener('pointermove', moveFish);
+                window.addEventListener('pointerup', releaseFish);
+                window.addEventListener('touchend', releaseFish);
+            };
+
+            if ('ontouchstart' in window) {
+                fishElement.addEventListener('touchstart', startFishDrag);
+            } else {
+                fishElement.addEventListener('pointerdown', startFishDrag);
+            }
+        };
+
+        // Initialize game
+        const initializeGame = () => {
+            resizeGame();
+            buildAllCats();
+            updateUpgradesUI();
+
+            // Spawn initial coins
+            for (let i = 0; i < 13; i++) {
+                spawnCoin();
+            }
+
+            setupFishDrag();
+
+            // Game loop
+            let lastTime = performance.now();
+            const gameLoop = (currentTime) => {
+                const deltaTime = Math.min(0.033, (currentTime - lastTime) / 1000);
+                lastTime = currentTime;
+
+                catArray.forEach(cat => cat.updateCat(deltaTime, currentTime));
+                requestAnimationFrame(gameLoop);
+            };
+
+            gameLoop(lastTime);
+        };
+
+        // Start the game
+        initializeGame();
+    </script>
+</body>
+</html>
