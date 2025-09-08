@@ -1,0 +1,10 @@
+{
+  "short_name": "Roni and Kira",
+  "name": "Roni and Kira",
+  "icons": [{ "src": "icon.png", "type": "image/png", "sizes": "512x512" }],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#503c6f",
+  "background_color": "#503c6f",
+  "orientation": "portrait"
+}
