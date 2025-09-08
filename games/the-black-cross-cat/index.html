@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the-black-crosscat-js13k</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #game-container {
+            position: relative;
+        }
+        #game {
+            background: #111;
+            cursor: pointer;
+        }
+        .loading {
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+  <script type="module" crossorigin src="./game.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game" width="800" height="600"></canvas>
+    </div>
+    
+</body>
+</html>
