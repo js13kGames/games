@@ -1,0 +1,87 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background: #2c3e50;
+    font-family: Arial, Helvetica, sans-serif;
+    color:white;    
+    margin: 0;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+#message {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#shuffle-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#shuffle-button:hover {
+    background-color: #2980b9;
+}
+
+#game-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+#puzzle-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#puzzle {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(4, 100px);
+    gap: 5px;
+    background: #34495e;
+    padding: 5px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.tile {
+    width: 100px;
+    height:100px;
+    background-image: url(asset/cat1.jpg);
+    background-size:400px 400px;
+    cursor:pointer;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+.tile:hover {
+    transform: scale(1.05);
+}
+.empty {
+    background: none;
+}
+
+#reference {
+    text-align: center;
+}
+
+.reference-img {
+    width: 200px;
+    height: 200px;
+    border: 3px solid white;
+    border-radius: 10px;
+}
+
