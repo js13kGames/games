@@ -42,7 +42,7 @@ var Grid = {
                     _this.checkForVictory(e.target.position);
                 });
             }
-        };
+        }
     },
     
     /**
@@ -71,28 +71,28 @@ var Grid = {
         for (i = 0; i < this.arrayChecked.length; i++) {
             for (j = 0; j < this.arrayChecked[i].length; j++) {
                 counter += this.arrayChecked[i][j];
-            };
+            }
             if(counter === this.arrayChecked.length) {
                 this.victory();
                 break;
                 return;
             }
             counter = 0;
-        };
+        }
         
         /* CHECK VERTICALY */
         counter = 0;
         for (i = 0; i < this.arrayChecked[0].length; i++) {
             for (j = 0; j < this.arrayChecked.length; j++) {
                 counter += this.arrayChecked[j][i];
-            };
+            }
             if(counter === this.arrayChecked[0].length) {
                 this.victory();
                 break;
                 return;
             }
             counter = 0;
-        };
+        }
         
         /* CHECK DIAGONAL LEFT TO RIGHT */
         counter = 0;
@@ -103,7 +103,7 @@ var Grid = {
                 break;
                 return;
             }
-        };
+        }
         
         /* CHECK DIAGONAL RIGHT TO LEFT */
         counter = 0;
@@ -115,7 +115,7 @@ var Grid = {
                 break;
                 return;
             }
-        };
+        }
     },
     
     /**

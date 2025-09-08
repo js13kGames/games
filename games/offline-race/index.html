@@ -4,7 +4,6 @@
     <title>Offline Race</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link rel="shortcut icon" href="about:blank">
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
@@ -12,6 +11,6 @@
   </body>
   <script src="utils.js"></script>
   <script>
-    loadScripts(['/socket.io.js','shared.js','game.min.js'],[], () => {G = new Game()})
+    loadScripts(['/socket.io.js','client.js'],[], () => {G = new Game()})
   </script>
 </html>

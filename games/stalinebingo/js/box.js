@@ -1,8 +1,13 @@
+function addElement (tag, className, html, daddy) {
+  newElement = document.createElement(tag);
+  newElement.innerHTML = html;
+  newElement.setAttribute("class", className);
+  daddy[0].appendChild(newElement);
+  return newElement
+}
+
 ;(function ()
 {
-    /**
-     * 
-     */
     this.Box = (function ()
     {
         

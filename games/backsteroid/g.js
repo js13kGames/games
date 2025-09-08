@@ -506,7 +506,7 @@ function multiEndLoop() {
 			return {score:Math.max(el.highscore,calcScore(el)),name:el.name,kills:el.kills,isP:el==player};
 		}).sort((s1,s2)=>{
 			return s2.score - s1.score;
-		});;
+		});
 		drawLeaderBoard(scores);
 
 		writeLine("X to restart / C to title screen",20,300,560,CENTER);

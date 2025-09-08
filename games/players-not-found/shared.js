@@ -1,5 +1,3 @@
-"use strict";
-
 const SpriteW = 32;
 const SpriteH = 64;
 const MapW = 1000;

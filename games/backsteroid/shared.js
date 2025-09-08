@@ -1,9 +1,4 @@
-/*	All the game logic is here, because the client have to run the game itself for solo game,
-	and the server too for multiplayer.. */
-
-
 /// VARIABLES
-
 const width=600;
 const wAstMin = 7;
 const wAstMax = 60;
