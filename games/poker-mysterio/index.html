@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="mobile-web-app-capable" content="yes" />
+    <title>Poker Mysterio</title>
+    <style>
+body { margin:0; padding:0; background:#0f5f3f; overflow:hidden; user-select:none; -webkit-user-select:none; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+#board { position:relative; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; z-index:1; }
+canvas { display:block; touch-action:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; image-rendering:pixelated; }
+@media (orientation: portrait){ #board{flex-direction:column;} #canvas-main{order:2;} #canvas-aux{order:1;} }
+@media (orientation: landscape){ #board{flex-direction:row;} #canvas-main{order:2;} #canvas-aux{order:1;} }
+*{ touch-action:manipulation; }
+.plasma-bg { position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; image-rendering:pixelated; }
+@media (prefers-reduced-motion: reduce){ .plasma-bg { display:none; } }
+    </style>
+		<script type="module" crossorigin src="./assets/index-C7TSFyfN.js"></script>
+	</head>
+	<body>
+    <canvas id="canvas-bg" width="512" height="240" class="plasma-bg"></canvas>
+		<div id="board">
+			<canvas width="256" height="240" id="canvas-aux"></canvas>
+			<canvas width="256" height="240" id="canvas-main"></canvas>
+		</div>
+  </body>
+</html>
