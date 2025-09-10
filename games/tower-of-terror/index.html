@@ -1,0 +1,95 @@
+<!doctype HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>TOWER OF TERROR</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <svg id="svg" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <radialGradient id="portalGradient">
+                    <stop offset="40%" stop-color="lightblue" />
+                    <stop offset="100%" stop-color="blue" />
+                </radialGradient>
+                <circle id="portal" cx="0" cy="0" r="18" fill="url('#portalGradient')"></circle>
+                <g id="goodluck">
+                    <circle cx="0" cy="0" r="18" fill="green"></circle>
+                    <circle cx="0" cy="-8" r="7" fill="none" stroke="white" stroke-width="6"></circle>
+                    <circle cx="0" cy="7" r="8" fill="none" stroke="white" stroke-width="6"></circle>
+                </g>
+                <g id="badluck">
+                    <circle cx="0" cy="0" r="18" fill="red"></circle>
+                    <line x1="-8" y1="-15" x2="-8" y2="15" stroke="orange" stroke-width="6"/>
+                    <path d="M 0 -15 A 8 5 0 1 1 0 0" fill="none" stroke="orange" stroke-width="6" />
+                    <path d="M 0 0 A 8 5 0 1 1 0 15" fill="none" stroke="orange" stroke-width="6" />
+                </g>
+                <g id="horseshoe">
+                    <circle cx="0" cy="0" r="18" fill="darkgray"></circle>
+                    <path d="M -10 0 A 10 10 0 1 0 10 0" fill="none" stroke="gray" stroke-width="10" />
+                    <line x1="-10" y1="1" x2="-9" y2="-15" stroke="gray" stroke-width="10"></line>
+                    <line x1="10" y1="1" x2="9" y2="-15" stroke="gray" stroke-width="10"></line>
+                </g>
+                <g id="head1">
+                    <circle cx="0" cy="0" r="18" fill="#d6b45c"></circle>
+                    <path d="M -18 0 A 8 8 0 1 1 18 0" fill="none" stroke="#381e06" stroke-width="6" />
+                    <circle cx="-8" cy="-2" r="2" fill="#4d4020"></circle>
+                    <circle cx="8" cy="-2" r="2" fill="#4d4020"></circle>
+                    <line x1="-4" y1="8" x2="4" y2="8" stroke="#965518" stroke-width="4" ></line>
+                </g>
+                <line id="head2hair" x1="0" y1="0" x2="2" y2="-10" stroke="#381e06" stroke-width="5" ></line>
+                <g id="head2">
+                    <circle cx="0" cy="0" r="18" fill="#d6b45c"></circle>
+                    <path d="M -17 0 A 8 8 0 1 1 17 0" fill="none" stroke="#381e06" stroke-width="6" />
+                    <circle cx="-7" cy="-2" r="3" fill="#4d4020"></circle>
+                    <circle cx="7" cy="-2" r="3" fill="#4d4020"></circle>
+                    <line x1="0" y1="13" x2="0" y2="5" stroke="#965518" stroke-width="8" ></line>
+                    <use href="#head3hair" x="-14" y="-7"></use>
+                    <use href="#head3hair" x="-5" y="-14"></use>
+                    <use href="#head3hair" x="5" y="-14"></use>
+                    <use href="#head3hair" x="14" y="-7"></use>
+                </g>
+                <line id="head3hair" x1="0" y1="0" x2="1" y2="-7" stroke="#381e06" stroke-width="5" ></line>
+                <g id="head3">
+                    <circle cx="0" cy="0" r="18" fill="#d6b45c"></circle>
+                    <path d="M -16 0 A 8 8 0 1 1 16 0" fill="none" stroke="#381e06" stroke-width="6" />
+                    <circle cx="-7" cy="-2" r="3" fill="#4d4020"></circle>
+                    <circle cx="7" cy="-2" r="3" fill="#4d4020"></circle>
+                    <line x1="0" y1="14" x2="0" y2="4" stroke="#965518" stroke-width="8" ></line>
+                    <use href="#head2hair" x="-14" y="-7"></use>
+                    <use href="#head2hair" x="-5" y="-14"></use>
+                    <use href="#head2hair" x="5" y="-14"></use>
+                    <use href="#head2hair" x="14" y="-7"></use>
+                </g>
+                <line id="head4hair" x1="0" y1="0" x2="3" y2="-15" stroke="#381e06" stroke-width="5" ></line>
+                <g id="head4">
+                    <circle cx="0" cy="0" r="18" fill="#d6b45c"></circle>
+                    <path d="M -15 0 A 8 8 0 1 1 15 0" fill="none" stroke="#381e06" stroke-width="6" />
+                    <circle cx="-7" cy="-2" r="4" fill="#4d4020"></circle>
+                    <circle cx="7" cy="-2" r="4" fill="#4d4020"></circle>
+                    <line x1="0" y1="15" x2="0" y2="3" stroke="#965518" stroke-width="8" ></line>
+                    <use href="#head4hair" x="-14" y="-7"></use>
+                    <use href="#head4hair" x="-5" y="-14"></use>
+                    <use href="#head4hair" x="5" y="-14"></use>
+                    <use href="#head4hair" x="14" y="-7"></use>
+                </g>
+                <g id="cat">
+                    <circle cx="0" cy="3" r="13" fill="#313331" stroke="black" ></circle>
+                    <polygon points="-15,-10 -10,-18 -5,-13 0,-13 5,-13 10,-18 15,-10 0,15" fill="#313331" stroke="black" />
+                    <polygon points="-8,-3 -2,-3 -6,-6" fill="red" />
+                    <polygon points="-5,-3 -3,-3 -5,-4" fill="yellow" />
+                    <polygon points="8,-3 2,-3 6,-6" fill="red" />
+                    <polygon points="5,-3 3,-3 5,-4" fill="yellow" />
+                    <polygon points="-5,0 5,0 0,5" fill="red"  stroke="black"/>
+                </g>
+            </defs>
+        </svg>
+        <script src="src/svg.js"></script>
+        <script src="src/audio.js"></script>
+        <script src="src/menu.js"></script>
+        <script src="src/level.js"></script>
+        <script src="src/input.js"></script>
+        <script src="src/view.js"></script>
+        <script src="src/game.js"></script>
+    </body>
+</html>
