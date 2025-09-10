@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catris</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            color: #eee;
+            font-family: sans-serif;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            border: 2px solid #ccc;
+            background-color: #000;
+        }
+        p {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+         #gameContainer {
+             position: relative;
+             display: inline-block;
+         }
+        #game {
+            display: block;
+            background: #1c1c2e;
+            border-radius: 16px;
+            box-shadow: 0 0 56px #0009;
+        }
+        #startGame {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 24px 42px;
+            font-size: 2rem;
+            font-family: inherit;
+            color: #fff7e0;
+            background: rgba(200, 80, 255, 0.85);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 40px #56138899, 0 1.5px 6px #fff3 inset;
+            backdrop-filter: blur(1.5px);
+            transition: transform 0.07s, box-shadow 0.18s;
+            outline: none;
+            z-index: 2;
+        }
+        #startGame:hover, #startGame:focus {
+            background: rgba(255, 122, 200, 0.95);
+            transform: translate(-50%, -50%) scale(1.06);
+            box-shadow: 0 8px 48px #ee43becc, 0 1.5px 8px #fff6 inset;
+        }
+        #scorePanel {
+            min-width: 220px;   /* vorher 120px */
+            background: #3a316f;
+            color: #fff7e0;
+            border-radius: 16px;
+            font-size: 1.8rem;
+            box-shadow: 0 1px 22px #0006;
+            padding: 48px 30px; /* vorher 28px 18px */
+            user-select: none;
+            text-align: center;
+            font-family: inherit;
+        }
+        #scorePanel div:first-child {
+            font-size: 1.25rem;
+            opacity: 0.85;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        #scoreValue {
+            font-weight: bold;
+            font-size: 2.4rem;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        #textOverlay {
+            position: absolute;
+            width: 100%;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #fff7e0;
+            -webkit-text-stroke: 10px black;
+            paint-order: stroke fill;
+            font-weight: 900;
+            text-align: center;
+            display: none;
+            will-change: transform, opacity;
+            animation: fadeInScale 2s ease-out forwards;
+        }
+
+        /* Fade-in + scale animation for textOverlay */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 0%) scale(0.2) rotate(-10deg);
+            }
+            30% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(5deg);
+            }
+            90% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(5deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-80%, -50%) scale(0.8) rotate(20deg);
+            }
+        }
+        #textOverlay.show {
+            display: block;
+            animation-play-state: running;
+        }
+        #highscoreList li {
+            margin-bottom: 6px;
+            color: #fff7e0;
+            font-weight: 500;
+        }
+        #highscoreList li span {
+            float: right; /* Punktzahl rechtsbündig */
+            font-weight: 700;
+        }
+    </style>
+  <script type="module" crossorigin>var r1=Object.defineProperty;var s1=(e,l,t)=>l in e?r1(e,l,{enumerable:!0,configurable:!0,writable:!0,value:t}):e[l]=t;var R=(e,l,t)=>s1(e,typeof l!="symbol"?l+"":l,t);(function(){const l=document.createElement("link").relList;if(l&&l.supports&&l.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))o(r);new MutationObserver(r=>{for(const n of r)if(n.type==="childList")for(const c of n.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&o(c)}).observe(document,{childList:!0,subtree:!0});function t(r){const n={};return r.integrity&&(n.integrity=r.integrity),r.referrerPolicy&&(n.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?n.credentials="include":r.crossOrigin==="anonymous"?n.credentials="omit":n.credentials="same-origin",n}function o(r){if(r.ep)return;r.ep=!0;const n=t(r);fetch(r.href,n)}})();const n1='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M272 303q-4 1-10 10c-9 13-8 14 41 67l37 39v71c0 75 0 75-21 75q-6 1-7 3 1 3 14 2l14-2v35l-24 11s-22 11-22 17c-2 12 47-17 47-16v22c0 4-30 12-24 21 3 5 26-9 26-4v5h321v-6c1-4 11 1 11-1q-1-4-6-6c-7-2-9-33-3-33l18 6q14 6 20 5 2-2-19-11l-22-9v-35h15q23 1-4-5l-11-3V408l36-38c37-41 43-54 27-63-6-3-20 0-67 14l-59 18H392l-58-18z" style="fill:#171210;stroke-width:15.0386"/><path d="m304 346 18 9 53 29c40 22 47 24 47 8l2-20c3-9 4-9 72-9h69l2 20c2 11 4 21 6 22s26-12 56-28c29-17 54-29 54-29 1 1-12 16-28 33-29 32-35 42-24 42 5 0 6 10 6 68v68l-23-3c-26-3-21 3 6 8 16 2 17 4 17 14q1 20-24 6-12-6-17-5c-3 1 6 6 18 12 19 9 23 12 23 20 0 13-2 13-21 0-22-15-23-9-1 7q16 12 18 16c0 2-59 3-131 3q-130 0-132-4 1-4 16-15l16-13c0-4-23 7-26 12-5 8-14 5-14-6 0-8 4-11 23-20q21-10 18-12-5-1-17 5-26 14-24-6c0-10 2-12 15-14 27-5 33-10 8-8l-23 3v-74l1-74-21-23-30-32zm116 157-9 1c-18 2-19 4-12 16 8 12 27 14 37 4q17-19-16-21m148 4c-5 2-14 1-4 14 7 11 26 12 35 3 8-8 8-17 0-17zm-69 15q-35-1-15 21 13 15-14 26-15 6-16 9c0 10 38-4 42-14q1-9 13 4c12 10 36 18 36 10q-1-4-9-6c-5-2-14-7-19-12l-8-10 8-10q8-10 6-14-4-5-24-4" style="fill-opacity:1;stroke-width:15.0386"/><path d="M424 509q9 0 10 3c0 5-9 8-15 6-9-3-6-9 5-9m169 4q-2 4-8 5c-14 1-9-8-3-8 4 0 11 0 11 3" style="fill:#fff;stroke-width:15.0386"/></svg>',i1='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M350 350h300v300H350z" style="fill:none;fill-opacity:.30322;stroke:red;stroke-width:.984427;stroke-dasharray:none;stroke-opacity:1"/><rect width="300" height="300" x="350" y="350" ry="18" style="fill-opacity:1;stroke:#171210;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"/></svg>',c1='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M350 350h300v300H350z" style="fill:none;fill-opacity:.30322;stroke:red;stroke-width:.984427;stroke-dasharray:none;stroke-opacity:1"/><path d="M744 318q-16-2-26 11c-20 22 2 44-10 92-7 24-27 42-48 53-6 2-12 0-10 8l-1 76c23-6 47-12 67-26 39-24 66-66 72-112q6-38-6-75c-5-15-19-27-35-27h-1z" style="fill:#171210;stroke-width:12.526"/><path d="M650 497c31-10 61-32 73-63q10-31 6-64c-4-11-5-25 5-32 9-7 22-4 27 6q12 26 11 54c-2 55-37 108-88 129-9 3-19 9-29 8l-6-2m0 0v-1zm1-36q-1 0 0 0" style="stroke-width:12.526"/><path d="M350 350h300v300H350z" style="fill:none;fill-opacity:.30322;stroke:red;stroke-width:.984427;stroke-dasharray:none;stroke-opacity:1"/><rect width="300" height="300" x="350" y="350" ry="18" style="fill-opacity:1;stroke:#171210;stroke-width:30;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"/></svg>',a1='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="M342 342c-10 20-4 42-5 64 0 57 4 114 3 171-5 15-32 11-38 28-6 13-14 38 0 47q53 4 105 4l253 3-1-230 1-70-24-24c-91 1-184-3-275 1-7 1-16 0-19 6" style="fill:#171210;stroke-width:15.3751"/><path d="M365 362h273v202c1 10-2 29-10 11-21-28-52-51-87-54-8-4-36-1-18 8 16 4 32 3 46 12 36 17 65 51 69 92q5 11-7 9H309c-1-15 0-33 15-40 34-15 73-4 108-12 7-5-10-12 0-20 5-19-16 4-22 7-16 6-32 3-48 4l3-216z" style="stroke-width:15.3751"/></svg>',W=new Map,f=40,j=100,N=35,I=j-N*2;function h1(e){switch(e){case"head":return n1;case"body":return i1;case"tail":return c1;case"legs":return a1}}function $(e,l,t,o,r){const n=`${o}-${r}`,c=W.get(n);c&&e.drawImage(c,l*f-N*f/I,t*f-N*f/I,f*j/I,f*j/I)}function f1(e){const l=["head","body","tail","legs"],t=new Set;e.forEach(r=>l.forEach(n=>t.add(`${r}-${n}`)));const o=[];for(const r of t){let n,c;if(r.startsWith("special-")){const i=r.replace("special-","").split("-");n=i[0],c=i.slice(1).join("-")}else[n,c]=r.split("-");const A=h1(c).replace("<svg",`<svg fill="${n}"`),T=`data:image/svg+xml;base64,${btoa(A)}`,G=new Promise(i=>{const a=new Image;a.onload=()=>{W.set(r,a),i()},a.src=T});o.push(G)}return Promise.all(o).then(()=>{})}let E=0,k=0;function d1(){E=0,B(),k=0}function m1(e){E+=e*100,B()}function q1(e){k||(k=e);let l=0;for(;e-k>=1e4;)E+=10,k+=1e4,l++;l>0&&B()}function B(){const e=document.getElementById("scoreValue");e&&(e.textContent=String(E))}function U(){return E}const u1='<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 300 300"><path d="M46 253q-10-2-17-9-9-9-10-24 0-9 5-17 4-6 9-10l2-1v-52l2-55c3-2 2-2 17-2h15l1-20c0-9 0-9 2-11s0-2 25-2h22v-8c1-9 1-10 3-12 3-2 1-2 30-2h28l4 4 1 1 1 9v8h19l21 1q3 1 3 4l1 14v13h1l15 1 15 1 4 3v105l2 1q4 2 6 7 3 3 0 7l-2 5-2 2 2 2q5 6 5 14 1 6-2 10-5 9-16 12l-3 1zm13-9q5 0 9-5l3-2-1-2-7-5-2 1-8 2q-7 0-10-7l-1-5 1-6q2-6 9-6 4-1 8 2l3 2c1 0 8-6 8-8q0-2-5-4-9-6-22-3-13 5-15 20-1 7 2 15 5 10 18 12zm197 0q11-3 11-14 0-6-4-9l-10-5q-10-4-8-6l4-2q3-1 8 2h4l4-6q1-1-3-3-8-6-20-3l-7 4q-6 9-1 17 2 4 12 6 9 3 9 6l-2 2q-2 3-11-1l-5-2-6 7q-2 1 3 4l12 4zm-169 0 1-4 1-3h16l1 3 1 4h6l7-1a267 267 0 0 0-16-45H90l-2 4-14 42zm6-18 2-7 2-7 1 2 3 10q3 4-4 3zm50 18v-17l1-17h6q7 1 7-3l-1-8-1-1h-36l-1 1-1 5 1 5 1 1h5l6 1 1 32 6 1zm31 0 1-7v-6h5l4 6 5 6 6 1 7-1-2-4-6-10 2-3q6-4 6-12 0-6-4-10-3-5-11-6h-25v46zm2-24q-2 1-1-6-1-6 4-5 8-1 10 4 0 4-4 7zm47 23 1-22-1-23h-12l-1 23 1 23zM91 189l5-14 2-3-1-1-11-12-2 1-4 2-2-3q-1-1 4-3l2-2-1-9q2-3-6 0h-5q-2-1-1-3l6-3q6-1 6-3v-1H63c-21 0-20 0-21 2v53h1l24 1h23zm111-1q-4-9-9-15l-1-1 2-2 10-8q5-4 4-6l-3-1-12-4c0-2 1-2 13 0h5l1-6 1-2h-5l-14 1v-3l2-1 12-2 4-1c1-1-2-9-5-16l-1-5a85 85 0 0 0 0-38l-2-4q-2-3-9 2l-19 15q-2 3-5 1l-15-2q-12-1-24 2-4 2-7-1c-6-6-22-17-24-17q-4-2-5 4c-2 5-2 8-2 19l1 16 1 5-1 3-5 16 2 1 16 2v3H91q-3-1-2 2l2 6 6-1 11-1v2q2 1-10 4l-4 1q0 2 7 9l9 6-2 2-5 8-3 9-1 1h104zm-61-32q-6-2-8-6l1-3 4 2q3 5 8 2l3-4v-2h-2q-3-2-3-6v-2l1-1h12q2 1 1 4 0 3-4 5l-1 2q1 4 6 5l6-3 2-2 2 1q2 6-9 8-4 0-7-2l-2-1-1 1zm-20-16q-4-1-6-6l-1-5 1-5q3-6 10-5 6 0 8 5l1 6-1 5-4 4q-3 2-8 1m8-12q3-3-2-4-3 1-1 4zm46 12q-8-2-7-11 0-7 5-9l5-1q6 0 9 6v10q-4 6-12 5m6-12q2-3-1-5-4 0-3 4 2 3 4 1m77 62v-53l-1-1-1-1-18-1h-19v2l1 2 5 1 6 2v3h-11l-1 3-1 5v2l4 2 4 2q1 4-2 4l-5-2-4-1-11 13-1 1 1 2 7 16h46zM86 125l2-6 1-2-1-6-1-14q0-23 6-29l4-2q7 0 18 8l5 3V67l-1-10-20-1-21 1-1 1-1 16v14l-1 1-1 1H43l-1 2 1 36h41zm171 3 1-2v-17l-1-19h-16l-18-2V73l-1-15c0-2-1-2-19-2l-17 1v17l3-2q12-7 17-6 4 0 7 8 2 4 2 13v24l-1 8 2 6 1 3zm-84-44 3-3 2-2V37c-1-3-1-2-25-2-25 0-24-1-25 2l-1 23v22l1 1c2 2 2 2 8 1l14-1 15 1z" style="fill:#000;stroke-width:1.24053"/><path d="m100 190 1-4 7-12 2-3-4-2-12-11q-2-1 7-3l7-3v-3l-9 1-8 1v-2q-3-5-1-6h18q2-4-12-5l-6-1 4-14 2-5-1-6c-1-9-1-28 1-33q1-5 4-5c2 0 14 8 24 16 4 3 4 3 12 2a103 103 0 0 1 36 0l3 1 4-4 20-15 3-1 1 1c5 3 7 22 4 38l-1 6 2 5 4 14-6 1-8 1q-6 1-4 4l9 1 9-1v2l-1 6-18-1v2l11 4 4 1c0 1-7 8-12 11l-5 4 1 1 10 16v2h-51zm48-35 3-2 2 2q8 3 15-3l2-3q0-2-3-2l-3 2q-4 4-7 2l-4-4 2-2q5-4 3-8l-6-2-6 1q-3-1-3 2 1 5 4 7t-1 6q-4 2-8-2-3-4-4-2-3 3 3 7 5 4 11 1zm-19-15q5-3 5-10 0-9-7-11-8-1-12 5v11q2 4 6 5l2 1zm52 0q5-2 6-7v-5q0-9-9-9-5-1-9 4-3 5 0 12 4 8 12 5z" style="fill:#fea622;fill-opacity:1;stroke:#171210;stroke-width:1.57268;stroke-linejoin:round"/><path d="M166 84c-5-1-25-2-31-1h-7l-1-1V60l1-24 2-1h46l2 3v41l-3 2-4 3zM43 127l-1-18 1-18 16-1 17-1 1-15 1-17 41 1 1 18-7-4q-10-6-16-6-5 0-9 11c-1 6-2 27-1 34l1 5-2 6-2 6H64zm0 63-1-27 1-27 20-1h19v1q1 2-4 3-9 2-7 5 0 2 6 1l5-1v2l1 5 1 3-2 1-3 2q-3 1-1 4h5l3-1 3 3 5 6 4 3-2 5q-3 4-4 9l-2 5H67zm168-2-6-12-2-3 3-3 7-7q3-4 4-3l8 2 1-2q1-3-5-5l-3-1 2-10 3 1 8-1v-3l-6-2q-6-1-5-3v-1h36l1 1 1 26v27l-1 1-23 1h-22zm5-65c-2-5-2-7-1-14V84q-1-12-7-17-3-3-12 1l-7 4-3 2V57h35l2 16 1 16 16 1h16l1 2v35l-20 1h-19zm28 121c-6-1-13-5-13-6l6-8c11 5 13 5 16 3q5-2-1-5l-7-3-10-5q-6-7 0-16 8-9 23-5l7 5-5 6-4-1-6-1q-5 0-5 3-1 2 8 5l11 6c6 7 3 17-6 21q-7 3-14 1zm-33-5 1-41h10l1 22v22q1 2-6 2h-6zm-48 1v-40l4-2h13c10 1 13 2 17 5q5 4 5 11c0 7-2 8-5 12l-3 3 4 7 4 7-7 1c-6 0-5 0-12-9q-3-6-5-5l-3 1-1 6v6h-5l-6 1zm23-20c4-2 4-8 0-10-3-2-10-2-11-1l-1 10 6 1zm-55 7-1-17-6-1-6-1v-9l19-1c21 0 19 0 19 6q2 6-6 5l-6 1-1 17v16h-6l-6 1zm-57 16 17-45 13 1 15 44h-12l-1-3-1-3H89l-1 3-1 4h-6zm27-17-3-13-1-1-1 1-3 13zm-53 19q-18-4-19-23c0-16 12-27 27-25q10 2 14 7 1 2-3 5l-4 3-3-1q-2-2-8-2t-9 4l-2 7c0 12 10 17 21 11l1-1 4 3 3 4-8 6z" style="fill:#fea622;fill-opacity:1;stroke:#171210;stroke-width:1.57268;stroke-linejoin:round"/><path d="m166 83-20-1h-17V37h47l1 21v20l-3 3c-3 2-3 2-8 2zm52 42c-2-5-3-8-2-17 1-10 1-25-1-30l-3-7q-3-11-19-3l-7 4 1-7 1-6h32l1 13c1 16 1 17 3 18l16 1 15 1 1 17v17h-2l-19 1h-16zm-7 60-4-8-2-4 3-3 6-6 3-3 3 1q7 3 7-1 2-4-4-6-4-1-3-4l1-4v-1h5l6-1q3-4-5-7l-6-2h35v53h-22l-21 1z" style="fill:#e8443c;fill-opacity:1;stroke:#171210;stroke-width:1.84682;stroke-linejoin:round"/><path d="M165 81h-35V38h45l1 20v19l-1 2-6 3z" style="fill:#25a5d2;fill-opacity:1;stroke:#171210;stroke-width:1.84682;stroke-linejoin:round"/><path d="m45 126-2-1v-16l1-17 16-1 16-1q2-1 2-18l1-13 20-1h19l1 8-1 8-5-3q-15-9-20-4-5 4-6 14l-1 32q2 3-1 8l-2 6H65z" style="fill:#4bbe55;fill-opacity:1;stroke:#171210;stroke-width:1.84682;stroke-linejoin:round"/><path d="M53 189h-9v-52l19-1h18l-5 2q-6 2-7 4 1 4 3 4h5q6-2 5 2v3q2 2-2 4-5 3-3 6 1 3 7 1 2-2 3 1l5 5 4 4-2 4-3 9-2 5H76zm-7 54-4-1c-10-5-15-19-10-30q4-9 13-12c7-3 18-1 22 4l2 1-3 3-3 3-3-2q-7-3-13 0-7 3-7 11c0 11 10 18 20 13l3-2 3 3q4 2 2 4c-5 4-15 7-22 5zm30-1 15-42h12l15 41v1h-10l-1-3-1-3h-7c-10-1-11-1-12 3l-1 3zm25-15q3 1 0-7-2-8-4-9l-4 9q-3 8 0 7zm31 0-1-17-7-2h-5l-1-2 2-7h32l3 1v8h-6l-6 1-1 2v28l-1 3h-9zm32 13-1-22 1-18 3-1 25 2q8 5 8 14 0 4-4 10l-3 4 3 7 4 6h-5c-5 0-5 0-10-6q-4-7-7-7-5-1-4 8l-1 5h-9zm24-21 2-4q0-5-3-6c-4-2-12-2-13 0l-1 6c0 6 0 6 8 6q6 1 7-2zm24 3v-22l5-1h5v43h-10zm28 20-7-5 2-3c3-2 2-2 8 0q12 3 13-3 1-3-9-7l-8-3-6-6 2-10q9-9 23-5l5 3q2 1-1 4l-2 2-4-1q-11-3-12 3-1 4 7 6 12 4 14 9 3 7-3 13-9 8-22 3z" style="fill:#fff4d4;fill-opacity:1;stroke:#171210;stroke-width:1.84682;stroke-linejoin:round"/></svg>',d=10,p=20,M=document.getElementById("game"),L=M.getContext("2d");M.width=d*f;M.height=p*f;const x=document.getElementById("nextPiece"),y=x.getContext("2d"),y1=document.getElementById("logo");y1.innerHTML=u1;const H=document.getElementById("textOverlay");let V=null;function S(e){V&&(clearTimeout(V),H.classList.remove("show")),H.textContent=e,V=setTimeout(()=>{H.classList.remove("show")},2e3),requestAnimationFrame(()=>{H.classList.add("show")})}class v1{constructor(l,t=1){R(this,"name");R(this,"count");this.name=l,this.count=t}}const X="#333333",g=[{name:"4",roles:[["head","body","body","tail"]],color:"#ff6666"},{name:"Q",roles:[["head","body"],["legs","tail"]],color:"#0044ffff"},{name:"T",roles:[[null,"head",null],["tail","body","legs"]],color:"#99ff99"},{name:"L",roles:[["head",null,null],["tail","body","legs"]],color:"#ffcc66"},{name:"L2",roles:[[null,null,"head"],["legs","body","tail"]],color:"#ff7b00ff"},{name:"S",roles:[["head","body",null],[null,"legs","tail"]],color:"#f266ffff"},{name:"S2",roles:[[null,"body","head"],["tail","legs",null]],color:"#62cdffff"}];let m=Array.from({length:p},()=>Array(d).fill(null)),s,C,b=0,g1=1e3,_=0,w=!1,O=!1,D=0,z=0,v;const K=document.getElementById("highscoreList");let q=[];q.length===0&&(h("Player",1500),h("Mouse",15890),h("Black Cat",25e3),h("4Player",780),h("CasualGamer",900),h("TetrisMaster",250),h("ProGamer",100),h("Spicy Chicken",8e3),h("Player9",100),h("Harry Dotter",3750));function h(e,l){q.push({name:e,score:l}),q.sort((t,o)=>o.score-t.score),q.length>10&&(q=q.slice(0,10)),p1()}function p1(){K.innerHTML="",q.forEach(e=>{const l=document.createElement("li");l.innerHTML=`${e.name} <span style="float:right; font-weight:700">${e.score}</span>`,K.appendChild(l)})}function F(){const e=U();let l=0,t=Math.floor(Math.random()*g.length),o=g[t];if(v&&v.name===o.name?v.count++:v=new v1(o.name,1),v.count>=3)do t=Math.floor(Math.random()*g.length);while(v.name!==g[t].name);const r=g[t];if(e>=100){const c=Date.now();(c-D>=25e3-Math.min(2e4,e)||D===0)&&(l=Math.ceil(Math.random()*3),z===l&&(z===2&&(l=1),z===1&&(l=3),z===3&&(l=2)),D=c,z=l)}const n=Math.floor(l===2?Math.random()*(d-r.roles[0].length+1):d/2-Math.ceil(r.roles[0].length/2));return{roles:r.roles.map(c=>[...c]),color:l!==0?X:r.color,x:n,y:0,special:l}}function Y(){s=C,C=F(),l1(),s.special===2?S("UNMOVABLE!"):s.special===1?S("UNROTATABLE!"):s.special===3&&S("HARD DROP!")}function u(e){for(let l=0;l<e.roles.length;l++)for(let t=0;t<e.roles[l].length;t++)if(e.roles[l][t]){const o=e.x+t,r=e.y+l;if(o<0||o>=d||r>=p||r>=0&&m[r][o])return!0}return!1}function Z(){s.roles.forEach((e,l)=>{e.forEach((t,o)=>{if(t){const r=s.x+o,n=s.y+l;n>=0&&(m[n][r]={color:s.color,role:s.roles[l][o],special:s.special,x:r,y:n})}})})}function Q(){let e=0;for(let l=p-1;l>=0;l--){let t=!0;for(let o=0;o<d;o++)if(!m[l][o]){t=!1;break}if(t){for(let o=0;o<d;o++)m[l][o]=null;e++}else if(e>0)for(let o=0;o<d;o++)m[l+e][o]=m[l][o],m[l][o]=null}e>0&&(m1(e),B())}function J(){s.y++,u(s)&&(s.y--,Z(),Q(),Y(),u(s)&&(w=!0)),b=0}function e1(){for(;!u(s);)s.y++;s.y--,Z(),Q(),Y(),u(s)&&(w=!0)}function w1(){L.fillStyle="#1c1c2e",L.fillRect(0,0,M.width,M.height);for(let e=0;e<p;e++)for(let l=0;l<d;l++){const t=m[e][l];t&&$(L,l,e,t.color,t.role)}s.roles.forEach((e,l)=>e.forEach((t,o)=>{t&&$(L,s.x+o,s.y+l,s.color,s.roles[l][o])}))}function l1(){if(!y)return;y.clearRect(0,0,x.width,x.height);const{roles:e,color:l}=C;let t=1/0,o=-1/0,r=1/0,n=-1/0;for(let i=0;i<e.length;i++)for(let a=0;a<e[i].length;a++)e[i][a]&&(a<t&&(t=a),a>o&&(o=a),i<r&&(r=i),i>n&&(n=i));const c=o-t+1,A=n-r+1,T=Math.floor((x.width-c*f)/2),G=Math.floor((x.height-A*f)/2);y.save(),y.translate(T,G);for(let i=0;i<e.length;i++)for(let a=0;a<e[i].length;a++)e[i][a]&&$(y,a-t,i-r,l,e[i][a]);y.restore()}document.addEventListener("keydown",e=>{!O||w||(s.special!==2&&(e.key==="ArrowLeft"&&(s.x--,u(s)&&s.x++),e.key==="ArrowRight"&&(s.x++,u(s)&&s.x--)),e.key==="ArrowDown"&&J(),e.key==="ArrowUp"&&z1(s),e.key===" "&&e1())});function z1(e){if(e.special===1)return;const l=e.roles[0].map((o,r)=>e.roles.map(n=>n[r]).reverse()),t=e.roles;e.roles=l,u(e)&&(e.roles=t)}function t1(e=0){if(!O)return;if(w){k1();return}const l=e-_;_=e,b+=l,b>g1&&(s.special===3?e1():J()),q1(e),w1(),requestAnimationFrame(t1)}const P=document.getElementById("startGame");async function k1(){w=!0,O=!1,h("New Player",U()),S("Game Over! Points: "+U()),await new Promise(e=>setTimeout(e,3500)),P.style.display="inline-block"}P&&P.addEventListener("click",()=>{f1([...g.map(e=>e.color),X]).then(()=>{P.style.display="none",x1()})});function x1(){d1(),m=Array.from({length:p},()=>Array(d).fill(null)),s=F(),C=F(),l1(),w=!1,O=!0,_=0,b=0,t1()}function o1(){const e=document.getElementById("gameUi");if(!e)return;const l=window.innerHeight,t=e.offsetHeight;if(t>0){const o=l/t;e.style.transform=`scale(${o})`}}window.addEventListener("resize",o1);window.addEventListener("load",o1);</script>
+</head>
+<body>
+<div id="gameUi" style="display:flex; align-items: start; gap: 32px; padding: 20px">
+    <div id="gameContainer" style="position: relative; display: inline-block;">
+        <canvas id="game"></canvas>
+        <button id="startGame">
+            <div id="logo"></div>
+            Start Game
+        </button>
+        <div id="textOverlay">HARD DROP</div>
+    </div>
+    <div>
+        <div id="scorePanel">
+            <div>Points</div>
+            <div id="scoreValue">0</div>
+
+            <div id="nextPieceLabel" style="margin-top:22px; font-size:1.1rem; opacity:.8;">next piece</div>
+            <canvas id="nextPiece" style="background:#302e45; border-radius:8px; margin-top:8px; display:block; margin-left:auto; margin-right:auto;"></canvas>
+            <div id="highscoreContainer" style="margin-top:32px;">
+                <div style="font-size:1.1rem; opacity:.85; margin-bottom:8px;">Highscores</div>
+                <ol id="highscoreList" style="padding-left:20px; margin:0; font-size:1rem;">
+                </ol>
+            </div>
+        </div>
+        <p>Use Arrow Keys to move and rotate. Space to drop.</p>
+    </div>
+</div>
+</body>
+</html>
