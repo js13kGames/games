@@ -1,0 +1,54 @@
+<!DOCTYPE html><html><head><title>Nine Lives</title><style>#aw{display:none}
+html{background:#000;color:#fff}
+body{margin:0;overflow:hidden}
+canvas{width:100vw;height:100vh;image-rendering:pixelated;object-fit:contain}
+</style><xyz id="aw">
+class P extends AudioWorkletProcessor{constructor(...args){super();this.rom=null;this.bufferv=[];this.minb=0;
+this.wasm={};this.msgv=[];this.port.onmessage=msg=>{if(msg.data?.wasm){this.prepareClient(msg.data.wasm,msg.data.r,msg.data.c).catch((e)=>{console.error("Failed to initialize audio thread.",e);
+});}else if(msg.data?.msg){this.msgv.push(msg.data.msg);}else{console.log(`AudioWorkletProcessor unexpected message`,msg);
+}};}process(i,o,p){if(!this.run||(this.minb&lt;1))return true;let op=0;while(op&lt;o[0][0].length){let updc=o[0][0].length-op;
+if(updc>this.minb)updc=this.minb;this.upd(updc);for(let chid=o[0].length;chid-->0;){const sb=this.bufferv[chid];
+if(sb){const src=new Float32Array(sb.buffer,sb.byteOffset+op*4,updc);const dst=new Float32Array(o[0][chid].buffer,o[0][chid].byteOffset+op*4,updc);
+dst.set(src);}}op+=updc;}return true;}prepareClient(s,rt,c){if(this.wi)throw new Error("Multiple audio init.");
+return WebAssembly.instantiate(s,{env:{sh_spcm:(chid,p,c)=>this.spb(chid,p,c),sh_log:p=>this.log(p),sh_mr:(p,a)=>this.rcv(p,a),}
+}).then(r=>{this.wi=r.instance;this.mem=new Uint8Array(this.wi.exports.memory.buffer);this.upd=this.wi.exports.sha_update;
+if(this.wi.exports.sha_init(rt,c)<0){throw new Error("sha_init failed");}}).then(()=>{this.run=true;
+});}spb(chid,p,c){if(this.run)return;this.bufferv[chid]=new Float32Array(this.mem.buffer,this.mem.byteOffset+p,c);
+this.minb=this.bufferv.reduce((a,v)=>((a&lt;v?.length)?a:v.length),9999);}rcv(p,a){if(this.msgv.length<1)return 0;
+const msg=this.msgv[0];this.msgv.splice(0,1);if(msg.length<=a){new Uint8Array(this.mem.buffer,this.mem.byteOffset+p,msg.length).set(msg);
+}return msg.length;}log(p){}}registerProcessor("AWP",P);
+</xyz><script>
+const td=new TextDecoder("utf8"),te=new TextEncoder("utf8"),km={ArrowLeft:0x0001,ArrowRight:0x0002,ArrowUp:0x0004,ArrowDown:0x0008,Enter:0x1000,KeyA:0x0001,KeyD:0x0002,KeyW:0x0004,KeyS:0x0008,Space:0x0010,KeyE:0x0020,KeyR:0x0040,KeyX:0x0020,KeyZ:0x0010,}
+;let wi,mem,rom,fb,fbw,fbh,trm,cvs,ctx,imd,pvt,actx,an,pau,inp=0,gpi=0;function zs(p){if(p<0)return"";
+let c=0;while((p+c<mem.length)&&(c<256)&&mem[p+c])c++;return td.decode(new Uint8Array(mem.buffer,mem.byteOffset+p,c));
+}function rs(p,c){if((p<0)||(c<0)||(p>mem.length-c))return"";return td.decode(new Uint8Array(mem.buffer,mem.byteOffset+p,c));
+}function ws(p,a,s){if((p<0)||(a<0)||(p>mem.length-a)||(s.length<1))return 0;s=te.encode(s);let cpc=s.length;
+if(cpc>a)s=new Uint8Array(s.buffer,0,cpc=a);const dv=new Uint8Array(mem.buffer,mem.byteOffset+p,cpc);
+dv.set(s);return cpc;}function sh_sg(vp,va,kp,kc){return ws(vp,va,localStorage.getItem(rs(kp,kc))||"");
+}function sh_ss(kp,kc,vp,vc){localStorage.setItem(rs(kp,kc),rs(vp,vc));return 0;}function sh_ms(p,c){if(!an)return-1;
+const msg=new Uint8Array(mem.buffer,mem.byteOffset+p,c);an.port.postMessage({msg});return 0;}function sh_fb(p,w,h){const l=w*h*4;
+if((p<0)||(p>mem.length-l))return;fb=new Uint8Array(mem.buffer,mem.byteOffset+p,l);fbw=w;fbh=h;}function ina2(){an=new AudioWorkletNode(actx,"AWP");
+an.connect(actx.destination);an.port.postMessage({wasm:rom.a,r:actx.sampleRate,c:actx.destination.channelCount}
+);}function ina(){const js=new Blob([document.getElementById("aw").innerText],{type:"text/javascript"}
+);const url=URL.createObjectURL(js);actx=new AudioContext({latencyHint:"interactive"});return actx.audioWorklet.addModule(url).then(()=>{URL.revokeObjectURL(url);
+if(actx.state==="suspended"){addEventListener("click",()=>{actx.resume().then(ina2);},{once:1});}else{ina2();
+}});}function dec(s){if(s.length<16)throw new Error("Malformed ROM.");if((s[0]!==0x00)||(s[1]!==0x53)||(s[2]!==0x56)||(s[3]!==0x4c))throw new Error("Malformed ROM.");
+const tc=(s[4]<<24)|(s[5]<<16)|(s[6]<<8)|s[7];const mc=(s[8]<<24)|(s[9]<<16)|(s[10]<<8)|s[11];const ac=(s[12]<<24)|(s[13]<<16)|(s[14]<<8)|s[15];
+if((tc<16)||(mc<0)||(ac<0)||(tc+mc+ac>s.length))throw new Error("Malformed ROM.");const m=new Uint8Array(s.buffer,tc,mc);
+const a=new Uint8Array(s.buffer,tc+mc,ac);return{m,a};}function ok(e){if(e.ctrlKey||e.altKey)return;
+e.stopPropagation();e.preventDefault();const m=km[e.code];if(m){if(e.type==="keydown"){if(inp&m)return;
+inp|=m;}else{if(!(inp&m))return;inp&=~m;}}}function gp(){for(const g of navigator?.getGamepads?.()){const b=(p,d)=>{if(g.buttons[p]?.value){if(gpi&d)return;
+gpi|=d;inp|=d;}else{if(!(gpi&d))return;gpi&=~d;inp&=~d;}};if(g){b(0,0x10);b(1,0x40);b(2,0x20);b(9,0x1000);
+b(12,0x04);b(13,0x08);b(14,0x01);b(15,0x02);}}}function ui(){document.getElementById("msg").remove();
+cvs=document.createElement("CANVAS");ctx=cvs.getContext("2d");document.body.appendChild(cvs);addEventListener("keydown",ok);
+addEventListener("keyup",ok);addEventListener("focus",()=>{if(pau&&(typeof(trm)!=="number")){pau=false;
+raf();actx?.resume();}});addEventListener("blur",()=>{if(!pau){pau=true;actx?.suspend();}});}function raf(){requestAnimationFrame(t=>{if(typeof(trm)==="number"){wi.exports.shm_quit(trm);
+console.log(`Terminated with status ${trm}.`);ctx.clearRect(0,0,cvs.width,cvs.height);actx?.suspend();
+return;}if(pau)return;gp();let e=t-pvt;if(e>=14){pvt=t;if(e>19)e=19;wi.exports.shm_update(e/1000);if(fb){if(!imd||(fbw!==imd.width)||(fbh!==imd.height)){cvs.width=fbw;
+cvs.height=fbh;imd=new ImageData(fbw,fbh);}imd.data.set(fb);ctx.putImageData(imd,0,0);fb=null;}}raf();
+});}addEventListener("load",_=>{fetch("game.rom").then(rsp=>{if(!rsp.ok)throw rsp;return rsp.arrayBuffer();
+}).then(serial=>{rom=dec(new Uint8Array(serial));return WebAssembly.instantiate(rom.m,{env:{sh_log:p=>console.log("GAME: "+zs(p)),sh_term:s=>trm=s,sh_now:_=>Date.now()/1000,sh_sg,sh_ss,sh_ms,sh_in:_=>inp,sh_fb,}
+});}).then(({module:m,instance:i})=>{wi=i;mem=new Uint8Array(i.exports.memory.buffer);return ina();}
+).then(_=>{if(wi.exports.shm_init()<0)throw new Error("shm_init");ui();pvt=performance.now();raf();}
+).catch(e=>{console.error(e);document.getElementById("msg").innerText=e.toString();});},{once:1});
+</script></head><body><p id="msg">Loading</p></body></html>
