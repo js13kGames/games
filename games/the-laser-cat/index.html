@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable = no">
+        <title>The Laser Cat</title>
+        <link rel = "stylesheet" href="style.css">
+        <script defer src= "index.js"></script>
+    </head>
+
+
+    <body>
+        <div id="start-screen">
+        <h2 class="info">🎯 Catch the lasers to score!<br>💣 If you hit a bomb, you'll have to solve 5 math problems!</h2>
+        <button id="start-button" class="button">Start Game</button>
+        </div>
+        
+        <img src="cat.png" id="cat" alt= "Cat"/>
+        <img src="cat.png" id="cat2" alt= "Cat2"/>
+        <h1 class="header">CATCH THE LASER!</h1>
+        <h2 id="score">0</h2>
+    
+       <div class="cloud"></div>
+         <div class="cloud2"></div>
+         <div class="cloud3"></div>
+      <!--   <div class="mountain"></div>
+        <div class="mountain2"></div>
+                        3x3 board-->
+            
+        <div id="game-container" style = "display: none;">    
+        <div id="board"></div>
+        <canvas id="game"></canvas>
+        <div id="math-popup" style="display: none;" >
+        <div id="popup-content">
+         <p id = "math-question"></p>
+         <input type = "text" id="math-answer" placeholder="your answer"/>  
+        <button onclick="submitAnswer()">solve</button>
+            <p id = "math-feedback"></p>
+            </div>
+        </div>
+      </div>
+    </body>
+</html>        
