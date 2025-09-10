@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cat Rooftop Adventure</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{display:flex;justify-content:center;align-items:center;height:100vh;background:linear-gradient(to bottom,#1a237e,#283593,#303f9f);font-family:'Arial',sans-serif;overflow:hidden;color:#fff;}
+#c{position:relative;width:800px;height:600px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,0.6);border-radius:10px;}
+#g{background:#0c1021;display:block;}
+#ui{position:absolute;top:15px;left:15px;font-size:18px;z-index:10;background:rgba(0,0,0,0.5);padding:10px;border-radius:10px;}
+.sc{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(12,16,33,0.9);z-index:20;}
+h1{font-size:36px;margin-bottom:20px;text-align:center;color:#ffcc00;text-shadow:2px 2px 0 #000;}
+button{background:#ffcc00;color:#1a237e;border:none;padding:15px 30px;font-size:20px;border-radius:30px;cursor:pointer;margin-top:30px;font-weight:bold;box-shadow:0 4px 0 #d81b60;transition:all 0.1s;}
+button:hover{transform:translateY(2px);box-shadow:0 2px 0 #d81b60;}
+#i{max-width:500px;text-align:center;margin-bottom:30px;line-height:1.6;font-size:18px;}
+.ct{display:flex;gap:20px;margin-top:15px;}
+.k{background:#ffcc00;color:#1a237e;width:40px;height:40px;display:flex;justify-content:center;align-items:center;border-radius:5px;font-weight:bold;box-shadow:0 3px 0 #999;}
+.h{display:none;}
+#go{text-align:center;}
+#fs{font-size:32px;color:#ffcc00;margin:15px 0;}
+#ci{margin-top:20px;font-size:16px;background:rgba(255,255,255,0.1);padding:10px;border-radius:5px;}
+</style>
+</head>
+<body>
+<div id="c">
+<canvas id="g" width="800" height="600"></canvas>
+<div id="ui"><div>High score: <span id="s">0</span></div><div>Fish: <span id="fc">0</span></div></div>
+<div id="ss" class="sc">
+<h1>Cat Rooftop Adventure</h1>
+<div id="i">Help the cat climb as high as possible on the roofs!<br>Control the cat with the left/right arrows and jump with the spacebar.<br>Collect fish for bonus points!<br>The cat can jump up two platforms!</div>
+<div class="ct"><div class="k">←</div><div class="k">→</div><div class="k" style="width:80px;">Space</div></div>
+<button id="sb">Start</button>
+</div>
+<div id="gos" class="sc h"><h1>The cat fell!</h1><div>Your score:</div><div id="fs">0</div><button id="rb">Play again</button></div>
+</div>
+<script>
+const c=document.getElementById('g'),x=c.getContext('2d'),se=document.getElementById('s'),fce=document.getElementById('fc'),
+ss=document.getElementById('ss'),gos=document.getElementById('gos'),sb=document.getElementById('sb'),rb=document.getElementById('rb'),
+fse=document.getElementById('fs');
+let s=0,fc=0,gs=2,p=[],pl,fi=null,go=!1,lt=0,st=0,ks={},m={x:650,y:80,r:40},sts=[];
+for(let i=0;i<100;i++)sts.push({x:Math.random()*c.width,y:Math.random()*c.height,sz:Math.random()*2+1,sp:Math.random()*0.5+0.2});
+class Player{
+constructor(){this.w=40;this.h=50;this.x=c.width/2-this.w/2;this.y=0;this.vx=0;this.vy=0;this.j=!1;this.gr=0.5;this.sp=5;this.st=0;this.si=0;}
+setOnPlatform(t){this.x=t.x+t.w/2-this.w/2;this.y=t.y-this.h;this.vy=0;this.j=!1;}
+update(){
+if(ks['ArrowLeft'])this.vx=-this.sp;else if(ks['ArrowRight'])this.vx=this.sp;else this.vx=0;
+if(ks[' ']&&!this.j)this.J();
+this.vy+=this.gr;this.x+=this.vx;this.y+=this.vy;
+if(this.x<0)this.x=0;if(this.x+this.w>c.width)this.x=c.width-this.w;
+let e=!1;for(let t of p)if(this.vy>0&&this.x+this.w>t.x&&this.x<t.x+t.w&&this.y+this.h>t.y&&this.y<t.y+t.h){
+if(this.y+this.h-this.vy<=t.y){this.y=t.y-this.h;this.vy=0;this.j=!1;e=!0;if(!t.v){s+=10;t.v=!0;se.textContent=s;}}}
+if(!e&&this.vy===0)this.j=!0;
+if(fi&&this.x+this.w>fi.x&&this.x<fi.x+fi.w&&this.y+this.h>fi.y&&this.y<fi.y+fi.h){
+s+=50;fc++;se.textContent=s;fce.textContent=fc;ps('fish');fi=null;}
+if(this.y>c.height){go=!0;ps('fall');fse.textContent=s;gos.classList.remove('h');}
+if(this.st>0)this.st--;}
+J(){if(!this.j){this.vy=-16;this.j=!0;this.st=10;this.si=2;ps('jump');}}
+draw(){
+let t=0,e=0;if(this.st>0){t=(Math.random()-0.5)*this.si;e=(Math.random()-0.5)*this.si;}
+x.fillStyle='#000';x.fillRect(this.x+t,this.y+e,this.w,this.h);
+x.fillStyle='#000';x.beginPath();x.moveTo(this.x-2+t,this.y+5+e);x.lineTo(this.x+5+t,this.y-5+e);x.lineTo(this.x+12+t,this.y+5+e);x.fill();
+x.beginPath();x.moveTo(this.x+this.w-5+t,this.y-5+e);x.lineTo(this.x+this.w+2+t,this.y+5+e);x.lineTo(this.x+this.w-12+t,this.y+5+e);x.fill();
+x.fillStyle='#ffcc00';x.beginPath();x.arc(this.x+12+t,this.y+18+e,5,0,2*Math.PI);x.arc(this.x+28+t,this.y+18+e,5,0,2*Math.PI);x.fill();
+x.fillStyle='#000';let i=this.vx*0.5;if(i>3)i=3;if(i<-3)i=-3;
+x.beginPath();x.arc(this.x+12+i+t,this.y+18+e,2,0,2*Math.PI);x.arc(this.x+28+i+t,this.y+18+e,2,0,2*Math.PI);x.fill();
+x.fillStyle='#ff3366';x.beginPath();x.arc(this.x+20+t,this.y+25+e,4,0,2*Math.PI);x.fill();
+x.strokeStyle='#fff';x.lineWidth=1;x.beginPath();x.moveTo(this.x+20+t,this.y+25+e);x.lineTo(this.x+5+t,this.y+22+e);
+x.moveTo(this.x+20+t,this.y+25+e);x.lineTo(this.x+5+t,this.y+28+e);x.moveTo(this.x+20+t,this.y+25+e);x.lineTo(this.x+35+t,this.y+22+e);
+x.moveTo(this.x+20+t,this.y+25+e);x.lineTo(this.x+35+t,this.y+28+e);x.stroke();
+let o=Math.sin(Date.now()/120)*5*(this.vx/this.sp);x.beginPath();x.moveTo(this.x+this.w+t,this.y+this.h-10+e);
+x.quadraticCurveTo(this.x+this.w+20+o+t,this.y+this.h-20+e,this.x+this.w+10+t,this.y+this.h-30+e);x.lineWidth=5;x.strokeStyle='#000';x.stroke();}}
+class Platform{
+constructor(t,e,i){this.x=t;this.y=e;this.w=i;this.h=20;this.v=!1;}
+update(){this.y+=gs;if(this.y>c.height)return!1;return!0;}
+draw(){x.fillStyle=this.v?'#6d4c41':'#795548';x.fillRect(this.x,this.y,this.w,this.h);x.fillStyle='#5d4037';
+for(let t=0;t<this.w;t+=15)x.fillRect(this.x+t,this.y,7,this.h);}}
+class Fish{
+constructor(t,e){this.x=t;this.y=e;this.w=25;this.h=12;this.wg=0;}
+update(){this.y+=gs;this.wg=Math.sin(Date.now()/200)*3;if(this.y>c.height)return!1;return!0;}
+draw(){x.fillStyle='#ff5252';x.beginPath();x.ellipse(this.x+this.w/2,this.y+this.h/2+this.wg,this.w/2,this.h/2,0,0,2*Math.PI);x.fill();
+x.beginPath();x.moveTo(this.x-3,this.y+this.h/2+this.wg);x.lineTo(this.x+7,this.y+this.wg);x.lineTo(this.x+7,this.y+this.h+this.wg);x.closePath();x.fill();
+x.fillStyle='#000';x.beginPath();x.arc(this.x+18,this.y+5+this.wg,2,0,2*Math.PI);x.fill();
+x.fillStyle='#fff';x.beginPath();x.arc(this.x+22,this.y+4+this.wg,1.5,0,2*Math.PI);x.fill();}}
+const sn={jump:()=>{const t=new OscillatorNode(ct,{frequency:523.25}),e=new GainNode(ct,{gain:0.2});t.connect(e).connect(ct.destination);t.start();t.stop(ct.currentTime+0.1);},
+fish:()=>{const t=new OscillatorNode(ct,{frequency:659.25}),e=new GainNode(ct,{gain:0.2});t.connect(e).connect(ct.destination);t.start();t.stop(ct.currentTime+0.1);
+const i=new OscillatorNode(ct,{frequency:783.99}),n=new GainNode(ct,{gain:0.2});i.connect(n).connect(ct.destination);i.start(ct.currentTime+0.1);i.stop(ct.currentTime+0.2);},
+fall:()=>{const t=new OscillatorNode(ct,{frequency:220}),e=new GainNode(ct,{gain:0.3});t.connect(e).connect(ct.destination);t.start();t.frequency.exponentialRampToValueAtTime(110,ct.currentTime+0.5);
+e.gain.exponentialRampToValueAtTime(0.01,ct.currentTime+0.5);t.stop(ct.currentTime+0.5);}};
+const ct=new (window.AudioContext||window.webkitAudioContext)();
+function ps(t){sn[t]&&sn[t]();}
+function init(){s=0;fc=0;gs=2;p=[];pl=new Player();fi=null;go=!1;st=0;
+for(let t=0;t<8;t++)p.push(cp(c.height-t*80));
+const e=p[p.length-2];pl.setOnPlatform(e);se.textContent=s;fce.textContent=fc;ks={};}
+function cp(t){const e=Math.random()*100+80,i=Math.random()*(c.width-e);return new Platform(i,t,e);}
+function cf(){const t=p.filter(e=>e.y<c.height*0.7);if(0===t.length)return null;const e=t[Math.floor(Math.random()*t.length)],
+i=e.x+Math.random()*(e.w-25),n=e.y-30;return new Fish(i,n);}
+function gl(t){if(!lt)lt=t;const e=t-lt;lt=t;
+if(!go){x.fillStyle='#0c1021';x.fillRect(0,0,c.width,c.height);x.fillStyle='#fff';x.beginPath();x.arc(m.x,m.y,m.r,0,2*Math.PI);x.fill();
+x.fillStyle='#e0e0e0';x.beginPath();x.arc(m.x-15,m.y-10,m.r/4,0,2*Math.PI);x.arc(m.x+20,m.y+5,m.r/5,0,2*Math.PI);x.arc(m.x+5,m.y+15,m.r/3,0,2*Math.PI);x.fill();
+x.fillStyle='#ffffff';sts.forEach(t=>{t.y+=t.sp;if(t.y>c.height){t.y=0;t.x=Math.random()*c.width;}x.beginPath();x.arc(t.x,t.y,t.sz,0,2*Math.PI);x.fill();});
+for(let t=p.length-1;t>=0;t--){p[t].draw();if(!p[t].update()){p.splice(t,1);p.push(cp(-20));}}
+if(fi){fi.draw();if(!fi.update())fi=null;}else{st+=e;if(st>2000){if(Math.random()<0.3)fi=cf();st=0;}}
+pl.update();pl.draw();if(s>0&&s%200===0)gs=2+Math.floor(s/200)*0.2;requestAnimationFrame(gl);}}
+sb.addEventListener('click',()=>{ss.classList.add('h');init();lt=0;requestAnimationFrame(gl);});
+rb.addEventListener('click',()=>{gos.classList.add('h');init();lt=0;requestAnimationFrame(gl);});
+window.addEventListener('keydown',t=>{ks[t.key]=!0;if(' '===t.key)t.preventDefault();});
+window.addEventListener('keyup',t=>{ks[t.key]=!1;});
+window.addEventListener('load',()=>{x.fillStyle='#0c1021';x.fillRect(0,0,c.width,c.height);x.fillStyle='#fff';x.font='24px Arial';x.textAlign='center';x.fillText('Загрузка...',c.width/2,c.height/2);});
+</script>
+</body>
+</html>
