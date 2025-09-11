@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>RLL</title>
+        <audio id="attack_sound" src="./attack.mp3"></audio>
+        <audio id="magic_sound" src="./magic_attack.mp3"></audio>
+        <audio id="eme_die_sound" src="./enemy_die.mp3"></audio>
+        <audio id="player_die_sound" src="./player_die.mp3"></audio>
+    </head>
+    <body>
+        <style>
+            body {
+                touch-action: manipulation;
+                overflow: hidden;
+                background-color: white;
+            }
+        </style>
+        <canvas id="main" style="height:100%;width:100%;"></canvas>
+        <script>
+            const attack_sound = document.getElementById("attack_sound")
+            const magic_sound = document.getElementById("magic_sound")
+            const enemy_die_sound = document.getElementById("eme_die_sound")
+            const player_die_sound = document.getElementById("player_die_sound")
+            var running = false
+
+            var canvas = document.getElementById("main")
+            var draw = canvas.getContext("2d")
+            var H = window.innerHeight
+            var W = window.innerWidth
+            var ground_height = H/2
+            var gravity = 1
+            var score = 0
+            var replayable = true
+            
+            var hit = []//the list for all the positions of the attack of the main character
+            var harm = []//the list of all the positions of the attack of the enemies which will hurt the main character
+
+            var dft_clr = "#000"
+            var claw = new Image()
+            claw.src = "./claw.svg"
+            var flip_delay = 0.02
+            
+            var touch_move_root = {"oriplace":[-1,-1],"id":-1} // so player move will depend on where the finger now is compare to the place the finger was first placed.
+            var attack_touch_ori = {"oriplace":[-1,-1],"id":-1}
+            //{"oriplace":pageX;"id":touch identifer}
+            //var ongoingTouches = []
+
+            canvas.height = H-10
+            H -= 10
+            canvas.width = W
+            console.log(canvas.height)
+
+            const action = {"w":false,"a":false,"s":false,"d":false,"o":false,"p":false}
+            var cls=(clr="#fff")=>{draw.fillStyle=clr;draw.fillRect(0,0,W,H);draw.fillStyle=dft_clr}
+            var delay=async(seconds)=>{await new Promise(resolve => setTimeout(resolve, seconds*1000))}
+            var get_real_y=(y)=>{return H-ground_height-y-60}
+            var rdint=(min,max)=>{return Math.floor(Math.random()*(max-min)+min)}
+
+            draw.fillStyle = "black"
+            draw.strokeStyle = "black"
+            draw.font = "32px Arial"
+            draw.fillText("RLL - RogueLikeLike",W/2,H/2)
+            draw.fillText("Press R or Press Screen to start",W/2,H/2+30)
+
+            window.addEventListener("touchstart",(e)=>{//touch start
+                //e.preventDefault()
+                var touches = e.changedTouches
+                for(let i = 0; i< touches.length;i++){
+                    if(touches[i].pageX < W/2){
+                        touch_move_root = {"oriplace":[touches[i].pageX,touches[i].pageY],"id":touches[i].identifier}
+                    }
+                    else{
+                        action["o"] = true
+                        attack_touch_ori["id"] = touches[i].identifier
+                        attack_touch_ori["oriplace"] = [touches[i].pageX,touches[i].pageY]
+                    }
+                }
+            })
+
+            window.addEventListener("touchmove",(e)=>{//touch drag for mobile devices!!!!!!!
+                //e.preventDefault()
+                const touches = e.changedTouches
+                for (let i = 0; i<touches.length;i++){
+                    if(touches[i].identifier == touch_move_root["id"]){
+                        console.log("Move ctl moved!")
+                        if(touches[i].pageX < touch_move_root["oriplace"][0]-20){
+                            action["d"] = false
+                            action["a"] = true
+                        }else if(touches[i].pageX > touch_move_root["oriplace"][0]+20){
+                            action["d"] = true
+                            action["a"] = false
+                        }
+                        if(touches[i].pageY < touch_move_root["oriplace"][1]-25){
+                            action["w"] = true
+                        }
+                    }
+                }
+                //console.log(action,e.key)
+            })
+
+            window.addEventListener("touchend",(e)=>{//touch end for mobile devices!!!!!!!
+                //e.preventDefault()
+                console.log("touch end")
+                if(running){
+                        const touches = e.changedTouches
+                    for (let i = 0; i<touches.length;i++){
+                        if(touches[i].identifier == touch_move_root["id"]){
+                            touch_move_root = {}
+                            action["a"] = action["d"] = action["w"] = false
+                        }else if(touches[i].identifier == attack_touch_ori["id"]){
+                            if(touches[i].pageY < attack_touch_ori["oriplace"][1]-25){
+                                action["p"] = true
+                                console.log("P")
+                            }
+                            action["o"] = false
+                        }
+                    }
+                }else if(replayable){
+                    running = true
+                    replayable = false
+                    main()
+                }
+                
+                //console.log(action,e.key)
+            })
+
+
+            window.addEventListener("keydown",(e)=>{
+                var k = e.key.toLowerCase()
+                //console.log(k)
+                if(k in action){
+                    action[k] = true
+                }
+                if(k == "r" && !running && replayable){
+                    console.log("Start Main!")
+                    running = true
+                    replayable = false
+                    main()
+                }
+                //console.log(action,e.key)
+            })
+
+            window.addEventListener("keyup",(e)=>{
+                var k = e.key.toLowerCase()
+                if(k in action){
+                    action[k] = false
+                }
+                //console.log(action,e.key)
+            })
+
+            async function update_attack(mainchar){
+                hit.forEach(function(v,i){
+                    draw.fillText("<>",v[0],v[1])
+                    hit[i][0] += hit[i][3]
+                    hit[i][2] -= 1
+                    if(hit[i][2] <= 0){
+                        hit.splice(i,1)
+                    }
+                    //console.log(i)
+                })
+                harm.forEach(function(v,i){
+                    v.update()
+                    v.draw()
+                    if(Math.abs(v.x - mainchar.x)<10 && v.y - mainchar.y >= 0 && v.running){
+                        mainchar.hp.value -= 1
+                    }
+                })
+                if(a.hp.value <= 0){
+                    await game_over()
+                }
+            }
+            class enemy{
+                constructor(x,dmg,target,father,index,y){
+                    this.dmg = dmg
+                    this.x = x
+                    this.y = y
+                    this.hp = rdint(10,20)
+                    this.target = target
+                    this.father = father
+                    this.index = index
+                    this.running = true
+                    this.spd = rdint(1,5)
+                }
+                draw(){
+                    var h=get_real_y(this.y)
+                    draw.beginPath()
+                    draw.arc(this.x,h-rdint(8,12),10,0,2 * Math.PI)
+                    draw.fillRect(this.x-8,h-10,16,70)
+                    draw.fill()
+                }
+                async update(){
+                    if(this.running){
+                        if(this.hp <= 0){
+                            await this.die()
+                        }
+                        if(this.target.x > this.x){
+                            this.x += this.spd
+                        }else{
+                            this.x -= this.spd
+                        }
+                    }
+                    var tmp = this.x
+                    var tmp_y = this.y
+                    var tmp_hp = this.hp
+                    var del_hit = []
+                    hit.forEach(function(v,i){
+                        //console.log(tmp)
+                        if(Math.abs(v[0]-tmp)<10 && Math.abs(get_real_y(tmp_y) - v[1])<50){//you cannot hit enemies in the sky when you are on the gnd
+                            tmp_hp -= 5 // Hit harm decleared here
+                            del_hit.push(i)
+                        }
+                    })
+                    var tmp_hit = hit
+                    del_hit.forEach(function(v,i){
+                        tmp_hit = tmp_hit.slice(i,1);
+                    })
+                    hit = tmp_hit
+                    this.hp = tmp_hp
+                }
+                async die(){
+                    enemy_die_sound.play()
+                    this.running = false
+                    for(var i = this.index+1;i < this.father.length;i++){
+                        this.father[i].index -= 1
+                    }
+                    this.father.splice(this.index,1)
+                    console.log(this.father)
+                    score ++
+                    if(this.target.mp.value < 100){
+                        this.target.mp.value += rdint(10,20)
+                    }
+                    if(this.target.mp.value >= 100){
+                        this.target.mp.value = 100
+                        if(this.target.hp.value < 100){
+                           this.target.hp.value += 5 
+                        }
+                    }
+                    
+                    for(var i=0;i<10;i++){
+                        this.y -= 1
+                        this.draw()
+                        await delay(0.02)
+                    }
+                }
+            }
+
+            class main_char{
+                constructor(dmg){
+                    this.dmg = dmg//damage the main char makes
+                    this.x_velo = 0
+                    this.y_velo = 0
+                    this.x = W/2
+                    this.y = 0
+                    this.acc = 1 // acc is how fast the speed will increase, acceleration
+                    this.jump = 15
+                    this.face_right = true
+                    this.can_attack = true//lock down after first press, unlock after release key
+                    
+                    this.hp = new bar(100,100,0)
+                    this.mp = new bar(100,0,1)
+                }
+                draw(){
+                    var h = get_real_y(this.y)
+                    draw.beginPath()
+                    draw.arc(this.x,h,10,0,2 * Math.PI)
+                    draw.fill()
+                    draw.fillRect(this.x-5,h,10,70)
+                    draw.moveTo(this.x,h-10)
+                    if(this.face_right){
+                        draw.lineTo(this.x-10,h-20)
+                        draw.lineTo(this.x-10,h)
+                    }else{
+                        draw.lineTo(this.x+10,h-20)
+                        draw.lineTo(this.x+10,h)
+                    }
+                    draw.fill()
+                    this.hp.draw()
+                    this.mp.draw()
+                }
+                update(){
+                    if(this.y <= 50){
+                            if(action["a"]){
+                            this.x_velo -= this.acc
+                            this.face_right = false
+                        }
+                        else if(action["d"]){
+                            this.x_velo += this.acc
+                            this.face_right = true
+                        }else{
+                            this.x_velo *= 0.9
+                        }
+                    }
+                    if(this.x >= W && this.x_velo > 0){
+                        this.x_velo = -5
+                    }else if(this.x <= 0 && this.x_velo < 0){
+                        this.x_velo = 5
+                    }
+                    if(action["w"] && this.y <= 0){
+                        this.y_velo += this.jump
+                    }else if(this.y > 0){
+                        this.y_velo -= gravity
+                    }else{
+                        this.y_velo = 0
+                    }
+                    if(action["o"] && this.can_attack){
+                        hit.push([this.x,get_real_y(this.y-30),10,(this.face_right-0.5)*2*(Math.abs(this.x_velo)+20),false])//x,y,rest refresh steps,face right, if is big
+                        this.can_attack = false
+                        attack_sound.play()
+                        console.log("Attack!")
+                    }
+                    if(!action["o"]){
+                        this.can_attack = true
+                    }
+                    this.y += this.y_velo
+                    this.x += this.x_velo
+                    if(action["p"] && this.mp.value >= 100){
+                        this.big_hit()
+                    }
+                }
+                big_hit(){
+                    magic_sound.play()
+                    cls("#000")
+                    draw.drawImage(claw,(W-claw.width)/2,(H-claw.height)/2)
+                    score += harm.length
+                    harm = []
+                    action["p"] = false
+                    this.mp.value = 0
+                    flip_delay = 0.2
+                }
+            }
+            class bar{
+                constructor(full,now,at){
+                    this.full = full
+                    this.value = now
+                    this.col = at
+                }
+                draw(){
+                    draw.fillRect(10,25*this.col,W/4*(this.value/this.full),20)
+                    draw.strokeRect(10,25*this.col,W/4,20)
+                }
+            }
+            
+            var game_over=async(word="Game Over")=>{
+                player_die_sound.play()
+                running = false
+                replayable = false
+                await delay(1)
+                replayable = true
+                cls("#000")
+                draw.fillStyle = "#fff"
+                draw.fillText(word,W/2,H/2)
+                draw.fillText("Score:"+String(score),W/2,H/2+30)
+                draw.fillText("Press or R to replay",W/2,H/2+60)
+            }
+
+            var draw_ground=(gnd_height=ground_height)=>{
+                draw.fillRect(0,H-gnd_height,W,H)
+            }
+
+            async function main(){
+                score = 0
+                hurt = []
+                harm = []
+                a = new main_char(25)
+                a.draw()
+                var enemy_gen_clock = 0
+                while(running){
+                    //console.log("Refresh")
+                    enemy_gen_clock += 1
+                    if(enemy_gen_clock >= 50/(((score+1)/5)**0.1)){
+                        console.log("generate time delay:",50/(((score+1)/5)**0.1))
+                        harm.push(new enemy((rdint(0,2))*W,10,a,harm,harm.length,(!Boolean(rdint(0,5)))*60))//20% for enemy to fly
+                        enemy_gen_clock = 0
+                    }
+                    draw_ground()
+                    a.update()
+                    a.draw()
+                    update_attack(a)
+                    draw.fillText("Score:"+String(score),W/2,40)
+                    await delay(flip_delay)
+                    if(flip_delay != 0.02){
+                        flip_delay = 0.02
+                    }
+                    cls()
+                }
+            }
+            //TEST
+        </script>
+    </body>
+</html>
