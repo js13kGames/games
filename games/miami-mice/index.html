@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miami Mice</title>
+    <script src="main.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="a sky"></div>
+    <div class="a water">
+        <div class="water_sun"></div>
+    </div>
+    <div class="a watershade"></div>
+    <div class="a ground"></div>
+    <div class="a torii v l"></div>
+    <div class="a torii v r"></div>
+    <div class="a torii h t2"></div>
+    <div class="a torii h t1"></div>
+    <div class="a torii h t3"></div>
+    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+    <div class="a cast load">LOADING</div>
+    <div class="a intro e" style="opacity: 0;">
+        <div class="a chrome bigtext miamimice e">
+            <div class="a shadow">MIAMI MICE</div>
+            <div class="a text">MIAMI MICE</div>
+        </div>
+        <div class="a neon e"><b>Paws of Steel</b></div>
+        <div class="a cast e">ARNOLD SCHWARZENMOUSER &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JEAN CLAWS VAN DAMME</div>
+        <div class="a cast cast2 e">feat. &nbsp;&nbsp; DANNY DE CHEETO &nbsp;&nbsp; as &nbsp;&nbsp; &quot;RAT KING&quot;</div>
+        <div class="a mainmenu">
+            <div class="a btn start" onclick="gameStart();">START</div>
+            <div class="a btn horde" onclick="gameStartHorde();">HORDE MODE</div>
+        </div>
+    </div>
+    <div class="a txt" style="display: none;"></div>
+    <div class="a gameover e" style="opacity: 0;">
+        <div class="a chrome bigtext e">
+            <div class="a shadow">GAME OVER</div>
+            <div class="a text">GAME OVER</div>
+        </div>
+        <div class="a btn" onclick="gameRetry();">RETRY STAGE</div>
+        <div class="a hint">Retry costs half of your current score</div>
+    </div>
+    <div class="a stats">
+        <div class="a stamina">
+            <div class="a staminabar" style="width: 100%;"></div>
+            <div class="a stat">STAMINA</div>
+        </div>
+        <div class="a health">
+            <div class="a healthbar" style="width: 100%;"></div>
+            <div class="a stat">HEALTH</div>
+        </div>
+        <div class="a score">SCORE: <span id="sc">0</span></div>
+    </div>
+</body>
+</html>
