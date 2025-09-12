@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CatCoin Network — Black Cat Mining</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box }
+      body { background:#0a0a0a; color:#00ff41; font:11px monospace; overflow:hidden }
+      canvas{display:block;margin:0 auto;border:1px solid #222;background:radial-gradient(circle,#001100,#000000)}
+      #ui{position:fixed;top:8px;left:8px;z-index:100;background:rgba(0,20,0,0.95);padding:8px;border:1px solid #333;border-radius:4px}
+      .stat{margin:2px 0;display:flex;align-items:center;gap:6px}
+      #scoreboard{position:fixed;top:8px;right:8px;background:rgba(0,20,0,0.95);padding:8px;border:1px solid #333;border-radius:4px;min-width:220px;max-height:60vh;overflow:auto}
+      #instructions{position:fixed;bottom:8px;right:8px;background:rgba(0,20,0,0.95);padding:8px;border:1px solid #333;border-radius:4px;max-width:350px;font-size:9px}
+      #level-complete{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,50,0,0.95);padding:20px;border:2px solid #00ff41;border-radius:8px;text-align:center;display:none}
+      button{background:#1a472a;border:1px solid #00ff41;color:#00ff41;padding:8px 16px;margin:5px;border-radius:4px;cursor:pointer;font:11px monospace}
+      button:hover{background:#2a573a}
+      #ai-toggle{background:#472a1a;border-color:#ff8800}
+      #ai-toggle:hover{background:#573a2a}
+      #ai-toggle.active{background:#573a1a;border-color:#ffaa00}
+    </style>
+  </head>
+  <body>
+    <div id="ui">
+      <div class="stat">🐱 Black Cat Network</div>
+      <div class="stat">🎯 Level: <span id="level">1</span></div>
+      <div class="stat">⏱️ Time: <span id="timer">0</span></div>
+      <div class="stat">⭐ Score: <span id="score">0</span></div>
+      <div class="stat">🌐 Mode: <span id="mode">Offline</span></div>
+      <div style="margin-top:6px">
+        <button id="connectBtn">Join Multiplayer</button>
+        <button id="newGameBtn">New Game</button>
+        <button id="ai-toggle">AI Cat: OFF</button>
+      </div>
+    </div>
+
+    <div id="scoreboard">
+      <div style="font-weight:bold;margin-bottom:6px">🏆 Scoreboard</div>
+      <div id="playersList">Click "Join Multiplayer" to compete!</div>
+    </div>
+
+    <div id="instructions">
+      <div>🎮 HOW TO PLAY:</div>
+      <div>• Click nodes to move your black cat</div>
+      <div>• Mine all target nodes (yellow) to win</div>
+      <div>• Cats can only move along green connections</div>
+      <div>• Each node takes time to mine</div>
+      <div>• Faster completion = higher score</div>
+      <br>
+      <div>🏁 MULTIPLAYER:</div>
+      <div>• Race against other players</div>
+      <div>• First to mine all targets wins</div>
+      <div>• Watch the scoreboard for rankings</div>
+      <br>
+      <div>🤖 AI CAT:</div>
+      <div>• Toggle AI for automated play</div>
+      <div>• Learn strategies by watching</div>
+    </div>
+
+    <canvas id="game" width="1000" height="700"></canvas>
+
+    <div id="level-complete">
+      <div style="font-size:16px;margin-bottom:10px">🎉 LEVEL COMPLETE!</div>
+      <div>Network Successfully Mined!</div>
+      <div style="margin:10px 0">
+        <span>Score Earned: </span><span id="level-score">0</span>
+      </div>
+      <button onclick="nextLevel()">Next Level</button>
+      <button onclick="resetGame()">Restart</button>
+    </div>
+
+    <script>
+      // Game Configuration
+      const WS_SERVER = "wss://relay.js13kgames.com/shadow-network";
+      
+      // Game state
+      const canvas = document.getElementById('game');
+      const ctx = canvas.getContext('2d');
+      const game = {
+        width: canvas.width = 1000,
+        height: canvas.height = 700,
+        nodes: [],
+        links: [],
+        cats: [],
+        level: 1,
+        score: 0,
+        startTime: Date.now(),
+        levelComplete: false,
+        particles: [],
+        targetNodes: [],
+        completedNodes: new Set(),
+        players: {},
+        clientId: null,
+        ws: null,
+        mode: 'offline',
+        aiEnabled: false,
+        aiCat: null
+      };
+
+      // Level configurations with increasing complexity
+      const levels = [
+        {nodes: 8, cats: 1, targets: 2, time: 45, reward: 100, complexity: 'ring'},
+        {nodes: 12, cats: 1, targets: 3, time: 60, reward: 200, complexity: 'grid'},
+        {nodes: 16, cats: 1, targets: 4, time: 75, reward: 350, complexity: 'spiral'},
+        {nodes: 20, cats: 1, targets: 5, time: 90, reward: 500, complexity: 'cluster'},
+        {nodes: 24, cats: 1, targets: 6, time: 120, reward: 750, complexity: 'mesh'},
+        {nodes: 30, cats: 1, targets: 8, time: 150, reward: 1000, complexity: 'complex'}
+      ];
+
+      // Enhanced NetworkCat class
+      class NetworkCat {
+        constructor(id, x, y, isAI = false) {
+          this.id = id;
+          this.x = x;
+          this.y = y;
+          this.targetX = x;
+          this.targetY = y;
+          this.node = 0;
+          this.moving = false;
+          this.mining = false;
+          this.miningProgress = 0;
+          this.energy = 100;
+          this.maxEnergy = 100;
+          this.trail = [];
+          this.isAI = isAI;
+          this.aiTimer = 0;
+          this.lastTarget = -1;
+        }
+
+        update() {
+          if (this.moving) {
+            const dx = this.targetX - this.x;
+            const dy = this.targetY - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > 3) {
+              this.x += dx * 0.2;
+              this.y += dy * 0.2;
+            } else {
+              this.x = this.targetX;
+              this.y = this.targetY;
+              this.moving = false;
+              this.startMining();
+            }
+          }
+
+          if (this.mining) {
+            const cur = game.nodes[this.node];
+            if (cur && !cur.mined && this.energy > 0 && game.targetNodes.includes(this.node)) {
+              this.miningProgress += 2;
+              this.energy = Math.max(0, this.energy - 1);
+              const required = cur.difficulty * 60;
+              if (this.miningProgress >= required) {
+                this.completeMining();
+              }
+              if (Math.random() < 0.3) this.createMiningParticle();
+            } else {
+              // Stop mining if conditions aren't met
+              this.mining = false;
+              if (cur) cur.mining = false;
+            }
+          }
+
+          if (!this.mining && this.energy < this.maxEnergy) {
+            this.energy += 0.8;
+          }
+
+          // AI behavior
+          if (this.isAI && !this.moving && !this.mining) {
+            this.aiTimer++;
+            if (this.aiTimer > 30) { // AI acts every 30 frames (~0.5s)
+              this.performAIAction();
+              this.aiTimer = 0;
+            }
+          }
+
+          this.updateTrail();
+        }
+
+        performAIAction() {
+          // Find nearest unmined target node
+          const unminedTargets = game.targetNodes.filter(id => !game.completedNodes.has(id));
+          if (unminedTargets.length === 0) return;
+
+          let bestTarget = null;
+          let bestDistance = Infinity;
+          
+          for (const targetId of unminedTargets) {
+            const distance = this.getPathDistance(this.node, targetId);
+            if (distance < bestDistance && targetId !== this.lastTarget) {
+              bestDistance = distance;
+              bestTarget = targetId;
+            }
+          }
+
+          if (bestTarget !== null) {
+            const nextNode = this.findNextNodeToTarget(bestTarget);
+            if (nextNode !== -1) {
+              this.moveTo(nextNode);
+              if (nextNode === bestTarget) {
+                this.lastTarget = bestTarget;
+              }
+            }
+          }
+        }
+
+        getPathDistance(from, to) {
+          // Simple BFS to find shortest path distance
+          if (from === to) return 0;
+          
+          const visited = new Set();
+          const queue = [{node: from, dist: 0}];
+          visited.add(from);
+
+          while (queue.length > 0) {
+            const {node, dist} = queue.shift();
+            
+            const neighbors = game.links
+              .filter(l => l.from === node || l.to === node)
+              .map(l => l.from === node ? l.to : l.from);
+
+            for (const neighbor of neighbors) {
+              if (neighbor === to) return dist + 1;
+              if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                queue.push({node: neighbor, dist: dist + 1});
+              }
+            }
+          }
+          return Infinity;
+        }
+
+        findNextNodeToTarget(target) {
+          const neighbors = game.links
+            .filter(l => l.from === this.node || l.to === this.node)
+            .map(l => l.from === this.node ? l.to : l.from);
+
+          if (neighbors.includes(target)) return target;
+
+          let bestNext = -1;
+          let bestDistance = Infinity;
+
+          for (const neighbor of neighbors) {
+            const distance = this.getPathDistance(neighbor, target);
+            if (distance < bestDistance) {
+              bestDistance = distance;
+              bestNext = neighbor;
+            }
+          }
+
+          return bestNext;
+        }
+
+        updateTrail() {
+          this.trail.push({x: this.x, y: this.y, alpha: 1});
+          if (this.trail.length > 12) this.trail.shift();
+          this.trail.forEach(t => t.alpha *= 0.85);
+        }
+
+        moveTo(nodeId) {
+          if (this.mining || this.moving) return false;
+          const canMove = this.node === nodeId || game.links.some(l => 
+            (l.from === this.node && l.to === nodeId) || 
+            (l.to === this.node && l.from === nodeId)
+          );
+          if (canMove && nodeId < game.nodes.length) {
+            this.node = nodeId;
+            this.targetX = game.nodes[nodeId].x;
+            this.targetY = game.nodes[nodeId].y;
+            this.moving = true;
+            this.miningProgress = 0;
+            return true;
+          }
+          return false;
+        }
+
+        startMining() {
+          const cur = game.nodes[this.node];
+          if (cur && !cur.mined) {
+            this.mining = true;
+            cur.mining = true;
+            this.miningProgress = 0;
+          }
+        }
+
+        completeMining() {
+          const cur = game.nodes[this.node];
+          if (cur) {
+            cur.mined = true;
+            cur.mining = false;
+            game.completedNodes.add(this.node);
+            
+            // Activate connections
+            game.links.forEach(link => {
+              if ((link.from === this.node || link.to === this.node) && 
+                  game.nodes[link.from].mined && game.nodes[link.to].mined) {
+                link.active = true;
+              }
+            });
+
+            const reward = cur.difficulty * 50;
+            game.score += reward;
+            this.createRewardParticles(reward);
+            updateUI();
+            checkLevelComplete();
+          }
+          this.mining = false;
+        }
+
+        createMiningParticle() {
+          game.particles.push({
+            x: this.x + (Math.random() - 0.5) * 20,
+            y: this.y + (Math.random() - 0.5) * 20,
+            vx: (Math.random() - 0.5) * 3,
+            vy: (Math.random() - 0.5) * 3 - 1,
+            life: 40,
+            type: 'mining',
+            size: Math.random() * 3 + 1
+          });
+        }
+
+        createRewardParticles(reward) {
+          const count = Math.min(reward / 20, 10);
+          for (let i = 0; i < count; i++) {
+            game.particles.push({
+              x: this.x,
+              y: this.y,
+              vx: (Math.random() - 0.5) * 8,
+              vy: (Math.random() - 0.5) * 8 - 3,
+              life: 60,
+              type: 'reward',
+              size: Math.random() * 4 + 2
+            });
+          }
+        }
+
+        draw(ctx) {
+          // Draw trail
+          this.trail.forEach(t => {
+            ctx.globalAlpha = t.alpha * 0.5;
+            ctx.fillStyle = this.isAI ? '#ff8800' : '#00ff41';
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+
+          // Draw cat body
+          ctx.fillStyle = '#000';
+          ctx.fillRect(this.x - 10, this.y - 8, 20, 16);
+          
+          // Cat eyes
+          ctx.fillStyle = this.isAI ? '#ff8800' : '#00ff41';
+          ctx.fillRect(this.x - 6, this.y - 4, 3, 3);
+          ctx.fillRect(this.x + 3, this.y - 4, 3, 3);
+          
+          // Cat ears
+          ctx.fillStyle = '#000';
+          ctx.beginPath();
+          ctx.moveTo(this.x - 8, this.y - 8);
+          ctx.lineTo(this.x - 12, this.y - 15);
+          ctx.lineTo(this.x - 4, this.y - 12);
+          ctx.fill();
+          
+          ctx.beginPath();
+          ctx.moveTo(this.x + 8, this.y - 8);
+          ctx.lineTo(this.x + 12, this.y - 15);
+          ctx.lineTo(this.x + 4, this.y - 12);
+          ctx.fill();
+
+          // Mining progress
+          if (this.mining) {
+            ctx.strokeStyle = '#ffaa00';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            const progress = this.miningProgress / (game.nodes[this.node].difficulty * 60);
+            ctx.arc(this.x, this.y, 20, 0, progress * Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // Energy bar
+          const barWidth = 20;
+          ctx.fillStyle = '#330000';
+          ctx.fillRect(this.x - barWidth/2, this.y + 12, barWidth, 3);
+          ctx.fillStyle = this.energy > 30 ? '#00ff41' : '#ff4444';
+          ctx.fillRect(this.x - barWidth/2, this.y + 12, (barWidth * this.energy) / this.maxEnergy, 3);
+
+          // ID label
+          ctx.fillStyle = this.isAI ? '#ff8800' : '#00ff41';
+          ctx.font = '9px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(this.isAI ? 'AI' : this.id.toString(), this.x, this.y - 18);
+        }
+      }
+
+      // Network generation with different patterns
+      function generateLevel(level) {
+        const cfg = levels[Math.min(level - 1, levels.length - 1)];
+        resetGameState();
+        
+        const nodeCount = cfg.nodes;
+        game.level = level;
+        
+        switch (cfg.complexity) {
+          case 'ring':
+            generateRingNetwork(nodeCount);
+            break;
+          case 'grid':
+            generateGridNetwork(nodeCount);
+            break;
+          case 'spiral':
+            generateSpiralNetwork(nodeCount);
+            break;
+          case 'cluster':
+            generateClusterNetwork(nodeCount);
+            break;
+          case 'mesh':
+            generateMeshNetwork(nodeCount);
+            break;
+          case 'complex':
+            generateComplexNetwork(nodeCount);
+            break;
+          default:
+            generateRingNetwork(nodeCount);
+        }
+
+        // Set node properties
+        game.nodes.forEach((node, i) => {
+          node.id = i;
+          node.mined = false;
+          node.mining = false;
+          node.difficulty = Math.floor(Math.random() * 3) + 1;
+        });
+
+        // Select random target nodes
+        const possible = game.nodes.map(n => n.id);
+        shuffleArray(possible);
+        game.targetNodes = possible.slice(0, cfg.targets);
+
+        // Create cats
+        for (let i = 0; i < cfg.cats; i++) {
+          game.cats.push(new NetworkCat(i, game.nodes[0].x, game.nodes[0].y));
+        }
+
+        // Create AI cat if enabled
+        if (game.aiEnabled) {
+          game.aiCat = new NetworkCat('AI', game.nodes[0].x, game.nodes[0].y, true);
+          game.cats.push(game.aiCat);
+        }
+
+        ensureConnectedGraph();
+      }
+
+      function resetGameState() {
+        game.nodes = [];
+        game.links = [];
+        game.cats = [];
+        game.targetNodes = [];
+        game.completedNodes = new Set();
+        game.particles = [];
+        game.startTime = Date.now();
+        game.levelComplete = false;
+        game.aiCat = null;
+      }
+
+      function generateRingNetwork(nodeCount) {
+        const cx = game.width / 2;
+        const cy = game.height / 2;
+        const radius = 200;
+
+        for (let i = 0; i < nodeCount; i++) {
+          const angle = (i / nodeCount) * Math.PI * 2;
+          game.nodes.push({
+            x: cx + Math.cos(angle) * radius + (Math.random() - 0.5) * 40,
+            y: cy + Math.sin(angle) * radius + (Math.random() - 0.5) * 40
+          });
+        }
+
+        // Ring connections + some random ones
+        for (let i = 0; i < nodeCount; i++) {
+          game.links.push({from: i, to: (i + 1) % nodeCount, active: false});
+          if (Math.random() < 0.3) {
+            const target = (i + 2 + Math.floor(Math.random() * 3)) % nodeCount;
+            if (target !== i) {
+              game.links.push({from: i, to: target, active: false});
+            }
+          }
+        }
+      }
+
+      function generateGridNetwork(nodeCount) {
+        const cols = Math.ceil(Math.sqrt(nodeCount));
+        const rows = Math.ceil(nodeCount / cols);
+        const cellWidth = (game.width - 200) / cols;
+        const cellHeight = (game.height - 200) / rows;
+
+        for (let i = 0; i < nodeCount; i++) {
+          const row = Math.floor(i / cols);
+          const col = i % cols;
+          game.nodes.push({
+            x: 100 + col * cellWidth + cellWidth/2 + (Math.random() - 0.5) * 30,
+            y: 100 + row * cellHeight + cellHeight/2 + (Math.random() - 0.5) * 30
+          });
+        }
+
+        // Grid connections
+        for (let i = 0; i < nodeCount; i++) {
+          const row = Math.floor(i / cols);
+          const col = i % cols;
+          
+          if (col < cols - 1 && i + 1 < nodeCount) {
+            game.links.push({from: i, to: i + 1, active: false});
+          }
+          if (row < rows - 1 && i + cols < nodeCount) {
+            game.links.push({from: i, to: i + cols, active: false});
+          }
+          
+          // Add some diagonal connections
+          if (Math.random() < 0.4) {
+            if (col < cols - 1 && row < rows - 1 && i + cols + 1 < nodeCount) {
+              game.links.push({from: i, to: i + cols + 1, active: false});
+            }
+          }
+        }
+      }
+
+      function generateSpiralNetwork(nodeCount) {
+        const cx = game.width / 2;
+        const cy = game.height / 2;
+        let angle = 0;
+        let radius = 50;
+
+        for (let i = 0; i < nodeCount; i++) {
+          game.nodes.push({
+            x: cx + Math.cos(angle) * radius + (Math.random() - 0.5) * 20,
+            y: cy + Math.sin(angle) * radius + (Math.random() - 0.5) * 20
+          });
+          angle += 0.8;
+          radius += 8;
+        }
+
+        // Spiral connections
+        for (let i = 0; i < nodeCount - 1; i++) {
+          game.links.push({from: i, to: i + 1, active: false});
+        }
+
+        // Add some cross connections
+        for (let i = 0; i < nodeCount; i++) {
+          if (Math.random() < 0.3 && i + 3 < nodeCount) {
+            game.links.push({from: i, to: i + 3, active: false});
+          }
+        }
+      }
+
+      function generateClusterNetwork(nodeCount) {
+        const clusters = 3;
+        const nodesPerCluster = Math.floor(nodeCount / clusters);
+        
+        for (let c = 0; c < clusters; c++) {
+          const centerX = 200 + c * 300;
+          const centerY = 200 + (c % 2) * 200;
+          
+          for (let i = 0; i < nodesPerCluster; i++) {
+            const angle = (i / nodesPerCluster) * Math.PI * 2;
+            const radius = 80 + Math.random() * 60;
+            game.nodes.push({
+              x: centerX + Math.cos(angle) * radius,
+              y: centerY + Math.sin(angle) * radius
+            });
+          }
+        }
+
+        // Add remaining nodes
+        while (game.nodes.length < nodeCount) {
+          game.nodes.push({
+            x: Math.random() * (game.width - 100) + 50,
+            y: Math.random() * (game.height - 100) + 50
+          });
+        }
+
+        // Cluster internal connections
+        for (let c = 0; c < clusters; c++) {
+          const start = c * nodesPerCluster;
+          const end = Math.min(start + nodesPerCluster, game.nodes.length);
+          
+          for (let i = start; i < end; i++) {
+            for (let j = i + 1; j < end; j++) {
+              if (Math.random() < 0.6) {
+                game.links.push({from: i, to: j, active: false});
+              }
+            }
+          }
+        }
+
+        // Inter-cluster connections
+        for (let i = 0; i < game.nodes.length; i++) {
+          for (let j = i + 1; j < game.nodes.length; j++) {
+            const dx = game.nodes[i].x - game.nodes[j].x;
+            const dy = game.nodes[i].y - game.nodes[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 200 && Math.random() < 0.2) {
+              game.links.push({from: i, to: j, active: false});
+            }
+          }
+        }
+      }
+
+      function generateMeshNetwork(nodeCount) {
+        // Random placement
+        for (let i = 0; i < nodeCount; i++) {
+          game.nodes.push({
+            x: Math.random() * (game.width - 200) + 100,
+            y: Math.random() * (game.height - 200) + 100
+          });
+        }
+
+        // Dense connections based on distance
+        for (let i = 0; i < nodeCount; i++) {
+          for (let j = i + 1; j < nodeCount; j++) {
+            const dx = game.nodes[i].x - game.nodes[j].x;
+            const dy = game.nodes[i].y - game.nodes[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 150;
+            const prob = Math.max(0, 0.8 - (dist / maxDist));
+            if (Math.random() < prob) {
+              game.links.push({from: i, to: j, active: false});
+            }
+          }
+        }
+      }
+
+      function generateComplexNetwork(nodeCount) {
+        // Hybrid approach: multiple patterns combined
+        const patterns = ['ring', 'grid', 'cluster'];
+        const nodesPerPattern = Math.floor(nodeCount / patterns.length);
+        
+        // Generate sub-networks
+        for (let p = 0; p < patterns.length; p++) {
+          const startIdx = game.nodes.length;
+          generateSubNetwork(patterns[p], nodesPerPattern, p);
+        }
+
+        // Add remaining nodes randomly
+        while (game.nodes.length < nodeCount) {
+          game.nodes.push({
+            x: Math.random() * (game.width - 100) + 50,
+            y: Math.random() * (game.height - 100) + 50
+          });
+        }
+
+        // Connect sub-networks
+        connectSubNetworks();
+      }
+
+      function generateSubNetwork(pattern, count, offset) {
+        const baseX = (offset % 2) * 400 + 150;
+        const baseY = Math.floor(offset / 2) * 300 + 150;
+        const startIdx = game.nodes.length;
+
+        for (let i = 0; i < count; i++) {
+          let x, y;
+          if (pattern === 'ring') {
+            const angle = (i / count) * Math.PI * 2;
+            x = baseX + Math.cos(angle) * 100;
+            y = baseY + Math.sin(angle) * 100;
+          } else if (pattern === 'grid') {
+            const cols = Math.ceil(Math.sqrt(count));
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+            x = baseX + col * 40 - (cols * 20);
+            y = baseY + row * 40 - (Math.ceil(count/cols) * 20);
+          } else {
+            x = baseX + (Math.random() - 0.5) * 200;
+            y = baseY + (Math.random() - 0.5) * 200;
+          }
+          
+          game.nodes.push({x, y});
+        }
+
+        // Internal connections
+        for (let i = startIdx; i < startIdx + count; i++) {
+          for (let j = i + 1; j < startIdx + count; j++) {
+            if (Math.random() < 0.5) {
+              game.links.push({from: i, to: j, active: false});
+            }
+          }
+        }
+      }
+
+      function connectSubNetworks() {
+        // Ensure all sub-networks are connected
+        const subNetworkSize = Math.floor(game.nodes.length / 3);
+        for (let i = 0; i < 2; i++) {
+          const from = i * subNetworkSize + Math.floor(Math.random() * subNetworkSize);
+          const to = (i + 1) * subNetworkSize + Math.floor(Math.random() * subNetworkSize);
+          game.links.push({from, to, active: false});
+        }
+      }
+
+      function ensureConnectedGraph() {
+        const n = game.nodes.length;
+        const parent = Array.from({length: n}, (_, i) => i);
+        
+        function find(a) {
+          return parent[a] === a ? a : (parent[a] = find(parent[a]));
+        }
+        
+        function union(a, b) {
+          a = find(a);
+          b = find(b);
+          if (a !== b) parent[b] = a;
+        }
+
+        game.links.forEach(l => union(l.from, l.to));
+
+        // Connect disconnected components
+        for (let i = 1; i < n; i++) {
+          if (find(i) !== find(0)) {
+            game.links.push({from: 0, to: i, active: false});
+            union(0, i);
+          }
+        }
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      // Rendering
+      function render() {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, game.width, game.height);
+
+        // Draw links
+        game.links.forEach(link => {
+          const from = game.nodes[link.from];
+          const to = game.nodes[link.to];
+          ctx.strokeStyle = link.active ? '#00ff41' : '#003300';
+          ctx.lineWidth = link.active ? 3 : 2;
+          if (link.active) {
+            ctx.setLineDash([6, 6]);
+            ctx.lineDashOffset = Date.now() / 50;
+          } else {
+            ctx.setLineDash([]);
+          }
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          ctx.lineTo(to.x, to.y);
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+
+        // Draw nodes
+        game.nodes.forEach((node, i) => {
+          let fillStyle, strokeStyle, lineWidth;
+          
+          if (game.targetNodes.includes(i)) {
+            if (node.mined) {
+              fillStyle = 'rgba(0, 255, 65, 0.6)';
+              strokeStyle = '#00ff41';
+              lineWidth = 4;
+            } else {
+              fillStyle = 'rgba(255, 170, 0, 0.3)';
+              strokeStyle = '#ffaa00';
+              lineWidth = 4;
+            }
+          } else if (node.mined) {
+            fillStyle = 'rgba(0, 255, 65, 0.4)';
+            strokeStyle = '#00ff41';
+            lineWidth = 3;
+          } else if (node.mining) {
+            fillStyle = 'rgba(255, 170, 0, 0.4)';
+            strokeStyle = '#ffaa00';
+            lineWidth = 3;
+          } else {
+            fillStyle = 'rgba(0, 255, 65, 0.1)';
+            strokeStyle = '#003300';
+            lineWidth = 2;
+          }
+
+          ctx.fillStyle = fillStyle;
+          ctx.strokeStyle = strokeStyle;
+          ctx.lineWidth = lineWidth;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 22, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          // Node labels
+          ctx.fillStyle = strokeStyle;
+          ctx.font = '11px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(i.toString(), node.x, node.y - 2);
+          ctx.font = '9px monospace';
+          ctx.fillText('D' + node.difficulty, node.x, node.y + 10);
+        });
+
+        // Draw particles
+        game.particles = game.particles.filter(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.15;
+          p.vx *= 0.98;
+          p.vy *= 0.98;
+          p.life--;
+
+          ctx.globalAlpha = p.life / (p.type === 'reward' ? 60 : 40);
+          ctx.fillStyle = p.type === 'reward' ? '#ffaa00' : '#00ff41';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          return p.life > 0;
+        });
+        ctx.globalAlpha = 1;
+
+        // Draw cats
+        game.cats.forEach(cat => cat.draw(ctx));
+
+        // HUD overlay
+        const totalNodes = game.nodes.length;
+        const minedNodes = game.completedNodes.size;
+        const targetMined = game.targetNodes.filter(id => game.completedNodes.has(id)).length;
+
+        ctx.fillStyle = 'rgba(0, 20, 0, 0.9)';
+        ctx.fillRect(10, game.height - 90, 320, 80);
+        ctx.strokeStyle = '#003300';
+        ctx.strokeRect(10, game.height - 90, 320, 80);
+
+        ctx.fillStyle = '#00ff41';
+        ctx.font = '11px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Total Nodes: ${minedNodes}/${totalNodes}`, 15, game.height - 70);
+        ctx.fillText(`Target Nodes: ${targetMined}/${game.targetNodes.length}`, 15, game.height - 54);
+        ctx.fillText(`Network Progress: ${Math.floor((minedNodes/totalNodes)*100)}%`, 15, game.height - 38);
+        ctx.fillText(`Completion: ${Math.floor((targetMined/game.targetNodes.length)*100)}%`, 15, game.height - 22);
+      }
+
+      // Input handling
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const clickedNode = game.nodes.findIndex(node => {
+          const dx = x - node.x;
+          const dy = y - node.y;
+          return Math.sqrt(dx * dx + dy * dy) < 30;
+        });
+
+        if (clickedNode >= 0) {
+          // Find available human cat (not AI)
+          const availableCat = game.cats.filter(cat => 
+            !cat.isAI && !cat.moving && !cat.mining
+          ).sort((a, b) => b.energy - a.energy)[0];
+          
+          if (availableCat) {
+            availableCat.moveTo(clickedNode);
+          }
+        }
+      });
+
+      // Level completion check
+      function checkLevelComplete() {
+        if (!game.nodes || game.nodes.length === 0) return;
+        
+        const targetMined = game.targetNodes.filter(id => game.completedNodes.has(id)).length;
+        const allTargetsMined = game.targetNodes.length > 0 && 
+                              game.targetNodes.every(id => game.completedNodes.has(id));
+
+        if (allTargetsMined && !game.levelComplete) {
+          game.levelComplete = true;
+          const cfg = levels[Math.min(game.level - 1, levels.length - 1)];
+          const timeTaken = Math.floor((Date.now() - game.startTime) / 1000);
+          const timeBonus = Math.max(0, cfg.time - timeTaken) * 20;
+          const levelScore = cfg.reward + timeBonus;
+          
+          game.score += levelScore;
+          updateUI();
+          
+          document.getElementById('level-score').textContent = levelScore;
+          document.getElementById('level-complete').style.display = 'block';
+          
+          // Send multiplayer completion
+          if (game.mode === 'online' && game.ws && game.clientId) {
+            const payload = {
+              type: 'finish',
+              clientId: game.clientId,
+              level: game.level,
+              time: timeTaken,
+              score: levelScore
+            };
+            try {
+              game.ws.send(JSON.stringify(payload));
+            } catch (e) {
+              console.warn('WebSocket send failed:', e);
+            }
+          }
+        }
+      }
+
+      // UI updates
+      function updateUI() {
+        document.getElementById('level').textContent = game.level;
+        document.getElementById('score').textContent = game.score;
+      }
+
+      function updateTimer() {
+        const elapsed = Math.floor((Date.now() - game.startTime) / 1000);
+        document.getElementById('timer').textContent = elapsed + 's';
+      }
+
+      // Multiplayer WebSocket handling
+      function connectMultiplayer() {
+        if (!WS_SERVER) {
+          alert('Multiplayer server not configured');
+          return;
+        }
+
+        if (game.ws) {
+          game.ws.close();
+        }
+
+        game.mode = 'online';
+        document.getElementById('mode').textContent = 'Online';
+        
+        const clientId = 'player_' + Math.random().toString(36).slice(2, 9);
+        game.clientId = clientId;
+        
+        const ws = new WebSocket(WS_SERVER);
+        game.ws = ws;
+
+        ws.addEventListener('open', () => {
+          console.log('Connected to multiplayer server');
+          ws.send(JSON.stringify({
+            type: 'join',
+            clientId: clientId,
+            name: `Player ${clientId.slice(-4)}`
+          }));
+        });
+
+        ws.addEventListener('message', (event) => {
+          handleWebSocketMessage(event);
+        });
+
+        ws.addEventListener('close', () => {
+          game.mode = 'offline';
+          document.getElementById('mode').textContent = 'Offline';
+          game.ws = null;
+          renderPlayersList();
+        });
+
+        ws.addEventListener('error', (error) => {
+          console.error('WebSocket error:', error);
+          alert('Connection failed. Playing offline.');
+        });
+      }
+
+      async function handleWebSocketMessage(event) {
+        try {
+          let rawData;
+          if (typeof event.data === 'string') {
+            rawData = event.data;
+          } else {
+            try {
+              rawData = await event.data.text();
+            } catch (e) {
+              const buffer = await event.data.arrayBuffer();
+              rawData = new TextDecoder().decode(buffer);
+            }
+          }
+
+          // Try to parse as JSON
+          let data;
+          try {
+            data = JSON.parse(rawData);
+          } catch (e) {
+            // Extract JSON from mixed content
+            const jsonStart = Math.min(
+              rawData.indexOf('{') === -1 ? Infinity : rawData.indexOf('{'),
+              rawData.indexOf('[') === -1 ? Infinity : rawData.indexOf('[')
+            );
+            if (jsonStart !== Infinity) {
+              const jsonPart = rawData.slice(jsonStart);
+              data = JSON.parse(jsonPart);
+            } else {
+              console.warn('Non-JSON WebSocket message:', rawData);
+              return;
+            }
+          }
+
+          handleGameMessage(data);
+        } catch (error) {
+          console.error('Failed to process WebSocket message:', error);
+        }
+      }
+
+      function handleGameMessage(data) {
+        try {
+          switch (data.type) {
+            case 'state':
+              if (data.players) {
+                game.players = data.players;
+                renderPlayersList();
+              }
+              break;
+
+            case 'start':
+              if (data.levelConfig) {
+                applyServerLevel(data.levelConfig);
+              }
+              game.startTime = Date.now();
+              document.getElementById('level-complete').style.display = 'none';
+              break;
+
+            case 'finish':
+              if (data.clientId && data.clientId !== game.clientId) {
+                game.players[data.clientId] = game.players[data.clientId] || {};
+                game.players[data.clientId].time = data.time;
+                game.players[data.clientId].score = data.score;
+                game.players[data.clientId].status = 'finished';
+                renderPlayersList();
+              }
+              break;
+
+            default:
+              console.log('Unknown message type:', data.type);
+          }
+        } catch (error) {
+          console.error('Error handling game message:', error);
+        }
+      }
+
+      function applyServerLevel(config) {
+        if (config && config.nodes && config.links) {
+          game.nodes = config.nodes;
+          game.links = config.links;
+          game.targetNodes = config.targetNodes || [];
+          
+          // Recreate cats
+          game.cats = [];
+          const catCount = config.cats || 1;
+          for (let i = 0; i < catCount; i++) {
+            game.cats.push(new NetworkCat(i, game.nodes[0].x, game.nodes[0].y));
+          }
+
+          if (game.aiEnabled) {
+            game.aiCat = new NetworkCat('AI', game.nodes[0].x, game.nodes[0].y, true);
+            game.cats.push(game.aiCat);
+          }
+        }
+      }
+
+      function renderPlayersList() {
+        const element = document.getElementById('playersList');
+        const players = Object.values(game.players).sort((a, b) => 
+          (a.time || 99999) - (b.time || 99999)
+        );
+
+        if (players.length === 0) {
+          element.innerHTML = 'Click "Join Multiplayer" to compete!';
+          return;
+        }
+
+        element.innerHTML = players.map(player => `
+          <div style="margin-bottom: 8px; padding: 4px; border-left: 2px solid ${player.status === 'finished' ? '#00ff41' : '#666'}">
+            <div>${player.name || player.clientId}</div>
+            <div style="font-size: 9px; color: #aaa">
+              ${player.status === 'finished' ? `⏱️ ${player.time}s` : '🏃 Racing...'}
+              ${player.score ? ` | 🏆 ${player.score}` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // AI toggle functionality
+      function toggleAI() {
+        game.aiEnabled = !game.aiEnabled;
+        const button = document.getElementById('ai-toggle');
+        
+        if (game.aiEnabled) {
+          button.textContent = 'AI Cat: ON';
+          button.classList.add('active');
+          
+          // Add AI cat if not present
+          if (!game.aiCat) {
+            game.aiCat = new NetworkCat('AI', game.nodes[0].x, game.nodes[0].y, true);
+            game.cats.push(game.aiCat);
+          }
+        } else {
+          button.textContent = 'AI Cat: OFF';
+          button.classList.remove('active');
+          
+          // Remove AI cat
+          if (game.aiCat) {
+            const index = game.cats.indexOf(game.aiCat);
+            if (index > -1) {
+              game.cats.splice(index, 1);
+            }
+            game.aiCat = null;
+          }
+        }
+      }
+
+      // Game control functions
+      function nextLevel() {
+        if (game.level < levels.length) {
+          game.level++;
+        } else {
+          // Loop back to harder versions
+          game.level = 1;
+        }
+        generateLevel(game.level);
+        document.getElementById('level-complete').style.display = 'none';
+        updateUI();
+      }
+
+      function resetGame() {
+        game.level = 1;
+        game.score = 0;
+        generateLevel(1);
+        document.getElementById('level-complete').style.display = 'none';
+        updateUI();
+      }
+
+      // Main game loop
+      function gameLoop() {
+        if (!game.levelComplete) {
+          game.cats.forEach(cat => cat.update());
+          updateTimer();
+        }
+        render();
+        requestAnimationFrame(gameLoop);
+      }
+
+      // Event listeners
+      document.getElementById('connectBtn').addEventListener('click', connectMultiplayer);
+      document.getElementById('newGameBtn').addEventListener('click', resetGame);
+      document.getElementById('ai-toggle').addEventListener('click', toggleAI);
+
+      // Initialize game
+      generateLevel(1);
+      updateUI();
+      gameLoop();
+    </script>
+  </body>
+</html>
