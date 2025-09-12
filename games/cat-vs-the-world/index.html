@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Cat vs. the World - js13k 2025</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    #ui {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      color: #eee;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: rgba(0, 0, 0, .6);
+    }
+
+    #overlay.show {
+      display: flex;
+    }
+
+    #overlay .card {
+      background: #222;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    }
+
+    #overlay h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    #overlay p {
+      margin: 6px 0;
+      opacity: .9;
+    }
+
+    #overlay button {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 999px;
+      background: #5cf;
+      color: #001018;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+
+    /* Mobile controls */
+    #controls {
+      position: fixed;
+      inset: auto 0 0 0;
+      height: 34vh;
+      pointer-events: none;
+    }
+
+    .pad {
+      position: absolute;
+      width: 36vmin;
+      height: 36vmin;
+      border-radius: 50%;
+      left: 2vmin;
+      bottom: 2vmin;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .15), rgba(255, 255, 255, .05));
+      pointer-events: auto;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .btn {
+      position: absolute;
+      right: 2vmin;
+      bottom: 6vmin;
+      width: 28vmin;
+      height: 28vmin;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .15), rgba(255, 255, 255, .05));
+      pointer-events: auto;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .hint {
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      font-size: 12px;
+      opacity: .6;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="ui">
+    <div id="score">Score: 0</div>
+    <div id="time">Time: 15</div>
+    <div id="hp">Time: 45</div>
+  </div>
+  <canvas id="c"></canvas>
+
+  <div id="overlay">
+    <div class="card">
+      <h1 id="endGameReason"></h1>
+      <p id="summary"></p>
+      <button id="again">Play Again</button>
+      <p style="font-size:12px;opacity:.7;margin-top:8px">R to restart</p>
+    </div>
+  </div>
+
+  <div id="controls" aria-hidden="true">
+    <div class="pad" id="pad"></div>
+    <div class="btn" id="act"></div>
+  </div>
+
+  <div class="hint">js13k2025: Controls: WASD/Arrows to move · Space to jump/knock</div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('c');
+      const ctx = canvas.getContext('2d');
+      let W = 0, H = 0, DPR = 1;
+      let realHeight = 10;
+
+      function getViewportSize() {
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          h -= 50; // iOS Safari bar
+        } else if (/Android/i.test(navigator.userAgent)) {
+          h -= 56; // Chrome Android bar
+        }
+
+        return { width: w, height: h };
+      }
+
+      function resize() {
+        DPR = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+        W = Math.floor(innerWidth * DPR);
+        H = Math.floor(innerHeight * DPR);
+        canvas.width = W; canvas.height = H;
+        realHeight = getViewportSize().height;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.textBaseline = 'middle';
+      }
+      addEventListener('resize', resize, { passive: true });
+      resize();
+
+      // Game state
+      const state = {
+        cat: { x: 120, y: 380, vx: 0, vy: 0, speed: 2.2, r: 18, lastDir: 1, hp: 3, hurt: 0, onGround: false },
+        keys: {},
+        time: 15, // seconds
+        score: 0,
+        active: true,
+        objs: []
+      };
+
+      const GLYPHS = {
+        cat: '🐈‍⬛', burst: '💥', spark: '✨'
+      };
+
+      const FONT_CACHE = {};
+      function getFont(size, family) {
+        const key = `${size}+${family}`;
+        if (!FONT_CACHE[key]) FONT_CACHE[key] = `${size}px ${family}`;
+        return FONT_CACHE[key];
+      }
+
+      function makeGlyph(glyph, size) {
+        const c = document.createElement('canvas');
+        c.width = c.height = size * 2.5;
+        const g = c.getContext('2d');
+
+        g.font = `${size}px serif`;
+        g.textBaseline = 'top';
+        g.textAlign = 'left';
+
+        g.fillText(glyph, size, size);
+
+        return { canvas: c, size };
+      }
+
+      const glyphCache = new Map();
+      function getGlyph(glyph, size = 16) {
+        const key = `${glyph}@${size}`;
+        if (!glyphCache.has(key)) {
+          glyphCache.set(key, makeGlyph(glyph, size));
+        }
+        return glyphCache.get(key);
+      }
+
+      function drawGlyph(ctx, text, x, y, size) {
+        const glyph = getGlyph(text, size * 2);
+        ctx.drawImage(glyph.canvas, x - size, y - size, glyph.size, glyph.size);
+      }
+
+      // Mobile input (virtual stick + button)
+      const pad = document.getElementById('pad');
+      const btn = document.getElementById('act');
+
+      // basic clamp helper
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+      let stick = { active: false, id: null, cx: 0, cy: 0, dx: 0, dy: 0 };
+
+      // pointer-based start
+      function padStart(e) {
+        // Only handle primary pointer to keep things simple
+        if (e.pointerType && e.isPrimary === false) return;
+        e.preventDefault();
+        stick.active = true;
+        stick.id = e.pointerId;
+        // compute center once
+        const r = pad.getBoundingClientRect();
+        stick.cx = r.left + r.width / 2;
+        stick.cy = r.top + r.height / 2;
+
+        // capture pointer so we keep getting moves even if finger leaves element
+        try { pad.setPointerCapture(e.pointerId); } catch (err) { }
+        padMove(e);
+      }
+
+      function padMove(e) {
+        if (!stick.active) return;
+
+        // If pointer events: use pointerId, clientX/Y
+        if (e.pointerId != null) {
+          if (e.pointerId !== stick.id) return;
+          stick.dx = clamp((e.clientX - stick.cx) / (pad.offsetWidth * 0.35), -1, 1);
+          stick.dy = clamp((e.clientY - stick.cy) / (pad.offsetHeight * 0.35), -1, 1);
+          return;
+        }
+
+        // fallback for touch events
+        if (e.changedTouches && e.changedTouches.length) {
+          const t = e.changedTouches[0];
+          stick.dx = clamp((t.clientX - stick.cx) / (pad.offsetWidth * 0.35), -1, 1);
+          stick.dy = clamp((t.clientY - stick.cy) / (pad.offsetHeight * 0.35), -1, 1);
+        }
+      }
+
+      function padEnd(e) {
+        // allow pointerId-based end or generic end
+        if (e && e.pointerId != null && e.pointerId !== stick.id) return;
+        stick.active = false;
+        stick.id = null;
+        stick.dx = stick.dy = 0;
+        try { if (e && e.pointerId != null) pad.releasePointerCapture(e.pointerId); } catch (err) { }
+      }
+
+      // Pointer event listeners
+      pad.addEventListener('pointerdown', padStart, { passive: false });
+      pad.addEventListener('pointermove', padMove, { passive: false });
+      pad.addEventListener('pointerup', padEnd);
+      pad.addEventListener('pointercancel', padEnd);
+      pad.addEventListener('lostpointercapture', padEnd);
+
+      // Button: use pointerdown for immediate action, prevent default to avoid focus issues
+      btn.addEventListener('pointerdown', (e) => { e.preventDefault(); action(); }, { passive: false });
+
+
+      // Keyboard
+      addEventListener('keydown', e => { state.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); action(); } if (e.key === 'r' || e.key === 'R') restart(); });
+      addEventListener('keyup', e => { state.keys[e.key] = false; });
+
+      // Objects generation    
+      const CACTUS = { emoji: '🌵', name: 'obstacle', score: 18, size: 32, breakable: true };
+
+      const TOPPLE_ITEMS = [
+        { emoji: '🪞', name: 'mirror', score: 18, size: 60, breakable: true },
+        { emoji: '🍽️', name: 'plate', score: 10, size: 32, breakable: true },
+        { emoji: '🍵', name: 'teacup', score: 8, size: 24, breakable: true },
+        { emoji: '🍎', name: 'apple', score: 3, size: 22, breakable: false },
+        { emoji: '🥛', name: 'milk', score: 12, size: 22, breakable: true },
+        { emoji: '🍯', name: 'honey', score: 7, size: 28, breakable: true },
+        { emoji: '🎮', name: 'controller', score: 15, size: 36, breakable: true },
+        { emoji: '🧸', name: 'teddy bear', score: 5, size: 40, breakable: false },
+        { emoji: '🪀', name: 'yo-yo', score: 2, size: 18, breakable: false },
+        { emoji: '🏀', name: 'basketball', score: 6, size: 38, breakable: false },
+        { emoji: '⚽', name: 'soccer ball', score: 6, size: 38, breakable: false },
+        { emoji: '🎲', name: 'dice', score: 4, size: 16, breakable: false },
+        { emoji: '🖼️', name: 'picture frame', score: 14, size: 44, breakable: true },
+        { emoji: '🪆', name: 'nesting dolls', score: 7, size: 30, breakable: true },
+        { emoji: '🕯️', name: 'candle', score: 3, size: 20, breakable: true },
+        { emoji: '🪴', name: 'potted plant', score: 5, size: 28, breakable: true },
+        { emoji: '💻', name: 'laptop', score: 20, size: 40, breakable: true },
+        { emoji: '📱', name: 'phone', score: 12, size: 22, breakable: true },
+        { emoji: '💡', name: 'lightbulb', score: 9, size: 18, breakable: true },
+        { emoji: '🔦', name: 'flashlight', score: 6, size: 22, breakable: true },
+        { emoji: '🐟', name: 'fish', score: 8, size: 24, breakable: false },
+        { emoji: '🐭', name: 'mouse', score: 7, size: 20, breakable: false },
+        { emoji: '🐦', name: 'bird', score: 7, size: 20, breakable: false },
+        { emoji: '🧶', name: 'yarn ball', score: 4, size: 18, breakable: false },
+        { emoji: '🥛', name: 'milk glass', score: 24, size: 24, breakable: true }
+      ];
+      const WORLD_WIDTH = 4000;
+      const STACKS = 8;
+      const TABLES = [];
+      function generateTables() {
+        TABLES.length = 0;
+        let x = 80;
+        while (x < WORLD_WIDTH - 80) {
+          let baseX = x + Math.random() * 40;
+          let y = realHeight - 120;
+          const tablesInStack = 3 + Math.floor(Math.random() * 4); // 3–6 tables
+          for (let t = 0; t < tablesInStack; t++) {
+            let w = 120 + Math.random() * 120;
+            TABLES.push({ x: baseX + Math.random() * 40, y, w, h: 24 });
+            y -= 80 + Math.random() * 60;
+            if (y < 80) break;
+          }
+          x += 180 + Math.random() * 120; // closer and random spacing
+        }
+      }
+      function rand(a, b) { return a + Math.random() * (b - a); }
+      function placeObjects() {
+        state.objs.length = 0;
+        for (const table of TABLES) {
+          // Place 1-2 objects per table
+          const n = 1 + (Math.random() < 0.5 ? 1 : 0);
+          for (let i = 0; i < n; i++) {
+            let t = TOPPLE_ITEMS[(Math.random() * TOPPLE_ITEMS.length) | 0];
+            if (Math.random() > 0.8) {
+              t = CACTUS;
+            }
+            const x = table.x + 32 + Math.random() * (table.w - 64);
+            const y = table.y - t.size / 2; // offset by half the size
+            state.objs.push({ x, y, glyph: t.emoji, score: t.score, r: t.size, type: t.name, breakable: t.breakable, alive: true, bump: 0, topple: false });
+          }
+        }
+      }
+
+      let furnitureItems = [
+        { emoji: '🪴', height: 60 },   // plant
+        { emoji: '🪑', height: 80 },   // chair
+        { emoji: '🛋️', height: 180 }, // couch
+        { emoji: '🛏️', height: 110 }, // bed
+        { emoji: '🚪', height: 140 },  // door
+        { emoji: '🪜', height: 130 },  // ladder
+        { emoji: '📺', height: 100 },   // TV
+        { emoji: '🧹', height: 90 },   // broom
+        { emoji: '🧺', height: 70 },   // laundry basket
+        { emoji: '🧴', height: 40 },   // bottle
+        { emoji: '🪣', height: 60 }    // bucket
+      ];
+      let furniturePositions = [];
+
+      function resetRound() {
+        state.time = 15; state.score = 0; state.active = true;
+        state.cat.x = 120; state.cat.y = 380; state.cat.vx = state.cat.vy = 0;
+        state.cat.hp = 3; state.cat.hurt = 0;
+        generateTables();
+        placeObjects();
+        // Generate window positions
+        windowPositions = [];
+        for (let i = 0; i < WORLD_WIDTH; i += 400) {
+          let winW = 180, winH = 140;
+          let winY = realHeight > 500 ? 120 : 20; // Fixed height for all windows
+          windowPositions.push({ x: i + 60, y: winY, w: winW, h: winH });
+        }
+        // Generate furniture positions
+        furniturePositions = [];
+        let x = 100;
+        for (let i = 0; i < furnitureItems.length; i++) {
+          furniturePositions.push({
+            emoji: furnitureItems[i].emoji,
+            x: x,
+            y: realHeight - 32 - furnitureItems[i].height,
+            height: furnitureItems[i].height
+          });
+          x += 220 + Math.random() * 180;
+        }
+        document.getElementById('overlay').classList.remove('show');
+      }
+
+      function restart() { resetRound(); }
+
+      // Effects
+      const puffs = [];
+      function burst(x, y) {
+        for (let i = 0; i < 6; i++) puffs.push({ x, y, a: 1, vx: rand(-1.5, 1.5), vy: rand(-2.0, 0.5), g: 0.035, life: rand(20, 40), t: (Math.random() < .5 ? GLYPHS.burst : GLYPHS.spark) });
+      }
+
+      // Action (knock nearest object within range)
+      function action() {
+        if (!state.active) return;
+        let target = null, td = 9999; const R = 46;
+        for (const o of state.objs) {
+          if (!o.alive) continue;
+          const dx = o.x - state.cat.x, dy = o.y - state.cat.y;
+          const d = Math.hypot(dx, dy);
+          if (d < td && d < R) { td = d; target = o; }
+        }
+        if (target) {
+          // Topple animation setup
+          target.topple = true;
+          const dir = Math.sign(target.x - state.cat.x) || 1;
+          target.vx = dir * 5.5;
+          target.vy = -3.5 - Math.random() * 2;
+          target.ay = 0.38;
+          target.alive = false; // Hide from normal rendering
+          if (target.breakable) {
+            target.bump = 16;
+          }
+          // slight knockback
+          //const ang = Math.atan2(target.y-state.cat.y, target.x-state.cat.x);
+          //state.cat.vx -= Math.cos(ang)*1.4; state.cat.vy -= Math.sin(ang)*1.4;
+        } else {
+          // Jump
+          if (state.cat.onGround) {
+            state.cat.vy = -10.5;
+            state.cat.onGround = false;
+          }
+        }
+      }
+
+      // Loop
+      let last = 0;
+      function tick(t) {
+        requestAnimationFrame(tick);
+        const now = t || 0; if (!last) last = now; const dt = Math.min(0.05, (now - last) / 1000); last = now;
+        update(dt); render();
+      }
+      requestAnimationFrame(tick);
+
+      let camX = 0;
+
+      function update(dt) {
+        // Time
+        if (state.active) { state.time -= dt; if (state.time <= 0) { state.time = 0; endGame(); } }
+
+        // Sidescroller physics
+        if (state.cat.hp > 0 && state.active) {
+          let ax = 0;
+          if (state.keys['ArrowLeft'] || state.keys['a']) ax -= 1;
+          if (state.keys['ArrowRight'] || state.keys['d']) ax += 1;
+          if (stick.active) {
+            ax += stick.dx;
+          }
+          // Horizontal movement
+          state.cat.vx += ax * state.cat.speed * 0.5;
+          state.cat.vx *= 0.85;
+          // Gravity
+          state.cat.vy += 0.38;
+          state.cat.vy *= 0.98;
+          // Move
+          state.cat.x += state.cat.vx;
+          state.cat.y += state.cat.vy;
+          // Table collision
+          state.cat.onGround = false;
+          for (const table of TABLES) {
+            if (state.cat.x > table.x - 16 && state.cat.x < table.x + table.w + 16) {
+              if (state.cat.y + state.cat.r > table.y && state.cat.y + state.cat.r < table.y + table.h + 16 && state.cat.vy > 0) {
+                state.cat.y = table.y - state.cat.r;
+                state.cat.vy = 0;
+                state.cat.onGround = true;
+              }
+            }
+          }
+          // Floor
+          if (state.cat.y > realHeight - 32) {
+            state.cat.y = realHeight - 32;
+            state.cat.vy = 0;
+            state.cat.onGround = true;
+          }
+          // Walls
+          state.cat.x = Math.max(24, Math.min(WORLD_WIDTH - 24, state.cat.x));
+          // Persist last movement direction
+          if (Math.abs(state.cat.vx) > 0.2) {
+            state.cat.lastDir = state.cat.vx > 0 ? 1 : -1;
+          }
+        }
+
+        // Animate particles
+        for (let i = puffs.length - 1; i >= 0; i--) {
+          const p = puffs[i];
+          p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life--; p.a = Math.max(0, p.life / 40);
+          if (p.life <= 0) puffs.splice(i, 1);
+        }
+
+        // Object bounce wiggle
+        for (const o of state.objs) { if (o.bump > 0) o.bump -= 60 * dt; }
+
+        // Obstacle collision
+        for (const o of state.objs) {
+          if (o.type === 'obstacle' && o.alive) {
+            const dx = o.x - state.cat.x, dy = o.y - state.cat.y;
+            if (dx * dx + dy * dy < (state.cat.r) ** 2) {
+              if (state.cat.hurt <= 0) {
+                state.cat.hp -= o.damage || 1;
+                state.cat.hurt = 40;
+                o.bump = 20;
+                if (state.cat.hp <= 0) { endGame(); }
+              }
+              o.topple = true;
+              const dir = Math.sign(o.x - state.cat.x) || 1;
+              o.vx = dir * 5.5;
+              o.vy = -3.5 - Math.random() * 2;
+              o.ay = 0.38;
+              o.alive = false; // Hide from normal rendering
+            }
+          }
+        }
+        if (state.cat.hurt > 0) state.cat.hurt -= 60 * dt;
+
+        // Animate toppled objects
+        for (const o of state.objs) {
+          if (o.topple) {
+            o.x += o.vx;
+            o.y += o.vy;
+            o.vy += o.ay;
+            o.vx *= 0.98;
+            // Hit ground
+            if (o.y > realHeight - 32 - o.r / 2) {
+              if (o.breakable) {
+                state.score += o.score;
+                burst(o.x, realHeight - 32);
+              }
+              o.topple = false;
+              o.alive = !o.breakable; // breakable: gone, non-breakable: lays on ground
+              o.y = realHeight - 32 - o.r / 2;
+            }
+          }
+        }
+
+        // Camera follows cat
+        camX = Math.floor(Math.max(0, Math.min(state.cat.x - innerWidth / 2, WORLD_WIDTH - innerWidth)));
+
+        // Update UI
+        document.getElementById('score').textContent = 'Score: ' + state.score;
+        document.getElementById('time').textContent = 'Time: ' + Math.ceil(state.time);
+        document.getElementById('hp').textContent = 'HP: ' + state.cat.hp;
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        ctx.save();
+        ctx.translate(-camX, 0);
+        // House background
+        ctx.fillStyle = '#a68e6f';
+        ctx.fillRect(camX, 0, innerWidth, realHeight);
+        // Floor line
+        ctx.fillStyle = '#bca37f';
+        ctx.fillRect(camX, realHeight - 32, innerWidth, 32);
+        // Draw windows from stored positions (cull)
+        for (const win of windowPositions) {
+          if (win.x + win.w < camX - 100 || win.x > camX + innerWidth + 100) continue;
+          // Window frame
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(win.x - 10, win.y - 10, win.w + 20, win.h + 20);
+          ctx.fillStyle = '#aeefff';
+          ctx.fillRect(win.x, win.y, win.w, win.h);
+          ctx.strokeStyle = '#888';
+          ctx.lineWidth = 6;
+          ctx.strokeRect(win.x, win.y, win.w, win.h);
+          // Crossbars
+          ctx.strokeStyle = '#bbb';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(win.x, win.y + win.h / 2); ctx.lineTo(win.x + win.w, win.y + win.h / 2);
+          ctx.moveTo(win.x + win.w / 2, win.y); ctx.lineTo(win.x + win.w / 2, win.y + win.h);
+          ctx.stroke();
+        }
+        // Draw furniture on the floor (cull)
+        for (const item of furniturePositions) {
+          if (item.x < camX - 200 || item.x > camX + innerWidth + 200) continue;
+          //ctx.font = getFont(item.height, 'serif');
+          //ctx.fillText(item.emoji, item.x, item.y + item.height * 0.7);
+          drawGlyph(ctx, item.emoji, item.x, item.y + item.height * 0.7, item.height);
+        }
+        // Draw tables (cull)
+        ctx.fillStyle = '#654321';
+        for (const table of TABLES) {
+          if (table.x + table.w < camX - 100 || table.x > camX + innerWidth + 100) continue;
+          ctx.fillRect(table.x, table.y, table.w, table.h);
+        }
+        // Draw objects (cull)
+        for (const o of state.objs) {
+          if ((o.x < camX - 100 || o.x > camX + innerWidth + 100) && !o.topple) continue;
+          //ctx.font = getFont(o.r, 'serif');
+          if (o.topple) {
+            ctx.globalAlpha = 0.8;
+            //ctx.fillText(o.glyph, o.x, o.y);
+            drawGlyph(ctx, o.glyph, o.x, o.y, o.r);
+            ctx.globalAlpha = 1;
+          } else if (o.alive) {
+            // If item is laying on the floor, draw a bit lower
+            let y = o.y;
+            if (!o.breakable && y >= realHeight - 32 - o.r / 2 - 1) {
+              y += o.r * 0.38;
+            }
+            //ctx.fillText(o.glyph, o.x, y);
+            drawGlyph(ctx, o.glyph, o.x, o.y, o.r);
+          }
+        }
+        // Particles (cull and limit, only draw)
+        let drawnParticles = 0;
+        for (let i = puffs.length - 1; i >= 0; i--) {
+          const p = puffs[i];
+          if (p.x < camX - 100 || p.x > camX + innerWidth + 100) continue;
+          if (drawnParticles > 120) break;
+          ctx.globalAlpha = p.a;
+          //ctx.font = getFont(22, 'sans-serif');
+          //x.fillText(p.t, p.x, p.y);
+          drawGlyph(ctx, p.t, p.x, p.y, 22);
+          ctx.globalAlpha = 1;
+          drawnParticles++;
+        }
+        // Cat
+        /* debug 
+        ctx.beginPath();
+        ctx.arc(state.cat.x, state.cat.y, state.cat.r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'lime';
+        ctx.lineWidth = 2;
+        ctx.stroke();*/
+        //ctx.font = getFont(34, 'sans-serif');
+        ctx.save();
+        if (state.cat.lastDir === 1) {
+          ctx.translate(state.cat.x + 17, state.cat.y);
+          ctx.scale(-1, 1);
+          drawGlyph(ctx, GLYPHS.cat, 0, 0, 34);
+          //ctx.fillText(GLYPHS.cat, 0, 0);
+        } else {
+          drawGlyph(ctx, GLYPHS.cat, state.cat.x - 17, state.cat.y, 34);
+          //ctx.fillText(GLYPHS.cat, state.cat.x - 17, state.cat.y);
+        }
+        // Hurt effect
+        if (state.cat.hurt > 0) {
+          ctx.globalAlpha = 0.5;
+          ctx.beginPath();
+          ctx.arc(state.cat.x, state.cat.y, 32, 0, Math.PI * 2);
+          ctx.strokeStyle = '#f44';
+          ctx.lineWidth = 4;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+        ctx.restore();
+        ctx.restore();
+        // Hint ring for nearest object
+        let target = null, td = 9999;
+        for (const o of state.objs) { if (!o.alive) continue; const d = Math.hypot(o.x - state.cat.x, o.y - state.cat.y); if (d < td) { td = d; target = o; } }
+        if (target && td < 60) {
+          ctx.beginPath(); ctx.arc(target.x, target.y, 24, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2; ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function endGame() {
+        if (!state.active) return;
+        state.active = false;
+        let text = '';
+        if (state.cat.hp <= 0) {
+          document.getElementById('endGameReason').textContent = 'Whoops that hurts';
+        } else {
+          document.getElementById('endGameReason').textContent = 'Owner is back! 🧹';
+        }
+        text = `Final Score: ${state.score}`;
+        document.getElementById('summary').textContent = text;
+        document.getElementById('overlay').classList.add('show');
+      }
+
+      // Start
+      resetRound();
+      document.getElementById('again').addEventListener('click', restart);
+    })();
+  </script>
+</body>
+
+</html>
