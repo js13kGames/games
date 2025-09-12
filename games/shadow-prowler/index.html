@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Prowler</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Shadow Prowler</h1>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">
+            <div id="message"></div>
+            <div>Time: <span id="timer">60</span>s</div>
+            <div>Fish: <span id="fish-count">0</span></div>
+            <div class="instructions">
+                Use <b>Arrow Keys</b> or <b>WASD</b> to move.
+                <br>
+                Stay in the shadows to avoid dogs!
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/partysocket@1.1.5/dist/partysocket.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
