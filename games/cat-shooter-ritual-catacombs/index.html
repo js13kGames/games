@@ -1,0 +1,408 @@
+<!doctype html><meta charset=utf-8><title>Cat Shooter Ritual Catacombs</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#000}canvas{display:block;width:100vw;height:100vh; image-rendering: pixelated;}</style>
+<canvas id=c></canvas>
+<div id="xh" style="position:fixed;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;pointer-events:none;"><div style="position:absolute;left:11px;top:0;width:2px;height:24px;background:#fff;opacity:.7"></div><div style="position:absolute;left:0;top:11px;width:24px;height:2px;background:#fff;opacity:.7"></div></div>
+<div id="hud" style="
+  position:fixed;
+  top:5%;
+  left:50%;
+  transform:translateX(-50%);
+  pointer-events:none;
+  font:700 40px/1.2 system-ui,sans-serif;
+  color:#f33;
+  text-shadow:0 0 8px #000;
+  letter-spacing:2px;">
+</div>
+<div id="end" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);color:#eee;z-index:9;pointer-events:none;
+  font:700 32px/1.3 system-ui,sans-serif;text-align:center;letter-spacing:1px;">
+  <div id="endT" style="margin-top:16vh;font-size:64px;color:#f33;text-shadow:0 0 14px #500;"></div>
+  <div id="endB" style="margin-top:18px;font-weight:600;opacity:.95"></div>
+  <div id="endS" style="margin-top:28px;font-size:18px;color:#aaa">Wait for 60 s, then click to restart.</div>
+</div>
+<script>
+const canvas=c,gl=canvas.getContext("webgl2",{antialias:false,depth:false,stencil:false});let W=0,H=0,DPR=Math.min(1,devicePixelRatio||1);const RES_PRESETS=[[400,300],[320,240],[288,216],[256,192],[224,168],[192,144]];let resIdx=0;function setRenderSize(idx){resIdx=Math.max(0,Math.min(RES_PRESETS.length-1,idx));const[rw,rh]=RES_PRESETS[resIdx];W=canvas.width=rw;H=canvas.height=rh;const s=Math.min(innerWidth/rw,innerHeight/rh);canvas.style.width=rw*s+"px";canvas.style.height=rh*s+"px";canvas.style.marginLeft=(innerWidth-rw*s)/2+"px";canvas.style.marginTop=(innerHeight-rh*s)/2+"px";canvas.style.position="absolute";canvas.style.left=canvas.style.top="0";gl.viewport(0,0,W,H)}function resize(){setRenderSize(resIdx)}addEventListener("resize",resize);resize();let keys={},yaw=0,pitch=0,pos=[0,0,0],frames=0,startT=performance.now(),enemyDownUntil=0;let shardCount=0,hp=100,gameOver=false,hurtPulse=0,muzzle=0;let fearPulse=0;let rightMouse=false;const hud=document.getElementById("hud");let hudUntil=0,hudMsg="";let endState="none";let endLockUntil=0;const endEl=document.getElementById("end"),endT=document.getElementById("endT"),endB=document.getElementById("endB"),endS=document.getElementById("endS");function showEnd(type,title,body,lockMs=6e4){endState=type;gameOver=true;endLockUntil=performance.now()+lockMs;endT.textContent=title;endB.textContent=body;endEl.style.display="block"}function hideEnd(){endEl.style.display="none";endState="none";endLockUntil=0}let checkpointIndex=0;const HUD_MS=2500,CAT_ALERT_RADIUS=3.5,CAT_EYES_DELAY_MS=1500,CAT_CHARGE=3,CAT_WALK=.4;const CAT_SAFE_MS=7e3;const SHARDS_REQ=3;const WRAITH_ORBIT_R=1.9,WRAITH_SPEED=1.2,WRAITH_DRAIN_RANGE=4;const AC=window.AudioContext||window.webkitAudioContext;const ac=new AC;function sfx(f=1200,len=.08,vol=.2,type="square"){let o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(ac.destination);g.gain.value=vol;let t=ac.currentTime;o.start(t);g.gain.exponentialRampToValueAtTime(1e-4,t+len);o.stop(t+len)}const TILE=2;const LEVELS=[["ooooooooooo*****","o***S*****XSSSdo","o*********o","o*********o","o*********o","o*p**d**Sko","o*********o","o*********o","o*k*S*k***o","o*********o","ooooooooooo"],["oooooooooooooooo*****","o*p**S**o***d*XSSSdo","o***o*k***o***o","o***o*o*o*o***o","o****S**k*****o","o***o*o*o*o***o","o*k**k*****k**o","o***o*o*o*o***o","o**k*****k****o","o***oS***So***o","o*k*ooo*ooo**So","o***o*****o***o","o***o***kSo***o","ooooooooooooooo"],["ooooooooooooooooooooooooo***","o*p*D*******************XSdo","o***o***o***S*S***o*****o","o***o*S*o***ooo***o**S**o","o***o***o***odo***o*****o","o*******o***oXo***o*****o","o***********************o","o***********************o","o****T******T******T****o","o***********************o","o***********************o","ooooo***ooooooooooooo***o","o****k*k**ooo*ooo****k*k*o","o**********o***o*********o","o***ooooo***o***o***oooo*o","o***o***o***o***o***o***o","o***o***oXXXXXXXXXo***o*do","o***o***oSk*o***oSk*o*k*o","o***o***ok**o*k*okk*o***o","o********k************kSo","ooooooooooooooooooooooooo"],["oooooooooooooooooooo****","o**********H********XSSdo","op***S***T**k*****do","o***ooo***ooo***ooo*o","o**ko*S*k*o*Tk*o***o","o***ooo***ooo***ooo*o","o****k***H**S*****k*o","oooooooooooooooooooo"],["ooooooooooo****","o****d****XSSdo","o****S****o","o****k****o","o****o****o","oSok*p*kSo","o****o****o","o****k****o","o****T****o","o*********o","ooooooooooo"],["ooooooooooooooooo****","o*p*****S*****Do","o***oooo*oooo***XSdo","o***oS****o*k*So","o***o*XoX*o***o","oT***XH*HX***So","o***o*XoX*o***o","oS*k*o*****o*k*o","o***oooXXXooo***o","o******S*******o","ooooooooooooooooo"],["oooooooooooooooooooo*****","o****p****H*****H**XSSSdo","o*H****************o","o*************H****o","o******************o","o*H******H****H****o","o******************o","o*H***********H****o","o******************o","o****H***d*******B*o","oooooooooooooooooooo"]];const WALL_SET=new Set(["o","X","#"]);const SOLID_SET=new Set(["o","#"]);function parseLevel(level){const rows=level.length,cols=level[0].length;const cx=(cols-1)/2,cz=(rows-1)/2;const toWorld=(col,row)=>[(col-cx)*TILE,-.4,-(row-cz)*TILE];let playerStart=[0,0,0],catSpawns=[],sphereSpawns=[],healSpawns=[],doors=[];let turretSpawns=[];const tiles=[];let bossPos=null;for(let r=0;r<rows;r++){const line=level[r];for(let c=0;c<cols;c++){const ch=line[c];const[x,y,z]=toWorld(c,r);if(ch==="p")playerStart=[x,0,z];if(ch==="C"||ch==="c"||ch==="K"||ch==="k")catSpawns.push([x,y,z]);if(ch==="S")sphereSpawns.push([x,y,z]);if(ch==="H"||ch==="h")healSpawns.push([x,y,z]);if(ch==="d"||ch==="D")doors.push({x:x,y:y,z:z,ch:ch});if(ch==="T")turretSpawns.push([x,y,z]);if(ch==="B")bossPos=[x,0,z];tiles.push({ch:ch,x:x,y:y,z:z})}}return{playerStart:playerStart,catSpawns:catSpawns,sphereSpawns:sphereSpawns,healSpawns:healSpawns,doors:doors,tiles:tiles,rows:rows,cols:cols,center:[cx,cz],turretSpawns:turretSpawns,bossPos:bossPos}}function buildTileTexture(level){const rows=level.length,cols=level[0].length;const data=new Uint8Array(cols*rows);for(let r=0;r<rows;r++){const line=level[r];for(let c=0;c<cols;c++){const ch=line[c];const i=r*cols+c;data[i]=WALL_SET.has(ch)?1:0}}const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.pixelStorei(gl.UNPACK_ROW_LENGTH,0);console.assert(data.byteLength===cols*rows,"tile data size mismatch",{cols:cols,rows:rows,len:data.byteLength});gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,cols,rows,0,gl.RED,gl.UNSIGNED_BYTE,data);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return{tex:tex,cols:cols,rows:rows}}let boss={active:false,pos:[0,0,0],scale:2,phase:0,until:0,eyes:0,lives:9,nextShot:0,didNova:false};const MAX_CATS=13,MAX_SPHERES=12,MAX_DOORS=4;const MAX_TURRETS=6,MAX_ORBS=12;const TURRET_RANGE=8,ORB_SPEED=2.1,ORB_DMG=10;let LV,TILE_TEX,cats=[],spheres=[],doors=[],turrets=[],orbs=[],levelIndex=0,minDoorReq=3;let LEVEL_ROWS=null;function loadLevel(levelRows){LEVEL_ROWS=levelRows;LV=parseLevel(levelRows);if(TILE_TEX&&TILE_TEX.tex){gl.deleteTexture(TILE_TEX.tex)}TILE_TEX=buildTileTexture(levelRows);cats=LV.catSpawns.slice(0,MAX_CATS).map(([x,y,z])=>({pos:[x,y,z],eyes:0,attacking:false,mode:0,modeUntil:0,spawn:[x,y,z],theta:Math.random()*6.283,nextBlink:performance.now()+1500+Math.random()*1500,gaze:0,noGazeUntil:0}));spheres=[];spheres.push(...LV.sphereSpawns.slice(0,MAX_SPHERES).map(([x,y,z])=>({pos:[x,-.2,z],R:.3,downUntil:0,collected:false,type:"shard"})));const roomLeft=Math.max(0,MAX_SPHERES-spheres.length);spheres.push(...LV.healSpawns.slice(0,roomLeft).map(([x,y,z])=>({pos:[x,-.2,z],R:.3,downUntil:0,collected:false,type:"heal"})));doors=LV.doors.slice(0,MAX_DOORS).map(d=>({pos:[d.x,0,d.z],half:[.08,.6,TILE*.5-.08],open:false,req:d.ch==="D"?6:3,activeVisual:false}));turrets=LV.turretSpawns.slice(0,MAX_TURRETS).map(([x,y,z])=>({pos:[x,0,z],next:performance.now()+500+Math.random()*800}));orbs=[];minDoorReq=doors.length?Math.min(...doors.map(d=>d.req)):0;if(LV.playerStart){pos=[LV.playerStart[0],0,LV.playerStart[2]]}if(LV.bossPos){const now=performance.now();boss.active=true;boss.pos=[LV.bossPos[0],0,LV.bossPos[2]];boss.scale=2;boss.phase=1;boss.until=now+1600;boss.eyes=0;boss.lives=9;boss.nextShot=now+1400;boss.didNova=false;hudMsg="NINE LIVES RITUAL";hudUntil=now+2e3}else{boss.active=false}shardCount=0;hudMsg=LV.bossPos?"DON'T STARE — WAIT FOR THE EYES":minDoorReq>0?`COLLECT ${minDoorReq} SHARDS`:"FIND EXIT";hudUntil=performance.now()+3200}const vs=`#version 300 es
+void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);gl_Position=vec4(p*2.-1.,0,1);}
+`;const fs=`#version 300 es
+precision highp float;out vec4 o;
+uniform vec2 uRes;uniform float uTime;uniform vec3 uCam,uF,uR,uU;uniform float uEnemy;
+uniform float uHurt,uMuzzle;
+uniform float uFear;
+uniform sampler2D uTileTex;
+uniform ivec2 uTileSize;
+uniform vec2 uTileCenter;
+uniform float uTileScale;
+const int MAX_CATS=13;
+uniform int uCatCount;
+uniform vec4 uCatsPos[MAX_CATS];
+uniform float uCatsState[MAX_CATS];
+uniform float uCatsEyes[MAX_CATS];
+float packCatId(int i){return 3.0+float(i)*0.01;}
+int unpackCatId(float m){
+int id=int(floor((m-3.0)*100.0+0.5));
+if(id<0)id=0;
+if(id>=MAX_CATS)id=MAX_CATS-1;
+return id;
+}
+const int MAX_SPHERES=8;
+uniform int uSphereCount;
+uniform vec4 uSpheresPos[MAX_SPHERES];
+uniform float uSpheresActive[MAX_SPHERES];
+float packSphereId(int i){return 2.0+float(i)*0.01;}
+int unpackSphereId(float m){
+int id=int(floor((m-2.0)*100.0+0.5));
+if(id<0)id=0;
+if(id>=MAX_SPHERES)id=MAX_SPHERES-1;
+return id;
+}
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float hash31(vec3 p){return fract(sin(dot(p,vec3(17.3,113.1,241.7)))*43758.5453);}
+float sdCircle2(vec2 p,float r){return length(p)-r;}
+float pawMask(vec2 uv){
+vec2 c=uv-vec2(0.32,0.34);
+float d=sdCircle2(c,0.11);
+d=min(d,sdCircle2(c-vec2(-0.10,0.14),0.050));
+d=min(d,sdCircle2(c-vec2(0.00,0.16),0.058));
+d=min(d,sdCircle2(c-vec2(0.10,0.14),0.050));
+return smoothstep(0.03,0.0,d);
+}
+float catRune(vec2 uv){
+vec2 p=(uv-0.5);
+p.x/=0.86;
+float d=sdCircle2(p,0.24);
+d=min(d,sdCircle2(p-vec2(-0.18,0.16),0.11));
+d=min(d,sdCircle2(p-vec2(0.18,0.16),0.11));
+return smoothstep(0.03,0.0,d);
+}
+const int MAX_DOORS=4;
+uniform int uDoorCount;
+uniform vec4 uDoorsPos[MAX_DOORS];
+uniform vec4 uDoorsHalf[MAX_DOORS];
+float packDoorId(int i){return 5.0+float(i)*0.01;}
+int unpackDoorId(float m){
+int id=int(floor((m-5.0)*100.0+0.5));
+if(id<0)id=0;
+if(id>=MAX_DOORS)id=MAX_DOORS-1;
+return id;
+}
+const int MAX_TURRETS=6;
+uniform int uTurretCount;
+uniform vec4 uTurretsPos[MAX_TURRETS];
+uniform int uBossActive;
+uniform vec4 uBoss;
+uniform float uBossEyes;
+uniform float uBossPhase;
+float packTurretId(int i){return 6.0+float(i)*0.01;}
+int unpackTurretId(float m){
+int id=int(floor((m-6.0)*100.0+0.5));
+if(id<0)id=0;
+if(id>=MAX_TURRETS)id=MAX_TURRETS-1;
+return id;
+}
+float sdSphere(vec3 p,float r){return length(p)-r;}
+float sdRect(vec2 p,vec2 b){vec2 d=abs(p)-b;return min(max(d.x,d.y),0.)+length(max(d,0.));}
+float sdCapsule(vec3 q,vec3 a,vec3 b,float r){
+vec3 pa=q-a,ba=b-a;
+float h=clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);
+return length(pa-ba*h)-r;
+}
+float sdEllipsoid(vec3 q,vec3 s){
+return(length(q/s)-1.0)*min(min(s.x,s.y),s.z);
+}
+float sdBox(vec3 p,vec3 b){
+vec3 d=abs(p)-b;
+return min(max(d.x,max(d.y,d.z)),0.)+length(max(d,0.));
+}
+float smin(float a,float b,float k){
+float h=clamp(0.5+0.5*(b-a)/k,0.0,1.0);
+return mix(b,a,h)-k*h*(1.0-h);
+}
+float opInter(float a,float b){return max(a,b);}
+float sdTwoPlanesY(vec3 p,float h){
+return min(abs(p.y-h),abs(p.y+h));
+}
+float sdCatModelAt(vec3 q,vec3 catPos){
+q-=catPos;
+float d=1e9;
+d=min(d,sdEllipsoid(q-vec3(-0.06,0.03,0.00),vec3(0.58,0.24,0.28)));
+d=min(d,sdEllipsoid(q-vec3(0.18,0.01,0.00),vec3(0.22,0.14,0.22)));
+d=min(d,sdEllipsoid(q-vec3(-0.10,0.07,0.00),vec3(0.52,0.20,0.26)));
+d=min(d,sdEllipsoid(q-vec3(0.03,-0.06,0.00),vec3(0.28,0.11,0.20)));
+d=min(d,sdCapsule(q,vec3(0.36,0.10,0.17),vec3(0.48,0.14,0.17),0.070));
+{
+float hd=sdEllipsoid(q-vec3(0.585,0.160,0.170),vec3(0.155,0.125,0.135));
+float hZL=sdEllipsoid(q-vec3(0.575,0.150,0.255),vec3(0.105,0.070,0.070));
+float hZR=sdEllipsoid(q-vec3(0.575,0.150,0.085),vec3(0.105,0.070,0.070));
+float hWL=sdEllipsoid(q-vec3(0.635,0.108,0.230),vec3(0.088,0.058,0.078));
+float hWR=sdEllipsoid(q-vec3(0.635,0.108,0.110),vec3(0.088,0.058,0.078));
+float hSN=sdEllipsoid(q-vec3(0.690,0.095,0.170),vec3(0.060,0.045,0.060));
+float hFL=sdBox(q-vec3(0.570,0.185,0.170),vec3(0.120,0.030,0.120));
+float k=0.08;
+hd=smin(hd,hZL,k);
+hd=smin(hd,hZR,k);
+hd=smin(hd,hWL,k);
+hd=smin(hd,hWR,k);
+hd=smin(hd,hSN,k*0.85);
+hd=smin(hd,hFL,k*0.70);
+d=min(d,hd);
+}
+{
+vec3 eBL=vec3(0.620,0.292,0.100),eTL=vec3(0.640,0.332,0.095);
+vec3 eBR=vec3(0.620,0.292,0.240),eTR=vec3(0.640,0.332,0.245);
+float earL=smin(sdBox(q-eBL,vec3(0.046,0.085,0.026)),
+sdBox(q-eTL,vec3(0.030,0.050,0.018)),0.06);
+float earR=smin(sdBox(q-eBR,vec3(0.046,0.085,0.026)),
+sdBox(q-eTR,vec3(0.030,0.050,0.018)),0.06);
+d=min(d,earL);
+d=min(d,earR);
+}
+d=min(d,sdCapsule(q,vec3(0.05,-0.12,0.20),vec3(0.05,-0.48,0.20),0.038));
+d=min(d,sdCapsule(q,vec3(0.05,-0.12,-0.20),vec3(0.05,-0.48,-0.20),0.038));
+d=min(d,sdEllipsoid(q-vec3(-0.31,-0.06,0.25),vec3(0.13,0.095,0.105)));
+d=min(d,sdEllipsoid(q-vec3(-0.31,-0.06,-0.25),vec3(0.13,0.095,0.105)));
+d=min(d,sdCapsule(q,vec3(-0.34,-0.16,0.25),vec3(-0.34,-0.46,0.25),0.053));
+d=min(d,sdCapsule(q,vec3(-0.34,-0.16,-0.25),vec3(-0.34,-0.46,-0.25),0.053));
+d=min(d,sdCapsule(q,vec3(-0.62,0.00,0.02),vec3(-0.92,0.19,0.02),0.036));
+d=min(d,sdCapsule(q,vec3(-0.92,0.19,0.02),vec3(-1.02,0.36,-0.06),0.030));
+d=min(d,sdCapsule(q,vec3(-1.02,0.36,-0.06),vec3(-1.07,0.47,0.10),0.024));
+return d;
+}
+float sdCatScaled(vec3 p,vec3 c,float s){
+vec3 q=c+(p-c)/s;
+return sdCatModelAt(q,c)*s;
+}
+vec2 map(vec3 p){
+float d=1e9,m=0.;
+float dFloor=sdTwoPlanesY(p,0.6);
+if(dFloor<d){d=dFloor;m=4.;}
+int ix=int(floor(p.x/uTileScale+uTileCenter.x+0.5));
+int iz=int(floor(-p.z/uTileScale+uTileCenter.y+0.5));
+for(int dz=-1;dz<=1;dz++){
+for(int dx=-1;dx<=1;dx++){
+int tx=ix+dx;
+int tz=iz+dz;
+if(tx<0||tz<0||tx>=uTileSize.x||tz>=uTileSize.y)continue;
+float code=texture(uTileTex,(vec2(tx,tz)+0.5)/vec2(uTileSize)).r*255.0;
+if(code<0.5)continue;
+vec3 c=vec3((float(tx)-uTileCenter.x)*uTileScale,0.0,-(float(tz)-uTileCenter.y)*uTileScale);
+vec3 b=vec3(uTileScale*0.48,0.6,uTileScale*0.48);
+vec3 d3=abs(p-c)-b;
+float rough=max(max(d3.x,d3.y),d3.z);
+if(rough>d)continue;
+float db=sdBox(p-c,b);
+if(db<d){d=db;m=1.;}
+}
+}
+for(int i=0;i<MAX_SPHERES;i++){
+if(i>=uSphereCount)break;
+if(uSpheresActive[i]<0.5)continue;
+vec3 sp=uSpheresPos[i].xyz;
+float rr=abs(uSpheresPos[i].w);
+float ds=sdSphere(p-sp,rr);
+if(ds<d){d=ds;m=packSphereId(i);}
+}
+for(int i=0;i<MAX_CATS;i++){
+if(i>=uCatCount)break;
+if(uCatsState[i]<0.5)continue;
+vec3 cp=uCatsPos[i].xyz;
+float dc=sdCatModelAt(p,cp);
+if(dc<d){d=dc;m=packCatId(i);}
+}
+for(int i=0;i<MAX_DOORS;i++){
+if(i>=uDoorCount)break;
+vec3 dp=uDoorsPos[i].xyz;
+vec3 dh=uDoorsHalf[i].xyz;
+float dd=sdBox(p-dp,dh);
+if(dd<d){d=dd;m=packDoorId(i);}
+}
+for(int i=0;i<MAX_TURRETS;i++){
+if(i>=uTurretCount)break;
+vec3 tp=uTurretsPos[i].xyz;
+float dp=sdCapsule(p,tp+vec3(0.0,-0.45,0.0),tp+vec3(0.0,0.30,0.0),0.035);
+if(dp<d){d=dp;m=packTurretId(i);}
+float de=sdSphere(p-(tp+vec3(0.0,0.38,0.0)),0.11);
+if(de<d){d=de;m=packTurretId(i);}
+}
+if(uBossActive>0){
+float db=sdCatScaled(p,uBoss.xyz,uBoss.w);
+if(db<d){d=db;m=7.0;}
+}
+return vec2(d,m);
+}
+vec2 march(vec3 ro,vec3 rd){
+float t=0.0;
+float m=0.0;
+for(int i=0;i<128;i++){
+vec2 h=map(ro+rd*t);
+float eps=mix(0.001,0.015,clamp((t-5.0)/20.0,0.0,1.0));
+if(h.x<eps){m=h.y;break;}
+t+=h.x;
+if(t>40.0){m=0.0;break;}
+if(exp(-0.09*t)<0.02){m=0.0;break;}
+}
+return vec2(t,m);
+}
+vec3 nrm(vec3 p){
+float e=0.001;
+vec2 k=vec2(1,-1);
+return normalize(
+k.xyy*map(p+k.xyy*e).x+
+k.yyx*map(p+k.yyx*e).x+
+k.yxy*map(p+k.yxy*e).x+
+k.xxx*map(p+k.xxx*e).x);
+}
+void main(){
+vec2 uv=(gl_FragCoord.xy-0.5*uRes)/uRes.y;
+vec3 rd=normalize(uv.x*uR+uv.y*uU+uF);
+vec2 h=march(uCam,rd);float t=h.x,mat=h.y;
+vec3 bg=vec3(0.02,0.02,0.04);
+if(t>40.||mat<0.5){o=vec4(bg,1.0);return;}
+vec3 p=uCam+rd*t;
+vec3 n=(mat>3.5&&mat<4.5)?vec3(0.0,(p.y>0.0)?1.0:-1.0,0.0):nrm(p);
+float fx=(p.x/uTileScale+uTileCenter.x);
+float fz=(-p.z/uTileScale+uTileCenter.y);
+int ix=int(floor(fx+0.5));
+int iz=int(floor(fz+0.5));
+vec2 tuv=fract(vec2(fx,fz));
+vec3 col;
+int ciHit=-1,diHit=-1,siHit=-1;
+int tiHit=-1;
+if(mat>=3.0&&mat<4.0)ciHit=unpackCatId(mat);
+if(mat>=5.0&&mat<6.0)diHit=unpackDoorId(mat);
+if(mat>=2.0&&mat<3.0)siHit=unpackSphereId(mat);
+if(mat>=6.0&&mat<7.0)tiHit=unpackTurretId(mat);
+if(mat<1.5){
+col=mix(vec3(0.09,0.10,0.11),vec3(0.12,0.13,0.14),
+0.5+0.5*sin((p.x*1.7+p.z*1.3)*0.4));
+float u=(abs(n.x)>abs(n.z))?fract(-p.z/uTileScale+uTileCenter.y)
+:fract(p.x/uTileScale+uTileCenter.x);
+float v=clamp((p.y+0.6)/1.2,0.0,1.0);
+vec2 wuv=vec2(u,v);
+float r=hash21(vec2(ix,iz)*1.23);
+if(r<0.16){
+float m=catRune(wuv);
+col=mix(col,col+vec3(0.00,0.08,0.12),m*0.28);
+}
+}else if(mat<3.0){
+bool isHeal=false;
+bool isProj=false;
+if(siHit>=0&&siHit<uSphereCount){
+isHeal=(uSpheresPos[siHit].w<0.0);
+isProj=(uSpheresActive[siHit]>1.5);
+}
+if(isProj){
+float pulse=0.5+0.5*sin(uTime*8.0);
+col=vec3(0.10,0.02,0.03)+pulse*vec3(1.8,0.3,0.6);
+}else if(isHeal){
+col=vec3(0.05,0.10,0.12)+0.8*vec3(0.2,0.9,1.6);
+}else{
+col=vec3(0.05,0.12,0.04)+0.7*vec3(0.2,0.9,0.2);
+}
+}else if(mat<4.0){
+float state=(ciHit>=0&&ciHit<uCatCount)?uCatsState[ciHit]:1.0;
+if(state<1.5){
+col=vec3(0.02,0.02,0.03);
+float fr=pow(1.0-max(dot(n,-rd),0.0),3.0);
+col+=fr*vec3(0.35,0.05,0.05);
+}else{
+col=vec3(0.85);
+float flick=0.5+0.5*sin(uTime*20.0+p.x*10.0+p.z*7.0);
+col+=vec3(0.15,0.45,0.55)*flick;
+}
+}else if(mat<4.5){
+bool isCeil=(n.y>0.0);
+col=mix(vec3(0.10),vec3(0.18,0.19,0.20),0.5+0.5*sin(p.x*2.0));
+float rv=hash21(vec2(ix,iz));
+if(!isCeil){
+if(rv<0.33){
+float paw=pawMask(tuv);
+col=mix(col,col*0.60+vec3(0.03,0.00,0.00),paw*0.75);
+}else if(rv<0.66){
+float w=abs(sin((tuv.x*18.0+sin(tuv.y*6.0+rv*6.0))*1.0));
+float crack=smoothstep(0.06,0.03,w);
+col-=crack*0.07;
+}
+}else{
+float str=abs(sin((tuv.x+tuv.y+rv)*14.0))*0.5+abs(sin((tuv.x*2.0-tuv.y)*9.0))*0.5;
+float mold=smoothstep(1.0,0.85,str);
+col=mix(col,col+vec3(0.00,0.12,0.16),mold*0.20);
+}
+}else if(mat<5.5){
+float door_active=(diHit>=0&&diHit<uDoorCount)?step(0.5,uDoorsHalf[diHit].w):0.0;
+vec3 dp=uDoorsPos[diHit].xyz;
+vec3 dh=uDoorsHalf[diHit].xyz;
+vec3 lp=p-dp;
+bool faceX=(dh.x<dh.z);
+vec2 uvd=faceX
+?vec2((lp.z/dh.z)*0.5+0.5,(lp.y/dh.y)*0.5+0.5)
+:vec2((lp.x/dh.x)*0.5+0.5,(lp.y/dh.y)*0.5+0.5);
+uvd=clamp(uvd,0.0,1.0);
+vec3 base=vec3(0.08,0.08,0.10);
+float panel=0.55+0.45*sin(uTime*1.8+float(diHit)*1.3);
+vec3 colOff=vec3(0.35,0.10,0.55);
+vec3 colOn=vec3(1.60,0.35,0.90);
+vec3 eCol=mix(colOff,colOn,door_active);
+float seam=smoothstep(0.06,0.00,abs(uvd.x-0.5));
+float edge=smoothstep(0.10,0.00,min(min(uvd.x,1.0-uvd.x),min(uvd.y,1.0-uvd.y)));
+float rune=catRune(uvd);
+vec2 pawUV=fract(uvd*vec2(2.0,1.5)+vec2(0.0,-0.15));
+float paw=pawMask(pawUV)*smoothstep(0.4,0.9,uvd.y);
+float eBoost=mix(1.0,1.8,smoothstep(8.0,24.0,t));
+vec3 emiss=vec3(0.0);
+emiss+=panel*(0.22+0.28*door_active)*eCol;
+emiss+=seam*(0.14+0.24*door_active)*eCol;
+emiss+=edge*(0.08+0.22*door_active)*eCol;
+emiss+=(0.28*rune+0.22*paw)*(0.4+0.6*(0.5+0.5*sin(uTime*6.0+float(diHit))))*eCol;
+emiss*=eBoost;
+col=base+emiss;
+}else if(mat<7.0){
+col=vec3(0.08,0.08,0.10);
+if(tiHit>=0&&tiHit<uTurretCount){
+vec3 tp=uTurretsPos[tiHit].xyz;
+float dEye=length(p-(tp+vec3(0.0,0.45,0.0)));
+float pulse=0.6+0.4*sin(uTime*3.0+float(tiHit)*1.7);
+float glow=smoothstep(0.20,0.03,dEye);
+col+=glow*(vec3(0.10,0.02,0.05)+pulse*vec3(1.00,0.30,0.90));
+float poleBand=0.15+0.85*abs(sin((p.y+tp.y+1.5)*6.0));
+col=mix(col,col+vec3(0.06,0.01,0.08)*pulse,0.25*poleBand);
+}
+}else if(mat<8.0){
+col=vec3(0.02,0.02,0.03);
+float fr=pow(1.0-max(dot(n,-rd),0.0),3.0);
+col+=fr*vec3(0.40,0.10,0.45);
+if(uBossEyes>0.0){
+vec3 pr=p-uBoss.xyz;
+float eL=length(pr-vec3(0.662,0.172,0.238)*uBoss.w);
+float eR=length(pr-vec3(0.662,0.172,0.102)*uBoss.w);
+float glow=uBossEyes*smoothstep(0.20*uBoss.w,0.04*uBoss.w,min(eL,eR));
+col+=glow*vec3(2.2,0.5,2.6);
+}
+}else{
+col=vec3(0.1);
+}
+vec3 l=normalize(vec3(0.4,0.6,0.7));
+float diff=max(0.05,dot(n,l));
+col*=diff+(mat>2.5?0.3:0.3);
+if(ciHit>=0&&ciHit<uCatCount){
+float eyes=uCatsEyes[ciHit];
+if(eyes>0.0){
+vec3 pr=p-uCatsPos[ciHit].xyz;
+float eyeL=length(pr-vec3(0.662,0.172,0.238));
+float eyeR=length(pr-vec3(0.662,0.172,0.102));
+float dEye=min(eyeL,eyeR);
+float glow=eyes*smoothstep(0.10,0.028,dEye);
+float stateE=(ciHit>=0&&ciHit<uCatCount)?uCatsState[ciHit]:1.0;
+vec3 glowCol=(stateE<1.5)?vec3(3.0,0.6,0.2):vec3(0.6,1.6,2.3);
+col+=glow*glowCol;
+}
+}
+float fog=exp(-0.09*t);
+vec3 colFog=mix(bg,col,fog);
+colFog=mix(colFog,vec3(0.45,0.0,0.0),clamp(uHurt,0.0,1.0));
+colFog=mix(colFog,vec3(0.0,0.22,0.33),clamp(uFear,0.0,1.0));
+float flash=uMuzzle*smoothstep(0.6,0.0,length(uv));
+colFog+=flash*0.6;
+colFog*=1.3;
+o=vec4(colFog,1.0);
+}
+`;function shader(t,src){const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error("SHADER COMPILE ERROR:",gl.getShaderInfoLog(s),"\n--- SOURCE ---\n"+src)}return s}const pr=gl.createProgram(),vao=gl.createVertexArray();gl.attachShader(pr,shader(gl.VERTEX_SHADER,vs));gl.attachShader(pr,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr);gl.bindVertexArray(vao);if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.error("PROGRAM LINK ERROR:",gl.getProgramInfoLog(pr))}const uRes=gl.getUniformLocation(pr,"uRes"),uTime=gl.getUniformLocation(pr,"uTime"),uCam=gl.getUniformLocation(pr,"uCam"),uF=gl.getUniformLocation(pr,"uF"),uR=gl.getUniformLocation(pr,"uR"),uU=gl.getUniformLocation(pr,"uU"),uEnemy=gl.getUniformLocation(pr,"uEnemy"),uHurt=gl.getUniformLocation(pr,"uHurt"),uMuzzle=gl.getUniformLocation(pr,"uMuzzle"),uFear=gl.getUniformLocation(pr,"uFear"),uTileTex=gl.getUniformLocation(pr,"uTileTex"),uTileSize=gl.getUniformLocation(pr,"uTileSize"),uTileCenter=gl.getUniformLocation(pr,"uTileCenter"),uTileScale=gl.getUniformLocation(pr,"uTileScale"),uCatCount=gl.getUniformLocation(pr,"uCatCount"),uCatsPos=gl.getUniformLocation(pr,"uCatsPos[0]"),uCatsState=gl.getUniformLocation(pr,"uCatsState[0]"),uCatsEyes=gl.getUniformLocation(pr,"uCatsEyes[0]"),uSphereCount=gl.getUniformLocation(pr,"uSphereCount"),uSpheresPos=gl.getUniformLocation(pr,"uSpheresPos[0]"),uSpheresActive=gl.getUniformLocation(pr,"uSpheresActive[0]"),uDoorCount=gl.getUniformLocation(pr,"uDoorCount"),uDoorsPos=gl.getUniformLocation(pr,"uDoorsPos[0]"),uDoorsHalf=gl.getUniformLocation(pr,"uDoorsHalf[0]"),uTurretCount=gl.getUniformLocation(pr,"uTurretCount"),uTurretsPos=gl.getUniformLocation(pr,"uTurretsPos[0]");uBossActive=gl.getUniformLocation(pr,"uBossActive"),uBoss=gl.getUniformLocation(pr,"uBoss"),uBossEyes=gl.getUniformLocation(pr,"uBossEyes"),uBossPhase=gl.getUniformLocation(pr,"uBossPhase");loadLevel(LEVELS[levelIndex]);function onKey(e){if(["KeyW","KeyA","KeyS","KeyD"].includes(e.code)){keys[e.code]=e.type==="keydown";e.preventDefault()}}document.addEventListener("keydown",onKey);document.addEventListener("keyup",onKey);canvas.addEventListener("mousedown",()=>{canvas.requestPointerLock?.()},{passive:true});document.addEventListener("pointerlockchange",()=>{},false);document.addEventListener("mousemove",e=>{if(document.pointerLockElement===canvas){yaw+=e.movementX*.002;pitch-=e.movementY*.002;pitch=Math.max(-1.5,Math.min(1.5,pitch))}});canvas.addEventListener("mousedown",e=>{if(e.button===0){if(endState!=="none"){if(performance.now()<endLockUntil)return;if(endState==="bossWin"||endState==="ritualWin"){levelIndex=0;checkpointIndex=0}else{levelIndex=checkpointIndex|0}gameOver=false;hideEnd();hp=100;loadLevel(LEVELS[levelIndex]);hudMsg=`RESPAWN AT LEVEL ${levelIndex+1}`;hudUntil=performance.now()+2e3;return}if(gameOver){levelIndex=checkpointIndex|0;gameOver=false;hp=100;loadLevel(LEVELS[levelIndex]);hudMsg=`RESPAWN AT LEVEL ${levelIndex+1}`;hudUntil=performance.now()+2e3;return}muzzle=1;sfx(1200,.08,.22,"square");const now=performance.now();const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);const F=[sy*cp,sp,-cy*cp],U=[-sy*sp,cp,cy*sp],Rv=[cy,0,sy];const O=pos,D=F;for(let i=0;i<spheres.length;i++){const s=spheres[i];if(s.collected)continue;const C=s.pos,R=s.R;const OC=[O[0]-C[0],O[1]-C[1],O[2]-C[2]];const t=-(OC[0]*D[0]+OC[1]*D[1]+OC[2]*D[2]);if(t>0){const qx=OC[0]+t*D[0],qy=OC[1]+t*D[1],qz=OC[2]+t*D[2];if(Math.hypot(qx,qy,qz)<=R+.02){s.downUntil=now+2e3}}}function rayHitsSphere(O,D,C,R,slack=.02){const OC=[O[0]-C[0],O[1]-C[1],O[2]-C[2]];const t=-(OC[0]*D[0]+OC[1]*D[1]+OC[2]*D[2]);if(t<=0)return false;const qx=OC[0]+t*D[0],qy=OC[1]+t*D[1],qz=OC[2]+t*D[2];return qx*qx+qy*qy+qz*qz<=(R+slack)*(R+slack)}for(let i=0;i<cats.length;i++){const c=cats[i];const parts=[{C:[c.pos[0]+.6,c.pos[1]+.16,c.pos[2]+.17],R:.32},{C:[c.pos[0]+.22,c.pos[1]+0,c.pos[2]+0],R:.4},{C:[c.pos[0]-.15,c.pos[1]+.02,c.pos[2]+0],R:.44}];let hit=false;for(const p of parts){if(rayHitsSphere(pos,D,p.C,p.R,.03)){hit=true;break}}if(!hit)continue;if(c.mode===0){c.mode=1;c.modeUntil=now+CAT_SAFE_MS+2500;c.attacking=false;c.eyes=0;hudMsg="IT SPLITS — WRAITH!";hudUntil=now+HUD_MS;sfx(1800,.1,.25,"sawtooth");fearPulse=1}else{c.modeUntil=now+Math.max(1500,c.modeUntil-now+800);hudMsg="WRAITH SHRIEKS";hudUntil=now+HUD_MS;sfx(260,.12,.25,"triangle");fearPulse=1}}if(boss.active&&boss.phase===3){const s=boss.scale,bp=boss.pos;const eyeL=[bp[0]+.662*s,bp[1]+.172*s,bp[2]+.238*s];const eyeR=[bp[0]+.662*s,bp[1]+.172*s,bp[2]+.102*s];const r=.1*s;if(rayHitsSphere(O,D,eyeL,r,.02)||rayHitsSphere(O,D,eyeR,r,.02)){boss.lives=Math.max(0,boss.lives-1);boss.phase=4;boss.until=now+900;boss.eyes=0;boss.didNova=false;hudMsg=`LIFE -1 (${boss.lives}/9)`;hudUntil=now+1200;sfx(460,.2,.28,"triangle");fearPulse=1;if(boss.lives<=0){boss.active=false;gameOver=true;showEnd("bossWin","CEREMONY COMPLITE","CHERNOCOT avatar has been banished from this realm. The World signs in relief.");sfx(1200,.6,.25,"triangle")}}}for(let i=0;i<orbs.length;i++){const b=orbs[i];if(b.collected)continue;if(rayHitsSphere(O,D,b.pos,b.R,.03)){b.collected=true;sfx(420,.05,.18,"triangle")}}}});canvas.addEventListener("mousedown",e=>{if(e.button===2){rightMouse=true;e.preventDefault()}});canvas.addEventListener("mouseup",e=>{if(e.button===2){rightMouse=false;e.preventDefault()}});canvas.addEventListener("contextmenu",e=>e.preventDefault());function hasLOS(ax,az,bx,bz){const dx=bx-ax,dz=bz-az,dist=Math.hypot(dx,dz);const steps=Math.max(1,Math.floor(dist/(TILE*.25)));let x=ax,z=az,stepx=dx/steps,stepz=dz/steps;for(let i=0;i<steps;i++){x+=stepx;z+=stepz;if(isSolidAt(x,z))return false}return true}function pointInDoor(p,d,pad=0){const dx=Math.abs(p[0]-d.pos[0])-(d.half[0]+pad);const dy=Math.abs(p[1]-d.pos[1])-(d.half[1]+pad);const dz=Math.abs(p[2]-d.pos[2])-(d.half[2]+pad);return dx<=0&&dy<=0&&dz<=0}function resolveDoorCollision(oldP,nextP){let out=[nextP[0],nextP[1],nextP[2]];const pad=.02;for(const d of doors){if(d.open)continue;if(pointInDoor(out,d,pad)){const tryX=[nextP[0],oldP[1],oldP[2]];const tryZ=[oldP[0],oldP[1],nextP[2]];const inX=pointInDoor(tryX,d,pad);const inZ=pointInDoor(tryZ,d,pad);if(!inX&&inZ){out=tryX}else if(inX&&!inZ){out=tryZ}else if(!inX&&!inZ){out=Math.abs(tryX[0]-d.pos[0])>Math.abs(tryZ[2]-d.pos[2])?tryX:tryZ}else{out=[oldP[0],oldP[1],oldP[2]]}}}return out}function worldToTile(x,z){const col=Math.floor(x/TILE+LV.center[0]+.5);const row=Math.floor(-z/TILE+LV.center[1]+.5);return{col:col,row:row}}function isSolidAt(x,z){const{col,row}=worldToTile(x,z);if(col<0||row<0||col>=LV.cols||row>=LV.rows)return true;const ch=LEVEL_ROWS[row][col];return SOLID_SET.has(ch)}function resolveWallCollision(oldP,nextP){const r=.28;let nx=nextP[0],nz=nextP[2];let candX=[nx,nextP[1],oldP[2]];if(isSolidAt(candX[0]+r,candX[2])||isSolidAt(candX[0]-r,candX[2])||isSolidAt(candX[0],candX[2]+r)||isSolidAt(candX[0],candX[2]-r)){candX[0]=oldP[0]}let candZ=[candX[0],nextP[1],nz];if(isSolidAt(candZ[0]+r,candZ[2])||isSolidAt(candZ[0]-r,candZ[2])||isSolidAt(candZ[0],candZ[2]+r)||isSolidAt(candZ[0],candZ[2]-r)){candZ[2]=oldP[2]}return[candZ[0],nextP[1],candZ[2]]}function pickNearest(arr,k,getPos){const tmp=arr.map((_,i)=>{const p=getPos(arr[i]);const dx=p[0]-pos[0],dy=p[1]-pos[1],dz=p[2]-pos[2];return{i:i,d:dx*dx+dy*dy+dz*dz}});tmp.sort((a,b)=>a.d-b.d);return tmp.slice(0,Math.min(k,tmp.length)).map(o=>o.i)}function vec3(x,y,z){return new Float32Array([x,y,z])}function frame(t){frames++;let dt=(t-(frame.t||t))/1e3;frame.t=t;frame.acc=(frame.acc||0)+dt;frame.count=(frame.count||0)+1;if(frame.acc>=.75){const fps=frame.count/frame.acc;if(fps<55&&resIdx<RES_PRESETS.length-1){setRenderSize(resIdx+1)}else if(fps>62&&resIdx>0){setRenderSize(resIdx-1)}frame.acc=0;frame.count=0}const cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);const F=[sy*cp,sp,-cy*cp],U=[-sy*sp,cp,cy*sp],Rv=[cy,0,sy];const speed=3*dt*(gameOver?0:1);let next=[pos[0],pos[1],pos[2]];if(keys.KeyW||rightMouse){next[0]+=F[0]*speed;next[1]+=F[1]*speed;next[2]+=F[2]*speed}if(keys.KeyS){next[0]-=F[0]*speed;next[1]-=F[1]*speed;next[2]-=F[2]*speed}if(keys.KeyA){next[0]-=Rv[0]*speed;next[2]-=Rv[2]*speed}if(keys.KeyD){next[0]+=Rv[0]*speed;next[2]+=Rv[2]*speed}next[1]=0;next=resolveWallCollision(pos,next);next=resolveDoorCollision(pos,next);pos=next;const now=performance.now();for(let i=0;i<spheres.length;i++){const s=spheres[i];if(s.collected)continue;const dx=pos[0]-s.pos[0],dy=pos[1]-s.pos[1],dz=pos[2]-s.pos[2];const d=Math.hypot(dx,dy,dz);if(d<.8){s.collected=true;if(s.type==="heal"){const before=hp|0;hp=Math.min(100,hp+25);const got=(hp|0)-before;hudMsg=`HEAL +${got}`;hudUntil=performance.now()+HUD_MS;sfx(640,.1,.22,"triangle")}else{shardCount++;hudMsg="SHARD +1";hudUntil=performance.now()+HUD_MS;sfx(900,.06,.25,"triangle")}}}for(let i=0;i<doors.length;i++){const d=doors[i];d.open=shardCount>=d.req;d.activeVisual=d.open}if(!gameOver){for(const d of doors){const distXZ=Math.hypot(pos[0]-d.pos[0],pos[2]-d.pos[2]);if(!d.open&&distXZ<1.2&&now>hudUntil){hudMsg=`NEED ${d.req} SHARDS`;hudUntil=now+900}if(d.open&&pointInDoor(pos,d,.02)){hp=Math.min(100,hp+25);sfx(1080,.2,.2,"triangle");levelIndex++;if(levelIndex<LEVELS.length){sfx(1200,.5,.25,"triangle");loadLevel(LEVELS[levelIndex]);hudMsg=`LEVEL ${levelIndex+1} — COLLECT ${minDoorReq||0} SHARDS`;hudUntil=performance.now()+2600;if(levelIndex%3===0){checkpointIndex=levelIndex;hudMsg=`RITUAL ${Math.floor(levelIndex/3)} COMPLETE — CHECKPOINT SET`;hudUntil=performance.now()+2800}}else{gameOver=true;showEnd("ritualWin","RITUAL COMPLITE","Catacombs now silent. You have made way out.");sfx(1200,.5,.25,"triangle")}break}}}if(!gameOver){for(let i=0;i<cats.length;i++){const c=cats[i];const now=performance.now();let isWraith=c.mode===1&&now<c.modeUntil;if(c.mode===1&&!isWraith){c.mode=0;c.gaze=0;c.eyes=0;c.attacking=false;c.pos=c.spawn.slice()}const dx=pos[0]-c.pos[0],dy=pos[1]-c.pos[1],dz=pos[2]-c.pos[2];const dist=Math.hypot(dx,dy,dz);if(isWraith){c.attacking=false;c.eyes=0;c.theta+=dt*.8;const tx=pos[0]+Math.sin(c.theta)*WRAITH_ORBIT_R;const tz=pos[2]+Math.cos(c.theta)*WRAITH_ORBIT_R;c.pos[0]+=(tx-c.pos[0])*Math.min(1,dt*WRAITH_SPEED*1.5);c.pos[2]+=(tz-c.pos[2])*Math.min(1,dt*WRAITH_SPEED*1.5);if(now>c.nextBlink){c.nextBlink=now+1500+Math.random()*1500;c.pos[0]=pos[0]-F[0]*1.4+(Math.random()-.5)*.4*Rv[0];c.pos[2]=pos[2]-F[2]*1.4+(Math.random()-.5)*.4*Rv[2];c.noGazeUntil=now+300}const pctx=c.pos[0]-pos[0],pcty=c.pos[1]-pos[1],pctz=c.pos[2]-pos[2];const lookDot=(pctx*F[0]+pcty*F[1]+pctz*F[2])/Math.max(.001,Math.hypot(pctx,pcty,pctz));if(lookDot>.92&&dist<WRAITH_DRAIN_RANGE&&now>(c.noGazeUntil||0)){c.gaze+=dt;fearPulse=Math.min(1,fearPulse+dt*1.5);if(c.gaze>.6){hp=Math.max(0,hp-8*dt);hudMsg="DON'T STARE";hudUntil=now+HUD_MS;if(hp<=0){gameOver=true;endState="fail";hudMsg="RITUAL FAILED — CLICK TO RESTART";hudUntil=now+999999;sfx(140,.6,.25,"sawtooth")}}}else{c.gaze*=Math.exp(-dt*2)}}else{if(!c.attacking){if(dist<CAT_ALERT_RADIUS){c.eyes=Math.min(1,c.eyes+dt*(1/CAT_EYES_DELAY_MS*1e3));if(c.eyes>=1)c.attacking=true}else{c.eyes=0;c.pos[2]+=CAT_WALK*dt;if(c.pos[2]>c.spawn[2]+1.5)c.pos[2]=c.spawn[2]+1.5}}else{const inv=1/Math.max(1e-5,dist);let vx=dx*inv,vy=dy*inv,vz=dz*inv;const zig=Math.sin(now*.012+i)*.3;vx+=Rv[0]*zig;vz+=Rv[2]*zig;const norm=1/Math.max(1e-5,Math.hypot(vx,vy,vz));vx*=norm;vy*=norm;vz*=norm;c.pos[0]+=vx*CAT_CHARGE*dt;c.pos[1]+=vy*CAT_CHARGE*dt;c.pos[2]+=vz*CAT_CHARGE*dt;c.eyes=1;if(dist<.6){hp=Math.max(0,hp-25);hurtPulse=1;hudMsg="BLACK CAT ATTACKED YOU";hudUntil=now+HUD_MS;sfx(220,.12,.3,"square");c.pos=c.spawn.slice();c.attacking=false;c.eyes=0;if(hp<=0){gameOver=true;endState="fail";hudMsg="RITUAL FAILED — CLICK TO RESTART";hudUntil=now+999999;sfx(140,.6,.25,"sawtooth")}}}}}}hurtPulse*=Math.exp(-dt*3.5);muzzle*=Math.exp(-dt*25);fearPulse*=Math.exp(-dt*2.2);if(boss.active&&!gameOver){const now=performance.now();if(boss.phase===1){boss.eyes=0;if(now>boss.until){boss.phase=2;boss.until=now+3e3+Math.random()*1e3}}else if(boss.phase===2){boss.eyes=0;const R=3,spd=.9;const ang=now*7e-4%6.283;const tx=pos[0]+Math.sin(ang)*R,tz=pos[2]+Math.cos(ang)*R;boss.pos[0]+=(tx-boss.pos[0])*Math.min(1,dt*spd*1.6);boss.pos[2]+=(tz-boss.pos[2])*Math.min(1,dt*spd*1.6);const vx=boss.pos[0]-pos[0],vy=boss.pos[1]-pos[1],vz=boss.pos[2]-pos[2];const d=Math.hypot(vx,vy,vz);const lookDot=(vx*F[0]+vy*F[1]+vz*F[2])/Math.max(.001,d);if(lookDot>.9&&d<6){fearPulse=Math.min(1,fearPulse+dt*2);hp=Math.max(0,hp-15*dt);if(now>hudUntil){hudMsg="THE AVATAR FEEDS ON YOUR STARE";hudUntil=now+900}if(hp<=0){gameOver=true;endState="fail";hudMsg="RITUAL FAILED — CLICK TO RESTART";hudUntil=now+999999;sfx(140,.6,.25,"sawtooth")}}if(now>=boss.nextShot){const dx=pos[0]-boss.pos[0],dz=pos[2]-boss.pos[2];const dist=Math.hypot(dx,dz),inv=1/Math.max(1e-5,dist);const vx=dx*inv*ORB_SPEED*1.05,vz=dz*inv*ORB_SPEED*1.05;if(orbs.length>=MAX_ORBS)orbs.shift();orbs.push({pos:[boss.pos[0],0,boss.pos[2]],vel:[vx,0,vz],R:.24,collected:false,type:"orb",born:now,ttl:4800});sfx(520,.05,.15,"square");boss.nextShot=now+1100+Math.random()*700}if(now>boss.until){boss.phase=3;boss.until=now+1200;boss.eyes=1}}else if(boss.phase===3){boss.eyes=Math.min(1,boss.eyes+dt*3);if(now>boss.until){boss.phase=2;boss.until=now+2600+Math.random()*900;boss.eyes=0}}else if(boss.phase===4){boss.eyes=0;if(!boss.didNova){boss.didNova=true;const N=8,sp=ORB_SPEED*.9;for(let j=0;j<N;j++){const a=j*(Math.PI*2/N);const vx=Math.cos(a)*sp,vz=Math.sin(a)*sp;if(orbs.length>=MAX_ORBS)orbs.shift();orbs.push({pos:[boss.pos[0],0,boss.pos[2]],vel:[vx,0,vz],R:.22,collected:false,type:"orb",born:now,ttl:5200})}sfx(360,.1,.18,"square")}if(now>boss.until){boss.phase=2;boss.until=now+2600+Math.random()*900}}}{for(const t of turrets){if(now>=t.next){const dx=pos[0]-t.pos[0],dz=pos[2]-t.pos[2];const dist=Math.hypot(dx,dz);if(dist<TURRET_RANGE&&hasLOS(t.pos[0],t.pos[2],pos[0],pos[2])){const inv=1/Math.max(1e-5,dist);const vx=dx*inv*ORB_SPEED,vz=dz*inv*ORB_SPEED;if(orbs.length>=MAX_ORBS)orbs.shift();orbs.push({pos:[t.pos[0],0,t.pos[2]],vel:[vx,0,vz],R:.22,collected:false,type:"orb",born:now,ttl:5200});sfx(520,.05,.15,"square")}t.next=now+1400+Math.random()*1e3}}for(const b of orbs){if(b.collected)continue;b.pos[0]+=b.vel[0]*dt;b.pos[2]+=b.vel[2]*dt;if(isSolidAt(b.pos[0],b.pos[2])){b.collected=true;continue}for(const d of doors){if(!d.open&&pointInDoor([b.pos[0],0,b.pos[2]],d,b.R)){b.collected=true;break}}if(b.collected)continue;if(now>b.born+b.ttl){b.collected=true;continue}const pd=Math.hypot(b.pos[0]-pos[0],b.pos[2]-pos[2]);if(pd<.38){hp=Math.max(0,hp-ORB_DMG);hurtPulse=1;b.collected=true;sfx(180,.08,.22,"square");if(hp<=0){gameOver=true;endState="fail";hudMsg="RITUAL FAILED — CLICK TO RESTART";hudUntil=now+999999;sfx(140,.6,.25,"sawtooth")}}}}const base=now<hudUntil?hudMsg:"";const hudNew=`${base}   SHARDS:${shardCount}   HP:${hp|0}`;if(hud._prev!==hudNew){hud.textContent=hudNew;hud._prev=hudNew}if(endState!=="none"){const left=Math.ceil((endLockUntil-performance.now())/1e3);endS.textContent=left>0?`Wait for ${left} s, then click to restart.`:`Click to restart.`}gl.uniform2f(uRes,W,H);gl.uniform1f(uTime,(t-startT)/1e3);gl.uniform3fv(uCam,vec3(pos[0],pos[1],pos[2]));gl.uniform3fv(uF,vec3(F[0],F[1],F[2]));gl.uniform3fv(uR,vec3(Rv[0],Rv[1],Rv[2]));gl.uniform3fv(uU,vec3(U[0],U[1],U[2]));gl.uniform1f(uEnemy,performance.now()<enemyDownUntil?0:1);gl.uniform1f(uHurt,hurtPulse);gl.uniform1f(uMuzzle,muzzle);gl.uniform1f(uFear,fearPulse);{const CAT_GPU_MAX=6;const pick=pickNearest(cats,CAT_GPU_MAX,c=>c.pos);const catCount=pick.length|0;const posArr=new Float32Array(MAX_CATS*4);const stateArr=new Float32Array(MAX_CATS);const eyesArr=new Float32Array(MAX_CATS);const now=performance.now();for(let j=0;j<Math.min(catCount,MAX_CATS);j++){const i=pick[j];const c=cats[i];posArr[j*4+0]=c.pos[0];posArr[j*4+1]=c.pos[1];posArr[j*4+2]=c.pos[2];stateArr[j]=c.mode===1&&now<c.modeUntil?2:1;eyesArr[j]=c.eyes}gl.uniform1i(uCatCount,Math.min(catCount,MAX_CATS));gl.uniform4fv(uCatsPos,posArr);gl.uniform1fv(uCatsState,stateArr);gl.uniform1fv(uCatsEyes,eyesArr)}{const SPH_GPU_MAX=6;const balls=spheres.concat(orbs.filter(o=>!o.collected));const pick=pickNearest(balls,SPH_GPU_MAX,s=>s.pos);const n=pick.length|0;const posArr=new Float32Array(MAX_SPHERES*4);const actArr=new Float32Array(MAX_SPHERES);const now=performance.now();for(let j=0;j<Math.min(n,MAX_SPHERES);j++){const i=pick[j];const s=balls[i];posArr[j*4+0]=s.pos[0];posArr[j*4+1]=s.pos[1];posArr[j*4+2]=s.pos[2];posArr[j*4+3]=(s.type==="heal"?-1:1)*s.R;actArr[j]=s.collected||now<(s.downUntil||0)?0:s.type==="orb"?2:1}gl.uniform1i(uSphereCount,Math.min(n,MAX_SPHERES));gl.uniform4fv(uSpheresPos,posArr);gl.uniform1fv(uSpheresActive,actArr)}{const n=Math.min(doors.length|0,MAX_DOORS);const posArr=new Float32Array(MAX_DOORS*4);const halfArr=new Float32Array(MAX_DOORS*4);for(let i=0;i<n;i++){const d=doors[i];posArr[i*4+0]=d.pos[0];posArr[i*4+1]=d.pos[1];posArr[i*4+2]=d.pos[2];halfArr[i*4+0]=d.half[0];halfArr[i*4+1]=d.half[1];halfArr[i*4+2]=d.half[2];halfArr[i*4+3]=d.activeVisual?1:0}gl.uniform1i(uDoorCount,n);gl.uniform4fv(uDoorsPos,posArr);gl.uniform4fv(uDoorsHalf,halfArr)}{const TUR_GPU_MAX=Math.min(MAX_TURRETS,6);const pick=pickNearest(turrets,TUR_GPU_MAX,t=>t.pos);const n=Math.min(pick.length|0,MAX_TURRETS);const posArr=new Float32Array(MAX_TURRETS*4);for(let j=0;j<n;j++){const t=turrets[pick[j]];posArr[j*4+0]=t.pos[0];posArr[j*4+1]=t.pos[1];posArr[j*4+2]=t.pos[2]}gl.uniform1i(uTurretCount,n);gl.uniform4fv(uTurretsPos,posArr)}gl.uniform1i(uBossActive,boss.active?1:0);gl.uniform4f(uBoss,boss.pos[0],boss.pos[1],boss.pos[2],boss.scale);gl.uniform1f(uBossEyes,boss.eyes);gl.uniform1f(uBossPhase,boss.phase);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,TILE_TEX.tex);gl.uniform1i(uTileTex,0);gl.uniform2i(uTileSize,TILE_TEX.cols,TILE_TEX.rows);gl.uniform2f(uTileCenter,LV.center[0],LV.center[1]);gl.uniform1f(uTileScale,TILE);gl.drawArrays(gl.TRIANGLES,0,3);requestAnimationFrame(frame)}requestAnimationFrame(frame);console.assert(canvas&&gl instanceof WebGL2RenderingContext,"canvas exists");console.assert("requestPointerLock"in canvas&&"exitPointerLock"in document,"pointer lock path");(function(){let K=keys;onKey({code:"KeyW",type:"keydown",preventDefault:()=>{}});console.assert(K.KeyW===true,"input update");onKey({code:"KeyW",type:"keyup",preventDefault:()=>{}})})();console.assert(gl.getProgramParameter(pr,gl.LINK_STATUS),"shader compile success");setTimeout(()=>console.assert(frames>0,"frame counter > 0 after 1s"),1100);function resetGame(){shardCount=0;hp=100;gameOver=false;hurtPulse=0;muzzle=0;hideEnd();endState="none";endLockUntil=0;levelIndex=checkpointIndex|0;loadLevel(LEVELS[levelIndex])}
+</script>
