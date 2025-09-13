@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="color-scheme" content="light dark" />
+	<title>Poker Mysterio</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: #000;
+		}
+
+		canvas {
+			image-rendering: pixelated;
+			border: 1px solid #fff;
+			transform: scale(1);
+			background-color: #361;
+		}
+
+		@media screen and (min-width: 512px) {
+			canvas {
+				transform: scale(2);
+			}
+		}
+
+		@media screen and (min-width: 768px) {
+			canvas {
+				transform: scale(3);
+			}
+		}
+
+		@media screen and (min-width: 1024px) {
+			canvas {
+				transform: scale(4);
+			}
+		}
+	</style>
+  <script type="module" crossorigin src="./assets/index-C7bee2D_.js"></script>
+</head>
+
+<body>
+	<canvas id="canvas" width="256" height="240"></canvas>
+</body>
+
+</html>
