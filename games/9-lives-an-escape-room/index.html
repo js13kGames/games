@@ -1,0 +1,338 @@
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>9 Lives: An escape room</title>
+    <script src="https://js13kgames.com/2025/webxr/aframe.js"></script>
+  </head>
+  <body>
+    <a-scene cursor="rayOrigin: mouse; fuse: false" background="color: black;">
+
+		<a-assets>
+            <canvas id="poem"></canvas>
+			<canvas id="clockface"></canvas>
+			<canvas id="page-1"></canvas>
+			<canvas id="page-2"></canvas>
+			<canvas id="maze"></canvas>
+			<canvas id="maths-1"></canvas>
+			<canvas id="maths-2"></canvas>
+			<canvas id="end-message-canvas"></canvas>
+			<canvas id="letter-orb-1"></canvas>
+			<canvas id="letter-orb-2"></canvas>
+			<canvas id="letter-orb-3"></canvas>
+			<canvas id="letter-orb-4"></canvas>
+			<canvas id="letter-orb-5"></canvas>
+			<canvas id="letter-orb-6"></canvas>
+			<canvas id="letter-orb-7"></canvas>
+			<canvas id="letter-orb-8"></canvas>
+			<canvas id="letter-orb-9"></canvas>
+			<canvas id="letter-clue-1"></canvas>
+			<canvas id="letter-clue-2"></canvas>
+			<canvas id="letter-clue-3"></canvas>
+			<canvas id="letter-clue-4"></canvas>
+			<canvas id="letter-clue-5"></canvas>
+			<canvas id="letter-clue-6"></canvas>
+			<canvas id="letter-clue-7"></canvas>
+			<canvas id="letter-clue-8"></canvas>
+			<canvas id="letter-clue-9"></canvas>
+		</a-assets>
+
+		<!-- floor & ceiling -->
+		<a-plane height="2.5" width="2.5" rotation="-90 0 0" material="color: #282624; roughness: 1"></a-plane>
+		<a-plane height="2.5" width="2.6" rotation="60 -90 -90" position="0.2 3.12 -0.15" material="color: #8c5740; roughness: 1"></a-plane>
+		<a-plane height="2.5" width="2.6" rotation="120 -90 -90" position="-0.2 3.12 -0.15" material="color: #8c5740; roughness: 1"></a-plane>
+
+		<!-- roof beams -->
+		<a-box height="0.1" width="2.5" depth="0.05" position="0 2.45 -0.8" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0 3 -0.8" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="-0.4 2.85 -0.8" rotation="0 0 45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0.4 2.85 -0.8" rotation="0 0 -45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="-0.6 2.83 -0.8" rotation="0 0 30" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="0.6 2.83 -0.8" rotation="0 0 -30" material="color: #8c5740; roughness: 1"></a-box>
+
+		<a-box height="0.1" width="2.5" depth="0.05" position="0 2.45 0" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0 3 0" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="-0.4 2.85 0" rotation="0 0 45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0.4 2.85 0" rotation="0 0 -45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="-0.6 2.83 0" rotation="0 0 30" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="0.6 2.83 0" rotation="0 0 -30" material="color: #8c5740; roughness: 1"></a-box>
+		
+		<a-box height="0.1" width="2.5" depth="0.05" position="0 2.45 0.8" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0 3 0.8" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="-0.4 2.85 0.8" rotation="0 0 45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="1" width="0.1" depth="0.05" position="0.4 2.85 0.8" rotation="0 0 -45" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="-0.6 2.83 0.8" rotation="0 0 30" material="color: #8c5740; roughness: 1"></a-box>
+		<a-box height="0.1" width="1.8" depth="0.05" position="0.6 2.83 0.8" rotation="0 0 -30" material="color: #8c5740; roughness: 1"></a-box>
+
+		<!-- walls -->
+		<a-plane height="3.5" width="2.6" position="0 1.75 -1.25" material="color: #bbb; roughness: 1;"></a-plane>
+		<a-plane height="2.5" width="2.5" position="-1.25 1.25 0" rotation="0 90 0" material="color: #bbb; roughness: 1;"></a-plane>
+		<a-plane height="2.5" width="2.5" position="1.25 1.25 0" rotation="0 270 0" material="color: #bbb; roughness: 1;"></a-plane>
+
+		<!-- door -->
+		<a-box depth="0.3" width="0.7" height="3.5" position="0.9 1.75 1.25" material="color: #bbb; roughness: 1;"></a-box>
+		<a-box depth="0.3" width="0.7" height="3.5" position="-0.9 1.75 1.25" material="color: #bbb; roughness: 1;"></a-box>
+		<a-box depth="0.3" width="1.1" height="1.2" position="0 2.7 1.25" material="color: #bbb; roughness: 1;"></a-box>
+		<a-entity id="door" depth="0.05" width="2.2" height="2.1" position="-0.55 1.05 1.25">
+			<a-box depth="0.05" width="1.1" height="2.1" position="0.55 0 0" material="color: #8c5740; roughness: 1"></a-box>
+			<!--<a-torus color="#777" arc="180" radius="0.15" radius-tubular="0.01" position="0.95 0.15 0" rotation="0 -90 90" scale="1 0.5 1"></a-torus>-->
+		</a-entity>
+
+		<!-- end message -->
+		<a-plane id="end-message" width="1.6" height="0.8" position="0 1.5 1" rotation="0 180 0" visible="false" material="src: #end-message-canvas; shader: flat; transparent: true;"></a-plane>
+
+		<!-- poem -->
+		<a-plane height="0.75" width="1.5" position="0.1 1.7 -1.2" rotation="0 0 0" material="src: #poem; shader: flat; transparent: true;"></a-plane>
+
+		<!-- clock -->
+		<a-cylinder color="white" radius="0.5" height="0.04" position="-1.25 1.5 0" rotation="-10 0 -90" material="color: white; emissive: white; emissiveIntensity: 0.1" segments-radial="9" segments-height="1"></a-cylinder>
+		<a-plane position="-1.22 1.48 0" rotation="0 90 0" material="src: #clockface; shader: flat; transparent: true;"></a-plane>
+		<a-entity id="clock-hand" height="0.5" width="0.5" position="-1.2 1.5 0" rotation="0 90 0">
+			<a-box color="#777" width="0.02" height="0.3" depth="0.01" position="0 0.09 0"></a-box>
+			<a-entity scale="1 10 1">
+				<a-box color="#777" width="0.03" height="0.03" depth="0.01" position="0 0.015 0" rotation="0 0 45"></a-box>
+			</a-entity>	
+		</a-entity>
+
+		<!-- lighting -->
+		<a-light type="ambient" intensity="0.2"></a-light>
+		<!--<a-entity light="type: point; castShadow: true; intensity: 0.2" position="0 2.1 0"></a-entity>-->
+		<a-light id="light" intensity="1" type="point" position="0 2.1 0"></a-light>
+
+
+		<!-- cat -->
+		<a-entity id="cat" position="-0.65 1.35 -1" rotation="0 45 0" scale="0.8 0.8 0.8">
+
+			<a-entity id="cat-head">
+
+				<!-- head -->
+				<a-sphere class="clickable" radius="0.2" rotation="0 0 0" scale="1 0.7 1" material="color: #111; roughness: 1;" segments-height="16" segments-width="24"></a-sphere>
+
+				<!-- ears -->
+				<a-sphere radius="0.07" position="-0.1 0.11 0.1" rotation="-15 90 90" scale="1.4 0.2 0.4" material="color: #111; roughness: 1;" segments-height="8" segments-width="24"></a-sphere>
+				<a-sphere radius="0.05" position="-0.1 0.11 0.11" rotation="-15 90 90" scale="1.4 0.1 0.4" material="color: pink; roughness: 1; emissive: pink; emissiveIntensity: 0.05" segments-height="6" segments-width="16"></a-sphere>
+				<a-sphere radius="0.07" position="0.1 0.11 0.1" rotation="15 90 90" scale="1.4 0.2 0.4" material="color: #111; roughness: 1;" segments-height="8" segments-width="24"></a-sphere>
+				<a-sphere radius="0.05" position="0.1 0.11 0.11" rotation="15 90 90" scale="1.4 0.1 0.4" material="color: pink; roughness: 1; emissive: pink; emissiveIntensity: 0.05" segments-height="6" segments-width="16"></a-sphere>
+
+				<!-- eyes -->
+				<a-sphere radius="0.04" position="-0.06 0.02 0.17" rotation="0 0 0" material="color: #f7c954; emissive: #fbe23c; emissiveIntensity: 0.05" segments-height="12" segments-width="12"></a-sphere>></a-sphere>
+				<a-sphere radius="0.04" position="0.06 0.02 0.17" rotation="0 0 0" material="color: #f7c954; emissive: #fbe23c; emissiveIntensity: 0.05" segments-height="12" segments-width="12"></a-sphere>
+
+				<!-- nose -->
+				<a-tetrahedron radius="0.03" position="0 -0.02 0.19" rotation="-25 -120 145" material="color: pink; roughness: 1; emissive: pink; emissiveIntensity: 0.05"></a-tetrahedron>
+
+				<!-- whiskers -->
+				<a-entity position="0 -0.05 0.18">
+					<a-box width="0.18" depth="0.001" height="0.001" position="-0.12 0 0" rotation="0 0 -3" color="#ccc"></a-box>
+					<a-box width="0.18" depth="0.001" height="0.001" position="-0.12 -0.01 0" color="#ccc"></a-box>
+					<a-box width="0.18" depth="0.001" height="0.001" position="-0.12 -0.02 0" rotation="0 0 3" color="#ccc"></a-box>
+					<a-box width="0.18" depth="0.001" height="0.001" position="0.12 0 0" rotation="0 0 3" color="#ccc"></a-box>
+					<a-box width="0.18" depth="0.001" height="0.001" position="0.12 -0.01 0" color="#ccc"></a-box>
+					<a-box width="0.18" depth="0.001" height="0.001" position="0.12 -0.02 0" rotation="0 0 -3" color="#ccc"></a-box>
+				</a-entity>
+
+			</a-entity>
+
+			<!-- body -->
+			<a-sphere class="clickable" radius="0.25" position="0 -0.36 0" rotation="0 0 0" scale="0.8 1 1" material="color: #111; roughness: 1;" segments-height="24" segments-width="16"></a-sphere>
+
+			<!-- tail -->
+			<!--
+			<a-torus arc="120" radius="0.1" radius-tubular="0.01" material="color: #111; roughness: 1;" position="-0.12 -0.31 -0.248" rotation="0 -60 190" scale="1 2 1" segments-radial="2" segments-tubular="12">
+				<a-sphere phi-length="180" radius="0.019" position="0.1 0 0.012" rotation="90 0 0" material="color: #111; roughness: 1;"></a-sphere>
+			</a-torus>
+			-->
+		</a-entity>
+
+
+		<!-- desk -->
+		<a-entity position="0 0.45 -0.9">
+			<!-- legs -->
+			<a-box width="0.08" height="0.8" depth="0.08" position="-0.7 0 -0.25" material="color: #cb7a57; roughness: 1"></a-box>
+			<a-box width="0.08" height="0.8" depth="0.08" position="-0.7 0 0.25" material="color: #cb7a57; roughness: 1"></a-box>
+			<a-box width="0.08" height="0.8" depth="0.08" position="0.7 0 -0.25" material="color: #cb7a57; roughness: 1"></a-box>
+			<a-box width="0.08" height="0.8" depth="0.08" position="0.7 0 0.25" material="color: #cb7a57; roughness: 1"></a-box>
+			<!-- surface -->
+			<a-box width="1.5" height="0.02" depth="0.6" position="0 0.4 0" material="color: #cb7a57; roughness: 1"></a-box>
+			<!-- drawer - left -->
+			<a-entity position="-0.33 0 0">
+				<a-entity class="drawer">
+					<a-box width="0.64" height="0.01" depth="0.6" position="0 0.2 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box class="letter-clue clue" position="0 0.3 0.1" rotation="-90 0 0" width="0.2" height="0.2" depth="0.02"></a-box>
+					<a-box width="0.02" height="0.2" depth="0.6" position="-0.32 0.3 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box width="0.02" height="0.2" depth="0.6" position="0.32 0.3 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box width="0.64" height="0.2" depth="0.01" position="0 0.3 -0.3" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box class="clickable" width="0.64" height="0.2" depth="0.01" position="0 0.3 0.295" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-torus class="clickable" color="#777" arc="180" radius="0.1" radius-tubular="0.005" position="0 0.3 0.3" rotation="90 0 0" scale="1 0.5 1"></a-torus>
+				</a-entity>
+			</a-entity>
+			<!-- drawer - right -->
+			<a-entity position="0.33 0 0">
+				<a-entity class="drawer">
+					<a-box width="0.64" height="0.01" depth="0.6" position="0 0.2 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box class="letter-clue clue" position="0 0.3 0.1" rotation="-90 0 0" width="0.2" height="0.2" depth="0.02"></a-box>
+					<a-box width="0.02" height="0.2" depth="0.6" position="-0.32 0.3 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box width="0.02" height="0.2" depth="0.6" position="0.32 0.3 0" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box width="0.64" height="0.2" depth="0.01" position="0 0.3 -0.3" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-box class="clickable" width="0.64" height="0.2" depth="0.01" position="0 0.3 0.295" material="color: #cb7a57; roughness: 1"></a-box>
+					<a-torus class="clickable" color="#777" arc="180" radius="0.1" radius-tubular="0.005" position="0 0.3 0.3" rotation="90 0 0" scale="1 0.5 1"></a-torus>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+
+
+		<!-- letter clues (+2 in drawers) -->
+		<!-- on floor in center -->
+		<a-box class="letter-clue clue" position="0 0.1 0" rotation="-90 0 0" width="0.2" height="0.2" depth="0.02"></a-box>
+		<!-- bottom of door-->
+		<!--<a-box class="letter-clue clue" position="0 0.2 1.2" rotation="0 0 0" width="0.2" height="0.2" depth="0.02"></a-box>-->
+		<!-- under table -->
+		<a-box class="letter-clue clue" position="0 0.2 -1.2" rotation="0 180 0" width="0.2" height="0.2" depth="0.02"></a-box>
+		<!-- on ceiling -->
+		<a-box class="letter-clue clue" position="0 3.1 0.4" rotation="90 0 0" width="0.2" height="0.2" depth="0.02"></a-box>
+		<!-- above door -->
+		<a-box class="letter-clue clue" position="0 2.8 1.1" rotation="0 0 0" width="0.2" height="0.2" depth="0.02"></a-box>
+		<!-- right wall -->
+		<!--<a-box class="letter-clue clue" position="1.2 1.7 0" rotation="0 90 0" width="0.2" height="0.2" depth="0.02"></a-box>-->
+		<!-- top of front wall -->
+		<a-box class="letter-clue clue" position="0 2.8 -1.2" rotation="0 180 0" width="0.2" height="0.2" depth="0.02"></a-box>
+
+		<!-- bookshelf -->
+		<a-entity position="0.92 0 0.9">
+			<a-box material="color: #cb7a57; roughness: 1" position="0.3 1.1 0" width="0.03" height="2.2" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="-0.3 1.1 0" width="0.03" height="2.2" depth="0.35"></a-box>
+			<a-plane material="color: #cb7a57; roughness: 1" position="0 1.1 0.16" width="0.6" height="2.2" rotation="0 180 0"></a-plane>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 2.185 0" width="0.6" height="0.03" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 1.737 0" width="0.6" height="0.03" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 1.304 0" width="0.6" height="0.03" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 0.871 0" width="0.6" height="0.03" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 0.438 0" width="0.6" height="0.03" depth="0.35"></a-box>
+			<a-box material="color: #cb7a57; roughness: 1" position="0 0.015 0" width="0.6" height="0.03" depth="0.35"></a-box>
+		</a-entity>
+
+		<!-- books on bookshelf -->
+		<a-box material="color: yellow; roughness: 0.5;" height="0.35" width="0.07" depth="0.25" position="1.16 1.5 0.87">
+		<a-cylinder material="color: yellow; roughness: 0.5;" height="0.35" radius="0.035" position="0 0 -0.12" theta-length="180" theta-start="90" segments-height="1" segments-radial="6"></a-cylinder>
+		</a-box>
+		<a-box material="color: green; roughness: 0.5;" height="0.35" width="0.07" depth="0.25" position="1.08 1.5 0.87">
+		<a-cylinder material="color: green; roughness: 0.5;" height="0.35" radius="0.035" position="0 0 -0.12" theta-length="180" theta-start="90" segments-height="1" segments-radial="6"></a-cylinder>
+		</a-box>
+		<a-box material="color: blue; roughness: 0.5;" height="0.35" width="0.07" depth="0.25" position="0.95 1.51 0.87" rotation="0 0 -20">
+		<a-cylinder material="color: blue; roughness: 0.5;" height="0.35" radius="0.035" position="0 0 -0.12" theta-length="180" theta-start="90" segments-height="1" segments-radial="6"></a-cylinder>
+		</a-box>
+
+		<!-- INTERACTIVE BOOKS -->
+		<!-- book of symbols -->
+		<a-entity class="interactive-book" position="0.9 0.9 0.75" rotation="90 -90 0">
+			<a-entity class="book-front" position="0 0 -0.075" rotation="0 -180 0">
+				<a-box class="clickable open" color="orange" width="0.25" height="0.35" depth="0.01" position="-0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="-0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="-0.13 0 -0.04" rotation="0 180 180" material="src: #page-1; shader: flat; transparent: true;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="90" position="-0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-entity>
+				<a-box color="orange" width="0.25" height="0.35" depth="0.01" position="0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="0.13 0 -0.04" rotation="0 180 180" material="src: #page-2; shader: flat; transparent: true;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="180" position="0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-cylinder class="clickable open book-spine" color="orange" scale="0.5 1 1" radius="0.045" height="0.35" position="0 0 -0.035" theta-length="180" theta-start="180" segments-height="1" segments-radial="8"></a-cylinder>
+		</a-entity>
+
+		<!-- maze book -->
+		<a-entity class="interactive-book clue" id="maze-book" position="0.9 1.77 0.75" rotation="90 -90 0">
+			<a-entity class="book-front" position="0 0 -0.075" rotation="0 -180 0">
+				<a-box class="clickable open" color="pink" width="0.25" height="0.35" depth="0.01" position="-0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="-0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="-0.13 0 -0.04" rotation="0 180 180" material="shader: flat; transparent: true; opacity: 0;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="90" position="-0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-entity>
+				<a-box color="pink" width="0.25" height="0.35" depth="0.01" position="0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="0.13 0 -0.04" rotation="0 180 180" material="src: #maze; shader: flat; transparent: true;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="180" position="0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-cylinder class="clickable open book-spine" color="pink" scale="0.5 1 1" radius="0.045" height="0.35" position="0 0 -0.035" theta-length="180" theta-start="180" segments-height="1" segments-radial="8"></a-cylinder>
+		</a-entity>
+
+		<!-- maths book -->
+		<a-entity class="interactive-book clue" id="maths-book" position="1.2 0.64 0.75" rotation="180 -90 0">
+			<a-entity class="book-front" position="0 0 -0.075" rotation="0 -180 0">
+				<a-box class="clickable open" color="cyan" width="0.25" height="0.35" depth="0.01" position="-0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="-0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="-0.13 0 -0.04" rotation="0 180 180" material="src: #maths-1; shader: flat; transparent: true;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="90" position="-0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-entity>
+				<a-box color="cyan" width="0.25" height="0.35" depth="0.01" position="0.125 0 0"></a-box>
+				<a-box color="white" width="0.2" height="0.33" depth="0.04" position="0.13 0 -0.019"></a-box>
+				<a-plane class="clickable close" width="0.2" height="0.33" position="0.13 0 -0.04" rotation="0 180 180" material="src: #maths-2; shader: flat; transparent: true;"></a-plane>
+				<a-cylinder color="white" radius="0.04" height="0.33" theta-length="90" theta-start="180" position="0.04 0 0" segments-height="1" segments-radial="8"></a-cylinder>
+			</a-entity>
+			<a-cylinder class="clickable open book-spine" color="cyan" scale="0.5 1 1" radius="0.045" height="0.35" position="0 0 -0.035" theta-length="180" theta-start="180" segments-height="1" segments-radial="8"></a-cylinder>
+		</a-entity>
+		
+
+		<!-- letter orbs -->
+		<a-entity position="1 1.5 -0.25">
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-1; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-2; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-3; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-4; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-5; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-6; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-7; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-8; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+			<a-entity class="letter-orb">
+				<a-plane heightConstantSourceNode.l="0.12" width="0.12" height="0.12" rotation="0 -90 0" material="src: #letter-orb-9; shader: flat; transparent: true;"></a-plane>
+				<a-sphere class="clickable top" phi-length="180" rotation="-90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+				<a-sphere class="clickable bottom" phi-length="180" rotation="90 0 0" radius="0.08" material="color: blue; transparent: true; opacity: 0.1;" segments-width="20" segments-height="10"></a-sphere>
+			</a-entity>
+		</a-entity>
+
+		<a-camera></a-camera>
+
+		<a-entity laser-controls="hand: right" raycaster="objects: .clickable; lineColor: yellow; showLine: true"></a-entity>
+		<a-entity laser-controls="hand: left" raycaster="objects: .clickable; lineColor: yellow; showLine: true"></a-entity>
+
+    </a-scene>
+
+	<script src="scripts/main.js"></script>
+	<script src="scripts/books.js"></script>
+	<script src="libs/mini-synth.js"></script>
+	<script src="scripts/audio.js"></script>
+
+  </body>
+</html>
