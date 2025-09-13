@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nine Lives Fall</title>
+<style>
+body{margin:0;padding:0;background:#001133;font-family:Arial;overflow:hidden}
+canvas{display:block;border:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c');
+const ctx=c.getContext('2d');
+
+// Set canvas to full screen
+function resizeCanvas(){
+  c.width=window.innerWidth;
+  c.height=window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+// Game dimensions
+const GAME_WIDTH=c.width;
+const GAME_HEIGHT=c.height;
+
+let gameTime=0;
+let score=0;
+let lives=9;
+let gameOver=false;
+let particles=[];
+let shakeTime=0;
+let distanceScore=0;
+let speedScore=0;
+let baseSpeed=150;
+
+// Cat falling
+const cat={
+  x:GAME_WIDTH/2,
+  y:50,
+  vy:150,
+  size:16
+};
+
+let lastObstacleY=0;
+
+// Audio context for sound effects
+let audioCtx;
+function initAudio(){
+  if(!audioCtx){
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  }
+}
+
+function playSound(freq,duration,type='sine',volume=0.1){
+  if(!audioCtx)return;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.setValueAtTime(freq,audioCtx.currentTime);
+  osc.type=type;
+  gain.gain.setValueAtTime(volume,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+duration);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime+duration);
+}
+
+// Building elements (ledges, awnings, etc.)
+let obstacles=[];
+let cameraY=0;
+let difficulty=1;
+
+function generateMoreObstacles(){
+  // Generate obstacles ahead of the cat
+  const startY=Math.max(lastObstacleY,cat.y+300);
+  const endY=startY+1000;
+
+  for(let y=startY;y<endY;y+=60+Math.random()*80){
+    const difficultyFactor=Math.min(y/2000,1);
+
+    const type=Math.random();
+    if(type<0.3){
+      // Horizontal obstacles - limited width
+      const width=80+Math.random()*(120+difficultyFactor*80);
+      obstacles.push({
+        x:Math.random()*(GAME_WIDTH-width),
+        y:y,
+        width:width,
+        height:15,
+        type:'obstacle'
+      });
+    }else if(type<0.6){
+      // Vertical obstacles
+      const height=100+Math.random()*(150+difficultyFactor*150);
+      obstacles.push({
+        x:Math.random()*(GAME_WIDTH-100),
+        y:y,
+        width:30+Math.random()*30,
+        height:height,
+        type:'obstacle'
+      });
+    }else{
+      // Block obstacles - limited width
+      obstacles.push({
+        x:Math.random()*(GAME_WIDTH-150),
+        y:y,
+        width:60+Math.random()*(60+difficultyFactor*60),
+        height:40+Math.random()*(50+difficultyFactor*60),
+        type:'obstacle'
+      });
+    }
+  }
+  lastObstacleY=endY;
+
+  // Remove obstacles that are too far behind
+  obstacles=obstacles.filter(obs=>obs.y>cat.y-1000);
+}
+
+// Keyboard controls
+let keys={};
+document.addEventListener('keydown',e=>{
+  initAudio(); // Initialize audio on first interaction
+  keys[e.key]=true;
+});
+document.addEventListener('keyup',e=>{
+  keys[e.key]=false;
+});
+
+function handleInput(dt){
+  if(gameOver)return;
+
+  // Simple left/right movement while falling
+  if(keys['ArrowLeft']||keys['a']){
+    cat.x-=450*dt;
+  }
+  if(keys['ArrowRight']||keys['d']){
+    cat.x+=450*dt;
+  }
+
+  // Speed boost with down arrow
+  if(keys['ArrowDown']||keys['s']){
+    cat.vy+=400*dt; // Extra acceleration
+    if(Math.random()<0.02)playSound(800+Math.random()*400,0.05,'sine',0.05); // Wind sound
+  }
+
+  // Slow down with up arrow
+  if(keys['ArrowUp']||keys['w']){
+    cat.vy=Math.max(baseSpeed,cat.vy-300*dt); // Reduce speed but keep minimum base speed
+  }
+
+  cat.x=Math.max(cat.size,Math.min(GAME_WIDTH-cat.size,cat.x));
+}
+
+function update(dt){
+  if(gameOver)return;
+
+  gameTime+=dt;
+  handleInput(dt);
+
+  // Progressive base speed increase
+  const newBaseSpeed=150+Math.floor(cat.y/1000)*20;
+  if(newBaseSpeed>baseSpeed){
+    playSound(400,0.3,'triangle',0.1); // Level up sound
+  }
+  baseSpeed=newBaseSpeed;
+  cat.vy=Math.max(baseSpeed,cat.vy);
+
+  // Constant falling with slight acceleration
+  cat.vy+=50*dt;
+  cat.y+=cat.vy*dt;
+
+  // Generate more obstacles as needed
+  generateMoreObstacles();
+
+  // Scoring system
+  distanceScore=Math.floor(cat.y/10);
+  speedScore+=Math.floor((cat.vy-baseSpeed)/10)*dt*10; // Bonus for speed above base
+  score=distanceScore+Math.floor(speedScore);
+
+  // Check collisions with all obstacles
+  obstacles.forEach(obs=>{
+    if(cat.x+cat.size/2>obs.x&&cat.x-cat.size/2<obs.x+obs.width&&
+       cat.y+cat.size/2>obs.y&&cat.y-cat.size/2<obs.y+obs.height){
+      lives--;
+      shakeTime=0.3;
+
+      // Create impact particles
+      for(let i=0;i<8;i++){
+        particles.push({
+          x:cat.x,
+          y:cat.y,
+          vx:(Math.random()-0.5)*200,
+          vy:(Math.random()-0.5)*200,
+          life:1,
+          color:'#f00'
+        });
+      }
+
+      if(lives<=0){
+        gameOver=true;
+        playSound(150,0.5,'sawtooth',0.2); // Game over sound
+      }else{
+        // Quick bounce away from obstacle
+        cat.vy=-20;
+        cat.y=obs.y-obs.height-cat.size/2-2;
+        playSound(200,0.1,'square',0.15); // Hit sound
+      }
+    }
+  });
+
+  // Update particles
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.x+=p.vx*dt;
+    p.y+=p.vy*dt;
+    p.life-=dt*2;
+    if(p.life<=0){
+      particles.splice(i,1);
+    }
+  }
+
+  // Update effects
+  if(shakeTime>0)shakeTime-=dt;
+
+  // Camera follows cat
+  cameraY=cat.y-GAME_HEIGHT/2;
+}
+
+function draw(){
+  // Gradient night sky background
+  const gradient=ctx.createLinearGradient(0,0,0,GAME_HEIGHT);
+  gradient.addColorStop(0,'#001155');
+  gradient.addColorStop(0.7,'#000822');
+  gradient.addColorStop(1,'#000311');
+  ctx.fillStyle=gradient;
+  ctx.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+
+  // Animated stars
+  const starCount=Math.floor(GAME_WIDTH/10);
+  for(let i=0;i<starCount;i++){
+    const x=(i*137)%GAME_WIDTH;
+    const y=((i*173+gameTime*10)%2000-cameraY)%GAME_HEIGHT;
+    const twinkle=Math.sin(gameTime*3+i)*0.5+0.5;
+    const brightness=0.3+twinkle*0.7;
+    ctx.fillStyle=i%7===0?`rgba(255,255,150,${brightness})`:`rgba(255,255,255,${brightness})`;
+    const size=i%5===0?3:2;
+    ctx.fillRect(x,y,size,size);
+  }
+
+  // Falling particles (wind effect)
+  const particleCount=Math.floor(GAME_WIDTH/40);
+  for(let i=0;i<particleCount;i++){
+    const x=(i*89+gameTime*50)%GAME_WIDTH;
+    const y=((i*67+gameTime*200)%1200-cameraY)%GAME_HEIGHT;
+    ctx.fillStyle=`rgba(150,200,255,${0.1+Math.sin(gameTime*2+i)*0.1})`;
+    ctx.fillRect(x,y,1,3);
+  }
+
+  ctx.save();
+  // Screen shake effect
+  const shakeX=shakeTime>0?Math.sin(gameTime*50)*shakeTime*10:0;
+  const shakeY=shakeTime>0?Math.cos(gameTime*60)*shakeTime*8:0;
+  ctx.translate(shakeX,-cameraY+shakeY);
+
+  // Draw building sides with windows
+  const buildingWidth=50;
+  const buildingGrad=ctx.createLinearGradient(0,0,buildingWidth,0);
+  buildingGrad.addColorStop(0,'#1a1a2e');
+  buildingGrad.addColorStop(1,'#16213e');
+  ctx.fillStyle=buildingGrad;
+  ctx.fillRect(0,cameraY-300,buildingWidth,1200);
+  ctx.fillRect(GAME_WIDTH-buildingWidth,cameraY-300,buildingWidth,1200);
+
+  // Building windows
+  for(let y=Math.floor((cameraY-300)/40)*40;y<cameraY+GAME_HEIGHT+300;y+=40){
+    for(let x of[15,GAME_WIDTH-35]){
+      if((y/40)%3!==0){
+        const glow=Math.sin(gameTime*2+y*0.01)*0.3+0.7;
+        ctx.fillStyle=`rgba(255,200,100,${glow*0.4})`;
+        ctx.fillRect(x,y,20,25);
+        ctx.fillStyle=`rgba(255,255,200,${glow*0.6})`;
+        ctx.fillRect(x+2,y+2,16,21);
+      }
+    }
+  }
+
+  // Draw varied and appealing obstacles
+  obstacles.forEach((obs,index)=>{
+    if(obs.y>cameraY-50&&obs.y<cameraY+GAME_HEIGHT+50){
+      const pulse=Math.sin(gameTime*4+index)*0.3+0.7;
+      const uniqueOffset=index*0.1;
+
+      // Shadow
+      ctx.fillStyle='rgba(0,0,0,0.4)';
+      ctx.fillRect(obs.x+4,obs.y+4,obs.width,obs.height);
+
+      // Determine obstacle type based on dimensions
+      const aspectRatio=obs.width/obs.height;
+
+      if(aspectRatio>2){
+        // Horizontal laser barrier
+        drawLaserBarrier(obs,pulse,uniqueOffset);
+      }else if(aspectRatio<0.8){
+        // Vertical energy pillar
+        drawEnergyPillar(obs,pulse,uniqueOffset);
+      }else{
+        // Energy cube/block
+        drawEnergyCube(obs,pulse,uniqueOffset);
+      }
+
+      // Universal danger aura
+      ctx.fillStyle=`rgba(255,100,150,${pulse*0.3})`;
+      ctx.fillRect(obs.x-3,obs.y-3,obs.width+6,obs.height+6);
+
+      // Scanning lines effect
+      const scanY=(gameTime*100+obs.y*0.5)%(obs.height+10);
+      if(scanY<obs.height){
+        ctx.fillStyle=`rgba(100,255,255,${pulse*0.6})`;
+        ctx.fillRect(obs.x,obs.y+scanY,obs.width,2);
+      }
+    }
+  });
+
+  function drawLaserBarrier(obs,pulse,offset){
+    // Laser barrier - horizontal energy beam
+    const segments=Math.floor(obs.width/20);
+    for(let i=0;i<segments;i++){
+      const segmentPulse=Math.sin(gameTime*6+i+offset)*0.4+0.6;
+
+      // Core laser beam
+      ctx.fillStyle=`rgba(255,50,100,${segmentPulse})`;
+      ctx.fillRect(obs.x+i*20,obs.y+obs.height/2-3,18,6);
+
+      // Bright center line
+      ctx.fillStyle=`rgba(255,200,255,${segmentPulse})`;
+      ctx.fillRect(obs.x+i*20,obs.y+obs.height/2-1,18,2);
+
+      // Energy nodes
+      ctx.fillStyle=`rgba(255,100,200,${pulse})`;
+      ctx.fillRect(obs.x+i*20+7,obs.y+obs.height/2-5,4,10);
+    }
+  }
+
+  function drawEnergyPillar(obs,pulse,offset){
+    // Vertical energy pillar
+    const coreGrad=ctx.createLinearGradient(obs.x,obs.y,obs.x+obs.width,obs.y);
+    coreGrad.addColorStop(0,`rgba(100,50,255,${pulse*0.3})`);
+    coreGrad.addColorStop(0.5,`rgba(150,100,255,${pulse})`);
+    coreGrad.addColorStop(1,`rgba(100,50,255,${pulse*0.3})`);
+    ctx.fillStyle=coreGrad;
+    ctx.fillRect(obs.x,obs.y,obs.width,obs.height);
+
+    // Energy rings
+    const rings=Math.floor(obs.height/25);
+    for(let i=0;i<rings;i++){
+      const ringPulse=Math.sin(gameTime*8+i*2+offset)*0.5+0.5;
+      ctx.strokeStyle=`rgba(200,150,255,${ringPulse})`;
+      ctx.lineWidth=3;
+      ctx.strokeRect(obs.x-2,obs.y+i*25,obs.width+4,8);
+    }
+
+    // Core energy line
+    ctx.fillStyle=`rgba(255,255,255,${pulse})`;
+    ctx.fillRect(obs.x+obs.width/2-1,obs.y,2,obs.height);
+  }
+
+  function drawEnergyCube(obs,pulse,offset){
+    // Energy cube/block
+    const cubeGrad=ctx.createLinearGradient(obs.x,obs.y,obs.x+obs.width,obs.y+obs.height);
+    cubeGrad.addColorStop(0,`rgba(255,100,50,${pulse})`);
+    cubeGrad.addColorStop(0.3,`rgba(255,150,100,${pulse})`);
+    cubeGrad.addColorStop(0.7,`rgba(200,80,40,${pulse})`);
+    cubeGrad.addColorStop(1,`rgba(150,50,25,${pulse})`);
+    ctx.fillStyle=cubeGrad;
+    ctx.fillRect(obs.x,obs.y,obs.width,obs.height);
+
+    // Circuit pattern
+    const circuitOffset=Math.sin(gameTime*3+offset)*2;
+    ctx.strokeStyle=`rgba(255,200,100,${pulse})`;
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    // Horizontal lines
+    for(let y=obs.y+10;y<obs.y+obs.height-10;y+=15){
+      ctx.moveTo(obs.x+5,y+circuitOffset);
+      ctx.lineTo(obs.x+obs.width-5,y+circuitOffset);
+    }
+    // Vertical lines
+    for(let x=obs.x+10;x<obs.x+obs.width-10;x+=20){
+      ctx.moveTo(x+circuitOffset,obs.y+5);
+      ctx.lineTo(x+circuitOffset,obs.y+obs.height-5);
+    }
+    ctx.stroke();
+
+    // Corner energy points
+    const corners=[
+      [obs.x+3,obs.y+3],
+      [obs.x+obs.width-3,obs.y+3],
+      [obs.x+3,obs.y+obs.height-3],
+      [obs.x+obs.width-3,obs.y+obs.height-3]
+    ];
+    corners.forEach(([x,y],i)=>{
+      const cornerPulse=Math.sin(gameTime*10+i+offset)*0.5+0.5;
+      ctx.fillStyle=`rgba(255,255,200,${cornerPulse})`;
+      ctx.fillRect(x-2,y-2,4,4);
+    });
+  }
+
+  // Draw enhanced particles
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life;
+
+    // Particle glow
+    ctx.fillStyle=p.color;
+    ctx.fillRect(p.x-2,p.y-2,4,4);
+
+    // Bright center
+    ctx.fillStyle=p.color==='#f00'?'#fff':'#aff';
+    ctx.fillRect(p.x-1,p.y-1,2,2);
+
+    ctx.globalAlpha=1;
+  });
+
+  // Draw enhanced falling cat
+  const rotation=Math.sin(gameTime*10)*0.2;
+  const speedGlow=Math.min((cat.vy-baseSpeed)/100,1);
+
+  ctx.save();
+  ctx.translate(cat.x,cat.y);
+  ctx.rotate(rotation);
+
+  // Speed trail effect
+  if(speedGlow>0.3){
+    ctx.fillStyle=`rgba(100,200,255,${speedGlow*0.5})`;
+    ctx.fillRect(-10,-20,20,15);
+  }
+
+  // Cat shadow
+  ctx.fillStyle='rgba(0,0,0,0.3)';
+  ctx.fillRect(-7,-7,16,16);
+
+  // Cat body gradient
+  const catGrad=ctx.createRadialGradient(0,0,0,0,0,12);
+  catGrad.addColorStop(0,'#333');
+  catGrad.addColorStop(0.7,'#111');
+  catGrad.addColorStop(1,'#000');
+  ctx.fillStyle=catGrad;
+  ctx.fillRect(-8,-8,16,16);
+
+  // Cat ears
+  ctx.fillStyle='#000';
+  ctx.beginPath();
+  ctx.moveTo(-6,-8);
+  ctx.lineTo(-3,-12);
+  ctx.lineTo(0,-8);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(0,-8);
+  ctx.lineTo(3,-12);
+  ctx.lineTo(6,-8);
+  ctx.fill();
+
+  ctx.restore();
+
+  // Glowing cat eyes
+  const eyeGlow=Math.sin(gameTime*8)*0.3+0.7;
+  ctx.fillStyle=`rgba(0,255,100,${eyeGlow})`;
+  ctx.fillRect(cat.x-5,cat.y-5,3,3);
+  ctx.fillRect(cat.x+2,cat.y-5,3,3);
+  ctx.fillStyle=`rgba(150,255,200,${eyeGlow})`;
+  ctx.fillRect(cat.x-4,cat.y-4,1,1);
+  ctx.fillRect(cat.x+3,cat.y-4,1,1);
+
+  // No ground - infinite fall!
+
+  ctx.restore();
+
+  // Enhanced UI with glow effects
+  ctx.shadowColor='rgba(0,0,0,0.5)';
+  ctx.shadowBlur=4;
+  ctx.shadowOffsetX=2;
+  ctx.shadowOffsetY=2;
+
+  ctx.fillStyle='#fff';
+  ctx.font='bold 20px Arial';
+  ctx.fillText(`Lives: ${lives}`,10,30);
+  ctx.fillText(`Score: ${score}`,10,60);
+
+  ctx.font='14px Arial';
+  ctx.fillStyle='#bbb';
+  ctx.fillText(`Distance: ${Math.floor(cat.y)}m`,10,90);
+  ctx.fillText(`Speed: ${Math.floor(cat.vy)}`,10,110);
+  ctx.fillText(`Base: ${baseSpeed}`,10,130);
+
+  ctx.shadowBlur=0;
+  ctx.shadowOffsetX=0;
+  ctx.shadowOffsetY=0;
+
+  // Animated speed bonus indicator
+  if(cat.vy>baseSpeed+50){
+    const bounce=Math.sin(gameTime*12)*0.2+1;
+    ctx.fillStyle=`rgba(0,255,100,${Math.sin(gameTime*8)*0.3+0.7})`;
+    ctx.font=`bold ${12*bounce}px Arial`;
+    ctx.fillText('SPEED BONUS!',10,150);
+  }
+
+  // Lives indicator with hearts
+  for(let i=0;i<Math.max(lives,0);i++){
+    const heartX=10+i*25;
+    const heartY=170;
+    const beat=Math.sin(gameTime*6+i)*0.1+1;
+    ctx.fillStyle=`rgba(255,100,100,${beat})`;
+    ctx.font=`${16*beat}px Arial`;
+    ctx.fillText('♥',heartX,heartY);
+  }
+
+  if(gameOver){
+    ctx.fillStyle='rgba(0,0,0,0.7)';
+    ctx.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+    ctx.fillStyle='#fff';
+    ctx.font='24px Arial';
+    ctx.fillText('All Nine Lives Lost!',GAME_WIDTH/2-120,GAME_HEIGHT/2-20);
+    ctx.font='16px Arial';
+    ctx.fillText(`Final Score: ${score}`,GAME_WIDTH/2-70,GAME_HEIGHT/2+10);
+    ctx.fillText('Refresh to play again',GAME_WIDTH/2-90,GAME_HEIGHT/2+40);
+  }else{
+    ctx.font='12px Arial';
+    ctx.fillStyle='#aaa';
+    ctx.fillText('← → steer, ↓ faster, ↑ slower, dodge obstacles!',10,GAME_HEIGHT-20);
+  }
+}
+
+// Game loop
+let lastTime=0;
+function gameLoop(currentTime){
+  const dt=(currentTime-lastTime)/1000;
+  lastTime=currentTime;
+
+  update(dt);
+  draw();
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Initialize with some obstacles
+generateMoreObstacles();
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
