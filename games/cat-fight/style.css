@@ -1,0 +1,52 @@
+html, css {
+  touch-action: none;
+}
+* {
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+  font-size: 32px;
+  _touch-action: manipulation;
+}
+html, body {
+  height: 100%;
+  background: black;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+#scrDiv {
+  margin: 0 auto;
+  text-align: center;
+  _border: 1px solid blue;
+}
+canvas {
+  transform-origin: top left;
+  _display: inline-block;
+  _margin: 0 auto;
+  display: block;
+  _position: absolute;
+  _top: 0;
+}
+#ctrl {
+  position: absolute;
+  bottom: 100px;
+  transform-origin: top left;
+  width: 100%;
+  _border: 1px solid red;
+}
+#ctrl input {
+  font-size: 64px;
+}
+#debug {
+  position: absolute;
+  bottom: 0;
+}
+#attack {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
