@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Black Cat's Adventure</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #111;
+        overflow: hidden;
+        font-family: Arial;
+      }
+      #game {
+        position: relative;
+        width: 800px;
+        height: 400px;
+        margin: 50px auto;
+        background: #222;
+      }
+      .cell {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+      }
+      .wall {
+        background: #8b4513;
+      }
+      .floor {
+        background: #444;
+      }
+      .player {
+        background: #000;
+        clip-path: polygon(
+          20% 0%,
+          30% 25%,
+          70% 25%,
+          80% 0%,
+          90% 10%,
+          100% 50%,
+          100% 100%,
+          0% 100%,
+          0% 50%,
+          10% 10%
+        );
+        z-index: 10;
+        transition: all 0.1s;
+      }
+      .enemy {
+        background: #666;
+        border-radius: 15%;
+        z-index: 5;
+        border: 2px solid #999;
+      }
+      .mouse {
+        background: #888;
+        border-radius: 70% 30% 70% 30%;
+        z-index: 5;
+        width: 15px;
+        height: 15px;
+        position: relative;
+      }
+      .mouse::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 2px;
+        background: #888;
+        right: -6px;
+        top: 6px;
+        border-radius: 50%;
+      }
+      .boss {
+        background: #654321;
+        clip-path: polygon(
+          15% 0%,
+          25% 30%,
+          75% 30%,
+          85% 0%,
+          95% 15%,
+          100% 50%,
+          100% 100%,
+          0% 100%,
+          0% 50%,
+          5% 15%
+        );
+        z-index: 5;
+        width: 40px;
+        height: 40px;
+        box-shadow: 0 0 15px #654321;
+      }
+      .fish {
+        background: #ffa500;
+        border-radius: 40% 60% 40% 60%;
+        z-index: 3;
+      }
+      .yarn {
+        background: #ff69b4;
+        border-radius: 50%;
+        z-index: 3;
+      }
+      .milk {
+        background: #fff;
+        border-radius: 50%;
+        z-index: 3;
+        border: 1px solid #ddd;
+      }
+      .potion {
+        background: #00f;
+        border-radius: 50%;
+        z-index: 3;
+      }
+      .exit {
+        background: #00ffff;
+        border-radius: 50%;
+        z-index: 3;
+        width: 30px;
+        height: 30px;
+        box-shadow: 0 0 15px #00ffff;
+        animation: pulse 2s infinite;
+      }
+      .shop {
+        background: #ff69b4;
+        z-index: 3;
+        animation: shimmer 1.5s infinite;
+        box-shadow: 0 0 10px #ff69b4;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 15px #00ffff;
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 30px #00ffff, 0 0 45px #0ff;
+          transform: scale(1.2);
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          box-shadow: 0 0 10px #ff69b4;
+        }
+        50% {
+          box-shadow: 0 0 20px #ff1493, 0 0 30px #ff69b4;
+        }
+        100% {
+          box-shadow: 0 0 10px #ff69b4;
+        }
+      }
+      #ui {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        color: #fff;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 8px;
+        border-radius: 5px;
+      }
+      #combat,
+      #shop {
+        position: fixed;
+        top: 15%;
+        left: 15%;
+        width: 70%;
+        height: 70%;
+        background: rgba(0, 0, 0, 0.95);
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+        overflow-y: auto;
+        z-index: 2000;
+      }
+      #combatLog {
+        max-height: 150px;
+        overflow-y: auto;
+        background: #222;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-size: 11px;
+      }
+      .btn {
+        background: #444;
+        color: #fff;
+        border: none;
+        padding: 8px 15px;
+        margin: 3px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background: #666;
+      }
+      .heal-btn {
+        background: #0a5c0a;
+      }
+      .heal-btn:hover {
+        background: #0e7e0e;
+      }
+      .buy-btn {
+        background: #1e5799;
+      }
+      .buy-btn:hover {
+        background: #2989d8;
+      }
+      .expensive {
+        background: #8b0000;
+      }
+      .expensive:hover {
+        background: #a52a2a;
+      }
+      #startScreen,
+      #victoryScreen,
+      #defeatScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 1000;
+      }
+      .screen h1 {
+        font-size: 36px;
+        margin: 10px;
+      }
+      .screen p {
+        font-size: 14px;
+        margin: 5px;
+        max-width: 500px;
+      }
+      .survival-guide {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 2px solid #555;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px auto;
+        max-width: 480px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+      .guide-item {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        padding: 5px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .guide-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      .player-icon {
+        background: #000;
+        clip-path: polygon(
+          20% 0%,
+          30% 25%,
+          70% 25%,
+          80% 0%,
+          90% 10%,
+          100% 50%,
+          100% 100%,
+          0% 100%,
+          0% 50%,
+          10% 10%
+        );
+      }
+      .furniture-icon {
+        background: #666;
+        border: 1px solid #999;
+      }
+      .mouse-icon {
+        background: #888;
+        border-radius: 70% 30% 70% 30%;
+      }
+      .fish-icon {
+        background: #ffa500;
+        border-radius: 40% 60% 40% 60%;
+      }
+      .milk-icon {
+        background: #fff;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+      }
+      .door-icon {
+        background: #00ffff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #00ffff;
+      }
+      .boss-icon {
+        background: #654321;
+        clip-path: polygon(
+          15% 0%,
+          25% 30%,
+          75% 30%,
+          85% 0%,
+          95% 15%,
+          100% 50%,
+          100% 100%,
+          0% 100%,
+          0% 50%,
+          5% 15%
+        );
+      }
+      .shop-icon {
+        background: #ff69b4;
+        box-shadow: 0 0 5px #ff69b4;
+      }
+      .ending-story {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 10px auto;
+        max-width: 480px;
+        font-style: italic;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      }
+      .bigBtn {
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        margin: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .bigBtn:hover {
+        background: #45a049;
+      }
+      .restartBtn {
+        background: #f44336;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        margin: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .restartBtn:hover {
+        background: #da190b;
+      }
+      #info {
+        text-align: center;
+        color: #fff;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+      .dmg-player {
+        color: #0f0;
+      }
+      .dmg-enemy {
+        color: #f00;
+      }
+      .heal {
+        color: #00f;
+      }
+      .gold-text {
+        color: #ff0;
+      }
+      .shop-item {
+        margin: 10px 0;
+        padding: 10px;
+        background: #333;
+        border-radius: 5px;
+      }
+      #bonusMessage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(45deg, #ffd700, #ffa500);
+        color: #000;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 16px;
+        z-index: 3000;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        border: 2px solid #ffd700;
+        animation: bonusPulse 2s ease-in-out;
+      }
+      @keyframes bonusPulse {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <div id="ui">
+      <div>Room:<span id="level">1</span></div>
+      <div>HP:<span id="hp">100</span></div>
+      <div>ATK:<span id="atk">10</span></div>
+      <div>DEF:<span id="armor">0</span></div>
+      <div>FISH:<span id="gold">0</span></div>
+      <div>MILK:<span id="potions">0</span></div>
+      <div>Dog Repellent:<span id="poison">0</span></div>
+    </div>
+    <div id="combat">
+      <div id="combatText"></div>
+      <div id="combatLog"></div>
+      <div id="combatButtons"></div>
+    </div>
+    <div id="shop">
+      <div id="shopContent"></div>
+    </div>
+    <div id="info">
+      WASD or Arrows to move • Collect fish and treats to escape the house!
+    </div>
+
+    <div id="startScreen" class="screen">
+      <h1>SHADOW'S ESCAPE</h1>
+      <p>
+        <strong
+          >In the darkness of night, you are Shadow - a cunning black cat
+          trapped within the walls of a mysterious manor.</strong
+        >
+      </p>
+      <p>
+        <strong
+          >Five treacherous rooms stand between you and freedom. Navigate
+          through furniture, outsmart scurrying mice, and face the ultimate
+          guardian - a massive hound that prowls these halls.</strong
+        >
+      </p>
+      <p>
+        <strong
+          >Your survival depends on wit, agility, and the treasures you discover
+          along the way.</strong
+        >
+      </p>
+      <div class="survival-guide">
+        <p><strong>SURVIVAL GUIDE:</strong></p>
+        <div class="guide-item">
+          <div class="guide-icon player-icon"></div>
+          You, the shadow cat
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon furniture-icon"></div>
+          Furniture obstacles blocking your path
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon mouse-icon"></div>
+          Mice that dart unpredictably
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon fish-icon"></div>
+          Fish for sustenance and strength
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon milk-icon"></div>
+          Precious milk for healing
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon door-icon"></div>
+          Your gateway to freedom
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon boss-icon"></div>
+          The guardian hound that hunts you
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon shop-icon"></div>
+          Underground pet store for supplies
+        </div>
+      </div>
+      <p>
+        <strong
+          >Remember: Only by collecting enough fish can you gain the strength
+          needed to face what lies ahead.</strong
+        >
+      </p>
+      <button class="bigBtn" onclick="startGame()">BEGIN THE ESCAPE</button>
+    </div>
+
+    <div id="victoryScreen" class="screen" style="display: none">
+      <h1>SHADOW'S TRIUMPH</h1>
+      <h2>Against all odds, you have escaped the cursed manor!</h2>
+      <div class="ending-story">
+        <p>
+          <strong
+            >The cyan glow of freedom beckons as you slip through the cat
+            door...</strong
+          >
+        </p>
+        <p>
+          <strong
+            >Behind you, the dark halls fall silent. The guardian hound's howls
+            fade into the night.</strong
+          >
+        </p>
+        <p><strong>You are Shadow no more - you are free.</strong></p>
+      </div>
+      <div class="survival-guide">
+        <p><strong>FINAL STATISTICS:</strong></p>
+        <div id="victoryStats"></div>
+      </div>
+      <p>
+        <strong>The manor's secrets remain, but your legend lives on...</strong>
+      </p>
+      <button class="bigBtn" onclick="location.reload()">Escape Again</button>
+    </div>
+
+    <div id="defeatScreen" class="screen" style="display: none">
+      <h1>SHADOW'S END</h1>
+      <h2 id="defeatMessage">Your escape attempt has failed...</h2>
+      <div class="ending-story">
+        <p><strong>The darkness of the manor consumes you...</strong></p>
+        <p>
+          <strong
+            >Your tale ends here, but perhaps another shadow will attempt what
+            you could not.</strong
+          >
+        </p>
+        <p><strong>The manor awaits its next challenger.</strong></p>
+      </div>
+      <div class="survival-guide">
+        <p><strong>YOUR JOURNEY:</strong></p>
+        <div id="defeatStats"></div>
+      </div>
+      <p>
+        <strong>Every shadow learns from defeat. Will you try again?</strong>
+      </p>
+      <button class="restartBtn" onclick="location.reload()">Rise Again</button>
+    </div>
+
+    <script>
+      const W = 40,
+        H = 20;
+      let px = 5,
+        py = 5,
+        map = [],
+        enemies = [],
+        treasures = [],
+        shops = [],
+        exits = [],
+        rooms = [];
+      let playerHP = 100,
+        playerATK = 10,
+        playerGold = 0,
+        playerPotions = 0,
+        playerArmor = 0,
+        playerPoison = 0;
+      let inCombat = false,
+        currentEnemy = null,
+        gameStarted = false,
+        damageBoost = 0;
+      let currentLevel = 1,
+        combatLog = [],
+        levelComplete = false;
+      let totalMiceInLevel = 0,
+        miceKilled = 0;
+
+      function initMap() {
+        enemies = [];
+        treasures = [];
+        shops = [];
+        exits = [];
+        rooms = [];
+        levelComplete = false;
+        totalMiceInLevel = 0;
+        miceKilled = 0;
+        for (let y = 0; y < H; y++) {
+          map[y] = [];
+          for (let x = 0; x < W; x++) map[y][x] = "#";
+        }
+
+        rooms = [];
+        for (let i = 0; i < 6; i++) {
+          let w = 4 + Math.floor(Math.random() * 4);
+          let h = 3 + Math.floor(Math.random() * 3);
+          let x = 2 + Math.floor(Math.random() * (W - w - 4));
+          let y = 2 + Math.floor(Math.random() * (H - h - 4));
+          rooms.push({ x, y, w, h });
+          for (let ry = y; ry < y + h; ry++)
+            for (let rx = x; rx < x + w; rx++) map[ry][rx] = ".";
+        }
+
+        for (let i = 0; i < rooms.length - 1; i++) {
+          let r1 = rooms[i],
+            r2 = rooms[i + 1];
+          let x1 = r1.x + Math.floor(r1.w / 2),
+            y1 = r1.y + Math.floor(r1.h / 2);
+          let x2 = r2.x + Math.floor(r2.w / 2),
+            y2 = r2.y + Math.floor(r2.h / 2);
+
+          let minX = Math.min(x1, x2),
+            maxX = Math.max(x1, x2);
+          for (let x = minX; x <= maxX; x++) map[y1][x] = ".";
+
+          let minY = Math.min(y1, y2),
+            maxY = Math.max(y1, y2);
+          for (let y = minY; y <= maxY; y++) map[y][x2] = ".";
+        }
+
+        for (let i = 0; i < rooms.length; i++) {
+          for (let j = i + 1; j < rooms.length; j++) {
+            let r1 = rooms[i],
+              r2 = rooms[j];
+            let x1 = r1.x + Math.floor(r1.w / 2),
+              y1 = r1.y + Math.floor(r1.h / 2);
+            let x2 = r2.x + Math.floor(r2.w / 2),
+              y2 = r2.y + Math.floor(r2.h / 2);
+            if (Math.random() < 0.3) {
+              for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++)
+                map[y1][x] = ".";
+              for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++)
+                map[y][x2] = ".";
+            }
+          }
+        }
+
+        let startRoom = rooms[0];
+        px = startRoom.x + 1;
+        py = startRoom.y + 1;
+        map[py][px] = ".";
+        if (currentLevel === 5) {
+          // Place boss in a room different from the starting room
+          let bossRoom = rooms[rooms.length - 1]; // Last room
+          let x = bossRoom.x + Math.floor(bossRoom.w / 2);
+          let y = bossRoom.y + Math.floor(bossRoom.h / 2);
+          // Ensure boss doesn't spawn too close to player
+          if (Math.abs(x - px) <= 3 && Math.abs(y - py) <= 3) {
+            // Find a different position
+            for (let room of rooms) {
+              if (Math.abs(room.x - px) > 5 || Math.abs(room.y - py) > 5) {
+                x = room.x + Math.floor(room.w / 2);
+                y = room.y + Math.floor(room.h / 2);
+                break;
+              }
+            }
+          }
+          enemies.push({
+            x,
+            y,
+            hp: 250 + Math.floor(Math.random() * 80),
+            atk: 30 + Math.floor(Math.random() * 20),
+            isBoss: true,
+          });
+        } else {
+          // Mix of static furniture and moving mice - more mice at higher levels
+          let numFurniture = Math.min(1 + currentLevel, 4);
+          let numMice = Math.min(1 + currentLevel, 6);
+          console.log(
+            `Level ${currentLevel}: Planning to spawn ${numMice} mice and ${numFurniture} furniture`
+          );
+
+          // Add furniture (static)
+          for (let i = 0; i < numFurniture; i++) {
+            let room = rooms[Math.floor(Math.random() * rooms.length)];
+            let x, y;
+            do {
+              x = room.x + Math.floor(Math.random() * room.w);
+              y = room.y + Math.floor(Math.random() * room.h);
+            } while (
+              map[y][x] !== "." ||
+              (x === px && y === py) ||
+              enemies.some((e) => e.x === x && e.y === y)
+            );
+            let baseHP = 20 + currentLevel * 8;
+            let baseATK = 3 + currentLevel * 2;
+            enemies.push({
+              x,
+              y,
+              hp: baseHP + Math.floor(Math.random() * 15),
+              atk: baseATK + Math.floor(Math.random() * 5),
+              isFurniture: true,
+            });
+          }
+
+          // Add mice (moving) - much stronger scaling
+          for (let i = 0; i < numMice; i++) {
+            let x, y;
+            let attempts = 0;
+            let validSpot = false;
+
+            do {
+              let room = rooms[Math.floor(Math.random() * rooms.length)];
+              x =
+                room.x +
+                2 +
+                Math.floor(Math.random() * Math.max(1, room.w - 4)); // Stay well inside room
+              y =
+                room.y +
+                2 +
+                Math.floor(Math.random() * Math.max(1, room.h - 4)); // Stay well inside room
+              attempts++;
+
+              // Very strict validation - ensure it's definitely a floor tile in open area
+              if (
+                x >= 3 &&
+                x < W - 3 &&
+                y >= 3 &&
+                y < H - 3 &&
+                map[y] &&
+                map[y][x] === "." &&
+                (x !== px || y !== py) &&
+                !enemies.some((e) => e.x === x && e.y === y)
+              ) {
+                // Check 3x3 area around the spawn point - must all be floor
+                validSpot = true;
+                for (let dy = -1; dy <= 1; dy++) {
+                  for (let dx = -1; dx <= 1; dx++) {
+                    if (map[y + dy] && map[y + dy][x + dx] === "#") {
+                      validSpot = false;
+                      break;
+                    }
+                  }
+                  if (!validSpot) break;
+                }
+              }
+            } while (!validSpot && attempts < 100);
+
+            if (validSpot) {
+              // Only spawn if we found a perfectly valid spot
+              let baseHP = 15 + currentLevel * 6; // Much higher base HP
+              let baseATK = 2 + currentLevel * 2; // Reduced from 4+level*4 to 2+level*2
+              enemies.push({
+                x,
+                y,
+                hp: baseHP + Math.floor(Math.random() * 20),
+                atk: baseATK + Math.floor(Math.random() * 6),
+                isMouse: true,
+              });
+              totalMiceInLevel++;
+              console.log(
+                `Spawned mouse ${totalMiceInLevel} at (${x},${y}) in level ${currentLevel}`
+              );
+            }
+          }
+        }
+
+        if (currentLevel < 5) {
+          // Distribute treasures across different rooms for better spread
+          let usedRooms = [];
+          for (let i = 0; i < 3; i++) {
+            let availableRooms = rooms.filter((r) => !usedRooms.includes(r));
+            if (availableRooms.length === 0) availableRooms = rooms; // Reset if all used
+
+            let room =
+              availableRooms[Math.floor(Math.random() * availableRooms.length)];
+            usedRooms.push(room);
+
+            let x, y;
+            let attempts = 0;
+            do {
+              x = room.x + 1 + Math.floor(Math.random() * (room.w - 2));
+              y = room.y + 1 + Math.floor(Math.random() * (room.h - 2));
+              attempts++;
+            } while (
+              attempts < 50 &&
+              (map[y][x] !== "." ||
+                (x === px && y === py) ||
+                enemies.some((e) => e.x === x && e.y === y) ||
+                treasures.some((t) => t.x === x && t.y === y) ||
+                // Ensure some distance from other treasures
+                treasures.some(
+                  (t) => Math.abs(t.x - x) + Math.abs(t.y - y) < 3
+                ))
+            );
+
+            if (attempts < 50) {
+              let types = ["gold", "weapon", "armor"];
+              treasures.push({
+                x,
+                y,
+                type: types[Math.floor(Math.random() * types.length)],
+              });
+            }
+          }
+        }
+
+        if (currentLevel < 5 && Math.random() < 0.3) {
+          let room = rooms[Math.floor(Math.random() * rooms.length)];
+          let x, y;
+          do {
+            x = room.x + Math.floor(Math.random() * room.w);
+            y = room.y + Math.floor(Math.random() * room.h);
+          } while (
+            map[y][x] !== "." ||
+            (x === px && y === py) ||
+            enemies.some((e) => e.x === x && e.y === y) ||
+            treasures.some((t) => t.x === x && t.y === y)
+          );
+          treasures.push({ x, y, type: "health" });
+        }
+
+        // Debug final count after all spawning
+        let actualMice = enemies.filter((e) => e.isMouse).length;
+        let actualFurniture = enemies.filter((e) => e.isFurniture).length;
+        let actualBoss = enemies.filter((e) => e.isBoss).length;
+        console.log(
+          `Level ${currentLevel} FINAL: ${actualMice} mice spawned (totalMiceInLevel=${totalMiceInLevel}), ${actualFurniture} furniture, ${actualBoss} boss`
+        );
+      }
+
+      function spawnExit() {
+        if (rooms.length === 0) return;
+        let attempts = 0;
+        while (attempts < 50) {
+          let room = rooms[Math.floor(Math.random() * rooms.length)];
+          let x = room.x + Math.floor(Math.random() * room.w);
+          let y = room.y + Math.floor(Math.random() * room.h);
+          if (
+            map[y][x] === "." &&
+            (x !== px || y !== py) &&
+            !enemies.some((e) => e.x === x && e.y === y) &&
+            !shops.some((s) => s.x === x && s.y === y) &&
+            !treasures.some((t) => t.x === x && t.y === y)
+          ) {
+            exits.push({ x, y });
+            return;
+          }
+          attempts++;
+        }
+      }
+
+      function spawnShop() {
+        if (rooms.length === 0) return;
+        let attempts = 0;
+        while (attempts < 50) {
+          let room = rooms[Math.floor(Math.random() * rooms.length)];
+          let x = room.x + Math.floor(Math.random() * room.w);
+          let y = room.y + Math.floor(Math.random() * room.h);
+          if (
+            (map[y][x] === "." &&
+              (x !== px || y !== py) &&
+              !enemies.some((e) => e.x === x && e.y === y) &&
+              !exits.some((e) => e.x === x && e.y === y) &&
+              !treasures.some((t) => t.x === x && t.y === y) &&
+              Math.abs(x - px) > 2) ||
+            Math.abs(y - py) > 2
+          ) {
+            shops.push({ x, y });
+            return;
+          }
+          attempts++;
+        }
+      }
+
+      function render() {
+        const game = document.getElementById("game");
+        game.innerHTML = "";
+
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            const cell = document.createElement("div");
+            cell.className = "cell " + (map[y][x] === "#" ? "wall" : "floor");
+            cell.style.left = x * 20 + "px";
+            cell.style.top = y * 20 + "px";
+            game.appendChild(cell);
+          }
+        }
+
+        treasures.forEach((t) => {
+          const treasure = document.createElement("div");
+          let className = "fish";
+          if (t.type === "health") className = "milk";
+          else if (t.type === "weapon") className = "yarn";
+          else if (t.type === "armor") className = "fish";
+          treasure.className = "cell " + className;
+          treasure.style.left = t.x * 20 + "px";
+          treasure.style.top = t.y * 20 + "px";
+          game.appendChild(treasure);
+        });
+
+        exits.forEach((e) => {
+          const exit = document.createElement("div");
+          exit.className = "cell exit";
+          exit.style.left = e.x * 20 + "px";
+          exit.style.top = e.y * 20 + "px";
+          game.appendChild(exit);
+        });
+
+        shops.forEach((s) => {
+          const shop = document.createElement("div");
+          shop.className = "cell shop";
+          shop.style.left = s.x * 20 + "px";
+          shop.style.top = s.y * 20 + "px";
+          game.appendChild(shop);
+        });
+
+        enemies.forEach((e) => {
+          const enemy = document.createElement("div");
+          let className = "enemy";
+          if (e.isBoss) className = "boss";
+          else if (e.isMouse) className = "mouse";
+          enemy.className = "cell " + className;
+          enemy.style.left = e.x * 20 + "px";
+          enemy.style.top = e.y * 20 + "px";
+          game.appendChild(enemy);
+        });
+
+        const player = document.createElement("div");
+        player.className = "cell player";
+        player.style.left = px * 20 + "px";
+        player.style.top = py * 20 + "px";
+        game.appendChild(player);
+      }
+
+      function move(dx, dy) {
+        if (inCombat) return;
+        const nx = px + dx,
+          ny = py + dy;
+        if (nx >= 0 && nx < W && ny >= 0 && ny < H && map[ny][nx] === ".") {
+          px = nx;
+          py = ny;
+
+          treasures = treasures.filter((t) => {
+            if (t.x === px && t.y === py) {
+              collectTreasure(t);
+              return false;
+            }
+            return true;
+          });
+
+          let exit = exits.find((e) => e.x === px && e.y === py);
+          if (exit) {
+            if (currentLevel < 5) {
+              currentLevel++;
+              initMap();
+              render();
+              updateUI();
+              addToCombatLog(
+                `<span class="gold-text">Entered Room ${currentLevel}!</span>`
+              );
+            } else {
+              showVictoryScreen();
+            }
+            return;
+          }
+
+          let shop = shops.find((s) => s.x === px && s.y === py);
+          if (shop) {
+            openShop();
+            return;
+          }
+
+          let enemy = enemies.find((e) => {
+            if (e.isBoss) {
+              // Boss occupies 2x2 space
+              return px >= e.x && px <= e.x + 1 && py >= e.y && py <= e.y + 1;
+            }
+            return e.x === px && e.y === py;
+          });
+          if (enemy) {
+            startCombat(enemy);
+            return;
+          }
+
+          if (currentLevel < 5 && treasures.length === 0 && !levelComplete) {
+            levelComplete = true;
+            spawnShop();
+            spawnExit();
+            render();
+            addToCombatLog(
+              `<span class="gold-text">Room cleared! Find the cat door or visit the pet store!</span>`
+            );
+          }
+
+          moveEnemies();
+          cleanupGlitchedEnemies(); // Remove enemies that somehow got outside valid areas
+          checkEnemyCollision(); // Check if any enemy moved onto the player
+          render();
+          updateUI();
+        }
+      }
+
+      function openShop() {
+        document.getElementById("shop").style.display = "block";
+        let shopItems = `<h2>🐾 PET STORE - Room ${currentLevel}</h2>`;
+
+        shopItems += `<div class="shop-item">
+        <strong>Fresh Milk</strong> - Heals 30-50 HP<br>
+        Cost: 50 fish<br>
+        <button class="btn buy-btn" onclick="buyItem('potion',50)" ${
+          playerGold < 50 ? "disabled" : ""
+        }>Buy</button>
+    </div>`;
+
+        shopItems += `<div class="shop-item">
+        <strong>Catnip Power</strong> - +5 Attack<br>
+        Cost: 80 fish<br>
+        <button class="btn buy-btn" onclick="buyItem('weapon',80)" ${
+          playerGold < 80 ? "disabled" : ""
+        }>Buy</button>
+    </div>`;
+
+        shopItems += `<div class="shop-item">
+        <strong>Thick Fur</strong> - +3 Defense<br>
+        Cost: 100 fish<br>
+        <button class="btn buy-btn" onclick="buyItem('armor',100)" ${
+          playerGold < 100 ? "disabled" : ""
+        }>Buy</button>
+    </div>`;
+
+        if (currentLevel >= 3) {
+          shopItems += `<div class="shop-item">
+            <strong>DOG REPELLENT</strong><br>
+            Scares away 50% of dog's aggression!<br>
+            Cost: 300 fish<br>
+            <button class="btn expensive" onclick="buyItem('poison',300)" ${
+              playerGold < 300 ? "disabled" : ""
+            }>Buy</button>
+        </div>`;
+        }
+
+        shopItems += `<button class="btn" onclick="closeShop()">Leave Shop</button>`;
+        document.getElementById("shopContent").innerHTML = shopItems;
+      }
+
+      function buyItem(item, cost) {
+        if (playerGold >= cost) {
+          playerGold -= cost;
+          switch (item) {
+            case "potion":
+              playerPotions++;
+              break;
+            case "weapon":
+              playerATK += 5;
+              break;
+            case "armor":
+              playerArmor += 3;
+              break;
+            case "poison":
+              playerPoison++;
+              break;
+          }
+          updateUI();
+          openShop();
+        }
+      }
+
+      function closeShop() {
+        document.getElementById("shop").style.display = "none";
+      }
+
+      function cleanupGlitchedEnemies() {
+        // Remove enemies that are outside valid map areas or in walls
+        let initialCount = enemies.length;
+        enemies = enemies.filter((e) => {
+          // Check if enemy is within map bounds
+          if (e.x < 1 || e.x >= W - 1 || e.y < 1 || e.y >= H - 1) return false;
+
+          // Check if enemy is in a wall
+          if (map[e.y] && map[e.y][e.x] === "#") return false;
+
+          // For boss, check all 4 corners
+          if (e.isBoss) {
+            if (e.x + 1 >= W - 1 || e.y + 1 >= H - 1) return false;
+            if (map[e.y] && map[e.y][e.x] === "#") return false;
+            if (map[e.y + 1] && map[e.y + 1][e.x] === "#") return false;
+            if (map[e.y] && map[e.y][e.x + 1] === "#") return false;
+            if (map[e.y + 1] && map[e.y + 1][e.x + 1] === "#") return false;
+          }
+
+          return true;
+        });
+
+        // If we removed any mice, log it
+        let removedCount = initialCount - enemies.length;
+        if (removedCount > 0) {
+          console.log(`Cleaned up ${removedCount} glitched enemies`);
+        }
+      }
+
+      function checkEnemyCollision() {
+        let enemy = enemies.find((e) => {
+          if (e.isBoss) {
+            // Boss occupies 2x2 space
+            return px >= e.x && px <= e.x + 1 && py >= e.y && py <= e.y + 1;
+          }
+          return e.x === px && e.y === py;
+        });
+        if (enemy && !inCombat) {
+          startCombat(enemy);
+        }
+      }
+
+      function collectTreasure(t) {
+        switch (t.type) {
+          case "gold":
+            let gold = 30 + Math.floor(Math.random() * 40);
+            playerGold += gold;
+            addToCombatLog(
+              `<span class="gold-text">Found ${gold} shiny fish!</span>`
+            );
+            break;
+          case "health":
+            playerPotions++;
+            addToCombatLog(`<span class="heal">Found fresh milk!</span>`);
+            break;
+          case "weapon":
+            let atkBoost = 3 + Math.floor(Math.random() * 4);
+            playerATK += atkBoost;
+            addToCombatLog(
+              `<span style="color:#ff69b4">Played with yarn! +${atkBoost} agility!</span>`
+            );
+            break;
+          case "armor":
+            let defBoost = 2 + Math.floor(Math.random() * 3);
+            playerArmor += defBoost;
+            addToCombatLog(
+              `<span style="color:#0f0">Ate nutritious fish! +${defBoost} defense!</span>`
+            );
+            break;
+        }
+      }
+
+      function moveEnemies() {
+        // Furniture is static, mice move quickly, boss dog chases the cat
+        enemies.forEach((e) => {
+          if (e.isMouse && Math.random() < 0.6) {
+            // Mice move fast and erratically but stay within bounds and valid floor tiles
+            let moves = [
+              [0, 1],
+              [0, -1],
+              [1, 0],
+              [-1, 0],
+            ];
+            let validMoves = [];
+
+            for (let move of moves) {
+              let nx = e.x + move[0],
+                ny = e.y + move[1];
+              // Strict validation: must be floor and surrounded by non-walls
+              if (
+                nx >= 2 &&
+                nx < W - 2 &&
+                ny >= 2 &&
+                ny < H - 2 &&
+                map[ny] &&
+                map[ny][nx] === "." &&
+                map[ny - 1][nx] !== "#" &&
+                map[ny + 1][nx] !== "#" &&
+                map[ny][nx - 1] !== "#" &&
+                map[ny][nx + 1] !== "#" &&
+                !enemies.some(
+                  (other) => other !== e && other.x === nx && other.y === ny
+                )
+              ) {
+                validMoves.push([nx, ny]);
+              }
+            }
+
+            if (validMoves.length > 0) {
+              let [nx, ny] =
+                validMoves[Math.floor(Math.random() * validMoves.length)];
+              e.x = nx;
+              e.y = ny;
+            }
+          } else if (e.isBoss) {
+            // Boss dog chases the cat aggressively when close, randomly when far
+            let distance = Math.abs(px - e.x) + Math.abs(py - e.y);
+            let chaseChance = distance <= 6 ? 0.8 : 0.4;
+
+            if (Math.random() < chaseChance) {
+              let dx = 0,
+                dy = 0;
+              if (px > e.x) dx = 1;
+              else if (px < e.x) dx = -1;
+              if (py > e.y) dy = 1;
+              else if (py < e.y) dy = -1;
+
+              // Try to move towards the cat
+              let moves = [];
+              if (dx !== 0) moves.push([dx, 0]);
+              if (dy !== 0) moves.push([0, dy]);
+
+              // If can't move directly, try diagonal or random
+              if (moves.length === 0 || Math.random() < 0.2) {
+                moves = [
+                  [0, 1],
+                  [0, -1],
+                  [1, 0],
+                  [-1, 0],
+                ];
+              }
+
+              for (let move of moves) {
+                let nx = e.x + move[0],
+                  ny = e.y + move[1];
+                if (
+                  nx > 0 &&
+                  nx < W - 2 &&
+                  ny > 0 &&
+                  ny < H - 2 &&
+                  map[ny][nx] === "." &&
+                  map[ny + 1][nx] === "." &&
+                  map[ny][nx + 1] === "." &&
+                  map[ny + 1][nx + 1] === "."
+                ) {
+                  e.x = nx;
+                  e.y = ny;
+                  break;
+                }
+              }
+            }
+          }
+          // Furniture (isFurniture:true) doesn't move at all
+        });
+      }
+
+      function startCombat(enemy) {
+        inCombat = true;
+        currentEnemy = enemy;
+        combatLog = [];
+        document.getElementById("combat").style.display = "block";
+
+        if (enemy.isBoss && playerPoison > 0) {
+          let poisonDmg = Math.floor(currentEnemy.hp / 2);
+          currentEnemy.hp -= poisonDmg;
+          playerPoison--;
+          addToCombatLog(
+            `<span style="color:#ff0">DOG REPELLENT used! ${poisonDmg} damage dealt!</span>`
+          );
+          updateUI();
+        }
+
+        let enemyText = enemy.isBoss
+          ? "CONFRONTING THE GIANT DOG!"
+          : enemy.isMouse
+          ? "A MOUSE IS ATTACKING!"
+          : "Furniture is blocking your path!";
+        addToCombatLog(`<span style="color:#ff0">${enemyText}</span>`);
+        updateCombatUI();
+      }
+
+      function updateCombatUI() {
+        if (!currentEnemy) return;
+        document.getElementById("combatText").innerHTML = `
+        <h3>${
+          currentEnemy.isBoss
+            ? "DOG FIGHT"
+            : currentEnemy.isMouse
+            ? "MOUSE BATTLE"
+            : "Navigating Furniture"
+        }</h3>
+        <p>${
+          currentEnemy.isBoss
+            ? "Dog"
+            : currentEnemy.isMouse
+            ? "Mouse"
+            : "Furniture"
+        } HP:${currentEnemy.hp} ATK:${currentEnemy.atk}</p>
+        <p>Your HP:${playerHP} ATK:${playerATK + damageBoost}</p>
+    `;
+        document.getElementById("combatButtons").innerHTML = `
+        <button class="btn" onclick="attack()">${
+          currentEnemy.isBoss
+            ? "🐾 Hiss & Scratch"
+            : currentEnemy.isMouse
+            ? "🐾 Pounce"
+            : "🐾 Push Through"
+        }</button>
+        <button class="btn heal-btn" onclick="usePotion()" ${
+          playerPotions <= 0 ? "disabled" : ""
+        }>Drink Milk (${playerPotions})</button>
+        <button class="btn" onclick="flee()" ${
+          currentEnemy.isBoss ? "disabled" : ""
+        }>Sneak Away</button>
+    `;
+      }
+
+      function addToCombatLog(text) {
+        combatLog.push(text);
+        if (combatLog.length > 10) combatLog.shift();
+        document.getElementById("combatLog").innerHTML = combatLog.join("<br>");
+        document.getElementById("combatLog").scrollTop =
+          document.getElementById("combatLog").scrollHeight;
+      }
+
+      function attack() {
+        if (!currentEnemy) return;
+        let pRoll = Math.floor(Math.random() * 20) + 1;
+        let eRoll = Math.floor(Math.random() * 20) + 1;
+
+        // Calculate base damage
+        let pDmg = Math.floor((playerATK + damageBoost) * (pRoll / 20));
+        let eDmg = Math.max(
+          1,
+          Math.floor(currentEnemy.atk * (eRoll / 20)) - playerArmor
+        );
+
+        let enemyName = currentEnemy.isBoss
+          ? "dog"
+          : currentEnemy.isMouse
+          ? "mouse"
+          : "furniture";
+
+        // Critical hits and fumbles
+        let pCrit = "",
+          eCrit = "";
+        if (pRoll === 20) {
+          pDmg *= 2;
+          pCrit = " CRITICAL HIT!";
+        } else if (pRoll === 1) {
+          pDmg = 0;
+          pCrit = " FUMBLE!";
+        }
+
+        if (eRoll === 20) {
+          eDmg *= 2;
+          eCrit = " CRITICAL HIT!";
+        } else if (eRoll === 1) {
+          eDmg = 0;
+          eCrit = " FUMBLE!";
+        }
+
+        currentEnemy.hp -= pDmg;
+        playerHP -= eDmg;
+        damageBoost = Math.max(0, damageBoost - 1);
+
+        addToCombatLog(
+          `Dice: You rolled ${pRoll}, ${enemyName} rolled ${eRoll}`
+        );
+        addToCombatLog(
+          `<span class="dmg-player">Claw attack: ${pDmg} damage${pCrit}</span>`
+        );
+        addToCombatLog(
+          `<span class="dmg-enemy">Counter: ${eDmg} damage${eCrit}</span>`
+        );
+
+        // Check player death immediately after taking damage
+        if (playerHP <= 0) {
+          addToCombatLog(`<span class="dmg-enemy">You got caught!</span>`);
+          setTimeout(() => showDefeatScreen(currentEnemy), 1000);
+          return;
+        }
+
+        if (currentEnemy.hp <= 0) {
+          let gold = 15 + Math.floor(Math.random() * 20);
+          if (currentEnemy.isBoss) gold *= 4;
+          playerGold += gold;
+          let defeatText = currentEnemy.isBoss
+            ? "DOG DEFEATED!"
+            : currentEnemy.isMouse
+            ? "Mouse caught!"
+            : "Obstacle cleared!";
+          addToCombatLog(
+            `<span style="color:#ff0">${defeatText} +${gold} shiny things</span>`
+          );
+
+          // Store enemy info before removing it
+          let wasMouseKilled = currentEnemy.isMouse;
+
+          // Count killed mice
+          if (wasMouseKilled) {
+            miceKilled++;
+          }
+
+          enemies = enemies.filter((e) => e !== currentEnemy);
+          endCombat(); // This sets currentEnemy to null
+
+          // Check if all mice killed and award bonus (only when killing a mouse)
+          if (wasMouseKilled && currentLevel < 5) {
+            // Count actual remaining mice in the game instead of relying on counter
+            let remainingMice = enemies.filter((e) => e.isMouse).length;
+
+            console.log(
+              `Level ${currentLevel}: Killed mouse. Remaining mice: ${remainingMice}, Total spawned: ${totalMiceInLevel}`
+            );
+
+            if (remainingMice === 0 && totalMiceInLevel > 0) {
+              setTimeout(() => {
+                let bonus = 25 * currentLevel;
+                playerGold += bonus;
+                showBonusMessage(`ALL MICE DEFEATED! +${bonus} FISH BONUS!`);
+                updateUI();
+              }, 500);
+            }
+          }
+
+          if (currentLevel === 5 && enemies.length === 0) {
+            levelComplete = true;
+            setTimeout(() => {
+              spawnExit();
+              render();
+              addToCombatLog(
+                `<span class="gold-text">GIANT DOG DEFEATED! Cat door opened - You're free!</span>`
+              );
+            }, 1000);
+          }
+        }
+        updateCombatUI();
+      }
+
+      function usePotion() {
+        if (playerPotions > 0) {
+          let heal = 30 + Math.floor(Math.random() * 20);
+          playerHP = Math.min(100, playerHP + heal);
+          playerPotions--;
+          addToCombatLog(
+            `<span class="heal">Drank milk! Restored ${heal} HP!</span>`
+          );
+          updateCombatUI();
+        }
+      }
+
+      function flee() {
+        if (currentEnemy.isBoss) return;
+        if (Math.random() < 0.7) {
+          addToCombatLog(
+            `<span style="color:#0f0">Sneaked away successfully!</span>`
+          );
+          endCombat();
+        } else {
+          let dmg = Math.floor(currentEnemy.atk * 0.3);
+          playerHP -= dmg;
+          addToCombatLog(
+            `<span class="dmg-enemy">Couldn't sneak away! Took ${dmg} damage</span>`
+          );
+          if (playerHP <= 0) {
+            showDefeatScreen(currentEnemy);
+            return;
+          }
+          updateCombatUI();
+        }
+      }
+
+      function endCombat() {
+        inCombat = false;
+        currentEnemy = null;
+        document.getElementById("combat").style.display = "none";
+        render();
+        updateUI();
+      }
+
+      function updateUI() {
+        document.getElementById("level").textContent = currentLevel;
+        document.getElementById("hp").textContent = playerHP;
+        document.getElementById("atk").textContent =
+          playerATK + (damageBoost ? `+${damageBoost}` : "");
+        document.getElementById("armor").textContent = playerArmor;
+        document.getElementById("gold").textContent = playerGold;
+        document.getElementById("potions").textContent = playerPotions;
+        document.getElementById("poison").textContent = playerPoison;
+      }
+
+      function showBonusMessage(text) {
+        // Remove any existing bonus message
+        let existing = document.getElementById("bonusMessage");
+        if (existing) existing.remove();
+
+        // Create new bonus message
+        let bonus = document.createElement("div");
+        bonus.id = "bonusMessage";
+        bonus.textContent = text;
+        document.getElementById("game").appendChild(bonus);
+
+        // Remove after animation
+        setTimeout(() => {
+          if (bonus.parentNode) bonus.parentNode.removeChild(bonus);
+        }, 2000);
+      }
+
+      function startGame() {
+        gameStarted = true;
+        document.getElementById("startScreen").style.display = "none";
+        initMap();
+        render();
+        updateUI();
+      }
+
+      function showVictoryScreen() {
+        // Close any open dialogs
+        document.getElementById("combat").style.display = "none";
+        document.getElementById("shop").style.display = "none";
+
+        document.getElementById("victoryStats").innerHTML = `
+        Final Room: ${currentLevel}<br>
+        HP: ${playerHP}/100<br>
+        Agility: ${playerATK}<br>
+        Defense: ${playerArmor}<br>
+        Fish Collected: ${playerGold}
+    `;
+        document.getElementById("victoryScreen").style.display = "flex";
+      }
+
+      function showDefeatScreen(killedBy) {
+        // Close any open dialogs
+        document.getElementById("combat").style.display = "none";
+        document.getElementById("shop").style.display = "none";
+
+        let message = "Your escape attempt has failed...";
+        if (killedBy) {
+          if (killedBy.isBoss) {
+            message = "The mighty hound has cornered you in the shadows...";
+          } else if (killedBy.isMouse) {
+            message = "Overwhelmed by the tiny but fierce creatures...";
+          } else if (killedBy.isFurniture) {
+            message = "The treacherous furniture has trapped you...";
+          }
+        }
+
+        document.getElementById("defeatMessage").textContent = message;
+        document.getElementById("defeatStats").innerHTML = `
+        Room Reached: ${currentLevel}/5<br>
+        Fish Collected: ${playerGold}
+    `;
+        document.getElementById("defeatScreen").style.display = "flex";
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (!gameStarted) return;
+        switch (e.key.toLowerCase()) {
+          case "w":
+          case "arrowup":
+            move(0, -1);
+            break;
+          case "s":
+          case "arrowdown":
+            move(0, 1);
+            break;
+          case "a":
+          case "arrowleft":
+            move(-1, 0);
+            break;
+          case "d":
+          case "arrowright":
+            move(1, 0);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
