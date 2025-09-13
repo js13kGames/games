@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Night Dealer - Prototype</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="scene">
+        <div id="ankidu" class="bubble">
+            <div class="bubble-header">
+                <button id="btnHelp" class="icon-btn" title="Règles">?</button>
+            </div>
+            <div id="bubbleText" class="bubble-text">Select a wheel, then select a cell to place tile.</div>
+            <div id="bubbleChoices" class="bubble-choices"></div>
+            <div class="ankidu-avatar">
+                <svg id="ankiduCat" viewBox="0 0 64 64" role="img" aria-label="Black cat head"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 28 L22 10 L30 20 L34 20 L42 10 L52 28
+                        C54 32 54 40 50 46
+                        C45 54 38 58 32 58
+                        C26 58 19 54 14 4
+                        C10 40 10 32 12 28 Z" fill="#111" />
+                    <ellipse cx="24" cy="36" rx="7" ry="3" fill="#ff8c00" transform="rotate(20 24 36)" />
+                    <ellipse cx="40" cy="36" rx="7" ry="3" fill="#ff8c00" transform="rotate(-20 40 36)" />
+                    <rect x="23" y="30" width="2" height="12" rx="1" fill="#000" />
+                    <rect x="39" y="30" width="2" height="12" rx="1" fill="#000" />
+                    <path d="M30 42 L34 42 L32 44 Z" fill="#222" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="board-wrap">
+            <canvas id="iso" width="640" height="480"></canvas>
+        </div>
+
+        <div id="hud" class="hud">
+            <div class="controls">
+                <button class="btn" id="rerollBtn" onclick="rerollAction()">Reroll</button>
+                <button class="btn" id="validateBtn" onclick="validateAction()" disabled>Validate</button>
+                <button class="btn" id="cancelBtn" onclick="cancelAction()">Cancel</button>
+                <button class="btn" id="resetBtn" onclick="resetAction()">Reset</button>
+            </div>
+            <div id="player1Wheels" class="wheels"></div>
+            <div id="scoreBar" class="scorebar">
+                <span id="p1Name" class="name">Stray</span>
+                <span class="sep">:</span>
+                <span id="p1Score" class="score">0</span>
+                <span class="dash">–</span>
+                <span id="p2Score" class="score">0</span>
+                <span class="sep">:</span>
+                <span id="p2Name" class="name">Ankidu</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="main.min.js"></script>
+
+</html>
