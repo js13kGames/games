@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>CatSlap</title>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+
+        <script src="https://js13kgames.com/2025/webxr/babylon.js"></script>
+
+    </head>
+
+   <body>
+        <audio id="meow" src="assets/meow-2kb.mp3"></audio>
+        <audio id="block" src="assets/block.wav"></audio>
+        <audio id="hitHurt" src="assets/hitHurt.wav"></audio>
+        <canvas id="renderCanvas"></canvas>
+
+        <script src="minified.js"></script>
+
+   </body>
+
+</html>
