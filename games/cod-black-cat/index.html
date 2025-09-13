@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COD: Black CAT</title>
+    <script src="https://js13kgames.com/2025/webxr/aframe.js"></script>
+    <!-- <script src="aframe.js"></script> -->
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <a-mixin id="ms" shadow="receive: true" mouse scale="0.4 0.4 0.4"></a-mixin>
+            <a-mixin id="l"
+                light="angle: 75;intensity:2; color: #FED; type: spot; castShadow: true; shadowCameraFar: 25" " rotation="
+                -90 0 0"></a-mixin>
+        </a-assets>
+        <a-sky color="#000"></a-sky>
+
+        <a-entity>
+            <a-entity light="color: #223; type: ambient"></a-entity>
+            <!-- <a-entity light="color: #888; castShadow: true; shadowCameraFar: 100" position="0.6 3.0 2.0"></a-entity> -->
+            <!-- <a-entity mixin="l" position="3.5 2.8 10"></a-entity>
+            <a-entity mixin="l" position="9.5 2.8 6.5"></a-entity> -->
+            <a-entity class="r" shadow="receive: true" world></a-entity>
+
+            <a-entity id="rig" head-offset position="5 0 10">
+                <!-- wasd-controls look-controls  -->
+                <a-entity id="camera" wasd-controls look-controls camera position="0 1.7 0">
+                    <a-entity id="title" text="value: COD: Black CAT; align: center; color: #FFF" position="0 0 -.5"
+                        scale="2 2 2" visible="true"></a-entity>
+                    <a-entity id="t" text="value: ...; align: center; color: #268" position="0 -.1 -.5"></a-entity>
+                    <a-entity id="go" text="value: GAME OVER; align: center; color: #F44" scale="1.5 1.5 1.5"
+                        position="0 -.1 -.5" visible="false"></a-entity>
+                    <a-entity id="win" text="value: YOU WIN; align: center; color: #FF4" position="0 -.1 -.5"
+                        scale="2 2 2" visible="false"></a-entity>
+                </a-entity>
+                <a-entity interact smooth-locomotion oculus-touch-controls="hand:left;model:false">
+                    <a-entity paw="" scale="0.1 0.1 0.1" rotation="0 180 0" position="0.05 0 0.1"> </a-entity>
+                </a-entity>
+
+                <a-entity shoot snap-rotate oculus-touch-controls="hand:right;model:false">
+                    <a-entity paw="gun:true" scale="0.1 0.1 0.1" rotation="0 180 0" position="0.05 0 0.1"> </a-entity>
+                </a-entity>
+            </a-entity>
+    </a-scene>
+</body>
+
+</html>
