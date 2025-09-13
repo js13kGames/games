@@ -1,0 +1,355 @@
+<!doctypehtml><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><title>Clawstruck</title><style>body,html{margin:0;padding:0;height:100%;font-family:'Courier New',Courier,monospace;font-weight:700;color:#2d1b27}body{background-color:#31293e;justify-content:center;align-items:center;display:flex}.game-container{display:flex;justify-content:space-between;height:450px;width:550px;border:8px solid #5f575e;background-color:#160d13;padding:20px}.left-container{width:300px;background-color:none;margin-right:20px;margin-top:auto;margin-bottom:auto;display:grid;grid-template-columns:repeat(6,50px);grid-template-rows:repeat(8,50px);position:relative;overflow:hidden}.grid-square{width:50px;height:50px;box-sizing:border-box;position:relative}.grid-square.warning-tile::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(255,0,0,.5);animation:flash-warning .4s infinite alternate}@keyframes flash-warning{from{opacity:.7}to{opacity:.2}}.light-tile{background-image:url(assets/light-tile.webp);background-size:cover;display:flex;justify-content:center;align-items:center;image-rendering:pixelated}.dark-tile{background-image:url(assets/dark-tile.webp);background-size:cover;display:flex;justify-content:center;align-items:center;image-rendering:pixelated}.stickman-character{width:30px;height:30px;image-rendering:pixelated}.right-container{display:flex;flex-direction:column;align-items:center;width:230px;gap:5px;box-sizing:border-box;background-color:none}.paw-container{position:absolute;display:flex;align-items:center}.paw-arm{height:25px;background-color:#160d13;width:0;transition:width .12s cubic-bezier(.5,0,.1,1),height .12s cubic-bezier(.5,0,.1,1)}.paw-image{width:40px;height:40px;image-rendering:pixelated;flex-shrink:0;position:relative;z-index:2}.top-right-container{flex:2;background:url(assets/card1.webp);background-position:center;background-repeat:no-repeat;image-rendering:pixelated;background-size:auto;width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;gap:0}.cat-container{width:100%;height:100%;display:flex;flex:1;justify-content:center;align-items:center;padding:10px 10px}.cat-text-container{height:fit-content;flex:1;padding-top:10px;justify-content:center;align-items:center;text-align:center}#cat-character{width:180px;image-rendering:pixelated;animation:hover-effect 2s infinite alternate ease-in-out}@keyframes hover-effect{from{transform:translate(0,10px)}to{transform:translate(0,-10px)}}.bottom-right-container{flex:1;width:100%;background:url(assets/card2.webp);background-position:center;background-repeat:no-repeat;image-rendering:pixelated;background-size:auto;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px}.heart-container{width:80%;display:flex;justify-content:space-around;align-items:center}.heart-img{width:44px;height:44px;image-rendering:pixelated}.time-score-container{font-size:14px;width:80%;text-align:center}.restart-button{background-image:url(assets/button-normal.webp);background-color:transparent;color:#a69998;border:none;padding:10px 20px;font-family:'Courier New',Courier,monospace;font-weight:700;font-size:16px;cursor:pointer;box-shadow:none;transition:all .1s ease-in-out}.restart-button:hover{background-image:url(assets/button-hover.webp)}.restart-button:active{background-image:url(assets/button-pressed.webp);transform:translateY(4px)}</style><div class=game-container><div class=left-container></div><div class=right-container><div class=top-right-container><div class=cat-container><img alt="cat Character"id=cat-character src=assets/cat.webp></div><div class=cat-text-container>i'll destroy you with my paw</div></div><div class=bottom-right-container><div class=heart-container></div><div class=time-score-container></div></div></div></div><script>document.addEventListener('DOMContentLoaded', () => {
+            const leftContainer = document.querySelector('.left-container');
+            const heartContainer = document.querySelector('.heart-container');
+            const timeScoreContainer = document.querySelector('.time-score-container');
+            const catTextContainer = document.querySelector('.cat-text-container');
+            const bottomRightContainer = document.querySelector('.bottom-right-container');
+
+            let playerLives = 3;
+            const maxLives = 3;
+            let startTime = Date.now();
+            let timerInterval;
+            let pawAttackInterval;
+            let dialogueInterval;
+            let difficultyLevel = 0;
+            let currentAttackInterval = 800;
+            let isGameOver = false;
+
+            let recentSpawns = {};
+            const SPAWN_COOLDOWN = 1000;
+
+            const catDialogues = [
+                "Heh. Too slow.",
+                "Gonna getcha!",
+                "Nowhere to run!",
+                "Just a little tap...",
+                "My claws are sharp!"
+            ];
+
+            const gridRows = 8;
+            const gridCols = 6;
+            const totalSquares = gridRows * gridCols;
+            const allSquares = [];
+
+            for (let i = 0; i < totalSquares; i++) {
+                const square = document.createElement('div');
+                
+                square.classList.add('grid-square');
+
+                const row = Math.floor(i / gridCols);
+                const col = i % gridCols;
+
+                square.classList.add((row + col) % 2 === 0 ? 'light-tile' : 'dark-tile');
+                
+                leftContainer.appendChild(square);
+                allSquares.push(square);
+            }
+
+            let stickmanRow = 2;
+            let stickmanCol = 3;
+
+            const stickman = document.createElement('img');
+            stickman.src = 'assets/stickman.webp';
+            stickman.alt = 'Stickman Character';
+            stickman.classList.add('stickman-character');
+
+            function drawStickman() {
+                const targetIndex = stickmanRow * gridCols + stickmanCol;
+                const targetSquare = allSquares[targetIndex];
+                targetSquare.appendChild(stickman);
+            }
+
+            function drawHearts(){
+                heartContainer.innerHTML = '';
+                for(let i = 0; i < maxLives; i++) {
+                    const heart = document.createElement('img');
+                    heart.classList.add('heart-img');
+
+                    if (i < playerLives) {
+                        heart.src = 'assets/heart-full.webp';
+                    } else {
+                        heart.src = 'assets/heart-empty.webp';
+                    }
+
+                    heartContainer.appendChild(heart);
+                }
+            }
+
+            function updateTimer() {
+                const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+                const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+                timeScoreContainer.textContent = `Time Survived: ${minutes}:${seconds}`;
+
+                const newDifficultyLevel = Math.floor(elapsedTime / 20);
+                if (newDifficultyLevel > difficultyLevel) {
+                    difficultyLevel = newDifficultyLevel;
+                    console.log(`Difficulty increased to level ${difficultyLevel}`);
+                    clearInterval(pawAttackInterval);
+                    currentAttackInterval = Math.max(300, 1000 - difficultyLevel * 125);
+                    pawAttackInterval = setInterval(createPawAttack, currentAttackInterval);
+                }
+            }
+
+            function changeCatDialogue() {
+                const randomIndex = Math.floor(Math.random() * catDialogues.length);
+                catTextContainer.textContent = catDialogues[randomIndex];
+            }
+
+            function handleKeyPress(event) {
+                if (playerLives <= 0) return;
+                switch(event.key) {
+                    case 'w':
+                    case 'ArrowUp':
+                        stickmanRow = Math.max(0, stickmanRow - 1);
+                        break;
+                    case 's':
+                    case 'ArrowDown':
+                        stickmanRow = Math.min(gridRows - 1, stickmanRow + 1);
+                        break;
+                    case 'a':
+                    case 'ArrowLeft':
+                        stickmanCol = Math.max(0, stickmanCol - 1);
+                        break;
+                    case 'd':
+                    case 'ArrowRight':
+                        stickmanCol = Math.min(gridCols - 1, stickmanCol + 1);
+                        break;
+                    default:
+                        return; 
+                }
+
+                drawStickman();
+            }
+
+            function createPawAttack() {
+                if (playerLives <= 0) return;
+                const directions = ['right', 'left', 'top', 'bottom'];
+                const attackDirection = directions[Math.floor(Math.random() * directions.length)];
+
+                let attackRow, attackCol, attackLength;
+                const attackedSquares = [];
+
+                const maxAttempts = 10;
+                let attempts = 0;
+
+                switch(attackDirection) {
+                    case 'right': case 'left':
+                        do {
+                            attackRow = Math.floor(Math.random() * gridRows);
+                            const key = `row-${attackRow}`;
+                            const lastSpawn = recentSpawns[key];
+                            if (!lastSpawn || Date.now() - lastSpawn > SPAWN_COOLDOWN) {
+                                recentSpawns[key] = Date.now();
+                                break;
+                            }
+                            attempts++;
+                        } while (attempts < maxAttempts);
+                        
+                        attackLength = Math.floor(Math.random() * (gridCols - 2)) + 3;
+                        break;
+                    case 'top': case 'bottom':
+                        do {
+                            attackCol = Math.floor(Math.random() * gridCols);
+                            const key = `col-${attackCol}`;
+                            const lastSpawn = recentSpawns[key];
+                            if (!lastSpawn || Date.now() - lastSpawn > SPAWN_COOLDOWN) {
+                                recentSpawns[key] = Date.now();
+                                break;
+                            }
+                            attempts++;
+                        } while (attempts < maxAttempts);
+
+                        attackLength = Math.floor(Math.random() * (gridRows - 2)) + 3;
+                        break;
+                }
+
+                for (let i = 0; i < attackLength; i++) {
+                    let squareIndex;
+                     switch(attackDirection) {
+                        case 'right': squareIndex = attackRow * gridCols + (gridCols - 1 - i); break;
+                        case 'left':  squareIndex = attackRow * gridCols + i; break;
+                        case 'top':   squareIndex = i * gridCols + attackCol; break;
+                        case 'bottom':squareIndex = (gridRows - 1 - i) * gridCols + attackCol; break;
+                    }
+                    if (allSquares[squareIndex]) {
+                        allSquares[squareIndex].classList.add('warning-tile');
+                        attackedSquares.push({row: Math.floor(squareIndex / gridCols), col: squareIndex % gridCols});
+                    }
+                }
+
+                setTimeout(() => {
+                    attackedSquares.forEach(sq => {
+                        const idx = sq.row * gridCols + sq.col;
+                        if (allSquares[idx]) {
+                           allSquares[idx].classList.remove('warning-tile');
+                        }
+                    });
+
+                    if (isGameOver) return;
+
+                    const pawContainer = document.createElement('div');
+                    pawContainer.className = 'paw-container';
+                    const pawImage = document.createElement('img');
+                    pawImage.className = 'paw-image';
+                    pawImage.src = 'assets/paw.webp';
+                    const pawArm = document.createElement('div');
+                    pawArm.className = 'paw-arm';
+                    
+                    leftContainer.appendChild(pawContainer);
+                    
+                    switch(attackDirection) {
+                        case 'right':
+                            pawContainer.style.flexDirection = 'row-reverse';
+                            pawContainer.appendChild(pawArm);
+                            pawContainer.appendChild(pawImage);
+                            pawContainer.style.top = `${attackRow * 50}px`;
+                            pawContainer.style.right = '0px';
+                            pawImage.style.transform = 'rotate(360deg)';
+                            break;
+                        case 'left':
+                             pawContainer.appendChild(pawArm);
+                             pawContainer.appendChild(pawImage);
+                             pawContainer.style.top = `${attackRow * 50}px`;
+                             pawContainer.style.left = '0px';
+                             pawImage.style.transform = 'rotate(180deg)';
+                            break;
+                        case 'bottom':
+                            pawContainer.style.flexDirection = 'column-reverse';
+                            pawContainer.appendChild(pawArm);
+                            pawContainer.appendChild(pawImage);
+                            pawContainer.style.left = `${attackCol * 50}px`;
+                            pawContainer.style.bottom = '0px';
+                            pawContainer.style.width = '50px';
+                            pawContainer.style.alignItems = 'center';
+                            pawArm.style.width = '25px';
+                            pawArm.style.height = '0';
+                            pawImage.style.transform = 'rotate(90deg)';
+                            break;
+                        case 'top':
+                             pawContainer.style.flexDirection = 'column';
+                             pawContainer.appendChild(pawArm);
+                             pawContainer.appendChild(pawImage);
+                             pawContainer.style.left = `${attackCol * 50}px`;
+                             pawContainer.style.top = '0px';
+                             pawContainer.style.width = '50px';
+                             pawContainer.style.alignItems = 'center';
+                             pawArm.style.width = '25px';
+                             pawArm.style.height = '0';
+                             pawImage.style.transform = 'rotate(270deg)';
+                            break;
+                    }
+
+                    setTimeout(() => {
+                        if (attackDirection === 'top' || attackDirection === 'bottom') {
+                            pawArm.style.height = `${(attackLength - 1) * 50}px`;
+                        } else {
+                            pawArm.style.width = `${(attackLength - 1) * 50}px`;
+                        }
+
+                        setTimeout(() => {
+                            let collisionCheckInterval;
+
+                            collisionCheckInterval = setInterval(() => {
+                                if (isGameOver) {
+                                    clearInterval(collisionCheckInterval);
+                                    return;
+                                }
+
+                                const hit = attackedSquares.some(sq => sq.row === stickmanRow && sq.col === stickmanCol);
+
+                                if (hit && !isGameOver) {
+                                    playerLives--;
+                                    drawHearts();
+                                    if (playerLives <= 0) {
+                                        endGame();
+                                    }
+                                    clearInterval(collisionCheckInterval); 
+                                }
+                            }, 50); 
+
+                            const randomStayDuration = Math.random() * 3000;
+
+                            setTimeout(() => {
+                                clearInterval(collisionCheckInterval);
+                                
+                                if (attackDirection === 'top' || attackDirection === 'bottom') {
+                                    pawArm.style.height = '0';
+                                } else {
+                                    pawArm.style.width = '0';
+                                }
+                                setTimeout(() => pawContainer.remove(), 200);
+                            }, randomStayDuration);
+
+                        }, 120);      
+
+                    }, 100); 
+
+                }, 1200);
+            }
+
+            function endGame() {
+                if (isGameOver) return;
+                isGameOver = true;
+                const finalTimeText = timeScoreContainer.textContent;
+
+                clearInterval(pawAttackInterval);
+                clearInterval(timerInterval);
+                clearInterval(dialogueInterval);
+                document.removeEventListener('keydown', handleKeyPress);
+                catTextContainer.textContent = "GAME OVER!";
+
+                heartContainer.style.display = 'none';
+
+                const restartButton = document.createElement('button');
+                restartButton.textContent = 'RESTART';
+                restartButton.className = 'restart-button';
+                restartButton.onclick = () => {
+                    location.reload();
+                };
+
+                timeScoreContainer.innerHTML = ''; 
+                
+                const finalTimeElement = document.createElement('div');
+                finalTimeElement.textContent = finalTimeText; 
+
+                timeScoreContainer.style.display = 'flex'; 
+                timeScoreContainer.style.alignItems = 'center';
+                timeScoreContainer.appendChild(finalTimeElement);
+                timeScoreContainer.appendChild(restartButton); 
+                timeScoreContainer.style.flexDirection = 'column';
+                timeScoreContainer.style.gap = '10px';
+            }
+
+            function startGame(){
+                isGameOver = false; 
+                recentSpawns = {};
+                difficultyLevel = 0;
+                currentAttackInterval = 800;
+                playerLives = 3;
+                startTime = Date.now();
+                
+                timeScoreContainer.innerHTML = '';
+                timeScoreContainer.style.display = '';
+                timeScoreContainer.style.alignItems = '';
+                timeScoreContainer.style.flexDirection = '';
+                timeScoreContainer.style.gap = '';
+                heartContainer.style.display = 'flex';
+                
+                if(pawAttackInterval) clearInterval(pawAttackInterval);
+                if(timerInterval) clearInterval(timerInterval);
+                if(dialogueInterval) clearInterval(dialogueInterval);
+
+                drawStickman();
+                drawHearts();
+                timerInterval = setInterval(updateTimer, 1000);
+                updateTimer();
+                dialogueInterval = setInterval(changeCatDialogue, 4000);
+                changeCatDialogue();
+                document.removeEventListener('keydown', handleKeyPress); // Remove old listener before adding new one
+                document.addEventListener('keydown', handleKeyPress);
+                pawAttackInterval = setInterval(createPawAttack, currentAttackInterval);
+            }
+
+            startGame();
+        });</script>
