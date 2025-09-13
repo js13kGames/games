@@ -1,0 +1,128 @@
+.d-flex {
+  display: flex;
+}
+
+:root {
+  background: lightgreen;
+  height: 100%;
+  width: 100%;
+}
+
+.reverse {
+  transform: scale(-1, 1);
+}
+
+.field {
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+}
+
+#eden {
+  position: relative;
+  height: calc(100% - 102px);
+  width: calc(100% - 60px);
+
+  &:hover {
+    cursor: grab;
+  }
+}
+
+#cat * {
+  position: absolute;
+}
+
+#cat {
+  height: 60px;
+  width: 60px;
+  position: absolute;
+
+  &.adult {
+    transform: scale(0.8);
+  }
+
+  &:not(.adult) {
+    transform: scale(0.6);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.head {
+  height: 50%;
+  width: 70%;
+}
+
+.ear {
+  height: 50%;
+  width: 50%;
+  background: linear-gradient(to right, var(--secondary) 50%, pink 50%);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+
+  &.l {
+    left: -10%;
+    transform: rotate(-40deg) scaleX(-1);
+  }
+
+  &.r {
+    left: 60%;
+    transform: rotate(30deg);
+  }
+}
+
+.face {
+  top: 20%;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.eye {
+  top: 25%;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  border: 1px solid white;
+
+  &.l {
+    background: var(--secondary);
+    left: 20%;
+  }
+
+  &.r {
+    background: var(--third);
+    left: 60%;
+  }
+}
+
+.mouse {
+  top: 60%;
+  left: 50%;
+  height: 4px;
+  width: 4px;
+  border: 1px solid;
+  border-color: white white transparent transparent;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.body {
+  top: 50%;
+  left: 10%;
+  height: 40%;
+  width: 60%;
+  background: var(--secondary);
+  border-radius: 50px 50px 20px 20px;
+}
+
+.tail {
+  top: 60%;
+  left: 55%;
+  height: 10%;
+  width: 50%;
+  background: var(--third);
+  border-radius: 0 10px 10px 0;
+  transform: rotate(-45deg);
+}

@@ -1,0 +1,34 @@
+<title>Game title</title>
+
+<head>
+  <link rel="stylesheet" href="dist/global.css">
+</head>
+
+<body style="margin: 0;">
+  <div id="cat" draggable="true">
+    <div class="tail"></div>
+    <div class="body"></div>
+    <div class="head">
+      <div class="ear l"></div>
+      <div class="ear r"></div>
+      <div class="face">
+        <div class="eye l">
+          <div></div>
+        </div>
+        <div class="eye r">
+          <div></div>
+        </div>
+        <div class="mouse"></div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex field">
+    <div>Month: <span id="month">0</span></div>
+    <div class="d-flex">
+      Speed:
+      <input id="speed" type="range" min="1" max="5" value="1" />
+    </div>
+    <div id="eden"></div>
+  </div>
+  <script src="dist/main.js"></script>
+</body>
