@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NekoDachi</title>
+<style>
+body{margin:0;width:100vw;height:100vh;display:flex;justify-content:center;align-items:center;background:#222034;font-family:sans-serif;}
+div{box-sizing:border-box;}
+#b{display:flex;flex-direction:column-reverse;position:absolute;width:100%;height:100%;left:0;top:0;justify-content:space-between;pointer-events:none;}
+#sh{padding:0 4vw;display:none;position:absolute;width:100%;height:60%;left:0;top:5vh;pointer-events:none;overflow-y:scroll;}
+#li{padding:2vh 1vh 0 1vh;display:flex;flex-direction:column;flex-wrap:wrap;background:#69668280;}
+#_a{position:absolute;top:5vh;left:5vw;font-size: 8vh; color:#22203458}
+#bars{display:flex;flex-direction:row;position:relative;background:#ffc3ca;}
+#con{display:flex;justify-content:center;position:relative;height:100%;}
+#c{height:100%;image-rendering:pixelated;background:#222034;}
+#menu{display:flex;flex-direction:row;width:100%}
+button{flex:1;font-size:3vh;margin:.2em;background:#C458;border:2px solid pink;border-radius:5px;color:white;cursor:pointer;pointer-events:all;}
+button:active{background:#d568;transform:'translateY(-1vh)';}
+img{display:none;}
+label{font-size:4vh;margin:0 5px;}
+#l_m{position:absolute;top:0;right:0;}
+#bars::after{content:'';position:absolute;right:0;bottom:-1vh;width:100%;height:1vh;background-color:#ef5c6d;}
+</style>
+</head>
+<body>
+<div id="con">
+<canvas id="c"width="65"height="100"></canvas>
+<div id="b">
+<h1 id="_a"></h1>
+<div id="menu"><button id="b_l">Litter</button><button id="b_f">Feed $25</button><button id="b_s">Shop</button><button id="b_c">Cards</button></div>
+<div id="sh"><div id="li"></div></div>
+<div id="bars"><label id="l_m"></label><label id="l_s"></label><label id="l_h"></label><label id="l_a"></label></div>
+</div>
+</div>
+<img id="png" src="./cat.png"></img>
+<script src="./data.js"></script>
+<script src="./render.js"></script>
+<script src="./sprite.js"></script>
+<script src="./script.js"></script>
+</body>
+</html>
