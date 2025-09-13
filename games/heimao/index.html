@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0,
+          maximum-scale=1.0, user-scalable=no" />
+  <link class="app-icon" rel="icon" href="#" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      touch-action: none;
+      user-select: none;
+    }
+
+    body {
+      align-items: center;
+      background: #101010;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      justify-content: center;
+    }
+
+    .dp {
+      position: absolute;
+      z-index: 9999;
+    }
+
+    .dp circle {
+      fill: #00000080;
+    }
+
+    .dp_path {
+      fill: #fff4;
+    }
+
+    .dp_path.dp_up.active,
+    .dp_path.dp_down.active,
+    .dp_path.dp_left.active,
+    .dp_path.dp_right.active {
+      fill: #fff;
+    }
+
+    .game_canvas {
+      background: #e0e0e0;
+      image-rendering: pixelated;
+    }
+
+    @media (orientation:landscape) {
+      .dp {
+        bottom: 48px;
+        left: 48px;
+      }
+
+      .game_canvas {
+        height: 100%;
+      }
+    }
+
+    @media (orientation:portrait) {
+      .dp {
+        bottom: 24px;
+      }
+
+      .game_canvas {
+        width: 100%;
+      }
+    }
+  </style>
+  <title>Heimao</title>
+</head>
+
+<body>
+  <canvas class="game_canvas" width="100" height="100"></canvas>
+  <svg class="dp" width="144" height="144" viewBox="0 0 144 144" version="1.1">
+    <path class="dp_path dp_up" d="M 72 0 L 48 24 L 60 24 L 60 48 L 84 48 L 84 24 L 96 24 L 72 0 z " />
+    <path class="dp_path dp_down" d="m 72,144 -24,-24 h 12 v -24 h 24 v 24 h 12 z" />
+    <path class="dp_path dp_left" d="m 0,72 24,24 v -12 h 24 v -24 h -24 v -12 z" />
+    <path class="dp_path dp_right" d="m 144,72 -24,24 v -12 h -24 v -24 h 24 v -12 z" />
+    <circle cx="72" cy="72" r="36" />
+  </svg>
+
+  <script>
+    const debugMode = false
+    const ss = new Image(); ss.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAVBJREFUSIntlbGOgkAQhmcvvoWdoFBbWYHdlfcCRmN8CK1Or9OHIMQLL3JUVtaiYudzjIUZb0XYHcNuYuHfSITsxzc7swBYTOA5iIi4Xs4x8ByU733YBKvy2uDAcx5KZR0ceA7+7Y4wGQ/AJLzBgQIADKeL659xgmmWi7rgSmMZ+rta3OCmzEvBRWgUJxD6rnH4A5RSnD/VPdVa2mc5Cz8DV4GVzVU3aZYLIZh9aLLUT6cMYBpaWYdiZ9McU5dXzbKRKsiWXFNkRrvzZK4zpayXc5Yxq+XIknNUGm+4d+pGAGNf0iwX3KYZzX6g0+3BfrtR/jbkea1K6LvYbLVZJhzofrv5P6vpmysnihOglzqfDiwwB9rp9u4/ElGc3K4n48HdgtaMKV+f/dIFrRqrYtW4WF451ozl/S2LNWPdSBk3TrNchL6rPUC+W23WAcI1vgBUOtWHDbftqQAAAABJRU5ErkJggg=='
+    const canvas = document.querySelector('.game_canvas')
+    const ctx = canvas.getContext('2d')
+    const offCanvas = document.createElement('canvas'); offCanvas.width = 10; offCanvas.height = 10
+    const offCtx = offCanvas.getContext('2d')
+
+    const titleCI = [1, 1, 9, 6, 6, 3, 17, 6, 11, 3, 7, 8, 5, 3, 16, 8, 10, 3, 8, 6, 6, 3, 17, 6, 11, 3, 57, 7, 5, 4, 8, 1, 7, 2, 2, 2, 5, 5, 5, 6, 1, 8, 3, 6, 6, 3, 5, 8, 3, 7, 3, 16, 2, 8, 5, 3, 5, 8, 4, 7, 2, 11, 2, 3, 2, 3, 3, 2, 5, 3, 5, 8, 8, 3, 2, 3, 2, 6, 2, 3, 2, 3, 3, 2, 5, 3, 5, 8, 4, 7, 2, 3, 2, 6, 2, 3, 2, 8, 5, 3, 5, 2, 1, 2, 1, 2, 3, 8, 2, 3, 2, 6, 2, 3, 2, 7, 6, 3, 5, 2, 1, 2, 1, 2, 3, 3, 3, 2, 2, 3, 2, 6, 2, 3, 2, 3, 10, 3, 5, 2, 1, 2, 1, 2, 3, 3, 3, 2, 2, 3, 2, 6, 2, 3, 2, 7, 6, 3, 5, 2, 1, 2, 1, 2, 3, 8, 2, 11, 2, 3, 3, 7, 5, 3, 5, 2, 1, 2, 1, 2, 4, 6, 3, 8, 1, 1, 4, 1, 5, 5, 7, 1, 7, 1, 1, 2, 1, 1, 6, 4, 5, 6, 2, 27, 3, 2, 4, 2, 5, 3, 7, 3, 3, 29, 1, 5, 1, 4, 3, 5, 5, 5, 2, 35, 1, 4, 2, 7, 3, 7, 1, 35, 1, 4, 1, 24, 7, 6, 7, 15, 1, 23, 9, 4, 9, 4, 1, 9, 1, 23, 9, 4, 9, 4, 1, 9, 1, 23, 4, 2, 3, 4, 4, 2, 3, 4, 2, 8, 1, 23, 3, 4, 2, 4, 3, 4, 2, 4, 2, 8, 3, 5, 5, 5, 2, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 8, 3, 5, 5, 5, 2, 4, 2, 6, 1, 4, 2, 6, 1, 4, 1, 9, 4, 3, 7, 3, 3, 4, 3, 4, 2, 4, 3, 4, 2, 13, 21, 4, 4, 2, 3, 4, 4, 2, 3, 13, 21, 4, 9, 4, 9, 12, 4, 17, 1, 4, 9, 4, 9, 4, 1, 7, 3, 24, 7, 6, 7, 5, 3, 5, 3, 49, 4, 4, 3, 49, 5, 4, 2, 48, 6, 5, 1, 5, 3, 4, 2, 5, 1, 27, 7, 5, 1, 4, 5, 2, 4, 4, 12, 8, 15, 5, 1, 4, 5, 2, 4, 4, 14, 4, 17, 5, 1, 4, 5, 2, 4, 4, 1, 28, 6, 5, 1, 4, 5, 2, 4, 34, 5, 5, 1, 4, 5, 2, 4, 34, 5, 5, 1, 4, 5, 2, 4, 34, 4, 6, 1, 4, 5, 2, 4, 4, 1, 28, 2, 9, 1, 5, 3, 4, 2, 5, 13, 6, 11, 10, 1, 19, 14, 4, 12, 10, 1, 19, 1, 28, 1, 10, 1, 49, 1, 9, 1, 49, 4, 6, 1, 5, 3, 4, 2, 35, 5, 5, 1, 4, 5, 2, 4, 34, 5, 5, 1, 4, 5, 2, 4, 4, 1, 28, 6, 5, 1, 4, 5, 2, 4, 4, 4, 2, 4, 2, 6, 2, 6, 2, 7, 5, 1, 4, 5, 2, 4, 4, 3, 4, 2, 3, 5, 4, 4, 3, 7, 5, 1, 4, 5, 2, 4, 4, 2, 5, 1, 5, 3, 5, 3, 5, 6, 5, 1, 4, 5, 2, 4, 4, 2, 5, 1, 5, 3, 6, 2, 5, 6, 5, 1, 4, 5, 2, 4, 4, 2, 5, 1, 6, 2, 6, 2, 5, 5, 6, 1, 4, 5, 2, 4, 4, 1, 6, 1, 7, 1, 7, 1, 6, 1, 9, 1, 5, 3, 4, 2, 12, 1, 8, 1, 7, 1, 14, 2, 18, 1, 6, 3, 7, 1, 7, 1, 14, 2, 17, 2, 5, 5, 5, 3, 6, 2, 12, 4, 15, 4, 3, 7, 3, 5, 4, 4, 2, 2, 6, 6, 13, 4]
+    const titleCanvas = document.createElement('canvas'); titleCanvas.width = 60; titleCanvas.height = 60
+    const numbersCI = [1, 3, 3, 1, 3, 3, 2, 3, 2, 1, 1, 1, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 1, 1, 1, 2, 2, 5, 1, 4, 1, 2, 1, 1, 1, 2, 1, 4, 1, 6, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 3, 1, 3, 3, 2, 3, 2, 3, 2, 3, 2, 3, 4, 1, 2, 3, 2, 3, 2, 1, 1, 1, 3, 1, 3, 1, 6, 1, 4, 1, 4, 1, 2, 1, 1, 1, 4, 1, 2, 1, 1, 1, 4, 1, 2, 3, 2, 3, 2, 3, 2, 3, 4, 1, 2, 3, 2, 3, 4, 1, 2, 3, 4, 1, 1]
+    const numbersCanvas = document.createElement('canvas'); numbersCanvas.width = 50; numbersCanvas.height = 5
+    const youWinLoseCI = [42, 2, 2, 2, 5, 5, 4, 2, 2, 2, 4, 2, 2, 3, 3, 2, 2, 2, 4, 6, 4, 2, 2, 2, 4, 2, 1, 1, 2, 1, 3, 2, 2, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 1, 1, 2, 1, 3, 6, 4, 2, 2, 2, 4, 2, 2, 2, 4, 2, 1, 1, 2, 1, 4, 4, 5, 2, 2, 2, 4, 2, 2, 2, 4, 2, 1, 3, 5, 4, 5, 2, 2, 2, 4, 2, 2, 2, 4, 2, 10, 2, 6, 6, 4, 6, 4, 4, 8, 2, 6, 5, 6, 4, 5, 4, 85, 2, 4, 2, 3, 6, 5, 4, 8, 3, 3, 2, 4, 2, 3, 6, 4, 6, 6, 4, 3, 2, 1, 2, 1, 2, 5, 2, 6, 2, 2, 2, 6, 2, 5, 2, 1, 2, 1, 2, 5, 2, 6, 2, 2, 2, 3, 2, 1, 4, 3, 2, 1, 2, 1, 2, 5, 2, 6, 2, 2, 2, 2, 1, 3, 4, 3, 8, 5, 2, 6, 2, 2, 2, 2, 3, 1, 2, 6, 6, 4, 6, 4, 2, 2, 2, 4, 1, 1, 4, 5, 4, 5, 6, 4, 2, 2, 2, 2, 2, 3, 3, 42]
+    const youWinLoseCanvas = document.createElement('canvas'); youWinLoseCanvas.width = 40; youWinLoseCanvas.height = 20
+    const catCI = [122, 32, 12, 32, 13, 32, 11, 32, 15, 31, 52, 32, 52, 31, 11, 31, 51, 32, 52, 31, 14, 31, 51, 44, 51, 31, 11, 31, 55, 31, 14, 31, 52, 42, 52, 31, 11, 31, 21, 51, 21, 52, 31, 11, 33, 41, 56, 41, 32, 21, 51, 21, 51, 41, 32, 51, 32, 58, 34, 53, 41, 52, 31, 11, 32, 41, 52, 41, 32, 12, 31, 52, 42, 52, 41, 31, 12, 31, 51, 42, 51, 31, 14, 31, 55, 31, 13, 31, 51, 32, 51, 31, 14, 31, 51, 33, 51, 31, 123, 32, 12, 32, 16, 32, 11, 32, 12, 31, 52, 32, 52, 31, 14, 31, 52, 32, 51, 31, 11, 31, 56, 31, 14, 31, 55, 31, 11, 31, 51, 21, 52, 21, 51, 31, 11, 32, 11, 31, 52, 21, 51, 21, 32, 41, 51, 21, 52, 21, 51, 41, 32, 51, 32, 41, 51, 21, 51, 21, 32, 53, 32, 53, 32, 52, 41, 53, 33, 11, 32, 41, 52, 41, 32, 11, 31, 41, 52, 42, 52, 31, 13, 31, 44, 31, 13, 31, 55, 31, 14, 31, 51, 32, 51, 31, 13, 31, 51, 33, 51, 31, 124, 32, 12, 32, 14, 32, 12, 32, 13, 31, 52, 32, 52, 31, 12, 31, 51, 41, 32, 41, 51, 31, 12, 31, 51, 44, 51, 31, 12, 31, 52, 42, 52, 31, 12, 31, 52, 42, 53, 32, 57, 31, 11, 31, 41, 57, 32, 53, 42, 52, 41, 32, 53, 42, 53, 32, 52, 41, 52, 41, 52, 31, 11, 32, 41, 52, 41, 32, 12, 32, 41, 52, 41, 32, 12, 31, 52, 43, 31, 14, 31, 43, 52, 31, 13, 33, 52, 31, 14, 31, 52, 33, 124, 32, 12, 32, 14, 32, 12, 32, 13, 31, 52, 32, 52, 31, 12, 31, 52, 32, 52, 31, 12, 31, 56, 31, 12, 31, 56, 31, 11, 31, 51, 21, 52, 21, 52, 31, 12, 31, 52, 21, 52, 21, 51, 32, 51, 21, 52, 21, 51, 42, 32, 42, 51, 21, 52, 21, 51, 32, 52, 32, 54, 32, 54, 32, 52, 31, 11, 32, 53, 41, 32, 12, 32, 41, 53, 32, 13, 31, 43, 52, 31, 12, 31, 52, 43, 31, 14, 31, 52, 33, 14, 33, 52, 31, 123, 32, 11, 32, 15, 32, 11, 32, 14, 31, 51, 32, 52, 31, 13, 31, 51, 32, 52, 31, 13, 31, 55, 31, 13, 31, 55, 31, 11, 33, 21, 51, 21, 52, 31, 11, 33, 21, 52, 21, 51, 32, 51, 32, 21, 51, 21, 51, 41, 32, 51, 32, 21, 52, 21, 51, 41, 31, 51, 34, 53, 41, 52, 32, 51, 32, 53, 41, 51, 31, 11, 31, 52, 42, 52, 41, 31, 11, 31, 53, 42, 51, 31, 13, 31, 55, 31, 12, 31, 41, 55, 31, 12, 31, 51, 41, 32, 41, 51, 31, 13, 31, 51, 32, 51, 31, 126, 32, 11, 32, 15, 32, 11, 32, 14, 31, 52, 32, 51, 31, 13, 31, 52, 32, 51, 31, 13, 31, 55, 33, 11, 31, 55, 33, 11, 31, 52, 21, 51, 21, 32, 51, 32, 51, 21, 52, 21, 32, 51, 32, 41, 51, 21, 51, 21, 32, 51, 31, 41, 51, 21, 52, 21, 32, 52, 41, 53, 34, 51, 41, 53, 32, 51, 32, 41, 52, 42, 52, 31, 12, 31, 51, 42, 53, 31, 12, 31, 55, 31, 13, 31, 55, 41, 31, 12, 31, 51, 41, 32, 41, 51, 31, 13, 31, 51, 32, 51, 31, 12]
+    const catCanvas = document.createElement('canvas'); catCanvas.width = 20; catCanvas.height = 60
+    const catRCanvas = document.createElement('canvas'); catRCanvas.width = 20; catRCanvas.height = 60
+    const catGCanvas = document.createElement('canvas'); catGCanvas.width = 20; catGCanvas.height = 60
+    const catBCanvas = document.createElement('canvas'); catBCanvas.width = 20; catBCanvas.height = 60
+    const catStoneCanvas = document.createElement('canvas'); catStoneCanvas.width = 20; catStoneCanvas.height = 60
+    const lightBulbCI = [124, 22, 18, 22, 17, 21, 42, 21, 16, 21, 52, 21, 15, 21, 41, 52, 41, 21, 14, 21, 54, 21, 14, 21, 41, 52, 41, 21, 14, 21, 54, 21, 15, 21, 42, 21, 16, 21, 52, 21, 16, 21, 42, 21, 16, 21, 52, 21, 17, 22, 18, 22, 17, 21, 42, 21, 16, 21, 42, 21, 15, 21, 31, 41, 31, 41, 21, 14, 21, 31, 41, 31, 41, 21, 14, 21, 31, 41, 31, 41, 21, 14, 21, 31, 41, 31, 41, 21, 15, 21, 42, 21, 16, 21, 42, 21, 17, 22, 18, 22, 17, 21, 42, 21, 16, 21, 52, 21, 16, 21, 42, 21, 16, 21, 52, 21, 15, 21, 41, 52, 41, 21, 14, 21, 54, 21, 14, 21, 41, 52, 41, 21, 14, 21, 54, 21, 15, 21, 42, 21, 16, 21, 52, 21, 17, 22, 18, 22, 167, 22, 14, 21, 13, 22, 14, 21, 12, 21, 42, 22, 11, 21, 41, 12, 21, 52, 22, 11, 21, 41, 11, 21, 41, 52, 42, 21, 41, 31, 11, 21, 55, 21, 41, 31, 11, 21, 41, 52, 42, 21, 42, 11, 21, 55, 21, 42, 12, 21, 42, 22, 11, 21, 31, 12, 21, 52, 22, 11, 21, 31, 13, 22, 14, 21, 13, 22, 14, 21, 180, 21, 14, 22, 13, 21, 14, 22, 13, 41, 21, 11, 22, 42, 21, 12, 41, 21, 11, 22, 52, 21, 12, 31, 41, 21, 42, 52, 41, 21, 11, 31, 41, 21, 55, 21, 11, 42, 21, 42, 52, 41, 21, 11, 42, 21, 55, 21, 11, 31, 21, 11, 22, 42, 21, 12, 31, 21, 11, 22, 52, 21, 12, 21, 14, 22, 13, 21, 14, 22, 143]
+    const lightBulbCanvas = document.createElement('canvas'); lightBulbCanvas.width = 20; lightBulbCanvas.height = 40
+    const levelNeedCI = [11, 318, 11, 31, 518, 32, 518, 32, 51, 31, 52, 32, 51, 31, 52, 31, 51, 32, 51, 31, 52, 32, 51, 31, 52, 31, 52, 31, 52, 31, 51, 31, 52, 31, 52, 32, 51, 31, 52, 32, 51, 31, 52, 31, 51, 32, 51, 31, 52, 32, 51, 31, 52, 31, 52, 34, 51, 31, 52, 31, 52, 32, 51, 32, 51, 32, 52, 32, 52, 32, 51, 32, 51, 32, 518, 322, 41, 31, 514, 31, 41, 32, 41, 31, 52, 23, 53, 42, 51, 42, 51, 31, 41, 32, 41, 31, 51, 25, 58, 31, 41, 32, 51, 31, 51, 25, 51, 42, 51, 42, 51, 41, 31, 51, 32, 51, 31, 51, 25, 58, 31, 51, 32, 51, 31, 51, 21, 43, 21, 52, 42, 51, 42, 51, 31, 51, 32, 51, 31, 51, 21, 43, 21, 58, 31, 51, 32, 51, 32, 25, 38, 52, 32, 51, 31, 17, 31, 58, 31, 11, 31, 19, 38, 12, 318, 11, 31, 518, 32, 518, 32, 52, 33, 51, 32, 52, 32, 51, 32, 53, 32, 52, 31, 51, 31, 51, 31, 53, 31, 52, 31, 51, 31, 52, 32, 52, 31, 51, 31, 51, 32, 52, 32, 51, 31, 51, 31, 52, 32, 52, 31, 51, 31, 51, 31, 53, 31, 52, 31, 51, 31, 52, 32, 52, 31, 51, 31, 51, 32, 52, 32, 51, 32, 53, 32, 518, 322, 41, 31, 514, 31, 41, 32, 41, 31, 52, 23, 53, 42, 51, 42, 51, 31, 41, 32, 41, 31, 51, 21, 53, 21, 58, 31, 41, 32, 51, 31, 51, 21, 51, 21, 51, 21, 51, 42, 51, 42, 51, 41, 31, 51, 32, 51, 31, 51, 21, 53, 21, 58, 31, 51, 32, 51, 31, 51, 31, 23, 31, 52, 42, 51, 42, 51, 31, 51, 32, 51, 31, 51, 35, 58, 31, 51, 32, 51, 32, 25, 38, 52, 32, 51, 31, 17, 31, 58, 31, 11, 31, 19, 38, 11]
+    const levelNeedCanvas = document.createElement('canvas'); levelNeedCanvas.width = 20; levelNeedCanvas.height = 40
+    const coinCI = [12, 26, 16, 22, 51, 17, 22, 17, 51, 22, 115, 21, 56, 21, 14, 21, 52, 21, 41, 15, 21, 41, 51, 21, 15, 51, 21, 52, 21, 15, 26, 12, 21, 58, 21, 12, 21, 54, 21, 51, 14, 21, 51, 41, 21, 14, 41, 21, 54, 21, 13, 21, 56, 21, 11, 21, 52, 24, 52, 21, 12, 21, 51, 22, 51, 21, 41, 14, 21, 41, 51, 21, 14, 51, 21, 51, 22, 51, 21, 13, 21, 51, 24, 51, 21, 11, 21, 52, 21, 12, 21, 52, 21, 12, 21, 51, 22, 51, 21, 51, 14, 21, 51, 41, 21, 14, 41, 21, 51, 22, 51, 21, 13, 21, 51, 21, 12, 21, 51, 21, 11, 21, 52, 21, 12, 21, 52, 21, 12, 21, 51, 22, 51, 21, 41, 14, 21, 41, 51, 21, 14, 51, 21, 51, 22, 51, 21, 13, 21, 51, 21, 12, 21, 51, 21, 11, 21, 52, 24, 52, 21, 12, 21, 51, 22, 51, 21, 51, 14, 21, 51, 41, 21, 14, 41, 21, 51, 22, 51, 21, 13, 21, 51, 24, 51, 21, 11, 21, 58, 21, 12, 21, 54, 21, 41, 14, 21, 41, 51, 21, 14, 51, 21, 54, 21, 13, 21, 56, 21, 12, 21, 56, 21, 14, 21, 52, 21, 51, 15, 21, 51, 41, 21, 15, 41, 21, 52, 21, 15, 26, 14, 26, 16, 22, 41, 17, 22, 17, 51, 22, 114]
+    const coinCanvas = document.createElement('canvas'); coinCanvas.width = 50; coinCanvas.height = 10
+    const heartCI = [122, 32, 11, 33, 113, 31, 52, 31, 53, 31, 14, 31, 11, 32, 14, 31, 52, 31, 53, 31, 13, 31, 51, 31, 52, 31, 13, 31, 56, 31, 13, 31, 51, 31, 52, 31, 13, 31, 56, 31, 13, 31, 54, 31, 14, 31, 54, 31, 15, 31, 52, 31, 16, 31, 52, 31, 17, 32, 18, 32, 134]
+    const heartCanvas = document.createElement('canvas'); heartCanvas.width = 20; heartCanvas.height = 10
+    const fishCI = [118, 21, 13, 24, 11, 21, 31, 21, 11, 21, 41, 51, 41, 31, 21, 31, 41, 22, 41, 51, 31, 51, 41, 31, 41, 21, 11, 21, 31, 41, 51, 41, 31, 41, 31, 21, 12, 21, 31, 41, 31, 41, 21, 41, 31, 21, 12, 24, 11, 21, 41, 21, 18, 21, 111]
+    const fishCanvas = document.createElement('canvas'); fishCanvas.width = 10; fishCanvas.height = 10
+    const matCI = [13, 44, 16, 44, 15, 41, 54, 41, 14, 41, 54, 41, 13, 41, 51, 44, 51, 41, 12, 41, 51, 41, 52, 41, 51, 41, 11, 41, 51, 41, 51, 42, 51, 41, 51, 42, 51, 42, 52, 42, 51, 42, 51, 42, 52, 42, 51, 42, 53, 42, 53, 42, 51, 42, 52, 42, 51, 42, 53, 42, 53, 42, 51, 41, 51, 42, 51, 41, 51, 42, 51, 42, 52, 42, 51, 41, 11, 41, 51, 44, 51, 41, 12, 41, 51, 41, 52, 41, 51, 41, 13, 41, 54, 41, 14, 41, 54, 41, 15, 44, 16, 44, 13]
+    const matCanvas = document.createElement('canvas'); matCanvas.width = 20; matCanvas.height = 10
+
+
+    const uncompressImage = (decodeType = 0, ci, ciCanvas, color1, color2, color3, color4, color5) => {
+      const result = []
+
+      const colors = [
+        color1 ?? [0, 0, 0, 0],
+        color2 ?? [0, 0, 0, 255],
+        color3 ?? [38, 50, 56, 255],
+        color4 ?? [69, 90, 100, 255],
+        color5 ?? [120, 144, 156, 255]
+      ]
+
+      if (decodeType === 0) {
+        for (let i = 0; i < ci.length; i++) {
+          for (let j = 0; j < ci[i]; j++) {
+            result.push(...colors[i % 2])
+          }
+        }
+      }
+
+      if (decodeType === 1) {
+        for (let i = 0; i < ci.length; i++) {
+          const numToString = ci[i].toString()
+          const firstNumber = Number(numToString[0]) - 1
+          const iterateNum = Number(numToString.slice(1))
+
+          for (let j = 0; j < iterateNum; j++) {
+            result.push(...colors[firstNumber])
+          }
+        }
+      }
+
+      const imageData = new ImageData(new Uint8ClampedArray(result), ciCanvas.width, ciCanvas.height)
+      ciCanvas.getContext('2d').putImageData(imageData, 0, 0)
+    };
+
+    uncompressImage(0, titleCI, titleCanvas, null, [38, 50, 56, 255])
+    uncompressImage(0, numbersCI, numbersCanvas, null, [38, 50, 56, 255])
+    uncompressImage(0, youWinLoseCI, youWinLoseCanvas, null, [255, 255, 255, 255])
+    uncompressImage(1, catCI, catCanvas)
+    uncompressImage(1, catCI, catRCanvas, null, [191, 54, 12, 255], [191, 54, 12, 255], [245, 127, 23, 255], [255, 245, 157, 255])
+    uncompressImage(1, catCI, catGCanvas, null, [50, 105, 30, 255], [50, 105, 30, 255], [156, 204, 101, 255], [197, 255, 165, 255])
+    uncompressImage(1, catCI, catBCanvas, null, [42, 54, 177, 255], [42, 54, 177, 255], [115, 143, 254, 255], [175, 191, 255, 255])
+    uncompressImage(1, catCI, catStoneCanvas, null, [255, 255, 255, 255], [38, 50, 56, 127], [255, 255, 255, 127], [0, 0, 0, 127])
+    uncompressImage(1, lightBulbCI, lightBulbCanvas, null, [38, 50, 56, 255], [141, 110, 99, 255], [255, 245, 157, 255], [255, 255, 255, 255])
+    uncompressImage(1, levelNeedCI, levelNeedCanvas, null, [0, 0, 0, 255], [38, 50, 56, 255], [255, 255, 0, 255], [205, 220, 57, 255])
+    uncompressImage(1, coinCI, coinCanvas, null, [130, 119, 33, 255], null, [175, 180, 43, 255], [205, 220, 57, 255])
+    uncompressImage(1, heartCI, heartCanvas, null, null, [30, 50, 56, 255], null, [246, 153, 156, 255])
+    uncompressImage(1, fishCI, fishCanvas, null, null, [255, 138, 101, 255], [225, 112, 67, 255], [255, 255, 255, 255])
+    uncompressImage(1, matCI, matCanvas, null, null, null, [50, 105, 30, 255], [197, 255, 165, 255])
+
+    const DP = document.querySelector('.dp')
+    const DP_UP = document.querySelector('.dp_up')
+    const DP_DOWN = document.querySelector('.dp_down')
+    const DP_LEFT = document.querySelector('.dp_left')
+    const DP_RIGHT = document.querySelector('.dp_right')
+    const DP_MAP = new Map()
+    const DP_DIRS = {up: {el: DP_UP, x1: 48, x2: 96, y1: 0, y2: 48}, down: {el: DP_DOWN, x1: 48, x2: 96, y1: 96, y2: 144}, left: {el: DP_LEFT, x1: 0, x2: 48, y1: 48, y2: 96}, right: {el: DP_RIGHT, x1: 96, x2: 144, y1: 48, y2: 96}}
+    const gameSounds = {}
+
+    const rewards = {
+      savedAllCats: false,
+      gotAllCoins: false,
+      ateAllFish: false,
+      clearedAll: false
+    }
+
+    const resetDp = () => {
+      Object.values(DP_DIRS).forEach(d => d.el.classList.remove('active'))
+      DP_MAP.delete('dir')
+    }
+
+    const checkDir = (x, y) => {
+      resetDp()
+      for (let {x1, x2, y1, y2, el} of Object.values(DP_DIRS)) {
+        if (x > x1 && x < x2 && y > y1 && y < y2) {
+          if (el.classList.contains('dp_up')) {
+            DP_MAP.set('dir', 'up')
+          } else if (el.classList.contains('dp_down')) {
+            DP_MAP.set('dir', 'down')
+          } else if (el.classList.contains('dp_left')) {
+            DP_MAP.set('dir', 'left')
+          } else if (el.classList.contains('dp_right')) {
+            DP_MAP.set('dir', 'right')
+          } else {
+            DP_MAP.delete('dir')
+          }
+          el.classList.add('active')
+          break
+        }
+      }
+    }
+
+    const draw = (sx, sy, dx, dy) => ctx.drawImage(ss, sx, sy, 10, 10, dx, dy, 10, 10)
+
+    const drawPat = (sx = 10, sy = 20, dx = 0, dy = 0, dw = 100, dh = 100) => {
+      offCtx.drawImage(ss, sx, sy, 10, 10, 0, 0, 10, 10)
+      ctx.fillStyle = ctx.createPattern(offCanvas, 'repeat')
+      ctx.fillRect(dx, dy, dw, dh)
+    }
+
+    const onDown = (el, e, m) => {
+      e.preventDefault()
+
+      if (typeof el === 'string' || el instanceof String) {
+        if (el === 'KeyW') {
+          DP_MAP.set('dir', 'up')
+        } else if (el === 'KeyS') {
+          DP_MAP.set('dir', 'down')
+        } else if (el === 'KeyA') {
+          DP_MAP.set('dir', 'left')
+        } else if (el === 'KeyD') {
+          DP_MAP.set('dir', 'right')
+        }
+        return
+      }
+
+      const p = m.get('t') || {x: e.offsetX, y: e.offsetY}
+      p.x = Math.round(e.offsetX)
+      p.y = Math.round(e.offsetY)
+      m.set('t', p)
+      checkDir(p.x, p.y)
+    }
+
+    const onMove = (el, e, m) => {
+      e.preventDefault()
+      let p = m.get('t') || {x: e.offsetX, y: e.offsetY}
+      p.x = Math.round(e.offsetX)
+      p.y = Math.round(e.offsetY)
+      m.set('t', p)
+      checkDir(p.x, p.y)
+    }
+
+    const onEnd = (el, e, m) => {
+      e.preventDefault()
+
+      if (typeof el === 'string' || el instanceof String) {
+        DP_MAP.delete('dir')
+        return
+      }
+
+      m.delete('t')
+      resetDp()
+    }
+
+    const setEvents = (els = [DP], maps = [DP_MAP]) => {
+      els.forEach((el, i) => {
+        const m = maps[i]
+        el.addEventListener('pointerdown', e => onDown(el, e, m))
+        el.addEventListener('pointermove', e => onMove(el, e, m))
+        el.addEventListener('pointerup', e => onEnd(el, e, m))
+        el.addEventListener('pointercancel', e => onEnd(el, e, m))
+        el.addEventListener('pointerleave', e => onEnd(el, e, m))
+      })
+      document.addEventListener('keydown', e => onDown(e.code, e, null))
+      document.addEventListener('keyup', e => onEnd(e.code, e, null))
+    }; setEvents()
+
+    const updateTimer = (timer) => {
+      if (timer.current >= timer.max) {
+        timer.current = 0
+      } else {
+        timer.current++
+      }
+    }
+
+    const checkCol = (dx, dy, dw, dh, dx2, dy2, dw2, dh2) => {
+      return dx < dx2 + dw2 && dx + dw > dx2 && dy < dy2 + dh2 && dy + dh > dy2
+    }
+
+    class GameLogic {
+      constructor(sm) {
+        this.lives = 9
+        this.fish = 0
+        this.coins = 0
+        this.hasRcat = false
+        this.hasGcat = false
+        this.hasBcat = false
+      }
+    }
+
+    class GameObj {
+      constructor(sm, scene, dx, dy, dw = 10, dh = 10) {this.sm = sm; this.scene = scene; this.dx = dx; this.dy = dy; this.dw = dw; this.dh = dh}
+      action() { }
+    }
+
+    class Wall {
+      constructor(sm, scene, dx, dy, dw, dh) {
+        this.sm = sm
+        this.scene = scene
+        this.dx = dx
+        this.dy = dy
+        this.dw = dw
+        this.dh = dh
+        this.solid = true
+      }
+
+      render() {
+        drawPat(0, 20, this.dx, this.dy, this.dw, this.dh)
+      }
+
+      action() {this.scene.player.goBack[this.scene.player.dir]()}
+    }
+
+    class FakeWall {
+      constructor(sm, scene, dx, dy, dw, dh) {
+        this.sm = sm
+        this.scene = scene
+        this.dx = dx
+        this.dy = dy
+        this.dw = dw
+        this.dh = dh
+        this.solid = true
+      }
+
+      render() {
+        drawPat(0, 20, this.dx, this.dy, this.dw, this.dh)
+      }
+
+      action() {
+
+      }
+    }
+
+
+    class Border {
+      constructor(scene, dx, dy, dw, dh) {
+        this.scene = scene
+        this.dx = dx
+        this.dy = dy
+        this.dw = dw
+        this.dh = dh
+        this.solid = true
+      }
+
+      render() {
+        if (debugMode) {
+          ctx.fillStyle = '#FF000080'
+          ctx.fillRect(this.dx, this.dy, this.dw, this.dh)
+        }
+      }
+
+      action() {this.scene.player.goBack[this.scene.player.dir]()}
+    }
+
+    class Miao extends GameObj {
+      constructor(sm, scene, dx, dy, color = 'R') {
+        super(sm, scene, dx, dy)
+        this.color = color
+      }
+
+      render() {
+        if (this.color === 'R') ctx.drawImage(catRCanvas, 0, 10, 10, 10, this.dx, this.dy, 10, 10)
+        if (this.color === 'G') ctx.drawImage(catGCanvas, 0, 10, 10, 10, this.dx, this.dy, 10, 10)
+        if (this.color === 'B') ctx.drawImage(catBCanvas, 0, 10, 10, 10, this.dx, this.dy, 10, 10)
+      }
+
+      action() {
+        this.scene.gameObjs.splice(this.scene.gameObjs.indexOf(this), 1)
+        this.sm.gameLogic[`has${this.color}cat`] = true
+      }
+    }
+
+    class CatStone extends GameObj {
+      constructor(sm, scene, dx, dy) {
+        super(sm, scene, dx, dy)
+        this.solid = true
+      }
+
+      render() {
+        ctx.drawImage(catStoneCanvas, 0, 10, 10, 10, this.dx, this.dy, 10, 10)
+      }
+
+      action() {
+        this.scene.player.goBack[this.scene.player.dir]()
+      }
+    }
+
+    class Coin extends GameObj {
+      constructor(sm, scene, dx, dy) {
+        super(sm, scene, dx, dy)
+      }
+
+      render() {
+        const timer = Math.floor(this.sm.timers.timer60.current / 15)
+        ctx.drawImage(coinCanvas, timer * 10, 0, 10, 10, this.dx, this.dy, this.dw, this.dh)
+      }
+
+      action() {
+        this.scene.gameObjs.splice(this.scene.gameObjs.indexOf(this), 1)
+        this.sm.gameLogic.coins++
+      }
+    }
+
+    class LightBulb extends GameObj {
+      constructor(sm, scene, dx, dy, dir = 0) {
+        super(sm, scene, dx, dy)
+        this.dir = dir
+        this.currentLightLength = 0
+      }
+
+      render() {
+        const timer = Math.floor(this.sm.timers.timer60.current / 30)
+        ctx.fillStyle = timer === 0 ? '#FFFF0080' : '#FFFFFF80'
+
+        if (this.dir === 0) {
+          ctx.fillRect(this.dx + 2, this.dy - this.currentLightLength, this.dw - 4, this.dh + this.currentLightLength - 5)
+        }
+
+        if (this.dir === 1) {
+          ctx.fillRect(this.dx + 2, this.dy + 5, this.dw - 4, this.dh + this.currentLightLength - 5)
+        }
+
+        if (this.dir === 2) {
+
+        }
+
+        if (this.dir === 3) {
+          ctx.fillRect(this.dx + 5, this.dy + 2, this.dw + this.currentLightLength - 5, this.dh - 4)
+        }
+
+
+        ctx.drawImage(lightBulbCanvas, timer * 10, this.dir * 10, 10, 10, this.dx, this.dy, 10, 10)
+      }
+
+      action() {
+        this.scene.player.goBack[this.scene.player.dir]()
+        this.scene.gameObjs.push(new CatStone(this.sm, this.scene, this.scene.player.dx, this.scene.player.dy - 1, 10, 10))
+        this.scene.player.dx = this.scene.sdx
+        this.scene.player.dy = this.scene.sdy
+        this.sm.gameLogic.lives--
+      }
+
+      update() {
+        const player = this.scene.player
+        let hitSolid = false
+        let lightLength = 0
+
+        while (!hitSolid && lightLength < 100) {
+          lightLength += 5
+
+          this.scene.gameObjs.forEach(obj => {
+            if (obj.solid) {
+              // Up
+              if (this.dir === 0 && checkCol(this.dx, this.dy - lightLength, this.dw, this.dh + lightLength, obj.dx, obj.dy, obj.dw, obj.dh)) {
+                hitSolid = true
+                this.currentLightLength = lightLength
+                return
+              }
+              // Down
+              if (this.dir === 1 && checkCol(this.dx, this.dy, this.dw, this.dh + lightLength, obj.dx, obj.dy, obj.dw, obj.dh)) {
+                hitSolid = true
+                this.currentLightLength = lightLength
+                return
+              }
+
+              // Right
+              if (this.dir === 3 && checkCol(this.dx, this.dy, this.dw + lightLength, this.dh, obj.dx, obj.dy, obj.dw, obj.dh)) {
+                hitSolid = true
+                this.currentLightLength = lightLength
+                return
+              }
+            }
+          })
+
+          // Up
+          if (this.dir === 0 && checkCol(this.dx, this.dy - lightLength, this.dw, this.dh + lightLength, player.dx, player.dy, player.dw, player.dh)) {
+            hitSolid = true
+            this.currentLightLength = lightLength
+            return
+          }
+
+          // Down
+          if (this.dir === 1 && checkCol(this.dx, this.dy, this.dw, this.dh + lightLength, player.dx, player.dy, player.dw, player.dh)) {
+            hitSolid = true
+            this.currentLightLength = lightLength
+            return
+          }
+
+          // Right
+          if (this.dir === 3 && checkCol(this.dx, this.dy, this.dw + lightLength, this.dh, player.dx, player.dy, player.dw, player.dh)) {
+            hitSolid = true
+            this.currentLightLength = lightLength
+            return
+          }
+
+          this.currentLightLength = lightLength
+        }
+      }
+    }
+
+    class Fish extends GameObj {
+      constructor(sm, scene, dx, dy) {
+        super(sm, scene, dx, dy)
+        this.fishEaten = false
+      }
+
+      render() {
+        ctx.drawImage(this.fishEaten ? matCanvas : fishCanvas, 0, 0, 10, 10, this.dx, this.dy, 10, 10)
+      }
+
+      action() {
+        if (!this.fishEaten) {
+          this.fishEaten = true
+          this.sm.gameLogic.fish++
+        }
+
+        this.scene.player.dx = this.scene.sdx
+        this.scene.player.dy = this.scene.sdy
+        this.sm.cs = 'lvs'
+      }
+    }
+
+    class Mat extends GameObj {
+      constructor(sm, scene, dx, dy) {super(sm, scene, dx, dy)}
+      render() {ctx.drawImage(matCanvas, 10, 0, 10, 10, this.dx, this.dy, 10, 10)}
+    }
+
+    class TrapFloor extends GameObj {
+      constructor(sm, scene, dx, dy) {
+        super(sm, scene, dx, dy)
+        this.touched = false
+      }
+
+      render() {
+        if (this.touched) {
+          ctx.drawImage(ss, 20, 20, 10, 10, this.dx, this.dy, 10, 10)
+        }
+      }
+
+      action() {
+        this.touched = true
+        this.scene.player.goBack[this.scene.player.dir]()
+      }
+    }
+
+    class HUD {
+      constructor(sm, scene) {
+        this.sm = sm
+        this.scene = scene
+      }
+
+      render() {
+        const timer = Math.floor(this.sm.timers.timer60.current / 30)
+        const gameLogic = this.sm.gameLogic
+        const digits = [gameLogic.lives.toString(), gameLogic.coins.toString(), gameLogic.fish.toString()]
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(0, 0, canvas.width, 10)
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < digits[i].length; j++) {
+            ctx.drawImage(numbersCanvas, digits[i][j] * 5, 0, 5, 5, i * 20 + j * 5 + 10, 3, 5, 5)
+          }
+
+          ctx.drawImage(heartCanvas, timer * 10, 0, 10, 10, 0, 0, 10, 10)
+          ctx.drawImage(coinCanvas, 40, 0, 10, 10, 20, 0, 10, 10)
+          ctx.drawImage(fishCanvas, 0, 0, 10, 10, 40, 0, 10, 10)
+        }
+
+        if (gameLogic.hasRcat) ctx.drawImage(catRCanvas, 0, 10, 10, 10, 60, 0, 10, 10)
+        if (gameLogic.hasGcat) ctx.drawImage(catGCanvas, 0, 10, 10, 10, 70, 0, 10, 10)
+        if (gameLogic.hasBcat) ctx.drawImage(catBCanvas, 0, 10, 10, 10, 80, 0, 10, 10)
+      }
+    }
+
+    class LvArea {
+      constructor(sm, scene, lv = 1, isUnlocked = false, coinRequirement = 9, tdx = 0, tdy = 0) {
+        this.sm = sm
+        this.scene = scene
+        this.lv = lv
+        this.isUnlocked = isUnlocked
+        this.coinRequirement = coinRequirement
+        this.ts = 10
+        this.tdx = tdx
+        this.tdy = tdy
+        this.dx = this.ts * this.tdx
+        this.dy = this.ty * this.tdy
+        this.dw = 20
+        this.dh = 15
+      }
+
+      render() {
+        this.dx = this.ts * this.tdx
+        this.dy = this.ts * this.tdy
+        ctx.drawImage(levelNeedCanvas, 0, this.isUnlocked ? 0 : 20, 20, 20, this.dx, this.dy, 20, 20)
+        ctx.drawImage(numbersCanvas, 5 * (this.isUnlocked ? this.lv : this.coinRequirement), 0, 5, 5, this.dx + 11, this.dy + 11, 5, 5)
+      }
+
+      action() {
+        const player = this.scene.player
+
+        if (this.isUnlocked) {
+          player.dx = 45
+          player.dy = 45
+          player.dir = 'down'
+          this.sm.cs = `lv${this.lv}`
+        } else {
+          this.scene.player.goBack[this.scene.player.dir]()
+          if (this.sm.gameLogic.coins >= this.coinRequirement) {
+            this.sm.gameLogic.coins -= this.coinRequirement
+            this.isUnlocked = true
+          }
+        }
+      }
+    }
+
+    class Player {
+      constructor(sm, scene, dx = 45, dy = 45) {
+        this.sm = sm
+        this.scene = scene
+        this.dx = dx
+        this.dy = dy
+        this.dw = 10
+        this.dh = 9
+        this.dir = 'down'
+        this.idle = true
+        this.goBack = {up: () => this.dy++, down: () => this.dy--, left: () => this.dx++, right: () => this.dx--}
+      }
+
+      render() {
+        if (this.idle) {
+          ctx.drawImage(catCanvas, this.dir === 'up' || this.dir === 'down' ? 0 : 10, this.dir === 'up' || this.dir === 'left' ? 1 : 11, 10, 9, this.dx, this.dy, this.dw, this.dh)
+        } else {
+          const timer = Math.floor(this.sm.timers.timer30.current / 15)
+          ctx.drawImage(catCanvas, timer * 10, (this.dir === 'up' ? 21 : this.dir === 'down' ? 31 : this.dir === 'left' ? 41 : 51), 10, 9, this.dx, this.dy, this.dw, this.dh)
+        }
+      }
+
+      update() {
+        const dir = DP_MAP.get('dir');
+        const directions = {up: {update: () => this.dy--}, down: {update: () => this.dy++}, left: {update: () => this.dx--}, right: {update: () => this.dx++}}
+
+        if (dir && directions[dir]) {
+          this.dir = dir
+          this.idle = false
+          directions[dir].update()
+        } else {
+          this.idle = true
+        }
+
+        this.scene.gameObjs.forEach(gameObj => {
+          if (gameObj instanceof LightBulb) {
+            if (gameObj.dir === 0 && checkCol(this.dx + 4, this.dy, this.dw - 8, this.dh, gameObj.dx, gameObj.dy - gameObj.currentLightLength, gameObj.dw, gameObj.dh + gameObj.currentLightLength)) gameObj.action()
+            if (gameObj.dir === 1 && checkCol(this.dx + 4, this.dy, this.dw - 8, this.dh, gameObj.dx, gameObj.dy, gameObj.dw, gameObj.dh + gameObj.currentLightLength)) gameObj.action()
+            if (gameObj.dir === 3 && checkCol(this.dx, this.dy + 4, this.dw, this.dh - 8, gameObj.dx, gameObj.dy, gameObj.dw + gameObj.currentLightLength, gameObj.dh)) gameObj.action()
+          } else if (checkCol(this.dx + 2, this.dy, this.dw - 4, this.dh, gameObj.dx, gameObj.dy, gameObj.dw, gameObj.dh)) {
+            gameObj.action()
+          }
+        })
+      }
+
+      action() { }
+    }
+
+    class Scene {constructor(sm) {this.sm = sm}; render() { }; update() { } }
+
+    class SceneGameOver extends Scene {
+      constructor(sm) {
+        super(sm)
+        this.countdown = 180
+      }
+
+      render() {
+        ctx.fillStyle = 'rgb(38, 50, 56)'
+        ctx.fillRect(0, 0, 100, 100)
+        ctx.drawImage(youWinLoseCanvas, 0, 0, 30, 10, 10 + 25, 40, 30, 10)
+        ctx.drawImage(youWinLoseCanvas, 30, 0, 10, 10, 15 + 25, 50, 10, 10)
+        ctx.drawImage(youWinLoseCanvas, 30, 10, 10, 10, 25 + 25, 50, 10, 10)
+      }
+
+      update() {
+        if (this.countdown >= 0) {
+          this.countdown--
+        } else {
+          this.sm.destroy()
+          sceneManager = new SceneManager()
+          return
+        }
+      }
+    }
+
+
+
+    class SceneYouWin extends Scene {
+      constructor(sm) {
+        super(sm)
+        this.countdown = 180
+      }
+
+      render() {
+        ctx.fillStyle = 'rgb(38, 50, 56)'
+        ctx.fillRect(0, 0, 100, 100)
+        ctx.drawImage(youWinLoseCanvas, 0, 0, 30, 10, 10 + 25, 40, 30, 10)
+        ctx.drawImage(youWinLoseCanvas, 0, 10, 30, 10, 10 + 25, 50, 30, 10)
+      }
+
+      update() {
+        if (this.countdown >= 0) {
+          this.countdown--
+        } else {
+          this.sm.destroy()
+          sceneManager = new SceneManager()
+          return
+        }
+      }
+    }
+
+
+    class SceneGame extends Scene {
+      constructor(sm, hasCam = false, sdx = 10, sdy = 80, fdx = 80, fdy = 20, itemList = []) {
+        super(sm)
+        this.hasCam = hasCam
+        this.hud = new HUD(this.sm, this)
+        this.sdx = sdx
+        this.sdy = sdy
+        this.player = new Player(this.sm, this, this.sdx, this.sdy)
+        this.gameObjs = []
+        itemList.forEach(item => this.gameObjs.push(items[item[0]](this.sm, this, item[1], item[2], item[3], item[4])))
+        this.gameObjs.push(new Mat(this.sm, this, this.sdx, this.sdy))
+        this.gameObjs.push(new Fish(this.sm, this, fdx, fdy))
+        if (!this.hasCam) for (const b of [[0, 10, 100, 10], [0, 90, 100, 10], [0, 20, 10, 70], [90, 20, 10, 70]]) this.gameObjs.push(new Border(this, ...b))
+      }
+
+      render() {
+        if (!this.hasCam) drawPat();[[20, 10, 10, 10, 80, 10], [20, 10, 10, 90, 80, 10]].map(a => drawPat(...a));
+        [[0, 10, 0, 10], [10, 10, 90, 10], [0, 0, 0, 90], [10, 0, 90, 90]].map(a => draw(...a));
+
+        this.gameObjs.forEach(gameObj => gameObj.render())
+        this.player.render()
+        this.hud.render()
+      }
+
+      update() {
+        this.gameObjs.forEach(gameObj => {
+          if (gameObj.update) gameObj.update()
+        })
+
+        this.player.update()
+        if (this.sm.gameLogic.lives <= 0) this.sm.cs = 'gameOver'
+      }
+    }
+
+    class SceneLvs extends Scene {
+      constructor(sm) {
+        super(sm)
+        this.gameObjs = [new Border(this, 0, 0, 100, 10), new Border(this, 0, 100, 100, 10), new Border(this, -10, 10, 10, 90), new Border(this, 100, 10, 10, 90), new Coin(this.sm, this, 30, 60), new Coin(this.sm, this, 45, 30), new Coin(this.sm, this, 60, 60)]
+        this.player = new Player(this.sm, this)
+        this.hud = new HUD(this.sm)
+
+        for (let i = 0; i < 9; i++) {
+          if (i === 4) continue
+          this.gameObjs.push(new LvArea(this.sm, this, i < 4 ? i + 1 : i, false, i < 3 ? 1 : i < 6 ? 3 : i < 8 ? 6 : 9, i % 3 * 3 + 1, Math.floor(i / 3) % 3 * 3 + 1))
+        }
+      }
+
+      render() {
+        this.gameObjs.forEach(gameObj => gameObj.render())
+        this.player.render()
+        this.hud.render()
+      }
+
+      update() {this.player.update()}
+    }
+
+    class SceneSplash extends Scene {
+      constructor(sm) {super(sm); this.countdown = 180}
+      render() {ctx.drawImage(titleCanvas, 0, 0, 60, 60, 20, 20, 60, 60)}
+      update() {if (this.countdown <= 0) {this.countdown = 180; this.sm.cs = 'lvs'} else {this.countdown--} }
+    }
+
+    class SceneManager {
+      constructor() {
+        this.catRRng = Math.floor(Math.random() * 8) + 1
+        this.catGRng = Math.floor(Math.random() * 8) + 1
+        this.catBRng = Math.floor(Math.random() * 8) + 1
+        this.timers = {timer30: {current: 0, max: 29}, timer60: {current: 0, max: 59}}
+        this.gameLogic = new GameLogic(this)
+
+        this.scenes = {
+          splash: new SceneSplash(this),
+          gameOver: new SceneGameOver(this),
+          win: new SceneYouWin(this),
+          lvs: new SceneLvs(this),
+          lv1: new SceneGame(this, false, 45, 80, 45, 20, [
+            ['c', 20, 30],
+            ['c', 70, 30],
+            ['c', 20, 70],
+            ['c', 70, 70],
+            ['lb', 10, 80],
+            ['lb', 80, 80],
+            ['w', 10, 30, 10, 10],
+            ['w', 80, 30, 10, 10],
+          ]),
+          lv2: new SceneGame(this, false, 10, 80, 80, 20, [
+            ['tf', 10, 30],
+            ['tf', 20, 30],
+            ['tf', 30, 30],
+            ['tf', 30, 40],
+            ['tf', 30, 50],
+            ['tf', 30, 60],
+            ['tf', 40, 30],
+            ['tf', 50, 30],
+            ['tf', 50, 60],
+            ['tf', 50, 70],
+            ['tf', 50, 80],
+            ['tf', 80, 70],
+            ['tf', 70, 70],
+            ['tf', 80, 30],
+            ['tf', 80, 40],
+            ['c', 60, 60],
+            ['c', 60, 80],
+            ['c', 80, 60],
+            ['c', 80, 80],
+          ]),
+          lv3: new SceneGame(this, false, 80, 80, 80, 20, [
+            ['lb', 20, 30, 1],
+            ['lb', 20, 70, 0],
+            ['w', 20, 20, 10, 10],
+            ['w', 20, 80, 10, 10],
+            ['c', 30, 20],
+            ['c', 30, 40],
+            ['c', 30, 60],
+            ['c', 30, 80],
+          ]),
+          lv4: new SceneGame(this, false, 30, 20, 40, 70, [
+            ['w', 20, 50, 30, 10],
+            ['w', 70, 50, 10, 10],
+            ['tf', 60, 20],
+            ['tf', 60, 30],
+            ['tf', 70, 30],
+            ['tf', 60, 50],
+            ['tf', 80, 50],
+            ['tf', 40, 60],
+            ['tf', 30, 70],
+            ['tf', 20, 70],
+            ['c', 10, 20],
+            ['c', 10, 30],
+            ['c', 80, 70],
+            ['c', 80, 80],
+            ['lb', 10, 80, 0],
+            ['lb', 70, 60, 1],
+          ]),
+          lv5: new SceneGame(this, false, 45, 20, 10, 60, [
+            ['w', 30, 20, 10, 10],
+            ['w', 60, 20, 10, 10],
+            ['tf', 60, 80],
+            ['c', 10, 20],
+            ['c', 20, 20],
+            ['c', 70, 20],
+            ['c', 80, 20],
+            ['lb', 10, 70, 3],
+            ['w', 70, 70, 10, 10],
+            ['fw', 80, 70, 10, 10],
+          ]),
+          lv6: new SceneGame(this, false, 30, 30, 20, 20, [
+            ['c', 50, 50],
+            ['c', 60, 60],
+            ['c', 70, 70],
+            ['c', 80, 80],
+            ['lb', 50, 20, 1],
+            ['lb', 70, 20, 1],
+            ['lb', 10, 50, 3],
+            ['lb', 10, 70, 3],
+            ['tf', 30, 60],
+            ['tf', 40, 60],
+          ]),
+          lv7: new SceneGame(this, false, 10, 80, 80, 20, [
+            ['c', 80, 50],
+            ['c', 80, 60],
+            ['c', 80, 70],
+            ['c', 80, 80],
+            ['lb', 10, 20, 3]
+          ]),
+          lv8: new SceneGame(this, false, 10, 20, 80, 20, [
+            ['lb', 80, 80],
+            ['lb', 10, 50, 3],
+            ['c', 10, 80],
+            ['c', 30, 80],
+            ['c', 50, 80],
+            ['c', 70, 80],
+            ['w', 10, 70, 40, 10],
+            ['fw', 70, 20, 10, 10],
+            ['fw', 50, 70, 10, 10],
+            ['w', 60, 70, 20, 10],
+            ['w', 70, 30, 10, 30],
+            ['tf', 70, 60],
+          ]),
+        }
+
+        if (this.catRRng === 1) this.scenes.lv1.gameObjs.push(new Miao(this, this.scenes.lv1, 10, 20, 'R'))
+        if (this.catRRng === 2) this.scenes.lv2.gameObjs.push(new Miao(this, this.scenes.lv2, 10, 20, 'R'))
+        if (this.catRRng === 3) this.scenes.lv3.gameObjs.push(new Miao(this, this.scenes.lv3, 10, 30, 'R'))
+        if (this.catRRng === 4) this.scenes.lv4.gameObjs.push(new Miao(this, this.scenes.lv4, 70, 20, 'R'))
+        if (this.catRRng === 5) this.scenes.lv5.gameObjs.push(new Miao(this, this.scenes.lv5, 70, 80, 'R'))
+        if (this.catRRng === 6) this.scenes.lv6.gameObjs.push(new Miao(this, this.scenes.lv6, 10, 80, 'R'))
+        if (this.catRRng === 7) this.scenes.lv7.gameObjs.push(new Miao(this, this.scenes.lv7, 70, 20, 'R'))
+        if (this.catRRng === 8) this.scenes.lv8.gameObjs.push(new Miao(this, this.scenes.lv8, 10, 60, 'R'))
+
+        if (this.catGRng === 1) this.scenes.lv1.gameObjs.push(new Miao(this, this.scenes.lv1, 45, 30, 'G'))
+        if (this.catGRng === 2) this.scenes.lv2.gameObjs.push(new Miao(this, this.scenes.lv2, 20, 20, 'G'))
+        if (this.catGRng === 3) this.scenes.lv3.gameObjs.push(new Miao(this, this.scenes.lv3, 10, 50, 'G'))
+        if (this.catGRng === 4) this.scenes.lv4.gameObjs.push(new Miao(this, this.scenes.lv4, 30, 60, 'G'))
+        if (this.catGRng === 5) this.scenes.lv5.gameObjs.push(new Miao(this, this.scenes.lv5, 80, 80, 'G'))
+        if (this.catGRng === 6) this.scenes.lv6.gameObjs.push(new Miao(this, this.scenes.lv6, 20, 80, 'G'))
+        if (this.catGRng === 7) this.scenes.lv7.gameObjs.push(new Miao(this, this.scenes.lv7, 60, 20, 'G'))
+        if (this.catGRng === 8) this.scenes.lv8.gameObjs.push(new Miao(this, this.scenes.lv8, 30, 60, 'G'))
+
+        if (this.catBRng === 1) this.scenes.lv1.gameObjs.push(new Miao(this, this.scenes.lv1, 80, 20, 'B'))
+        if (this.catBRng === 2) this.scenes.lv2.gameObjs.push(new Miao(this, this.scenes.lv2, 30, 20, 'B'))
+        if (this.catBRng === 3) this.scenes.lv3.gameObjs.push(new Miao(this, this.scenes.lv3, 10, 70, 'B'))
+        if (this.catBRng === 4) this.scenes.lv4.gameObjs.push(new Miao(this, this.scenes.lv4, 80, 60, 'B'))
+        if (this.catBRng === 5) this.scenes.lv5.gameObjs.push(new Miao(this, this.scenes.lv5, 70, 60, 'B'))
+        if (this.catBRng === 6) this.scenes.lv6.gameObjs.push(new Miao(this, this.scenes.lv6, 30, 80, 'B'))
+        if (this.catBRng === 7) this.scenes.lv7.gameObjs.push(new Miao(this, this.scenes.lv7, 50, 20, 'B'))
+        if (this.catBRng === 8) this.scenes.lv8.gameObjs.push(new Miao(this, this.scenes.lv8, 50, 60, 'B'))
+
+        this.animationFrameId = null
+        this.isDestroyed = null
+        this.cs = 'splash'
+        this.render = this.render.bind(this)
+        this.start()
+      }
+
+      start() {
+        this.animationFrameId = requestAnimationFrame(this.render)
+      }
+
+      destroy() {
+        if (this.animationFrameId) {
+          cancelAnimationFrame(this.animationFrameId)
+          this.animationFrameId = null
+          this.isDestroyed = true
+        }
+      }
+
+      render() {
+        if (this.isDestroyed) return
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        this.scenes[this.cs].render(); this.update()
+      }
+
+      update() {
+        if (this.gameLogic.hasRcat && this.gameLogic.hasGcat && this.gameLogic.hasBcat) {
+          this.cs = 'win'
+        } else if (this.gameLogic.fish >= 8) {
+          this.cs = 'win'
+        }
+
+        if (this.isDestroyed) return
+        this.scenes[this.cs].update()
+        updateTimer(this.timers.timer30)
+        updateTimer(this.timers.timer60)
+        this.animationFrameId = requestAnimationFrame(this.render)
+      }
+    }
+
+    const items = {
+      c: (sm, scene, dx, dy) => new Coin(sm, scene, dx, dy),
+      fw: (sm, scene, dx, dy, dw, dh) => new FakeWall(sm, scene, dx, dy, dw, dh),
+      lb: (sm, scene, dx, dy, dir) => new LightBulb(sm, scene, dx, dy, dir),
+      tf: (sm, scene, dx, dy) => new TrapFloor(sm, scene, dx, dy),
+      w: (sm, scene, dx, dy, dw, dh) => new Wall(sm, scene, dx, dy, dw, dh),
+    }
+
+    let sceneManager = new SceneManager()
+    console.log('May God bless you')
+  </script>
+</body>
+
+</html>
