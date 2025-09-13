@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chickpocalypse Meow!</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            outline: 2px solid black;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <!-- <script src="tween.js"></script>
+    <script src="button.js"></script>
+    <script src="game.js"></script> -->
+    <script src="game.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = new ChickpocalypseMeow('gameCanvas');
+        });
+    </script>
+</body>
+
+</html>
