@@ -1,0 +1,797 @@
+<html lang="en"><head><title>Tangled</title><script>
+ document.addEventListener('DOMContentLoaded', () => {
+  const $ = document, W = window, B = $.body, C = $.createElement('canvas'), X = C.getContext('2d');
+  (document.getElementById('content') || B).innerHTML = '';
+  Object.assign(B.style, {margin: 0, overflow: 'hidden'});
+  Object.assign(C.style, {display: 'block', touchAction: 'none'});
+  B.appendChild(C);
+
+  const {min, max, hypot, sqrt, sin, cos, PI, random} = Math;
+  const clamp = (v, a, b) => max(a, min(b, v));
+  const perpDot = (ax,ay,bx,by)=>ax*by-ay*bx;
+
+  const DPR = min(2, W.devicePixelRatio || 1);
+  function fitCanvasToWindow() {
+   const w = W.innerWidth || $.documentElement.clientWidth;
+   const h = W.innerHeight || $.documentElement.clientHeight;
+   Object.assign(C.style, {width: w + 'px', height: h + 'px'});
+   C.width = (w * DPR) | 0; C.height = (h * DPR) | 0;
+   X.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  W.addEventListener('resize', fitCanvasToWindow);
+
+  const TUNE = {
+   SIM: {
+    DT_S:                1/60,
+    SUBSTEPS:            1,
+    ITERS:               18,
+    GRAVITY_MPS2:        [0, 9.81],
+    DRAG:                0.01,
+    BOUNDS_M:            [0, -1000, 8, 6],
+    COLLIDE_CIRCLES:     true,
+    CONTACT_COMPLIANCE_M_PER_N: 0,
+    CONTACT_SLIDING_SLOP_M: 1e-3,
+    RESTITUTION:         0.20,
+    FRICTION:            0.55
+   },
+   RENDER: {
+    BG:                  '#121825',
+    LINK_STROKE:         ['#e74688', '#d73779', '#cb2f6f'],
+    LINK_PATTERN:        [0, 0, 1, 2, 1],
+    LINK_WIDTH_PX:       8,
+    PIXELS_PER_METER:    130,
+    SHOW_BOUNDS:         false
+   },
+   GAME: {
+    ROPE_COUNT:          1000,
+    ROPE_START_M:        {x: 4, y: 0.8},
+    ROPE_SEG_LEN_M:      0.10,
+    ROPE_NODE_MASS_KG:   0.01,
+    ROPE_NODE_RADIUS_M:  0.025,
+    ROPE_STIFFNESS_N_PER_M: 1e8,
+    BALL_POS_M:          {x: 6, y: 4.3},
+    BALL_RADIUS_M:       0.30,
+    BALL_MASS_KG:        2,
+    MAX_FRAME_DT_S:      1/30,
+    CLICK_POKE_N_PER_M:  300,
+    YARN_SNAP_MAX_STRETCH: 1.35,
+    YARN_SNAP_COOLDOWN_S:  0.15,
+    YARN_SNAP_MIN_FROM_TIP: 20,
+    DEBRIS_COLLIDES:       true,
+    MAX_LEVELS:           100,
+    X_MARGIN_M:           0.6,
+    PLATFORM_RADIUS_M:    0.10,
+    PEG_RADIUS_M:         0.18,
+    THORN_RADIUS_M:       0.15,
+    STEP_CHOICES_M:       [0.5, 1.0, 1.5],
+    PEG_SPAWN_PROB:       0.50,
+    THORN_START_DELTA_M:  25.0,
+    THORN_PROB_AT_START:  0.00,
+    THORN_PROB_AT_TOP:    0.80
+   }
+  };
+  let INTRO_T0 = performance.now();
+  const GAME = { mode: 'playing',  clicks: 0,  startY: TUNE.GAME.BALL_POS_M.y,  best_m: 0,  height_m: 0,  msg: '' };
+  function lose(msg){ GAME.mode='lost'; GAME.msg=msg; }
+  function restartRun(){
+   location.reload();
+  }
+  const VIEW = { spanY_m: TUNE.SIM.BOUNDS_M[3], minY: 0 };
+  const EYES = [];
+  (function buildEyes() {
+   const [BX0, BY0, BX1, BY1] = TUNE.SIM.BOUNDS_M;
+   const W = BX1 - BX0;
+   const H = BY1 - BY0;
+   const COUNT = 300;
+   for (let i = 0; i < COUNT; i++) {
+    const x = BX0 + random() * W;
+    const y = BY0 + random() * H;
+    const r = 0.01 + random() * 0.02;
+    const gap = 0.04 + random() * 0.05;
+    const a = 0.25 + random() * 0.45;
+    const twinkle = random() * PI * 2;
+    const layer = random();
+    EYES.push({x, y, r, gap, a, twinkle, layer});
+   }
+  })();
+  const INTERNAL = { EPS_M: 1e-9, LAMBDA_DECAY: 1.0 };
+  function XPBD(opt = {}) {
+   const Wd = {
+    dt: opt.dt ?? TUNE.SIM.DT_S,
+    substeps: opt.substeps ?? TUNE.SIM.SUBSTEPS,
+    iters: opt.iters ?? TUNE.SIM.ITERS,
+    g: opt.g ?? TUNE.SIM.GRAVITY_MPS2.slice(),
+    drag: opt.drag ?? TUNE.SIM.DRAG,
+    bounds: opt.bounds ?? (TUNE.SIM.BOUNDS_M && TUNE.SIM.BOUNDS_M.slice()),
+    contactCompliance: opt.contactCompliance ?? TUNE.SIM.CONTACT_COMPLIANCE_M_PER_N,
+    collide: opt.collide ?? TUNE.SIM.COLLIDE_CIRCLES,
+    e: opt.restitution ?? TUNE.SIM.RESTITUTION,
+    mu: opt.friction ?? TUNE.SIM.FRICTION,
+    P: [], C: [], T: [], R: [], K: []
+   };
+   function add(x_m, y_m, mass_kg = 1, radius_m = 0, col_mask=7, active=true) {
+    const w = mass_kg > 0 ? 1 / mass_kg : 0;
+    const p = { x: x_m, y: y_m, px: x_m, py: y_m, vx: 0, vy: 0, w, r: radius_m, col_mask, active, rigid:false };
+    Wd.P.push(p); return p;
+   }
+   function addRigidCircle(x, y, r, mass_kg = 0, col_mask=7, active=true) {
+    const w = mass_kg > 0 ? 1 / mass_kg : 0;
+    const I = mass_kg > 0 ? 0.5 * mass_kg * r * r : Infinity;
+    const iI = mass_kg > 0 ? 1 / I : 0;
+    const b = {
+     x, y, px: x, py: y, vx: 0, vy: 0,
+     w, r, col_mask, active,
+     rigid: true,
+     theta: 0, omega: 0, iI
+    };
+    Wd.R.push(b);
+    return b;
+   }
+   function addCapsule(x1,y1,x2,y2,r, mass_kg=0, col_mask=7, active=true) {
+    const w = mass_kg > 0 ? 1 / mass_kg : 0; // treat as rigid line w/ large inertia → no rotation for simplicity
+    const cap = { x1, y1, x2, y2, r, w, col_mask, active, capsule:true };
+    Wd.K.push(cap);
+    return cap;
+   }
+   function link(a, b, rest_m = null, compliance_m_per_N = 0) {
+    if (rest_m == null) { const dx = b.x - a.x, dy = b.y - a.y; rest_m = hypot(dx, dy); }
+    const c = { a, b, rest: rest_m, comp: compliance_m_per_N, lam: 0 };
+    Wd.C.push(c); return c;
+   }
+   function addForce(p, Fx_N, Fy_N) {
+    if (!p.w) return p;
+    p.vx += (Fx_N * p.w) * Wd.dt;
+    p.vy += (Fy_N * p.w) * Wd.dt;
+    return p;
+   }
+   function applyImpulse(b, jx, jy, rx, ry) {
+    if (!b.w && !b.iI) return;
+    if (b.w) { b.vx += jx * b.w; b.vy += jy * b.w; }
+    if (b.iI) { b.omega += b.iI * perpDot(rx, ry, jx, jy); }
+   }
+   function resolveContactImpulse(a, pa, b, pb, nx, ny, e, mu, pen=0, sdt=1/60, gDotN=0) {
+    const tax = -ny, tay = nx;
+    const rax = pa.x - a.x, ray = pa.y - a.y;
+    const rbx = pb.x - b.x, rby = pb.y - b.y;
+    const vax = a.vx + (-a.omega || 0) * ray;
+    const vay = a.vy + ( a.omega || 0) * rax;
+    const vbx = b.vx + (-b.omega || 0) * rby;
+    const vby = b.vy + ( b.omega || 0) * rbx;
+    const rvx = vbx - vax, rvy = vby - vay;
+    const rnA = (a.w || 0) + (a.iI || 0) * (perpDot(rax, ray, nx, ny) ** 2);
+    const rnB = (b.w || 0) + (b.iI || 0) * (perpDot(rbx, rby, nx, ny) ** 2);
+    const rtA = (a.w || 0) + (a.iI || 0) * (perpDot(rax, ray, tax, tay) ** 2);
+    const rtB = (b.w || 0) + (b.iI || 0) * (perpDot(rbx, rby, tax, tay) ** 2);
+    const invEffN = rnA + rnB || 1e9;
+    const invEffT = rtA + rtB || 1e9;
+    const mEffN = 1 / (invEffN || 1e-9);
+    const support = max(0, gDotN) * mEffN * sdt;
+    const vrel_n = rvx*nx + rvy*ny;
+    const vrel_t = rvx*tax + rvy*tay;
+    let jn = 0;
+    if (vrel_n < 0) jn = -(1+e) * vrel_n / invEffN;
+    const beta = 1;
+    const jn_bias = (pen > 0 ? (beta * pen / sdt) / invEffN : 0);
+    const Jn = jn + jn_bias;
+    if (Jn !== 0) {
+     const jnx = Jn * nx, jny = Jn * ny;
+     applyImpulse(a, -jnx, -jny, rax, ray);
+     applyImpulse(b,  jnx,  jny, rbx, rby);
+    }
+    let jt = -vrel_t / invEffT;
+    const maxF = mu * (max(Jn, 0) + support);
+    jt = clamp(jt, -maxF, maxF);
+    const jtx = jt * tax, jty = jt * tay;
+    applyImpulse(a, -jtx, -jty, rax, ray);
+    applyImpulse(b,  jtx,  jty, rbx, rby);
+   }
+   function circleCircleContact(a, b) {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    let d = hypot(dx, dy); if (d < INTERNAL.EPS_M) d = INTERNAL.EPS_M;
+    const rs = (a.r || 0) + (b.r || 0);
+    return { hit: d < rs, d, nx: dx/d, ny: dy/d, pen: rs - d };
+   }
+   function closestPointOnSegment(px,py, ax,ay, bx,by) {
+    const abx = bx-ax, aby = by-ay;
+    const ab2 = abx*abx + aby*aby || 1;
+    let t = ((px-ax)*abx + (py-ay)*aby) / ab2;
+    t = clamp(t, 0, 1);
+    return { x: ax + t*abx, y: ay + t*aby, t };
+   }
+   function circleCapsuleContact(c, cap) {
+    const q = closestPointOnSegment(c.x, c.y, cap.x1, cap.y1, cap.x2, cap.y2);
+    const dx = c.x - q.x, dy = c.y - q.y;
+    let d = hypot(dx, dy) || INTERNAL.EPS_M;
+    const rs = (c.r||0) + cap.r;
+    const hit = d < rs + TUNE.SIM.CONTACT_SLIDING_SLOP_M;
+    const pen = max(0, rs - d);
+    return { hit, d, nx: dx/d, ny: dy/d, pen, pc: {x:q.x, y:q.y} };
+   }
+   function step(dt = Wd.dt) {
+    const P = Wd.P, Cn = Wd.C, Rg = Wd.R;
+    const g = Wd.g, drag = Wd.drag, sub = Wd.substeps, it = Wd.iters;
+    const hasBounds = !!Wd.bounds, B = Wd.bounds;
+    const doCollide = !!Wd.collide;
+    const e = Wd.e, mu = Wd.mu;
+    const sdt = dt / sub;
+    const invDrag = 1 / (1 + drag);
+    const alphaScale = sdt * sdt;
+    for (let s = 0; s < sub; s++) {
+     for (let i = 0; i < P.length; i++) {
+      const p = P[i]; if (!p.active) continue;
+      p.px = p.x; p.py = p.y;
+      if (!p.w) continue;
+      p.vx += g[0] * sdt; p.vy += g[1] * sdt;
+      p.vx *= invDrag;    p.vy *= invDrag;
+      p.x += p.vx * sdt;  p.y += p.vy * sdt;
+     }
+     for (let i = 0; i < Rg.length; i++) {
+      const b = Rg[i]; if (!b.active) continue;
+      b.px = b.x; b.py = b.y;
+      if (b.w) {
+       b.vx += g[0] * sdt; b.vy += g[1] * sdt;
+       b.vx *= invDrag;    b.vy *= invDrag;
+       b.x  += b.vx * sdt; b.y  += b.vy * sdt;
+      }
+      b.theta += b.omega * sdt;
+     }
+     for (let k = 0; k < it; k++) {
+      for (let i = 0; i < Cn.length; i++) {
+       const c = Cn[i], a = c.a, b = c.b;
+       let dx = b.x - a.x, dy = b.y - a.y;
+       const d = hypot(dx, dy); if (d < INTERNAL.EPS_M) continue;
+       const nx = dx / d, ny = dy / d;
+       const Cval = d - c.rest;
+       const wsum = a.w + b.w; if (wsum === 0) { c.lam = 0; continue; }
+       const alpha = (c.comp || 0) / alphaScale;
+       const oldLam = c.lam * INTERNAL.LAMBDA_DECAY;
+       const dlam = (-Cval - alpha * oldLam) / (wsum + alpha);
+       c.lam = oldLam + dlam;
+       const px = dlam * nx, py = dlam * ny;
+       if (a.w) { a.x -= px * a.w; a.y -= py * a.w; }
+       if (b.w) { b.x += px * b.w; b.y += py * b.w; }
+      }
+      if (hasBounds) {
+       const [minx, miny, maxx, maxy] = B;
+       for (let i = 0; i < P.length; i++) {
+        const p = P[i]; if (!p.active) continue;
+        const r = p.r || 0;
+        if (p.x < minx + r) p.x = minx + r;
+        if (p.x > maxx - r) p.x = maxx - r;
+        if (p.y < miny + r) p.y = miny + r;
+        if (p.y > maxy - r) p.y = maxy - r;
+       }
+       for (let i = 0; i < Rg.length; i++) {
+        const b = Rg[i]; if (!b.active) continue;
+        const r = b.r || 0;
+        if (b.x < minx + r) b.x = minx + r;
+        if (b.x > maxx - r) b.x = maxx - r;
+        if (b.y < miny + r) b.y = miny + r;
+        if (b.y > maxy - r) b.y = maxy - r;
+       }
+      }
+      if (doCollide) {
+       for (let i = 0; i < Rg.length; i++) {
+        const a = Rg[i]; if (!a.active) continue;
+        for (let j = i + 1; j < Rg.length; j++) {
+         const b = Rg[j]; if (!b.active) continue;
+         if ((a.col_mask & b.col_mask) === 0) continue;
+         const cc = circleCircleContact(a,b); if (!cc.hit) continue;
+         const wsum = a.w + b.w; if (wsum === 0) continue;
+         const corr = cc.pen / wsum;
+         if (a.w) { a.x -= cc.nx * corr * a.w; a.y -= cc.ny * corr * a.w; }
+         if (b.w) { b.x += cc.nx * corr * b.w; b.y += cc.ny * corr * b.w; }
+        }
+       }
+       for (let i = 0; i < Rg.length; i++) {
+        const c = Rg[i]; if (!c.active) continue;
+        for (let j = 0; j < Wd.K.length; j++) {
+         const cap = Wd.K[j]; if (!cap.active) continue;
+         if ((c.col_mask & cap.col_mask) === 0) continue;
+         const ck = circleCapsuleContact(c, cap); if (!ck.hit) continue;
+         if (c.w) { c.x += ck.nx * ck.pen; c.y += ck.ny * ck.pen; }
+        }
+       }
+       for (let i = 0; i < P.length; i++) {
+        const a = P[i]; if (!a.active || !a.r) continue;
+        if (!a.w) continue;
+        for (let j = 0; j < Wd.K.length; j++) {
+         const cap = Wd.K[j]; if (!cap.active) continue;
+         if ((a.col_mask & cap.col_mask) === 0) continue;
+         const ck = circleCapsuleContact(a, cap);
+         if (!ck.hit) continue;
+         a.x += ck.nx * ck.pen;
+         a.y += ck.ny * ck.pen;
+        }
+       }
+       for (let i = 0; i < P.length; i++) {
+        const a = P[i]; if (!a.active || !a.r) continue;
+        for (let j = 0; j < Rg.length; j++) {
+         const b = Rg[j]; if (!b.active || !b.r) continue;
+         if ((a.col_mask & b.col_mask) === 0) continue;
+         const cc = circleCircleContact(a,b); if (!cc.hit) continue;
+         const wsum = a.w + b.w; if (wsum === 0) continue;
+         const corr = cc.pen / wsum;
+         if (a.w) { a.x -= cc.nx * corr * a.w; a.y -= cc.ny * corr * a.w; }
+         if (b.w) { b.x += cc.nx * corr * b.w; b.y += cc.ny * corr * b.w; }
+        }
+       }
+      }
+     }
+     for (let i = 0; i < P.length; i++) {
+      const p = P[i]; if (!p.active) continue;
+      p.vx = (p.x - p.px) / sdt;
+      p.vy = (p.y - p.py) / sdt;
+     }
+     for (let i = 0; i < Rg.length; i++) {
+      const b = Rg[i]; if (!b.active) continue;
+      b.vx = (b.x - b.px) / sdt;
+      b.vy = (b.y - b.py) / sdt;
+     }
+     if (doCollide) {
+      for (let i = 0; i < Rg.length; i++) {
+       const a = Rg[i]; if (!a.active) continue;
+       for (let j = i + 1; j < Rg.length; j++) {
+        const b = Rg[j]; if (!b.active) continue;
+        if ((a.col_mask & b.col_mask) === 0) continue;
+        const cc = circleCircleContact(a,b); if (!cc.hit) continue;
+        const pa = { x: a.x + cc.nx * ( a.r), y: a.y + cc.ny * ( a.r) };
+        const pb = { x: b.x - cc.nx * ( b.r), y: b.y - cc.ny * ( b.r) };
+        const gDotN = ((a.w?1:0) - (b.w?1:0)) * (Wd.g[0]*cc.nx + Wd.g[1]*cc.ny);
+        resolveContactImpulse(a, pa, b, pb, cc.nx, cc.ny, e, mu, cc.pen, sdt, gDotN);
+       }
+      }
+      for (let i = 0; i < Rg.length; i++) {
+       const c = Rg[i]; if (!c.active) continue;
+       for (let j = 0; j < Wd.K.length; j++) {
+        const cap = Wd.K[j]; if (!cap.active) continue;
+        if ((c.col_mask & cap.col_mask) === 0) continue;
+        const ck = circleCapsuleContact(c, cap); if (!ck.hit) continue;
+        const pb = { x: ck.pc.x, y: ck.pc.y };
+        const nx = -ck.nx, ny = -ck.ny;
+        const gDotN = (Wd.g[0]*nx + Wd.g[1]*ny);
+        resolveContactImpulse(c, {x: c.x - ck.nx * c.r, y: c.y - ck.ny * c.r},
+          {x: cap.x1, y: cap.y1, vx:0, vy:0, omega:0, w:0, iI:0}, pb, nx, ny, e, mu, ck.pen, sdt, gDotN);
+       }
+      }
+      if (hasBounds) {
+       const [minx, miny, maxx, maxy] = B;
+       for (let i = 0; i < Rg.length; i++) {
+        const b = Rg[i]; if (!b.active) continue;
+        if (b.x - b.r <= minx) resolveContactImpulse(
+         b, {x:minx, y:b.y}, {x:0,y:0,vx:0,vy:0,omega:0,w:0,iI:0}, {x:minx,y:b.y}, 1,0, e, mu
+        );
+        if (b.x + b.r >= maxx) resolveContactImpulse(
+         b, {x:maxx, y:b.y}, {x:0,y:0,vx:0,vy:0,omega:0,w:0,iI:0}, {x:maxx,y:b.y}, -1,0, e, mu
+        );
+        if (b.y - b.r <= miny) resolveContactImpulse(
+         b, {x:b.x, y:miny}, {x:0,y:0,vx:0,vy:0,omega:0,w:0,iI:0}, {x:b.x,y:miny}, 0,1, e, mu
+        );
+        if (b.y + b.r >= maxy) resolveContactImpulse(
+         b, {x:b.x, y:maxy}, {x:0,y:0,vx:0,vy:0,omega:0,w:0,iI:0}, {x:b.x,y:maxy}, 0,-1, e, mu
+        );
+       }
+      }
+     }
+    }
+   }
+   function stiffnessToCompliance(k_N_per_m) { return k_N_per_m > 0 ? 1 / k_N_per_m : 0; }
+   return {
+    P: Wd.P, C: Wd.C, T: Wd.T, R: Wd.R, K: Wd.K,
+    get dt() { return Wd.dt; }, set dt(v) { Wd.dt = v; },
+    get iters() { return Wd.iters; }, set iters(v) { Wd.iters = v | 0; },
+    get substeps() { return Wd.substeps; }, set substeps(v) { Wd.substeps = v | 0; },
+    get gravity() { return Wd.g; }, set gravity(g) { Wd.g = g; },
+    get bounds() { return Wd.bounds; }, set bounds(b) { Wd.bounds = b; },
+    get collide() { return Wd.collide; }, set collide(v) { Wd.collide = !!v; },
+    add, addRigidCircle, addCapsule, link, addForce, step, stiffnessToCompliance
+   };
+  }
+  function makeSimulator() {
+   const sim = XPBD({
+    dt: TUNE.SIM.DT_S,
+    iters: TUNE.SIM.ITERS,
+    substeps: TUNE.SIM.SUBSTEPS,
+    g: TUNE.SIM.GRAVITY_MPS2,
+    bounds: TUNE.SIM.BOUNDS_M,
+    collide: TUNE.SIM.COLLIDE_CIRCLES,
+    contactCompliance: TUNE.SIM.CONTACT_COMPLIANCE_M_PER_N,
+    restitution: TUNE.SIM.RESTITUTION,
+    friction: TUNE.SIM.FRICTION,
+   });
+   let snapCooldown_s = 0;
+   const REST_LEN = TUNE.GAME.ROPE_SEG_LEN_M;
+   const MAX_STRETCH = TUNE.GAME.YARN_SNAP_MAX_STRETCH;
+   const plats = [];
+   const pegs = [];
+   const thorns = [];
+   const [BX0, BY0, BX1, BY1] = TUNE.SIM.BOUNDS_M;
+   const BW = BX1 - BX0, BH = BY1 - BY0;
+   const floor = sim.addCapsule(BX0 - BW, BY1, BX1 + BW, BY1, 0.12, 0, 7, true);
+   plats.push(floor);
+   plats.push(sim.addCapsule(BX0 + BW*0.15, BY1 - 0.9, BX1 - BW*0.15, BY1 - 1.0, TUNE.GAME.PLATFORM_RADIUS_M, 0, 7, true));
+   function rand(a,b){ return a + random()*(b-a); }
+   function choice(a){ return a[(random()*a.length)|0]; }
+   function breakLinkAt(i) {
+    const c = links[i];
+    if (c) {
+     const idx = sim.C.indexOf(c);
+     if (idx >= 0) sim.C.splice(idx, 1);
+     links[i] = null;
+    }
+    for (let j = tailStartIdx; j <= i; j++) {
+     if (!rope[j]) continue;
+     if (!TUNE.GAME.DEBRIS_COLLIDES) rope[j].col_mask = 0;
+    }
+    tailStartIdx = i + 1;
+    snapCooldown_s = TUNE.GAME.YARN_SNAP_COOLDOWN_S;
+   }
+   function checkYarnSnap(dt) {
+    if (snapCooldown_s > 0) { snapCooldown_s -= dt; return; }
+    if (freeCount - tailStartIdx <= 1) return;
+    let worstIdx = -1, worstRatio = 0;
+    for (let i = tailStartIdx; i < freeCount - 1; i++) {
+     const a = rope[i], b = rope[i+1];
+     const dx = b.x - a.x, dy = b.y - a.y;
+     const d = Math.hypot(dx, dy) || REST_LEN;
+     const ratio = d / REST_LEN;
+     if (ratio > worstRatio) { worstRatio = ratio; worstIdx = i; }
+    }
+    if (!(worstIdx >= 0 && worstRatio >= MAX_STRETCH)) {
+     return;
+    }
+    const farFromTip = (worstIdx - tailStartIdx) >= TUNE.GAME.YARN_SNAP_MIN_FROM_TIP;
+    const farFromYarn = worstIdx < freeCount - TUNE.GAME.YARN_SNAP_MIN_FROM_TIP;
+    if (farFromTip && farFromYarn) {
+     breakLinkAt(worstIdx);
+    }
+   }
+   let currentY = BY1 - 1.2;
+   for (let i = 0; i < TUNE.GAME.MAX_LEVELS; i++) {
+    const dy = choice(TUNE.GAME.STEP_CHOICES_M);
+    const nextY = currentY - dy;
+    const xL = BX0 + TUNE.GAME.X_MARGIN_M;
+    const xR = BX1 - TUNE.GAME.X_MARGIN_M;
+    const x1 = rand(xL, xR - 2.0);
+    const x2 = x1 + rand(1.2, 2.4);
+    plats.push(sim.addCapsule(x1, nextY, min(x2, xR), nextY + rand(-0.05,0.05), TUNE.GAME.PLATFORM_RADIUS_M, 0, 7, true));
+    const midY = (currentY + nextY) * 0.5;
+    const midX = rand(xL, xR);
+    const climbed_m = (TUNE.GAME.BALL_POS_M.y - nextY);
+    const over = max(0, climbed_m - TUNE.GAME.THORN_START_DELTA_M);
+    const ramp = min(1, over / (BH*0.8));
+    const thornProb = TUNE.GAME.THORN_PROB_AT_START * (1 - ramp) + TUNE.GAME.THORN_PROB_AT_TOP * ramp;
+    if (random() < TUNE.GAME.PEG_SPAWN_PROB) {
+     if (random() < thornProb) {
+      thorns.push(sim.addRigidCircle(midX, midY, TUNE.GAME.THORN_RADIUS_M, 0, 7, true));
+     } else {
+      pegs.push(sim.addRigidCircle(midX, midY, TUNE.GAME.PEG_RADIUS_M, 0, 7, true));
+     }
+    }
+    currentY = nextY;
+   }
+   const N = TUNE.GAME.ROPE_COUNT;
+   const start = TUNE.GAME.ROPE_START_M;
+   const segLen = TUNE.GAME.ROPE_SEG_LEN_M;
+   const rope = [];
+   let prev = sim.add(start.x, start.y, TUNE.GAME.ROPE_NODE_MASS_KG, TUNE.GAME.ROPE_NODE_RADIUS_M, 0);
+   rope.push(prev);
+   const links = [];
+   for (let i = 1; i < N; i++) {
+     const p = sim.add(start.x + i * segLen, start.y, TUNE.GAME.ROPE_NODE_MASS_KG, TUNE.GAME.ROPE_NODE_RADIUS_M, 0);
+     const c = sim.link(prev, p, segLen, sim.stiffnessToCompliance(TUNE.GAME.ROPE_STIFFNESS_N_PER_M));
+     links.push(c);
+     rope.push(p);
+     prev = p;
+   }
+   const ball = sim.addRigidCircle(
+    TUNE.GAME.BALL_POS_M.x, TUNE.GAME.BALL_POS_M.y,
+    TUNE.GAME.BALL_RADIUS_M, TUNE.GAME.BALL_MASS_KG,
+    1, true
+   );
+   function buildWoundPath(total, segLen_m, R_m) {
+    const wX = new Array(total).fill(0), wY = new Array(total).fill(0);
+    const inner = 0, outer = R_m;
+    const locals = [];
+    const pushFar = p => {
+     if (!locals.length) { locals.push(p); return; }
+     const q = locals[locals.length - 1], d = hypot(p.x - q.x, p.y - q.y);
+     const nx = (p.x - q.x) / (d || 1), ny = (p.y - q.y) / (d || 1);
+     locals.push({ x: q.x + nx * segLen_m, y: q.y + ny * segLen_m });
+    };
+    pushFar({ x: outer, y: outer });
+    const limit = total - locals.length;
+    let dir = 1;
+    for (let i = 0; i < limit; i++) {
+     if (random() < 0.2) { dir *= -1; }
+     const angle = dir * i * (segLen_m / (2 * PI * outer)) * 2 * PI;
+     const r = (outer - inner) * sqrt(1 - i / limit) + inner;
+     const p = { x: r * cos(angle), y: r * sin(angle)};
+     pushFar(p);
+    }
+    for (let i = 0; i < total; i++) { const p = locals[i] || locals[locals.length - 1]; wX[i] = p.x; wY[i] = p.y; }
+    const wR = new Array(total).fill(0);
+    for (let i = 1; i < total; i++) wR[i] = hypot(wX[i], wY[i]);
+    return { wX, wY, wR };
+   }
+   const woundLocal = buildWoundPath(N, segLen, TUNE.GAME.BALL_RADIUS_M);
+   let freeCount = 0;
+   let tailStartIdx = 0;
+   function worldAnchor(i, cx, cy, ang = 0) {
+    const ca = cos(ang), sa = sin(ang);
+    const wx = cx + (woundLocal.wX[i] * ca - woundLocal.wY[i] * sa);
+    const wy = cy + (woundLocal.wX[i] * sa + woundLocal.wY[i] * ca);
+    return { x: wx, y: wy };
+   }
+   (function layoutInitial() {
+    for (let i = 0; i < N; i++) { rope[i].w = 0; }
+    rope[0].w = 0; freeCount = 0;
+   })();
+   function freeSegments(n = 1) {
+    for (let k = 0; k < n && freeCount < N; k++) {
+     const idx = freeCount;
+     const p = rope[idx];
+     p.w = 1 / TUNE.GAME.ROPE_NODE_MASS_KG;
+     const dx = p.x - ball.x, dy = p.y - ball.y;
+     p.vx = ball.vx + (-ball.omega) * dy;
+     p.vy = ball.vy + ( ball.omega) * dx;
+     p.col_mask = 2;
+     freeCount++;
+    }
+    if (freeCount < N) {
+     rope[freeCount].w = 0;
+     let totalRad = 0;
+     const limit = min(max(25, 0.1 * (N - freeCount)), N - freeCount);
+     for (let i = 0; i < limit; i++) totalRad += woundLocal.wR[i + freeCount];
+     ball.r = max(0.05, totalRad / limit);
+    } else {
+     ball.active = false;
+    }
+   }
+   function advance(dt) {
+    if (freeCount < N) {
+     const pin = rope[freeCount];
+     const a0 = worldAnchor(freeCount, ball.x, ball.y, ball.theta);
+     pin.x = a0.x; pin.y = a0.y; pin.px = a0.x; pin.py = a0.y;
+    }
+    for (let i = freeCount + 1; i < N; i++) {
+     const p = rope[i];
+     const a = worldAnchor(i, ball.x, ball.y, ball.theta);
+     p.x = a.x; p.y = a.y; p.px = a.x; p.py = a.y; p.vx = 0; p.vy = 0; p.w = 0;
+    }
+    sim.step(dt);
+    checkYarnSnap(dt);
+   }
+   function applyPoke(wx, wy, k = TUNE.GAME.CLICK_POKE_N_PER_M) {
+    sim.addForce(ball, (wx - ball.x) * k, (wy - ball.y) * k);
+   }
+   function getRenderData() {
+    const tail = [];
+    for (let i = tailStartIdx; i < min(freeCount, N); i++) {
+      tail.push({ x: rope[i].x, y: rope[i].y });
+    }
+    const wound = [];
+    if (freeCount < N - 1) {
+     for (let i = freeCount; i < N; i++) {
+      const a = worldAnchor(i, ball.x, ball.y, ball.theta);
+      wound.push(a);
+     }
+    }
+    const freedLength_m = TUNE.GAME.ROPE_SEG_LEN_M * freeCount;
+    return {
+     bounds: TUNE.SIM.BOUNDS_M.slice(),
+     tail, wound,
+     ball: { x: ball.x, y: ball.y, r: ball.r, active: ball.active, theta: ball.theta, vx: ball.vx, vy: ball.vy },
+     hud: { freedLength_m },
+     platforms: plats.map(c => ({ r:c.r, x1:c.x1, y1:c.y1, x2:c.x2, y2:c.y2 })),
+     pegs: pegs.map(p => ({ x:p.x, y:p.y, r:p.r })),
+     thorns: thorns.map(p => ({ x:p.x, y:p.y, r:p.r }))
+    };
+   }
+   return { advance, freeSegments, applyPoke, getRenderData };
+  }
+  function makeRenderer() {
+   const cfg = {
+    pixelsPerMeter: TUNE.RENDER.PIXELS_PER_METER,
+    bg: TUNE.RENDER.BG,
+    linkStroke: TUNE.RENDER.LINK_STROKE,
+    linkPattern: TUNE.RENDER.LINK_PATTERN,
+    linkWidth: TUNE.RENDER.LINK_WIDTH_PX,
+    showBounds: TUNE.RENDER.SHOW_BOUNDS
+   };
+   const S = cfg.pixelsPerMeter;
+   function clear() {
+    X.fillStyle = cfg.bg;
+    X.fillRect(0, 0, C.clientWidth, C.clientHeight);
+   }
+   function toPx(bounds, x, y) {
+    const [BX0, BY0] = bounds;
+    return [(x - BX0) * S, (y - BY0) * S];
+   }
+   function toLen(lm) { return lm * S; }
+   function drawStaticsAndHUD(state) {
+    const {bounds, platforms, pegs, thorns, ball, hud} = state;
+    X.strokeStyle = '#666'; X.lineCap = 'round';
+    for (const cap of platforms) {
+     X.lineWidth = cap.r * S * 2;
+     const p0 = toPx(bounds, cap.x1, cap.y1);
+     const p1 = toPx(bounds, cap.x2, cap.y2);
+     X.beginPath(); X.moveTo(p0[0], p0[1]); X.lineTo(p1[0], p1[1]); X.stroke();
+    }
+    X.fillStyle = '#888';
+    for (const p of pegs) {
+     const q = toPx(bounds, p.x, p.y);
+     X.beginPath(); X.arc(q[0], q[1], toLen(p.r), 0, PI*2); X.fill();
+    }
+    X.fillStyle = '#c0392b';
+    for (const p of thorns) {
+     const q = toPx(bounds, p.x, p.y);
+     X.beginPath(); X.arc(q[0], q[1], toLen(p.r), 0, PI*2); X.fill();
+     const spikes = 6, R = toLen(p.r), r = R*1.25;
+     X.beginPath();
+     for (let i=0;i<spikes;i++){
+      const a = (i / spikes) * PI*2;
+      X.moveTo(q[0] + cos(a)*R, q[1] + sin(a)*R);
+      X.lineTo(q[0] + cos(a)*r, q[1] + sin(a)*r);
+     }
+     X.strokeStyle = '#c0392b'; X.lineWidth = 2; X.stroke();
+    }
+    X.fillStyle = '#fff'; X.font = '14px system-ui,sans-serif';
+    const yarnLeft = max(0, 100.0 - hud.freedLength_m);
+    X.fillText('yarn left: ' + yarnLeft.toFixed(1) + ' m', 12, 22);
+    X.fillText('height: ' + (GAME.startY - ball.y).toFixed(1) + ' m', 12, 42);
+    X.fillText('best: ' + GAME.best_m.toFixed(1) + ' m', 12, 62);
+    if (GAME.mode === 'lost') X.fillText(GAME.msg + '  (click to restart)', 12, 84);
+    const t = performance.now() - INTRO_T0;
+    if (t < 10000) {
+     X.globalAlpha = 0.8;
+     X.fillStyle = '#d8d8ff';
+     X.font = '13px system-ui,sans-serif';
+     X.fillText('A black cat must climb the tower before dawn, but its yarn is limited…', 12, 82);
+     X.globalAlpha = 1;
+    }
+   }
+   function drawYarnCurve(pts) {
+    if (!pts || pts.length < 2) return;
+    const n = pts.length - 1, m = Array(n);
+    const mp = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    for (let i = 0; i < n; i++) {
+     m[i] = mp(pts[i], pts[i + 1]);
+    }
+    let colorIdx = 0, color = cfg.linkStroke[cfg.linkPattern[colorIdx]];
+    X.save();
+    X.lineWidth = cfg.linkWidth; X.lineCap = 'round'; X.lineJoin = 'round'; X.strokeStyle = color;
+    X.beginPath(); X.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 0; i < n; i++) {
+     X.quadraticCurveTo(pts[i][0], pts[i][1], m[i][0], m[i][1]);
+     colorIdx = (colorIdx + 1) % cfg.linkPattern.length;
+     let newColor = cfg.linkStroke[cfg.linkPattern[colorIdx]];
+     if (newColor !== color) {
+      X.stroke();
+      X.beginPath();
+      X.moveTo(m[i][0], m[i][1]);
+      X.strokeStyle = color = newColor;
+     }
+    }
+    X.quadraticCurveTo(pts[n][0], pts[n][1], pts[n][0], pts[n][1]);
+    X.stroke();
+    X.restore();
+   }
+   function drawYarn(state) {
+    const {bounds, tail, wound} = state;
+    const m = tail.concat(wound), n = m.length;
+    if (n < 2) return;
+    for (let i = 0; i < n; i++) m[i] = toPx(bounds, m[i].x, m[i].y);
+    drawYarnCurve(m);
+   }
+   function drawEyes(viewBounds){
+    const [_, BY0, __, BY1] = viewBounds;
+    const margin = 0.5;
+    const now = performance.now() * 0.002;
+    X.save();
+    for (const e of EYES) {
+     if (e.y < BY0 - margin || e.y > BY1 + margin) continue;
+     const parallaxX = (BY0) * 0.02 * (e.layer - 0.5);
+     const ex = e.x + parallaxX;
+     const L = toPx(viewBounds, ex - e.gap*0.5, e.y);
+     const R = toPx(viewBounds, ex + e.gap*0.5, e.y);
+     const rp = toLen(e.r);
+     const tw = (sin(now + e.twinkle) * 0.15 + 0.85);
+     const rr = rp * tw;
+     X.globalAlpha = e.a * 0.6;
+     X.shadowColor = '#e6fffa';
+     X.shadowBlur = rr * 3.0;
+     X.fillStyle = '#e6fffa';
+     X.beginPath(); X.arc(L[0], L[1], rr, 0, PI*2); X.fill();
+     X.beginPath(); X.arc(R[0], R[1], rr, 0, PI*2); X.fill();
+     X.shadowBlur = 0;
+    }
+    X.restore();
+   }
+   function draw(state, viewBounds) {
+    clear();
+    const b = viewBounds || state.bounds;
+    const proxy = Object.assign({}, state, {bounds: b});
+    drawEyes(b);
+    drawYarn(proxy);
+    drawStaticsAndHUD(proxy);
+   }
+   function screenToMeters(bounds, clientX, clientY) {
+    const rect = C.getBoundingClientRect();
+    const lx = (clientX - rect.left) / DPR;
+    const ly = (clientY - rect.top) / DPR;
+    const [BX0, BY0] = bounds;
+    return { x: BX0 + lx / S, y: BY0 + ly / S };
+   }
+   return { draw, screenToMeters };
+  }
+  const simCtl = makeSimulator();
+  const renderer = makeRenderer();
+  fitCanvasToWindow();
+  let last = performance.now();
+  function tick(t) {
+   const dt = clamp((t - last) / 1000, 0, TUNE.GAME.MAX_FRAME_DT_S);
+   last = t;
+   simCtl.advance(dt);
+   const state = simCtl.getRenderData();
+   const targetMinY = state.ball.y - 2.5;
+   if (targetMinY < VIEW.minY) {
+     VIEW.minY = 0.85 * VIEW.minY + 0.15 * targetMinY;
+   }
+   if (targetMinY > VIEW.minY + 5) {
+    VIEW.minY = 0.97 * VIEW.minY + 0.03 * targetMinY;
+   }
+   const viewBounds = [
+     state.bounds[0],
+     VIEW.minY,
+     state.bounds[2],
+     VIEW.minY + VIEW.spanY_m
+   ];
+   GAME.height_m = max(0, GAME.startY - state.ball.y);
+   if (GAME.height_m > GAME.best_m) GAME.best_m = GAME.height_m;
+   if (GAME.mode === 'playing') {
+    if (!state.ball.active) {
+     lose('Out of yarn');
+    }
+    const BY1 = state.bounds[3];
+    if (state.ball.y >= BY1 - 0.01) {
+     lose('You fell');
+    }
+    if (hitThorn(state)) {
+     lose('Thorned!');
+    }
+   }
+   if (isNaN(state.ball.y)) {
+    restartRun()
+   }
+   renderer.draw(state, viewBounds);
+   requestAnimationFrame(tick);
+  }
+  function hitThorn(state){
+   const thorns = state.thorns || [];
+   if (!thorns.length) return false;
+   for (const h of thorns) {
+    const dx = state.ball.x - h.x, dy = state.ball.y - h.y;
+    if (hypot(dx,dy) <= state.ball.r + h.r) return true;
+   }
+   const nr = TUNE.GAME.ROPE_NODE_RADIUS_M;
+   for (const p of state.tail) {
+    for (const h of thorns) {
+     const dx = p.x - h.x, dy = p.y - h.y;
+     if (hypot(dx,dy) <= nr + h.r) return true;
+    }
+   }
+   return false;
+  }
+  requestAnimationFrame(tick);
+  C.addEventListener('click', e => {
+   if (GAME.mode === 'lost') { restartRun(); return; }
+   GAME.clicks++;
+   const state = simCtl.getRenderData();
+   const viewBounds = [state.bounds[0], VIEW.minY, state.bounds[2], VIEW.minY + VIEW.spanY_m];
+   const wp = renderer.screenToMeters(viewBounds, e.clientX, e.clientY);
+   simCtl.applyPoke(wp.x, wp.y, TUNE.GAME.CLICK_POKE_N_PER_M);
+   simCtl.freeSegments(10);
+  });
+ });
+</script></head></html>
