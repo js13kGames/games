@@ -3,7 +3,8 @@
   "main": "index.ts",
   "compatibility_date": "2025-05-23",
   "assets": {
-    "directory": "games"
+    "directory": "games",
+    "binding": "ASSETS"
   },
   "services": [
     {

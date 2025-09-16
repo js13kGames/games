@@ -9,6 +9,13 @@ export default {
     // Naively filter out all requests for URIs with dots. Legit, existing files would've been already served
     // one level higher (before hitting the Worker) and we don't want every single scanner to trigger boots.
     if (uri.indexOf('.') >= 0) {
+      // Rewrite requests to game packages so that they're served on easy to remember paths,
+      // i.e.: play.js13kgames.com/my-game.zip
+      if (uri.slice(-4) == '.zip') {
+        url.pathname = uri.slice(0, -4) + '/.src/g.zip'
+        return env.ASSETS.fetch(url, req)
+      }
+
       return new Response(null, { status: 404 })
     }
 
