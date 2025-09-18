@@ -11,7 +11,6 @@ export default {
   'stalinebingo': 1,
   // TODO(alcore) Unbundled and :effort:
   'tanks': 1,
-  // TODO(alcore) Broken. Possibly net-related (missing socketId?)
   'outaluq': 1,
 
   // 2014

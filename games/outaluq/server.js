@@ -1,8 +1,6 @@
 var players = {};
 var mapItems = new Array();
-
 var itemSpawnInterval = 2;
-
 var itemConstructors = [
   {
     name: 'Pulse',
@@ -73,6 +71,7 @@ var Inventory = function () {
 } ();
 
 var Item = function () {
+
   function cls(params) {
     var self = this;
 
@@ -365,8 +364,8 @@ var Player = function () {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  return cls;
-} ();
+  return cls
+} ()
 
 function generate_random_item() {
   return new Item(itemConstructors[random(0, itemConstructors.length)]).init();
@@ -381,11 +380,11 @@ function spawn_map_items(interval) {
     }
     //loop
     spawn_map_items(itemSpawnInterval);
-  }, 1 / (io.engine.clientsCount || 1) * (interval * 1000)); //Every {interval} seconds per connected player
+  }, 1 / (io.sockets.size || 1) * (interval * 1000)); //Every {interval} seconds per connected player
 }
 
 function broadcastItems() {
-  io.emit('updateItems', mapItems);
+  io.sockets.emit('updateItems', mapItems);
 }
 
 function random(min, max) {
@@ -393,7 +392,7 @@ function random(min, max) {
 }
 
 io.on('connection', function (socket) {
-  socket.on('connected', function (data) {
+  socket.on('playerConnect', function (data) {
     var player;
     if (data.socketId && typeof players[data.socketId] !== 'undefined') {
       player = players[data.socketId];
@@ -402,11 +401,11 @@ io.on('connection', function (socket) {
       players[socket.id] = player;
     }
 
-    player.initialise();
-    broadcastItems();
+    player.initialise()
+    broadcastItems()
   });
 });
 
-spawn_map_items(itemSpawnInterval);
-var Map = new Map();
-Map.generate();
+spawn_map_items(itemSpawnInterval)
+var Map = new Map()
+Map.generate()
