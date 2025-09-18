@@ -1,9 +1,9 @@
 'use strict';
 
-var socket = {};
-var config = { pad1:0.5, pad2:0.5, ballX:0.5, ballY:0.5 };
+var socket = {}
+var config = { pad1:0.5, pad2:0.5, ballX:0.5, ballY:0.5 }
 var connected = false;
-var playerName = 'Player '+Math.random().toString().replace(/.*\./,'');
+var playerName = 'Player '+Math.random().toString().replace(/.*\./,'')
 
 function connect() {
   connected = true;
@@ -12,15 +12,8 @@ function connect() {
   socket.on('config', onConfig);
   socket.on('disconnect', onDisconnect);
   socket.emit('playerInfo', { name: playerName });
-  setTimeout(tic, 10);
+  tic()
 }
-
-window.requestAnimationFrame =
-  window.requestAnimationFrame ||
-  window.mozRequestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  window.msRequestAnimationFrame ||
-  function(fn){ setTimeout(fn, 33); };
 
 function tic() {
   if (!connected) return;
@@ -28,16 +21,16 @@ function tic() {
   pad2.style.top  = (100 * config.pad2)  + '%';
   ball.style.top  = (100 * config.ballY) + '%';
   ball.style.left = (100 * config.ballX) + '%';
-  window.requestAnimationFrame(tic);
-};
+  requestAnimationFrame(tic)
+}
 
 function onNews(data) {
   var msg = document.createElement('p');
   msg.className = 'show';
   msg.innerHTML = data.message;
   messageBox.appendChild(msg);
-  setTimeout(function(){ msg.className = '' }, 10);
-  setTimeout(function(){ messageBox.removeChild(msg) }, 20*1000);
+  setTimeout(function(){ msg.className = '' }, 10)
+  setTimeout(function(){ messageBox.removeChild(msg) }, 20000)
 }
 
 var endGameMsg = 'The server connection dropped.';
@@ -54,18 +47,19 @@ function onConfig(data) {
   }
 }
 
-function onDisconnect(data) {
+function onDisconnect() {
   connected = false;
   openDialog(
     'Disconnected', endGameMsg+'<br>Do you want to reconnect?',
     'Reconnect', function() {
-      document.location.reload();
+      location.reload();
       dialog.style.display = 'none';
   });
 }
 
+const K = '_pong.playerName'
 function openNameDialog() {
-  var name = docCookies.getItem('playerName') || '';
+  var name = localStorage.getItem(K) || '';
   openDialog(
     'Welcome',
     'What is your name?' +
@@ -75,10 +69,10 @@ function openNameDialog() {
   );
 }
 function getName() {
-  docCookies.setItem('playerName', playerNameInput.value, Infinity);
   playerName = playerNameInput.value;
+  localStorage.setItem(K, playerName);
   dialog.style.display = 'none';
-  connect();
+  connect()
 }
 
 function openDialog(title, content, btLabel, btFunc) {
@@ -89,15 +83,18 @@ function openDialog(title, content, btLabel, btFunc) {
   dialogBtFunc.onclick = btFunc;
 }
 
-var lastY = 0;
-var currentY = 0;
+var
+  lastY    = 0,
+  currentY = 0
+
 document.ontouchmove = function(ev) {
   currentY = ev.touches[0].screenY;
-  ev.preventDefault();
-};
+  ev.preventDefault()
+}
 document.onmousemove = function(ev) {
-  currentY = ev.clientY;
-};
+  currentY = ev.clientY
+}
+
 setInterval(function(){
   // Submit mouse position only each 33ms if it was changed.
   if (!connected || !config.playing) return;

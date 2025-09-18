@@ -9,12 +9,10 @@ function Game(player1, player2) {
   this.id = 'game' + Math.random();
   games[this.id] = this;
   this.players = [player1, player2];
-  log('Start game', { id:this.id, players:this.players });
   player1.joinGame(this);
   player2.joinGame(this);
-  io.to(this.id)
-    .emit('news', { message: 'You found a pair to play' })
-    .emit('config', {
+  io.to(this.id).emit('news', { message: 'You found a pair to play' })
+  io.to(this.id).emit('config', {
       playing:true,
       player1:player1.name, player2:player2.name,
       pointsP1:player1.points, pointsP2:player2.points,
@@ -50,7 +48,7 @@ Game.prototype.playerLostBall = function(pIndex) {
   otherPlayer.inkPoints();
   // Notify players
   io.to(this.id).emit('news', { message: player.name+' lost the ball.' })
-                .emit('config', { pointsP1:p[0].points, pointsP2:p[1].points });
+  io.to(this.id).emit('config', { pointsP1:p[0].points, pointsP2:p[1].points })
   // Restart ball
   this.ball = { x:0.5, y:0.5, inc:{ x:0.005, y:(Math.random()*2-1)/100 } };
 };
@@ -88,7 +86,6 @@ Game.prototype.tic = function() {
 };
 
 Game.prototype.end = function() {
-  log('End game', { id:this.id, players:this.players });
   this.players[0].exit();
   this.players[1].exit();
   delete games[this.id];
@@ -105,9 +102,7 @@ function Player(socket) {
 Player.prototype.joinGame = function(game) {
   this.game = game;
   this.points = 0;
-  log('records', records);
   this.lastRecord = records[this.name] || 0;
-  log('lastRecord', this.name, records[this.name], this.lastRecord);
   this.socket.join(game.id);
   this.socket.on('move', this.onMove.bind(this));
   this.socket.emit('news', { message: 'My key', key:this.whoInTheGame().me.key });
@@ -144,10 +139,10 @@ Player.prototype.whoInTheGame = function() {
       other: {obj:players[0], key:'player1'}
     };
   }
-};
+}
 
 Player.prototype.onExit = function() {
-  if (this==alonePlayer) alonePlayer = null;
+  if (this==alonePlayer) alonePlayer = null
   if (!this.game) return;
   var otherPlayer = this.whoInTheGame().other.obj;
   otherPlayer.socket.emit('news', {
@@ -166,7 +161,7 @@ Player.prototype.exit = function(msg) {
 
 io.on('connection', function(socket) {
   var newPlayer = new Player(socket);
-  if ( alonePlayer ) { // && alonePlayer.socket.id != socket.id ) {
+  if (alonePlayer) {
     socket.emit('news', { message: 'Entering in a game...' });
     var firstPlayer = alonePlayer;
     alonePlayer = null;
@@ -177,4 +172,3 @@ io.on('connection', function(socket) {
     alonePlayer = newPlayer;
   }
 });
-
