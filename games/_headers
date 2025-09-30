@@ -1,4 +1,4 @@
 /*
   Cache-Control: max-age=31536000
   Access-Control-Allow-Origin: https://js13kgames.com
-  Content-Security-Policy: frame-ancestors https://js13kgames.com
+  Content-Security-Policy: frame-ancestors 'self' https://js13kgames.com
