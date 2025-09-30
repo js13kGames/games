@@ -262,7 +262,6 @@
           state = WAITING_FOR_GAME_START;
           data.state = state;
           data.endMsg = winMsg;
-          // log(winMsg);
         }
         else  {
           io.to(id).emit('news', {message: winMsg+ "team winning in "+winInSec+' !</h2>'});
@@ -273,7 +272,6 @@
   }
 
   function playerStarted(player,data) {
-    // log("Game starting!");
     state = GAME_STARTING;
     winTimestamp = 0;
 
@@ -320,7 +318,6 @@
     // generate a maze with enough potential places for bulb lights
     var potentials = [];
     while (potentials.length < 11) {
-      // log("Generating Maze");
       maze = Maze(MAZE_X/2,MAZE_Y/2);
       potentials = maze.places.bottomDE.concat(maze.places.horizDE);
     }
@@ -358,7 +355,6 @@
       player[k] = data[k];
     }
     if (data.instant) {
-      //log("instant update!");
       updatePlayers();
     }
   }
@@ -375,13 +371,9 @@
     var found = findPlayer(player);
     if (!found) {
       players.push(player);
-      // log('Player connected', { name: player.name });
       sockets[player.id].join(id);
       io.to(id).emit('news', { message: player.name+' joined the game', player: player });
     }
-    // else {
-    //   log('Player updated', data);
-    // }
 
     io.to(id)
       .emit('state', { state: state, players: players });
@@ -389,7 +381,6 @@
   }
 
   function onExit(player) {
-    // log('Player exit', { name: player.name, color: player.color });
     var found = findPlayer(player);
     if (found) {
       players.splice(players.indexOf(found),1);

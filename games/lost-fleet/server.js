@@ -1,9 +1,9 @@
 let random_color = () => 'hsl(' + ((Math.random() + 0.618033988749895) * 360) % 360 + ',50%,50%)'
 
-let clients = {};
-let commands = [];
-let arena;
-let waiting = {};
+let clients = {}
+let commands = []
+let arena
+let waiting = {}
 
 let start_game = (players) => {
   let mothership_stats = {

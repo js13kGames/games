@@ -17,6 +17,7 @@ export default {
   'pong': 1,
   'woe-war-of-elements': 1,
   'spaceships': 1,
+  // TODO(alcore) Broken.
   'little-tank-war': 1,
 
   // 2015
@@ -51,6 +52,7 @@ export default {
 
   // 2017
   'spacefield-league': 1,
+  // TODO(alcore) Unknown issue (looks client-side)
   'lost-islands': 1,
   'labyio': 1,
   'scribble': 1,

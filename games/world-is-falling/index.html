@@ -247,15 +247,12 @@
                 if (!player) continue;
                 player.x = data[i].x;
                 player.y = data[i].y;
-                //player.speed_x = data[i].speed_x;
-                //player.speed_y = data[i].speed_y;
-                //player.speed_is_on_ground = data[i].is_on_ground;
-            };
+            }
         });
 
         socket.on('won', function (data) {
-            log('Awesome, YOU WON THE GAME!!!');
-        });
+            log('Awesome, YOU WON THE GAME!!!')
+        })
     }
 
     /* Game code */
