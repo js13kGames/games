@@ -2,9 +2,7 @@ Avenge your fallen human and cut through waves of enemies across fast-paced, pun
 
 Prove your skill and unlock **9 Lives Mode** by completing the game.
 
-<p align="center">
-<img src="https://github.com/remvst/clawstrike/blob/main/assets/gameplay-demo.gif?raw=true" loading="lazy">
-</p>
+<img src=//raw.githubusercontent.com/remvst/clawstrike/refs/heads/main/assets/gameplay-demo.gif loading=lazy>
 
 ## Controls:
 - **Move:** Arrow Keys / WASD
