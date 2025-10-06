@@ -1,0 +1,1 @@
+Lost in the abyss find your path, gather your resources. Protect your beacon and destroy the enemies.

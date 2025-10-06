@@ -1,0 +1,1 @@
+Consume all the coffee in each level.

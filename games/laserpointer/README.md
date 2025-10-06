@@ -1,0 +1,1 @@
+Distract the cat with a laser pointer while trying to get to the cheese.

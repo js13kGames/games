@@ -1,0 +1,1 @@
+The spaceship is stuck in a planet, offline and isolated from other members of your species. The planet is very weird, for it allows you to switch gravity according to your will. Navigate through the obstacles in an infinitely side-scrolling game!

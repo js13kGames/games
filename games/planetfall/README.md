@@ -1,0 +1,1 @@
+Find the satellite station on each planet and take it offline.

@@ -1,0 +1,1 @@
+Yeah, that`s easy to slice fruits! But now try it to reverse it!

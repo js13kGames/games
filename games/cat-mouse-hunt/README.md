@@ -1,0 +1,1 @@
+Swipe at the mice. See how many you can get.

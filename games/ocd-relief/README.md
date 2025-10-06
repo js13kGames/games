@@ -1,15 +1,3 @@
-# OCD Relief
-
 Bring moments of relief to folks with OCD (Obsessive-compulsive disorder) through a fun game of organizing messy desktop spaces.
-
-Originally created in couple of hours for participating in [https://js13kgames.com/](https://js13kgames.com/).
-
-# Credits
-
-Game dev: [Sayem Shafayet](https://github.com/ishafayet)
-
-Music: [Mysha Azfar](https://www.linkedin.com/in/myshaazfar)
-
-# License
-
-[MIT](LICENSE)
+Your time will start as soon as you close this window. Before that check out the objectives and organize your desktop space accordingly, before the time runs out.
+The 90's aesthetics is just a bonus.

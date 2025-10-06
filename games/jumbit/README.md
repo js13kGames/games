@@ -1,0 +1,1 @@
+You are a small spark of flame trapped in a cold cave. Travelling through a breeze of wind, how long can you travel through the unstable frozen formations in your way? Tap to survive!gtgtgt

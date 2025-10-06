@@ -1,0 +1,1 @@
+Just try to survive using left and right buttons.

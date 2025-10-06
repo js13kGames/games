@@ -1,0 +1,1 @@
+Arrow Keys (or WASD) To Move. X or Space to shoot.

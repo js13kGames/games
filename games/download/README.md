@@ -1,0 +1,1 @@
+A packet of data trying to be downloaded before the network is disconnected

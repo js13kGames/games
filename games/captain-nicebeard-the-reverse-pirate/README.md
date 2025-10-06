@@ -1,0 +1,1 @@
+Reverse pirate game. Save your shipmates and give back your plundered treasure through the seven seas. Asynchronous multiplayer game. Works best in Firefox or Chrome.

@@ -1,0 +1,1 @@
+You are a red square, called Redsquare and you hate your life. Therefor you try to escape from a planet called online. You have to climb to a new world. But you your brother green square hates you and enjoys seeing you get recjected. So he sends the online police to catch you. Yes the online police are pink triangles. Why certainly!

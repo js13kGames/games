@@ -1,0 +1,2 @@
+Player need to sprint in the limbo world of dead, avoiding hostile zombies and killing them for resources to be able to reach home on the other side.
+Controls: arrow keys + space bar for attack, B for building walls259.

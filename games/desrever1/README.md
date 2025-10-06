@@ -1,6 +1,3 @@
-# desrever
-My entry for [js13kGames](http://2015.js13kgames.com/).
-
 Use the Arrow Keys to move around and reach the Goal tile.
 
 ## Tiles
@@ -9,6 +6,4 @@ Use the Arrow Keys to move around and reach the Goal tile.
 * Gray - The walls. You can't walk on them.
 * Yellow - Swaps the walls with the floors.
 * Dark Blue - Switches the arrow keys. 
-* Green - Your goal! Get her. 
-
-I made this game for the [js13kGames](http://2015.js13kgames.com/) competition. I need to design more levels but I submitted four levels for the deadline. I learned to work with the HTML5 Canvas and polished up my JavaScript chops. 
+* Green - Your goal! Get here.

@@ -1,0 +1,1 @@
+Help the lost spirits reach their home, by guiding them from star to star, wonder every star system to find artefacts to get clues and reach home.

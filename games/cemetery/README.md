@@ -1,0 +1,1 @@
+Pick up 13 keys without triggering the ghosts

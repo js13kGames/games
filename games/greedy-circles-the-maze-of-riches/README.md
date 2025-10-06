@@ -1,0 +1,1 @@
+Traverse through a maze to reach the tenth floor and defeat the boss.

@@ -1,0 +1,1 @@
+As a space defense engineer you are contracted to protect planets. On each level you are paid according to your contract. If you don't fulfill your end of the contract you will be fired! Click on the squares to buy a tower to shoot incoming attackers.

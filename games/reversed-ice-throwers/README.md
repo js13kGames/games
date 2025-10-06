@@ -1,0 +1,1 @@
+Simple game, just avoid ice throwers and reach the door.

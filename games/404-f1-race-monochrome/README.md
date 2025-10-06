@@ -1,0 +1,1 @@
+swipe desired direction (left / right) to move the character. avoid incoming traffic

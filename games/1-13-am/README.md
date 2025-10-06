@@ -1,0 +1,1 @@
+Chop the metal dudes before they get you. They have 13 spikes

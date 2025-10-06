@@ -1,0 +1,3 @@
+You are a new QE ninja in your team. The team is going to release new game (Silly Little Tanks) soon and your job is to find bugs and provide repro steps for them, so dev team can fix them prior release. You need to play the game in order to find those bugs and provide as detailed repro steps as possible. Earn points and improve your tank, so you can get to higher levels as some bugs might not be so easy to find (But don't worry, after you find all bugs, you still can play in free mode)
+
+You are controlling red tank using WSAD or arrows. Use your mouse to rotate the cabin and fire at other tanks.

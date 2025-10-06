@@ -1,0 +1,1 @@
+A small game for clicking in time.Every time shapes, colour and timings are different. You should click with in 2 seconds.

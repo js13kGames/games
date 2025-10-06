@@ -1,0 +1,1 @@
+You bought the cheapest phone on the market and you subscribed the cheapest contract you could find... now you have to run after the signal to prevent going offline... but pay attention not to be knocked down by a car!

@@ -1,3 +1,4 @@
-# lost-miner-jsgame
-You are a panda miner that tried to be romantic by find a rare gem for your lover.
-Sadly you got lost! Try to get out... and in the same time... find a gem for your lover
+You are a romantic panda that went into an adventure to find the most rare crystal for your lover.
+Sadly, you got lost in that cavern.
+Mine ores and find gem to get out of that cave.
+Beware to not fall deeper...!

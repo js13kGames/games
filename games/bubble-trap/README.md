@@ -1,0 +1,1 @@
+Trap bubbles in colored areas by either blowing your own bubbles, editing the level itself, or both. Watch out though, because the bubbles can be squeezed where they shouldn't be able to go. This might not be a bad thing.

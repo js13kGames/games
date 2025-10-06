@@ -1,7 +1,4 @@
-### Unlucky Blackjack
-> :heart: Blackjack implemented in under 13kb.
-
-My entry for [js13kGames 2017](http://2017.js13kgames.com).
+Blackjack implemented in under 13kb.
 
 Player vs Dealer Blackjack.
 You've lost $ 1000. Win it back.
@@ -11,8 +8,9 @@ You've lost $ 1000. Win it back.
 
 You will automatically bet $ 100 every turn.
 
-
 Clear browser session to reset game.
+
+(Little broken. Ran out of time. :()
 
 Source code at:
 https://github.com/stpettersens/js13k_2017

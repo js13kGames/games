@@ -1,0 +1,1 @@
+You can go around and shoot emoji brains.

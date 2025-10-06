@@ -1,0 +1,1 @@
+In this game your task is to manage the traffic lights. Control the traffic to avoid jams. The car drivers have to wait as little as possible. You should be avoided that the drivers will be nervous. The game ends when they become totally upset.

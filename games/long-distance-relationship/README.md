@@ -1,0 +1,1 @@
+Keep the connection between you and your loved-one alive. Explore dungeons around you and build your way to resources you need

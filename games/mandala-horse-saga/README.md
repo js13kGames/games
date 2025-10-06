@@ -1,0 +1,5 @@
+It was in the small log cabins deep in the forests during the long winter nights in front of a log fire that the forerunner of the Dala horse was born. Using simple tools, generally only a knife, woodcarvers made toys for their children. It was only natural that many of these toys were horses, because the horse was invaluable in those days, as a trusty friend and worker who could pull great loads of timber from the forests during the winter months, and in the summer could be of just as much use on the farm.
+
+Mandala (Sanskrit: मण्डल Maṇḍala, 'circle') is a spiritual and ritual symbol in Hinduism and Buddhism, representing the Universe. The basic form of most mandalas is a square with four gates containing a circle with a center point. Each gate is in the general shape of a T.
+
+Keep Mandala Horse happy by triggering the elements through the four gates!

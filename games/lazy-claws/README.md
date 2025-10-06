@@ -1,0 +1,1 @@
+You used to be a predator, but years of living at home have dulled your skills. Your owner will be back any minute, and the house is full of pests. Take care of them if you want to keep enjoying your cozy home life!

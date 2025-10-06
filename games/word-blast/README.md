@@ -1,0 +1,1 @@
+Type in words coming from above and collect coins to reverse the words that are 'REVERSED'

@@ -1,0 +1,1 @@
+So you want to be an action hero, huh? Do you think you have it takes? Do you think it's easy to take an Oculus Rift and press A/X to pick up guns and pull the triggers to shoot them? Oh. You can. Ever done it backward??

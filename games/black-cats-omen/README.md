@@ -1,0 +1,3 @@
+Experience the challenge of navigating the streets at night as Shaurya, a young man guided by superstition. Black cats populate the environment, and excessive noise—caused by jumping, stomping, or moving too quickly—can alert them, increasing the difficulty of each level.
+
+Players must employ careful strategy and precise movements to progress, balancing risk and stealth to avoid detection. Only those with skill and patience can successfully maneuver through the challenges and complete the game.

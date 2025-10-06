@@ -1,0 +1,2 @@
+A hacking puzzle / strategy game. Exploit vulnerabilities in nodes and connections to knock a dynamically-routed mesh network offline.
+Bring down an evil corporation's mesh network in Story mode, or test your skills against randomly-generated mesh networks in Challenge mode.

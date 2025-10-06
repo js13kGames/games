@@ -1,0 +1,1 @@
+Play the snake in canvas. The particularity of this game is its smoothness.

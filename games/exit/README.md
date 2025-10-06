@@ -1,0 +1,1 @@
+Guide your friends to the exit without them being found. Made for VR, but works on desktop with mouse. Requires a pointer control

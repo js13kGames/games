@@ -1,0 +1,1 @@
+Disconnect the connection between circles before time runs out.

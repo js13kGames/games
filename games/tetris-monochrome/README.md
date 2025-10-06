@@ -1,0 +1,1 @@
+Standard directional keys for desktop.

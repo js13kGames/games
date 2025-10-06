@@ -1,0 +1,3 @@
+You're in a maze. You don't really know why, or how. It looks like you've lost a couple of things you've held dear for your whole life, but you'll find so much more...
+
+Put some headphones on, close your eyes for a bit and take some time to isolate yourself from the rest of the world! I find that the mazes are actually better solved with eyes closed, so it's easier to imagine your own mental structure for the map.

@@ -1,0 +1,1 @@
+Catch all the marios before they fall into the water! Press X to start, and Q, W, or E to raise the pipe and catch the mario, but don't catch bombs! If you lose a life, catch a heart which pops up.

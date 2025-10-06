@@ -1,0 +1,1 @@
+Keep the power grid from going offline by selectively disconnecting buildings.

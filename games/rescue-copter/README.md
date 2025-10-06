@@ -1,0 +1,1 @@
+Control a helicopter to save the people and put out forest fires.

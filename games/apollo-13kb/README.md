@@ -1,0 +1,1 @@
+Join the crew of the unlucky Apollo-13 mission to the moon in this simplified historical simulation. Listen for commands from Mission Control, and control the spacecraft by simply pushing buttons. Keep the crew alive, and bring them home to Earth.

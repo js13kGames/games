@@ -1,0 +1,1 @@
+Try to catch the yellow planets and avoid the red ones.

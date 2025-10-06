@@ -1,0 +1,1 @@
+Explore a uniquely generated island, uncovering terrain and spiritual sites. Meet other lost people, and trade with them for items to help with your travels. Ultimately you may find enlightenment and a way off the island.

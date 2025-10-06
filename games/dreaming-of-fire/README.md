@@ -1,0 +1,1 @@
+Dreaming of Fire is a game in which the player's objective is to burn the city down, wipe out the population and cause as much destruction as possible.

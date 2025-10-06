@@ -1,0 +1,1 @@
+Spider solitaire. But as we fear number 13 there are no kings - only 12 cards per suit. This seems to make it much more likely that you can complete the game! Click and drag cards, Ctrl-Z to undo as many moves as you like. Enjoy the animated deals and suit completions.

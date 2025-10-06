@@ -1,0 +1,4 @@
+- There are code units with their respective programming language protocol in the server space.
+- Player has to connect the units of same programming language and make a loop to confirm backup of that collection of data. Example: you connect all the 'C#' units with other 'C#' units and then connect the last with the first unit and then this collection will be backup and cleared from server space. 
+- Player have initial 60 seconds for performing backup and as player score time also increase and hence player can score as high he/she can within the available time.
+- If time run out to ZERO, then GAME will be OVER.

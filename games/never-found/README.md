@@ -1,0 +1,5 @@
+You are an archaeologist who has found the crypt of Phor-oh IV, an ancient king long lost to history.  According to the recently deciphered ancient text that led you to the crypt, it contains a locked room with a vast treasure.  The game uses the Ga game framework, and ZzFX for all the sound effects.
+
+Press P when the startup screen is up to play a game in normal mode.  Press C to play in challenging mode (if you are a Coil subscriber).  Control the player with the arrow keys.  Feel around in the dark to find the key, then bump along the walls with the arrow keys to find the door.  The key and door will be in a random location each time you play the game. 
+
+The extra challenge mode for Coil subscribers will have an extra ghost to dodge with its own speed.  The other ghosts will also start out faster.

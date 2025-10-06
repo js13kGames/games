@@ -1,0 +1,1 @@
+You lost in the middle of nowhere, find your way to exit and avoid obstacles.

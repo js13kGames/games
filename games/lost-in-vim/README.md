@@ -1,0 +1,1 @@
+Being lost in vim is an unforgettable adventure that every programmer has a chance to experience at least once in his programming career. Lost in Vim allows every non-programmer to take up the challenge of quitting vim and feel the pride and the relief after typing The Magic Combination.

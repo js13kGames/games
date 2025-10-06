@@ -1,0 +1,2 @@
+Martin the parrot has just eaten some kind of weird berries in the forest, and he keeps imagining all kinds of elementals in front of him. Lead him to his end by shooting down the elementals. 
+Use the controls on the sides of the screen, or your keyboard (as in the description).

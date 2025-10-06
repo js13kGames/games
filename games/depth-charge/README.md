@@ -1,0 +1,1 @@
+Your friends have just been lost at sea, because of a submarine attack! You are the captain of a submarine detroyer and have been givin orders to sink as many submarines as you can. You drop depth charges onto the submarines below, and are awarded point for each hit.

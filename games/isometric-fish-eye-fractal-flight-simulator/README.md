@@ -1,0 +1,1 @@
+Built for Chrome. No fancy canvas.

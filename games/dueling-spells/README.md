@@ -1,0 +1,1 @@
+This is basic typing game, set in the world of magic. You have to type the spell(given aside), to execute that spell. The spell results in a decrease in opponents' health. The opponent will continually attack you. Keep typing spells faster to defeat the opponent.

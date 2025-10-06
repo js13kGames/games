@@ -1,0 +1,1 @@
+Click on the character to build a collection, barracks, arrow tower hospitals, houses, etc., and strengthen your village

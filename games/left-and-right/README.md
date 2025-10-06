@@ -1,0 +1,1 @@
+Control two cars simultaneously with the left and right arrows. Collect gold coins and avoid silver coins.

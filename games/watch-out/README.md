@@ -1,3 +1,2 @@
-# watchout
-Game Javascript
-By : Dicky Fajar Darmawan
+avoid the block
+reach the high level

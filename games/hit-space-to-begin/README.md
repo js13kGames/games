@@ -1,0 +1,1 @@
+Use SPACE and arrow keys in a short story about living

@@ -1,0 +1,1 @@
+Collect asteroids while avoiding to crash into planets or fly off into space. Your tools are to manipulate gravity.

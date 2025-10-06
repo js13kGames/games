@@ -1,0 +1,1 @@
+Stranded on an alien planet you struggle to understand the natives. Features: alien language, interesting questions.

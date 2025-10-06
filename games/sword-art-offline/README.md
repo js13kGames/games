@@ -1,0 +1,3 @@
+In 2022, a virtual reality massively multiplayer online role-playing game (VRMMORPG) called Sword Art Offline (SAO) is released. On November 6, 10,000 players log into the SAO's mainframe cyberspace for the first time, only if you kill all the octahedron bosses you can go offline.
+
+Now you are Kirito ✔ | Rules are so simple use the sword to attack the bosses i.e. the octahedrons (30 of them) only then you can go offline...

@@ -1,0 +1,15 @@
+# Gravity Cat
+
+...is a small puzzle game where you play as a black cat (who would have guessed!) and control the gravity. You have to collect all the purple gems because... umm... well, I'm fairly certain there is a good reason for that, and it has something to do with beliefs related to black cats or something.
+
+## Idea
+
+Idea is that you can control the direction of the gravity, and it affects all the objects on the screen (excluding fire). You need to collect all the gems you can see. If you get crushed by an object, you die. However, in some stages there are people. They cannot collect the gems, but you must keep them alive (i.e. try not to crush them with anything!).
+
+## Controls
+
+- **Arrow keys or WASD**: Move (gravity or the cursor in menus)
+- **R**: Restart level
+- **Backspace**: Undo a move
+- **Escape or enter**: Pause
+- **Enter or space**: accept (in menus)

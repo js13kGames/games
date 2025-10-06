@@ -1,0 +1,1 @@
+Tap or press space to glitch through walls.

@@ -1,0 +1,1 @@
+Your Hero Game" is a very simple and dungeon explorer game. You play a rookie trying to become a hero, and to prove yourself worth you must complete a simple quest: Return a stolen amulet from the evil Gathor!

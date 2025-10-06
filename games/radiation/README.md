@@ -1,0 +1,1 @@
+Save the earth from an inevitable catastrophe, use the indicated keys to control the bars.

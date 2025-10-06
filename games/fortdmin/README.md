@@ -1,0 +1,1 @@
+A mini text adventure game inspired by the atelier series

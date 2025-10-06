@@ -1,0 +1,2 @@
+Welcome to the multiplayer board game, this is a simple game, on joining you will be given a random name (if you do not type) and then a random colour .
+Now you can try coloring 5 continuous blocks on the board in either up-down, left-right or diagonally, and also you need to destroy the sequence of your opponent, the player who colors 5 continuous blocks first wins.

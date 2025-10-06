@@ -1,0 +1,2 @@
+move: UP, DOWN, RIGHT, LEFT
+fire: SPACEBAR

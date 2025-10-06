@@ -1,0 +1,1 @@
+Sand is a game that will test your ability to recall various symbols in a stressful and harsh environment. As the player, you take on the role of an unnamed character, tasked with bringing the system back online.

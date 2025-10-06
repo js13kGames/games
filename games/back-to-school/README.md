@@ -1,0 +1,1 @@
+This game is about math. The objective of this game is to achieve the goal shown on the right corner of the screen before running out of steps. It really requires you to have backward thinking. enumerating all possibilities from the goal to the initial value.

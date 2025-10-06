@@ -1,0 +1,1 @@
+Cubi is a tower defense game with 13 different types of monsters, 3 kind of towers and only one set of surface graphics. The major goal of that game is to kill all the monsters approaching you via choosing the right amount of towers.

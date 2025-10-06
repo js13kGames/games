@@ -1,0 +1,1 @@
+Capture the other team's flag while protecting your own!

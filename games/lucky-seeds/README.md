@@ -1,0 +1,1 @@
+Collect the lucky seeds!

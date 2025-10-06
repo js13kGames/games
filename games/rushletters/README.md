@@ -1,0 +1,1 @@
+Rush letters is a simple Javascript game where random alphabets falls from top to bottom like a meteor shower. Pressing the corresponding key on the keyboard blasts the alphabets and keep you safe. Once any of the letters reaches the bottom the game ends and you are offline and hence the theme.

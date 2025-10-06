@@ -1,0 +1,1 @@
+Everyday we are always charged and online. What if we were to go offline?

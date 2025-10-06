@@ -1,0 +1,1 @@
+A rogue-like tabletop ruleset inspired Battle Royale where you compete to be the last cat standing in a sprawling metropolis.  Beware the Black Cat.

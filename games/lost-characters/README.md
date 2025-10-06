@@ -1,0 +1,1 @@
+The game is to find a lost string character by character in a large grid populated randomly using a set of characters. If the user can find all the letters of the string 'U ARE LOST' sequentially in the allowed time for each character, he wins the game. If he can't find a a character in the given time, he loses the game.

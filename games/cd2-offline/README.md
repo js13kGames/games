@@ -1,0 +1,1 @@
+This is how Internet looked like in times of Dial Up

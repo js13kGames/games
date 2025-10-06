@@ -1,0 +1,1 @@
+The classic tale of 7 castaways stranded on an uncharted, desert isle. You are the brave first mate exploring the island trying to find a way to activate the offline communications terminal and send an SOS in this tropical puzzle game.

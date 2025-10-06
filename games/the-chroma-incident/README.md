@@ -1,0 +1,1 @@
+The Achromats have taken the worlds color offline! </end shamelessThemePlug> Raid their colorless lair and vanquish them all, restoring the world to it's technicolor glory. A twin-stick shooter playable with gamepad or keyboard+mouse. Huge thanks to Herebefrogs for naming the game!

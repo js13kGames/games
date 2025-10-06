@@ -1,0 +1,1 @@
+You are Dr. Heisenberg, a cyborg scientist desperately trying to escape a spaceship that's about to explode.  Fusion reactors are melting down and emitting radioactive bursts, so you must jump into SAFE SPACES for cover as you make your way to Bay 13 to access the escape pod.

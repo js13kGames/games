@@ -1,0 +1,3 @@
+13th century, golden age of cathedrals... 
+Will you be able to build a cathedral in less than 100 years? 
+Dig up rocks... cut stones... and build... to see your cathedral growing progressively.

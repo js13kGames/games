@@ -1,0 +1,1 @@
+AUD13ND is an sound sequencer game. Sounds are created by selecting selecting boxes in a grid as the sequence progresses from left to right. Enemy voids will attack from both sides, and if they collide with a highlighted cell, that entire beat will be ended. Go for high score and try to survive all 13 levels to earn your freedom (to make more music).

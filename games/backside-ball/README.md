@@ -1,0 +1,1 @@
+A funny arcade style paddle game. Make the gremlin drop his coins. Collect coins to slow ball. Control the paddles separately using A/D, Left/Right keys or together with mouse or tap.

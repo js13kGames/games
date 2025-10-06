@@ -1,1 +1,1 @@
-# snake
+Tap desired direction to move the character. eat dots to grow

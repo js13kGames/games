@@ -1,0 +1,25 @@
+26 mini-games by The Codegolf Team (xem, subzey, aemkei, p01, innovati, veu, solinca, tio)
+- MMXLVIII (play with arrow keys)
+- flASCII bird (play with any key)
+- Four (play with arrow keys)
+- Impossible Road (play with arrow keys)
+- 2P games (play with the mouse)
+- CHIP8 emulator (play with Numpad 0-9 + QWERTY) + 5 demos
+  -> Rocket (press Y to launch)
+  -> Breakout (play with 4 and 6)
+  -> X-mirror (draw with 8, 4, 6, 2)
+  -> Cave (start with Y, move with 8, 4, 6, 2)
+  -> More free ROMs on Github
+- Floppy dragon (play with mouse)
+- Flappy Braille (look the address bar and use arrow keys)
+- PopTiles (click the numbers in the correct order)
+- Simon (play with arrow keys)
+- Mini Sweeper (play with left and right click)
+- Ping (play with arrow keys)
+- Run (play with arrow keys)
+- Snake (play with arrow keys)
+- Snake Lite (play with arrow keys)
+- Color (play with mouse)
+- Game of Life
+- Game of ASCII (play with left click, press any key to evolve)
+- Game of Braille

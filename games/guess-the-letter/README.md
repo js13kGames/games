@@ -1,0 +1,1 @@
+Type in the letter as soon as you can recognize it

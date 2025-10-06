@@ -1,0 +1,1 @@
+A simple game where a white dot is stranded in space trying to avoid flying rocks and at the same time trying to collect as many green comets as possible. As time passes the speed increases and it becomes more difficult to survive.

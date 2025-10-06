@@ -1,0 +1,1 @@
+You are the OFFLINE square. Keep inside the rectangle if you, and can get score. Don't touch corners of the rectangle.

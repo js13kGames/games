@@ -1,0 +1,1 @@
+Arcade bomberman: move with zqsd or wasd, use space to drop bomb. There are 4 types of bombs used from left to right. (bottom right button to turn off the music)
