@@ -1,10 +1,10 @@
 /*
   Cache-Control: max-age=31536000
-  Access-Control-Allow-Origin: https://js13kgames.com
-  Content-Security-Policy: frame-ancestors 'self' https://js13kgames.com
-
-/*.html
-  Content-Type: text/html; charset=utf-8
 
 /*/
+  Content-Type: text/html; charset=utf-8
+  Content-Security-Policy: frame-ancestors 'self' https://js13kgames.com
+  Origin-Agent-Cluster: ?1
+
+/*.html
   Content-Type: text/html; charset=utf-8
