@@ -1,5 +1,8 @@
 # Catch the Black Cat 13 times
-## Legends say a mysterious black cat roams these lands. Some believe it **brings fortune**, others whisper it’s a **shadow of bad luck**.
+
+> Legends say a mysterious black cat roams these lands. Some believe it **brings fortune**,
+> others whisper it’s a **shadow of bad luck**.
+
 Your goal: **find it, follow it, and catch it** — but beware...
 the cat is **clever, fast, and always one step ahead.**
 

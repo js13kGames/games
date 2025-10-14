@@ -27,9 +27,9 @@ Interact with other objects to find hidden easter eggs.
 <kbd>Tap</kbd> to interact with other objects.  
 
 # ❔Hints (spoilers ahead)
-## The Color Puzzle
+
 <details>
-    <summary>Where do I look for this one?</summary>
+    <summary>Where do I look for the Color Puzzle?</summary>
     🤔The dance floor is playing a repeating sequence.
     <details>
         <summary>Ok, how do I know where to start?</summary>
@@ -45,9 +45,8 @@ Interact with other objects to find hidden easter eggs.
     </details>
 </details>
 
-## The Artist Puzzle (Green text)
 <details>
-    <summary>Where do I look for this one?</summary>
+    <summary>Where do I look for the Artist Puzzle (green text)?</summary>
     🤔Notice that each artist has is at least two words long. What might be the way to connect one artist to the next?
     <details>
         <summary>I'm still not sure, what is an example?</summary>
@@ -63,9 +62,8 @@ Interact with other objects to find hidden easter eggs.
     </details>
 </details>
 
-## The Title Puzzle (Blue text)
 <details>
-    <summary>Where do I look for this one?</summary>
+    <summary>Where do I look for the Title Puzzle (blue text)?</summary>
     🤔Notice that the song title is a compound word. How could this be related to the next title?
     <details>
         <summary>I'm still not sure, what is an example?</summary>
