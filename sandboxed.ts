@@ -7,8 +7,6 @@ export default {
   'runrun-rabbit': 1,
   'pixel-quest': 1,
   'untitled13': 1,
-  // TODO(alcore) Could really be moved out of the Online category (a websocket is used to pull static game data, and that's it...)
-  'stalinebingo': 1,
   // TODO(alcore) Unbundled and :effort:
   'tanks': 1,
   'outaluq': 1,

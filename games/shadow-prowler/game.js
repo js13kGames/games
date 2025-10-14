@@ -1,3 +1,5 @@
+import { WebSocket } from '/2025/online/partysocket.js';
+
 // --- GAME SETUP ---
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -16,9 +18,6 @@ const messageEl = document.getElementById('message');
 // Game state
 let player, level, dogs, fish, otherPlayers, timeLeft, timerInterval, gameState;
 
-// Multiplayer WebSocket setup
-// This URL is now correctly parsed by the new connection function.
-const RELAY_URL = 'wss://relay.js13kgames.com/shadow-prowler';
 let ws;
 const myId = Math.random().toString(36).substr(2, 9);
 
@@ -246,51 +245,17 @@ window.addEventListener('keydown', e => {
 // --- MULTIPLAYER (OPTIONAL) --- [UPDATED SECTION]
 
 function connectWebSocket() {
-    // This function is now wrapped in a try-catch block.
-    // This makes the online feature truly optional: if the connection
-    // fails for any reason (bad URL, server down, library not loaded),
-    // it won't crash the offline single-player game.
-    try {
-        // The original RELAY_URL was not structured correctly for PartySocket.
-        // It expects a 'host' and a 'room' separately. We parse them here.
-        const url = new URL(RELAY_URL);
-        const host = url.hostname;
-        const room = url.pathname.substring(1); // Remove leading '/'
-
-        // We only try to connect if the URL looks like a real one.
-        if (host.includes('js13kgames.com')) {
-             ws = new PartySocket({
-                host: host,
-                room: room,
-             });
-
-            ws.onopen = () => {
-                console.log(`Connected to game server room: ${room}`);
-                sendPosition();
-            };
-        
-            ws.onmessage = event => {
-                const data = JSON.parse(event.data);
-                if (data.id !== myId) {
-                    otherPlayers.set(data.id, { x: data.x, y: data.y });
-                }
-            };
-        
-            ws.onclose = () => {
-                console.log('Disconnected from game server.');
-            };
-
-            ws.onerror = (err) => {
-                console.error("WebSocket Error:", err);
-            };
-
-        } else {
-            console.warn("Multiplayer disabled: Using placeholder URL.");
+  ws = new WebSocket('wss://relay.js13kgames.com/shadow-prowler');
+        ws.onopen = sendPosition;
+        ws.onmessage = event => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.id !== myId) {
+              otherPlayers.set(data.id, { x: data.x, y: data.y });
+            }
+          } catch (e) {}
         }
-    } catch (error) {
-        console.error("Could not establish WebSocket connection:", error);
     }
-}
 
 function sendPosition() {
     if (ws && ws.readyState === WebSocket.OPEN) {

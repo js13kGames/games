@@ -6,17 +6,16 @@ export default {
       url = new URL(req.url),
       uri = url.pathname.slice(1)
 
-    // Naively filter out all requests for URIs with dots. Legit, existing files would've been already served
-    // one level higher (before hitting the Worker) and we don't want every single scanner to trigger boots.
+    // Naively filter out all requests for URIs with dots. Locally existing game files would've been already served
+    // one level higher, so unless we're dealing with a virtual path, passthrough to the assets CDN.
     if (uri.indexOf('.') >= 0) {
-      // Rewrite requests to game packages so that they're served on easy to remember paths,
-      // i.e.: play.js13kgames.com/my-game.zip
       if (uri.slice(-4) == '.zip') {
+        // Rewrite to support `play.js13kgames.com/my-game.zip` URLs.
         url.pathname = uri.slice(0, -4) + '/.src/g.zip'
-        return env.ASSETS.fetch(url, req)
+        return env.PLAY.fetch(url, req)
       }
 
-      return new Response(null, { status: 404 })
+      return env.ASSETS.fetch(req)
     }
 
     const i = uri.indexOf('/')
@@ -38,7 +37,7 @@ export default {
       return Response.redirect('https://js13kgames.com/games/' + game, 308)
     }
 
-    return env.RUNTIME_SANDBOX.fetch(req)
+    return env.RUNTIME.fetch(req)
   }
 }
 

@@ -1,12 +1,4 @@
-<html>
-
-<head>
-    <script src="https://aframe.io/releases/0.6.1/aframe.min.js"></script>
-    <script src="b.js"></script>
-    <!-- fragment shader -->
-<script id="fragment" type="x-shader/x-fragment">
-
-#define SPRITE_WIDTH 8.0
+<script src=/2017/webxr/aframe.js></script><script src=b.js></script><script id=fragment type=x-shader/x-fragment>#define SPRITE_WIDTH 8.0
 #define SPRITE_HEIGHT 8.0
 
 precision highp float;
@@ -39,58 +31,52 @@ void main()
 {
   float u = clamp(floor(mod(FragTexcoord.x,1.0)*SPRITE_WIDTH)/SPRITE_WIDTH,0.0,1.0)/spriteDimensions.x+(index*1.0/spriteDimensions.x);//+1.0/128.0;
   float v = clamp(floor(mod(FragTexcoord.y,1.0)*SPRITE_HEIGHT)/SPRITE_HEIGHT,0.0,1.0)/spriteDimensions.y;//+1.0/16.0;
-  
+
   vec2 UV = vec2(u, v);
-  vec4 texturedColor = texture2D(DiffuseTexture, vec2(UV.x, UV.y)); 
-  
+  vec4 texturedColor = texture2D(DiffuseTexture, vec2(UV.x, UV.y));
+
   float fogFactor = smoothstep( fogStart, fogEnd, fogDepth );
   vec4 color;
   if( lookupIndex >= 0.0 && texturedColor.a > 0.0 && texturedColor.x == texturedColor.y && texturedColor.x == texturedColor.z){
-    float ind = texturedColor.x; 
+    float ind = texturedColor.x;
     float y = 1.0-(lookupIndex*(1.0/25.0));
-		texturedColor = texture2D(Lookup,vec2(ind, y));  
+		texturedColor = texture2D(Lookup,vec2(ind, y));
 	}//else{
 
  if ( texturedColor.a < alphatest ) discard;
 
- color = mix(texturedColor, vec4(fogColor,0.0), fogFactor);   
+ color = mix(texturedColor, vec4(fogColor,0.0), fogFactor);
   //}
-  
+
 
   gl_FragColor =  color;
-}
-</script>
-<script id="vertex" type="x-shader/x-vertex">  
-  precision highp float;
+}</script><script id=vertex type=x-shader/x-vertex>precision highp float;
 
-  varying vec2 FragTexcoord;  
+  varying vec2 FragTexcoord;
   varying float fogDepth;
 
   uniform vec2 repeat;
 
- 
+
   void main() {
-    FragTexcoord = vec2(uv.x*repeat.x,uv.y*repeat.y) ;    
+    FragTexcoord = vec2(uv.x*repeat.x,uv.y*repeat.y) ;
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    
-    float fogDistance = length(gl_Position.xyz);
-    fogDepth = -(modelViewMatrix * vec4( position, 1.0 )).z;    
-  }
-</script>
-<script id="vertex-billboard" type="x-shader/x-vertex">  
-  precision highp float;
 
-  varying vec2 FragTexcoord;  
+    float fogDistance = length(gl_Position.xyz);
+    fogDepth = -(modelViewMatrix * vec4( position, 1.0 )).z;
+  }</script><script id=vertex-billboard type=x-shader/x-vertex>precision highp float;
+
+  varying vec2 FragTexcoord;
   varying float fogDepth;
 
   uniform vec2 repeat;
 
- 
+
   void main() {
-    FragTexcoord = vec2(uv.x*repeat.x,uv.y*repeat.y) ;   
-    
-     
-    mat4 modelView = modelViewMatrix;   
+    FragTexcoord = vec2(uv.x*repeat.x,uv.y*repeat.y) ;
+
+
+    mat4 modelView = modelViewMatrix;
     modelView[0][0] = 1.0;
     modelView[0][1] = 0.0;
     modelView[0][2] = 0.0;
@@ -101,50 +87,7 @@ void main()
     modelView[2][1] = 0.0;
     modelView[2][2] = 1.0;
     gl_Position = projectionMatrix * (modelView) * vec4(position, 1.0 );
-    
+
     float fogDistance = length(gl_Position.xyz);
-    fogDepth = -(modelViewMatrix * vec4( position, 1.0 )).z;    
-  }
-</script>
-</head>
-<body style="background-color:#000;">    
-  <a-scene  id="scene"
-            gamemanager
-            inspector="url: https://aframe.io/releases/0.3.0/aframe-inspector.min.js" class="fullscreen"            
-            >
-    <a-assets>
-      <a-mixin id="voxel"         
-          geometry="primitive: plane; height: 1; width: 1;"
-          mytexture="index:0"
-          rotation="-90 0 0"
-          snap="offset: 0.5 0.5 0.5; snap: 0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="spr" geometry="primitive: plane; height: .5; width: .5;"></a-mixin>
-      
-    </a-assets>
-    <a-entity id="mapgeo" map></a-entity>      
-   
-    <a-entity id="player" player position="0 .25 0" >        
-      <a-entity id="player-sprite" geometry="primitive: plane; height: .5; width: .5"  
-        billboard-texture="index:1;lookup:-1"></a-entity>
-      <a-entity id="camera" camera="active:true;fov:90;zoom:.8;near:0.01;far:15;userHeight:.8" 
-            look-controls="standing:true" position="0 0 2.0" 
-            rotation="-25 0.8 0" 
-            scale="1 1 1" 
-            visible="true">
-        <a-entity position="0 0 -.5"
-            geometry="primitive: ring; radiusOuter: 0.009;
-                      radiusInner: 0.006;"
-            material="color: red; shader: flat"
-            raycaster="far:3;objects: .floor"
-            cursor="maxDistance: 2; fuse: true;fuseTimeout: 1500">
-          <a-animation begin="click" easing="ease-in" attribute="scale"
-                       fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
-          <a-animation begin="fusing" easing="ease-in" attribute="scale"
-                       fill="forwards" from="1 1 1" to="1.5 1.5 1.5" dur="1500"></a-animation>
-        </a-entity> <!-- cursor -->
-        <a-image canvas-text position="0 -0.05 -.5"></a-image>        
-      </a-entity> <!-- camera -->
-    </a-entity> <!-- player -->    
-  </a-scene>
-</body>
-</html>
+    fogDepth = -(modelViewMatrix * vec4( position, 1.0 )).z;
+  }</script><body style=background-color:#000><a-scene class=fullscreen gamemanager id=scene inspector="url: https://aframe.io/releases/0.3.0/aframe-inspector.min.js"><a-assets><a-mixin geometry="primitive: plane; height: 1; width: 1;" id=voxel mytexture=index:0 rotation="-90 0 0" snap="offset: 0.5 0.5 0.5; snap: 0.5 0.5 0.5"></a-mixin><a-mixin geometry="primitive: plane; height: .5; width: .5;" id=spr></a-mixin></a-assets><a-entity id=mapgeo map></a-entity><a-entity id=player position="0 .25 0" player><a-entity id=player-sprite billboard-texture=index:1;lookup:-1 geometry="primitive: plane; height: .5; width: .5"></a-entity><a-entity id=camera position="0 0 2.0" camera=active:true;fov:90;zoom:.8;near:0.01;far:15;userHeight:.8 look-controls=standing:true rotation="-25 0.8 0" scale="1 1 1" visible><a-entity position="0 0 -.5" cursor="maxDistance: 2; fuse: true;fuseTimeout: 1500" geometry="primitive: ring; radiusOuter: 0.009; radiusInner: 0.006;" material="color: red; shader: flat" raycaster="far:3;objects: .floor"><a-animation attribute=scale begin=click dur=150 easing=ease-in fill=backwards from="0.1 0.1 0.1" to="1 1 1"></a-animation><a-animation attribute=scale begin=fusing dur=1500 easing=ease-in fill=forwards from="1 1 1" to="1.5 1.5 1.5"></a-animation></a-entity><a-image canvas-text position="0 -0.05 -.5"></a-image></a-entity></a-entity></a-scene>

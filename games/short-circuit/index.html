@@ -1,34 +1,5 @@
-<html>
-<head>
-<meta name="google" value="notranslate">
-<style>
-html, body {
-  overflow-x: hidden;
-}
-body {
-  position: relative
-}
-
-*.unselectable {
-   -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-}
-
-H1 {
-  padding: 30px 20px 30px 20px;
-  font-family: Roboto Black, Arial Black;
-}
-H1:hover {
-  background-color: #BBBBBB;
-  color: black;
-}
-</style>
-<meta name="viewport" content="user-scalable=no"/> <!--320-->
-</head>
-<body unselectable="on" class="unselectable" style="color:white;overflow:hidden;background-color:black">
+<style>body,html{overflow-x:hidden}body{position:relative}.unselectable{user-select:none}H1{padding:30px 20px 30px 20px;font-family:Roboto Black,Arial Black}H1:hover{background-color:#bbb;color:#000}</style><meta name=viewport content="user-scalable=no">
+<body class="unselectable" style="color:white;overflow:hidden;background-color:black">
 <div align="center">
    <br><nobr>
    <canvas id="view" width=600" height="600" style="background-color:#eeeeee;display:none"></canvas>
@@ -41,11 +12,8 @@ H1:hover {
    <div style="width:100%;background-color:#222222">
       <canvas id="controls-portrait" width="500" height="500" style="background-color:#222222"></canvas>
    </div>
-   <br><br><br><br><br> 
-</div>
-<div id="touchPadding" style="display:none">
-   <br><br>
-</div>
+   <br><br><br><br><br></div>
+<div id="touchPadding" style="display:none"><br><br></div>
 <maps style="display:none">
   <map>
 XXXXXXXXXXXXXXXXXXXX
@@ -204,27 +172,4 @@ X6X5X7X5X3X2X2..X6X3
 XX................XX
   </map>
 </maps>
-<div id="restartButton" style="display:none;position:absolute; posTop:0px; posLeft:0px; top:0px; left:0px">
-  <svg width="100" height="100">
-    <circle cx="50" cy="50" r="15" stroke="#CCCCCC" stroke-width="30" fill="#000000" />
-    <line x1="40" y1="40" x2="21" y2="21" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="60" y1="60" x2="79" y2="79" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="40" y1="60" x2="21" y2="79" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="60" y1="40" x2="79" y2="21" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="50" y1="25" x2="50" y2="10" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="25" y1="50" x2="10" y2="50" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="50" y1="75" x2="50" y2="90" style="stroke:#CCCCCC;stroke-width:15" />
-    <line x1="75" y1="50" x2="90" y2="50" style="stroke:#CCCCCC;stroke-width:15" />
-    <circle cx="50" cy="50" r="15" stroke="#666666" stroke-width="15" />
-  </svg>
-</div>
-<div id="popDialog" align="center" style="display:none; position:absolute; background-color:#AAAAAA; posTop:0px; posLeft: 0px; top:0px; left:0px;width:400px;box-shadow: 10px 10px 0px #333333;">
-   <H1>RESTART LEVEL</H1>
-   <H1>PREVIOUS LEVEL</H1>
-   <H1>NEXT LEVEL</H1>
-   <H1 id='sounder'>SOUND ON</H1>
-</div>
-
-<script src="shortcircuit.js"></script>
-</body>
-</html>
+<div id=restartButton style=display:none;position:absolute;posTop:0px;posLeft:0px;top:0;left:0><svg width=100 height=100><circle cx=50 cy=50 r=15 stroke=#CCCCCC stroke-width=30 fill=#000000 /><line x1=40 y1=40 x2=21 y2=21 style=stroke:#CCCCCC;stroke-width:15 /><line x1=60 y1=60 x2=79 y2=79 style=stroke:#CCCCCC;stroke-width:15 /><line x1=40 y1=60 x2=21 y2=79 style=stroke:#CCCCCC;stroke-width:15 /><line x1=60 y1=40 x2=79 y2=21 style=stroke:#CCCCCC;stroke-width:15 /><line x1=50 y1=25 x2=50 y2=10 style=stroke:#CCCCCC;stroke-width:15 /><line x1=25 y1=50 x2=10 y2=50 style=stroke:#CCCCCC;stroke-width:15 /><line x1=50 y1=75 x2=50 y2=90 style=stroke:#CCCCCC;stroke-width:15 /><line x1=75 y1=50 x2=90 y2=50 style=stroke:#CCCCCC;stroke-width:15 /><circle cx=50 cy=50 r=15 stroke=#666666 stroke-width=15 /></svg></div><div id=popDialog align=center style="display:none;position:absolute;background-color:#aaa;posTop:0px;posLeft:0px;top:0;left:0;width:400px;box-shadow:10px 10px 0 #333"><h1>RESTART LEVEL</h1><h1>PREVIOUS LEVEL</h1><h1>NEXT LEVEL</h1><h1 id=sounder>SOUND ON</h1></div><script src=shortcircuit.js></script>

@@ -1,18 +1,17 @@
 function clickBody(){
-	a = (document.getElementById("actor").getAttribute("position").y)
-
+	a = (document.getElementById("actor").getAttribute("position").y);
 	if(a==1.25){
 		document.getElementById("actor").setAttribute('position', "0 2.75 -4.9");	
 	}
 	else{
 		document.getElementById("actor").setAttribute('position', "0 "+(a+1)+" -4.9");	
 	}
-	document.getElementById("cam").setAttribute("position",'0 '+(((document.getElementById("actor").getAttribute("position")).y-0.20)/2)+' 2')
+	document.getElementById("cam").setAttribute("position",'0 '+(((document.getElementById("actor").getAttribute("position")).y-0.20)/2)+' 2');
 }
 (function(){
 	document.getElementById("cam").setAttribute('rotation',"2 111 0");
   	document.getElementById("sc").insertAdjacentHTML("afterbegin", '<a-ring  position="0 1.25 -5"  color="#FFF" radius-inner="-1" radius-outer="0"></a-ring>');
-  	l = ['#8BC34A','#FFEB3B','#2196F3','#F39C12']
+  	l = ['#8BC34A','#FFEB3B','#2196F3','#F39C12'];
   	for (var i = 2; i < 6; i++) {
   		rand = Math.floor((Math.random() * 180) + 0);
   		console.log(rand);
