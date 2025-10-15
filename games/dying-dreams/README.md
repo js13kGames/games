@@ -5,7 +5,7 @@ Dying Dreams is a puzzle game where you have to kill all the... uh, *"figures"* 
 The game contains 13 puzzles, most of them not too hard (except maybe the puzzles in the end).
 
 ### Controls
-- **Move**: <kbd>▲</kbd> <kbd>▼</kbd> <kbd>◀</kbd> <kbd>▶</kbd>
+- **Move**: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>
 - **Undo**: <kbd>Backspace</kbd> or <kbd>Z</kbd>
 - **Restart**: <kbd>R</kbd> <small>(on non-QWERTY keyboards the key below 4 and 5, I think)</small>
 - **Pause**: <kbd>Enter</kbd> <small>(you can restart and undo from here, too)</small>

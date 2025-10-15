@@ -1,1 +1,0 @@
-var AW={name:"Agnes Waterhouse",health:100,attack:20},EP={name:"Elisabeth Plainacher",health:100,attack:50},JJ={name:"Johannes Junius",health:100,attack:10};
