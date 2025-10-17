@@ -1,8 +1,11 @@
 ### Game Description
-This is a two-player drafting card game, available both as a print-and-play and as a digital experience. Print the PDF from the GitHub repo to play with friends, or face the Void in the video game version trapped together at the edge of night. The shared deck holds 49 cards, built from 9 distinct designs.
+This is a two-player drafting card game, available both as a print-and-play and as a digital experience. 
+[Print the PDF](//github.com/js13kGames/dusk/blob/master/dusk-print-to-play.pdf?raw=true) from the GitHub repo to play
+with friends, or face the Void in the video game version trapped together at the edge of night. The shared deck holds 
+49 cards, built from 9 distinct designs.
 
 ### Basic Rules
-**Win:** End your turn with Goal card's goal met.
+**Win:** End your turn with Goal card's goal met.\
 **Lose:** End your turn with 15+ cards in Play Area. (Win checked before Loss)
 
 **Setup:** Shuffle deck. Each player takes 1 secret Goal Card.

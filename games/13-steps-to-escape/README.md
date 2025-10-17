@@ -38,7 +38,7 @@ This game is mostly inspired by the beautiful puzzle game *Isles of Seas and Sky
 
 Thanks to:
 - Romain Gillet supporting me with color palette and proposing some assets
-- [WTF'UX](//youtube.com/@WTFUX23) a professional UX designer giving useful feedbacks
+- [WTF'UX](//youtube.com/@wtf_ux) a professional UX designer giving useful feedbacks
 - Snaga and Saxo for testing and giving feedbacks
 - derBenniBanni for its remote debugging of gamepad controller
 
