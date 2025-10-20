@@ -1,4 +1,5 @@
-⚠️ Due to a SVG bug in Firefox, this game currently looks better on Webkit browsers (Chrome, Edge, Safari) ⚠️
+> [!NOTE]
+> Due to an SVG bug in Firefox, this game currently looks better in Webkit browsers (Chrome, Edge, Safari)
 
 It's your (unlucky) day! You got up on the wrong foot.
 

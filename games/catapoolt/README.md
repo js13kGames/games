@@ -1,8 +1,7 @@
-# Catapoolt
+> “Launch. Lunch. Litter.”
 
-“Launch. Lunch. Litter.”
-
-A game about a black cat that bounces like a slingshot, eating mice to regain stamina while every jump drains it - with a twist.
+A game about a black cat that bounces like a slingshot, eating mice to regain stamina while every jump drains it - 
+with a twist.
 
 ## How to play
 

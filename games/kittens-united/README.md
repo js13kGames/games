@@ -1,4 +1,3 @@
-## Story
 Step into the paws of Amara 🐈‍⬛ — a devoted mom on a mission to reunite with her three playful kittens.
 
 - 💚 Ivy, the energetic climber who’s always circling the tree.
@@ -8,10 +7,12 @@ Step into the paws of Amara 🐈‍⬛ — a devoted mom on a mission to reunite
 Can you bring them back together before the moon sets and darkness falls? 🌙
 
 ## Controls
+
 - On-screen buttons or keyboard
 - Advanced keyboard shortcuts will be displayed once you press the first key
 
 ## Challenges
+
 Here I have collected some level setups that I found interesting. You can load them via the 📂 button, once you finished the tutorial.
 
 1. `🟣04🔵03🟢43🟡30🌙00🌳32💧34`
@@ -29,7 +30,9 @@ Here I have collected some level setups that I found interesting. You can load t
 13. `🟣12🔵32🟢23🟡21🌙40🌳22💧04` - Upside down long
 
 ## If you are interested
+
 ### About the level generation and difficulty
+
 - All levels are randomly generated
 - Each level is solvable within the move limit (once there is a move limit). Exception: If you see a `?` for the move limit, it means no valid level was found after 13 tries — this should be very rare.
 - The displayed difficulty is based on the number of solutions (how many paths lead to victory)

@@ -1,6 +1,6 @@
-# Gravity Cat
-
-...is a small puzzle game where you play as a black cat (who would have guessed!) and control the gravity. You have to collect all the purple gems because... umm... well, I'm fairly certain there is a good reason for that, and it has something to do with beliefs related to black cats or something.
+A small puzzle game where you play as a black cat (who would have guessed!) and control the gravity.
+You have to collect all the purple gems because... umm... well, I'm fairly certain there is a good reason for that,
+and it has something to do with beliefs related to black cats or something.
 
 ## Idea
 
@@ -8,8 +8,8 @@ Idea is that you can control the direction of the gravity, and it affects all th
 
 ## Controls
 
-- **Arrow keys or WASD**: Move (gravity or the cursor in menus)
-- **R**: Restart level
-- **Backspace**: Undo a move
-- **Escape or enter**: Pause
-- **Enter or space**: accept (in menus)
+- **Move** (gravity or the cursor in menus): <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd> or <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>
+- **Restart level**: <kbd>R</kbd>
+- **Undo**: <kbd>Backspace</kbd>
+- **Pause**: <kbd>Esc</kbd> or <kbd>Enter</kbd>
+- **Accept** (in menus): <kbd>Enter</kbd> or <kbd>Space</kbd>
