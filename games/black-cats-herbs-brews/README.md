@@ -1,12 +1,12 @@
-## Black Cat's Herbs & Brews
-
 You and your familiar just arrived to a small village. Your new home, away from the bustling city.
 
-Brew and sell your potions to the villagers so you can pay rent, upgrade your shop and, more importantly, feed your familiar, otherwise she'll knock your potions and ingredients off the shelves.
+Brew and sell your potions to the villagers so you can pay rent, upgrade your shop and, more importantly, feed your
+familiar, otherwise she'll knock your potions and ingredients off the shelves.
 
 ----
 
 ## Controls
+
 ### Click the cupboard to see your inventory
 <img src="//raw.githubusercontent.com/dosaki/black-cats-herbs-and-brews/refs/heads/main/gif-instructions/inventory.gif" loading=lazy>
 
@@ -24,6 +24,7 @@ Brew and sell your potions to the villagers so you can pay rent, upgrade your sh
 
 
 ## Tips
+
 * Shop prices change every day. If something's too expensive, maybe wait until tomorrow... or maybe it'll be even worse!
 * You can try to guess the potion recipes, if you don't want to buy it.
 * Don't accrue too much debt

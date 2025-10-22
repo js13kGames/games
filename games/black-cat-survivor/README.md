@@ -1,16 +1,15 @@
-# Black Cat Survivor
-
-## Introduction
-
-Your boss, Catniss, threw you in the woods and "encouraged" you to collect gems from stray cats and their buddies. The more gems you collect, the more help she'll give you. However, you don't get to choose the kind of help she gives. Get the pink gem from Big Black Cat before she'll save you. She's also hidden some catnip on you that attracts them to you; the effect gets stronger over time. Don't let them touch you; they scratch.
+Your boss, Catniss, threw you in the woods and "encouraged" you to collect gems from stray cats and their buddies.
+The more gems you collect, the more help she'll give you. However, you don't get to choose the kind of help she gives.
+Get the pink gem from Big Black Cat before she'll save you. She's also hidden some catnip on you that attracts them to
+you; the effect gets stronger over time. Don't let them touch you; they scratch.
 
 Note: While a higher score is better for your boss; a lower score shows more skill.
 
 ## Controls
 
-* wasd or arrow keys for movement.
-* space to restart after death/win.
-* 'm' key to mute/unmute the background music.
+* **Move**: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd>
+* **Restart** (after death/win): <kbd>Space</kbd>
+* **Mute music**: <kbd>M</kbd>
 
 ## Items
 
@@ -35,5 +34,7 @@ Note: While a higher score is better for your boss; a lower score shows more ski
 
 ## Outside Credits
 
-* Uses hacked up pieces of the Kontra framework; a nice little framework but still too beefy for 13k. https://straker.github.io/kontra/
-* Sounds created with SoundBox and slightly modified player library; impressed with the various sounds created by this. https://sb.bitsnbites.eu/
+* Uses hacked up pieces of the [Kontra](https://straker.github.io/kontra) framework; a nice little framework but still
+  too beefy for 13k.
+* Sounds created with [SoundBox](https://sb.bitsnbites.eu) and slightly modified player library; impressed with the
+  various sounds created by this.

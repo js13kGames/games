@@ -7,6 +7,3 @@ I never finished it. I was really slow while making this, and then i got really 
 **LEFT/RIGHT ARROWS**: Move left/right
 **SPACE BAR**: Jump
 **SHIFT**: Sprint (you go faster)
-
-## Final size
-6.3KB compressed
