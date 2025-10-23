@@ -1,7 +1,7 @@
 import sandboxed from './sandboxed'
 
 export default {
-  async fetch(req: Request, env: Record<string, any>) {
+  fetch(req: Request, env: Record<string, any>) {
     const
       url = new URL(req.url),
       uri = url.pathname.slice(1)
@@ -14,7 +14,13 @@ export default {
         if (uri.slice(-4) == '.zip') {
           // Rewrite to support `play.js13kgames.com/my-game.zip` URLs.
           url.pathname = uri.slice(0, -4) + '/.src/g.zip'
+
+          // Attempt to fetch from locally attached static files and pass through to origin on failure.
           return env.PLAY.fetch(url, req)
+            .then(res => res.ok
+              ? res
+              : fetchFromOrigin(url.pathname, req)
+            )
         }
 
         return env.ASSETS.fetch(req)
@@ -47,22 +53,31 @@ export default {
     }
 
     // Proxy through to our backend directly as a last resort.
-    //
-    // Set to cache aggressively, because we invalidate Cloudflare's cache directly whenever content in the backend
-    // (like draft data) changes.
-    //
-    // TODO(alcore) Ideally we'd serve those off R2 directly, but this would require either backend support,
-    // or moving the draft submission logic directly into workers. For now this is a good enough stopgap
-    // measure to get stable URLs.
-    return fetch(new Request('http://drafts.js13kgames.com/' + uri), {
-      cf: {
-        cacheEverything: true
-      },
-    })
+    return fetchFromOrigin(uri, req)
   }
 }
 
 const naiveBots = /(?<! cu)bots?|crawl|http|scan|search|spider/i
 function isBot(req: Request) {
   return req.cf.verifiedBotCategory || naiveBots.test(req.headers.get('user-agent'))
+}
+
+async function fetchFromOrigin(uri: string, req: Request) {
+  // Set to cache aggressively, because we invalidate Cloudflare's cache directly whenever content in the backend
+  // (like draft data) changes.
+  //
+  // TODO(alcore) Ideally we'd serve those off R2 directly, but this would require either backend support,
+  // or moving the draft submission logic directly into workers. For now this is a good enough stopgap
+  // measure to get stable URLs.
+  let response = await fetch(new Request('http://drafts.js13kgames.com/' + uri, req), {
+    cf: {
+      cacheEverything: true
+    }
+  })
+
+  // Our backend uses a perma-cache max-age that we want Cloudflare to respect, but we want clients to actually
+  // revalidate through the Worker.
+  response = new Response(response.body, response);
+  response.headers.set("Cache-Control", "max-age=0,must-revalidate");
+  return response
 }
