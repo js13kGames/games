@@ -6,38 +6,59 @@ export default {
       url = new URL(req.url),
       uri = url.pathname.slice(1)
 
-    // Naively filter out all requests for URIs with dots. Locally existing game files would've been already served
-    // one level higher, so unless we're dealing with a virtual path, passthrough to the assets CDN.
-    if (uri.indexOf('.') >= 0) {
-      if (uri.slice(-4) == '.zip') {
-        // Rewrite to support `play.js13kgames.com/my-game.zip` URLs.
-        url.pathname = uri.slice(0, -4) + '/.src/g.zip'
-        return env.PLAY.fetch(url, req)
-      }
-
-      return env.ASSETS.fetch(req)
-    }
-
     const i = uri.indexOf('/')
     if (i < 0) {
-      // If a game with this slug exists, append trailing slash and redirect.
-      if (sandboxed[uri]) {
-        url.pathname = uri + '/'
-        return Response.redirect(url.toString(), 308)
+      // Naively filter out all requests for URIs with dots. Locally existing game files would've been already served
+      // one level higher, so unless we're dealing with a virtual path, passthrough to the assets CDN.
+      if (uri.indexOf('.') >= 0) {
+        if (uri.slice(-4) == '.zip') {
+          // Rewrite to support `play.js13kgames.com/my-game.zip` URLs.
+          url.pathname = uri.slice(0, -4) + '/.src/g.zip'
+          return env.PLAY.fetch(url, req)
+        }
+
+        return env.ASSETS.fetch(req)
       }
 
-      return new Response(null, { status: 404 })
+      // Append trailing slash and redirect. This is rather aggressive since we're not checking for the existence
+      // of the target resource in the first place (will get resolved after the redirect).
+      url.pathname = uri + '/'
+      return Response.redirect(url, 308)
     }
 
     const game = uri.slice(0, i)
-    if (!sandboxed[game]) return new Response(null, { status: 404 })
-    if (isBot(req)) {
-      // Perma-redirect for crawlers, since we're checking for them anyway
-      // and would rather people hit the game's page than the game directly.
-      return Response.redirect('https://js13kgames.com/games/' + game, 308)
+    if (sandboxed[game]) {
+      if (isBot(req)) {
+        // Perma-redirect for crawlers, since we would rather people hit the game's page than the game directly.
+        return Response.redirect('https://js13kgames.com/games/' + game, 308)
+      }
+
+      return env.RUNTIME.fetch(req)
     }
 
-    return env.RUNTIME.fetch(req)
+    // Naive filtering here because it's ultimately much cheaper (even if a bit inconvenient) to stick to
+    // a file naming convention. Note: this covers /2025/webxr/..., /2025/online/... - paths like /socket.io.js
+    // would have already been handled earlier in the flow.
+    if (game.length == 4) {
+      let y = parseInt(game)
+      if (y >= 2012 && y < 2200) {
+        return env.ASSETS.fetch(req)
+      }
+    }
+
+    // Proxy through to our backend directly as a last resort.
+    //
+    // Set to cache aggressively, because we invalidate Cloudflare's cache directly whenever content in the backend
+    // (like draft data) changes.
+    //
+    // TODO(alcore) Ideally we'd serve those off R2 directly, but this would require either backend support,
+    // or moving the draft submission logic directly into workers. For now this is a good enough stopgap
+    // measure to get stable URLs.
+    return fetch(new Request('http://drafts.js13kgames.com/' + uri), {
+      cf: {
+        cacheEverything: true
+      },
+    })
   }
 }
 
