@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Connect the vertices of the solid!
 Connect polygons to win extra points. Avoid your vertices becoming isolated.
 

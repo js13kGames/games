@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://lanceewing.github.io/the-kings-missing-page/
+---
 "The King's Missing Page" is a point and click animated adventure game.
 
 You control Detective Pip who has been given the assignment of finding the King's missing page boy, who went missing in the woods whilst delivering a message for the King.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Defend the last bunker on the moon against endless waves of invaders.
 
 Controls:

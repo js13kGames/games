@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/TtMCgEBjaK0
+post: https://github.com/gregwoodsfrontier/wandsTriska/blob/main/README.md
+---
 🪄 😊
 
 Once upon a time, there is a wizard, Trika, who is a freshman in the Deka Academy.

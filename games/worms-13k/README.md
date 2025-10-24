@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's the classic Worms mayhem, where two teams of worms – packing a formidable arsenal of bazookas, miniguns, cluster bombs, and more – fight it out to be the last one standing.
 
 Playable as either local multiplayer, or remote multiplayer for up to 2 players at once.

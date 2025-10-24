@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Knighting of Sr Isaac, is a simple random room generated roguelike game where you combine different weapons with unique attack patterns against enemies.
 
 Prove yourself worthy of being called a knight and see how far you can go!!!

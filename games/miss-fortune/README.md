@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://slothlikeman.itch.io/miss-fortune
+video: https://youtu.be/c6lBba7N4r4
+---
 Miss Fortune has been locked outside her apartment after a night on the town.
 
 Help Miss Fortune climb the building, dodge the angry tenants and cause a little chaos along the way.

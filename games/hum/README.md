@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Roger is a very hungry hummingbird. He needs nectar, pronto.
 
 Space bar: flap Roger's tiny wings. You will press this many many times

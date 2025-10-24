@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Unusual sighting in the sky above planet earth! It must be invaders from Jupiiter!
 Assemble our top pilots to defend planet Earth and launch a counter attack on Jupiter!
 

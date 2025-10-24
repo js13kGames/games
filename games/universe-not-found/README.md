@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game is a memory-game mixed with puzzle exploration game, where black holes transport your ship to new universes on a trek to find a place to call home.
 
 - Use WASD to move your probes and ships

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Minimalistic web strategy game. Player have to capture all enemy castles.
 
 Vanila JS.

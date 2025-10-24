@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You’ve been captured by the enemy and thrown into a prison deep in the heart of an island. To reach the sea and escape, you must face 13 legions, each composed of 13 enemies. Enemies come in colors of red, yellow, and blue. In order to defeat them, you will need to use a sword with a matching color. Also, be mindful of the rocks falling from above. Choose one of the four paths you want to take, your choice will determine the difficulty of your journey.
 
 ## Controls

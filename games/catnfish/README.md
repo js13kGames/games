@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 - Move with arrow keys
 - Navigate the rooms
 - Find the fish

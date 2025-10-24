@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://supernapie.com/games/black-hole-square/
+---
 Welcome to Black Hole Square!
 
 Clean up all the other squares in the universe. Just tap them and see what happens.

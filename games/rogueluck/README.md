@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Rogueluck is a roguelike game. Why? Because it has "Rogue" in the title. Rogueluck is also about luck, but this time not only because of the title. There are monsters, luck, arrows, blood, luck, points, haunted trees, luck and many more!
 
 Game features:

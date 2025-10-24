@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Battle Royale!  Fight for survival!  Last man standing wins!
 
 Gather ammunition, find strategic advantage, and do what you must to stay alive.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Infiltrate in a prision of a dystopian future trying to rescue Ned Snow.
 
 Coil members have access to a spin-off story that gives more information about this world.

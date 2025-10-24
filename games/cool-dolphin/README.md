@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help the dolphin find the sea where there is no number 13.
 
 Press UP and DOWN to swing the dolphin

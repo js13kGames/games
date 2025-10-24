@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Oh no ! Your ship is trapped in a parallel dimension, where it is going back in time ! Instead of gaining upgrade and becoming more powerful as time passes on, it losses upgrades ! Lucky for you, your ship is very well equipped, and can select which useless upgrade to lose first. How long will you survive, and how small can your ship get?
 
 controls :

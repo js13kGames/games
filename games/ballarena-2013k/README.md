@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Two pads, one ball, four lives, and lots of bricks to destroy. Obviously, there's a catch: you know the world is round, don't you ?
 
 Either go through the 13 levels with patience and elite aiming skills, or cheat your way to the end screen. Did I mention a cheat ? Oops ...

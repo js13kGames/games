@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Escape from a looping nightmare staying at a haunted hotel
 
 ## Story

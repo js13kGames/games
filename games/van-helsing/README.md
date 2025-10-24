@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Dr. Van Helsing!
 You have special mission from Vatican to kill Count Dracula.
 Explore his castle, collect arrows, eat food to heal yourself and kill the Dwergi and his Brides to get strength.

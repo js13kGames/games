@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Falling Blocks
 
 Dodge the Blocks with Reverse Color.

@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://tamats.com/games/blackcats/
+video: https://youtu.be/GkOCBgFX2Pc
+---
 **During World War II, there was an Allied squadron of fighter planes in the Pacific known as the Black Cats.**
 
 Their PBY Catalinas were painted black to blend into the night sky. Equipped with radar, capable of landing on the sea, and boasting long-range endurance, they are often considered the first stealth aircraft.

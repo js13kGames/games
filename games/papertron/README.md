@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 PAPERTRON
 Papercraft TRON game in 13 kByte.
 

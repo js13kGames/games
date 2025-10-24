@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/aIHlEQK_nR4
+post: https://roblouie.com/article/949/the-making-of-charon-jr-js13k-postmortem/
+---
 After centuries of faithful service, Charon, also known as the ferryman of the dead, has retired. His son is now collecting payments from the dead and escorting them to the next life. Just with one small change....
 
 ❌ Boat 

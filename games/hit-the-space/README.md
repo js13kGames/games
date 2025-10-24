@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are on a mission to colonize planets in the nearby system.
 Search for habitable planets, but watch out for the dangers of outer space!
 

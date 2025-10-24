@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Reversed: The Game is a one-button platformer / puzzle, where instead of controlling the protagonist directly, you're manipulating gravity. Newton would be proud.
 
 HOW TO PLAY

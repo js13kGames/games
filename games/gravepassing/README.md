@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You’re alone in a graveyard, hounded by armies of the undead. Can you escape death and rescue all of humanity?
 
 Set to 8-bit music, Gravepassing evokes Game Boy aesthetics with a 16x16 base tile grid, downscaled emojis, and dithered lighting for that overall retro vibe.  

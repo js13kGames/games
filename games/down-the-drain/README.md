@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A short graphic adventure game where you guide a teenager called Pip around the underground sewers in search of Pip's phone that was accidentally dropped down a curbside drain. You'll meet some interesting characters along the way.
 
 Classic point and click adventure interface that should be familiar to everyone.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are Planty. You must save the world from elemental forces.
 Move around with wasd or arrow keys
 Shoot with space, change elements with 1234

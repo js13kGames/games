@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Treasure -Thirteen : The Hidden Treasure Game  ainspired by Minesweeper. Players navigate a grid to uncover treasures while avoiding obstacles. Each treasure found grants extra lives, and obstacles reduce lives if clicked. 
 
 

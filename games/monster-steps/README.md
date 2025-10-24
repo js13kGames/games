@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://gamedev.pl/games/monster-steps
+post: https://x.com/gtanczyk/status/1823848171975401472
+---
 Monster Steps is a strategic puzzle game. In this game, players navigate through a grid-based world, avoiding monsters that appear every 13 steps while trying to reach their goal.
 
 ## Game Features

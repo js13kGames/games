@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Visit an ancient temple, collect goal, defeat 10 levels of baddies.  To navigate use:
 
 - Regular cursor keys

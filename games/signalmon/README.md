@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Signalmon is a tamagochi-like game for mobile browsers. Signalmon has 3 basic needs: Food, Sleep, Fun.
 
 ## Creatures

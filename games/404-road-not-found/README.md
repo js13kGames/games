@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 All roads vanished in a yellow wood
 Timmy is lost and can not move forth
 The germs could kill him right where he stood

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Year 13 after climate change, the Earth is uninhabitable.
 
 The last space freighter, with 13 million fertilized and cryogenized human ovules, leaves the earth, with 500 tons of Scriptium (Scm), 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's yet another doom clone.
 
 Kill the enemies and get through all the levels. But be careful, don't forget the way back.

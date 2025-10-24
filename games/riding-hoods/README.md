@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help the Little Red Riding Hood find the other Riding Hoods who are lost in the dark forest.  She must avoid getting eaten by Big Bad Wolves and get everyone safely out of the forest.

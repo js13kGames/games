@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your new job is to capture souls floating on the River of The Dead. Capture them and you'll be rewarded.
 
 Controls:

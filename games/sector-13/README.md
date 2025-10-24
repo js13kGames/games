@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Commander, it is all up to us!
 
 Thirteen sectors and untold legions of enemy ships... 

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://stevenklambert.com/writing/encroaching-darkness-postmortem/
+---
 Earn the most points at the end of 16 rounds
 
 ## How to Play

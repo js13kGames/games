@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The job of death is boring yet vital. If they did not banish the decreased from earth, they will turn into spectres and harm the world.
 Your time is limited. Send those poor souls to hell while avoiding spectres. The peace of the world is upon you.
 When the human is dying, a counter will appear over them. When the counter turns to 0, they will turn into spectres.

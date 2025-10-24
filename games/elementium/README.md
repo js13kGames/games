@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Shoot'em up arcade game. Kill as many enemies using four elemental weapons. Each kind of enemy has weakness for only one of your weapons.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A young vagabond is adopted/abducted (abdopted?) and enters the patronage of a wealthy and powerful personage; they are introduced and then immersed in the shadowy world of King of Cards - a mysterious and possibly supernatural tournament of 1:1 duels where the only weapons are quick eyes and keen minds.
 
 The goal of each match is to find a set of three cards that are a "true trinity" faster than your opponent.

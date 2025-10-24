@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A tower defense game in which you can play either on life's or death's side.
 
 There are some glitches in the submitted version, but life happened so I could not complete them.

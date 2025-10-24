@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're a computer geek sucked into the cyber space while using your VR goggles during a thunder storm. You have to fight your way back from the virtual reality by defeating the C.O.R.E. The mysterious power of GLITCH will help you on your journey.

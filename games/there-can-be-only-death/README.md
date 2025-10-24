@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A classic RTS game in the style of Warcraft and Starcraft. Obliterate your opponent and leave no surviving units or buildings to win. THERE CAN BE ONLY DEATH.
 
 Instructions and controls:

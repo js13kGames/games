@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The game idea is a social network called 'yourspace', a parody to myspace, where you had to race to make everyone in the world to follow you in the shortest possible time. To achieve this, you need to combine post types and topics to get according to the current trending topics.
 
 This game is unfinished since it was really difficult for a while to come up with a way to make this... well, fun. The most part of the development was done in the last hours just to see if I could make this work, but it still in an unplayable state.

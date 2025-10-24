@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Another little story of triangle man! Can you try to get out of cave? It isn't that easy as you think. 
 
 Controls:

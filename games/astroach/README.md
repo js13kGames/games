@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 “Astroach” is a speedy action game in which you fight on 4x4 tiles.
 It consists of 5 stages in total, and it won't be that easy to clear them all!
 

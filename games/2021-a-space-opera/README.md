@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://herebefrogs.com/2021-space-opera
+post: https://medium.com/@herebefrogs/2021-a-space-opera-a-js13kgames-2021-post-mortem-94cc2e061031
+---
 Space no longer sounds its old self... Bring harmony to the Cosmic Microwave Background by solving each planet's musical puzzle!
 
 How to play:

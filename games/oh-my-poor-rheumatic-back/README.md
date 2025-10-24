@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use the cursor keys or WAD keys.
 
 Toggle music off/on by pressing 'm'

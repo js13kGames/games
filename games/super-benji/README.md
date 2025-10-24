@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://hseager.github.io/blog/game-dev/js13k/2025/09/19/super-benji-post-mortem.html
+---
 
 ## Gameplay/Features
 

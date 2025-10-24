@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 mushroom picking with a drone are you serious lets do this manage a small mushroom garden. your task is to harvest mushrooms growing from the ground once fully grown collect the mushrooms the points awarded depends on the radius of the mushrooms. for 50 pts you can use 2X to enlarge the mushrooms. the rain drop to boost germination rate. the bomb to speed up harvesting processes use the joystick for flying around. I used tinymusic , and zzsfx for sound effects.

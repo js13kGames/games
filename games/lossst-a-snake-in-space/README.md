@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/nznC5jv0Vg8
+post: https://xem.github.io/articles/js13k21.html
+---
 LOSSST is back!
 Better graphics, better controls, better music and a ton of new puzzles, mechanics and surprises!
 

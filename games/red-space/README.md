@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Red space is a game in which enemies become more difficult as you move away from the home location. Don't get lost, you will regret it if you wonder to far away. Killing enemy's awards skill points that can be used to buy power ups, and returning to the home location will restore your hp half way.
 
 controls:

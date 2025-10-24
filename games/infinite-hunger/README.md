@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Infinite Hunger
 
 ...is a simple endless arcade platformer action thingy. You control a black cat who has to keep eating otherwise a single hit by a red-nosed slime can kill you. 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Glitch torpedo", my 2016 js13k submission, is a multiplayer sea battle online arcade game, based on Gremlin's "Depthcharge" arcade machine (1977).
 
 INSTRUCTIONS:

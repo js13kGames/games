@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## How to play
 
 You have 13 days to score as many points as you can with your magic dice.  

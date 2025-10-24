@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # 🐾 Clicker Pawry
 
 **Clicker Pawry** is a little clicker-roguelite where you fight bosses only with your **mouse** (desktop) or your **finger** (mobile).  

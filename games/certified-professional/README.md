@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Certified Professional is a game of teamwork and multitasking. You are working with your partner, helping one another to repair a broken power line while also watching out for hazards.
 
 The Line Worker is the fastest around when it comes to repairing wires, but is blind and cannot see approaching power surges or avoid the aggressive birds of the region!

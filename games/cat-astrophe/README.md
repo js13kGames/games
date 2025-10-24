@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Welcome to Cat-astrophe!
 
 **A game of skill, luck, and lots of sugar.**

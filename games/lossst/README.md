@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/ynh-eJVKGAw
+post: https://xem.github.io/articles/js13k17.html
+---
 Video teaser: https://twitter.com/MaximeEuziere/status/908662081955745792
 
 LOSSST

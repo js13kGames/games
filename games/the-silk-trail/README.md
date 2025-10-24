@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Get to the end of The Silk Trail and make as much money as you can along the way.
 
 Throw your items at incoming bandits to survive by pressing the left side of the screen.

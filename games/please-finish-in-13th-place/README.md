@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://frutal.pt/js13k-2024/
+---
 > *You are a galaxy famous space pilot*
 
 > *Until one day...*

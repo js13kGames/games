@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://lcapps.itch.io/13-curses
+---
 13 Curses is a card game where the first player to have exactly 13 *curses* loses.
 
 ### Playing

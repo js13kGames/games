@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A dark puzzle game where you explore the dark web and save your kidnapped sister. Try not to get hacked!
 
 How to play:

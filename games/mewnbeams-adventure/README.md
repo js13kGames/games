@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Mewnbeam’s Adventure
 
 Build your deck, battle enemies, and defeat the Rat King in this magical roguelike deckbuilder.

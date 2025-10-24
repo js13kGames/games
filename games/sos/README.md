@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 SOS is a retro shoot-em-up game with pixel art graphics. Game-play revolves around rescuing marooned citizens, whilst avoiding or engaging enemies.
 
 Controls:

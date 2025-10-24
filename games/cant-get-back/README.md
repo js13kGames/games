@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The player is stuck in a world where everything disappears as you pass by it. You must activate the generators in order to activate the bomb that will help you escape from this world.
 
 Controls:

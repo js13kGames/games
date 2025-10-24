@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a grim reaper.
 
 You were sent to the world of mortals to take care of ending the lives of the ones for which time has come.

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://megagrump.github.io/they-took-my-cat/
+---
 An evil society of animal snatchers stole your cat! Search their headquarters for Manny the cat and fight animal thieves along the way.
 
 Inspired by the classic arcade game [Elevator Action](https://en.wikipedia.org/wiki/Elevator_Action).

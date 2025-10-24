@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a very meaningful game. There will be some troubles in the world. You need to remember what they need and give them cure. Then you healed the world.
 
 

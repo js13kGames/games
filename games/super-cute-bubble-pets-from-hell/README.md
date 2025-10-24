@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Protect your turf against the jellies by commanding your elemental pets.
 If they reach the end of the lane, you lose 1 Life.
 Each element is weak against itself.

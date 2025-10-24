@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 *** SHUTTLE POWER DASH ***
 
 You and your fellow spacefarer are stranded and almost out of fuel! Luckily, you notice an abandoned space station nearby. But it's a pretty glitchy place... who knows what lies inside?

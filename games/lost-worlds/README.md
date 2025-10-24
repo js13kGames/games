@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Somewhere deep underground near the Large Hadron Collider... something has gone terribly wrong...
 
 Collect electronics, watch out for bugs, and don't get too lost in the multiverse!

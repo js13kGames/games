@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're hunting for "Orbs of Awesomeness" in the dark.
 
 Tap the lamps to illuminate their surrounding area (or ... ahem ... "reverse" the darkness into light within that area) and find your way to the orb in each level.

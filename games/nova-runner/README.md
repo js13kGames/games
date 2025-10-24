@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "The Northern Cluster Minerals pilot strike enters its third week today. The strikers demand stricter safety protocols, but an NCM spokesman emphasized that all their spacecraft are equipped with state-of-the-art prior-explosion time-reversal engines (PETREs). The spokesman did not address the concerns over the short usable lifetime of PETREs, nor the difficulty of preventing paradoxes."

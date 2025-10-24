@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://herebefrogs.com/highway-404/
+post: https://medium.com/@herebefrogs/highway-404-a-js13kgames-2020-post-mortem-89f94dedef03
+---
 How long will you survive the perils of Highway 404, Canada's evilest motorway? Featuring your favorite HTTP status codes:
 - 103 Early Hints: dispenses in-game instructions
 - 200 Road OK: cancels the adverse effects of 404

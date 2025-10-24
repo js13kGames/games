@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fungi decompose the dead. In this game, it is the player's objective to decompose the dead creatures. They are composed of molecules that can be dragged and rotated. When all molecules are dropped off the grid the level is completed. Molecules are moved by drag and drop and rotated with Q and E around the clicked grid position.
 
 Along with the game, I am submitting the level editor where players can create and share their own puzzles. They can draw on the grid. A molecule can be selected for editing with Q and E. Individual pieces of a selected molecule can be removed by clicking them. An entire *unselected* molecule can be removed by first toggling the delete mode with D and then clicking anywhere on the molecule. Try drawing first. Then, press E to move the selection further and create a new one. Colors will be assigned randomly upon creation and can be adjusted. Finally, the share button generates a link to be shared with friends.

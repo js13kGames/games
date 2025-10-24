@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Be the best signalmancer in the galaxy! Prevent 404s by bouncing messages home from deep space as quickly as possible.
 
 Controls (Keyboard):

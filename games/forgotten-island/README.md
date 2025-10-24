@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are lost in the Forgotten Island! Collect all the golden collectibles so you can leave through the exit! Beware of the mobs and turrets!
 
 Instructions and controls:

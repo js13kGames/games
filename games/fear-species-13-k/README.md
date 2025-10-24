@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 For too long we've lived in powerless terror. Hidden inside our minds. Consumed in order to fortify the strength of our enemy.
 
 Wake up and earn the trust of our captors. When the time is right we will strike a resounding blow... and make species 13-K begin to fear US.

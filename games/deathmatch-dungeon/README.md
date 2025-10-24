@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Deathmatch Dungeon is a multiplayer game where mages battle it out in the classic deathmatch tradition in a pixel art style.
 
 The aim is to kill as many opponents as you can in a three minute timed round whilst dying as few times as possible.

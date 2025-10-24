@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In bad times, some people choose to jump off the building and end their lives.
 A 2D fall down game speeds up with distance and increases more obstacle.
 Have fun!

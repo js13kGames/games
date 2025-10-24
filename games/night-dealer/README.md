@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 On full-moon midnights, a black-furred card-monger — the Night Dealer — weighs the fate of cats. On a 3×3 board, play your arcana to flip adjacent tiles and steal back time. Win rounds, stack life-points up to 9.

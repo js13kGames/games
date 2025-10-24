@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The controls are just tapping and mouse.
 
 I wanted to design prettier tiles, but ran out of time.

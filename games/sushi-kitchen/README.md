@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Command a fleet of cook to craft sushi! 
 
 Buy new machines, hired more crew, expand your kitchen.

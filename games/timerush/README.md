@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 TimeRush is an exciting web-based game where you can collect various items, control time, and maximize your earnings.
 
 ### Unlocking the Power of Blockchain

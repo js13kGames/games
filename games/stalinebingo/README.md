@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 StalineBingo is an addictive game Massively Multiplayer Online (or Massively Lonelyplayer Offline) specifically designed for you : Bored in Classrooms or meetings.
 
 With StalineBingo, stop the propaganda !

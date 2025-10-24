@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tough game about tough glitchy times. Aren't you afraid of the Internal Error?
 
 Controls:

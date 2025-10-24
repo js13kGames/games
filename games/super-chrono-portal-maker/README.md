@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/LELCS7Dvaa0
+post: https://xem.github.io/articles/js13k16.html
+---
 A puzzle-game, and an hommage to Super Mario Maker, Portal and Chronotron!
 
 Discover many game mechanisms through 30 different levels, then make and share your own levels with the built-in editor!

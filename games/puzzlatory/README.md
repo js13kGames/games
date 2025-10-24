@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/M_qRYF9x5BI
+post: https://xem.github.io/articles/js13k22.html
+---
 YOU JUST FELL IN THE PUZZLATORY.
 
 WILL YOU GO TO HELL OR IN HEAVEN?

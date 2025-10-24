@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Blanks Detective is a mystery themed, point-and-click, logic puzzle game with randomly generated puzzles! Fill in the empty spaces on the board as new clues are revealed. If you solve correctly on the first try before the 'possible thumbs up' message, you get a 'gold medal'.  Watch out, your evidence may get stolen along the way.
 
 Periodically you will see the 'case files' screen with features described below.

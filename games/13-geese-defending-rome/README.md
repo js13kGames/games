@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Variations of the fox and geese game have been popular in Europe since at least the 13th century.
 
 This variation travels along 13th century trade routes between the major cities of Medieval Europe.

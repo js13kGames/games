@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It is like google chrome offline dinosaur game.
 
 Use jump to start the game. Gain points by surviving!!

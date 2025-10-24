@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Shoot at the balls with the correct answer. 2 x 13 spacy questions.
 Correct answers will be rewarded (health, friends, points), wrong answers will be punished.
 

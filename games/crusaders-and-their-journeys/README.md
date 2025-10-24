@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 - Move up: <kbd>W</kbd> / <kbd>↑</kbd>
 - Move right: <kbd>D</kbd> / <kbd>→</kbd>
 - Move down: <kbd>S</kbd> / <kbd>↓</kbd>

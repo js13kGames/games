@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a mobile game inspired by pinball, based on the device's accelerometer.
 You can also play this on a desktop and use your mouse to define the table rotation.
 (I think will be better to understand if you try it on a desktop first)

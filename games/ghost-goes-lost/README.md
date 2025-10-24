@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Charlie is lost again in the store, forgotten by his shopaholic mother.
 
 Finished gameplay, with an unfinished concept due to time constraints.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome spectators! The renowned Witch World Cup of the year 1276 is about to start! 
 The contestants will race each other on four different courses, one harder than the other! 
 Beware of low flying brooms and jinxes!

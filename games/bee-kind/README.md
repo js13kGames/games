@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bee Kind
 You play as BeeKeeper Bunny trying to save the bees. The bees take pollen from the flowers to their hives, but the blue ZomBees try to steal pollen and break the hives.
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Odul Mages is a local multiplayer game for two people who must share/fight over the keyboard in order to defeat their foe in this take on a 2D fighting game!
 
 There are only two mages who remain on on the Odul plains after their brethren where locked away. They are bound by and ancient vow so must stay together... But they really hate each other.

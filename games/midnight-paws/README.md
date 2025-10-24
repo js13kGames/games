@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://teroj.kapsi.fi/black_cat/
+video: https://youtu.be/ZyV7AmJyflU
+---
 ### MIDNIGHT PAWS 
 by **Frost Sun**
 

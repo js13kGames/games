@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Escape three mazes to win. Watch out for enemies lurking in the shadows.
 
 Controls:

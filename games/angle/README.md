@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Eliminate weeds using missiles.
 Missiles can only fire backward.
 Weeds continue to grow.

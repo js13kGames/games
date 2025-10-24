@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Controls
 - Touch on mobile or click on desktop to falling square and line to other squares to go up.
 

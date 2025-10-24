@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Engage in thrilling archery duels against AI opponents in Archery Master. 
 
 Load your bow, aim precisely, and be the first to strike 70 targets to claim victory. 

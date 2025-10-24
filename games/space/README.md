@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Endless 2D Space Survival shooter.
 
 WASD / Arrows keys to thrust

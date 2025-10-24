@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Matt Kowalski: You never flown the Soyuz either?
 Ryan Stone: Only the simulator.
 Matt Kowalski: Then you know.

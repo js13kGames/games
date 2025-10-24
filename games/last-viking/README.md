@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The year is 1262. Iceland should be brought under Norwegian rule. For peace, they say. To replace the Gods by the Christian one, Odin says! Get rid of the missionaries and hail to Valhalla!
 
 ### Controls

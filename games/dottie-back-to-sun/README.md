@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Story:
 Dottie, a solar flare, blasted off to the other side of the galaxy during an event. Our mission is to get Dottie back to reunite with the Sun.
 

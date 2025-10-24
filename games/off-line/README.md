@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Move around with WASD.
 Your score is the amount of time you spend on the line.
 Stay on the green line or else your health will drain.

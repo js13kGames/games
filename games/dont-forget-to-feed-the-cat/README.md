@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help needed!
 
 I will be away for a couple of days on a business trip. A responsible person is wanted to take care of my precious cat 

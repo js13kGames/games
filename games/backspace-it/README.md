@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Delete characters with the backspace key as they appears in the screen.
 
 Special characters delete more than one cell and gives extra points.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome, dear minion!
 
 Here you are a new guardian of death, protecting gates access!

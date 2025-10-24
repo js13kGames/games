@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/yMR5HVWEmak
+post: https://github.com/michelts/thirteen-truco/blob/main/docs/POSTMORTEM.md
+---
 Clone of the classic card game Truco! One major difference: a card numbered 13!
 
 This card loses to any other card. However, it mimics any card in the deck until you play it. Only when you drop it does it reveal it as a 13.

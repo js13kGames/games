@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ### Game Description
 This is a two-player drafting card game, available both as a print-and-play and as a digital experience. 
 [Print the PDF](//github.com/js13kGames/dusk/blob/master/dusk-print-to-play.pdf?raw=true) from the GitHub repo to play

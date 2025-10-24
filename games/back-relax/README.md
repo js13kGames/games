@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Back Relax is a very simple gaze-based VR game for people with back pain.
 
 You'll need to lie down, probably with a pillow, in order to test the game. (Alternatively, you can stare at the ceiling and crane your neck, but I don't recommend it.)

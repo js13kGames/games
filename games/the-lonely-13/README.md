@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a memory-type matching game with a small town murder ambiance.
 
 Match at least two pairs, then click on the "healing pairs" button at the center top before the spiders make it back up to the button.

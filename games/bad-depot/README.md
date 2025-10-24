@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Depot receives deliveries. You're in command of robotic carrier that has to bring the containers to the drop zone. There's a manager supervising the whole process.
 
 - arrow keys move the carrier around (blinking)

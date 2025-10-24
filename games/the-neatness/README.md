@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://mvasilkov.animuchan.net/the-neatness-js13kgames2022
+---
 A walk through life, however thorough,
 Ends on a hill a bit too steep.
 Bear witness, not to strife and sorrow, –

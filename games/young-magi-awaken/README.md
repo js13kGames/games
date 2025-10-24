@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're a powerful mage who discovered the power of the void. Many envy it, many desire it. You must keep the void out of the greedy hands of the Rivington Knight Clan and protect its might at all costs.
 
 ### Controls

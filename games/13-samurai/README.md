@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you get the Yoshindo sword, heavily guarded by 13 of the most skilled samurai of the empire. Will you succeed, or get slain by the masters? Try the game to find out!
 
 * <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>: movement

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Destroy the blocks as they appear on the screen.
 
 Desktop Controls

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A-Snake is a twist on the classic "snake" games of yore.
 
 Guide your snake around a virtual environment to help it find its lost body parts. Running into ("gobbling") a body part will add it back to A-Snake's tail end. Find as many as you can without running into yourself or the walls.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Journey through a land of black and white and attempt to reach the legendary square which is said to hold infinite power (Of jumping that is). Legend has it that an ancient stone possesses the power to invert your collisions so you may interact with the background, it may help you along your journey.
 
 There is a multiplayer, press P while in-game to activate it. Arrow keys for first player, WASD controls for second player. By default the controls for solo play are the arrow keys.

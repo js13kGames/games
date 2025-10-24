@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://picosonic.github.io/js13k-2025/
+post: https://github.com/picosonic/js13k-2025/blob/main/devdiary/diary.md
+---
 You play as Mochi, a black cat who has been imprisoned in a hostile world
 
 You need to escape a series of areas under the cover of darkness to regain your freedom

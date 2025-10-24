@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fast paced survival space shooter in which enemies have the same color of the background. Reverse the background color to reveal hidden enemies, and avoid their bullets.
 
 How to Play:

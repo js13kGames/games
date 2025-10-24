@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you escape the dungeon of Six and Seven?
 To escape you must light the torches, and keep them lit!  The gremlins will thwart you at every opportunity.  Light more than Six and Seven torches to activate the portal to to the next floor...
 

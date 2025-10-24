@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Explore the world of emojis! All graphics are emojis! Cure zombies and get pets!
 
 Arrow keys to move. Space/Enter/Escape to interact.

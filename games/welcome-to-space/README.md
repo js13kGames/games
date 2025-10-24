@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Our space station has been overrun by evil aliens!
 You alone have been sent by Earth to defeat these treacherous villains. WELCOME TO SPACE.
 These wicked aliens are armed to the teeth, but so are you!

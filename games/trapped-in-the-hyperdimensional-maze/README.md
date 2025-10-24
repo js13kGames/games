@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The hero has been trapped in the hyperdimensional maze! Thankfully, the hyper sphere has offered to help. Bounce the ball around to destroy enemies. When they are all gone, use the power of the sphere to shift dimension and change the local map. Collect all three artifacts to reveal the exit.
 
 Basically Binding of Isaac + Breakout.

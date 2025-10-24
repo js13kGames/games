@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Memory Warriors is an innovative memory matching game that demonstrates modern web development best practices while maintaining the classic gameplay everyone loves. Built for the Challenge  2025, this project showcases:
 
 Single-Request Architecture - Everything in one HTML file

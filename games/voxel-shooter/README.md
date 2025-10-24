@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://indie-indian.blogspot.com/2012/09/js13kgames-and-voxel-shooter.html
+---
 A voxel based WebGL game. Will run on Firefox, Chrome and Safari.
 
 Use arrow keys to fly around. 

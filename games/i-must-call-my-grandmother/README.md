@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cellphone's dead. No signal. An offline apocalypse!
 And it seems that dead bodies are rising from their graves too.
 If that's true, it's not the end of the world. Really, this could be a good chance to see again your gone and beloved Grandma. She could be walking the earth again.

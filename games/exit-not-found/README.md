@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Exit Not Found is a game about trying to escape a maze that gets more complex the further you go.
 
 Desktop controls:

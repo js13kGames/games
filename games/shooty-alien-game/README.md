@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Small game where you shoot aliens!
 
 use WASD/arrows and mouse

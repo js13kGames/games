@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cats rule the world – especially black ones ;) So, become the Black Cat – God of Egypt!
 
 Lead your civilization to world domination. Manage its development, control your followers, and battle hostile empires. Your goal is to conquer all territories, but beware – you cannot allow the capital to fall into enemy hands!

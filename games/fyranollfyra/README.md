@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 FyraNollFyra is a mathematical puzzle game where the objective is to spell out 4, 0 and 4 in three containers. To do so you need to move numbers and operators until the equations in the containers reach their desired result.
 
 A total of six trophies are hidden throughout the three sections of levels and the tutorial.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Line of Fire is a realtime battle arena, inspired by Scorched Earth.
 You have two minutes to capture eight beacons or destroy your opponents.
 Extra ammo is delivered by air, watch out for crates as AI players will try to collect them too.

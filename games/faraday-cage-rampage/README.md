@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Destroy drones with the energy you accumulate on your Tin Foil Hat, collect 10 scraps to build faraday cages around each antenna and get 'em all offline!

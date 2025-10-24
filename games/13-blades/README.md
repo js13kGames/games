@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The 13-Blades are a notorious gang that follow the mantra of might makes right. They picked the wrong mark this time and you'll show them who's might is the greatest.
 
 Controls:

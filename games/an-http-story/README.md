@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Sometimes, the web can be a beautiful place. Other times, it can be a dangerous place.
 
 This game is about one of the latter times...

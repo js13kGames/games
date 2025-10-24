@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your boss, Catniss, threw you in the woods and "encouraged" you to collect gems from stray cats and their buddies.
 The more gems you collect, the more help she'll give you. However, you don't get to choose the kind of help she gives.
 Get the pink gem from Big Black Cat before she'll save you. She's also hidden some catnip on you that attracts them to

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Sand Adder is a snake.
 It has 3 D just like this game.
 

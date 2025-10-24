@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Glitched 15" is supposed to be a classic sliding puzzle. But because of lack of time the developer has left a few unfixed bugs. That causes glitches from time to time. You'll see :-)
 
 Your goal is to reposition the tiles in ascending order from 1 (the top left corner) to 15 counting left to right. The hole has to be in the bottom right corner.

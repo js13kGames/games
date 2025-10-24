@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Simple Sailing Simulator: Brave the north wind and search for York, or simply explore.
 
 ### Controls

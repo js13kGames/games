@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://serverboi.org/posts/js13k-Post-Mortem/
+---
 **Z0MB13** is an infinite horde shooter game where you face increasing waves of zombies. Defeat unique zombie species to collect currency and upgrade your weapons in the shop.
 
 **Controls:**

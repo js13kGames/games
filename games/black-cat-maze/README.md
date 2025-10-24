@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://lc-apps.co.uk/app/game/black-cat-maze
+---
 Navigate the darkness of the Black Cat Maze and escape before your luck runs out
 ## Controls
 ### Desktop

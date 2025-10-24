@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Pop the balloons to celebrate Jerry's birthday!
 
 Press space, tap, or click to jump

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An homage to one of my favorite games, Super Crate Box. 
 Collect glitchboxes for a high score!
 

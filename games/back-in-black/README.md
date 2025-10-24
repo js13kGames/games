@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Get in, get it, get out; your job is to nick the power source of each level.  Once you do, however, the lights go out and you have to find your way back blind!
 
 This is built on an experimental engine which has no render loop and uses the web animation API to animate SVGs in a reactive-like manner.  A lot more time was spent on this than the game, so the game is very short (basically just a tutorial).

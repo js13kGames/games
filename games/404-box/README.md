@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Description :
 This is simple puzzle game, you have to find 404 number within boxes
 

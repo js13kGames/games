@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Experience the strategic depth of the 13th-century Alquerque board game in this digital adaptation. Test your tactical prowess in a medieval setting where knights, castles, and strategic maneuvers rule the day. Challenge friends in this classic game of capture and conquest.
 
 ### Objective

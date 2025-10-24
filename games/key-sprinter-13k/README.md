@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A two-player online game. You need a friend to play it.
 
 Who's the quickest in da house?

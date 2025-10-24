@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://smallmahjong.pages.dev/
+---
 A variant of [Japanese mahjong](//en.wikipedia.org/wiki/Japanese_mahjong) for beginners
 
 - Suits: ▲ (Angle), ■ (Box), ◉ (Circle)

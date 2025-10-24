@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Storm. Thunder.. when you hear it you know your internet connection can go off. So here is a game you can play even when you are disconnected, but remember to tweet your hi-score when you go online again !
 
 This game is based on the Courts Of Chaos novel by Roger Zelazny - the fifth book from the Chronicles of Amber and the last one with Corwin as the main protagonist. You will be playing as prince Corwin of Amber on his journey to the end of the world. One of the many special things in this multiverse is that characters can connect and talk from distance, even teleport themselves using magical Tarot cards (Trumps) - the only time when it's not possible is covered in this chapter when the primal Pattern of Order in the heart of Amber is being recreated by Corwin's father Oberon. This process produces a wave of chaos and a huge metaphysical storm going through all dimensions. For a period of time the universe is in OFFLINE mode and Corwin is forced to hellride across Shadows all the way from Order to Chaos with the apocalyptic storm on his heels. His mission is to bring the Jewel of Justice to the Courts of Chaos after the jewel has been used to repair the Pattern.

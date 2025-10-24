@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Putt Till You Die is a 2 dimensional bird's eye view mini-putt golf game written in JavaScript, HTML, and CSS.
 
 The game its self doesn't really fit in with the theme but hey, you could literally die whilst playing the game.. as you could any other game ;)

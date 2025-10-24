@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In Blacky Returns Home, you must help the little black cat get back home and retrieve his lunch. 
 
 But first, you must help Blacky retrieve his little toys: some fish bone. Are you agile enough? 

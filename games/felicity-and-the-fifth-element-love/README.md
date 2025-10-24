@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 (Unfinished) NES style single screen platformer.
 
 Tested in Chrome, Firefox and IE.

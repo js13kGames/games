@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Slip in the spaces between the antagonistic red cube, and convert them to your blue cause and get bigger! Be careful though, it'll be harder to slip between them as your size increased.
 
 Control:

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Khan - Westward Conquest is a deck-building dungeon crawler.
 
 Can you, the Great Khan, defeat all the enemies standing in your way??

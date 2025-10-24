@@ -1,2 +1,5 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the not so distant future an alien intelligence named Simon has invaded Earth. 
 To defeat him you must do the reverse of his pattern and get his health to zero.  Be careful though!  You only have three lives.  If you can't do the reverse of his pattern but don't want to lose a life you can also do the forward of his pattern.  This won't hurt Simon but it can help you in a pinch.

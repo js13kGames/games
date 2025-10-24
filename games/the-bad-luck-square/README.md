@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Bad Luck Square is a simple shooter game that will challenge your skills.
 You'll have to protect a square by shooting enemies and buying upgrades.
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 3000+ sculptures are stored in the tombs of Egypt covered with ashes and dust. 
 
 ## Sculptures of extinct pharaohs:

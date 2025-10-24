@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 (This program uses "gaze controls", which is a fancy way of saying, "stare at a button to press it".)
 
 This is a game of life. Not Conway's. A difficult one.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 As the shuttle launches, you can feel your ship exploding behind you. You and your crew are safe, but set adrift in space.
 
 This game is all about rolling dice, managing risk, and allocating the resources available to you.

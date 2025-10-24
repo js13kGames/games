@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Mr.13lackie is a foul-mouthed black cat, and the game requires just one click to play.

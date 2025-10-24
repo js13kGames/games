@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A packet with an important mission and you should help it to jump many URLs composed by bricks.
 
 CONTROLS:

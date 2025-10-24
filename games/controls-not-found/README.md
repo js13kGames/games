@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The control panel of the ship is busted so up and down get swapped to different keys on the keyboard randomly.
 
 Go through the tunnel and don't touch the sides or the rocks.

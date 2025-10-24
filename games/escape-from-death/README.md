@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Run away from death!
 Stuck in the web, kill flying ghosts. THese ghosts hide the places where coffins appes, stepping on which you will reach death.
 

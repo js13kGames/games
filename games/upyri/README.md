@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/sATZin4rFwQ
+post: https://roblouie.com/article/1154/the-making-of-upyri-js13k-2023-post-mortem/
+---
 The first record of Vampires occurred in the 13th century. The anti-pagan treatise "Word of Saint Grigoriy" reported pagans worshipping Upyri, creatures that we now refer to as Vampires.
 
 While the details of 13th century Upyri have been lost to history, you are unfortunately all too familiar with them. You are the latest to be sent to the castle as a sacrifice to the Upyri. Can you defeat the creature within and escape the castle?

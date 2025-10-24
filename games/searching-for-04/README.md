@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A classic dungeon crawler for JS13k 2020 by Nicklas Löf
 
 Graphics by Nicklas Löf and https://www.patreon.com/elthen/

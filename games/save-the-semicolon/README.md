@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Stop all this glitch madness of JS13k! Quickly return your semicolon, to the bracketed finish. The faster you are, the more notoriety you'll receive on the leaderboard!  The leader will be immortalized as a ghost until the next semicolon beats the top time.
 
 On Desktop:

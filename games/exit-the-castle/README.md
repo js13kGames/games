@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 13th Century Badger presents Exit the Castle.
 
 You are trapped in the Sheriff of Nottingham's castle and must survive against his knights to make your way out.

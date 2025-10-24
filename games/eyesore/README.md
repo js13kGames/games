@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 EYESORE! is a short puzzle-platformer game. There are 4 different puzzle levels to climb through (which can be completed left-to-right or right-to-left) - plus the start level, which dictates direction of the game. You can move left and right, and fall down, by using your arrow keys or holding the relevant side of your screen (there's no jump!). Check out the github repo for more information. Also hosted at https://studiouniverse.co/eyesore/

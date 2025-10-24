@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Xycore is a 'throwback' to some old favorites, taking inspiration from Hero Core and Metroid to bring you a simple adventure on an unknown planet - take on the four bosses and destroy the reactor core!
 
 **Controls:**

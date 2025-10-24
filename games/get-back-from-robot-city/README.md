@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 What is this place? A teleporter experiment you were part of went very wrong. There are robots everywhere, and they are trying to attack you. You must GET BACK FROM ROBOT CITY.
 
 They took the teleporter, but it must be around here somewhere. You are armed with a laser blaster, which should help against the robots while you search for it.

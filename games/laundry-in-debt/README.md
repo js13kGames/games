@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a laundromat owner in a place where every **13:00**, an absurd amount of bills will be given to your laundromat account. Installing more machines in your laundromat will increase your income and daily bills. You also will be accompanied by a mysterious and calculative Wallow who will gladly trade some of his washing machines with you.
 
 ## Rules

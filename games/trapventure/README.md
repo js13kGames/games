@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Find the treasure inside the dungeon.
 
 Controls:

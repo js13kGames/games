@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://pdemia.com/bcg/
+---
 You are the familiar of a young witch, but an apocalypse happened while you were at training
 
 Portals have appeared and mosters kidnapped everyone, the village is empty

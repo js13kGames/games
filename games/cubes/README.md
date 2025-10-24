@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Find true Love. 
 
 Rotate the camera with the mouse, wasd or the arrow keys. Push the sphere away with the space bar or the left mouse button. 

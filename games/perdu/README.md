@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It is 1920.  You, Marcel Proust, have been appointed Visiting Professor of French Literature at Purdue University.
 To your horror you discover that underneath its' placid Midwestern exterior, the university has become the lair of
 the mad scientist Professor Melmoth who is hellbent on conquering the world with his army of mutant robot chickens.

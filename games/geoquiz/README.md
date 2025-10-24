@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/xzD7juEvLFg
+post: https://xem.github.io/articles/js13k15.html
+---
 Adjust your browser's zoom and get prepared for a big journey!
 
 GeoQuiz will get you through 13 levels of increasing difficulty and varying challenges (countries, capitols, famous places, ...).

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Take charge of your own destiny by ascending to the celestial throne, navigating your way through the heavens, fighting demons and collecting stars, before facing down an array of angelic bosses who seek to stop your ascension.
 
 Unlock an array of abilities and upgrades each time you die, opening up the game world and getting you one step closer to the elusive final empyrean guardian, accessible after collecting the prophesied 404 burning stars.

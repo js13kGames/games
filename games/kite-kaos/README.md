@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 By the 13th century, the Taoist monks had made man-carrying kites into a common technology.
 
 You have been strapped to a kite as punishment. The local guards are using you for target practice with their newly invented rockets! Avoid the cross-hairs and dodge the debris.

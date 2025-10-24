@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An arena shooter, where your goal is too last as long as you can. Collect gems to buy upgrades, buy upgrades to destroy your enemies.
 PS Don't mess with the vendor.
 

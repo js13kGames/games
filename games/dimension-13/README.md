@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your teleporter's power is depleted, and you're stranded in the 13th dimension, courtesy of the 𝐏𝐎𝐋𝐀𝐍𝐃 𝐒𝐏𝐀𝐂𝐄 𝐏𝐑𝐎𝐆𝐑𝐀𝐌. To escape, you must retrieve all 7 power gems. But beware—your greatest 𝐅𝐄𝐀𝐑 is dying of hypothermia if your temperature drops below -𝟏𝟑°C. Retreat to the teleporter or find a campfire to 𝐖𝐀𝐑𝐌 𝐔𝐏 before it's too late.
 
 Controls:

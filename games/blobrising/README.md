@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi everybody !
 --------------
 This game is a little exprimentation for the js13kgame competition. The first try for 4 friends.

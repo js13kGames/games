@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Space Invaders
 You are defending a space station from hostile space invaders.
 

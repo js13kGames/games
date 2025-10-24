@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a puzzle game about making cycles. 
 
 Controls (mouse / touch):

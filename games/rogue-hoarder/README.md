@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your inventory space is also your HP. 
 Your abilities and vitals are also items in your inventory. 
 Which "part" of you is more important than winning the game itself? 

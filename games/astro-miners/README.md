@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The year is 2349 AD. A private company, Astro Miner Co. (AMC), has begun mining operations on the surface of a large asteriod in our solar system. You work for AMC and are responsible for remotely controlling the 10 robotic miner ships that are deployed to the asteroid.
 
 One day when you arrive at work, you learn that all but one of the ten Astro Miners have been mysteriously taken offline. All you have now at your disposal is the one remaining Miner ship.

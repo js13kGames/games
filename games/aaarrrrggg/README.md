@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Life of the pirate means always stepping out of(f) line. Crush, kill and loot fire power from other ships so that you can finally hunt down the greatest pirate in these waters and sink his big-ass ship. AAARRRRGGG!!
 
 Controls

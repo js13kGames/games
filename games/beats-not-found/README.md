@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The melody is ready...but where have the beats gone?!
 
 Where they are who can say, but in the song they are not!

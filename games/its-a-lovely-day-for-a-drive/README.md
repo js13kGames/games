@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lovely Drive pays homage to Desert Bus. Drive on a lonely desert highway with nothing but the wind rushing by and your chill tunes on the radio. Your transmission is stuck in reverse, but that won't stop you from enjoying this lovely day.
 
 Controls:

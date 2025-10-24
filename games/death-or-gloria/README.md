@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tony (you) is working late, again and due to his hard worked efforts is tired and falls asleep. 
 He dreams of a heroic quest to find the beautiful princess Gloria and golden treasure beyond 
 his wildest dreams.

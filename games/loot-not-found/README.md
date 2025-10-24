@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Steal 404 gold worth of loot from the abandoned lair and escape the area.
 
 WASD/Arrow keys: move

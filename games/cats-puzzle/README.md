@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Design
 
 This time I decided to make a logic game and ended up in building variation of the match-3 game. To keep it entertaining I made rotation logic.

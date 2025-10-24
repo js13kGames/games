@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 VR is back, and it's full of evil cubes.
 Good news: you got a pair of morning stars to destroy them, it's quite satisfying.
 Bad news: they will keep coming. FOREVER.

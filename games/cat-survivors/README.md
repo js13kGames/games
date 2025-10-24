@@ -1,3 +1,8 @@
+---
+directors_cut: https://eliasku.win/s/cat-survivors/
+video: https://youtu.be/qy2ndPHUXfs
+post: https://eliasku.win/blog/cat-survivors-js13k-2025-postmortem/
+---
 An exciting story about a hunter cat inspired by **Vampire Survivors** game.
 
 We added a personal touch — we have a black cat ourselves, and watching her hunt made us really excited about this theme.

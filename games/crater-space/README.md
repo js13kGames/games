@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 On the moon of planet Figadore the Regolith starships have returned, but they are using advanced cloaking techniques to remain invisible. You must discover the hiding place of the last 3 remaining starships by firing splat missiles.
 
 Green splat indicates a miss and pink splat indicates a hit. You have 24 missiles, but hits don't count. Once each ship is fully covered in splat, one of the finder indicators changes to black.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Black Cat Shinobi
 
 Is a platform game where you need to perform jumps and acrobatics moves to find the Torii gates, so you can finish your shinobi missions.

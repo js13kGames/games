@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A maze game where the walls are lasers
 
 INSTRUCTIONS:

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Don't go back - Maze Game
 
 'Everything behind you is on fire. Don't go back.'

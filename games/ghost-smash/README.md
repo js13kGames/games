@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ghost Smash is a type of whack-a-mole game where you catch ghosts and earn scores! 
 Sometimes these ghosts will cast black magic on you so you can only see a dark screen but just keep catching them!  
 

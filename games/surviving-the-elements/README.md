@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The world was destroyed by the natural elements and you are the unique survivor.
 
 Try to survive to the attack of the elements, using them!!!

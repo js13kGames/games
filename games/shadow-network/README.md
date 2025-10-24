@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A mystical black cat explores decentralized networks, mines CatCoin, and builds a shared economy. CatCoin Network combines online multiplayer, offline-first design, and Web3 integration in under 13KB.
 
 🎮 Gameplay

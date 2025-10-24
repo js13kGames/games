@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A short 3D action game for the 2021 js13kGames Competition.
 
 Our hero, Captain Callisto, blasts through space, seeking adventure. What will he find?

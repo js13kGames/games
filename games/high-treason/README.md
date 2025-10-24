@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Keyboard Controls
 1,2,3 keys to select a piece
 While piece is selected

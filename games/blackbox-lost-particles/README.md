@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are the new intern in a lab. You have to help The Scientist in correctly labeling things he calls 'blackboxes'.
 
 Sounds boring?

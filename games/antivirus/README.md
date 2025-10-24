@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the era when internet was not everywhere, we all used various offline storage devices to save our precious data. But viruses corrupted our data so many times. Out objective is to go into those devices and kill those viruses.
 
 This game has 3 stages:

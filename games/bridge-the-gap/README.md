@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A simple HTML5 game where a player has to create bridges in order to cross buildings.
 
 Rules

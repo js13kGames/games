@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 We need help.
 
 See, people don't like the #13. They seem to be a little... stitious.

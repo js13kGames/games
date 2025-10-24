@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Sum 13:
 - Tap the numbers after they fall to add up sums of "13"
 - The numbers in the sum must all be of the same color

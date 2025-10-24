@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Escape the pit inhabited by biologically improbable snakes.
 
 Make your way through 9 levels of varying difficulty. If you get caught, you go back one level. The game is turn-based, constantly giving you an opportunity to think.

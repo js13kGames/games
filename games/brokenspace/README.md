@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ummm... press space ^~^
 (or tap on the big rectangle)
 

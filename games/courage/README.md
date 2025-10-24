@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A game for JS13k 2024 by Nicklas Löf. Follow me on [Mastodon](https://mastodon.social/@snukey)
 
 ## Story

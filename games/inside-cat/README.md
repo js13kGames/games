@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://dysla.com/js2025/
+---
 You're the legendary cat burglar they call **The Shadow.** Nine heists in nine months. Nobody knows how you do it. They think you must always have an accomplice. An inside man.
 
 They're wrong... but they're close. You have an inside *cat*.

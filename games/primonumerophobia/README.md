@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The fear of prime numbers. Fear them all. Especially 13!
 
 Please read all instructions below. An introduction and tutorial were not added in game.

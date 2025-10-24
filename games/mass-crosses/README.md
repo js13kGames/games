@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # The Game
 A Tic-Tac-Toe with a replace rule, where a massive body can replace any other with less mass. To be played in decentralized fashion.
 

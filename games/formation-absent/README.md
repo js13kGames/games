@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Formation Absent is a turn-based puzzle - an abstract representation of a battle. In each of the 13 stages two armies are colliding.
 As a member of the Green side, you’ll have to restore the lost battle formation of the Green party. Move through the battlefield,
 collaborate with your Allies (exchange positions) and fight with the Red enemy as you like, but remember: the main goal is to

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Game where you pick an item that doesn't have 13 of it on the screen as fast as possible to get high score!
 
 ## Challenges

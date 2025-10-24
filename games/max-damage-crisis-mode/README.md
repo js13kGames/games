@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/G27VAhcDIYA
+---
 GAMEPLAY:
 Land on three or more enemies of the same color to trigger your planted bombs. Detonate the bombs either by landing on an enemy of a different color, or by jumping back to your satellite platform.
 

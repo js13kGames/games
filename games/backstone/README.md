@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The world is on the verge of destruction and you are one of the last surviving ships left of our species. In the modern age of discoveries and technology, we've found a stone capable of doing something that we never even dreamt of, "get you BACK in time".We started calling these stones as BackStones.These stones can be found spread across the galaxy.
 
 Instructions:

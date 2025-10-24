@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://srmcgann.github.io/TRON2.0
+---
 ## HUMAN VS CPU
 
 Maintain a superior score against the clever AI drivers. Use speed and reflexes to cut them off, or trap them into areas where they eventually run out of space.

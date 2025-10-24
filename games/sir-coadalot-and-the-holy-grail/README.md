@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/U4mXvB_zLyg
+post: https://niklever.com/js13kgame-competition-2023-diary/
+---
 It is the year 1213 and Sir Coadalot is 13 years into his quest to find the Holy Grail. He has reached the final hurdle, the Castle of Doom. To reach his goal he must navigate the castle with your help.
 
 ### Instructions

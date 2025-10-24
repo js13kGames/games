@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Last Tear is a short story game.
 
 Synopsis:

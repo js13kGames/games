@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Anime fans across the world have succesfully raided Area 51, but poor Dengar here quite enjoyed his containment facility"
 
 'Endess' runner that's not quite endless...and it's in reverse. You play as Dengar, an alien trying to get BACK into Area 51.

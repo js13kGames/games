@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Life is struggle, you have to overcome the challenge again and again.
 Death does not stop you from moving forward but gives up can. Keep trying because you are Trevasor. 
 

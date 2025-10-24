@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Totally unfinished very buggy puzzle platformer.
 
 What goes on behind the scenery of a platformer?

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 So your plane just crashed on this island. At least, you've got an ax. The island has trees. And crabs! Actually, the island is called "Crab Island".
 
 You're very hungry though. So, better not become too acquainted with those crabs, because you're going to have to eat them.

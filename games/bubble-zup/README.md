@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 BUBBLE ZUP is a game of patience.
 
 Wait for the bubbles to line up so you hit more than one at a time.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 **Ghosted** is a Sokoban-type puzzle game where you play as a naked alien humanoid who has exactly 13 steps to move until he transforms to a ghost. The goal is to collect all the coins in the map, but the twist is that they can be only collected when you are a ghost, but as a ghost you cannot push rocks or press buttons.
 
 The game has 12 levels and one hidden one you unlock by beating all the other levels.

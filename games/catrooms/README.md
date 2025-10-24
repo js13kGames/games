@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a mouse.
 
 You move with the keyboard arrow keys.

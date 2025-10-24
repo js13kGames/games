@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 13 levels. 404 seconds. Can you complete them all before the time runs out?
 
 Do you need help? Use the question mark button at the top right of each level to get a hint. There are multiple hints for each level. But don't click so quickly, because each hint will cost you 13 seconds!

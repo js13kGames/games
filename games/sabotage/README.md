@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're assigned to stealth mision - disable connection between 3 hostile campuses.
 
 Main goal of each level is to access the antenna and hack it - then entire campus goes offline and sabotage is done. 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a 4x genre inspired game.
 You will need to mine resources, research stars and planets, and outfit your ship to get the job done!
 

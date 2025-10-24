@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A game for future programmers.
 
 You need to reach the flag. You have a robot JSK-13 to do this. 

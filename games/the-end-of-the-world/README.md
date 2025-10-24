@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you survive at the END of the WORLD?
 
 Play as the end of the World, and survive until you actually reach the END of the WORLD.

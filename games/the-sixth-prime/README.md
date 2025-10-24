@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the Prime Kingdom, in the 13th century, a certain evil — the Sixth Prime — Triskaidekaphobia Demon King — grew fat from the sin of the land.  
 
 Soon It’s infernal cage could no longer contain it. It yearned to be free.

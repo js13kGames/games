@@ -1,3 +1,8 @@
+---
+directors_cut: https://cat-shooter.vercel.app/
+video: https://youtu.be/VKJWRrND6bM
+post: https://github.com/dkozhukhar/cat-shooter/blob/main/POSTMORTEM.md
+---
 **Cat Shooter: Ritual Catacombs**
 
 A tiny 3D horror-shooter in cursed catacombs.

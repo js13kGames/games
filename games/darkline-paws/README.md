@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 DarkLine Paws is a collection of three lightweight, browser-based games that put you in the paws of a curious cat. Built using pure vanilla JavaScript and HTML5 Canvas, these games are designed to be played directly in your browser without any external dependencies, offering a nostalgic, pixelated art style.
 
 Game Modes & Controls

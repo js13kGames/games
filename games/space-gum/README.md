@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Make sure there aren't any more gums on space!
 Hurry-up, Earth is in troubles!
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Explore the space by traveling from planet to planet. Just click (or tap) or press the spacebar in the right moment to leave the orbit for another planet.
 
 Different types of planets will add challenges to your exploration or help you in being more successful.

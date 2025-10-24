@@ -1,3 +1,8 @@
+---
+directors_cut: https://eoinmcgrath.com/gecko/
+video: https://youtu.be/4MvqV0VjYuM
+post: https://eoinmcgrath.com/gecko/post-mortem/
+---
 > Mile 13 in the Desert of Doom is feared by all Geckos.
 > After all, they know that evil things lurk there
 > ...but, Mile 13 is also home to the best donuts.

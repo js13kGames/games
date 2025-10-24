@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://herebefrogs.com/dont-look-back
+post: https://medium.com/@herebefrogs/dont-look-back-a-js13kgames-2019-postmortem-a0028d8acef2
+---
 Enjoy the stunning beauty of the Wild West, but beware of outlaws lurking around: They'll keep coming back to pester you...
 
 Don't Look Back is a short WebXR game of cowboys and chickens made with A-Frame, inspired by carnival shooting galleries and my love for pixelart.

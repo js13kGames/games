@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://hereismy.website/pico-buddy
+---
 PicoBuddy is a game/interactive story, in which you take care of a digital pet.
 
 ---

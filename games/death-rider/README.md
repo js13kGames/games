@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 DEATH rides out to collect souls in the cemetery.
 
 BEWARE!!!

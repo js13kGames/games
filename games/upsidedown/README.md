@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Arrow keys to move (green)
 Collect treasure (yellow)
 Glitch portals (red) allow you to move everywhere in the Upside Down

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Glitch in outer space
 
 CONTROLS for desktop:

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You play as a princess who needs to cure the plagued villagers from the rats of Corinium.
 
 Click or press where you want to walk to and the princess will find the best route there.

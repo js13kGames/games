@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://piesku.com/millennials/play/
+---
 > Did you grow up in the ‘80s and early ‘90s? Do you miss it?
 
 Craft your deck during a series of card duels against the childhood villains: Suke Lywalker against Varth Dader, Bombles against DojoBojo, and Matban against Poker!

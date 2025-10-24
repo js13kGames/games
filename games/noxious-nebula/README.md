@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your greatest foe has sent an army to destroy your homeworld for resources.
 
 You are one of the few survivors, Protect it at all costs!

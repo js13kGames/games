@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Become a Necromancer and feed on death to increase your power.
 
 Remember that a true Necromancer doesn't need much time to reach the peak of his abilities, understand the nature of

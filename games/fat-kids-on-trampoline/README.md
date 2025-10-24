@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Neighborhood kids caught a wind of you getting a giant trampoline and want to play.
 Though, they have no safety training, so you have no choice but politely send them BACK.
 They may object, but a strong enough kick makes them lose control temporarily, letting you usher them out.

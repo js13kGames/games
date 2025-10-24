@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tim is very good at stucking himself in strange positions. Can you help him?
 
 This is a puzzle game that will make you mad.

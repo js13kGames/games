@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Badluck Butter Chicken Goes To Outer Space is an uncomplicated casual game where you must avoid the thirteens and collect coins.
 
 You can get the magnet to attract coins to you for a amount of time, the shield which allows you to deflect the thireetns for a short time, and the clock which slows the thirteens down for a short time.

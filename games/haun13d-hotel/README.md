@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you escape this _Haunted Hotel_?
 
 Welcome to **Haun13d Hotel**, where a ghost hunting expedition to the infamous 13th floor has gone horribly wrong. You awaken disoriented, surrounded by eerie silence and the lingering presence of the supernatural. Your mission is clear: eliminate the remaining 13 ghosts with your trusty photon gun and find the elevator to escape this haunted nightmare.

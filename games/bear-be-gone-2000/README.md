@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bear-Be-Gone 2000
 
 Was meant to be a puzzle game where you had to find the glitch in the security system using the overlay lenses and get rid of the hungry bear. 

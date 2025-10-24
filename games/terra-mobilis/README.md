@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 NOTE: There are cheats left in game. Don't use them if you want "authenthicate" experience.
 Cheats are: click item in store to get 100 of it. And move or zoome camera with mouse, excapt for the first week.
 

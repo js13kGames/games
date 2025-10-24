@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bring peace to the galaxy... or war?
 
 Make allies by completing missions, study other planets, stars, defend yourself against planetary defenses and pirate groups, or makes enemies by attacking them, ignoring their communications and destroying their facilities.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a 3D remake of the famous Chrome Dino Game. Run as far as possible or race with one of your friends, but be careful not to bumb into any obsticles!
 
 The game inculdes:

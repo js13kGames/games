@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Spurred on by The Songs of the Nibelungs, many set off searching for the legendary treasure said to still lay hidden in the Rhine river.
 
 ### Keyboard controls

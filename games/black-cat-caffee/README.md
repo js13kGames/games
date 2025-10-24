@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this you're playing as a cat, who is running a coffee shop, coincidentally named Black Cat Caffee. The owner is probably out on a very long bathroom break, so it's your responsibility to make the coffee and serve it to the customer(s).
 
 Controls: WASD to move, E to interact, Q to place items on the counter. You brew coffee by placing the cooking pot into the coffee machine, then filling the coffee cups with the coffee. Costumers may also ask for milk, which can be poured into cups that already contain coffee. A coffee can contain 0, 1 or 2 doses of milk.

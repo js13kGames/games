@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Elemental Memory is very very simple and small memory-match game based on the theme of the four elements, Earth, Air, Fire and Water represented in the game's cards by SVG images.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The hacker came to dead end. The page he is looking for is gone, and he don't know where to. The only way to find it is to run the web crawler called CHOCH (ЧОЧ in cyrillic). You are CHOCH, but beware - the server intrusion prevention system will try to not let you go further. You need to pass 18 safety systems to reach the lost page.
 
 Controls:

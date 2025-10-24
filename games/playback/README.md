@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Playback is an ordered platformer game.
 Press the playback button to see (and hear) how the level must be played, and play it back.
 Keyboard and gamepads are supported.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A tiny turn-based game for 2 players (no AI, no network playing).
 Two great wizards confront in a weird region of the universe: the UniReverse.
 Each turn a player may use his magic to reverse enemy tiles (if he's adjacent to them) and then move through tiles of his own color. 

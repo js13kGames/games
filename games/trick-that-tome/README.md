@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Do you know Tic-Tac-Toe?
 Well, we do. Let's make it more interesting.
 

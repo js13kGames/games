@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Send creeps to steal lives and place creeps to defend against your opponent. First player with 0 lives looses.
 
 The game does not adjust its' size live, your have to reload after you resized the browser/tilted the device.

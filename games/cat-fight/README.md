@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 [Control]
 Move: Arrow keys or WASD keys
 Attack: Space bar

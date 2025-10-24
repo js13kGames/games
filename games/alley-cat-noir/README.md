@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://justinsullard.com/alleycatnoir/
+---
 Welcome to the Alley Cat Noir.
 Stay in the shadows.
 Catch those dirty rats.

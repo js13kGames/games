@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 How fast can you put everything BACK?
 Does this bring BACK memories of your childhood?
 Click a box, Click a toy. Timer stops when you finish.

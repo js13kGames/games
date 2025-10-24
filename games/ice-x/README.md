@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Free the great minds from the data locks in this retro cyberspace arcade game.
 
 Each play is unique with procedurally generated levels and music.

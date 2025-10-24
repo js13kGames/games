@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a point&click game, about a fictional event from 404 years ago...
 
 

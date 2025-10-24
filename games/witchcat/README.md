@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/jonathan-vallet/js13k-2025/blob/main/POST_MORTEM.md
+---
 **Witchcat** is a short adventure game.
 The seasons are in chaos and your black cats have disappeared. 🌒🐈‍⬛
 Uncover the power of the Seasons and bring your cats back!

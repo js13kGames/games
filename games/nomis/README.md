@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Nomis
 A new take on an endless classic...plus mechs! Nomis is a HTML5 game created for the 2015 js1k3games competition.
 

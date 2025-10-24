@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 🚀🃏 SHUTTLEDECK 🃏🚀 is a game inspired by infinite-runners merged with deck-builders.
 
 You control the vessel of a Space Courier delivering a very important package. To win, you'll need to successfully reach multiple consecutive planets while avoiding the dangers along the way. Collect minerals to purchase ship upgrades. Encounter quirky characters selling sketchy merchandise. Build your set of abilities and hone your timing and strategy.

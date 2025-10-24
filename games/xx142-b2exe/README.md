@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hello, xx142-b2.exe
 
 This is the year 2413,

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://space-four.herokuapp.com
+---
 In Space4 you must complete four meteorites to win.
 
 You can play offline on the same device or against a bot in three different levels of difficulty.

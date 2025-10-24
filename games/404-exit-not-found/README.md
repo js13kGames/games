@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Legends Tell...
 ...of a VAST treasure of {HTTP GET ERR: treasure.type is undefined} hidden deep in the "Tomb of the Four Hundred Four Kings". While many have attempted to make the journey, no one has came back to tell the tale.
 

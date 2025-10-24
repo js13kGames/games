@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 HOW TO PLAY:
 
 This is OrbCraft 13k, an idea for a game that I have been thinking about for a long time but have never 

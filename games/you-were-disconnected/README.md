@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've been working as always at night...
 And suddenly you find yourself...
 DISCONNECTED

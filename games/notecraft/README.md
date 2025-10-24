@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://killedbyapixel.github.io/NoteCraft/
+video: https://youtu.be/VkTBWJ1BQIE
+---
 Features
 - Program Music with Cellular Automata
 - Export to ZzFXM and OS13k

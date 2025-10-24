@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 All great science fiction has a few elements in common... 
 
 Drag elements into the gray forge area at the top, and drop them on top of each other to look for new combinations. Sometimes elements can combine with themselves.

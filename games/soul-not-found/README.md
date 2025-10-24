@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Soul Not Found is an incremental game with idle and offline progress!
 
 # Story

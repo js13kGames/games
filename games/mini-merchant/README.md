@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a merchant who has to sell goods to the people (and crabs) of the village.
 
 Use your mouse to interact with the world. 

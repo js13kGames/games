@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Imagine Wordle, but for Math Geeks 🤓 (but don't worry if you're not)
 
 And now try to guess all the years of the 13th century with the provided clues.

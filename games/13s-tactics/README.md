@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 13s Tactics, is a tactical/chess/puzzle game where you need to perform all your actions in 13 seconds before your enemies.
 
 You will fear the number 13! Not just because you will run out of time but you will loose your characters after your turn!

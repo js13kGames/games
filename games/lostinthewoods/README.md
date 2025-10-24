@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Controls:
 SPACE to start.
 ARROW keys to move.

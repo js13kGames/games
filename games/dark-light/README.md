@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your lover is missing, captured by evil creatures and locked up into their lair. You grab your lamp and venture deep into the darkness. You must bring her back at all costs!
 
 The game features:

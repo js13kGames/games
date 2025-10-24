@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your spaceship ran out of fuel.  You had to make an emergency landing on an unknown planet.  Obtain the nine energy crystals scattered around the world to get back to orbit.  Drill and build ladders throughout the world to help yourself get around.
 
 Controls:

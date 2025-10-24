@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Unfortunately your loved one was bitten and become a Queen of the zombies. Now it's your time to save the world. Or may be save her?
 Who knows...
 

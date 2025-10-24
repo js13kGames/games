@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In 2091 a meteor landed on earth, and an alien lifeform appeared with it. Not so far away from the meteor, the alien lifeform has been settled in a cave. An elite squad of 3 men have been sent to the cave to secure the area for further research. But then suddenly...
 
 Controls

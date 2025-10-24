@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://piesku.com/escape/play
+---
 Mankind is evacuating into space! How convenient to first destroy the planet and then just run away without looking back.
 
 ESCAPE is a 2.5D puzzle platformer about wildlife that we leave behind. Find your cubs and reach the Ark to save yourself!

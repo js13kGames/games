@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It Comes in Threes is a match-three game of sorts. 
 
 Move your character with the arrow keys and see what happens!

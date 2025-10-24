@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/XwFYRf13knM
+post: https://xem.github.io/articles/js13k25.html
+---
 > [!NOTE]
 > Due to an SVG bug in Firefox, this game currently looks better in Webkit browsers (Chrome, Edge, Safari)
 

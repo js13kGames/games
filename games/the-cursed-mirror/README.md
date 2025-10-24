@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a valiant knight. You have been cursed by an evil warlock: from time to time you transform into a vicious villain.
 To break free from the curse you had to find the cursed mirror that has been used to cast the spell on you.
 As soon as you break it the undead around you begin to rise. You have to fight until you come to the final battle.

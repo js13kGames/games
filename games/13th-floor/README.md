@@ -1,3 +1,8 @@
+---
+directors_cut: https://roblouie.com/13th-floor-dc/
+video: https://youtu.be/eF0seNiHA-Y
+post: https://roblouie.com/article/1219/the-making-of-the-13th-floor-js13k-2024/
+---
 13th Floor is a stealth horror game requiring you to stay vigilant and stay in the shadows.
 
 You receive a strange invitation to a party celebrating the 13th JS13k gaming competition. The party is on the 13th floor where there are 13 rooms, what could go wrong?

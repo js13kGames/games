@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://swing-a-cat.surma.technology/
+---
 A pixel art platformer where you play as the Clover the Cat, a lucky lil kitty with an impressive tail and an aversion to wets.
 
 ## 🕹️ How to play

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Challenge a friend or stranger to see who can eat the most niblets!
 
 The more you eat, the bigger you can get.  The bigger you get, the more you can eat!

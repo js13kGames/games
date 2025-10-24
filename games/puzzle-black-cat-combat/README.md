@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Puzzle Black Cat Combat
 
 A strategic match-3 puzzle game where you battle against a mysterious Black Cat!

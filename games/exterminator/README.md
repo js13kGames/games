@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The **Exterminator** scans for the number 13 hidden within the patterns of your **room** so you can eliminate them. Like in the Ghostbusters movie. Hurry or they will overload the circuits.
 
 - Controls: click/tap

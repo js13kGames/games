@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://slash.itch.io/cat-vs-the-world
+---
 You’ve always suspected it: cats aren’t here to cuddle, they’re here to conquer.
 Now it’s your turn to embrace the chaos!
 

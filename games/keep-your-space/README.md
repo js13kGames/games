@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bob works at a nuclear power plant...
 Bob has had an incident...
 Help bob find the hospital (red building) before he dies of radioactivity.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Shikken was the title of the supreme leader of Japan during the 13th century. When the Mongols demanded that Japan bend the knee, the shikken of the ruling Hōjō clan commanded the forces that prepared for the invasion, and were ultimately successful in keeping Japan free.
 
 Take control of the shikken's defenders in this minimalist-styled, Zen-like, city-builder resource management game. Expand your network of buildings, upgrade them to produce resources, and manage the growing workforce. Pillaging Mongol invasions will be ever present until two divine winds ("kamikaze") come to the rescue.

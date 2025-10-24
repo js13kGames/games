@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 After having gained intelligence during the battle of Kalka River in may 1223, the Mongol army retreated.
 
 The Kievan Rus felt at ease while Batu Khan planned an invasion like no other before.

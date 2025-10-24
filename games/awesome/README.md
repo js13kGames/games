@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are part of a hacker group called A.W.E.S.O.M.E, they have hacked into the GTNW to find the deactivation code. 
 
 There are 4 terminals that each contain an encrypted 4 character code. Use your elite problem solving skills to solve a 16 character deactivation code to prevent global conflict and save humanity.

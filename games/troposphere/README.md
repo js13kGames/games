@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 TROPOSPHERE
 
 You are lost in a metropolis in a foreign planet.

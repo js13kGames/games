@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Back the human revolution against an evil AI in this perma-death orbital-physics shoot-them-up!
 
 You must destroy all AI cities. To do so you have to mine resources on abandoned planets, sell them on a target planet, and, once resources are high enough, attack a enemy city (red) to start a war.

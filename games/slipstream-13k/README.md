@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Challenge your friends and watch your back in this multiplayer action trench-flying racer.  Enter a room code (or make anything up), share it with your friends, and hit enter to start a match. Controls are arrow keys to turn, space to boost, and Z to shoot.

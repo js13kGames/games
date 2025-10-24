@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A spaceship collects stars in outer space. 
 Be careful that there are many dangers in the universe.
 

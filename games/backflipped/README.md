@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fall to bottom to flip to the back, then fall back up on the other side... How long can you keep switching between the back and front of the stage? Game by Tom Hermans (@Auroriax). Best played in Chrome or Firefox. 
 
 How to play (Arrow keys/WASD/ZQSD/Swipes):

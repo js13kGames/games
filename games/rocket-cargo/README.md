@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Deliver your space orders with a rocket.
 
 Controls:

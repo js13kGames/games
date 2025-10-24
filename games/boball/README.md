@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi,
 Just use the mouse to play.
 Left click: place one white ball

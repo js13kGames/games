@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 26 mini-games by The Codegolf Team (xem, subzey, aemkei, p01, innovati, veu, solinca, tio)
 - MMXLVIII (play with arrow keys)
 - flASCII bird (play with any key)

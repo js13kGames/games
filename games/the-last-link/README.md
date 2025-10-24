@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Eliminate your opponent's links, the last one with the fewest broken links (404) will win the game.
 
 You will have two modes to play:

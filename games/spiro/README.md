@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Analog Tempest. Arcade action on Polar Curves!
 
 Works on mobile devices.

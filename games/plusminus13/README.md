@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/4-g27hhuMcw
+---
 **13** is bad, but can be good too. Just like this game. Probably needs a non-potato computer and mobile is not supported.
 
 **WASD** or arrow keys for movement, **spacebar** for shield.

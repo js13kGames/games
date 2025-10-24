@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Mongolian invaders are coming from every direction. You won't give up and will defend the last tower till the last drop of blood.
 
 ---

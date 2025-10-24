@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is my first try at the WebXR category. I did this myself and didn't have much time to finish it by 13th September, unfortunately, because I started 9th grade. I'll continue to develop purplFLOW on the game's GitHub page until it's an eventually feature-complete game.I would love any ideas/help on the game in any way! You can open an issue (or read what I'm planning to add)
 
 Controls: WASD+Mouse (desktop)/Tap+Look (VR+mobile)

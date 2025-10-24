@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/XYkS4vrhKuY
+post: https://fedetibaldo.itch.io/kuro-neko-market/devlog/1033446/postmortem
+---
 Fed up with your lack of contributions around the house, your owner has sent you off to work. Just your luck!
 
 ## Gameplay

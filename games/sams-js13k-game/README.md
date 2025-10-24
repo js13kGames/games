@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The js13k website is under attack and all its pages return 404s. Your goal is to defeat the invaders and recover the website! 
 Thank you for playing!
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The year is 1258. The Mongol Empire is rapidly expanding west, invading and conquering all lands they pass through. You have been notified that Mongol forces are drawing in, it is time to take up arms and defend the treasure!
 
 Controls:

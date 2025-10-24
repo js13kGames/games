@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 WASD or Arrow Keys • Move.
 Space • Jump.
 Left click • Fire.

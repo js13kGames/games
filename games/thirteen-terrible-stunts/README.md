@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://lopis.github.io/thirteen-terrible-stunts/
+---
 It's 1924 and you're trying to make in big in Hollywood as a movie star. But you have to start somewhere, so you work as a director's assistant's assistant and move up the ladder.
 
 Experience the fast paced movie industry under the wing of 4 terrible bosses who will give you 13 increasingly terrible stunt jobs to perform. Can you survive the pressure? Watch out for level 13!

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A simple space shooter game powered by kontra.js (v6)
 Controls:
 left arrow to move ship leftwards

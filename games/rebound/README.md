@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Action RTS game in pixel art village world (This is Poland for sure - look at the cows!)
 
 This is duel game to be played by 2 players on the same computer. Shoot capusle with soldiers next to the opponent base to destoy building. Gather additional resources if your capsule lands next to the cereal fields.

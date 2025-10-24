@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A battle between humans and demons begins on a remote island.
 You will become a captain and expand your territory with the formations selected by your king.
 

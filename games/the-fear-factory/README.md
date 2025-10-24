@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/uqZ1Nv7G6v0
+---
 **All Demons have one thing in common**, on their dreaded 13th birthday they must face their fears! This little demon must tackle 13 levels of spikes, ghosts, jumps, and falls to prove their worth.
 
 *Music by AdamTheWilliams*

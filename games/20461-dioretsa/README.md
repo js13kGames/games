@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Named after the damocloid, (and Asteroids... backwards) 20461 Dioretsa is a local multiplayer Asteroids-like.
 
 Each of the 4 spaceships include a 'flash back' drive [down arrow, 'S', or left trigger], which lets you 'travel back in time' 2 seconds to your previous location and ammo count.

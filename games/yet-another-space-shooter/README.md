@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's yet another space shooter.
 
 Lost in space. No allies to be found. You must survive.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to "Castle Attack," an exciting medieval-themed game. In this game, your mission is to destroy chests strategically placed within various castle forts using a ballista. Here's how it works:
 
 ### Controls

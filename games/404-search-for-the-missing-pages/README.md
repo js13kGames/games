@@ -1,2 +1,5 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 First, your web browser hides your page from you. When (or if) you find it it sends you on a wild goose chase for eight pages. Why does that sound familiar?
 Click on the buttons to go to the area you want to and if you want get a hint with the hint button.

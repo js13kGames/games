@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Badluck Butter Chicken Flies The Unfriendly Skies is an uncomplicated casual game where you must avoid the falling thirteens and collect coins.
 
 You can get the magnet to attract coins to you for a amount of time, and the shield which allows you to deflect the thireetns for a short time.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've been trapped by a black cat that wants to paw you to death! Block its paws using your hands, listening for its 'meows' around you.
 
 - You have 3 lives

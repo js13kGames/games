@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Karen Kohiruimaki always felt out of place in the real world. Due to her extreme height, she found it hard to make friends with other girls her age. Everything changes when she's introduced to VR and Gun Gale Online. In GGO, Karen is free to play the cute, chibi avatar of her dreams! Can Karen find friendship in this bullet-ridden MMO...?
 
 Now you are Karen Kohiruimaki ! Click to shoot ...

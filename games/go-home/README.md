@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi there!
 Cats are lost. The owner waits.
 A black cat knows the way.

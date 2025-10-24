@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Defeat enemies alone on the battlefield. It has 5 levels.
 
 - <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> (or arrow keys): Move.

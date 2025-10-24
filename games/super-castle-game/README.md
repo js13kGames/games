@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://mvasilkov.animuchan.net/super-castle-game-js13kgames2023
+---
 This is a game about building a castle. Magnificent and sempiternal, the fortress of the mind will rise — and it begins with a single block.
 
 Set in the 13th century, Super Castle Game immerses you in a captivating medieval fantasy world of some description.

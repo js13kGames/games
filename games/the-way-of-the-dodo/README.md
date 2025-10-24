@@ -1,3 +1,8 @@
+---
+directors_cut: https://repsej.github.io/TheWayOfTheDodo/
+video: https://youtu.be/p_GqomyfV1M
+post: https://github.com/repsej/TheWayOfTheDodo
+---
 *Welcome to the Dodo Dojo*
 
 Can you clear all the 13 chambers of fowl play ?  

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are Oggy, a black cat caught in the middle of your witch master's duels.
 
 As she unleashes powerful magic against hordes of enemies, you must survive through the chaos of fireballs, lightning, and curses raining from both sides. Your goal isn’t to fight - it’s to hunt.

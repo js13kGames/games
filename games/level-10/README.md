@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Level 10 is a game of skill, coordination, and patience. You must control the ball by manipulating the bar to avoid the trap holes and target the lit holes. Score more points the faster you are!
 
 Level 10 is based on the popular arcade game 'Ice Cold Beer' by Taito.

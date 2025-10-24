@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://revirtualis.net/blog-posts/850317ab-9036-4d39-a6a2-f138c4ce8dc9-09-13-js13.html
+---
 ## Introduction
 
 You have been visited by a magical creature: the Black Cat.  This creature bestows upon  you the power of witchood and with it the ability to cast magical spells and mix fantastic potions.

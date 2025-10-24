@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Description
 
 Go Away is a space world card game where you defend worlds from asteroids, planets and various other enemies!

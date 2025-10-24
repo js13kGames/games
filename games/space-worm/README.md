@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A little known fact is that space is actually filled with giant space worms who race around the galaxy gobbling up stars. They are constrained by fluctuations in the space/time continuum that appear as black boxes to the worms through which they cannot pass. They are hunted by errant meteors which devour their heads and they have little defence again.
 
 You are one of these worms, on a mission to eat as many stars as you can...

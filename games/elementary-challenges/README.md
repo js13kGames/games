@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Elementary Challenges consist in four mini-games, each one devoted to one of the classical elements. You have a total of 4:04 to complete them all. WebMonetization users get the chance to retry one of games if they took too long.
 
 Details, including the controls for the games, are inside the game.

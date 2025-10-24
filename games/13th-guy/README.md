@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://tkjantti.github.io/13thGuy/
+video: https://youtu.be/8otXvGISMtU
+---
 Don't be the 13th guy\
 ...in checkpoints\
 ...when falling down\

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Game description:
 When one-eyed squares are about to die, they must find a halo themselves to rest in peace.
 

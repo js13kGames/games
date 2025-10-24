@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Mechanism:
 Aim the cursor on enemy head. He will move for every 5 second. if enemy life(shown on topRight) becomes zero, you win. If game time (shown on topleft) runs out, you lose.
 

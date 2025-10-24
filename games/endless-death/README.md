@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are on the verge of DEATH. Collect enough collection of life and get out of the RED WALLS.
 
 ## WARNING!

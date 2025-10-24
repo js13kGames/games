@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a typical "turn right, left, and jump" endless runner game. Unlike most of other games, submitted for the contest, this one is heavily based on CSS3. Which, it seems, led to <6k final package size.

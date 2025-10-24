@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game is about a character who wants to escape from the 13th floor using the stairs, avoiding some giant moths.
 
 ## Idea

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the 13th Century, Mongol Emperor Genghis Khan created the largest contiguous empire in history.
 
 Year 1215 CE,<br>

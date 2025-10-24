@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 [Instruction]
 Arrow Key: Move
 Enter/Space: Choose, Cast spell

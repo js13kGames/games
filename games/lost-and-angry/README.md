@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Getting lost in a multiverse makes me angry... would you help me get back home?
 
 --

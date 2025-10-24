@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Saptcha - Slightly Automated Public Turing test to tell Computers Humans Apart
 
 -- INTRO --

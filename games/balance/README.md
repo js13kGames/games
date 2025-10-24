@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Balance is a game about trying to walk a tightrope (or slackline?) without falling off.
 
 Tap/hold to move forward on mobile, use the space bar on desktop. You can only move forward so take your time.

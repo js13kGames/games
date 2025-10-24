@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Vendredi is on his island, lost in the middle of the sea.  But he wants to get out of here!

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Try to find your way out without being caught by your predecessors from the 13th century.
 
 Can you do it, and how many times? They will know you were there. (You can try again.)

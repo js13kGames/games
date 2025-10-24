@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Witches Cauldron #
 
 Keep the Black Cats distracted before they curse your towers, and catch the Critters before the Witch can put them in her pot!

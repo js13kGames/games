@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are captain of a spaceship and have less fuel to come home. So you need to use gravity of planets and wormholes to find your way back home.
 
 Controls:

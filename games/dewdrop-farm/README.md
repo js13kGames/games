@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to Dewdrop Farm!
 
 Buy some seeds. Till the soil. Plant your crops. Water them daily. Pet the bunny. Harvest your crops. Sell for profit. Rinse and repeat.

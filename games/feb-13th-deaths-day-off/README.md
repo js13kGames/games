@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Survival (I think that's the name) Genre Desktop Game.  You're Death, it's your day off.  You don't want to kill today, but dudes keep coming to try to love you.  The nerve!  Kill or avoid as many as possible before you're no longer evil and become an angel.
 
 Unfinished as it's missing title screen & intro, sound, and I'd intended to include controls for mobile.  Procrastination and poor time management caused me to miss the deadline this year. Source still contains debug code, some unused set-up for added weapons, and hasn't been cleaned-up well for legibility. Zipped and full source html file are identical; no minification/optimization present.

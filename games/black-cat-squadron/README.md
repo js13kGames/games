@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://itch.io/embed-upload/15199337
+post: https://github.com/js13kGames/black-cat-squadron
+---
 A one button shooter based on a real WW2 secret US Navy squadron.
 
 ## Controls

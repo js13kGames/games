@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 CONTROLS:
 Desktop:
 Move: WASD/QZSD/Arrows

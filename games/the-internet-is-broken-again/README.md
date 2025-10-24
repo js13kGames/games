@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The internet is broken (again)Fix the internet by connecting links to their target destinations!.- Connect blue and pink links to their target sockets.
 - Hold mouse button to move.
 - Tap mouse button while moving to dash. You can dash through small gaps.

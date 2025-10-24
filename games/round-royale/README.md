@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Multiplayer battleground arena up to 6 players on map. Available for desktops and mobiles. 
 
 Desktop controls: Move the mouse away from the center of the screen accelerates your player. LMB to fire. 

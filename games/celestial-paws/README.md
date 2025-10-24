@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 While reading about “Black Cats” I learned they’re not bad luck in Scandinavia.  
 In this game, you’re helping them get stars to put behind the northern lights.
 

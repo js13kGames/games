@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Join the hamster uprising!
 
 Drive around as a hamster shooting humans! It can't take that long, can it?

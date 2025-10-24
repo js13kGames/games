@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are Hades - greek god of the dead and the king of the underworld. Your duty is to build underworld defence to protect yourself from enemies. Monsters of the underworld and pesky bandits will try to tackle you. Don't be fooled by first waves. Pressure will only increase over time!
 
 Create barricades to block their way, build magic altars which will burn them down, and spawn skeletons who will protect you. Those building can be upgraded to improve their stats.

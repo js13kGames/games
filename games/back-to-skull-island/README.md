@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 King Kong survived his fall off the Empire State Building and just wants to get home now.
 
 Level 1 controls: arrows or WASD to navigate.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 If you can't reach the goal yourself, lay an egg and maybe the next You can make it.
 
 | Motion      | Keyboard                  | Alt keyboard              | Gamepad |

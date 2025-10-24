@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 🐾 Clawdia: The Meanest Cat Around 🐾
 
 Objectives;

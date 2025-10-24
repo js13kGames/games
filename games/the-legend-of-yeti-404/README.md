@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A millennia ago, the great Ark Fleet set out across the galaxy to escape the certain doom of the ancient homeworld.
 
 Many colonies prospered, many failed, and some vanished without trace, disappearing into fokelaw and legend.

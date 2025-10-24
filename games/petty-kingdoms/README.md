@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://itch.io/embed-upload/9702622?color=cccac0
+---
 Take control over one of 4 kingdoms and unite the land under your rule.
 Recruit, move armies and counquer your neighbours.
 

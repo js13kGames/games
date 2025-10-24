@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A TREMENDOUS GLITCH IS COVERING THE SCREEN,
 DESTROY IT BEFORE IT IS TOO LATE!!!
 TOUCH THE TILE OF THE MATCHING COLOR

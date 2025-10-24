@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 the 13s are attacking earth to invade 
 
 they are sending colored ships with 13 written on them

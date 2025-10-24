@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Start from the back of the pack, finish 1st to go to the next race!
 
 To drift, stop accelerating, push handbrake and turn, start accelerating.

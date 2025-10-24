@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You and your familiar just arrived to a small village. Your new home, away from the bustling city.
 
 Brew and sell your potions to the villagers so you can pay rent, upgrade your shop and, more importantly, feed your

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Cornhole is hard enough, but you are a drunken player with wobbly balance!
 
 Compete against the CPU to reach 21 points first to win the match.

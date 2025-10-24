@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/eguneys/morchess_js13k_25?tab=readme-ov-file#mor-chess
+---
 Welcome to Mor Chess
 
 A chess puzzle game about building chess positions by following a few simple rules.

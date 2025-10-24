@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Wandering Moon
 
 As a meteor shower pelted your planet you were flung away, landing among distant and unfamiliar orbits. Now, you must struggle to navigate this strange realm in hopes of eventually returning home.

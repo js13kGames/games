@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Swords & Quills is a grand (tiny?) strategy game set in 13th Century British Isles.
 
 Make your nation the most powerful in the British Isles before the 13th century is over.

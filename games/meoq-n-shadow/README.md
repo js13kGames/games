@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Join the ultimate feline adventure in “*Cats vs. Rat: Poop Quest!*”.
 
 Two brave cats set out on a daring mission to rescue the kidnapped princess from the clutches of the evil Rat King.

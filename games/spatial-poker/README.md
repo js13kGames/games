@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use the arrow keys to move around the spaces on the board to collect cards. When you meet your computer opponent the best 5-card poker hand wins!
 
 t key to move card from Tray to Pile

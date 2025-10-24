@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are trapped in a cookie maze
 
 find all 13 cookies under 13 minutes to finish the level

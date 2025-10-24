@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Prepare for battle!
 
 Choose your army and send them to victory.

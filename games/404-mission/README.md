@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Exploring an unknown underwater facility, in a secret mission called 404 Mission, your orders aboard the Angelizer submarine(Project 404), is collect the 404 Cards that contain traces of an unknown lost civilization for further study within 10 dangerous missions. Oxygen resources are scarce in the facility depths, meaning your time in each mission is limited.
 
 404 Mission game is based on a procedural dungeon roguelike that increases the replayability.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Zodiac 13 is an arcade puzzler in the style of Tetris and Dr. Mario. Play as one of the thirteen Japanese zodiac characters and clear rows by turning all the orbs to the same color. Each orb you shoot will reverse the color of orbs of the opposite color in the same horizontal, vertical, and diagonal line, as in Reversi. Occasionally, there will be Zodiac orbs mixed in. A row cleared with a Zodiac orb will activate your character's Zodiac ability. Zodiac abilities range from clearing an extra row to delaying the next row drop to deleting a column of orbs.
 
 Music and sound effects generated with Sonant X. Pixel font is 04b-03 by Yuji Oshimoto.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Click on the tile to move it.
 
 Depending on the tile, your score goes up or down.

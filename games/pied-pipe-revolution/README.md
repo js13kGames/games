@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Pied Pipe Revolution!
 
 Be the Pied Piper and play your pan pipe to lead the rats from town. Use the Arrow keys to play the notes when they reach the arrows, which will increase your area of influence over the rats. Once rats hear the tune, they will follow you. When the song ends hopefully enough rats will follow you out of town that the townsfolk will rejoice!

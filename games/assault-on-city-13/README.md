@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Assault on City 13
 
 A strategic number-based battle game built with HTML5 Canvas and TypeScript.

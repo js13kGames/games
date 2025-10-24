@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Here you are in a hostile universe Azetz, where you need to survive as much as possible the meteorites and enemies' spaceships.
 
 Will you be the last standing?

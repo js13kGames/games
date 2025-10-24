@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A lightweight elementally themed card game based on the old-school timewaster "War". Graphics is pure DOM/CSS, so really should run on anything. 
 
 Click the info screen to start playing. 

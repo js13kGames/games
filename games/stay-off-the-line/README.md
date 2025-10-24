@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Game where you play as a tasty fish trying to survive in the ocean. Try to last as long as you can, and Stay Off the Line!

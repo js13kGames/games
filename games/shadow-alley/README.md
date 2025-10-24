@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://shadow-alley.kisimedia.de
+post: https://github.com/kisimediaDE/Shadow-Alley/blob/main/Post-Mortem.md
+---
 # Shadow Alley 🐾🌙
 
 You are a stray black cat wandering the rainy backstreets of the city. Hungry and alone, you sneak through the night in search of fish — but the alleys are guarded by lamps and watch dogs. Only stealth and patience will keep you safe.

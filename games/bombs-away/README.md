@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A polygonal physics roguelike!
 
 Shoot it out with bots in an arena as the odds grow more and more against you.

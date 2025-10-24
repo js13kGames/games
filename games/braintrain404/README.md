@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 BrainTrain404 - Challenge yourself and train your brain with series of mathematical challenges.
 
 Click/tap 3 numbers that together sum up to 404.

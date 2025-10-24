@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Runekeeper is a turn-based strategy game where you play as a mage defending your lil' tower.
 
 This game has a small neural net embedded for character recognition (takes about 2.5kb). The entire game was made as an excuse to write a lightweight neural runtime... Therefore, the controls rely exclusively on drawing symbols to make moves :)

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "The 13th Door" is a point and click animated adventure game. You control Pip, who suffers from Triskaidekaphobia.
 
 ![Screenshot](//raw.githubusercontent.com/lanceewing/the-13th-door/main/img/door_13_start.png)

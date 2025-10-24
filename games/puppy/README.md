@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Its a lovely day for a nice walk with your faithful canine companion.
 What can go wrong...
 

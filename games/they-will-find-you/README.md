@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lost in the ruins of ancient temple... the seekers are coming.
 
 Stay clear of them and survive as long as possible.

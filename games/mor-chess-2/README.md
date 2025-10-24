@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome back to Mor Chess 2
 
 An abstract shapeless form of chess.

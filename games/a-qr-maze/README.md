@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 I found about the game jam halfway into the actual game jam like a half of the time had already elapsed. Then I procrastinate for a couple more days. And finally on the last day. I started to make the game. This is the first time I’ve ever made a game and I’ve ever used JavaScript.
 
 

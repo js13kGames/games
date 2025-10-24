@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 DESCRIPTION:
 Norse goddess Hel presides over Niflheim, the underworld realm where warriors go after death if they did not fall in battle, but died of sickness or old age. One such warrior's soul is granted a chance to ascend to Valhalla … if they clear Hel's trial.
 

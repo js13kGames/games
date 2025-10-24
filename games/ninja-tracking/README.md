@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Point a phone to your webcam and kill all ninjas, watch out for bombs. This game uses tracking.js to track colors.
 How to play
 

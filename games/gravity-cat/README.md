@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A small puzzle game where you play as a black cat (who would have guessed!) and control the gravity.
 You have to collect all the purple gems because... umm... well, I'm fairly certain there is a good reason for that,
 and it has something to do with beliefs related to black cats or something.

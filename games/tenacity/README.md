@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the 20th century, man set foot on the moon.
 In the 21st century, NASA sent the Curiosity and Perseverance rovers to explore Mars.
 Now we are sending thousands of mini rovers named Tenacity to explore the planets and harvest resources.

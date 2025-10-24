@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Roam around the city connecting to WiFi hotspots and completing the download and upload goals.
 
 The closer you are to the centre of the network, the faster upload and download speeds will be.

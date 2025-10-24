@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ride like the wind, or in this case, against it! Stay on screen and avoid crashing your bike. 
 
 How to play

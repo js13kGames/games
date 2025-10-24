@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The frequently-misunderstood world of a person suffering from Dissociative Identity Disorder, viewed through the lens of an Atari 2600-style strategy RPG.
 
 Controls (keyboard and mouse required)

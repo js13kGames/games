@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Asteroids except it's a rhythm game now? Unleash your inner dancer, unlock new instruments of destruction and make sure to play them on the beat.
 
 Six levels available (the last two may be more challenging).

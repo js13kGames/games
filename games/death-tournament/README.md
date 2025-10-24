@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You control the death and your health decreases as the time passes. In order to stay alive you need to kill the humans.
 
 Collect different weapons to increase your attack and defense.

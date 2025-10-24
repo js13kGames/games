@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/baturinsky/no13
+---
 Play with numbers.
 Help Nina get rid of the triskaidekaphobia.
 Get yourself the triskaidekaphobia.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi there hero! (⛄)
 
 Talk to people (🙍) and they'll tell you

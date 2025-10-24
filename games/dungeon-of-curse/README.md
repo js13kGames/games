@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 **Dungeon of Curse is a top-down dungeon crawler where precision and speed are key to survival. Players must navigate cursed dungeons filled with treacherous enemies, engaging in melee-based combat. The twist? You only have 13 seconds to conquer each room, forcing quick decisions and sharp reflexes. Fail to escape the room in time, and face the wrath of the curse. Will you outsmart the dungeon and break the curse, or will time run out?**
 
 #### Here’s a Feature list tailored for Dungeon of Curse, aligning with its core mechanics and theme:

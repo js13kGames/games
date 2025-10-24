@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a shooting game where you can't see back, you need to shoot the enemies by predicting their positions in dark......Make 60 to win the game
 
 Controls :

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a virus and must eliminate all blood cells present.
 To eliminate a cell, you must absorb it. But be careful, you have to be bigger than her to absorb it.
 

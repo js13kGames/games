@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a lovebird, and you are trying to attract another lovebird. In order to do that, you must use your aural skills to sing back the melodies that you hear.

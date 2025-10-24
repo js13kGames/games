@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Oh no, you've been kicked out of the castle! Solve puzzles and make your way back to your rightful home. 
 
 Puzzle-platformer game with an audio mechanic. Robots and platforms will only respond to sounds from tapes of the same color. Platforms with dark arrows on them will remember their position after saving, so you don't need to worry about losing too much progress if you die. 

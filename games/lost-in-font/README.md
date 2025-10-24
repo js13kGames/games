@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lost in Font is a brain-teasing seek and find game where you have to find your lost colours.
 
 The word you need to find will be a name of a colour, but will also be randomly coloured a different colour.

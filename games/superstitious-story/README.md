@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Balancing the aspects of life is not easy. You need luck, wisdom, money and love. Knowing superstitions well can help to plan your actions correctly.
 
 ## Gameplay

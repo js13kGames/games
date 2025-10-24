@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 CONTROLS: Mouse to move. Click to fire. 
 Turn sound down, adjust to happy volume. 
 

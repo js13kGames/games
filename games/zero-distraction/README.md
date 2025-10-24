@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 About one month ago this competition started and only two days before the deadline I started working on my game.. I might have been distracted.
 
 This game is called Zero Distraction. Go offline and focus to complete the tasks!

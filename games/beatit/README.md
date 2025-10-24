@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi :) Few months ago I heard about 13kgames on MeetJS in Katowice. Together with collage we got inspired and decided to organise this kind of competition between few developers, based on the same rules. We chose a cathegory "carnivorous" back then.  Current contest category may have nothing in common, however I decided that it's a pity not to show you game inspired to create by you :)
 
 So about the game:

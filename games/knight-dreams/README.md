@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Knight Dreams is an endless runner arcade action platformer (yes, that's a genre now), where you control a 13th century knight - or at least a 13th century knight helmet with legs and arms. Your goal is to do things that most 13th century knights do: collect gems, kill everything that moves and keep running until you die. As simple as that. Or maybe you are a 13th century knight having a fever dream, that would explain the name of the game.
 
 ### Controls

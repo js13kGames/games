@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to "Overforged" where you step into the shoes of a skilled XIII century village blacksmith. Your mission is to keep the villagers and the Lord well-pleased with your craftsmanship. You'll manage your forge, craft weapons and tools, and make crucial decisions to keep your forge running and the people happy. But beware, a displeased Lord can bring an end to your time at the forge. So, craft wisely and manage your resources!
 
 ### Controls and Gameplay Elements

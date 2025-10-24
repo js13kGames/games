@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Live the life of a dragon on a small island
 * fly around
 * hatch eggs

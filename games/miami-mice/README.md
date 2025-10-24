@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 MIAMI MICE is a beat-em-up style game inspired by classics like International Karate and Double Dragon.
 
 ## Controls: Keyboard

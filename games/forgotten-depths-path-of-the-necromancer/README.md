@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Forgotten Depths: Path of the Necromancer" is a simplified roguelite, deck building game where you will craft cards, and customized your deck to take on the undead and their masters.
 
 Coil supporters will get an optional head start by having a few extra cards added to their card collection right from the start.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this addictive game, you are Dante, a developer who died and went to the Developer's Hell.
 
 Yeah, how could you imagine those silly jokes about javascript would bring you there?

@@ -1,3 +1,8 @@
+---
+directors_cut: https://www.newgrounds.com/portal/view/819609
+video: https://youtu.be/6VXrnk18Z4s
+post: https://frankforce.com/space-huggers-how-i-made-a-game-in-13-kilobytes/
+---
 The empire is spreading like a plague across the galaxy and building outposts on remote planets. You are an elite rebel soldier tasked with wiping out those bases. Explore strange planets using your tools of destruction and eliminate the invaders! You have only 10 clones left, 3 more will be replenished after each mission. Good luck, have fun, and give space a hug for me.
 
 How To Play

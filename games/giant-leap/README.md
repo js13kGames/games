@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 As Neil Armstrong said on the moon, “That’s one small step for man, one giant leap for mankind.”
 Giant Leap is a 2D side-scrolling game.
 

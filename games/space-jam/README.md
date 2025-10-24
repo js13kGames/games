@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are the first to reach the planet Mixolydia, where the only resource is sound. 
 What will you make of this new frontier?
 

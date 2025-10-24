@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 this game is inspired by one of my favorite childhood games "whack a mole", however we played a different version where all of the kids would set and one would stand and keep an eye on the sat kids, every time the person that was standing would look away the kids who were setting would start to jump and the standing player had to slap on top of their heads to catch them.
 this game took seven days to code for me as a beginner woman from Afghanistan, its mostly Javascript and CSS also a little HTML, the LOGO, and every other art work used in the game is done by me, i did take help from AI when i needed to debug the game but the game itself is entirely my own work, i do understand that the idea isn't very niche and new but i believe the math questions twist made it fun and interactive, i wish i could add an HP bar and a history of high scores or a game over if the player missed more than 5 lasers but due to the size allowed in the competition i couldn't.
 overall this is my first time joining this event and my first year as a self-thought programmer and hope the best.

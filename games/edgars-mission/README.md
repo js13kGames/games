@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Edgar’s Mission is a platformer game. Unlike most such games there are *two* points of contact. While you are on the ground or a platform, you have complete control over your movements. But when you only partially touch them you have less control, and while you are in the air you can control your movements only slightly.
 
 For controls you can use the arrow keys or WASD/ZQSD, for jumping you can alternatively also use the spacebar. Press <kbd>M</kbd> to mute/unmute the music and sounds.

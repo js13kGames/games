@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use the Arrow Keys.
 Your goal is to move to the green node, when you reach the green node, it will take all the steps, you've taken but in reverse and you need to reach the red node.
 You lose if you touch an enemy.

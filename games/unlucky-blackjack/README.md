@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Blackjack implemented in under 13kb.
 
 Player vs Dealer Blackjack.

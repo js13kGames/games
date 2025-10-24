@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the 13th century, a kingdom stood as a beacon of prosperity and peace. At its heart a structure said to be blessed by the gods themselves. Many tried to destroy it but in every attempt they failed. Driven by dark ambition, a neighboring realm, launched waves of archers and swordsmen to conquer it. The tower’s guardian, had lost much of his army in previous wars. He knew that facing the enemy directly would be suicide. Thus, using the tower as a strategic point, he rallied the remnants of his troops.
 Each wave of assault tested not just their strength but their unity, resilience, and cunning.
 Would the Last Tower stand or will it fall?

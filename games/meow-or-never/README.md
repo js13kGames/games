@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A quick card game for up to four players. Designed for your phone when you want to quickly play a round with friends, but no one has a deck of cards with them.
 
 1. Play a card equal to or higher than the last card.

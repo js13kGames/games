@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Memory game for kids and adults
 
 1. Turn back any two cards and remember what number was on the cards and where it was.

@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Usual platformer in 3D world (okay, in 2.5D world). Game controls are WASD with SPACE as jump button. Protagonist is black  cat (obviously), and task is to collect as much paws as possible. There is jump platforms (two arrows with yellow background) where cat can jump much higher, and magenta swirls where user can teleport to other dimension.

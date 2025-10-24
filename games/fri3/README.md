@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A game for [JS13k](//js13kgames.com/) 2024 by [Ilya Kuzmichev](//x.com/eliaskuvoice) and [Alexandra Alhovik](//x.com/alxovikaa)
 
 The goal of the game is to have fun through a series of bloody murders of happy students. Play and remember why you're afraid of **Friday the 13th**.  

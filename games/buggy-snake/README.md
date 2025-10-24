@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Everyone knows classic Snake game. Player has to control the snake and collect food in order to get more points. In this SnAkE version the basics are the same, but various glitches make the gameplay much richer, challenging and fun!
 
 Desktop:

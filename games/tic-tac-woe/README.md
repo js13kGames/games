@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tic Tac Woe  😢😢😢
 
 The aim, to get three red toruses in line, either horizontally, vertically, diagonally 2d or diagonally 3D.

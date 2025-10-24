@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The basic idea is to create a network of servers, switches, routers, and PSUs.
 
 The beefy-er your servers, the more traffic you can support; the more responsive your servers, the faster traffic will come.

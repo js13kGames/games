@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Take on the role of Scottish knight, William Wallace, in a retelling of the battle of Stirling Bridge. Charge along the bridge, fighting English soldiers, dodging arrows and avoiding obstacles. This game was created as an entry for js13kgames 2023.
 
 (Firefox browser recommended)

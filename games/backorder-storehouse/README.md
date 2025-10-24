@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "BACKORDER STOREHOUSE" 
 
 It's Black Friday, you need to dispatch all the parcels on backorder to the proper airports.

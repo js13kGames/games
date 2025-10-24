@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## The Story So Far
 In Rocket Jockey, you take on the role of Captain Pick a Card and have to pilot your ramshackle ship to the edge of an asteroid field.
 

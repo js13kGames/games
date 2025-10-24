@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 From blue to red, travel the network, but be careful, you can use path only once.
 
 Controls : 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The station on LZ-13 was taken over by its AIs! You must take it back... with style!
 
 [SWAGSHOT] is a throwback to 90s first person shooters, when games were about defeating countless enemies, except for one major difference: playing aggressively and taking risks is rewarded.

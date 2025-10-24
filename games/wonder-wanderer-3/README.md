@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A prototype of a Rhythm Game. There are 5 levels with different quirks and you have to click when on the center you have blue notes, don't click the red notes and then click or press SPACE on the white button when it appears. You can have a better theme if you are a Coil user.

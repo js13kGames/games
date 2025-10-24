@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Back:
 - In childhood many kids was playing labyrinths - thanks to books/magazines: "Back in time..."
 - One of Greek mythology was about Minotaur and Labyrinth: "Back to Greek legends..."

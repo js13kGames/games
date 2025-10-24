@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://superman2211.github.io/black-cat/dist/build/
+video: https://youtu.be/iZmJ3wtQQUQ
+---
 Get acquainted! This is Kate. Since she likes to dress in black, she is nicknamed Black Kate! These guys offended her, but they didn't know that she had a Black belt in karate! And now she's going to show them!
 
 Controls:

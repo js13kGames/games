@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are the server in an Internet Cafe.
 Move with WASD or Arrows and Mouse to click, use the build menu to place a desk, chair and then a PC onto the desk and you are off!
 

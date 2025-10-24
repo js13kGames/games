@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Mission::
 In each galaxy search for all planets and push them through the black hole.
 You have limited fuel :: Do not get lost in space or you will have to restart!

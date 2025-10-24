@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Connect the yurts to the farms!
 
 Left-click and drag to place paths and re-orient your yurts. Right-click to delete path segments.

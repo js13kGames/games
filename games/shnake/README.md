@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A variantion of the classic snake game.
 
 There are two modes:

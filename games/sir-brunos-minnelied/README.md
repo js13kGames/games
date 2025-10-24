@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Minnelied is a traditional medieval love song.
 
 In this game you will help the knight Sir Bruno, who set out to sing his Minnelied to Lady Sylvie, but instead was thrown into the dungeon.

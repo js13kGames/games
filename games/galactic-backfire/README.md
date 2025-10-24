@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A space shooter running in reverse.
 
 Control the spaceship with WASD or arrow keys.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You play as an HTTP request and you must find all the 5 files in each stage to progress. However, you must not get caught by the firewall agent, which has
 gone haywire and is targetting innocent requests such as yourself.
 

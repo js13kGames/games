@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Chem Fight is an HTML5 Chemistry Battle Game, defeat your three opponents and become a chemistry master!
 
 Players attack with a single atom, the defender is shown only the valence electron count of the attacking atom and is given a chance to choose a number of atoms for defense. If the attacking atom will bond with one or more of the defender's chosen atoms, it is considered a successful defense, otherwise the defending player is damaged based on the atomic number of the attacking element.  Once the opponent's health goes to zero the round is over, and the player will face a tougher opponent.

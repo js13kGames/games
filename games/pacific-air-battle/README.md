@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 For The Theme 'Death' I decided to make a shoot 'em up based on the Pacific theater of World War II.
 
 The player controls a Grumman F6F Hellcat.

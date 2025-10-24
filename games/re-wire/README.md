@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bring the system back online by rewiring the power nodes.
 
 Drag the cable around the power nodes and plug it into the socket!

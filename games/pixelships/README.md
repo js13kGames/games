@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a pixel fighting for survival in an arena of up to 4 opponents.
 
 Shoot layers of pixels off of your opponents to annihilate them from existence! Your pixel masses will gradually reverse as you battle it out!

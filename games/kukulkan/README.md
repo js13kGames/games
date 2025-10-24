@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 According to historical and mythological records, during the 13th century in America, the fall of Chichén Itzá - the last of the great Maya cities - took place. In the center of Chichén Itzá stood the main temple of Kukulcan, the feathered serpent. Centuries of glory turned the spiritual incarnation of Kukulcan residing in the temple into a powerful serpent, but as the city was abandoned, the lack of faithful followers quickly caused it to lose its power. With an irreversible destiny and no more followers, Kukulkan wants to escape before disappearing, but to achieve this, it must confront images of the new gods and artifacts of the upcoming civilizations.
 
 Kukulkan can move using WASD or the arrow keys. To shoot, you can use the "I" or "Z" key.

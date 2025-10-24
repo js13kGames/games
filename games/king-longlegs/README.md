@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://thcopeland.com/2024/12/12/js13k-2024.html
+---
 A small, challenging platformer set in an bleak, empty world. Journey through tunnels and caverns to find and defeat the evil thirteen-legged king, who lurks somewhere far below. Along the way, find secret paths, solve puzzles, and learn to face your fears.
 
 Use WAD or the left/right/up arrow keys to move around.

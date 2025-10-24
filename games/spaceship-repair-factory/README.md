@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Build a factory to repair incoming spaceships in the Asteroid Belt. Build Miners to extract resources from asteroids. Use belts to move those resources to repair any ships that come into the station.
 
 Reason unfinished: 

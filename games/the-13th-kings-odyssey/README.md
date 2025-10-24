@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 > In a shadowy realm of the 13th century, a once-mighty king finds himself trapped in his own castle. Now, he must use his wit and uncover ancient secrets to escape the castle's ancient curse. Join him on his journey to break free in this enchanting tale of courage and magic.
 
 The 13th King's Odyssey is a hard precision platformer game. Where you play as an unnamed King. You need to help him to escape the castle.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Step into the paws of Amara 🐈‍⬛ — a devoted mom on a mission to reunite with her three playful kittens.
 
 - 💚 Ivy, the energetic climber who’s always circling the tree.

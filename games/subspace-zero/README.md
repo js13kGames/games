@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Drop into Subspace and battle other bots and players. Features dynamically generated pixel art (ie theres not a single .png sprite file involved in this game) and a basic multiplayer implementation!
 
 *Note: Combat was still very WIP by the end of the jam - and not at all implemented in this submitted build. This is just the unfinished stage of the game at the time of the gamejam end. 

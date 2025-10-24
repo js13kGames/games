@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Controls: 
 (while on planet) WASD to move, SPACE to interact.
 (while on vessel) W to accelerate, AD to rotate, SPACE to stop, E to exit vessel.

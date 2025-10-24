@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is my 2018 Js13kgames game. You are a square who has lost its family and you need to get the beacons online for your family to find you. When beacons are offline they will be purple when they are online they will be blue. Beware of enemies (Red) they will deprive you of health (represented by how zoomed in you are).
 Controls:
 -W/A/S/D, Z/Q/S/D or arrow keys to move.

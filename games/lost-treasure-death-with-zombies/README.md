@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 One day... There was a treasures hunter.
 He heard a rumor that there was some treasures in the mountain.
 There is a king zombie in the mountain. The king zombie attacked many villages. 

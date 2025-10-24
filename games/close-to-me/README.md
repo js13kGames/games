@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Heavily inspired by Just Shapes and Beats.
 Avoid the lines, or anything pink.
 Use WASD to move, Space to dash, and r to restart.

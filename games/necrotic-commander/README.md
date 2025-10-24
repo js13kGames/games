@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are the Necrotic Commander! An ancient master of death and decay, with the power to reanimate the dead to do your bidding.
 
 Despite your warnings, the local peasantry seek to dethrone you. Using your dark arts, destroy their pitiful uprising, and send them to their graves!

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Offline Race is an online game where you have to defeat to your rival in a race to get connection.
 
 You have to move your ethernet wire selecting numbers between 0 and 9 to sum quantities between 10 and 30.

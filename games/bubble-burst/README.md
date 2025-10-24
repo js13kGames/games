@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://bubbleburst.reitgames.com/?referrer=js13k
+post: https://reitgames.com/news/post-mortem-bubble-burst
+---
 Reach the goal by tackling obstacles and avoiding enemy (XIII) bubbles in this sparkling adventure
 
 ## Controls

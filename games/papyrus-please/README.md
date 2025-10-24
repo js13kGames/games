@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The game is a cross-platform WebXR application made primarily with the A-Frame platform.
 It is played with a VR headset, without a need for hand controls.
 

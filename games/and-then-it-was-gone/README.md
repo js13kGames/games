@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 DESCRIPTION:
 A 2D platformer. Make quick decisions where to jump next while the ground you touched before crumbles behind you. Only the sturdy pillars are save and are a point to return to should you fall.
 

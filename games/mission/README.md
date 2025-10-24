@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You play as Reverend Captain Lore Whitaker, a missionary en route to prefecture 461.
 
 [tested lightly on a few mobile devices, but TBH this is much better on desktop]

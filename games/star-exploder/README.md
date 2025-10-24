@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use WASD or arrow keys to fly
 Use Space to break
 Click while flying to shoot

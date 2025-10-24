@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 SWIFT is an easy arcade game where your main objective is to fly with ship to the end of 10 different levels.
 Main idea and strong inspiration: http://swiftstitch.sophiehoulden.com/demo/
 

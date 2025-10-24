@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your army overwhelmed by the attack of the alliance of the 3 kingdoms.
 
 You will act as the Mongol Empire ruler Genghis Khan.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The player falls down a sewer and needs your help to escape from the dark catacombs of the rich medieval city.
 
 The news of the week is that an accident has occurred underground in the city and some tourists have been trapped.

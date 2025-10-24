@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the 13th century, a tower under construction began to lean in the Republic of Pisa.
 Restore the misaligned floors and save the tower from collapsing!
 

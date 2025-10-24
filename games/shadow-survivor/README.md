@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A small game made under 6kb of size (compressed) with pattern matching and feature extraction capabailities
 
 ## Game Features

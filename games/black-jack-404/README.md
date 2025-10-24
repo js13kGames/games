@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://reitgames.com/news/black-jack-404-post-mortem
+---
 This is a variant the card game, Black Jack.
 
 There are a total of 40 cards in the deck, with values from 1 to 10. There are four of each value.

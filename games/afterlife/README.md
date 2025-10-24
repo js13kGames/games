@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://piesku.com/afterlife/play
+---
 Where do Pac-Man's ghosts go when they die?
 They come here — to the ghost town full of life!
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fighting back to back against an onslaught of alien forces that destroyed your homeworld, you are the two remaining ace pilots of the Earth Defense Force. As the surviving remnants of humanity flee to safety, you must stand your ground against the attackers to buy them time.
 
 Collect a variety of weapons and use them to destroy wave after wave of alien forces, unstable asteroids, and powerful alien bosses.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Don't Die To Ghosts is a 2 dimensional side view game inspired by the classic arcade game Pac-Man.
 
 The aim of Don't Die To Ghosts is to complete successive levels (to beat the best score) by munching all the dots (244 of them), munching the bonus fruit (nom nom), and trying not to Die To Ghosts (eek).

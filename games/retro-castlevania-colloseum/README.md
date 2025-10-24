@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Shortly before the competition started, I noticed, that I haven't seen many circle mazes online, so I went to explore them.
 
 After SVG didn't worked out, Canvas was a better suit. Due to different coordination systems I have to make some trigonometric calculus for the painting as well as translations.

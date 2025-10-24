@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 **2133 AD:** The curse of the number 13 inflicted on earth is found to originate from the exoplanet Xiicur.
 
 You are humanity's best hope, tasked with gathering data from this planet to help rid everyone of this phobia.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a gentleman merchant, grave-robbing and selling disreputable goods to the upper class.
 After spending your nights gathering materials, sell them to your discerning patrons at high prices.           
 You seek the legendary blue diamond, buried with one of the world's elite.

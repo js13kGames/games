@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Move with WSAD. Go up with Space. Go down with C. Look around with mouse. Click on screen to lock pointer.
 
 The game has three stages:

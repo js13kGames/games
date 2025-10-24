@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 JSRACER is a drone racing game.
 You start each track with an countdown.
 Rings on the course allows you to add time.

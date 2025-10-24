@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 So you've _found_ yourself _lost_ in a maze with chickens running rampant?! Find your way to the exit and see what challenges await you in the next room.
 
 Use your computer arrow keys (or `WASD`) to navigate. Push objects around to make a path for yourself. If you have ended up in a position that is impossible to get out of, hit `R` to reset the level.

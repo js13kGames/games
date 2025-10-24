@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An endless tower defense type game.
 
 You are the holy knight!

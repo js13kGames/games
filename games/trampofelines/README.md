@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://trampofelines.dalp.sh/
+post: https://dalp.sh/blog/js13k2025
+---
 The yarn balls are on the loose and elastic felines must soar high in the sky to rescue them!
 
 Use the stretchy body of the *trampofelines* to bounce the yarn balls to the baskets.

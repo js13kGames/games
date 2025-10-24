@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You must to mount a puzzle to connect lands and build a path where your heroes will walk and fight the undead, until find and kill the Lord of Death.
 
 When you place a piece, you earn gold and more warriors on each neighbor piece with the same terrain. If no available piece matches the place you want, you can pay to randomly replace one.

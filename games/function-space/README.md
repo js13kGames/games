@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A logic puzzle game that is about transforming source numbers into target numbers.
 To do that, the "function machines" must be in the right places!
 

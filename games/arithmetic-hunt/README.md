@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 - Move your circle by mouse in order to hit the right expressions and to avoid the incorrect ones.
 - Think fast! You have 15 seconds to find next correct expression.
 - Small balls are neither dangerous nor count as correct ones.

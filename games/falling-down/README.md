@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 'Falling Down' is a simple platform game with the goal of jumping as far down as possible.
 
 How to Play

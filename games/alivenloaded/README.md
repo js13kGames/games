@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Alive and Loaded is a multiplayer exploration and escape game.
 Players will need to cooperate to access the temple's treasures, but unlocking those chambers will infuriate the ancient gods.
 Fear their wrath as the walls and ceiling begin to collapse. 

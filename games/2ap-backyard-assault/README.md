@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a tiny XCOM-like.
 
 I had two days left until deadline and was still high on adrenaline. So I decided to at least start something I was dreamed about for a long time: a tactical game that plays by XCOM rules. I.e. with 2 action points (hence the name), high/low cover system and the like.

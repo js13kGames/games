@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A fast paced word game. You have 13 seconds to solve the words!
 
 ## How to play

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Simple puzzle game consists 18 levels. You just have to fill the box with mouse click.
 
 Mechanic:

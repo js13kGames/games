@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Find the way out from the dungeon in this epic story.
 Try to avoid traps and monsters.
 May the Glitch be with you.

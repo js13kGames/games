@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Save our planet Earth! Save Forests from burning!
 
 Role of player:

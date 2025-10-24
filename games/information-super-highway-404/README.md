@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Travel the information super highway picking up lost pages whilst dodging traffic. 
 
 Use cursor keys or wasd to move.

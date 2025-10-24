@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 REPORT:
 - You are lost in space
 - Kamikaze vessels are hot on your tail

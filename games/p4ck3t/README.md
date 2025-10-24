@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Overview
 You are a small packet who just connected to an archaic network. The server is unhappy you've arrived, but you have to retrieve some data and your up-beat attitude can't be crushed.
 

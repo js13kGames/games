@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A minimalistic 2D shoot 'em up in space.
 
 ========

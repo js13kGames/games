@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/tTcBJreNepI
+post: https://github.com/jonathan-vallet/js13k-2024/blob/main/POST_MORTEM.md
+---
 13 Steps to Escape is a 2D pixel art puzzle game.
 
 Every level you have to reach the flag. You can push crates, pick keys to open locks, trigger switch, roll a boulder and many mechanisms.

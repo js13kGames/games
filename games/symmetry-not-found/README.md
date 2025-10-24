@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Note: actual title is "◢U4O4U◣" but decided to submit under a pronounceable one.
 
 Rotate, flip and slide icons in the correct order to create symmetries. How fast can you solve the puzzles?

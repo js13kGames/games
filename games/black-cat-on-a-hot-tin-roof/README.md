@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/_eUD48rlFIY
+---
 Black Bird and his gang captured Kitty.
 Black Cat has only one minute left to save her.
 The roof is full of dangers and getting hot.

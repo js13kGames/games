@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Schrödinger’s Catwalk 🐾
 
 You are a mysterious black cat wandering between two realities — one where you are lucky, and one where you are cursed.

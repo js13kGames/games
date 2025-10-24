@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help Lucky reach the other side of the screen by matching the target color as closely as you can before time runs out! Made for Chrome, should work in all major browsers, iOS, and Android (tested on Nexus 4)

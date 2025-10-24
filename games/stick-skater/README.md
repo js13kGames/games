@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Stick Skater is a throwback to the old Tony Hawk Pro Skater games. Your goal is to perform sick tricks and complete challenges.
 
 Will you be able to get a million points in less than two minutes?

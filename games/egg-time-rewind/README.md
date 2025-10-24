@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://www.newgrounds.com/portal/view/873020
+---
 Time REWINDS when you die...
 but your PARALLEL LIVES remain.
 Break the SPACE EGG to get powerups.

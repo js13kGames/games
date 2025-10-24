@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Reverse emerald mine
 
 You have to find enough gems to fulfill the gem target for each map. Then a door will open and you have to go in.

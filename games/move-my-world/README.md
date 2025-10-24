@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this puzzle game, you don't move around to get to your destination, but rather you get your destination to get to you!
 
 *HOW TO PLAY*

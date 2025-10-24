@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Row row row your boat,
 quickly back up stream,
 frantically frantically,

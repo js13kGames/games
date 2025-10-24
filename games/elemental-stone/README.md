@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Elemental Stone keeps in orden everything all around the world, The Evil Empire has steal it and has decided to destroy it, the olders of each elemental village have choosen it's more powerfull wariors, and now, 4 heroes are the only who can stop them, but they have work together to reach the stone.
 
 Instructions

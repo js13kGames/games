@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Move: WASD or Arrow Keys
 Shot: Space/Shift/E
 Pause: P

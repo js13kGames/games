@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is the tendergotchi, the cute virtual pet of your dreams... but for how long can you keep Death away from it? the best tender-trainers are able to make them live over one hundred years and see them grow from a feeble egg to a grown adult-pet, are you up to the challenge?
 
 If you fail, you can always try again, and again, and again. 

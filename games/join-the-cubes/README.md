@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Objectives:
 Connect all lighter blocks of the same color using darker blocks.
 Darker blocks start to pulse when they are connected.

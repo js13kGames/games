@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 sing-song ding-dong
 a js13games 2019 entry by richard munn
 

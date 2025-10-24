@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game is a realtime multiplayer game based on WebRTC.
 
 If you create a room, send the URL to your friends.

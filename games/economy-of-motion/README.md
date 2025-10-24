@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help Dot reach the goal in under 13 steps. It's measured in keystrokes, you have to be judicious about every movement.
 
 - WASD, Arrows, Dpad: Walk/Ladder

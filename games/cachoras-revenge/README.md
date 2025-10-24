@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cachoras Revange 
 
 The world is under attack of gigant cachoras(Kind of lizards)

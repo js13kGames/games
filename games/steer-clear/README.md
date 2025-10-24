@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Steer Clear is a game about navigating your tugboat and barge through tedious waters and delivering crates to factories along the way.
 
 Controls:

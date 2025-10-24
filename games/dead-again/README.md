@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Death was not enough to keep these evil spirits down.
 
 Defend yourself against the onslaught of zombies, vampires, ghosts ... and more.

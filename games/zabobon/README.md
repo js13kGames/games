@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Zabobon
 
 Guide a mischievous black cat with a laser pointer and spread "bad luck" by crossing people’s paths. Survive the night, watch the mayhem (hello, flying Black Volga), and make the most of your nine lives. Built in raw WebGL under 13 KB - mentee-powered, mentor-polished!

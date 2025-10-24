@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is the Starships latest usecase: Interplanetary Taxi Service!
  -> use the [left] and [right]-arrowkeys to turn the starship
  -> use the [up]-arrowkey to fire the boosters

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 checkmate is an HTML5 puzzle/strategy game that can be played by one or two person, on a desktop or a mobile device that has a browser app in it. 
 
 When the game starts, map will build black and white stones, as well as obstacle/transform blocks on the board. Using arrow keys user can move the white stones correspondingly, while in the same time the black stones are moving in the opposite direction.

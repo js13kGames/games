@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://meow.tap2play.io/
+video: https://youtu.be/n8V4umhu9ZA
+---
 Avenge your fallen human and cut through waves of enemies across fast-paced, punishingly fun levels. CLAWSTRIKE is a 
 die-and-retry action game: you’ll fall often, but each retry is instant, keeping the momentum alive.
 

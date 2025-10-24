@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Road to Roam is the story of a young adventurer who sets off from his small village to find Rome, only to find himself lost in a field of hazards.
 
 The goal is to ride as far as possible. Speed & obstacles increase over time!

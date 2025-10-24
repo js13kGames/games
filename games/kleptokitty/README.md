@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://eoinmcgrath.com/kleptokitty/
+post: https://eoinmcgrath.com/kleptokitty/postmortem.html
+---
 ## About
 
 _"If a black cat crosses your path, count your diamonds,

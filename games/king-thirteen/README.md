@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/2MOHO7dBFd8
+post: https://mvasilkov.animuchan.net/king-thirteen
+---
 King Godric XIII, called the Crimson Hand, the Withering Flame, the dreaded King Thirteen rose from his throne.
 
 The whispers of his subjects had grown too loud, too bold. They had forgotten their place.

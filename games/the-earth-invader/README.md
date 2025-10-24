@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Years ago, a terrible invasion by unknown entities was staved off by a lone Earth ship. Now, in the year 2048, humankind has discovered the planets of the coalition that nearly wiped them out, and has elected to send their most skilled pilot to destroy them: You.
 
 Wonder why there's no sound? In space, you won't hear your enemies dying.

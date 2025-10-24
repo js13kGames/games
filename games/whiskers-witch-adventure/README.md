@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://roblouie.com/article/1316/the-making-of-whiskers-witch-adventure-js13k-2025/
+---
 Every Halloween the 13 witches of Whimsywick cast a Halloween party spell, bringing the jack-o-lanterns to life and
 creating magical bubbles across the town. But this year the spell went wrong! The witches are trapped in the bubbles
 and the jack-o-lanterns are running wild!

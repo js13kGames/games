@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://death-match.herokuapp.com
+---
 In Death Match the goal is to clear as many rows and columns as possible using as less movements as possible. It is possible to clear the dashboard aligning three (or more) in a row, which is achieved by exchanging the pieces to form trios (swipe events) of equal pieces. The player who has more score wins at the end of the five turns.
 
 Prizes:

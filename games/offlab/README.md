@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Offlab is a tough, platform game where you need to pass through 10 floors filled with dangerous lasers and spikes! You can turn the power on and off whenever you want, turning the lasers off and stopping platforms! Using this power, make it through all floors alive and escape the lab. Good luck!
 
 "You wake up, dazzled by a bright light. After your eyes adjust to the brightness, you realise you are lying on the ground in some weird, white room. After a few second you hear a voice in your head, welcoming you and saying that you need to reach a portal on each floor. You get up from the white floor. You have trouble with standing at first, but after some time you manage to move normally. Seeing white light at the end of the corridor, you decide to go investigate..."

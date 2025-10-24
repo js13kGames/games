@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your are lost but not alone (we also lost the game's name so don't worry) !
 You fight against time and your goal is to be the last alive.
 

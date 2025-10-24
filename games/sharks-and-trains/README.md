@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Sharks or Trains, your choice.
 
 *You are the leader. Your followers follow you and each other until they are split apart by the Evil rotating  13 that drops pinball bumper  13s on the screen.* 

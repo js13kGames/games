@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bunny is hungry but spilled all his carrots! Find them before he gets too hungry!
 
 WASD - Move

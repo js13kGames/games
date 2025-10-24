@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game does not want to be recognizable.
 Usually, when you're stuck in a puzzle game, you ask Google for help.
 

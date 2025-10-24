@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A XR Abstract Puzzle game - all you have to do is Wake up the Cat.
 
 13 Levels of cat disturbing fun. Disturb Midnight the black cat at level 13 to win!

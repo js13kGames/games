@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a strategy/management game about being an interstellar internet service provider.
 
 * Link stars with mouse drag.

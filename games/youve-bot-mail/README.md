@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've BOT Mail
 
 Help Postman program his robot dog, Sparky, to navigate a maze of routes and fetch the requested files.

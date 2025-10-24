@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 So you killed the boss but can you make it back from the dungeon?
 
 An very simple Roguelike with reversed perspective (side instead of top down) that starts from the end of the game right after you defeated the last boss deep down in the dungeon.

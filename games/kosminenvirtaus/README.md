@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Follow the cosmic flow!
 
 Move your mouse to control direction.

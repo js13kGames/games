@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A Simple Simon inspired code sequence memory game.
 
 - At each level of the game you will be presented with 4 coloured code discs

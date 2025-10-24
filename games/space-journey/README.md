@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Go through the planets, and pick the 4 elements (FIRE, WATER, EARTH and AIR). You will have to use both your skills and your brain in order to go through the 9 levels!

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 WARING:  DO NOT BE FOOLED BY THE SURFACE PICTURES, THIS GAME IS NOT SOMETHING BIG!!
 
 Story: How will you treat the people who had cut your tail?

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://reitgames.com/news/building-triska-the-ninja-cat
+---
 ## Controls
 
 - Tap and hold anywhere to attach and swing from the red dots. (We all know cats love red dots)

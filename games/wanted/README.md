@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Wanted is a charming pixel art adventure that invites players to step into the legendary shoes of the heroic outlaw Robin Hood. Sharpen your archery skills, and rob from the rich to give to the poor.
 
 Avoid The King's guard and get as many coins as you can.

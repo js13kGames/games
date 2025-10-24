@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In the year 13K trade between planets is controlled by the Spacing Guild. As a merchant of the Guild your job is to trade with the planets to obtain the maximum profit.
 
 At the start of the game the stellar map will show the systems under your control.

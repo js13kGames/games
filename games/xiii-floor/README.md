@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Solve the mystery of the XIII floor.
 I bet you can do it in just 5 steps using only 3 buttons.
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Watch the outbound route of the plane then complete the route back home by tapping on the correct cells in order including the final landing. Be warned if you go off course your plane will crash.
 
 When ready for the return trip tap/click on the hex grid to move the plane around. Tap on the flags at the top of the page to be reminded of the route. If you go off course and crash tap or click to try again.

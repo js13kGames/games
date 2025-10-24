@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You must stop the caravan from reaching Acre. You must kill all knights and the Caravan, but you only have 20 arrows, and a bunch of knights.
 
 Use WSAD to move your knight.

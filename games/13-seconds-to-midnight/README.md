@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 **Escape the dark forest before time runs out!**
 
 Collect green cubes to add time, red spheres for speed boosts. 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Space Jelly is a MOBILE GAME in which you control an alien that lost control of its ship and needs to continue its travel using ... alternative ways of transportation.
 On that trip, you'll find like-minded folks that will gladly join you on your way.
 

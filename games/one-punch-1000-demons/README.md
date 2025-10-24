@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Temperature: One million °C.
 Space suit: Banana suit.
 Skill: One Punch.

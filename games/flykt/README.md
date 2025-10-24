@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://serverboi.org/js13k-2025/
+post: https://serverboi.org/posts/Js13k-2025-Post-Mortem/
+---
 # FLYKT
 
 A physics platformer that's all about solving levels using momentum, portals, and precise movement. Aim, charge, and fire a black cat through interesting puzzles across city rooftops and alleyways. Can you solve them all?

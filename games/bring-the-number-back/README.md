@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Robot challenges you to guess its number before it guesses yours.
 
 Gameplay:

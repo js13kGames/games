@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A short roguelike game about escaping from a castle full of traps.
 
 WASD to move, space to dismiss text.

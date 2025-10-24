@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 After a hard fought battle with Simon, you find out he escaped! You should be able to capture...if the game doesn't break too much.
 
 Special thanks to all of the contributors:

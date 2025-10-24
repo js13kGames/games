@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The player starts the game in a shark infested large water body. 
 There are many islands scattered across the water body. The player needs to explore and go to the different islands. The player needs to talk to the guardian to get key to the island associated with the guardian.
 

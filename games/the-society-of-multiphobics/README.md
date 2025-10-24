@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this puzzle game you have the role of an Event Planner for the dinner of the Society of Multiphobics. 
 
 Your task is to assign all the guests to chairs at the tables in such a way that no phobia is triggered.

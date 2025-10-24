@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Guardian Cat  
 
 **Guardian Cat** is a third-person shooter inspired by old-school graphics like *Doom*.  

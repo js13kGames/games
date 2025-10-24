@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The 13th Century was a chunk of time during which, according to Wikipedia, pretty much only war happened. In this game, you play a pacifist who's just trying to survive. While a bunch of enemies attack you, your goal is to simply parry their attacks.
 
 ### Game Instructions

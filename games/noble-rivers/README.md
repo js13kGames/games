@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Strategic game where you are a baron and have peasants that can build various buildings that produce various resources. And you can expand your territory by buying land.
 
 ---

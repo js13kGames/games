@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/sztRTCW4ppo
+---
 # How to Play
 Guide the yarn ball(s) into **all** target circles and keep a ball inside each for ~3 seconds to complete the level. Try to stay under budget!
 

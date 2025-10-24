@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Game of pool with "side effects"
 If sum of values of two colliding balls is equal to 13, runes will appear on the table.
 Each rune has its own effect, making game... unpredictable

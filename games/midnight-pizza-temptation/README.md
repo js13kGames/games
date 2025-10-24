@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 One button game,
 Press any letter key to control a carrier.
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to the exciting world of the 13th century! Get ready to embark on a thrilling journey of trading and resource management in this captivating idle game.
 
 In this game, you'll dive into the bustling world of the 13th century, where empires and kingdoms thrived on the art of trading. Explore the rich tapestry of resources that were exchanged during this era, from luxurious silk to humble rice.

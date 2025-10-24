@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Truly minimalist space arcade inspired by Amiga games.
 
 Do not let invaders destroy the planet's core. You are the last humanity hope!

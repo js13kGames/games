@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Drawbacks is a mini-game challenge, where all instructions are reversed. Sound confusing? That's the point.
 
 It's quite deceiving...

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Epic Loot is a game about wondering through a forest, picking mushrooms, and scaring away monsters by throwing loot at them. But not that boring junk loot you usually find in a RPG. This is epic loot. The kind of loot where your helmet is a Greater Leather Coif of Smiting with +6 Strength and +6 Charm.
 
 Epic Loot is playable in Chrome, Firefox, Safari and Opera on both phones and desktops. Also, if you're left handed, make sure you get the Dual Wielding skill.

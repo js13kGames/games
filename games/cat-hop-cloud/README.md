@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your black cat is lost in the clouds and needs to use its precious luck energy to hop back home to cloud 0. But beware - not all clouds are friendly!
 
 Cloud Types

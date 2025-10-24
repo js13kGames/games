@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An abstract puzzle game, navigate your way through the missing platforms.
 
 - F O U R F O L D -

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # About the game
 Only one sphere's color changes in 10seconds. Find the sphere in your background! 
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The system is riddled with aberrant code, head out and clean it up!
 
 Patchnotes is a fast paced top down bullet hell shooter with a procedurally generated open world and deep gameplay, including:

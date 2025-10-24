@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Instructions:
 
 You only have one shot per comet, don't miss; :)

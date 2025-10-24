@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/ZZvM0iq7fSg
+post: https://xem.github.io/articles/js13k19.html
+---
 Read the full making-of here: https://xem.github.io/articles/js13k19.html
 
 A remake of the very first Trackmania game (from 2003), in 13kb and in CSS3D!

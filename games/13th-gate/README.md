@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Speed past the ever-closing gate in this abstract flying (or gliding?) game. Collect enough speed boosts to get to the end of the level with enough time to spare, or perhaps spend them jumping over obstacles to reach it more safely.
 
 * All 3 dimensions and precise collisions with those inadvertently placed spikes.

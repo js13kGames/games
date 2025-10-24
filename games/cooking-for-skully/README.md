@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cooking for Skully is a cooking game where you have to prepare foods.
 
 Play with keyboard, Xbox controller, PlayStation controller or on mobile with a virtual controller.

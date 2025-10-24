@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Control spaceship to portal before running out of fuel, avoid red line and the planet can be your friend but do not so close
 
 Control :

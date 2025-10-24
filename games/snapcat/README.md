@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/R8dYUZS4xgM
+---
 SnapCat - Complete the Black Cats' photo album!
 
 - Every level always has a Black Cat.

@@ -1,3 +1,8 @@
+---
+directors_cut: https://catwayxr.desbwa.org/
+video: https://youtu.be/4NF9XbDBE8Y
+post: https://github.com/JackDesBwa/js13k2025_catway/blob/main/postmortem.md
+---
 **For entering WebXR, please see the `3D mode` button**
 
 ## Goal

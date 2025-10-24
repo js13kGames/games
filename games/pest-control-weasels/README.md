@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Pest Control : Weasels is an arcade puzzle game. Lemmings were meant to be saved, weasels should instead be disposed of. (consider this as your revenge on small pesky critters!)
 Use the four elements to achieve this goal. They come as a variety of tools and traps that you can arrange in the play area.
 The game is controlled entirely through the mouse or touch screen.

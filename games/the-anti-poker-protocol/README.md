@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://alex-adedge.itch.io/the-anti-poker-protocol-post-jam
+post: https://github.com/AD-Edge/JS13K_Triskaidekaphobia
+---
 A bit of a different take on poker!
 Featuring CRT visuals, sprites/graphics generated in-game (no image textures at all!), mobile support, and some whacky NPCs which feature a stunning guaranteed (>1) amount of lines to bark at you.
 

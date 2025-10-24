@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Uh oh, lost in yet another dungeon! Rumor has it that on the 13th level there is an exit, although it may not be unguarded. 
 
 With this game, I wanted to recapture the feeling I had when playing old-school RPGs with no built-in map. 

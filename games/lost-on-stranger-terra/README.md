@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The long lost astronaut has returned to explore the galaxy again. Build spaceships and fill them up with fuel. Collect rare materials and escape from the alien planets. Be the best in the galaxy!
 
 Controls

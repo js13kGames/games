@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 > Legends say a mysterious black cat roams these lands. Some believe it **brings fortune**,
 > others whisper it’s a **shadow of bad luck**.
 

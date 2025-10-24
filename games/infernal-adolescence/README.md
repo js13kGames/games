@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 DEMONS ARE JUST LIKE US... UNTIL THEIR 13TH BIRTHDAY.
 Help a struggling teenage demon go through puberty, transforming from a snot-nosed brat to the vile creature we all fear. 
 

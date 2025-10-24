@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Zombies have recived the number thirteen, and they can now walk. 
 
 Marching toward your castle and aiming for your brains. 

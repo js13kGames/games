@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Description: you have been recruited by a company to create their web pages. You'll have to combine the correct components and correct colors.
 Controles:
 -Player 1:

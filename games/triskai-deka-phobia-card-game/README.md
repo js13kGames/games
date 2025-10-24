@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use cards to attack enemy and defense yourself.
 
 Pick a card to collect attack or defense points.

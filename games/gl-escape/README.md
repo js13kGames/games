@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 GL-Escape is a WEBGL escape game in FPS style.
 
 Controls:

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Where in Space
 The js13k 2021 game by Imagineee: Where in Space?
 

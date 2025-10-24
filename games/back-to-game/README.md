@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In a world ruled by digital games, one of them travel to past and try to corrupt classic digital games. Now, you are the only hope for gaming world. Go back to past and destroy the evil! Play through different versions of classic games and win the game. You can play using your mouse by clicking and moving it. Each game has a tutorial explaining how it works and how can you beat the boss. There is two modes of play, with different benefits. For Coil subscribers, you can revive yourself when you lose a game and try again from that game and not from beginning.

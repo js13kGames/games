@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 All the content from our Esperanto learning app has disappeared offline, and all we have left is a bunch of emoji!
 
 Never learned any Esperanto before? Just hit the help button ("Helpi min") to access the word bank. Still struggling? Hit the button again.

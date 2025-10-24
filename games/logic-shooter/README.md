@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Logic Shooter is a game which you have to destroy the error that doesn’t allow the page to be found.
 The only way to defeat it is by supplying the logic gates inputs with energy. This can be done by pressing the buttons in the bottom left, and if you want to change the position of the logic gates, you can rotate them by pressing the buttons in the bottom right. 
 You can also press the a, s, left arrow and right arrow keys to perform the same actions.

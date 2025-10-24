@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ordinary leisure trips beyond Kármán line just isn't enough for the buckazoid billionaires of 20xx. In the pursuit of new endeavors, Space Golf was invited.
 Get ready to conquer a fresh nine world course. Why not eighteen worlds you say? Because that would require buckazoid trillionaires, and that's just silly.
 This was made by Nelson Berg (8 years), Mio Berg (5 years) and their much older father Niklas Berg.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tribes Life is a simulator of small island. It's simulates life of the primitive tribes. They eat, reproduce, build houses.
 
 Player can expand the land and show tribes hints of places where they should move (e.g. for food).

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is an adventure game written with SVG, JavaScript, CSS and bundled with Rollup.
 
 The game comes with some controls (which are hopefully reachable).

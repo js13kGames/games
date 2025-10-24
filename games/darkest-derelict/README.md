@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ah, the life of a space marine. You got yer-self some sweet power armour, a nice little sidearm, and all the cans of ground beef you could ever want. Only one thing that ruins it. And that's the BUGS!
 
 Damn things. Appear from nowhere. Eat yer crew. Lay eggs in their brains. The whole lot. Disgusting! Hopefully this will just be a routine mission. I'm sure this derelict space ship will be as empty as my last can of space beef...

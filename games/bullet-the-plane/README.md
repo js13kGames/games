@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are given the charge of a plane and the motive is to shoot the enemy planes and score up!!.  It is an ever-running game, just for fun under 13KB :)

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/baturinsky/dream
+---
 You found yourself in the empty room. You barely remember anything. And can't exit through the only door. There is a bed here, maybe if you sleep there you will recall something?
 
 Controls - LMB to pick/place items and switch characters, RMB to use items and doors, middle button and the wheel to control the camera.

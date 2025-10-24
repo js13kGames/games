@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Will you make it through the torment of hell in this bullet hell?
 
 A small story mode with 7 long level, an arcade mode with 48 small level, and a complete level editor !

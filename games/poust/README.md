@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Run, jump, and shoot your way out of a collapsing planet. 
 
 * Hitting a wall will reverse your direction. 

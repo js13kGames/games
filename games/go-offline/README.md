@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The title says it all: go offline to get some score.
 
 And you can beat you hi score.

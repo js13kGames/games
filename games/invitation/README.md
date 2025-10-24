@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Story:
 The player controls an alien who receives a signal. The idea was to keep the signal strength by using the workstation on the ship. Losing the signal would result in a failed mission, keeping the signal long enough would move the player to the next level (bringing the ship closer to earth).
 Controls:

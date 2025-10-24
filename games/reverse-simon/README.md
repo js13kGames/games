@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The reversed version of Simon!
 Pay attention while the sequence is played, then replicate it BACKWARDS!
 

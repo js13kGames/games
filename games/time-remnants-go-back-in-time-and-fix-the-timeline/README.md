@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Time remnants
 A game about going back in time and fixing the timeline. Very minimalistic ;)
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fortifia is a game all about defending the crown of your kingdom!  Lay bricks Tetris-style (use A, S, and D) to build up defenses around the crown.  Extra bricks can be placed by holding SHIFT and background bricks can be placed by holding SPACE.  Waves of armies will appear to fend off and crush with your bricks.  The crown is in your hands.  Save the kingdom!
 
 ---

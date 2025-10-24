@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The game is loosely based on Marco Polo, the explorer and merchant from the 13th century Italy.
 
 Your job is to explore Asia, find the bigger cities and ports along the way and trade for new goods.

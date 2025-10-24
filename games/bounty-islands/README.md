@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Capture the island in confrontation with other adventurers. Opponents will not joke!
 
 Controls:

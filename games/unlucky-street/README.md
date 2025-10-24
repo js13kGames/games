@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Play as a black cat crossing a busy Halloween street.
 
 ## Controls

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 I run out of time... I wish I could turn *back* one month.
 
 Controls are [WASD] for movement and Mouse for direction. 

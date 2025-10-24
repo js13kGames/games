@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Listen to emojis and echo them with the buttons before the slots run out! Or practice without pressure. 
 
 Play the predefined games or customize your own.

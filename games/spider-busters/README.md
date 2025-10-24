@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lead spiders into the Vacuum by using The Elements on the spider web.
 
 Keyboard Controls:

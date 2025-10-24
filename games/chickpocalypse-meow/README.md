@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://imtoospexy.com/blog/js13kgames-2025-post-mortem/
+---
 How many points can you score before the inevitable Chickpocalypse?
 
 **Note: Audio is best with headphones**

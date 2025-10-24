@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Count Dekatria's Mansion
 Welcome to Count Dekatria's Mansion, a thrilling strategic board game where your characters must navigate rooms, solve puzzles, and avoid being expelled by Count Dekatria! The game is based on the concept of Triskaidekaphobia—the fear of the number 13. Can you outwit the Count before it's too late?
 

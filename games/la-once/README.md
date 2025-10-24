@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 La Once is a Chilean custom were you gather with your love ones, during the afternoon, and have a cup of tea with something tasty to eat.
 La Once is a little interactive story of a grandkid called Rata and their grandma Patata. Rata visits Patata for la once and helps her with the preparations.
 

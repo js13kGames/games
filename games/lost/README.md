@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Try to get to the end of this strange maze you are trapped in. You could use those weird shapes on the floor, they might mean something...

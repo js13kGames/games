@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Boing Kat is a Platform Game Designed For the JS13K Games Jam. With Boing Kat you controls a Little Black Cat that needs to reach the end Mark with his Duck Friend. You must be awared from the Spikes and of course from the crazy jumps from this Cat.
 
 ## Features

@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://picosonic.github.io/js13k-2024/
+post: https://github.com/picosonic/js13k-2024/blob/main/devdiary/diary.md
+---
 You play as a cuboctahedron on the run. You have only 13 seconds to get from the drop point to the safety of the woods before you're caught.
 
 Some paths are blocked and will need to be opened up using the nearest button.

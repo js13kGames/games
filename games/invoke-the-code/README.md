@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You want to save your realm? 
 
 You're a mage gifted with all three elements: quas, wex, exort

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're a block. You're naked (don't worry, it's censored). You're out for a jog. Run and jump as far as you can. Avoid stepping on cracks in the sidewalk or your luck may run out as the earth opens up to swallow you whole. Good luck!
 
 Tested on the following browsers/systems:

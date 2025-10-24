@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 🎮 Hey! I'm Jude, a 16-year-old dev, and this is… Cats Cargo! 🐾
 
 Step into the paws of a black cat (surprise!) and become the ultimate rooftop delivery hero… for mice. Why mice? Who knows, but they need your help! Your mission: pick up as many mice and stack them on your back as you can and deliver them safely. But watch out the more mice you have the slower you are so you will have to balance that with the ticking clock—without plummeting into the deadly pits below.

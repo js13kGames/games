@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 &lt;p&gt; and ins proudly presents a game for the js13kgames.com game competition
 
 POCKETROCKET

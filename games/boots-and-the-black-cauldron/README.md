@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Boots the Cat is one evil animal. She always has been, always will be. But now she is worse than ever. Boots the Cat has figured out that she can use the witches Black Cauldrons for her own benefit...
 
 On each level, Boots has to collect ingredients and then get into the Witch Hut. Once in the hut, Boots must get the Key for the next Hut, optionally dump ingredients in the Cauldron with Space or South Button, then run out of the door. 

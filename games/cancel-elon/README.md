@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://elfprince.com/cancelelon/
+---
 the roguelike deckbuilder we deserve. collect emojis as cards to build ur deck, and play them in the best way to make social media posts.
 
 STORY - ur Triska the black cat. u need to cancel elon [^1] to reclaim the internet. first u need to build up ur skill by cancelling other idiots. then u can take 1 of their emojis to improve ur deck.

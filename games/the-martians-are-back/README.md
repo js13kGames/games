@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Martians are back! They are trying to invade earth again, and it’s up to you to defeat them!
 
 Use your mouse, your finger or your keyboard (but don’t expect that to be more precise than a pointing device) to shoot their spaceships, and collect stars to unlock more levels.

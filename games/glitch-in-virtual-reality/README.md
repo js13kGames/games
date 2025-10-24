@@ -1,2 +1,5 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You have become trapped in a virtual reality due to a glitch.  The glitch has caused the world around you to randomly regenerate every time you lose the game making it near impossible for you to escape till now.
       Help from outside the virtual world have injected various items to help you escape.  Can you leave before your real body dies?

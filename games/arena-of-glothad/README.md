@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 For centuries the village of Glothad has sent its people to the arena for their coming of age. While not as deadly as fighting a wild saberclaw in the high mountains of Chodun, goblins will take no qualm with attacking a human. 
 
 Three heroes must battle five goblins to survive and succeed in this arena. Do you have the iron fortitude to do battle?

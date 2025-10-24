@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Robot Coder is a game about coding a robot to run offline.
 
 You enter the code for the robot to move and to bring items to different targets. Then you start it, and it will run without any way by you to interfere in what it’s doing. So you have to plan ahead to make sure the robot runs the way you want it to run.

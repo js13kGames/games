@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are alone in a strange place, only with your phone, offline...
 Use it and all the apps available to find a 5 bars signal, then send a message to the world... while your signal is strong enough.
 Then find your way out of this place.

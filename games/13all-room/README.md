@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this game you will be trying to escape a house in under 13 minutes or less. You will need to learn about everyone's powers as you go through the rooms to grab room balls to open the final door.
 
 -- How to Play --

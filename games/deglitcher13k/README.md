@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Oh no your game is glitched! quick click or touch the 'fix' button to start fixing glitches to make the game not glitch out so much. Once you complete a wave there will be even more glitches, but don't worry in time Workers will help you out.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are Isaac Newton and you are searching for it in the underworld. Defeat Hades and claim it!
 
 Use WASD to move, Space for the sword (if you collected it) and Shift to switch to boomerang boomerang (once you collect it) and WASD to control it.

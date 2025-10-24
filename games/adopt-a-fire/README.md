@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Take care of this campfire by maintaining fuel, air flow, and heat distribution.
 When there is no fuel supplied, the fire will die down but still give you a chance to revive it
 

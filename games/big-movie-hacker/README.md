@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Description:
 "Big Movie Hacker" is a collection of mini-games. There is a time limit for each screen (the green border line). The difficulty of each task changes as you succeed / fail, and as you progress through levels.
 

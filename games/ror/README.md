@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Rules:
 1. Avoid Triangles.;
 2. Get as many dots as you can.

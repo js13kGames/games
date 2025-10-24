@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 FlappingBird is a Mobile side scroller game where the player controls a bird, attempting to fly between columns trees without hitting them
 
 Controls:

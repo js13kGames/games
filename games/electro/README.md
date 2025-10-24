@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Pitch:
 In this Tetris like, your goal is to make lines from left to right with tiles of the same shape, connected by side or by corner.
 

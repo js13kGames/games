@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A maze game. 
 You have to find the ♥, but it's hiding in the shadows. It's against the clock.
 

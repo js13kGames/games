@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A 13kb interactive music experience for Desktop, Mobile and WebXR.
 
 You're dead. There is one thing left to do: go beyonder.

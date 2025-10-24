@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Shooooooot!! is a twin-stick shooter. Shoot at endless waves of enemies with your limited ammo.
 
 Gamepad is strongly recommended.

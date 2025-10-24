@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Black Cat: 9 Lives is a fast-paced neon arcade survival game where you play as a sleek black cat with nine lives. Your mission? Collect as much glowing cheese as you can while avoiding packs of angry, glowing-eyed dogs.
 
 🎮 Gameplay

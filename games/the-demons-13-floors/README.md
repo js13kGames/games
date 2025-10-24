@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The sound of *Pathetique, Op. 13* echoes in the air, endlessly weaving through joy, sorrow, and chaos.  
 
 A mysterious 13th floor has appeared in the elevator.  

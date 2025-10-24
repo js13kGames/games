@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Click or point and drag to cast magick on a spinning slice of toast!
 
 The bigger the move, the more force you will unleash!

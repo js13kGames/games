@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Use the direction keys to dodge burning asteroids.
 You tackle the grey asteroids to maybe get minerals or oxygen to survive.
 

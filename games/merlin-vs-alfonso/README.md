@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Alfonso X was King of Castile during the 13th century. Also known as Alfonso the wise, he encouraged learning and had a particular interest in a game called "Ajedrez", which was a medieval precursor to chess.
 
 In this game you play as Merlin, the fictional wizard who's popularity peaked while Alfonso X reigned. You are invited to Alfonso's castle to learn about the game of "Ajedrez".

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is an educational strategy game about the Silk Road. It's somewhat difficult. To win you must make it to the end of the route with at least one member still alive. This game is inspired by "The Oregon Trail". Read below for some tips. 
 
 ### Decentralized

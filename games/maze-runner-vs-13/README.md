@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are trapped in a maze,
 
 And the walking 13s have your scent, you need to run for your life.

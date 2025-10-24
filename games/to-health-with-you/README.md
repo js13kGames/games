@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You play a 13th-century apothecary stranded on an island after a house call. A boat is coming in the morning; you just have to survive the night. However, this night is swarming with the undead. Using the logic that what's healthy for the living must harm the undead, you fight them off with your medicines.
 
 At your disposal, you have:

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You work at a zoo where the animals get to roam free in the fields during the day. But when a storm is coming, you have to bring them back into their pens. You can chase them back or ride them back.
 
 All graphics are emojis.

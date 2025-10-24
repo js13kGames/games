@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Forced to sit in the shadows for an entire year after narrowly escaping being caught, the hacker returns behind the monitor in hope that this time he will find the answers to some peculiar questions the average human has.

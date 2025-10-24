@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help Freebird escape from captivity.
 
 Can you negotiate 13km of treacherous terrain? Watch out for the hornets, mosquitoes and more!

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A simple game made from only 9 colors :D (Or at least it started as only 9 colors, but had to include white, for the text).
 
 The more you kill the more monsters and clouds are going to spawn.

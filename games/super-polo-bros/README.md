@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Controls
 - Move: Left and right arrow keys
 - Jump: <kbd>Space</kbd>

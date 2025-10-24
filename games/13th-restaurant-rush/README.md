@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://loganpb.github.io/js13kgames-typing-idea/
+post: https://github.com/LoganPB/js13kgames-typing-idea/blob/main/POST_MORTEM.md
+---
 In 13th Restaurant Rush, speed is key, but tradition is just as important! According to an old saying, there should never be  13 people seated at a table. This restaurant takes that very seriously, and it’s up to you to maintain the balance while typing orders as fast as possible!
 
 The challenge? Keep the line moving and don’t let more than 12 people wait for a seat, or face the consequences. Every second counts!

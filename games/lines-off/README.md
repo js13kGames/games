@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The main idea of the game begins with a pun about this year's theme: "Offline" becomes "Deactivated Lines".
 
 Put yourself in the shoes of a funny meme who wants to become famous on the Internet. Avoid the evil "haunters" who try to eliminate you from the network. 

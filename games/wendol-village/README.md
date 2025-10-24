@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Gather resources and protect your peaceful village against the invading heroes.  Thirteen famous heroes will try to raid your village.  
 
 Build defenses, raise an army, and use the power of your gods to send the invaders back home in their longboats.

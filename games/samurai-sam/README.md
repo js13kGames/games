@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://reitgames.com/news/samurai-sam-port-mortem
+---
 Drag finger (or mouse) across the screen and slice objects in the same color as indicated in the top of the screen. The game is over if you cut the wrong color, or don't cut the blazing arrows. Remember to slice all arrows.
 
 ### Decentralized

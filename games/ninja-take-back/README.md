@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game is meant for local multiplayer - 2 people, 1 keyboard. 
 
 Build out the playing field by taking turns clicking and dragging platforms/traps/weapons from the top.

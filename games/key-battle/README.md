@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A battle of keys where you can also play OffLine with your friend on the same computer!
 Controls for 2 player mode:
 P1 - Left/Right/Enter - A/D/S

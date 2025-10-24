@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Ōnamazu
 
 Ōnamazu is a giant catfish that lives under the Japanese islands and is known for causing earthquakes. Or maybe he warns people about upcoming earthquakes? It's a bit of both, really. 

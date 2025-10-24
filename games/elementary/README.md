@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bubble Breaker game clone for the js13kgames.com competition.
 
 Hints:

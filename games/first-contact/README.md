@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is the story of a first contact with an alien space fleet descending towards the Earth.
 
 Man the cannons, research upgrades, unleash the AI, ruin the global economy, rain fiery destruction upon the invaders!

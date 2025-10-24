@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Setlerio" is a working title, but the game was supposed to be a Settlers-like one themed around "The Year is 404 AD".
 
 Unfortunately I was not able to finish the game; I'm uploading it anyway just in case someone wants to pick it up (I'll also try to come back to it later).

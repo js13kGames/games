@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A tranquil puzzle game where you match stones to build your tiny island with all the comforts of the Middle Ages!
 
 Best experienced on Meta Quest!!

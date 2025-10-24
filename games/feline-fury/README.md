@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/zwIJwWPT4FY
+---
 # Feline Fury
 
 A top-down dodging game where a black cat uses a short-range melee (Z, long cooldown) and bounces cucumbers back at enemies — for js13k 2025.

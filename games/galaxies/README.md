@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fill all spaces with the given galaxies. The rules: all galaxies have to be 180 degrees symmetrical, cannot be destroyed, and cannot overlap.
 
 More details are explained in the tutorial.

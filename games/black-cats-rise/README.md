@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/8yzSGNtxco4
+---
 Can you mastermind Sunderland Black Cat's epic 2025 promotion from the UK's Championship? As the coach of the Black Cats, your decisions from the touchline are everything. Boost key players and switch tactics at the perfect moment to seal the win. Prove your tactical genius in just 13k!
 
 Once you start the game:

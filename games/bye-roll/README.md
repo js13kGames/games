@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bye Roll! Is a puzzle platformer game where you use deaths as ways to progress in five short, but fun levels.
 
 Your character is a treasure hunter who changed because of the artifact called "Bye Roll!" and became immortal.

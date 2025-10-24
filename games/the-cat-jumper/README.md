@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A new queen has ascended the throne of the country.
 But where all the family wealth was stored, the new queen's parents took to their grave
 You're her cat, trying to find your parents' treasure.

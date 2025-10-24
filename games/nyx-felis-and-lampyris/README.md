@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://nyx-felis.aftongauntlett.com/
+post: https://www.aftongauntlett.com/blog/js13k-2025-post-mortem
+---
 ## ✨ Nyx Felis & Lampyris ✨
 
 Guide **Lampyris** through the eternal night, collecting fireflies and delivering them to **Nyx Felis** in the sky. When Nyx’s eyes begin to shift, your gathered fireflies are in danger - use your shield with perfect timing or summon more from the night itself. Both actions consume your precious bioluminescence. Survive until dawn (10 minutes) by managing energy, mastering timing, and chaining delivery streaks.

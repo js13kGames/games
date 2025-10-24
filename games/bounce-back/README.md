@@ -1,3 +1,8 @@
+---
+directors_cut: https://www.newgrounds.com/portal/view/755171
+video: https://youtu.be/XjhdNodZyL4
+post: https://frankforce.com/bounce-back-postmortem/
+---
 When life gets you down, 
 it's never too late to...
 

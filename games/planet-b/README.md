@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 We fucked up. Earth is dead. Time for planet B. The ultra rich wanted Mars all for themselves, until they realized you can’t run a city with just CEOs. The goal of the game is to create a functioning colony while constantly receiving more refugees from Earth.
 
 Game works best on desktop; phones under 7in might struggle to fit all the information on the screen.

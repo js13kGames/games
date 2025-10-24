@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Guess My Triski, "Triski" inspired by this year's game jam's theme, is an engaging and challenging guessing game where players must solve puzzles by uncovering hidden numbers on a game board.  The ultimate goal is to find the elusive Number 13 among a series of randomly generated numbers.  Each level presents a grid of circles, each hiding a unique number.  Players click on these circles to reveal the numbers, hoping to uncover the Number 13 before running out of guesses or, in competitive mode, before the AI does.
 
 The game features multiple modes: 

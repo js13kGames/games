@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Nexus overload is a survival top down shooter.
 Gain upgrades and go as deep as you can.
 

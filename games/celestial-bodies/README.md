@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A Solar Sandbox! Build your own star and planet system or play with one of the example systems. Coil subscribers get an additional type of celestial body.
 
 Camera Controls:

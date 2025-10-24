@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A VR escape room:
 
 Can you unlock the secrets contained within the room? You can't escape on your own.

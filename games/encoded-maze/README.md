@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You tried to find some kids lost in a cave but ended up lost yourself.
 
 Follow the instructions of the scrolls to get back home.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Escape is a digital pinball game featuring you as the director of a TV series. The scenario begins when an airliner crash lands onto a mysterious island.
 
 Game tips :

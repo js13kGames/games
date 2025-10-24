@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to the World of Liminal Gap.
 
 Evil corporations have taken control of our data and placed it all in the cloud. Personal data possession is illegal now.

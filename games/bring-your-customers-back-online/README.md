@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Bring your customers back online!
 
 You are running your own litte ISP in the city, for some reason some of your customers gets offline. As you're the only one in the company you need to investigate and fix their problems. Oh, and you don't have a car or bike or even a skateboard either.

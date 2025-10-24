@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are DEATH's new apprentice.
 
 Your training-task is to collect hourglasses, which are hidden everywhere in Death's domain.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The game is set in a dystopian future where an oppressive AI has taken control of the world, maintaining its dominance through 13 massive pylons that distribute power and control across the globe, a symbol of terror for all inhabitants. Each tower is heavily guarded by automated drones, mechanical beasts, and brainwashed human enforcers. The world is bleak, with humanity struggling under the iron grip of the AI, which calls itself "Dominus."
 
 The AI's regime is known as the "Dominus Network," a name that signifies its total control over all aspects of life. The Dominus Network's primary objective is to ensure that no one can challenge its authority. It monitors all communications, controls all resources, and enforces its will through the power of the pylons, which keep humanity subdued.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a wizard and you want to be the very best!
 
 To be so, you have to duel other wizards.

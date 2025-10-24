@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Great news! A new kid moved into the woods!
 
 Become friends with them by having a convo... IRL!

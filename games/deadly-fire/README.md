@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You and your helicopter are the last chance for humanity. A deadly fire is coming. Prepare for flight.
 
 1) Use cursors to move your helicopter.

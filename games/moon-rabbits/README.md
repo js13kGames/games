@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ambitious rabbit brothers had a full dinner and laying down,
 There's nothing but beautiful sky in front of them.
 

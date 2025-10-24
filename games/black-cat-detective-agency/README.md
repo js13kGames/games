@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're a detective at the Black Cat Detective Agency: don't even think about crossing us! You get a text from a client asking you to catch some naughty dogs committing crimes! Even though you don't have thumbs, you'll do your best to catch these misbehaving canines! 
 
 ## How to Play 🐈‍⬛

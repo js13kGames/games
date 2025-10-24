@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Don't be afraid to play all 13 entangled holes of golf.
 
 Use the mouse or the touchpad to hit the ball.

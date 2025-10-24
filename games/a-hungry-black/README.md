@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In a unique spherical world, a one-of-a-kind black cat is born. Enduring hunger, the oppression from other cats and dogs, and even the threat of giant mice—can this little feline grow up strong against all odds? Take control of this adorable black cat, learning skills from everyone you defeated and guide it to become the ultimate ruler of the world!​
 
 Basic Controls​:

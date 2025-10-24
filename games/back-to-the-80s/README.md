@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Move - WASD
 
 Avoid the rocks and hit the blue orbs for a psychedelic bonus!

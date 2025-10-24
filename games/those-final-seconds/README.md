@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 **Those Final Seconds** is a poor attempt to make a shoot-em-up game. It could have been fun, but it is not, but I'm submitting it anyway to see how it fares.
 
 The goal is to gain as many points as possible before you run out of time. Killing those poor, innocent enemies will give you points, but dying enemies also drop clocks that magically give you more time.

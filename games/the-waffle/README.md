@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're trapped into... something. Find your way out!
 
 Controls:

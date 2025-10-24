@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this game you don't control you character, but with a single mouse click, or tap on the screen, you can reverse the time.
 
 Actually this is pretty much all you can do.

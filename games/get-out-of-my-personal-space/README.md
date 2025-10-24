@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Get Out Of My Personal Space! Is a game about navigating in a city center collecting items while keeping a social distance from other people during the pandemic.
 
 If you don't manage your social distance your anxiety bar will rise so keep it low!!!

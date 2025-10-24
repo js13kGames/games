@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Dust off those dice, and get ready to roll through a SUPER backpacking adventure!
 
 This is a dice rolling, roguelite, backpacking rpg!

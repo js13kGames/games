@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Giant monsters are roaming through the world, threatening your town and family.
 In this typing game, you're defending your city against a giant monster by typing the displayed story.
 

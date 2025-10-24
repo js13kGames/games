@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 There are nine research stations in the ocean which are located within sectors with unique electromagnetic fluctuations.
 
 You must stabilize energy levels of their cores by repeating specific code message. When stabilized - all three cores will be activated. Code size will grow on each new island.

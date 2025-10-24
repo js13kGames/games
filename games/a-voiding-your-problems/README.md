@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # A VOIDING YOUR PROBLEMS: A Friendship Quest
 
 Poor little stray Vicki is a void kitten who has just been adopted into a busy apartment building, ruled over by the resident tabby, Queen Kara III. She will have to prove herself by helping the other cats living in the building to build trust with Kara and be accepted as one of the clowder. Will you help her making this place her new home? (Based on a true story.)

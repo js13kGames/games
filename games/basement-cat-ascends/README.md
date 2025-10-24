@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/VtvCZAimw3g
+---
 A 2D platformer created for js13kGames 2025.
 You play as a black cat starting in the basement and climbing your way up through the house, room by room, until you reach the attic — gaining new abilities along the way. Beating the game unlocks additional challenge modes.
 

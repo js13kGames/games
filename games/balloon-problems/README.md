@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Implausibility Drive malfunctioned and dropped you ... somewhere. 
 You and BET/T3, a gambling AI, are now stranded ... unless? 
 

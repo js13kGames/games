@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The mission of the Space Cowboy was supposed to be easy: eliminate the target in the cow slaughterhouse, but your target triggered a lava trap before he died!
 
 Using your Space Cow-Boy power, save the cows! Or rush to the end 🚩 and leave them to die.

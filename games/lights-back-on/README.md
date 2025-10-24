@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 There is a blackout!
 You decide to go alone in the dark and look for the fuse box, but this is not an easy job.
 Try to memorize the level before the power outage and be careful with the platforms and traps that you will face on your way.

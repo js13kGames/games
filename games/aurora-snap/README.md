@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've been sent out into the wilderness to photograph the aurora borealis. Capture the best shots and improve your ratings among your colleagues. Who knows where your career may turn if your photos are top-notch!
 
 Your camera film only has capacity for 13 more photos (because yes, you're still using that), so don't run out before you're called back to HQ!

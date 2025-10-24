@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 WARNING: Game has a lot of flashing, seizure warning.
 
 You wake up in a hotel armed with a pretty poor quality flashlight. Can you escape before your flashlight dies?

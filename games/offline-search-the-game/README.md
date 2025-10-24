@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Rediscover the magic of looking up someone's phone number in the days before the internet!
 
 Take a guess where to start looking in a massive procedurally generated phonebook!

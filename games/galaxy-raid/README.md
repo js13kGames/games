@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 CONTROLS
 Mouse: the ship will follow the cursor; click to launch a bomb.
 Touch: drag the finger to move the ship; tap with a second finger to launch a bomb.

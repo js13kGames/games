@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Death comes in all forms.
 
 For billions of birds every year, death comes in the form of...windows.

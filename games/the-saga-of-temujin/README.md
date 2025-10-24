@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A short demo of a future game which follows along the story of a famous Mongolian warlord, by the name of Temujin.
 
 Controls: Click to select, hover to find out more information.

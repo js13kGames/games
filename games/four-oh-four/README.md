@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Four, oh four...
 how I adore,
 the sweetness of

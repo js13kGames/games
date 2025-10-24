@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fly a spaceship through a randomly generated level.
 Use LEFT, RIGHT and UP ARROWS to steer.
 You need to finish the level within given time.

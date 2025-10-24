@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In this colorful gamification of a real historical event set in the 1300s, you take the role of a sole, supernaturally gifted Tibetian Monk in charge of protecting the famous Chumbi Valley against the incoming hordes of horsemen and charioteers of the warlord Bakhtiyar Khalji (a.k.a Khilji).
 
 Shoot the incoming enemies with the multitude of fiery balls of fire (with fashionable particle effects to boot!) and see the score rise. Be careful, though. Some enemies can soak up more damage than most ammo can make!

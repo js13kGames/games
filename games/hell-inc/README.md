@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 To your surprise, you've been promoted to manage a hell pit. You. A lowly demon, now working with upper management! Your dream come true!
 
 Welcome sinful souls, build the right torture devices, extract their misery, pay your demon torturers, keep the hellish afterlife moving!

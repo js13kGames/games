@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a single player game. Controls of the game are-
 Enter key - start the game
 left key - move slider left

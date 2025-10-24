@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to "13 Order"!
 
 In this number puzzle challenge, your goal is to arrange the numbers on grids of different sizes, from 3x3 up to 13x13 🤯. Each level presents a unique and increasingly complex puzzle that tests your logic and patience.

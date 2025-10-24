@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Tis impossible to be sure of anything but Death and Taxes."
 
 Tax day is here, and our brave hero ventures to the local tax authority to collect a tax refund. What horrors will you find?

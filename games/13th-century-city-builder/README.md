@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This City Building game includes the inventions done during 13th century. Maintain the population, coins, amenities, industrial buildings to prosper the town and unlock new resources.
 
 Controls are click, click, click...

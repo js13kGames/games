@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/Jf2w4TqgH70
+---
 A first-person text adventure, for VR and desktop.
 
 Wander through a world of words. The environment itself is made of text. Choices appear in your view; simply look to select them.

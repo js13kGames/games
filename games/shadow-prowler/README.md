@@ -1,3 +1,8 @@
+---
+directors_cut: https://shadow-prowler.netlify.app/
+video: https://youtu.be/HFJtQn4rk2Q
+post: https://shadow-prowler.netlify.app/
+---
 Night has fallen, and your true life begins. As a cunning black cat, the world of shadows is your playground and your sanctuary.
 
 In Shadow Prowler, your goal is simple: navigate a series of treacherous rooms to steal every last delicious fish. But you are not just a cat; you are a creature of the night, and your greatest ally is the darkness itself.

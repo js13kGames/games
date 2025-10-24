@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Click (or tap) and drag tiles of the same type to cast a spell.  Spells can either damage an enemy (whilst you're fighting them), or grant you more time in the dungeon (when you're not).  The longer the spell chain, the more damage you'll do (or time you'll receive).
 
 There are four types of spell (Earth, Water, Air, and Fire), each belonging to an elemental school of magic.  Enemies also belong to a school of magic, and will be strong to and weak against certain elements.

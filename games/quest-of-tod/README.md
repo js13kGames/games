@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Quest of Tod  is a speed running adventure game, where you stuck inside unknown place controlled by strange machine. Can you find all the keys and codes to unlock the exit before the time runs out?
 
 Controls:

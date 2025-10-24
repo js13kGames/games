@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You were browsing with your shiny new 56k modem as somebody pulled the plug.
 
 Luckily you've prepared an alternative means to get online again. If only you could remember which levers to pull...

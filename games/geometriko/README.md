@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Welcome to a little game demo by indies4indies.
 
 GEOMETRIKO is a twisted mix of Tic–tac–toe and Reversi, featuring three single player modes and a two–player hotseat mode.

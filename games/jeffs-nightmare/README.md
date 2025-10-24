@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 *Can be played with or without decentralized!*
 Controls: Mouse to move. Click to fire.
 

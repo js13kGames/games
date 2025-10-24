@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/JNnS7r13jz4
+---
 A tranquil and aesthetically pleasing search for a long lost memory.
 
 A moment lost in time is an exploration game with an element of a geometry puzzle. The goal of the game is to memorize and then find a shot of a landscape taken from a random place.

@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/1XChnCqAbkQ
+post: https://github.com/codyebberson/js13k-phantomicus?tab=readme-ov-file#retrospective
+---
 > "In ghost hunting, one man's noise is another man's data." - Dr. H. Spookworth
 
 Welcome to Dr. Zaphod Beeblebrox's spirit-infested lab! Armed with your Spook Siphon and a PhD in Paranormal Pest Control, ascend 13 floors to defeat the spectral infestation.

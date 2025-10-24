@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Step into a minimalist survival platformer where day and night change everything. Gather wood and stone to craft tools, build bridges, and set traps. But beware of the black cat that lurks in the night, hunting you down with cunning jumps and relentless pursuit. Collect glowing orbs to unlock paths, avoid deadly pits, and outsmart your enemies.
 
 Use the [WASD] keys to move and to interact with stone and trees [SPACE] and [C] to access the crafting menu. Use the mouse to click on crafting items.

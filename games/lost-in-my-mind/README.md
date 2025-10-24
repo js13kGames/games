@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lost in my mind - js13kb
 -----------------
 A VR game about being lost in ones mind as if in a dream. You see your thoughts form in front of you.

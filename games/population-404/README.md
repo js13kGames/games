@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Earth is dying. The future of humanity is in the hand of 404 astronauts. Guide them on the preparation of a new home-world.
 
 Controls:

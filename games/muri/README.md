@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Muri had no luck. He wake up from a malfunctioning stasis capsule on a old space ship. Nothing works on this frickin trashcan, but he need to make it work again, so he is not lost in space forever. The lift has some special dislike against you, but don't get you blocked by him. You can do it!

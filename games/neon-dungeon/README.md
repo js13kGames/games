@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Neon Dungeon - A tiny procedural Roguelike.
 
 Lost in a vibrant labyrinth illuminated just by its glowing neon walls, you must search for a way out - but beware, you are not alone in here. Do you have what it takes to escape the Neon Dungeon?

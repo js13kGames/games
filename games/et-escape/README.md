@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An alien has been sucked into an unexpected wormhole...
 
 Decode the message encrypted in 10 levels of dark matter and you might just save his life.

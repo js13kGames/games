@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Connected all the pipes before you run out of time, sometimes you must combine colors to achieve the goal, play offline and you will have more time.
 
 To rotate each pipe you will have to click (desktop) or press (mobile) on it.

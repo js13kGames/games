@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 MS-13 Gang Members roam the streets of El Salvador, terrorizing the people and committing various crimes without consequence.
 
 Under President Nayib Bukele's command, you're tasked with taking out the MS-13 gangs scattered throughout the country.

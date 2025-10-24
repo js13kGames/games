@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Heimao is a charming puzzle adventure game where you play as a cat on a quest to collect delicious fish and find your 
 feline friends. This game was created for the Js13k 2025 competition. Navigate through a series of levels, solve puzzles, 
 and uncover secrets to complete your adventure.

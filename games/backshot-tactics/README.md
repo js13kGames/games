@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Pick your ships and try to destroy your opponent
 
 - 1 VS 1 tactical game

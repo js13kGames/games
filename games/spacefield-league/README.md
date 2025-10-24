@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Spacefield League is a multi-player on-line team game: there are 2 teams, the objective is to score more points than the opposite team by putting the ball in the opposite side (the side with the own team color).
 
 Game Features

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's tower defense building game. You need to clear 6 waves of red evil squares.
 
 Build platform, set guns on top to shoot. 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 First, Imagine Atari Breakout.
 Then, Imagine a high school student with no time.
 Put the two together and you get a glitchy version of breakout!

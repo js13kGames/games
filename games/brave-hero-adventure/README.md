@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are on your Epic Quest to find the dangerous beast that is hiding in the forest.
 
 --- Game mechanics ---

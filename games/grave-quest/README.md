@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Grave Quest is a high intensity, first person, voxel-graveyard wave shooter for Desktop & Oculus Quest.
 
 The instructions are simple; As ghosts rise from the grave, point and shoot!

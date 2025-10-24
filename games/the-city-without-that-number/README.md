@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://sites.engineering.ucsb.edu/~mdupree/blog/JS13K_2024_Postmortem.html
+---
 ### A WebGL2 city-building puzzler in 9,965 bytes. 
 
 This is the city without THAT NUMBER. Breaking the city into tiles, you may never have THAT NUMBER of anything (or any multiple of THAT NUMBER.) 12 buildings built? You may only place a new double or quad. 11 stories across three towers? Sorry, that new double tower will have to wait until you place one more single or a quad. Also counts these statistics separately between the two kinds of buildings -- residential versus commercial.

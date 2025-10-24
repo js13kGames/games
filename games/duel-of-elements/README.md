@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Grab your friend and play the duel of ICE and FIRE, a two player game on a single touch device.
 The game is quite resource hungry, so use a fast tablet or phone!
 

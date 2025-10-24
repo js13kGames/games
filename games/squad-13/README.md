@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 When all hope is lost, the World Police Organization sends SQUAD 13.
 
 They are tasked with the most dangerous missions.

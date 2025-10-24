@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're lost on a deserted island and the only food you can find is one coconut!
 
 Keep the greedy crabs away from your coconut tree or you lose!

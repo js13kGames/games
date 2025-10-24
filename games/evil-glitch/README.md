@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Strange glitches appear in your dimension, could you stop them to assimilate your world?
 
 ### Requirements

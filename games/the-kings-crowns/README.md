@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://thekingscrowns-blog.glitch.me
+---
 After centuries of reverence and grave robbing,
 By bandits, emperors and pharao's alike,
 The Tomb of Alexander the Great was destroyed,

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 How many times can a person wake up from cryosleep, only to find that their spaceship is on the verge of self-destructing, their robots are malfunctioning, and their only chance at escape is a transporter on the other side of the ship?
 
 Turns out, it happens quite a lot.

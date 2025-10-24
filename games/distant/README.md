@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a turn based simulation game. Via the arrow keys you can move across the map to build mines by pushing "m". Mines will provide supply which is necessary to attract space travellers settle near hubs "#". If you run out of supply. Settlements will be abandoned. Try to attract as many settlers as possible.

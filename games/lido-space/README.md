@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This game was inspired by Qix.
 You can choose either the mill or the dots in this game.
 

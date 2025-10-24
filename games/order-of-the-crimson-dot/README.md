@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## A quest to capture the im-paws-ible…
 
 For eons, no cat has managed to grasp the elusive Crimson Dot. Now a wise elder challenges you: do you have what it takes to join the Order?

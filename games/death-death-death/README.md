@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Try to kill as many good guys in this sad gray world. But the trick is that they are really good, you are really bad.
 
 Controls: WASD + mouse

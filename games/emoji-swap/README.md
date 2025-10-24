@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A match-3 tower defense. Matches create towers. Don't let the enemies through.
 
 Water guns shoot left/right.

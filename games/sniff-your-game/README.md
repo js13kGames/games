@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 I think your game is lost:
 S - Sniff other Dogs
 D - Woof Dogs

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://bacionejs.github.io/editor/bacionejs.html
+---
 *Tredici Malefici* **(13 evils)** is a missile defense &#128640; javascript game where aliens &#128125; have discovered your phobia of the number 13. To exploit your fear, they drop **13 bombs** adorned with **13 spikes**. Turn the tables and use this fear to your advantage.
 
 - Controls: Click/Tap

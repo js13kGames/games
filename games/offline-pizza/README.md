@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The internet DIED!
 Everyone is OFFLINE!!
 But they still need their PIZZA!!!

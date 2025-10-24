@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 1233, Toulouse.
 
 In the current inquisition the catholics try their best to kill all Cathars.

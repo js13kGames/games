@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An unfinished vertical shoot 'em up.
 
 Pretty much feature complete in terms of systems, but ended up only having time to create a single level, and not much playtesting, so i'm not sure how fun it is.

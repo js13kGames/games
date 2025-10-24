@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 I am one of the js13k judges, so I voluntarily disqualify myself from the competition! However, I adore coding so much that I tried to make a little 13kb demo anyways - just for the love the gamedev!
 
 It was a challenging month for various non computer reasons... and with that in mind, I am proud of what I had time to make!

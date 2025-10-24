@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A simple matching game involving rising layers of strata that must be destroyed. Textures and game level are all procedurally generated and are constantly evolving.

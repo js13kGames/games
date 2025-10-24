@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Step into the arena and embrace the thrill of medieval combat in Duelo, a unique fighting game that puts you in the boots of gallant knights wielding mighty swords.
 
 Duelo combines the fast-paced action of classic fighting games with the strategic depth of the combat mechanics from Prince of Persia. Engage in intense duels against skilled opponents. Block, parry, and strike with precision to claim victory in the arena.

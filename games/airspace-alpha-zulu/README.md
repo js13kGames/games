@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are a test pilot in the navy and are out on operations testing an experimental new jet, callsign Alpha Zulu.
 
 Your task is to launch from the aircraft carrier, fly around and then safely land back on the carrier.

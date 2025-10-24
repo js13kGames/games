@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Raising Fighting Spirits is a simple strategy card game where you fight the Grim Reaper using a horde of spirits!
 Try to kill the Reaper faster to receive a better score BUT watch out for the Reaper next turn intended action!
 

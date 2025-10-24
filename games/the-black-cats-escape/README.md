@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 I am a sixteen-year-old student, and I decided to participate in the game jam without any prior preparations on August 13th. Here is the goal and description of my game:
 
 Help the black cat escape safely by guiding it to the flag. To achieve this, you must place items on its path.

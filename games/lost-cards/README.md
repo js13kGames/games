@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You have mixed all the pairs. Find the lost pairs under 5 minutes. Contains 3 types - Numerical cards, Alphabetical cards and Symbolic cards.

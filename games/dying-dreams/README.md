@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 > "You are having the same dream again... the dream where everyone must die..."
 
 Dying Dreams is a puzzle game where you have to kill all the... uh, *"figures"* on the screen. The difficulty is that you control all of them at the same time! 

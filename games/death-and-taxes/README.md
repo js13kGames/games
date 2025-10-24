@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Death And Taxes
 
 Your city is bombarded from orbit.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 How to play the game:
 
 1) Click and drag the Toaster dial to the desired setting. The higher the setting the higher the starting altitude, and flight power.

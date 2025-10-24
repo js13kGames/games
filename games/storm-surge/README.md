@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Storm Surge is a game about keeping a thunderstorm from interrupting your viewing of cat GIFs, memes, and maybe work.  Don't let the lightning strike within the fence of your home. Use your fire cannon to evaporate the clouds so they can't strike.

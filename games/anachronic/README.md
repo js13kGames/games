@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hi, you just finished your portal to the thirteenth century.
 
 Only, as it happens, you don't have the necessary equipment at home (to live in the Middle Ages).

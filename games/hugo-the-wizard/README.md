@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Mouse only. Drag goblins left or right and see what happens.
 
 ### Decentralized

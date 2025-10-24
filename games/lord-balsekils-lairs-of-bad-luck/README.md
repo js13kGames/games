@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Lord Balsekil (do not look that name up in your Volapük dictionary, it might frighten you!) stole your seven purple lucky charms and hid them in his Lairs of Bad Luck. So fight him, his thirteen henchmen and your superstition to get them back!
 
 The game is a Rogue-like, especially it is round-based, so take all the time you need for your next step. There are two modes: a short game and a normal game. The normal game has thirteen levels, the short game is, well, shorter, for those who just want to quickly see as much as possible to judge the game. The levels are randomly generated, so no two games will be the same.

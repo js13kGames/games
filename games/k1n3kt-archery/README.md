@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This archery simulator game uses the webcam to detect lines on image and create a medieval virtual bow.
 
 ### How to play

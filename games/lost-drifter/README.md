@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Navigation is down. You are lost.
 An asteroid field comes into vision.
 Your last hope is to dodge.

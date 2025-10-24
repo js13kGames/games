@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Colors have disappeared from the world of robots! 
 The robot wanders looking for colors, but only a few RGB colors and other colors can not be found.
 Let's create different colors by combining RGB colors.

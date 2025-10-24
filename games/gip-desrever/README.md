@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Hey, does everybody know the Pig game? No? Take a look at the Wikipedia article then. "Gip Desrever" defers from the classic Pig game in that:
 - you spin the wheel not roll the dice
 - you play with bot named "Gip"

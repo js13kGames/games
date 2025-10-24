@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A DAY IN THE LIFE
 One tap retro minimalist 8-bit pixel art action endless running game, with a small glance to the meaning of life.  
 Overcome daily life obstacles, while gradually losing your powers.   

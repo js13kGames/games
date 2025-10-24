@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 - WASD / Arrows to move
 - Attack with Spacebar or Left Mouse Button (Hold to charge up)
 - Change weapon with number keys 1 to 4 or click the icons

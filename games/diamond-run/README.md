@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The world's largest pink diamond is kept on the top floor of a high-security building in town. 
 Yet, to a seasoned gemstone thief, that isn't much of a challenge. Your GlitchMaker(tm) will take care of the security computers.
 All you have to do is enter the building, climb to the top floor (don't climb - use the elevators), pocket the diamond and come back. It seems so easy.

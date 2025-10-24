@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Fly a paper plane lost at sea. If you look around enough, maybe you'll find something interesting. Be careful not to drown!

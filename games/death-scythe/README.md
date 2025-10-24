@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Death-Skite
 
 It's a kind of cross-scroll running.

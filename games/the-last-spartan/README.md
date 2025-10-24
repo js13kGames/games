@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cut your enemies to pieces and defend your homeland! Can you, the last Spartan Hoplite of your battalion, earn an honorable death across thousands of procedurally generated battlefields?
 
 An arcade hack n' slash survival game set in ancient Sparta, 404 B.C.

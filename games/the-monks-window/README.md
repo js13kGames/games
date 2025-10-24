@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 > We bless you and your efforts. -- the monk
 
 Help the monastery finish their window.

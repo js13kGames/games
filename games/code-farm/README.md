@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Its a two player one desktop game.
 
 Here the first player plays as Tomato and the second one as Orange(by default).

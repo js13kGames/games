@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You're a hungry mortal in a strange world filled with other animals. But you alone know how to wield tools and know the art of butchery, so time to get butcherin'! Complete all the achievements to win the game.
 
 Controls: 

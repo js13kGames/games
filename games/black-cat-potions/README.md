@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## The **Black Cat Potions** store just opened
 
 Figure out how to brew potions to fulfill the incoming orders.  

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A quite simple air combat game.
 
 Use the cursor keys to move, space to fire.

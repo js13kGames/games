@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 [Incomplete]
 
 WASD and/or Arrow Keys • Move.

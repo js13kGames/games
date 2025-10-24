@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://reitgames.com/news/hang-by-a-thread-post-mortem
+---
 # How to Play
 Reach the goal. Collect hearts for extra points.
 

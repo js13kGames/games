@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is my third entry for JS13k this year.
 
 It’s more of a tech demo than a real game. It started as an experiment to see how much content of a Minecraft like clone could be done in 13kB. When I was done with the engine I started to play around with some small gameplay fitting the space theme and since I have spent some time on this I figured I could submit it anyway.

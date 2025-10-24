@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A glitch themed Endless Faller game.
 
 Use the arrow-keys to escape the falling gas.

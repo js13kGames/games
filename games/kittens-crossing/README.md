@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In a careless moment you let your tiny kitten siblings out of your sight. 
 Now they are all lost in the big and dangerous city. 
 Soon you won't just be a black cat, you will be the black sheep of the family.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Dinky the Dragon must rescue his friend Sir Knight from the Firebreathing Princess!
 
 Use arrow keys to move and jump, z to pickup and throw crates and monsters. 

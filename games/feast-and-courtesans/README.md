@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Visit a medieval feast as a courtesan.
 
 To feed yourself, you need to seduce at least 7 boyars on a holiday. But beware of their ladies!

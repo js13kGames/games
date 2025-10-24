@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Keep your finger inside the box for as long as you can while touching the screen. The game works in a desktop browser (keep the mouse pointer inside the box) or a mobile browser (keep the finger inside the box). The box moves faster as you advance. The higher score I achieved was 514.

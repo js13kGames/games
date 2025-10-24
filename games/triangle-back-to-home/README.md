@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are lost in the cave. Try to get out and back to home. Sometimes it can be easy, sometimes not… but don’t give up and you will do it.
 
 I hope you will like this small adventure. :)

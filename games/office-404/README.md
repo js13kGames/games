@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Dear Office Manager!
 
 You have 404 days to the next performance review. Keep the office clean and find place for the newcomers. The company counts on you.

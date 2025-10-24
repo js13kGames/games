@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 13 Bubbles is a twist on the classic Bubble Pop kind of game.
 
 Here, to be able to pop bubbles, not only the group has to be of the same color but the sum of all its values must be a multiple of 13 (0 and negatives included). Reach bigger sums (26 or -26, 39 or -39, etc...) to multiply your score!

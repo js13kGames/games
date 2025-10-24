@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A tile swapping game, where you have a limited amount of moves to obtain the highest score. How is that score determined? Well, that's up to you to figure out.

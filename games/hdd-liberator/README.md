@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 HDD Liberator--liberate your files!
 
 Controls: Arrows, WASD, ZQSD. Spacebar to grab.

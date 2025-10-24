@@ -1,3 +1,8 @@
+---
+directors_cut: http://meuziere.free.fr/geoquiz2/
+video: https://youtu.be/j6oS6lWzpy8
+post: https://xem.github.io/articles/js13k18.html
+---
 An enhanced version of my 2015 entry Geoquiz.
 2 game modes, 14 categories, 1120 questions!
 Code by xem, music by Nghia.

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You have lost your sight, but gained the power of echolocating. When you start, you will not be able to see the level. By pressing SPACE you can temporarily reveal the space around you.
 
 When you know where to go, use the WASD/ZQSD/Arrow keys to move and jump around.

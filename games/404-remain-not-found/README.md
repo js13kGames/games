@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://lc-apps.co.uk/app/game/404
+---
 A turn-based stealth puzzle game.
 You must maneuver your two sneaky characters to the end of each room without being seen.
 

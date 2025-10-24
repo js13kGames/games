@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 It's a simple game, Escape or Die
 Use 'SPACE' to jump
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Prologue
 Rin was once one of the 13th century\' s most powerful sorceresses. Cursed by the Cat Witch Cauchy during a mission, she became a black cat of misfortune and was locked in Cauchy\' s basement.
 

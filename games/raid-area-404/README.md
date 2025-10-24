@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "It doesn't like being seen in the light. It hates the light!" - Anonymous 2020
 
 You've accidentally fallen down into a hidden bunker while participating in the latest viral Facebook event, Raid Area 404 (don't bother looking, it's a private group). There seems to be something down here with me, better get out as fast as I can. 

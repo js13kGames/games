@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Travel trough ASCII space in the hunt for the evil O.
 
 WASD to move around

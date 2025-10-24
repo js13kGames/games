@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Controls
 WASD / Arrow Keys : Movement
 R : Restart

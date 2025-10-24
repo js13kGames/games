@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Rules :
 
 1. You have a wrong pistal in which 1st bullets are fired by left click and 2nd by right click and then by left and so on.

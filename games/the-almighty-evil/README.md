@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A short game where you accidentally release The almighty Evil from it's slumber and you have to battle it back into submission. 
 
 Desktop: Tested on Chrome 

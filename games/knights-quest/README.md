@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You wake up at a your camp site and something is amiss. The legendary helm "Skullsavington" gifted to you by the elves of Galandrathrill; missing! The mythril armor "Gutscontainathryl" forged for you by the dwarves of Mount Rawrthrak; absent! The blessed sword "Barbsmasher" conjured and blessed by the goddess Arathnia herself; gone! Seeing as it's your only option, you pick up a rusty old sword left by one of the thieves and take off in search of the grubby skelpie-limmer who stole your hard-earned legendary gear!
 
 Level up, reclaim your legendary gear, and to lay waste to the thieves who stole it!

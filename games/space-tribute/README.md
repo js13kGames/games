@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 spaceTribute is a shoot'em up game where you have to face old games enemies.
 Careful with the boss, it is.... unstable
 Each level increases the speed, how far will you go?

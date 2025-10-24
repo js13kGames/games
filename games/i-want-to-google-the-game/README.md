@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In a world where the game cannot be found, you point your browser to the venerable search engine.
 
 Overcome the obstacles of the uncharted Internet, such as paywalls, dark patterns, and web standards.

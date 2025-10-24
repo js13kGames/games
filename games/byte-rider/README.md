@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Byte Rider is a two player card game, you against an AI. On your turn you may take one action...
 
 1. Draw a card and add it to your hand.

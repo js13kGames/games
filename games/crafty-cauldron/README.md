@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Take the role of a cat-loving witch as you collect herbs and craft potions. But avoid the angry, pushy, witch-hating villagers -- long enough to discover a potion that will make them into docile cats.
 
 - **W, A, S, D, arrow keys** - move

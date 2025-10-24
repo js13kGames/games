@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # I am the Night
 You are darkness. You are fear. You are strength. You are... **the Night**
 

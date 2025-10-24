@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 -404-
 友達を見つかりません
 ::FRIENDS NOT FOUND::

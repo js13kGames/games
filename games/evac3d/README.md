@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You pilot a Medical Helicopter. You must evacuate injured people to the nearest hospital before they die.
 
 All done in 3D using regular Canvas2D!!

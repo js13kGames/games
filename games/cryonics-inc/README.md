@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help emojis beat death by using cryonics!
 This is an open ended puzzle game made as a tribute to Zachtronics games.
 

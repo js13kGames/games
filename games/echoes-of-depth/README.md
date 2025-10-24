@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are the Ninja falling down a hole to fight demons. 
 You encounter demons and loot along the way.
 Dodge the demons and collect loot at the same time.

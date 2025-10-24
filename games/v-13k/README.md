@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Doctor Elliot is trapped with his daughter in a laboratory where they were experimenting with a lethal virus, something bad happened and all the scientists were infected, the quarantine protocol was activated and he closed the main door, Dr. Elliot must look for a computer with battery with access to the central to re-activate the energy and open the door.
 
 Hints:

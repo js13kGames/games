@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # 🐾 Roni and Kira  
 
 ![Demo](https://raw.githubusercontent.com/Jorger/js13k-2025/refs/heads/main/demo.gif)  

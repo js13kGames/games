@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is your first week at ParaTec Systems.
 
 I hope you do well. I hope you meet people.

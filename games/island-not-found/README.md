@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you find your way out, or is it a 404?
 
 Escape from 2020 for a moment, enjoy the sun, the ocean waves and relax trying to find your way.

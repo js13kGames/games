@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://itch.io/embed-upload/15122204?color=a3a29a
+video: https://youtu.be/m8UybYNnD6k
+---
 ## 😼About Game:
 #### 📜The Ninefold Gambit is a top-down adventure game where you take on the role of a courageous white mouse on a daring quest to rescue his beloved from the clutches of a devious black cat. Outsmart and overcome nine cunning feline foes. It’s a tale of love, courage, and cleverness—only the bravest mouse can triumph in the Ninefold Gambit.
 

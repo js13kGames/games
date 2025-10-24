@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 13th September 2024. Helsinki, Finland.
 
 You were supposed to give a speech at the National Accident Day, but you are very very late. You need to make it there on time, but the traffic is horrible.

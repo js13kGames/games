@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://killedbyapixel.github.io/JS13K2025/
+video: https://youtu.be/leeqG-vjBXs
+---
 # L1TTL3 PAWS!
 Made by Frank Force
 Created with LittleJS Engine

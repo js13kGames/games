@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://fdoganis.github.io/clawz
+---
 CLAWZ: (Im)prove your catness
 
 In a distant future most black cats have been eradicated since they are considered bad luck. 

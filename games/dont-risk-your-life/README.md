@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A man started losing his life the day he started:
 
 1. Smoking

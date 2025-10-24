@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In Refuel the Factory you control the blue spaceship using the arrow keys and you have to collect the green orbs and return them to the factory.
 
 Beware of the asteroids that constantly come raining down, because if they hit you it's game over and you have to restart the level.

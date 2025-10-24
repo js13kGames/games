@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In 13 the Damned, a card game inspired by triskaidekaphobia—the fear of the number 13—every decision is a gamble with fate. Flip cards, accumulate points, and push your luck. But beware, revealing a King (worth 13) spells doom, ending the game in an instant. Will you risk it all or walk away before it’s too late? With three levels of difficulty and a rising score multiplier for every card revealed, every choice could lead you to victory or disaster.
 
 ## How to Play

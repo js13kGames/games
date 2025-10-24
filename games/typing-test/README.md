@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # Typing Test
 Thank you for agreeing to participate in the speed-typing challenge between a cat and a human.
 

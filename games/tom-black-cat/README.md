@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Tom Black Cat!
 
 You control a black cat and must collect as much food as possible in a limited time.

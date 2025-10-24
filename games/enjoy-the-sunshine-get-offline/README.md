@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Another beautiful day. But, look! Nobody appreciates it.
 
 Relieve people of their phones and other accessories so they can marvel at the beauty of nature.

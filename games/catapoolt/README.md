@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 > “Launch. Lunch. Litter.”
 
 A game about a black cat that bounces like a slingshot, eating mice to regain stamina while every jump drains it - 

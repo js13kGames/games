@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Try to earn the most points without dying. Avoid enemies and stay close to fireplace so you don't get freezed. The default time for getting freezed is 13 seconds, so that's how long you have to find new campfire before it is too late. 
 
 W - moves up

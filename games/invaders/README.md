@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 _INVADERS is Space Invaders-inspired 3D game where you must stop endless waves of invaders from space! Fight against 3 types of invaders and 4 mini-bosses alone or with friend!
 
 Controls:

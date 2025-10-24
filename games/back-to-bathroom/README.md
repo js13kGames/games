@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Description:
 
 You are in bathroom and see that all you do over there go back for you. But you are hungry, if not eat then you die. Yet you can eat bread that falls, but the more you eat the more shit comes back to you.

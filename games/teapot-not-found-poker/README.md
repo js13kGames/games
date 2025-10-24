@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The game is a variation of video poker. As it's related to 404, it's quite logical 🙂 that pair of Fours or less don't count.
 
 Your initial balance is 411 and you need to reach 418 and officially become a teapot. If you get down to 404, your balance is not found and you lose.

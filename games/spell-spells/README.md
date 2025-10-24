@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://curtastic.com/spellspells
+---
 This is a roguelike deckbuilder where you have to collect letters and then make the best word you can to defeat monsters. Like Slay the Spire, but with words!
 
 Story:

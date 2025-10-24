@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Spaceships wars is a kind of battleroyal game where every player use a unique spacehip to destroy their opponents using a rock-paper-scissors mechanic.
 There are a limit number of spaceships available in the game (13312 to be precise) every one of this is a NFT that can't be purchased but it should be earned by being the winner of the tournament.
 

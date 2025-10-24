@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Can you transport 404 people in 404 seconds?
 
 They want to get from one city to another, represented by these red circles.

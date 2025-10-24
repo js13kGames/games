@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Multiplayer Online Auto Queue Game, The goal is to kill the Dark Orc General!
 
 Game Features

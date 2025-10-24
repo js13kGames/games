@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 BOOM CHASE
 
 "You are responsible for locating the terrorist who seeks to eliminate the iconic 'Liberty', while the clock counts among the suburb of New York"

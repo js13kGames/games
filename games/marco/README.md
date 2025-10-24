@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Marco Polo has stopped by for lunch.
 Unfortunately he is lost inside your massive castle.
 Your job is to find him.

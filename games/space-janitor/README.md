@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Homo sapiens are a messy bunch. They attempt to be cleanly (and do a decent job!) but end up polluting their surroundings regardless...it's year 2254 and the pollution has left the planet. You are performing community service by cleaning up the junk that has inevitably started to pile up. It's dangerous work though ... asteroids zipping about and even black holes! Collect as much of the trash as you can in this simple, fast-paced game.
 
 Controls:

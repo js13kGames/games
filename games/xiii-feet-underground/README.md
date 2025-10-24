@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In XIII century citizens of small town named Kłodzko (formerly known as Glatz or Cladzco) started expanding their basements. After some time, they managed to create complex network of rooms, halls and tunnels. In this underground city, they had shops, wells, taverns, counting rooms, doctor's office and... prison.
 
 Criminals captured and sent to the prison were then trailed in court, and often treated with appropriate kindness by the executioners.

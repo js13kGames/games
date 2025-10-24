@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A puzzle game that combines Sokoban-like gameplay mechanics with match-3. 
 
 You play as some kind of space creature controlling a flying saucer. Match three (or more) space goblins of the same color to destroy them. Collect every star in the room to complete the puzzle.

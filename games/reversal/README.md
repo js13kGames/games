@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Traversal is a game that allows you to teleport while gaining higher jumping velocity, teleportation is an important part of the game. Note that when you are teleporting, in order to increase velocity you've got to press the Up Arrow. The goal is to collect white tile, avoid black tile and use red beam to teleport, have fun!
 
 Control: Move Left: ← Move Right: → Jump: ↑ Teleportation via red beam: hold ↑ to jump higher.

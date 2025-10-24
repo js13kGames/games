@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # please DO NOT the cat
 Submission for [JS13K 2025: Black Cat](https://js13kgames.com/2025/)
 

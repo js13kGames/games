@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/h9PJcy9VAFY
+post: https://xem.github.io/articles/js13k23.html
+---
 It's the 13th century.
 
 You wake up in a cell, on top of a tower...

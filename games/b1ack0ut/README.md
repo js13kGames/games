@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Suddenly, the world went offline... insanity ruled as people could not cope with being disconected. Now, you'll have to survive while dealing with your own internet addiction.."
 This is just a silly survival game that's a bit of a mess all around... but at least it has some charm I think...
 Controls:

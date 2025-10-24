@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://superman2211.github.io/cube13/dist/build/
+---
 You have to find a way out of the cube.  Traps and puzzles will be on your way.
 
 13 levels

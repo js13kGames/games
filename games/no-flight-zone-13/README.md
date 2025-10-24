@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Maths handicap airplane shooting game.
 
 Enjoy an arcade game of air combat while avoiding the number 13 in your wallet.

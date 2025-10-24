@@ -1,3 +1,8 @@
+---
+directors_cut: https://hambley.me.uk/games/gettheflock
+video: https://youtu.be/w8HU8ANj-s0
+post: https://hambley.me.uk/blog/gettheflockouttahere
+---
 The story of our hero Tony and they're friends who must gather the lost sheep and return them to their home.   
 A simple task you would think but Tony wasn't to know who they would encounter along the way or the obstacles that they would face.  
   

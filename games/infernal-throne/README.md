@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 🔥👑 Infernal Throne 👑🔥 is a mini Metroidvania compressed into 13kb.
 
 ## The Story ##

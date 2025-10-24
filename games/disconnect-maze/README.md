@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Disconnect the machines before being caught!
 
 This is simple (relatively incomplete!) simultaneous turn-based random maze game. 

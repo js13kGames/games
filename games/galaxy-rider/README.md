@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Ride sick lines though the galactic bowl system adding to your star collection along the way. Try to finish each course as fast as you can!
 
 Controls:

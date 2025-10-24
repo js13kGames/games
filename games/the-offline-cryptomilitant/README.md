@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are an Air Force Cadet in the military and your base was attacked by the enemy.The enemy managed to plant a time bomb in your helicopter, when discovered, you were chosen as the operator to defuse the bomb.
 
             The bomb was encoded with an IC which is protected using the enemy's network such that any tampering will result in an explotion, the best way to defuse it is to fly northwards until the bomb IC goes OFFLINE such that it's receiver can no longer connect with the enemy's online network after which you must quickly defuse it before it detonates.

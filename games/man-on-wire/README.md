@@ -1,3 +1,8 @@
+---
+directors_cut: https://xem.github.io/funambule/
+video: https://youtu.be/3eQWYel2_k4
+post: https://xem.github.io/articles/js13k18.html
+---
 On August 7th, 1974, a young Frenchman named Philippe Petit stepped out on a wire illegally rigged between the New York World Trade Center’s twin towers.
 
 (only tested on Android phone + JS13k'17 Cardboard)

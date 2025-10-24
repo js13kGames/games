@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 "Meteor impacts detected. Life support systems offline. Escape pods launching in 30 seconds..."
 - Pegasus II, final transmission
 

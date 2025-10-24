@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A game about collecting numbers, creating good hands, handling basic math operators, shop for upgrades and get big combos while avoiding the number 13. "It's like math but somehow even more boring"  (actual quote from my beta testing kids).
 
 ### Controls

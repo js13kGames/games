@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Many astronauts have been lost in space, it is up to you to bring them home, this is a rescue mission. 
 
 Objective:

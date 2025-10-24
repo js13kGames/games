@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/GjLx2_lUV0Q
+post: https://xem.github.io/articles/js13k18.html
+---
 A relaxing* puzzle game where the goal is to reproduce a shape using a network of lines.
 
 "Network of lines". Get it? ;D

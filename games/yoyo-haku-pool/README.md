@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 YoYo Haku Pool puts you in control of a yoyo on a multiplayer pool table!
 
 The goal is to keep the highest score as long as possible.

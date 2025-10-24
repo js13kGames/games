@@ -1,1 +1,4 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 As a Bio-Server Model-0451, your job is to response to various creature assembly requests correctly, successful response will earn you Likes to purchase helpful yet challenging upgrades.(See the start screen in game for control manual)

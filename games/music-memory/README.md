@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Music Memory with Guitar and Piano sounds
 
 Customise your game to get the most out of it:

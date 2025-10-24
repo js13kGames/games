@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Somewhere in an old alley - the Catcher is lurking for the homeless cats. Fortunately, the Catcher has Triskaidekaphobia and is afraid of only one thing in the world: the number 13... so, the only way to save the GANG is to use the ancient CURSE OF 13 CATS!
 
 Rules:

@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/DerBenniBanni/js13k2024_Triskaideka/blob/main/makingOf/makingOf.md
+---
 13 days ago, a fleet of aliens - the **Trisdaideka** - started an invasion of earth. As everyone else on the planet is paralyzed by the resulting **Triskaidekaphobia**, it's up to you and your experimental rocket to defend the planet!
 
 **This game is controlled by keyboard or gamepad, not the mouse!**

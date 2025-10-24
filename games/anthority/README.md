@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A N T H O R I T Y
 
 Anthority is a quick ant colony simulation game. Help the Queen retrieve her colony in a modern interface created by the mysterious Antherous.

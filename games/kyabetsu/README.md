@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Kyabetsu is an adventure game inspired by graphical adventures like Monkey Island
 
 ### Controls

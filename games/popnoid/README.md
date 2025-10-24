@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Popnoid is a breakout game.
 
 Use mouse to move the pad. Click to start, use your gun and drop balls.

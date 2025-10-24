@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 # STORY
 Australia was land to a variety of megafauna (over one tonne) such as Diprotodons and giant koalas before 40,000 BC. This changed when Homo Sapiens discovered the continent. Sapiens mastered the control of fire and they started burning large areas of forests. Entire species of animals went 404.  
 

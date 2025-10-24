@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In 2018, people live their lives in virtual reality.
 Most never leave the community clusters assigned
 to them at birth. A handful of lucky ones migrate

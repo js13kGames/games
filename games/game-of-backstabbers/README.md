@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The king is old and has no heir. He will give the hand of his daughter to the most powerful lord of one of three houses. You support your house by gathering resources and paying tribute to the king. The crown will be awarded to the first house to gain the king's favor.
 But only the strongest lord of a house can become the next king. So better watch out for competitors of your own house.
 

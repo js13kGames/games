@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 10,048 tribbles are spread throughout the universe.
 
 Today, nearing the end of the Great Tribble Hunt, only a few of the most unique and well disguised tribbles remain.

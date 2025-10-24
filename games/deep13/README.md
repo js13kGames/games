@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+directors_cut: https://tamats.com/games/deep13/
+---
 You are in a submarine in the depths of the Artic circle.
 
 Your vessel is investigating a strange signal emanating from deep the water surface.

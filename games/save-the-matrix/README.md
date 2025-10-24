@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The Matrix is under attack! Obliterate all Hackers and get rid of the red glitches as they import dangerous drones.
 
 Play with:

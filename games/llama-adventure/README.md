@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Help the Llama to collect its items and bring them back home.
 
 - W or Up Arrow to jump

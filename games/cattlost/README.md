@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cattlost is about not losing your cattle.
 You had a long day in farm 
 And have left the cattle to graze in the open field 

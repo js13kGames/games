@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is a click farming game, where your goal is to leave the peasant life behind and buy your own farm!
 
 When you click on the soil it asks you for what it needs you to give it.

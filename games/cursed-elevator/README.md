@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An interactive story about getting on a cursed elevator.  
 But it seems you are not the first this happened to.  
 Get to floor 13 … as often as you have to.

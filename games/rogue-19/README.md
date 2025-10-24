@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Your planet is under attack from an alien civilization which is waging chemical warfare by sending viral pathogens through space toward you.
 
 You are the first in a series of clone pilots sent to destroy the pathogens and the final boss, the Incubator!

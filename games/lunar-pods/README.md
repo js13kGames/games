@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A fast-paced RTS game about conquering the moon.
 
 Use arrows to change your selection and press 1, 2, or 3 to build.

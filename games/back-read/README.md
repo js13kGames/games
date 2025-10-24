@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Challenge your brain in this reverse-reading game!
 
 You can play on Desktop and Mobile, just need to point and click/touch, to interact with the game.

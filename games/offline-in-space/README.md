@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Try to catch computer in space... or you lost connection!
 You have 60 seconds to hit computers!
 

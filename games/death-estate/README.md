@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Death Estate, a packing-puzzle city builder! Build roads, then try to place as many houses that can fit for ghosts to live in.
 
 (Instructions in-game, but also described below)

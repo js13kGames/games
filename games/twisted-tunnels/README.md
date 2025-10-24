@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You are lost in the Twisting Tunnels! Search for the exit while collecting as much treasure as you can find!
 
 Rotate the floor tiles to navigate your way through... will you escape?

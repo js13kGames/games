@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Important: This games requires one tracked controller to be played (tested on HTC Vive, should work on Oculus and perhaps DayDream)
 Also don't forget to turn on sound for the best experience :)
 

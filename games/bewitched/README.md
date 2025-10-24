@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The 12th Century was a time of happiness for witches of the world..
 
 ...until, an evil demon turned The Five Great Witches into cats and imprisoned them in cursed towers.

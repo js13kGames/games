@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Killing infernal demons bores you?
 Slaying dragons doesn't feel the same anymore?
 Maybe saving the world has become a tedious routine?

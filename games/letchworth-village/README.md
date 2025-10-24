@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Send demons BACK TO HELL in this 2D top-down button masher. As an immortal demon hunter possessed by a cursed sword, you awaken in Letchworth Village, an abandoned mental hospital in the midst of an ongoing demon invasion. Drown your sword in demon blood and close the portal to hell for good!
 
 HOW TO PLAY:

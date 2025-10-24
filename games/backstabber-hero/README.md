@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 This is the story of the mysterious backstabber hero. Whilst most people carry on with their carefree lives and sleep safe at nights the backstabbing hero is taking care of worlds backstabbing chores.
 
 Become the backstabber hero and play through 20 levels on desktop or mobile. Try to catch as many knifes as possible to impress your backstabbing rivals. With a Coil subscription able to customize your favourite backstabbing suit. 

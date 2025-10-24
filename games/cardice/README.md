@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Cardice is a roguelike deck building game.
 
 Pick a hero to get a deck with special effects depending of your character class.

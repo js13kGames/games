@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 A choose your own adventure game.
 
 You're an amnesiac robot with corrupted mission data. Fly around, talk to the town's people to fill in the blanks, and then carry out your mission.

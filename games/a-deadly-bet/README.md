@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You **died** !
 But that won't do it for you, so you bargain with Death to live a little more.
 

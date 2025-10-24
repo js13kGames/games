@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 need to turn off all fire cells
 
 when you click to the field cell

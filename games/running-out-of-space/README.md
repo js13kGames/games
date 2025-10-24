@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 My second entry this year.
 
 Graphics provided by Pascal at https://www.orangepixel.net

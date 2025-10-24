@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Undeads don't actually die. 
 They go into the spectral world, and respawn after some time.
 

@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 ## Description
 
 This game is inspired by Achtung, die Kurve!

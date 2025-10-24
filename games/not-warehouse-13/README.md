@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've just got hired to organise boxes in a warehouse.
 
 These are no ordinary boxes... they merge when they collide and their labels change accordingly.

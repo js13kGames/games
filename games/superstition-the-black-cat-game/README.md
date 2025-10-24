@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In Italy, people say that black cats bring bad luck. But don’t worry—you can chase the curse away! When a black cat appears, scream into your microphone to scare it off and earn a lucky point.
 
 Points are shown as horn signs (🤘), a traditional Italian gesture believed to keep misfortune away.

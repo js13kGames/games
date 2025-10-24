@@ -1,3 +1,7 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/sanL94Xga8g
+---
 In Poland, we say that cats walk their own paths.
 
 Inspired by this, *Lucky Charm* is a high-energy, micro-roguelike auto-battler with no direct combat input. Your only task is to guide your fighter's evolution by choosing powerful upgrades between battles.

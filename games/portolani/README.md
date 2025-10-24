@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 The 13th-century was a time of nautical innovation. The caravel was in development and early charts were being made. It's your turn to captain an expedition to map uncharted waters and become a legendary explorer!
 
 Portolani is a turn-based puzzle game. Your goal is to visit all of the ports, exploring as much of the map as possible. A new map is released every day at 00:00 UTC.

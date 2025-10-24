@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 An educational game to increase your typing skills.
 Race against your previous records and outrun them.
 

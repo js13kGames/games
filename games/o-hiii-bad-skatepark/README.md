@@ -1,3 +1,8 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+video: https://youtu.be/cYJH0Zn0rgo
+post: https://xem.github.io/articles/js13k24.html
+---
 In this game, you don't control a skater...
 You draw the skatepark!
 

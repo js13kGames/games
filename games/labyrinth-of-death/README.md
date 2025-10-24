@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 You've been trapped in the Labyrinth of Death!
 
 Unlock the gates or build a sword and slay the minotaur before he brings death upon everyone!

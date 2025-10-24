@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 In 'Wor', step into a realm where strategy meets combat. Command your units, master the terrain, and outmaneuver the CPU's forces. Can you dominate the battlefield and vanquish your foes to claim victory?
 
 ### Controls

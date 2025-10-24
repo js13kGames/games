@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Controls:
 Desktop:  
 Arrow keys Move

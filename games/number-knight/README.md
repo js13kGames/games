@@ -1,3 +1,6 @@
+---
+# See github.com/js13kGames/games for supported frontmatter
+---
 Have you ever seen this fake ad for a mobile game? You know, the one with a small knight in his tower, and you have to kill monsters from other towers.
 "Number Knight" is a full complete game based on this fake ad!
 
