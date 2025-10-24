@@ -1,0 +1,1 @@
+class A extends AudioWorkletProcessor{constructor(){super(),this.port.onmessage=event=>{this.t=eval(event.data)}}process(t,e){return e[0].forEach(e=>{for(let t=0;t<e.length;t++){var r,s;e[t]=2*Math.random()-1,this.t&&(r=currentTime,s=sampleRate,e[t]*=.2*(.1*this.t(t,r,s)[0]+.1*this.t(t,r,s)[1]))}}),!0}}registerProcessor("a",A);

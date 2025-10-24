@@ -4,7 +4,7 @@ Fed up with your lack of contributions around the house, your owner has sent you
 
 **Pick up fishes** as they pass on the conveyor belt, **calculate** how much they are worth, then input, print, and **stick labels** onto them. As soon as they are **back on the belt**, your guesses will be verified: **correct prices will net you points, wrong ones won't**. The job is simple, but it's sure to keep your paws busy.
 
-<img loading=lazy alt='How to play' src=https://fedetibaldo.com/uploads/kuro-neko-market-how-to-play.gif>
+<img loading=lazy src=https://fedetibaldo.com/uploads/kuro-neko-market-how-to-play.gif alt='How to play'>
 
 ## Controls
 

@@ -3,7 +3,7 @@ die-and-retry action game: you’ll fall often, but each retry is instant, keepi
 
 Prove your skill and unlock **9 Lives Mode** by completing the game.
 
-<img src=//raw.githubusercontent.com/remvst/clawstrike/refs/heads/main/assets/gameplay-demo.gif loading=lazy>
+<img loading=lazy src=//raw.githubusercontent.com/remvst/clawstrike/refs/heads/main/assets/gameplay-demo.gif alt='CLAWSTRIKE gameplay'>
 
 ## Controls
 - **Move**: <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd> or <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>
