@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2020/blob/master/devdiary/diary.md
 ---
 Planet Figadore is ravaged by the Regolith virus, so all sporting events have been cancelled. Fred sneaks on to the "Coding Golf" island golf course, to play 18 holes and win the "Broken Links" championship trophy.
 

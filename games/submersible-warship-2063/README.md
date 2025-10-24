@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/@herebefrogs/submersible-warship-2063-a-js13kgames-2018-postmortem-380b0008dc50
 ---
 Enemy submarines have invaded your perimeter. Stay off their radar and fight back! Submersible Warship 2063 is inspired by 3D submarine simulator Subwar 2050 (Microprose, 1993)
 

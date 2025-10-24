@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/nickshillingford/js13kGames-Disconnected/blob/f853908d559a41774441ba8e941a788f9dccca76/README.md
 ---
 Help Lucy and Levi get back online so they can send their messages to each other. You can reveal the solution to each level if completed over the minimal amount of moves but I encourage you to try and figure out the solution on your own.
 

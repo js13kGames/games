@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://crocidb.com/post/postmortem-phosphorus-dating/
 ---
 Phosphorus Dating is a game about Technology and Relationships.
 

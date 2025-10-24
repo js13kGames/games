@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/jonathan-vallet/js13k-2020/blob/master/POST_MORTEM.md
 ---
 Cardice is a roguelike deck building game.
 

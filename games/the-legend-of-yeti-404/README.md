@@ -1,7 +1,8 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://blog.grapefruitopia.com/post/2020-09-17-js13k-yeti-postmortem/
 ---
-A millennia ago, the great Ark Fleet set out across the galaxy to escape the certain doom of the ancient homeworld.
+A millennium ago, the great Ark Fleet set out across the galaxy to escape the certain doom of the ancient homeworld.
 
 Many colonies prospered, many failed, and some vanished without trace, disappearing into fokelaw and legend.
       

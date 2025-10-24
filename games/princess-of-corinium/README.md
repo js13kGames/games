@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2023/blob/main/devdiary/diary.md
 ---
 You play as a princess who needs to cure the plagued villagers from the rats of Corinium.
 

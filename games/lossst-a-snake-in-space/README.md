@@ -14,5 +14,3 @@ Controls:
 - OCD challenges: beat the developer's scores for each puzzle, Hard Mode (New Game +)
 
 Thanks to Bence for the SVG patterns, Yurume for RoadRoller, Anders Kaare for the sound effects, End3r for this amazing competition, Jaburns, Adrien, Julien, Anouk, Sam and Damien for the beta-testing! <3
-
-Making-of: https://xem.github.io/articles/js13k21.html

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://ashk.au/2015/09/15/l-road-blocks/
 ---
 Connect the grid and build infrastructure with Road Blocks, a challenging puzzle game for the browser.
 

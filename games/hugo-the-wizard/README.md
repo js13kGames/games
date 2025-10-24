@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://curtastic.com/hugo/postmortem.html
 ---
 Mouse only. Drag goblins left or right and see what happens.
 

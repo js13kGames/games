@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://phoboslab.org/log/2021/09/q1k3-making-of
 ---
 ## Controls
 

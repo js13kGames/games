@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2021/blob/main/devdiary/diary.md
 ---
 You are a test pilot in the navy and are out on operations testing an experimental new jet, callsign Alpha Zulu.
 

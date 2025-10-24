@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/@etchells.kevin/js13k-games-2019-entry-get-back-from-robot-city-22a48afe5fe
 ---
 What is this place? A teleporter experiment you were part of went very wrong. There are robots everywhere, and they are trying to attack you. You must GET BACK FROM ROBOT CITY.
 

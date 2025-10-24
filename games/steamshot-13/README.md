@@ -1,7 +1,7 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 video: https://youtu.be/g2bEYw87ckw
-post: https://niklever.com/steamshot-13-my-webxr-entry-to-the-2024-js13kgames-competition/
+post: https://web.archive.org/web/20250116091850/https://niklever.com/steamshot-13-my-webxr-entry-to-the-2024-js13kgames-competition
 ---
 A shooting gallery in a steampunk style. 
 

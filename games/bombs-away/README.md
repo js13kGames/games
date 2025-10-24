@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/MakeshiftMitten/bombsaway/blob/master/README.md
 ---
 A polygonal physics roguelike!
 

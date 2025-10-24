@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://hambley.me.uk/blog/diaryofagame
 ---
 Tony must send selfies to his followers on the internet to document his day at the local shopping mall. His mom is picking him up in 1 hour so he must gain as many likes as possible before she arrives.
 When the trolls see that you have a signal they will try and get to it also, too many users at a wifi hotspot will drop the signal and you will be 'Offline'. The lower the trolls using your hotspot the more likes you are likely to get.

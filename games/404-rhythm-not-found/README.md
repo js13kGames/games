@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://blog.slashie.net/2020/09/18/404-rhythm-not-found-js13k-2020/
 ---
 Dance robot dance! Find the rhythm within your circuits and beat the five super P.U.L.S.E. robot masters in head to head dance stand-offs!Make moves to the music beats to score points, the more varied they are the more bonus points you will obtain. Fill the energy bar before your opponent to win his respect!Controls:
 S - Flip Left Arm

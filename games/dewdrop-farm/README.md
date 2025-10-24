@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://www.frankmitchell.org/2020/10/ddf-post-mortem
 ---
 Welcome to Dewdrop Farm!
 

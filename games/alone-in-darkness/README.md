@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20200813093849/connect.adfab.fr/game/js13k-post-mortem-en
 ---
 You are alone in a strange place, only with your phone, offline...
 Use it and all the apps available to find a 5 bars signal, then send a message to the world... while your signal is strong enough.

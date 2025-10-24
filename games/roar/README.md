@@ -1,7 +1,7 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 directors_cut: https://piesku.com/roar/play
-post: https://piesku.com/roar
+post: https://piesku.com/roar/
 ---
 The government has taken baby-zilla away! They hid it somewhere in the city. You have 4 claws on one hand, a mouth that spits fire, and 4 claws on the other hand. It's FOUR-ROAR-FOUR time!
 

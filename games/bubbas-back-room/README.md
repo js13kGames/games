@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20191229231715/https://www.deadpix3l.com/bubbas-back-room-postmortem
 ---
 You just started a new job at a creepy gas station.  Your boss tells you to go to the back and meet his son, Bubba junior.  But something doesn't quite seem right...
 

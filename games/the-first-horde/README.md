@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://blog.slashie.net/2023/09/13/the-last-horde-js13k-2023/
 ---
 After having gained intelligence during the battle of Kalka River in may 1223, the Mongol army retreated.
 

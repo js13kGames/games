@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/morazor/TCM/wiki
 ---
 You are a valiant knight. You have been cursed by an evil warlock: from time to time you transform into a vicious villain.
 To break free from the curse you had to find the cursed mirror that has been used to cast the spell on you.

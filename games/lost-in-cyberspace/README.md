@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20231201041741/https://zofiakorcz.pl/lost-in-cyberspace-vr
 ---
 Lost in CYBERSPACE is a cooperative game designed for 2 players, each playing on a separate device. The only connection you need between each other is your voice. You can be in the same room or on the other part of the world, as long as you can hear each other.
 

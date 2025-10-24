@@ -1,8 +1,7 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20180831181131/http://theperplactory.net/postmortem-js13k-2016
 ---
-*** SHUTTLE POWER DASH ***
-
 You and your fellow spacefarer are stranded and almost out of fuel! Luckily, you notice an abandoned space station nearby. But it's a pretty glitchy place... who knows what lies inside?
 
 Find the shuttle in the space station, make sure it's powered up, and escape before you run out of oxygen. Avoid glitches and explosions if you can.

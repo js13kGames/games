@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/Platane/jurassic-nursery/blob/master/doc/postmortem/index.md
 ---
 Pet and feed adorable triceratops.
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/ripter/js13k/blob/master/2021/Postmortem%20JS13KGame%202021.md
 ---
 You work for the SPACE-Y company! Every day is a glorious day to serve. Your wonderful job is to clear the landing spot of all the Trash. Clear the SPACE so new ships can land and spend their tourist dollars at the many SPACE-Y shops and hotels.
 

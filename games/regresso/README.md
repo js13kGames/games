@@ -1,7 +1,8 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://dev.to/lopis/how-to-design-a-javascript-game-in-13kb-or-less-59kn
 ---
-Your ship wrecked in an unkown land. Keep your crew well fed while you struggle your way through finding the resources to rebuild the caravel and get back to the sea. And may god have mercy on you.
+Your ship wrecked in an unknown land. Keep your crew well fed while you struggle your way through finding the resources to rebuild the caravel and get back to the sea. And may god have mercy on you.
 
 -------
 

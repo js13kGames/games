@@ -1,7 +1,7 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 video: https://youtu.be/liawLPZsXmM
-post: https://github.com/bacionejs/byte-armada?tab=readme-ov-file#-post-mortem
+post: https://github.com/bacionejs/byte-armada#-post-mortem
 ---
 **Byte Armada** is a real-time-tactics 🚀 game
 

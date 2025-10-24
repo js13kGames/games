@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://www.mattiafortunati.com/a-day-in-the-life-and-js13kgames-2017/
 ---
 A DAY IN THE LIFE
 One tap retro minimalist 8-bit pixel art action endless running game, with a small glance to the meaning of life.  

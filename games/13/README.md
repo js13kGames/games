@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://eliasku.win/blog/13-game/
 ---
 "13" is a fast-paced multiplayer top-down shooting game
 

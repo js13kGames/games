@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20221207063622/dev.to/felladrin/cat-goric-escape-from-the-warp-chamber-post-mortem-57gc
 ---
 Cat Goric must escape!
 

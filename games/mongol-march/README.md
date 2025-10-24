@@ -1,6 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
-post: https://medium.com/@leokuo0724/mongol-march-navigating-the-js13k-challenge-658693d53a44
+post: https://leokuo0724.medium.com/mongol-march-navigating-the-js13k-challenge-658693d53a44
 ---
 In the 13th century, the Mongol Empire marched to conquer the world. As a Mongol commander, your duty is to lead your army to conquer European castles.
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20231101233927/https://www.loganfranken.com/blog/my-second-js13k
 ---
 This is your first week at ParaTec Systems.
 

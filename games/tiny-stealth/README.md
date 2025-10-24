@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/EduardoLopes/js13kgames-2015/blob/master/README.md
 ---
 controls:
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://dev.to/lopis/a-tiny-pixel-art-game-using-no-images-49df
 ---
 You are a merchant in the village market, trying to succeed. To do so, buy from the local suppliers and resell them in the weekend market.
 

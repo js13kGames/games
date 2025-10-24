@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/madmaw/LD33/blob/master/README.md
 ---
 Run, jump, and shoot your way out of a collapsing planet. 
 

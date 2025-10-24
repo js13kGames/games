@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/wololoa/js13k2023/blob/main/postmortem.md
 ---
 > In 1278, Brother Doen is asked to leave the temple during a Feast Night on a mission that might cost him more than his life — his very own soul.
 

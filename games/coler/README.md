@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://eguneys.github.io/js13k2020.html
 ---
 Controls:
 

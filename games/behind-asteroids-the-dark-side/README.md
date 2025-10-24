@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/gre/behind-asteroids/blob/master/README.md
 ---
 Ever wondered what is happening under the hood of an Asteroids Arcade machine? I can tell you: A greedy evil 25¢ money maker engine.
 

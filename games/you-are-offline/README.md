@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/@etchells.kevin/you-are-offline-a-js13k-game-2a497347ecad
 ---
 You are trapped in a room. There is no way out. Your only hope is to contact someone to rescue you. The only problem is: YOU ARE OFFLINE.
 

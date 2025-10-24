@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/Ayuu/forgetfulgod-js13k2020/wiki/Post-Mortem
 ---
 Story
 Hello...

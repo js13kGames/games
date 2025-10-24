@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://dev.to/salvan13/backshot-tactics-a-multiplayer-game-for-js13kgames-47ie
 ---
 Pick your ships and try to destroy your opponent
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/ArmaanMoh/Age-of-The-Demigods/blob/main/Post-Mortem.md
 ---
 wasd, Arrow Keys, touch(enabled through in-game prompt). Age of The Demigods is a role playing game in which you play 
 the role of hercules and face an imminent Danger! The game is set in 13nth century Greece!

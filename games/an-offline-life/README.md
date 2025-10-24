@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://jaenis.ch/blog/js13kgames-postmortem-an-offline-life
 ---
 You were browsing with your shiny new 56k modem as somebody pulled the plug.
 

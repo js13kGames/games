@@ -22,6 +22,3 @@ Code and level design by Maxime EUZIERE
 Music by GregPeck
 Sound effects by Anders Kaare
 Emoji by Twitter
-
-Making-of:
-https://xem.github.io/articles/js13k20.html

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://engineering.wingify.com/posts/js13k-game-development/#up--down
 ---
 Inspired form the classic game VVVVVV, in Up & Down the motive is simple. You can get a ball in the game which you can move left/right, and alternate the direction of its gravity by pressing Space key. So each time you press space the ball starts going in opposite direction. The motive is to make the ball reach the star. There are thorns as the level difficulty increases.
 

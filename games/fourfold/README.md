@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20210101000000*/saud.gq/blog/fourfold
 ---
 An abstract puzzle game, navigate your way through the missing platforms.
 

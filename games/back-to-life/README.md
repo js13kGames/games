@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://serpent7776.itch.io/back-to-life/devlog/100709/back-to-life-postmortem
 ---
 Use arrows to move, space to attack.
 

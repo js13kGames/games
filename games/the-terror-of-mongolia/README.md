@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://dev.to/jacklehamster/the-terror-of-mongolia-js13k-post-mortem-part-1-33a4
 ---
 The Terror of Mongolia is a rogue-like shooter set in the 13th century, recounting the tale of Genghis Khan. Riding the plains of Mongolia, Khan is on a quest to rescue Börte, his first wife, kidnapped by the rival tribe leader Jamukha the Jadaran.
 

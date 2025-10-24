@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/hypersphere-codes/how-i-created-a-gameboy-like-game-in-13kb-5905bf6166b2
 ---
 You’re alone in a graveyard, hounded by armies of the undead. Can you escape death and rescue all of humanity?
 

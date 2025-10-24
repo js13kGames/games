@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2022/blob/main/devdiary/diary.md
 ---
 Bee Kind
 You play as BeeKeeper Bunny trying to save the bees. The bees take pollen from the flowers to their hives, but the blue ZomBees try to steal pollen and break the hives.

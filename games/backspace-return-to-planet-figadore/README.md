@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2019/blob/master/devdiary/diary.md
 ---
 It's 50 years since humans first went to the moon. Now that we are planning to go back, the Regoliths need to escape before we find them. They have light-jumped to planet Figadore in the Hercules cluster to flee.
 

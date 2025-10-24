@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://auroriax.com/edge-not-found-postmortem-js13k-2020/
 ---
 Edge Not Found is a Sokoban-style puzzle game set on an infinitely repeating grid. There are 20+ puzzles and they get can get pretty tricky. Tested in Firefox and Chrome.
 

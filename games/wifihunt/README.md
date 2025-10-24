@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://shreyasminocha.me/blog/js13k-2018-postmortem
 ---
 Roam around the city connecting to WiFi hotspots and completing the download and upload goals.
 

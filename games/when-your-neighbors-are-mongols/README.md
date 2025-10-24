@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/Antix-Development/when_mongols_are_your_neighbors/blob/master/POST-MORTEM.md
 ---
 As the brave samurai looked out across the field of battle at the endless horde of mongol warriors advancing from the west, he knew his time was near. Nonetheless, he gripped his BFG tightly and vowed to take as many of the foreign invaders with him as he could. 
 

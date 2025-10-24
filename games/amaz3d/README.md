@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/gre/js13k-2017#mea-culpa
 ---
 AMAZ3D is a 3D Maze puzzle. connect 2 metaballs by rotating the maze cube. Progress over more and more complex levels.
 

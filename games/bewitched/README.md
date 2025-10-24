@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://eoinmcgrath.com/pages/postmortem-bewitched.html
 ---
 The 12th Century was a time of happiness for witches of the world..
 

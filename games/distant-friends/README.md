@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://blog.slashie.net/2021/09/21/distant-friends-js13k-2021
 ---
 It has been a long time since you last saw your friends. You board your rocket and fly back into Ceres... will you be able to gather the gang back together? 
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://hambley.me.uk/blog/goforthandconquer
 ---
 The true story of a brave Knight who went forth and conquered kingdoms to become the rightful King.
 

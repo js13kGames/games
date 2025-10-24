@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/AD-Edge/SubSpace-Zero#post-mortem
 ---
 Drop into Subspace and battle other bots and players. Features dynamically generated pixel art (ie theres not a single .png sprite file involved in this game) and a basic multiplayer implementation!
 

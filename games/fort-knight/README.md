@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://carelesslabs.wordpress.com/2023/09/21/fort-knight-post-mortem-js13k/
 ---
 - WASD / Arrows to move
 - Attack with Spacebar or Left Mouse Button (Hold to charge up)

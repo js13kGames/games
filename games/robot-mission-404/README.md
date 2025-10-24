@@ -1,11 +1,12 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://vertfromage.github.io./update/2020/09/25/Robot-Mission-404-JS13KGames-2020.html
 ---
 A choose your own adventure game.
 
 You're an amnesiac robot with corrupted mission data. Fly around, talk to the town's people to fill in the blanks, and then carry out your mission.
 
-                    CONTROLS: 
+## Controls 
 DESKTOP: Arrows or awsd, space, y, n, +/- speed.
 
 MOBILE: Landscape, tap to move, button to interact. Hint: tap past where you want to go.

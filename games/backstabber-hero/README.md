@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/@niklas.b3rg/game-dev-postmortem-backstabber-hero-part-1-80c7def92c74
 ---
 This is the story of the mysterious backstabber hero. Whilst most people carry on with their carefree lives and sleep safe at nights the backstabbing hero is taking care of worlds backstabbing chores.
 

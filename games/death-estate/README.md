@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://medium.com/@jayther/death-estate-js13k-2022-postmortem-863bfc0af423
 ---
 Death Estate, a packing-puzzle city builder! Build roads, then try to place as many houses that can fit for ghosts to live in.
 

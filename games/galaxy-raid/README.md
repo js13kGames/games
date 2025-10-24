@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://www.joseprio.com/blog/2021/09/16/js13k-2021-galaxy-raid/
 ---
 CONTROLS
 Mouse: the ship will follow the cursor; click to launch a bomb.

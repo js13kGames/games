@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/mhmdjawad/robinhoodgame/blob/main/README.md
 ---
 you step into the legendary shoes of Robin Hood.
 your mission is to make the world a better place.

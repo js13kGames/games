@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/SalvatorePreviti/js13k-2020/wiki/Post-Mortem
 ---
 Can you find your way out, or is it a 404?
 

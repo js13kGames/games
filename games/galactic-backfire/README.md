@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://web.archive.org/web/20170512074036/http://giddyplanet.com/2015/09/galactic-backfire-a-retrospective-of-my-js13k-entry/
 ---
 A space shooter running in reverse.
 

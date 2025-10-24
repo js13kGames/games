@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/BenjaminWFox/offline-oect-js13k/blob/master/readme.md
 ---
 They said organic-electric technology was the way of the future. It seemed promising until a string of natural disasters revealed how fragile the infrastructure really was. Now the building you manage has gone offline and it's up to you to recover the batteries needed to get it back up and running.
 

@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://platane.github.io/js13k-2017/postmortem
 ---
 You are lost in a museum.
 

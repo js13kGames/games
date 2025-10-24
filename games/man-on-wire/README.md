@@ -12,5 +12,3 @@ I'm french, it's 9/11, the theme is about being offline, so I made this little t
 You have 1 minute to cross the gap between the Twin Towers. Tilt your head on the left or on the right to stay balanced.
 
 PS: I included Babylon.js to respect the rules, but the game is done entirely with vanilla HTML + JS + CSS3D!
-
-Making-of coming soon on http://xem.github.io/articles/#js13k18 (along with my 2 other team entries)

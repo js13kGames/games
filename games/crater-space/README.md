@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/picosonic/js13k-2021-mobile/blob/main/devdiary/diary.md
 ---
 On the moon of planet Figadore the Regolith starships have returned, but they are using advanced cloaking techniques to remain invisible. You must discover the hiding place of the last 3 remaining starships by firing splat missiles.
 

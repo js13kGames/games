@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://github.com/amolinasalazar/LightsBackOn/blob/master/README.md
 ---
 There is a blackout!
 You decide to go alone in the dark and look for the fuse box, but this is not an easy job.

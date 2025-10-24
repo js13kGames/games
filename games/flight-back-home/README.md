@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://dev.to/johnkilmister/random-learnings-from-entering-js13k-games-2019-4pcn
 ---
 Watch the outbound route of the plane then complete the route back home by tapping on the correct cells in order including the final landing. Be warned if you go off course your plane will crash.
 

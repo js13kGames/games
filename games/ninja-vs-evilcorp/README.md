@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://remvst.medium.com/ninja-vs-evilcorp-postmortem-ceaa4ca96a83
 ---
 The bad and generic EVILCORP is believed to have come up with evil plans. As a ninja, your goal is to find those evil plans by hacking into its computers as quickly as possible.
 

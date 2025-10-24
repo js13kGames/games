@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://engineering.wingify.com/posts/js13k-game-development/#anti_virus
 ---
 In the era when internet was not everywhere, we all used various offline storage devices to save our precious data. But viruses corrupted our data so many times. Out objective is to go into those devices and kill those viruses.
 

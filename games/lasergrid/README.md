@@ -1,5 +1,6 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
+post: https://timmykokke.com/blog/2018/2018-09-18-js13kgames-2018-postmortem
 ---
 Oh no! The entire laser grid is offline! Maybe you can help fix it? 
 
