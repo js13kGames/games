@@ -1,7 +1,10 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 directors_cut: https://lopis.github.io/meow-mountain/
-post: https://dev.to/lopis/meow-mountain-postmortem-of-a-13kb-game-5fb6
+post:
+  url: https://dev.to/lopis/meow-mountain-postmortem-of-a-13kb-game-5fb6
+  date: 2025-09-16
+  summary: I was able to preserve my 8-year streak of participating in this game jam. I'd like to share some of the "low-tech tech" I've used — many of these are low-level development techniques that help me create tiny games.
 ---
 The spirit cat, protector of the valley and guardian of Meow Mountain, took a slightly too long nap. In that time, the 
 valley fell into disarray - the protective barrier keeping evil spirits at bay has collapsed, and the weary villagers 

@@ -1,6 +1,9 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
-post: https://roblouie.com/article/1316/the-making-of-whiskers-witch-adventure-js13k-2025/
+post:
+  url: https://roblouie.com/article/1316/the-making-of-whiskers-witch-adventure-js13k-2025/
+  date: 2025-09-16
+  summary: Building upon my js13k 3d game engine, that I have been improving since 2022. Full animation, efficient spherical skybox, refined third-person camera, lightweight web audio synths, and a simple particle system — all within tight zip size limits.
 ---
 Every Halloween the 13 witches of Whimsywick cast a Halloween party spell, bringing the jack-o-lanterns to life and
 creating magical bubbles across the town. But this year the spell went wrong! The witches are trapped in the bubbles

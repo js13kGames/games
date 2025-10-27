@@ -1,6 +1,9 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
-post: https://reitgames.com/news/building-triska-the-ninja-cat
+post:
+  url: https://reitgames.com/news/building-triska-the-ninja-cat
+  date: 2025-09-26
+  summary: Triska the Ninja Cat is full of action, challenge, and a bandana that moves on its own. In this post, I’ll share how I used AI to speed up game development and bring everything together.
 ---
 ## Controls
 

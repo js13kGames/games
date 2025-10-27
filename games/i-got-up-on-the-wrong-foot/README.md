@@ -1,7 +1,11 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 video: https://youtu.be/XwFYRf13knM
-post: https://xem.github.io/articles/js13k25.html
+post:
+  url: https://xem.github.io/articles/js13k25.html
+  date: 2025-09-16
+  summary: How I built a top-20 js13kGames placement with a black-cat themed point-and-click adventure full of SVG graphics, a day-night cycle and dozens of superstitions — and broke the record for most js13k submissions over the years.
+---
 ---
 > [!NOTE]
 > Due to an SVG bug in Firefox, this game currently looks better in Webkit browsers (Chrome, Edge, Safari)

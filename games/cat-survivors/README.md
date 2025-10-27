@@ -1,7 +1,10 @@
 ---
 directors_cut: https://eliasku.win/s/cat-survivors/
 video: https://youtu.be/qy2ndPHUXfs
-post: https://eliasku.win/blog/cat-survivors-js13k-2025-postmortem/
+post: 
+  url: https://eliasku.win/blog/cat-survivors-js13k-2025-postmortem/
+  date: 2025-09-15
+  summary: How we cloned Vampire Survivors with a black cat in just 13KB. A detailed breakdown of code, graphics, audio, and the build process. Secrets of JavaScript minification, ditching WebGL, and mastering Canvas.
 ---
 An exciting story about a hunter cat inspired by **Vampire Survivors** game.
 
