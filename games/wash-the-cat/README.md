@@ -1,6 +1,7 @@
 ---
 # See github.com/js13kGames/games for supported frontmatter
 directors_cut: https://dilpleu-games.itch.io/wash-the-cat
+post: https://homerdilpleu.github.io/articles/postmortem-wash-the-cat.html
 video: https://youtu.be/GsF1nQEg3Oc
 ---
 "Wash the Cat" is a puzzle game where you must manipulate a hydraulic system to clean a dirty black cat!
