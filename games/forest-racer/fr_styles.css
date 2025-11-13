@@ -1,5 +1,0 @@
-html,body{height:100%;}
-body{text-align:center;background:#45484d;background:linear-gradient(to bottom, #45484d 0%, #000000 100%);}
-div#backdrop{margin:30px auto;background:white;overflow:auto;padding:10px 0 50px;width:900px;border-radius:10px;}
-div#playarea{margin:0 auto;width:800px;height:600px;}
-div#playarea canvas{width:800px;height:600px;}
