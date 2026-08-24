@@ -1,0 +1,429 @@
+<!--
+en:
+Unfortunately, I don’t know English, so the translations and words may be bad.
+tr:
+Maalesef, İngilizce bilmiyorum, bu yüzden çeviriler ve kelimeler hatalı olabilir.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicorn Sitter</title>
+    <style>
+        body{
+            height: 100vh;
+            background: linear-gradient(-45deg,red,yellow,aqua,purple);
+background-size:300% 300%;
+overflow: hidden;
+animation: e1 12s infinite ease-in-out;
+        }
+        @keyframes e1{
+            0%{
+                background-position: 0% 50%;
+            }
+            50%{
+                background-position: 100% 50%;
+            }
+            100%{
+                background-position: 0% 50%;
+            }
+        }
+        #a{
+            font-family: 'Segoe UI';
+            height: 200px;
+            align-items: flex-end;
+            display: flex;
+            width: 150px;
+        }
+        #a *{
+border: 1px solid;
+border-radius: 5px;
+box-shadow: 1px 1px;
+height: 100px;
+width: 25px;
+margin-left: 10px;
+transition: all 0.3s ease;
+        }
+#b{
+background-color: aqua;
+}
+#d{
+background-color: rgb(255, 0, 0);
+}
+#c{
+background-color: rgb(0, 255, 106);
+}
+#e{
+background-color: rgb(217, 255, 0);
+}
+#h{
+    margin-top: 50px;
+    padding: 20px;
+    background-color: rgb(83, 83, 83);
+    border-radius: 15px;
+}
+button{
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    font-family:Verdana, sans-serif;
+    font-size: 18px;
+    border: 1px solid;
+    border-width: 3px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: rgb(230, 230, 230);
+    box-shadow: 1px 1px;
+}
+h3, h4{
+    font-size: 22px;
+}
+#o div{
+background-color: antiquewhite;
+border-radius: 10px;
+padding: 15px;
+margin-top: 30px;
+border: 1px solid;
+border-width: 3px;
+font-style: italic;
+display: none;
+}
+#oly{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    justify-content:center;
+    position:fixed;
+    width: 100%;
+    text-align: center;
+    font-family:cursive;
+    font-style: italic;
+    font-weight: 900;
+    text-shadow: 0 0 9px;
+    height: 30%;
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <p id="g1"></p>
+    <div id="oly">
+        <h2 id="yz1"></h2>
+        <button onclick="BT()">Okay</button>
+    </div>
+    <div id="a">
+        <div id="b"></div>
+        <div id="c"></div>
+        <div id="d"></div>
+        <div id="e"></div>
+    </div>
+    <div id="h">
+        <button onclick="B1()" class="btn">Give rainbow candy</button>
+        <button onclick="B2()" class="btn">Look after it</button>
+        <button onclick="B3()" class="btn">Go out with it</button>
+    </div>
+    <div id="o">
+        <div id="a1">
+            <h3>Event: The unicorn is exhausted.</h3>
+            <button onclick="OC1()">Try to heal</button>
+            <button onclick="OC2()">Ignore.</button>
+        </div>
+        <div id="a2">
+            <h3>Event: The unicorn began to make you angry</h3>
+            <button onclick="OC11()">Get angry at it</button>
+            <button onclick="OC12()">Ignore</button>
+            <button onclick="OC13()">Kick it out of the house</button>
+        </div>
+        <div id="a3">
+            <h3>Event: The unicorn is bored.</h3>
+            <button onclick="OC21()">Look after it</button>
+            <button onclick="OC22()">Ignore</button>
+        </div>
+        <div id="a4">
+            <h3>Event: The unicorn is having a rest.</h3>
+            <button onclick="OC31()">Look after it</button>
+            <button onclick="OC32()">Ignore</button>
+            <button onclick="B3()">Go out with it</button>
+        </div>
+        <div id="a5">
+            <h3>Event: The unicorn is investigating the Unicorn Elimination Force.</h3>
+            <button onclick="OC41()">Research together</button>
+            <button onclick="OC42()">Ignore</button>
+        </div>
+        <div id="a6">
+            <h3>Event: The unicorn states that it wants to be a debugger.</h3>
+            <button onclick="OC51()">Okay</button>
+            <button onclick="OC52()">NO</button>
+        </div>
+        <div id="snc1">
+            <h3>Unicorn Elimination Force attacked the unicorn.</h3>
+            <button onclick="SNC1()">Attempt to rescue.</button>
+            <button onclick="SNC2()">Ignore</button>
+        </div>
+        <div id="snc2">
+            <h3>The unicorn became more exhausted.</h3>
+            <button onclick="OC1()">Try to heal</button>
+            <button onclick="SNC12()">Ignore</button>
+        </div>
+        <div id="tklm1">
+        <h4>Click 10 times in 3 seconds.</h4>
+        <button onclick="TKL()" id="clickbutton">Click</button>
+    </div>
+    </div>
+    <script>
+        var km = 50;
+        var ka = 50;
+        var ks = 50;
+        var en = 50;
+        var tklm = 0;
+        var hst = "la";
+        var sr1 = 0;
+        var oldm1 = "la";
+        var o = "neam";
+        var chz,tryc;
+        var oldm2 = "la";
+        document.getElementById("g1").innerText = "Hello! Let me tell you about the game: \n The blue bar represents the unicorn’s hunger. \n The green bar represents the unicorn’s happiness. \n The red bar represents the unicorn’s anger. \n The yellow bar represents your energy. \n Winning conditions in the game: \n Anger must be below 30. \n Energy must be above 80. \n Happiness must be above 100. \n Hunger must be above 60.";
+        var audioCtx = null;
+        console.log("As-salamu alaykum.");
+        if(navigator.userAgent.toLowerCase().includes("mobile") ||navigator.userAgent.toLowerCase().includes("android") ||navigator.userAgent.toLowerCase().includes("iphone")){
+chz = "Mobile";
+        }
+        else{
+            chz = "PC";
+        }
+        if(navigator.userAgent.toLowerCase().includes("firefox")){
+tryc = "Firefox";
+        }
+        else if(navigator.userAgent.toLowerCase().includes("edg")){
+tryc = "Edge";
+        }
+        else if(navigator.userAgent.toLowerCase().includes("chrome")){
+tryc = "Chrome";
+        }
+        else if(navigator.userAgent.toLowerCase().includes("safari")){
+tryc = "Safari";
+        }
+        else{
+tryc = "?";
+        }
+        var btns = document.getElementsByTagName("button");
+        for(var i = 0;i < btns.length;i++){
+            btns[i].addEventListener("click", function(){
+                if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        var random3 = Math.random();
+var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if(random3 <= 0.1){
+    osc.type ="sawtooth";
+    }
+    else if(random3 <= 0.4){
+    osc.type ="sine";
+    }
+    else if(random3 <= 0.6){
+    osc.type ="square";
+    }
+    else{
+        osc.type ="triangle";
+    }
+    osc.frequency.value = Math.round((Math.random() * 4) * 100 + 500);
+
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.12);
+    osc.stop(audioCtx.currentTime + 0.04);
+            });
+        }
+        function OLYG(abc){
+            document.getElementById("oly").style.display = "block";
+            document.getElementById("yz1").innerText = abc;
+            document.getElementById("o").style.display = "none";
+            document.getElementById("h").style.display = "none";
+            document.getElementById("a").style.display = "none";
+        }
+        function B1(){
+    en -= 1;
+    ka += 3;
+    km += 1;
+        }
+        function B2(){
+    en -= 5;
+    ka -= 2;
+    km += 6;
+    ks -= 1;
+        }
+        function B3(){
+    en -= 6;
+    ka -= 4;
+    km += 8;
+    ks -= 3;
+    var random1 = Math.random();
+    if(random1 <= 0.1){
+        tklm = 0;
+document.getElementById("snc1").style.display = "block";
+    }
+        }
+        function OC1(){
+            o = "neam";
+en -= 3;
+    km += 4;
+    document.getElementById("a1").style.display = "none";
+    document.getElementById("snc2").style.display = "none";
+        }
+        function OC2(){
+            hst = "neam";
+            o = "neam";
+    km -= 24;
+    ks += 10;
+    document.getElementById("a1").style.display = "none";
+setTimeout(function(){
+    document.getElementById("snc2").style.display = "block";
+}, Math.round(Math.random() * 30000));
+        }
+        function OC11(){
+            o = "neam";
+    km -= 3;
+    ks += 1;
+    document.getElementById("a2").style.display = "none";
+        }
+        function OC12(){
+            o = "neam";
+    km += 2;
+    en -= 3;
+    document.getElementById("a2").style.display = "none";
+        }
+        function OC13(){
+    document.body.innerHTML = "<center><h1>You entered this game to care about me, NOT to kick me out of the house!</h1></center>";
+        }
+        function OC21(){
+            o = "neam";
+    km += 3;
+    en -= 2;
+    document.getElementById("a3").style.display = "none";
+        }
+        function OC22(){
+            o = "neam";
+    document.getElementById("a3").style.display = "none";
+        }
+        function OC31(){
+            o = "neam";
+            km += 4;
+    en -= 2;
+    document.getElementById("a4").style.display = "none";
+        }
+        function OC32(){
+            o = "neam";
+    document.getElementById("a4").style.display = "none";
+        }
+        function OC41(){
+            o = "neam";
+            km += 2;
+            tklm = 2;
+    en -= 1;
+    document.getElementById("a5").style.display = "none";
+        }
+        function OC42(){
+            o = "neam";
+            km -= 1;
+    document.getElementById("a5").style.display = "none";
+        }
+        function OC51(){
+            o = "neam";
+            oldm2 = "neam";
+            km += 6;
+            ks -= 3;
+    document.getElementById("a6").style.display = "none";
+        }
+        function OC52(){
+            o = "neam";
+            oldm2 = "nea";
+            km -= 3;
+            ks += 1;
+    document.getElementById("a6").style.display = "none";
+        }
+        function TKL(){
+            tklm++;
+            if(tklm == 10){
+                oldm1 = "la";
+                document.getElementById("tklm1").style.display = "none";
+            }
+        }
+        function SNC1(){
+            oldm1 = "neam";
+    document.getElementById("snc1").style.display = "none";
+    document.getElementById("tklm1").style.display = "block";
+        }
+        function SNC2(){
+            OLYG();
+    document.getElementById("yz1").innerHTML = "The Unicorn Elimination Force captured the unicorn.";
+        }
+        function SNC12(){
+            OLYG("Unicorn: The person using the " + tryc + " browser, I will restart you out of the game");
+        }
+        setInterval(function(){
+            ka -= 2;
+            km--;
+            en += Math.round(Math.random() * 4);
+if(oldm1 == "neam"){
+    sr1++;
+    if(sr1 == 3){
+        SNC2();
+    }
+}
+if(km >= 80){
+    ks -= 2;
+}
+else if(km <= 0){
+    ks += 3;
+}
+if(ka <= 20){
+    km -= 3;
+}
+        }, 1000);
+        setInterval(function(){
+document.getElementById("b").style.height = ka * 2 + "px";
+document.getElementById("c").style.height = km * 2 + "px";
+document.getElementById("d").style.height = ks * 2 + "px";
+document.getElementById("e").style.height = en * 2 + "px";
+if(o == "neam"){
+var random2 = Math.round(Math.random() * 5) + 1;
+if(random2 == 6 && oldm2 !== "la"){
+    random2 = 5;
+}
+document.getElementById("a" + random2).style.display = "block";
+o = "la";
+}
+if(oldm2 == "neam"){
+    km -= 1;
+    ks += 1;
+}
+if(ks >= 100){
+    OLYG("Unicorn: Why do you make me angry?");
+}
+else if(ks <= 30 && en >= 80 && km >= 100 && ka >= 60){
+    OLYG("You made it, bro");
+}
+else if(en <= 0){
+    OLYG("You are very tired");
+}
+else if(ka <= 0){
+    OLYG("The unicorn is very hungry.You failed, the person using the " + tryc + " Browser.");
+}
+        }, 200);
+        function BT(){
+            window.location.href = location.href;
+        }
+    </script>
+</body>
+</html>
