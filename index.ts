@@ -12,15 +12,7 @@ export default {
       // one level higher, so unless we're dealing with a virtual path, passthrough to the assets CDN.
       if (uri.indexOf('.') >= 0) {
         if (uri.slice(-4) == '.zip') {
-          // Rewrite to support `play.js13kgames.com/my-game.zip` URLs.
-          url.pathname = uri.slice(0, -4) + '/.src/g.zip'
-
-          // Attempt to fetch from locally attached static files and pass through to origin on failure.
-          return env.PLAY.fetch(url, req)
-            .then(res => res.ok
-              ? res
-              : fetchFromOrigin(url.pathname, req)
-            )
+          return fetchPackage(uri.slice(0, -4), req)
         }
 
         return env.ASSETS.fetch(req)
@@ -55,6 +47,26 @@ export default {
     // Proxy through to our backend directly as a last resort.
     return fetchFromOrigin(uri, req)
   }
+}
+
+async function fetchPackage(slug: string, req: Request) {
+  let response = await fetch(
+    `https://raw.githubusercontent.com/js13kGames/${encodeURIComponent(slug)}/HEAD/.website/game.zip`,
+    {
+      method: req.method,
+      headers: req.headers,
+      cf: {
+        cacheEverything: true,
+        cacheTtl: 300
+      }
+    }
+  )
+
+  response = new Response(response.body, response)
+  if (response.ok) {
+    response.headers.set('Content-Disposition', `attachment; filename="${slug}.zip"`)
+  }
+  return response
 }
 
 const naiveBots = /(?<! cu)bots?|crawl|http|scan|search|spider/i
