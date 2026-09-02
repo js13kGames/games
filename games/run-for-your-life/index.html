@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Run for your life</title>
+  <style>
+    body {
+      margin: 0;
+      background: #663300;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+    }
+  #cb canvas {
+    /* cursor: none; */
+    background-color: #19e1d6;
+    width: 100%;
+    display: block;
+  }
+  
+  div#cb {
+    width: 100vw;
+    height: 76vw;
+    max-height: 100vh;
+    max-width: 199.57vh;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  </style>
+</head>
+<body>
+<div id="cb"></div>    
+  <script>
+    "use strict";
+
+    class Timer{
+    constructor(t){
+        this.start = t;
+        this.time = t;
+        this.enabled = t>0;
+    }
+
+    Set(t){
+        this.time = t;
+        this.enabled = t>0;
+    }
+    Update(dt){
+        var r = false;
+        if(this.enabled){
+            this.time -= dt;
+
+            if(this.time <= 0)
+            {
+                this.time = 0;
+                this.enabled = false;
+                r = true;
+            }
+        }
+        return r;
+    }
+}
+var TinySound = function (s) {
+    
+  // https://github.com/KilledByAPixel/ZzFX
+  
+  let zzfx,zzfxV,zzfxX;
+
+  zzfxV=.5;    // volume
+  zzfx= (p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0)=>{let M=Math,R=44100,d=2*M.PI,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,g=0,H=0,a=0,n=1,I=0,J=0,f=0,x,h;e=R*e+9;m*=R;r*=R;t*=R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;for(h=e+m+r+t+c|0;a<h;k[a++]=f)++J%(100*F|0)||(f=q?1<q?2<q?3<q?M.sin((g%d)**3):M.max(M.min(M.tan(g),1),-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.round(g/d)-g/d):M.sin(g),f=(l?1-B+B*M.sin(d*a/l):1)*(0<f?1:-1)*M.abs(f)**D*p*zzfxV*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/2+(c>a?0:(a<h-c?1:(h-a)/c)*k[a-c|0]/2):f),x=(b+=u+=y)*M.cos(A*H++),g+=x-x*E*(1-1E9*(M.sin(a)+1)%2),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n||=1);p=zzfxX.createBuffer(1,h,R);p.getChannelData(0).set(k);b=zzfxX.createBufferSource();b.buffer=p;b.connect(zzfxX.destination);b.start();return b}
+  zzfxX=new(AudioContext||webkitAudioContext) // audio context
+      
+  var snds = s;
+
+    function play(n) {
+      zzfx(...snds[n]);
+      }
+    
+      return{
+          Play: function(n)
+          {
+              play(n);
+          }
+      }
+    }
+    var ShitMusic = function () {
+      
+let tranny1="Mary had a little tranny: E D C D E E E";
+let tranny2="Little hom, little tranny: D D D E E E";
+let tranny3="Its fleece was white as snow: E D C D E E E";
+let tranny4="And everywhere that tranny went: D D D E D C";
+let tranny5="a man in a nappy and pup mask would follow";
+      var score = [0,1,2,1,0,0,0,9, 1,1,1,9,0,0,0,9, 0,1,2,1,0,0,0,9, 1,1,0,1,2];
+      //var tune = [0,2,3,4,2,3];
+      // var score = [0,2,3,4,2,3];
+      // var tune = [0,2,3,4,2,3];
+      var notes = [
+        [1.0,0,164.8138,.18,.13,.48,1,2.6,,,,,.14,,,.1,,.65,.01,.15,941],//E
+        [1.0,0,146.8324,.18,.13,.48,1,2.6,,,,,.14,,,.1,,.65,.01,.15,941],//D
+        [1.0,0,130.8128,.18,.13,.48,1,2.6,,,,,.14,,,.1,,.65,.01,.15,941]
+          // [.4,0,110,.03,.66,.28,,3.5,,,,,,.1,,,,.47,.08],//A0
+          // [.4,0,82,.03,.66,.28,,3.5,,,,,,.1,,,,.47,.08],// E0
+
+          // [.2,0,123,.03,.66,.28,,3.5,,,,,,.1,,,,.47,.08],// B0
+          // [.2,0,65,.03,.66,.28,,3.5,,,,,,.1,,,,.47,.08],// C0
+          // [.2,0,97,.03,.66,.28,,3.5,,,,,,.1,,,,.47,.08]// G0
+      ];
+
+      var tm = new Timer(0);
+      var snd = new TinySound(notes);
+      var n = 0;
+      var m = 0;
+      var f = 1;
+      var x = 0;
+      var t = 0;
+        return{
+            Play: function(s, u)
+            {
+              t=u;
+              n=0;
+              x=0;
+              f=s||1;
+              tm.Set(1);
+            },
+            Stop: function(r)
+            {
+              if(r)tm.enabled = 0;
+              x=1;
+            },
+            OneOf: function(arr){
+                return arr[this.RndI(0,arr.length)];
+            },
+            //int min to max-1
+            RndI: function (min, max){
+                return ((Math.random() * (max-min))|0) + min;
+            },
+            Update: function(dt){
+              if(tm.Update(dt)){
+                m=score[n];
+                //if(n==0) m = this.OneOf([0,1]);
+
+                if(m==9){
+                  tm.Set(0.6*f);
+                  n++;
+                }
+                else{
+                  snd.Play(m);
+                  n++;
+
+                  if(n==score.length) {
+                    // if(x){
+                    //   tm.enabled = 0;
+                    // }
+                    // else{
+                      n = 0;
+                      tm.Set(1.5*f);
+                    //   if(t)
+                    //     score = tune.slice(0, 1).concat(tune.slice(1).sort(() => Math.random() - 0.5));
+                    //   else score = tune;
+                    // }
+                  }
+                  else
+                  {
+                    tm.Set(0.4*f);
+                  }
+                }
+              }
+            }
+        }
+      }
+
+class KeyInput{
+    
+    static pres = [];//pressed
+    static rel = [];//released
+
+    static IsDown(k1, k2) {
+        return this.pres[k1] || this.pres[k2];
+    }
+
+    static IsSingle(key) {
+        var k = this.pres[key] && (this.rel[key] !== null || this.rel[key]);
+        if(k){
+            this.rel[key] = null;
+        }
+        return k;
+    }
+    
+    static Pressed(e, status) {
+        var k = this.SetKey(e);
+        this.pres[k] = status;
+        return k;
+    }
+
+    static Released(e, status) {
+        var k = this.SetKey(e);
+        this.rel[k] = status;
+    }
+
+    static SetKey(event) {
+        return event.key;
+    }
+}
+
+class GamePad extends KeyInput{
+    static pads = () => (navigator.getGamepads ? Array.from(navigator.getGamepads()) : []).filter(x => !!x);
+
+    static bpres = [];
+    static meta = [
+        {i:1,v:-1,b:12},
+        {i:1,v:1,b:13},
+        {i:0,v:-1,b:14},
+        {i:0,v:1,b:15}];
+
+    static Btn(i, p, h) {
+        const pads = this.pads();        
+        try {
+            var s = pads[p].buttons[i].pressed;
+            var d = (h&&s) || (s && (this.bpres[i+10] != s));
+            this.bpres[i+10] = s;
+            return d;
+        } catch (e) {}
+    };
+
+    static Joy(p, i, h){
+        var m = this.meta[i];
+        var s = this.Pad(m.i,m.v, p) || this.Btn(m.b, p, h);
+        var d = (h&&s) || (s && (this.bpres[i] != s));
+        this.bpres[i] = s;
+        return d;
+    }
+
+    static Pad (i, v, p) {
+        const pads = this.pads();
+        try {
+            if (Math.abs(v - pads[p].axes[i]) < 0.5) {
+                return true;
+            }
+        } catch (e) {}
+    };
+
+    static Pads(){
+        return this.pads();
+    }
+}
+
+class TouchPad extends GamePad{
+    static TouchEnabled = false;
+    static tpres = [];
+
+    static zones = [
+        {x:0, t:200},
+        {x:700,t:900},
+        {x:201, t:699}];
+    
+    static press = [];
+
+    static Init(canvas, enabled, rend){//, b2){
+        this.TouchEnabled = enabled;
+        this.rend = rend;
+
+        var m = this;
+        var TouchMove = function(e){
+            e.preventDefault();
+            if (e.touches) {
+                var rect = canvas.getBoundingClientRect(); // abs. size of element
+                m.press = [];
+                for (var i = 0; i < e.touches.length; i++) {
+                    var touch = e.touches[i];
+                    m.press.push({e:1,
+                        x:Math.round((touch.pageX - rect.left)*(canvas.width / rect.width)),
+                        y:Math.round((touch.pageY - rect.top)*(canvas.height / rect.height))});
+                }
+                
+            } 
+        }
+
+        var TouchEnd = function(e){
+            e.preventDefault();
+            m.press = [];
+        }
+
+        canvas.addEventListener("touchstart", TouchMove);
+        canvas.addEventListener("touchmove", TouchMove);
+        canvas.addEventListener("touchend", TouchEnd);
+        canvas.addEventListener("touchcancel", TouchEnd);
+    }
+
+    static Touched(i) {
+        var s = this.Touch(i);
+        var d = s && (this.tpres[i] != s);
+        this.tpres[i] = s;
+        return d;
+    }
+
+    static Touching(i) {
+        var s = this.Touch(i);
+        this.tpres[i] = s;
+        return s;
+    }
+
+    // static Any() {
+    //     return this.press.length > 0;
+    // }
+
+    static Touch(indx) {
+        for (var i = 0; i < this.press.length; i++) {
+            var p = this.press[i];
+            var z = this.zones[indx];
+            console.log(p.x,z.x,z.t);
+            return p.x > z.x && p.x < z.t;
+        } 
+        return 0;
+    }
+}
+
+class Input extends TouchPad{
+
+    static LeftS(){return this.Touched(0) || this.IsSingle('a') || this.IsSingle('ArrowLeft') || this.Joy(0,2,0)}
+    static RightS(){return this.Touched(1) || this.IsSingle('d') || this.IsSingle('ArrowRight') || this.Joy(0,3,0)}
+    static Space(){return this.Touched(2) || this.IsSingle(' ') || this.Btn(0,0)}
+}
+
+
+onkeydown = function(e)
+{
+	e.preventDefault();
+    Input.Pressed(e, true);
+};
+
+onkeyup = function(e)  {
+	e.preventDefault();
+    Input.Pressed(e, false);
+    Input.Released(e, true);
+};
+
+onblur = function(e)  {
+	e.preventDefault();
+    Input.pressedKeys = {};
+};
+
+var Mob = window.ontouchstart !== undefined;
+
+var WR = 211;
+var MUSIC = new ShitMusic();
+let spriteSheet = null;
+
+
+// Example frame definitions — adjust to match your PNG
+const playerFrames = [
+  { x: 176,   y: 0,   w: 32, h: 48 },
+  { x: 208,  y: 0,   w: 32, h: 48 },
+  { x: 240,  y: 0,   w: 32, h: 48 },
+
+  { x: 112,   y: 64,   w: 32, h: 48 },
+  { x: 144,  y: 64,   w: 32, h: 48 },
+  { x: 272,  y: 0,   w: 32, h: 48 },
+
+  { x: 176,   y: 48,   w: 32, h: 48 },
+  { x: 208,  y: 48,   w: 32, h: 48 },
+  { x: 240,  y: 48,   w: 32, h: 48 },
+
+  { x: 0,   y: 112,   w: 32, h: 48 },
+  { x: 32,  y: 112,   w: 32, h: 48 },
+  { x: 64,  y: 112,   w: 32, h: 48 },
+  { x: 96,  y: 112,   w: 32, h: 48 }
+];
+
+const messages = ["Run for it", "Run for your life", "LEG IT!" ,"Watch your a**"];
+const names = ["Norm", "Pixie", "Stan", "Kathy"];
+const unicornFrames = [
+  { x: 100,   y: 0,  w: 37, h: 32 },
+  { x: 137,  y: 0,  w: 37, h: 32 },
+  { x: 100,   y: 32,  w: 37, h: 32 },
+  { x: 137,  y: 32,  w: 37, h: 32 }
+];
+
+const trany_copperlist = { x: 300,   y: 64,  w: 4, h: 24 }
+const groundFrames = [
+  { x: 0,   y: 0,  w: 100, h: 100 }
+];
+
+let TITLE = 0;
+let SELECTION = 1;
+let GAME = 2;
+let GAMOVER = 3;
+let waitfor_transvestite = 0;
+let flash=0;
+let stage = TITLE;
+let playerFrameIndex = 0;
+let unicornFrameIndex = 0;
+
+let uniframeTimer = 48;
+let uniframeInterval = 0; // lower = faster animation
+let uniMaxFrame = 2;
+
+let plrframeTimer = 64;
+let plrframeInterval = 0; // lower = faster animation
+let plrMaxFrame = 2;
+// World positions
+let playerWorldX = 0;
+let unicornWorldX = -500;          // unicorn starts behind you
+let hugepenis = 0;
+let dildo = -8;
+let G = 0.2;
+let Z = 0;
+let messageId = 0;
+let messageTm = 0;
+let lastChance = false;
+// Screen position where we *draw* the player (stays central-ish)
+const playerScreenX = 500;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+Input.Init(canvas, Mob);
+
+    canvas.width = 180*5;
+	  canvas.height = 90*5;
+    ctx.imageSmoothingEnabled = false;    
+    var b = document.getElementById("cb");
+    b.appendChild(canvas);
+
+    const transvestite = { x: 500, y: 310 };
+    let unicorn = { x: 80, y: 344 };
+
+
+    let running = false;
+
+// Player
+let playerSpeed = 0;
+let playerMaxSpeed = 12;
+let playerAcceleration = 0.5;
+let playerDeceleration = 0.08;
+let trany_scale = 3;//set the scale of the perverts
+let selectedHomo = 0;
+
+// Unicorn
+let unicornSpeed = 0;
+let wg = 0;
+let chasing = false;
+let tranyDist = 0;
+
+//cartoon
+playerMaxSpeed = 14;
+playerAcceleration = 1;
+
+
+
+    const groundTiles = [];
+    const tileWidth = 100;
+
+    for (let i = 0; i < 10; i++) {
+      groundTiles.push({ x: i * tileWidth, y: 350 });
+    }
+
+  function resetGame() {
+    transvestite.x= 500;
+    transvestite.y= 310;
+    unicorn.x = 80;
+    unicorn.y=344;
+    playerSpeed = 0;
+    unicornSpeed=0;
+    playerWorldX = 0;
+    unicornWorldX = -500;  
+    dildo = -8;
+    playerFrameIndex = 0;
+    unicornFrameIndex = 0;
+    Z = 0;
+    lastChance = false;
+    wg = 0;
+  }
+
+
+function update() {
+
+  if(stage == TITLE){
+
+    if(Input.LeftS()){
+      if(selectedHomo>0)
+      {
+        selectedHomo--;
+      }
+    }
+    else if(Input.RightS()){
+      if(selectedHomo<3)
+      {
+        selectedHomo++;
+      }
+    }
+    if(Input.Space()){
+      stage = GAME;
+      messageId = ((Math.random() * (4-0))|0) + 0;
+      messageTm = 300;
+    }
+    MUSIC.Update(0.0166);
+  }
+  else if(stage == GAME){  
+    if(messageTm > 0){
+      messageTm--;
+      
+    }
+    MUSIC.Update(0.0266); 
+    running = Input.Space();  
+
+    // TRANY SPEED
+    if (running) {
+      // make tranny run faster
+      playerSpeed += playerAcceleration;
+      if (playerSpeed > playerMaxSpeed) playerSpeed = playerMaxSpeed;
+    } 
+
+    // decelerate when not pressing
+    playerSpeed -= playerDeceleration;
+    if (playerSpeed < 0) playerSpeed = 0;
+
+    plrframeInterval += playerSpeed;
+    if(plrframeInterval>plrframeTimer){
+      plrframeInterval = 0;
+      playerFrameIndex++;
+      if(playerFrameIndex==plrMaxFrame){
+        playerFrameIndex=0;
+      }
+    }
+
+    // UNICORN SPEED - make unicorn chase the homo
+    if(playerSpeed>unicornSpeed){
+      unicornSpeed = playerSpeed;
+    }
+
+    uniframeInterval += unicornSpeed;
+    if(uniframeInterval>uniframeTimer){
+      uniframeInterval = 0;
+      unicornFrameIndex++;
+      if(unicornFrameIndex==uniMaxFrame){
+        unicornFrameIndex=0;
+      }
+    }
+    // MOVE BOTH IN WORLD SPACE
+    playerWorldX += playerSpeed;
+
+    if (playerSpeed > 0) {
+      chasing = true;
+    }
+
+    unicornWorldX += unicornSpeed;
+
+    tranyDist = playerWorldX - unicornWorldX;
+  }
+  else if(stage == GAMOVER){
+    
+    transvestite.x+=4;
+    transvestite.y+=dildo;
+    Z+=0.1;
+    dildo+=G;
+    if(waitfor_transvestite>0){
+      waitfor_transvestite--;
+    }
+    else{
+      if(Input.Space()){
+      if(playerWorldX/100 > WR)
+      {
+        WR = playerWorldX/100;
+      }
+        resetGame();
+        stage = TITLE;
+      }
+    }
+  }
+
+  // CAMERA
+  const cameraX = playerWorldX - playerScreenX;
+  window.currentCameraX = cameraX;
+
+  // SCROLL GROUND
+  for (let tile of groundTiles) {
+    tile.x -= playerSpeed;
+    if (tile.x < -tileWidth) {
+      tile.x += tileWidth * groundTiles.length;
+    }
+  }
+
+  if(stage == GAME){
+    // CHASE CHECK
+    if (!lastChance && unicornWorldX >= playerWorldX - 100) {
+      lastChance = true;
+          messageId = ((Math.random() * (4-0))|0) + 0;
+        messageTm = 300;
+    }
+    const catchDistance = 40;
+    if (unicornWorldX >= playerWorldX - catchDistance) {
+      stage=GAMOVER;
+      waitfor_transvestite = 300;
+      playerSpeed = 0;
+      playerFrameIndex = 2;
+      tranyDist = 300;
+      MUSIC.Stop();
+
+    }    
+  }
+
+}
+
+function PT(p){
+        return Math.round(p);
+    }
+
+function draw() {
+  flash++;
+  if(flash>60){
+    flash=0;
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if(stage==GAMOVER){
+    const tf = trany_copperlist;
+    let lgb = flash>30 ? 40:0
+    ctx.drawImage(
+          spriteSheet,
+          tf.x, tf.y, tf.w, tf.h,
+          PT(0), lgb,
+          900, 350+lgb
+          );
+  }
+
+  const cameraX = window.currentCameraX || 0;
+
+  // Ground (already using tile.x, fine)
+  const gf = groundFrames[0];
+  for (let tile of groundTiles) {
+    ctx.drawImage(
+        spriteSheet,
+        gf.x, gf.y, gf.w, gf.h,
+        PT(tile.x), tile.y,
+        tileWidth, 100
+        );
+  }
+
+// Draw unicorn sprite
+hugepenis = tranyDist<128 ? 2 :0;
+const uf = unicornFrames[unicornFrameIndex+hugepenis];
+const unicornScreenX = unicornWorldX - currentCameraX;
+
+ctx.drawImage(
+  spriteSheet,
+  uf.x, uf.y, uf.w, uf.h,
+  PT(unicornScreenX - uf.w / 2),
+  unicorn.y - uf.h,
+  uf.w*trany_scale, uf.h*trany_scale
+);
+
+if (selectedHomo==3 && stage==GAMOVER){
+  wg+=4;
+  const pf = playerFrames[playerFrameIndex+((selectedHomo)*3)+1];
+  ctx.drawImage(
+    spriteSheet,
+    pf.x, pf.y, pf.w, pf.h,
+    500+wg,
+    310 - pf.h,
+    pf.w*(trany_scale), pf.h*(trany_scale)
+  );
+  }
+
+// Draw player sprite
+const pf = playerFrames[playerFrameIndex+(selectedHomo*3)];
+ctx.drawImage(
+  spriteSheet,
+  pf.x, pf.y, pf.w, pf.h,
+  stage==GAME ? 
+  PT(playerScreenX - pf.w / 2)
+  : transvestite.x,
+  transvestite.y - pf.h,
+  pf.w*(trany_scale+Z), pf.h*(trany_scale+Z)
+);
+
+ctx.fillStyle = "#fff";
+  ctx.font = "36px sans-serif";
+  ctx.fillText("Run for your LIFE", 300, 30);
+  ctx.font = "23px sans-serif";
+  ctx.fillText("World Record:" + WR.toFixed(1)+"m", 300, 60);
+if(stage == TITLE){
+  ctx.fillStyle = "#fff";
+
+  ctx.font = "16px sans-serif";
+  ctx.fillText("< Select player >", 490, 240);
+  ctx.fillText(names[selectedHomo], 530, 260);
+    if(Mob){
+      ctx.fillText("Tap to start", 230, 130);
+    }
+    else{
+      ctx.fillText("Press SPACE to start", 330, 130);
+    }
+}
+else if(stage==GAME){ //ingame
+  ctx.fillStyle = "#fff";
+  ctx.font = "24px sans-serif";
+  ctx.fillText("Distance: " + (playerWorldX/100).toFixed(1)+"m", 300, 100);
+
+  if(messageTm){
+    ctx.font = "20px sans-serif";
+    ctx.fillText(messages[messageId]+" "+names[selectedHomo], 300, 140);
+  }
+}
+else if(stage==GAMOVER){//gameover
+    ctx.fillStyle = "#f44336";
+    ctx.font = "24px sans-serif";
+    ctx.fillText("GAME OVER - You'll never be the same", 200, 80);
+    ctx.fillText("Distance: " + (playerWorldX/100).toFixed(1)+"m", 10, 100);
+    if(playerWorldX/100 > WR){
+      ctx.fillText("You got the World Record. Your a real hero now", 10, 120);
+    }
+    if(waitfor_transvestite == 0){
+      ctx.font = "16px sans-serif";
+      if(Mob){
+        ctx.fillText("Tap to retry", 230, 150);
+      }
+      else{
+        ctx.fillText("Press SPACE to retry", 230, 150);
+      }
+
+    }
+}
+
+
+}
+
+
+    function loop() {
+
+        update();
+        
+
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    resetGame();
+    MUSIC.Play();
+
+     spriteSheet = new Image();
+    spriteSheet.src = "tony.png";
+    spriteSheet.onload = function() { 
+        loop();
+    };
+    //loop();
+
+
+
+  </script>
+</body>
+</html>
