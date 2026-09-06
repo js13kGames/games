@@ -4,29 +4,20 @@ var player = 0;
 var level;
 
 socket.on('srv-msg', function(data) {
-	if(parseInt(data[0]) == player)
-	{	
-		switch(data[1])
-		{
-			case 'p':
-				player = parseInt(data[2]);
-			break;
-
-			case 'a':
-				document.getElementById('info').innerHTML = data.substring(2);
-			break;
-
-			default:
-				level = data;
-				update();
-			break;
-
-		}
-	}
-	else //Everybody can spectate
-	{
-		level = data;
+	var message = data && data.msg;
+	if(Array.isArray(message)) {
+		level = message;
 		update();
+		return;
+	}
+	if(typeof message !== 'string' || parseInt(message[0]) != player) return;
+	switch(message[1]) {
+		case 'p':
+			player = parseInt(message[2]);
+			break;
+		case 'a':
+			document.getElementById('info').innerHTML = message.substring(2);
+			break;
 	}
 });
 

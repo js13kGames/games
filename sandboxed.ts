@@ -3,7 +3,6 @@ export default {
   'critter-defense': 1,
   'senshi': 1,
   'world-is-falling': 1,
-  // TODO(alcore) Needs quite a bit of time due to poor bundling in the source.
   'runrun-rabbit': 1,
   'pixel-quest': 1,
   'untitled13': 1,
@@ -86,7 +85,6 @@ export default {
   'game-of-backstabbers': 1,
   // TODO(alcore) Highscore-only (and implemented through WS instead of req/res)
   'beat-bricks': 1,
-  // TODO(alcore) Unknown issue.
   'slipstream-13k': 1,
   'fallback': 1,
   'throw-back': 1,
@@ -96,7 +94,6 @@ export default {
   'the-last-link': 1,
   'fx404seconds': 1,
   'players-not-found': 1,
-  // TODO(alcore) Nonexisting multiplayer, but possibly just due to unfinished game. Could move out of Online category and to Unfinished.
   'league-of-heroes': 1,
   // TODO(alcore) Issues with actually starting the game. @aurium might know more.
   'planetary-an-starship-fight-game': 1,
@@ -122,11 +119,9 @@ export default {
   'chess-arena': 1,
   'yoyo-haku-pool': 1,
   'deathmatch-dungeon': 1,
-  // TODO(alcore) Host/join appears broken (worlds get created, but can't be joined).
   'wasteworld': 1,
   'cooking-for-skully': 1,
   'kill-9': 1,
-  // TODO(alcore) Custom server implementation. Broken i.a. due to use of SSE.
   '13': 1,
   'planet-b': 1
 }

@@ -51,7 +51,7 @@ export default {
 
 async function fetchPackage(slug: string, req: Request) {
   let response = await fetch(
-    `https://raw.githubusercontent.com/js13kGames/${encodeURIComponent(slug)}/HEAD/.website/game.zip`,
+    `https://raw.githubusercontent.com/js13kGames/${ slug }/HEAD/.website/game.zip`,
     {
       method: req.method,
       headers: req.headers,
@@ -64,14 +64,38 @@ async function fetchPackage(slug: string, req: Request) {
 
   response = new Response(response.body, response)
   if (response.ok) {
-    response.headers.set('Content-Disposition', `attachment; filename="${slug}.zip"`)
+    response.headers.set('Content-Disposition', `attachment; filename="${ slug }.zip"`)
   }
   return response
 }
 
 const naiveBots = /(?<! cu)bots?|crawl|http|scan|search|spider/i
+type BotManagementSignals = {
+  score?: number
+  verifiedBot?: boolean
+  jsDetection?: { passed?: boolean }
+}
+
+type RequestWithBotSignals = Request & {
+  cf?: {
+    verifiedBotCategory?: string
+    botManagement?: BotManagementSignals | null
+  }
+}
+
 function isBot(req: Request) {
-  return req.cf.verifiedBotCategory || naiveBots.test(req.headers.get('user-agent'))
+  const
+    cf = (req as RequestWithBotSignals).cf,
+    botManagement = cf?.botManagement,
+    score = botManagement?.score
+
+  return Boolean(
+    cf?.verifiedBotCategory ||
+    botManagement?.verifiedBot ||
+    (typeof score === 'number' && score < 30) ||
+    botManagement?.jsDetection?.passed === false ||
+    naiveBots.test(req.headers.get('user-agent') || '')
+  )
 }
 
 async function fetchFromOrigin(uri: string, req: Request) {
