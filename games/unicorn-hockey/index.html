@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicorn Hockey</title>
+    <style>
+        :root {
+            --ice: #e8f4f8;
+            --ink: #14233a;
+            --accent: #f6bd60;
+            --red: #e63946;
+            --blue: #4361ee;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle at 50% 20%, #24344f 0%, #0e1626 70%);
+            font-family: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+        }
+
+        #gameContainer {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+
+        #title {
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #fff;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 0 var(--red), 0 4px 0 var(--blue), 0 6px 14px rgba(0,0,0,0.5);
+        }
+
+        #score {
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        canvas {
+            border: 4px solid #0b1220;
+            border-radius: 14px;
+            background-color: var(--ice);
+            display: block;
+            margin: 0 auto 14px;
+            cursor: none;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.55);
+        }
+
+        #instructions {
+            color: #cdd8e6;
+            font-size: 14px;
+            margin-top: 6px;
+            line-height: 1.7;
+        }
+        #instructions kbd {
+            background: #1d2b45;
+            border: 1px solid #33507e;
+            border-bottom-width: 3px;
+            border-radius: 6px;
+            padding: 1px 7px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        #goalMessage {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 68px;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 3px 3px 0 var(--red), 6px 6px 10px rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+            letter-spacing: 2px;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(8, 14, 26, 0.78);
+            z-index: 200;
+            border-radius: 14px;
+            backdrop-filter: blur(3px);
+        }
+        #gameOverOverlay { display: none; }
+
+        .overlayCard {
+            background: linear-gradient(160deg, #ffffff, #eef3fa);
+            padding: 34px 44px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+            max-width: 420px;
+        }
+
+        .overlayTitle {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--ink);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .overlaySub { color: #5a6b82; font-size: 15px; margin-bottom: 22px; }
+        .overlayIcon { font-size: 60px; margin-bottom: 8px; }
+
+        .diffLabel {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #7a8aa0;
+            margin-bottom: 12px;
+        }
+
+        .btnRow { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 14px 22px;
+            border-radius: 12px;
+            color: #fff;
+            transition: transform 0.08s ease, filter 0.15s ease;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover { filter: brightness(1.08); }
+        .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.25); }
+        .btn.easy   { background: #43aa8b; }
+        .btn.medium { background: var(--accent); color: #3a2c00; }
+        .btn.hard   { background: var(--red); }
+        .btn.again  { background: var(--blue); margin-top: 4px; padding: 14px 34px; }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="title">🦄 Unicorn Hockey</div>
+        <div id="score">Player: 0 | Computer: 0</div>
+        <canvas id="gameCanvas" width="1000" height="600"></canvas>
+        <div id="instructions">
+            <p><kbd>W A S D</kbd> / <kbd>Arrows</kbd> Skate &nbsp;·&nbsp; <kbd>Shift</kbd> Boost + Body-check &nbsp;·&nbsp; <kbd>Space</kbd> Hold to charge a shot, release to fire</p>
+            <p>Skate into the computer to steal the puck. First to 7 goals wins!</p>
+        </div>
+
+        <!-- Start menu -->
+        <div class="overlay" id="startOverlay">
+            <div class="overlayCard">
+                <div class="overlayIcon">🏒</div>
+                <div class="overlayTitle">🦄Unicorn🦄 Hockey</div>
+                <div class="overlaySub">Charge your shots, body-check for the steal, and outscore that pesky shark!</div>
+                <div class="diffLabel">Choose your difficulty</div>
+                <div class="btnRow">
+                    <button class="btn easy"   onclick="startGame('easy')">Easy</button>
+                    <button class="btn medium" onclick="startGame('medium')">Medium</button>
+                    <button class="btn hard"   onclick="startGame('hard')">Hard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game over -->
+        <div class="overlay" id="gameOverOverlay">
+            <div class="overlayCard">
+                <div class="overlayIcon">🏆</div>
+                <div class="overlayTitle" id="winnerText">You Win!</div>
+                <div class="overlaySub">Rematch?</div>
+                <div class="btnRow">
+                    <button class="btn easy"   onclick="startGame('easy')">Easy</button>
+                    <button class="btn medium" onclick="startGame('medium')">Medium</button>
+                    <button class="btn hard"   onclick="startGame('hard')">Hard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="goalMessage">GOAL!</div>
+
+    <script src="game.js"></script>
+</body>
+</html>
