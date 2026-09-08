@@ -1,7 +1,7 @@
 import sandboxed from './sandboxed'
 
 export default {
-  fetch(req: Request, env: Record<string, any>) {
+  async fetch(req: Request, env: Record<string, any>) {
     const
       url = new URL(req.url),
       uri = url.pathname.slice(1)
@@ -29,6 +29,13 @@ export default {
       if (isBot(req)) {
         // Perma-redirect for crawlers, since we would rather people hit the game's page than the game directly.
         return Response.redirect('https://js13kgames.com/games/' + game, 308)
+      }
+
+      // Only forward a request to the container when the asset service does not have that path. This keeps client
+      // assets out of the container image and avoids starting a container for an ordinary asset request.
+      if (req.method === 'GET' || req.method === 'HEAD') {
+        const asset = await env.ASSETS.fetch(req)
+        if (asset.status !== 404) return asset
       }
 
       return env.RUNTIME.fetch(req)
