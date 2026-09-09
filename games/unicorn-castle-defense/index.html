@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicorn Rainbow Defense</title>
+
+<link rel="stylesheet" href="./styles.css">
+    
+</head>
+<body>
+
+<header>
+    <h1>✨ Unicorn Castle Defense: Rainbow Rush</h1>
+</header>
+
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    <div id="boss-warning">🌈 BOSS WAVE!</div>
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <div id="modal-title" class="modal-title">Castle Lost</div>
+            <p id="modal-message">The rainbow magic faded...</p>
+            <button id="modal-btn" class="modal-btn">Try Again</button>
+        </div>
+    </div>
+</div>
+
+<div id="ui-panel">
+    <div class="stats-bar">
+        <div class="stat-item">💖 Hearts: <span id="lives">5</span></div>
+        <div class="stat-item">🌟 Magic: <span id="money-display">150</span></div>
+        <div class="stat-item">🌈 Wave: <span id="wave-display">1</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="controls" id="tower-controls"></div>
+      
+        <div class="tower-btn" id="upgrade-btn">
+            <div class="tower-icon">🔨</div>
+            <div class="tower-cost">+</div>
+            <div class="tower-name">Boost</div>
+        </div>
+        
+        <button id="wave-btn">Start!</button>
+        <button id="save-btn" style="background:linear-gradient(135deg,#ff9ecb,#a78bfa); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; box-shadow:0 4px 12px rgba(168,85,247,0.25);">💾 Save</button>
+        <button id="load-btn" style="background:linear-gradient(135deg,#7dd3fc,#86efac); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; box-shadow:0 4px 12px rgba(14,165,233,0.25);">📂 Load</button>
+        <button id="bgm-btn" style="background:linear-gradient(135deg,#f472b6,#fbbf24); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; box-shadow:0 4px 12px rgba(236,72,153,0.25);">🎵 BGM ON</button>
+    </div>
+</div>
+
+
+<script src="./game.js"></script>
+</body>
+</html>
