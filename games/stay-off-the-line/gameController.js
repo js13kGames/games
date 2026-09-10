@@ -4,6 +4,7 @@ var skyArea;
 var enemies = new Array();
 var gameControl;
 var myPauseButton;
+var scoreStorageKey = "stay-off-the-line-scores";
 
 class gameStateController
 {
@@ -1184,12 +1185,12 @@ function randomIntFromInterval(min,max)
 function updateLocalStorage(score)
 {
 	//init if there is no local storage already
-	if(localStorage.getItem("scores") == null)
+	if(localStorage.getItem(scoreStorageKey) == null)
 	{
 		initLocalStorage();
 	}
 	//get array out of local storage
-	var tempLocalArray = JSON.parse(localStorage.getItem("scores"));
+	var tempLocalArray = JSON.parse(localStorage.getItem(scoreStorageKey));
 	
 	for(var i = 0; i < tempLocalArray.length; i++)
 	{
@@ -1208,7 +1209,7 @@ function updateLocalStorage(score)
 
 	//save updated array back to local storage
 
-	localStorage.setItem("scores", JSON.stringify(tempLocalArray));
+	localStorage.setItem(scoreStorageKey, JSON.stringify(tempLocalArray));
 
 	//displays scores on HTML
 	displayScores();
@@ -1222,14 +1223,14 @@ function initLocalStorage()
 	{
 		tempArray.push(0);
 	}
-	localStorage.setItem("scores", JSON.stringify(tempArray));
+	localStorage.setItem(scoreStorageKey, JSON.stringify(tempArray));
 }
 
 function displayScores()
 {
 	var table = document.getElementById("scoreTable");
 	table.innerHTML = "";
-	var tempLocalArray = JSON.parse(localStorage.getItem("scores"));
+	var tempLocalArray = JSON.parse(localStorage.getItem(scoreStorageKey));
 	gameControl.highScore = tempLocalArray[0];
 
 	for(var i = 0; i < tempLocalArray.length; i++)
