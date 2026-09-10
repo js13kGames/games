@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<head>
-	<meta charset="utf8">
-	<style>
-		*, button {
+<!DOCTYPE html> <head><title>Counting Mind - js13kGames 2024</title> <style> *, button {
 			/*box-sizing: border-box;*/
 		}
 		body {
@@ -99,24 +95,4 @@
 			font-size: 10pt;
 			text-align: left;
 			text-shadow: -1px 1px #f44, 1px 1px cyan;
-		}
-	</style>
-</head>
-<body>
-	<div class="desc">
-		<p>You have to click the button only when the equation does NOT equal 13. You gain a point by clicking correctly and lose a point otherwise.</p>
-		<p>Play as long you want to excercise your math skills.</p>
-		<p>You can put your 3d-glasses 🕶</p>
-	</div>
-	<div class="desc"></div>
-	<span class="equation label" id="equation">2 + 3 * 5</span><span class="result label" id="result"></span>
-	<div class="button-wrapper">
-		<button id="ok">ok</button>
-		<div id="bar" class="bar"></div>
-		<div id="good-or-bad" class="good-or-bad" ></div>
-	</div>
-	<div class="label" id="points"></div>
-
-	<script src="index.js"></script>
-
-</body>
+		} </style> </head> <body> <div class="desc"> <p>You have to click the button only when the equation does NOT equal 13. You gain a point by clicking correctly and lose a point otherwise.</p> <p>Play as long you want to excercise your math skills.</p> <p>You can put your 3d-glasses 🕶</p> </div> <div class="desc"></div> <span class="equation label" id="equation">2 + 3 * 5</span><span class="result label" id="result"></span> <div class="button-wrapper"> <button id="ok">ok</button> <div id="bar" class="bar"></div> <div id="good-or-bad" class="good-or-bad"></div> </div> <div class="label" id="points"></div> <script>const timeForAnswer=5e3,rnd=e=>~~(Math.random()*e),equationEl=document.getElementById("equation"),resultEl=document.getElementById("result"),pointsEl=document.getElementById("points"),barEl=document.getElementById("bar"),goodOrBadEl=document.getElementById("good-or-bad"),okEl=document.getElementById("ok");function generateEquation(e){let t;if(Math.random()<.3){const n=rnd(20)+1,o=rnd(4)+2,i=n*o;t=i<=e?`${n} * ${o} + ${e-i}`:`${n} * ${o} - ${i-e}`}else{let n,o;n=rnd(20)+1,n<=e?(o=e-n,t=`${n} + ${o}`):(o=n-e,t=`${n} - ${o}`)}return t}function generateResult(){let e;return Math.random()<.4?e=13:(e=rnd(21),e>=13&&e++),e}let equation,autoAnswerTimeout,points=0;function nextEquation(){const e=generateResult(),t=generateEquation(e);equation={result:e,label:t},equationEl.innerText=t,pointsEl.innerText="points: "+points}function answer(e){barEl.classList.remove("waiting"),okEl.style.visibility="hidden",resultEl.innerText=" = "+equation.result,e!=(13==equation.result)?(goodOrBadEl.innerText="Wrong!",barEl.classList.add("wrong"),points--):(goodOrBadEl.innerText="Good!",points++,barEl.classList.add("good")),pointsEl.innerText="points: "+points,setTimeout(()=>{nextChallenge()},2e3)}function nextChallenge(){okEl.style.visibility="visible",resultEl.innerText="",barEl.classList.remove("good"),barEl.classList.remove("wrong"),goodOrBadEl.innerText="",barEl.classList.add("waiting"),nextEquation(),autoAnswerTimeout=setTimeout(()=>{answer(!0)},5e3)}nextChallenge(),document.getElementById("ok").addEventListener("click",()=>{clearTimeout(autoAnswerTimeout),answer(!1)})</script> </body> 

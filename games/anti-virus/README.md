@@ -1,4 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
-Play the game as a an Anti Virus defending the file system of your computer from glitches, viruses, and bugs! Buy upgrades, use items, and beat your high score!

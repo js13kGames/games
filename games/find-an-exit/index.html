@@ -1,14 +1,1 @@
-<body>
-    <div id="wrapper">
-        <canvas id="canvas"></canvas>
-        <style>
-            #wrapper {
-                height: fit-content;
-                width: fit-content;
-                display: block;
-                margin: 0 auto;
-            }
-        </style>
-        <script src="./build/game.js" type="module"></script>
-    </div>
-</body>
+<title>Find an Exit - js13kGames 2020</title><body> <div id="wrapper"> <canvas id="canvas"></canvas> <style>#wrapper{height:fit-content;width:fit-content;display:block;margin:0 auto}</style> <script type="module">import{clr}from"./build/common.js";import{GRAVITY,TILE_SIZE}from"./build/constants.js";import{keyPressed}from"./build/controller.js";import Player from"./build/player.js";import StartScreen from"./build/start_screen.js";import getLevels from"./build/levels.js";import WinScreen from"./build/win_screen.js";let player,newLevelStarted=!1,gameStarted=!1,playerWon=!1,currentLevelNumber=0,Levels=getLevels(),startScreen=new StartScreen,winScreen=new WinScreen;function update(timeStep=1){if(gameStarted){if(!newLevelStarted){const playerStartingPoint={x:Levels[currentLevelNumber].start[0]*TILE_SIZE,y:Levels[currentLevelNumber].start[1]*TILE_SIZE};return player=new Player(playerStartingPoint),newLevelStarted=!0,player}if(player){let lastPlayerState=player;return player.dy+=GRAVITY,Levels[currentLevelNumber].handleVerticalCollision(player),player.jump(timeStep),Levels[currentLevelNumber].handleHorizontalCollision(player),player.move(timeStep),player.adjustBoundingBox(),Levels[currentLevelNumber].reachedFakeExit(player)&&player.loseLife(),(Levels[currentLevelNumber].reachedExit(player)||0===player.health)&&(gameStarted=!1,newLevelStarted=!1,Levels=getLevels(),Levels[currentLevelNumber].reachedExit(player)&&(playerWon=!0)),lastPlayerState}}else keyPressed[0]&&(gameStarted=!0)}function render(player){clr(),playerWon?(winScreen.render(),setTimeout(()=>{playerWon=!1},2e3)):gameStarted?(Levels[currentLevelNumber].render(player),player?.render()):gameStarted||startScreen.render()}const fps=60,timeStep=1e3/60;let currentTime=performance.now(),timeAccumulator=0,currentTimeState=0,previousTimeState=0;function loop(timestamp){if(timestamp<currentTimeState+timeStep)return void requestAnimationFrame(loop);let lastPlayerState,frameTime=timestamp-currentTime;for(currentTime=timestamp,timeAccumulator+=frameTime;timeAccumulator>=timeStep;)previousTimeState=currentTimeState,lastPlayerState=update(),timeAccumulator-=timeStep;const alpha=timeAccumulator/timeStep;currentTimeState=currentTimeState*alpha+previousTimeState*(1-alpha),render(lastPlayerState),requestAnimationFrame(loop)}requestAnimationFrame(loop)</script> </div> </body>

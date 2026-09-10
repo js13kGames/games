@@ -1,5 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
-Press W A S D to move the ball... survive...
-Could you find the Easter Egg?

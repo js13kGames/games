@@ -1,4 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
-You are an illegal alien trying to get into the Land of the Free. Unfortunately for you, a fearless yellow leader wants you to GET LOST! Jump your way to freedom if you dare...

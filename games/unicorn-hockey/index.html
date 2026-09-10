@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unicorn Hockey</title>
+    <title>Unicorn Hockey - js13kGames 2026</title>
     <style>
         :root {
             --ice: #e8f4f8;
@@ -199,6 +199,940 @@
     </div>
     <div id="goalMessage">GOAL!</div>
 
-    <script src="game.js"></script>
+    <script>
+// ============================================================================
+//  UNICORN HOCKEY
+//  Smooth delta-time motion, chargeable shots, body-check/boost, sound & FX,
+//  and a beatable computer opponent (Easy / Medium / Hard).
+// ============================================================================
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const goalMessage = document.getElementById('goalMessage');
+const scoreDisplay = document.getElementById('score');
+const gameOverOverlay = document.getElementById('gameOverOverlay');
+const winnerText = document.getElementById('winnerText');
+const startOverlay = document.getElementById('startOverlay');
+
+const W = canvas.width;
+const H = canvas.height;
+
+// ---------------------------------------------------------------------------
+//  Difficulty presets — tuned so EASY is comfortably winnable.
+//  compSpeed   : top skating speed of the computer
+//  reactionMs  : how sluggishly the AI's "perceived" puck catches up to reality
+//                (bigger = slower reflexes = easier)
+//  aimError    : random spread (px) added to the AI's shots
+//  shootCd     : ms between AI shots
+//  deadzone    : how far off it lets the puck drift before reacting
+//  goalieMs    : goalie reaction lag (bigger = leakier net = easier to score)
+//  goalieSpeed : how fast the goalie can scroll to cut off a shot
+// ---------------------------------------------------------------------------
+const DIFFICULTY = {
+    // compSpeed values are the original tuning * 0.8 (shark is 20% slower on all 3 modes)
+    // goalieSpeed: easy = baseline (2.72); medium = +20% over baseline; hard = +25% over baseline
+    // aimError: easy unchanged (blind center aim). medium tightened for a harder mode;
+    // hard is exactly half medium's spread (2x as accurate), on top of open-net targeting.
+    easy:   { compSpeed: 2.0, reactionMs: 420, aimError: 60, shootCd: 1700, deadzone: 30, goalieMs: 260, goalieSpeed: 2.0,  label: 'Easy' },
+    medium: { compSpeed: 2.6, reactionMs: 210, aimError: 20, shootCd: 1150, deadzone: 18, goalieMs: 150, goalieSpeed: 3.0,  label: 'Medium' },
+    hard:   { compSpeed: 3.2, reactionMs: 90,  aimError: 10, shootCd: 800,  deadzone: 10, goalieMs: 80,  goalieSpeed: 3.5,  label: 'Hard' },
+};
+let diff = DIFFICULTY.easy;
+
+// ---------------------------------------------------------------------------
+//  State
+// ---------------------------------------------------------------------------
+const keys = {};
+let gameState = 'menu';            // 'menu' | 'playing' | 'over'
+let score = { player: 0, computer: 0 };
+let winner = null;
+let puckHeldBy = 'player';         // 'player' | 'computer' | null
+let goalPending = false;
+
+let charging = false;              // player winding up a shot
+let chargePower = 0;               // 0..1
+let compShootCooldown = 0;
+let compStealCooldown = 0;
+let playerStealCooldown = 0;
+
+let shakeTime = 0;                 // screen-shake timer (ms)
+let shakeMag = 0;
+let flashTime = 0;                 // goal flash
+
+const WIN_SCORE = 7;
+const MAX_CHARGE_MS = 900;
+
+// ---------------------------------------------------------------------------
+//  Entities
+// ---------------------------------------------------------------------------
+const player = {
+    x: 150, y: H / 2 - 26, width: 42, height: 52,
+    vx: 0, vy: 0, baseSpeed: 4.6, accel: 0.9, friction: 0.80,
+    bob: 0, boost: 1, boostCd: 0, facing: 1, team: '#e63946',
+};
+
+const computerPlayer = {
+    x: W - 190, y: H / 2 - 26, width: 42, height: 52,
+    vx: 0, vy: 0, bob: 0, facing: -1, team: '#4361ee',
+    perceived: { x: W / 2, y: H / 2 }, // lagged read of the puck
+};
+
+const puck = {
+    x: player.x + 80, y: player.y + 26, radius: 8,
+    vx: 0, vy: 0, color: '#111', trail: [],
+};
+
+const leftGoalie  = { x: 78,       y: H / 2 - 26, width: 30, height: 52, py: H / 2 };
+const rightGoalie = { x: W - 108,  y: H / 2 - 26, width: 30, height: 52, py: H / 2 };
+
+const leftNet  = { x: 30,      y: H / 2 - 70, width: 42, height: 140 };
+const rightNet = { x: W - 72,  y: H / 2 - 70, width: 42, height: 140 };
+
+const centerLineX = W / 2;
+
+// The red zone faceoff circles (drawn at 0.2W / 0.8W, radius 46 — see drawRink)
+// double as the skating boundary: neither player may cross into the near edge
+// of the circles on their opponent's side of the ice.
+const RED_CIRCLE_R = 46;
+const leftRedCircleX  = W * 0.2 + RED_CIRCLE_R;   // shark's forward limit into the player's zone
+const rightRedCircleX = W * 0.8 - RED_CIRCLE_R;   // player's forward limit into the shark's zone
+
+const particles = [];
+
+// ---------------------------------------------------------------------------
+//  Audio — tiny Web Audio synth (no asset files needed)
+// ---------------------------------------------------------------------------
+let audioCtx = null;
+function initAudio() {
+    if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch (e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+function beep(freq, dur, type = 'square', vol = 0.15, slideTo = null) {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+    gain.gain.setValueAtTime(vol, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + dur);
+}
+const sShoot = (p) => beep(180 + p * 260, 0.09, 'square', 0.18, 90);
+const sWall  = () => beep(120, 0.05, 'triangle', 0.10);
+const sSave  = () => beep(90, 0.12, 'sawtooth', 0.12, 60);
+const sHit   = () => beep(70, 0.10, 'square', 0.16, 40);
+function sHorn() {
+    if (!audioCtx) return;
+    [330, 415, 495].forEach((f, i) => setTimeout(() => beep(f, 0.55, 'sawtooth', 0.10), i * 90));
+}
+
+// ---------------------------------------------------------------------------
+//  Input
+// ---------------------------------------------------------------------------
+window.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
+    keys[e.key] = true;
+    initAudio();
+
+    // Begin charging a shot on first press of space (while holding the puck)
+    if (e.key === ' ' && gameState === 'playing' && puckHeldBy === 'player' && !charging) {
+        charging = true;
+        chargePower = 0.22;
+    }
+    // Boost / body-check
+    if ((e.key === 'Shift') && gameState === 'playing' && player.boostCd <= 0) {
+        player.boost = 2.05;
+        player.boostCd = 950;
+        spawnSpray(player.x + player.width / 2, player.y + player.height, player.team);
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+    if (e.key === ' ' && charging) {
+        releaseShot(chargePower);
+        charging = false;
+        chargePower = 0;
+    }
+});
+
+// ---------------------------------------------------------------------------
+//  Shooting
+// ---------------------------------------------------------------------------
+function releaseShot(power) {
+    if (gameState !== 'playing' || puckHeldBy !== 'player') return;
+    puckHeldBy = null;
+    const speed = 7 + power * 15;                    // 7..22
+    puck.vx = speed;
+    // Aim: hold Up/Down at release to pick a corner
+    let aim = 0;
+    if (keys['ArrowUp'] || keys['w'])   aim = -1;
+    if (keys['ArrowDown'] || keys['s']) aim =  1;
+    puck.vy = aim * (2 + power * 4);
+    sShoot(power);
+}
+
+function computerShoot() {
+    if (puckHeldBy !== 'computer') return;
+    puckHeldBy = null;
+    const speed = 9 + Math.random() * 5;
+    puck.vx = -speed;
+
+    let targetY;
+    if (diff === DIFFICULTY.easy) {
+        // Easy: blind — always aims for the middle of the net
+        targetY = (leftNet.y + leftNet.height / 2) + (Math.random() - 0.5) * diff.aimError;
+    } else {
+        // Medium/Hard: reads the goalie's current coverage and picks whichever
+        // gap (above or below the goalie) is bigger, then shoots at the middle
+        // of that open gap instead of the net's fixed center
+        const netTop = leftNet.y, netBottom = leftNet.y + leftNet.height;
+        const gTop = leftGoalie.y, gBottom = leftGoalie.y + leftGoalie.height;
+        const gapAbove = Math.max(0, gTop - netTop);
+        const gapBelow = Math.max(0, netBottom - gBottom);
+        const openMid = gapAbove >= gapBelow ? (netTop + gTop) / 2 : (gBottom + netBottom) / 2;
+        targetY = openMid + (Math.random() - 0.5) * diff.aimError;
+    }
+    targetY = Math.max(leftNet.y + 8, Math.min(leftNet.y + leftNet.height - 8, targetY));
+
+    // Increase the vertical aiming power so the AI's shot actually heads
+    // toward the intended target faster (improves scoring chance).
+    puck.vy = (targetY - puck.y) * 0.12;
+    compShootCooldown = diff.shootCd;
+    sShoot(0.5);
+}
+
+// ---------------------------------------------------------------------------
+//  Updates (dt-scaled — `f` is frames elapsed, 1.0 at 60fps)
+// ---------------------------------------------------------------------------
+function updatePlayer(f, dtMs) {
+    let ax = 0, ay = 0;
+    if (keys['ArrowUp'] || keys['w'])    ay -= 1;
+    if (keys['ArrowDown'] || keys['s'])  ay += 1;
+    if (keys['ArrowLeft'] || keys['a'])  ax -= 1;
+    if (keys['ArrowRight'] || keys['d']) ax += 1;
+
+    if (ax !== 0) player.facing = ax > 0 ? 1 : -1;
+    if (ax !== 0 && ay !== 0) { ax *= 0.707; ay *= 0.707; }
+
+    const maxSpeed = player.baseSpeed * player.boost;
+    player.vx += ax * player.accel * f;
+    player.vy += ay * player.accel * f;
+
+    // Friction when no input on that axis
+    if (ax === 0) player.vx *= Math.pow(player.friction, f);
+    if (ay === 0) player.vy *= Math.pow(player.friction, f);
+
+    // Clamp speed
+    const sp = Math.hypot(player.vx, player.vy);
+    if (sp > maxSpeed) { player.vx = player.vx / sp * maxSpeed; player.vy = player.vy / sp * maxSpeed; }
+
+    player.x += player.vx * f;
+    player.y += player.vy * f;
+
+    // Bounds — player may roam their own zone + neutral ice freely, but can't
+    // cross into the shark's zone past the red faceoff circles
+    player.x = Math.max(6, Math.min(rightRedCircleX - player.width, player.x));
+    player.y = Math.max(6, Math.min(H - player.height - 6, player.y));
+
+    // Skating bob + boost decay
+    player.bob += sp * 0.06 * f;
+    player.boost += (1 - player.boost) * 0.12 * f;
+    if (player.boost < 1.02) player.boost = 1;
+    if (player.boostCd > 0) player.boostCd -= dtMs;
+
+    if (sp > 5) spawnSpray(player.x + player.width / 2, player.y + player.height - 2, player.team, 0.25);
+}
+
+function updateComputer(f, dtMs) {
+    const c = computerPlayer;
+
+    // Lagged perception of the puck = the core "reflex" knob
+    const follow = Math.min(1, dtMs / diff.reactionMs);
+    c.perceived.x += (puck.x - c.perceived.x) * follow;
+    c.perceived.y += (puck.y - c.perceived.y) * follow;
+
+    // Vertical tracking with a deadzone
+    const cCenterY = c.y + c.height / 2;
+    const dy = c.perceived.y - cCenterY;
+    if (Math.abs(dy) > diff.deadzone) c.y += Math.sign(dy) * diff.compSpeed * f;
+
+    // Horizontal goal
+    let targetX;
+    if (puckHeldBy === 'computer') {
+        targetX = leftNet.x + leftNet.width + 60;      // carry toward player's net
+    } else {
+        targetX = Math.max(6, c.perceived.x - 60);
+    }
+    const dx = targetX - c.x;
+    if (Math.abs(dx) > 4) { c.x += Math.sign(dx) * diff.compSpeed * f; c.facing = Math.sign(dx) || c.facing; }
+
+    // Bounds — shark can't cross into the player's zone past the red faceoff circles
+    c.x = Math.max(leftRedCircleX, Math.min(W - c.width - 6, c.x));
+    c.y = Math.max(6, Math.min(H - c.height - 6, c.y));
+    c.bob += diff.compSpeed * 0.05 * f;
+
+    if (compShootCooldown > 0) compShootCooldown -= dtMs;
+
+    // Shoot when it has the puck, is in range, and roughly aimed — must get
+    // in close to the attacking zone rather than firing from center ice
+    if (puckHeldBy === 'computer' && compShootCooldown <= 0) {
+        const inRange = c.x <= leftRedCircleX + 160;
+        const aimed = Math.abs((c.y + c.height / 2) - (leftNet.y + leftNet.height / 2)) < 200;
+        if (inRange && aimed) computerShoot();
+    }
+}
+
+function updatePuck(f) {
+    if (puckHeldBy === 'player') {
+        puck.x = player.x + player.width / 2 + player.facing * 22;
+        puck.y = player.y + player.height / 2 + 6;
+        puck.vx = puck.vy = 0;
+        pushTrail();
+        return;
+    }
+    if (puckHeldBy === 'computer') {
+        puck.x = computerPlayer.x + computerPlayer.width / 2 + computerPlayer.facing * 22;
+        puck.y = computerPlayer.y + computerPlayer.height / 2 + 6;
+        puck.vx = puck.vy = 0;
+        pushTrail();
+        return;
+    }
+
+    if (goalPending) { pushTrail(); return; } // sits in the net during the goal celebration
+
+    puck.x += puck.vx * f;
+    puck.y += puck.vy * f;
+    puck.vx *= Math.pow(0.988, f);
+    puck.vy *= Math.pow(0.988, f);
+    pushTrail();
+
+    const B = 8; // inner edge of the boards
+
+    // Top / bottom boards — reflect away from the wall (no sticking)
+    if (puck.y - puck.radius <= B) {
+        puck.y = B + puck.radius; puck.vy = Math.abs(puck.vy) * 0.85;
+        if (Math.abs(puck.vy) > 1) sWall();
+    } else if (puck.y + puck.radius >= H - B) {
+        puck.y = H - B - puck.radius; puck.vy = -Math.abs(puck.vy) * 0.85;
+        if (Math.abs(puck.vy) > 1) sWall();
+    }
+
+    // Pickups (contact-based)
+    if (isColliding(puck, player))         { pickUp('player'); return; }
+    if (isColliding(puck, computerPlayer)) { pickUp('computer'); return; }
+
+    // Goals — puck crosses a goal line inside the net mouth
+    const inLeftMouth  = puck.y > leftNet.y  && puck.y < leftNet.y  + leftNet.height;
+    const inRightMouth = puck.y > rightNet.y && puck.y < rightNet.y + rightNet.height;
+    if (inLeftMouth  && puck.x - puck.radius <= leftNet.x + leftNet.width) { handleGoal('computer'); return; }
+    if (inRightMouth && puck.x + puck.radius >= rightNet.x)                { handleGoal('player');   return; }
+
+    // Left / right end boards — bounce (net openings were handled just above)
+    if (puck.x - puck.radius <= B) {
+        puck.x = B + puck.radius; puck.vx = Math.abs(puck.vx) * 0.85;
+        if (Math.abs(puck.vx) > 1) sWall();
+    } else if (puck.x + puck.radius >= W - B) {
+        puck.x = W - B - puck.radius; puck.vx = -Math.abs(puck.vx) * 0.85;
+        if (Math.abs(puck.vx) > 1) sWall();
+    }
+}
+
+// Projects the puck's flight (with top/bottom board bounces) forward to a
+// goalie's mouth line, so the goalie can set up on the shot's actual path
+// instead of reacting to whatever y the puck happens to be at right now.
+function predictPuckIntercept(targetX, fromX, fromY, vx, vy) {
+    if (Math.abs(vx) < 0.05) return fromY;
+    const B = 8;
+    let x = fromX, y = fromY, dvx = vx, dvy = vy;
+    for (let i = 0; i < 240; i++) {
+        x += dvx; y += dvy;
+        if (y - puck.radius <= B)            { y = B + puck.radius;         dvy = Math.abs(dvy) * 0.85; }
+        else if (y + puck.radius >= H - B)   { y = H - B - puck.radius;     dvy = -Math.abs(dvy) * 0.85; }
+        if ((dvx > 0 && x >= targetX) || (dvx < 0 && x <= targetX)) return y;
+        dvx *= 0.988; dvy *= 0.988;
+        if (Math.abs(dvx) < 0.05) break; // puck died before reaching the goal line
+    }
+    return y;
+}
+
+function updateGoalies(f, dtMs) {
+    [
+        { g: leftGoalie,  isLeft: true,  mouthX: leftNet.x + leftNet.width },
+        { g: rightGoalie, isLeft: false, mouthX: rightNet.x },
+    ].forEach(({ g, isLeft, mouthX }) => {
+        // Where the goalie WANTS to be: if the puck is loose and heading at
+        // this net, project the shot's landing spot. Otherwise (puck held,
+        // or drifting away) lean toward the current holder's y so it's
+        // already shading the right way before a shot is released.
+        const movingToward = isLeft ? puck.vx < -0.3 : puck.vx > 0.3;
+        let targetY = (puckHeldBy === null && !goalPending && movingToward)
+            ? predictPuckIntercept(mouthX, puck.x, puck.y, puck.vx, puck.vy)
+            : puck.y;
+        targetY = Math.max(leftNet.y + 10, Math.min(leftNet.y + leftNet.height - 10, targetY));
+
+        // Lagged tracking so hard, well-aimed shots can still beat the goalie
+        const follow = Math.min(1, dtMs / diff.goalieMs);
+        g.py += (targetY - g.py) * follow;
+        const gCenter = g.y + g.height / 2;
+        const d = g.py - gCenter;
+        // Slow down the left goalie slightly to make the AI more scoreable
+        const goalieSpeed = isLeft ? diff.goalieSpeed * 0.75 : diff.goalieSpeed;
+        if (Math.abs(d) > 12) g.y += Math.sign(d) * goalieSpeed * f;
+        g.y = Math.max(leftNet.y - 6, Math.min(leftNet.y + leftNet.height - g.height + 6, g.y));
+
+        if (puckHeldBy === null && isColliding(puck, g)) {
+            puck.vx *= -0.65;
+            puck.vy += (Math.random() - 0.5) * 6;
+            puck.x = g.x < centerLineX ? g.x + g.width + puck.radius + 2 : g.x - puck.radius - 2;
+            sSave();
+            spawnSpray(puck.x, puck.y, '#dfe9f2', 0.6);
+        }
+    });
+}
+
+// ---------------------------------------------------------------------------
+//  Body-checking / stealing on contact
+// ---------------------------------------------------------------------------
+function handleContacts(dtMs) {
+    if (!rectsOverlap(player, computerPlayer)) return;
+
+    // When either skater strips the other, start a shared cooldown so the
+    // opponent can't immediately steal it right back.
+    if (puckHeldBy === 'computer' && playerStealCooldown <= 0) {
+        pickUp('player');
+        sHit();
+        shake(6, 180);
+        spawnSpray((player.x + computerPlayer.x) / 2, player.y + 20, '#fff', 0.8);
+        playerStealCooldown = compStealCooldown = 500;
+        return;
+    }
+
+    if (puckHeldBy === 'player' && compStealCooldown <= 0) {
+        pickUp('computer');
+        sHit();
+        shake(6, 180);
+        playerStealCooldown = compStealCooldown = 500;
+    }
+
+    if (playerStealCooldown > 0) playerStealCooldown -= dtMs;
+    if (compStealCooldown > 0) compStealCooldown -= dtMs;
+}
+
+// ---------------------------------------------------------------------------
+//  Helpers
+// ---------------------------------------------------------------------------
+function isColliding(circle, rect) {
+    const cx = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+    const cy = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+    const dx = circle.x - cx, dy = circle.y - cy;
+    return dx * dx + dy * dy < circle.radius * circle.radius;
+}
+function rectsOverlap(a, b) {
+    return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+}
+// Push a skater out of a goalie along the axis of least penetration, so they
+// slide around the goalie instead of overlapping it. Skaters can go anywhere
+// on the ice except through a goalie.
+function separateFromGoalie(ent, g) {
+    const overlapX = Math.min(ent.x + ent.width, g.x + g.width) - Math.max(ent.x, g.x);
+    const overlapY = Math.min(ent.y + ent.height, g.y + g.height) - Math.max(ent.y, g.y);
+    if (overlapX <= 0 || overlapY <= 0) return;
+    const entCX = ent.x + ent.width / 2, entCY = ent.y + ent.height / 2;
+    const gCX = g.x + g.width / 2, gCY = g.y + g.height / 2;
+    if (overlapX < overlapY) {
+        ent.x += entCX < gCX ? -overlapX : overlapX;
+        ent.vx = 0;
+    } else {
+        ent.y += entCY < gCY ? -overlapY : overlapY;
+        ent.vy = 0;
+    }
+}
+function keepOffGoalies(ent) {
+    separateFromGoalie(ent, leftGoalie);
+    separateFromGoalie(ent, rightGoalie);
+    ent.x = Math.max(6, Math.min(W - ent.width - 6, ent.x));
+    ent.y = Math.max(6, Math.min(H - ent.height - 6, ent.y));
+}
+function pickUp(owner) {
+    puckHeldBy = owner;
+    puck.vx = puck.vy = 0;
+}
+function resetPuck(owner) { pickUp(owner); }
+function pushTrail() {
+    puck.trail.push({ x: puck.x, y: puck.y });
+    if (puck.trail.length > 12) puck.trail.shift();
+}
+function shake(mag, ms) { shakeMag = Math.max(shakeMag, mag); shakeTime = Math.max(shakeTime, ms); }
+
+// ---------------------------------------------------------------------------
+//  Particles
+// ---------------------------------------------------------------------------
+function spawnSpray(x, y, color, chance = 1) {
+    if (Math.random() > chance) return;
+    for (let i = 0; i < 4; i++) {
+        particles.push({
+            x, y, vx: (Math.random() - 0.5) * 3, vy: -Math.random() * 2 - 0.5,
+            life: 1, size: Math.random() * 2 + 1, color, grav: 0.08,
+        });
+    }
+}
+function spawnConfetti(x, y) {
+    const colors = ['#ff3b30','#ff9500','#ffd60a','#34c759','#007aff','#5856d6'];
+    for (let i = 0; i < 90; i++) {
+        particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 12,
+            vy: -Math.random() * 11 - 3,
+            life: 1, size: Math.random() * 5 + 2,
+            color: colors[(Math.random() * colors.length) | 0],
+            grav: 0.28, spin: Math.random() * 0.4 - 0.2, rot: Math.random() * 6,
+        });
+    }
+}
+function updateParticles(f) {
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx * f; p.y += p.vy * f; p.vy += p.grav * f;
+        p.life -= 0.02 * f;
+        if (p.rot !== undefined) p.rot += (p.spin || 0) * f;
+        if (p.life <= 0 || p.y > H + 20) particles.splice(i, 1);
+    }
+}
+
+// ---------------------------------------------------------------------------
+//  Goals & game flow
+// ---------------------------------------------------------------------------
+function handleGoal(team) {
+    if (goalPending) return;
+    goalPending = true;
+    score[team] += 1;
+    scoreDisplay.textContent = `Player: ${score.player} | Computer: ${score.computer}`;
+
+    const netX = team === 'player' ? rightNet.x : leftNet.x + leftNet.width;
+    spawnConfetti(netX, H / 2);
+    shake(14, 500);
+    flashTime = 250;
+    sHorn();
+    showGoalMessage(team);
+
+    if (score.player >= WIN_SCORE || score.computer >= WIN_SCORE) { finishGame(team); return; }
+    setTimeout(() => { goalPending = false; resetPuck(team === 'player' ? 'computer' : 'player'); }, 1500);
+}
+function showGoalMessage(team) {
+    goalMessage.textContent = 'GOAL! 🎉';
+    goalMessage.style.opacity = '1';
+    setTimeout(() => { goalMessage.style.opacity = '0'; }, 1100);
+}
+function finishGame(team) {
+    gameState = 'over';
+    winner = team;
+    winnerText.textContent = team === 'player' ? 'You Win! 🏆' : 'Computer Wins';
+    gameOverOverlay.style.display = 'flex';
+    if (team === 'player') for (let i = 0; i < 3; i++) setTimeout(() => spawnConfetti(W / 2, 100), i * 200);
+}
+
+function startGame(level) {
+    diff = DIFFICULTY[level] || DIFFICULTY.easy;
+    score = { player: 0, computer: 0 };
+    scoreDisplay.textContent = 'Player: 0 | Computer: 0';
+    winner = null; goalPending = false;
+    player.x = 150; player.y = H / 2 - 26; player.vx = player.vy = 0; player.boost = 1; player.boostCd = 0;
+    computerPlayer.x = W - 190; computerPlayer.y = H / 2 - 26;
+    leftGoalie.y = rightGoalie.y = H / 2 - 26;
+    particles.length = 0;
+    resetPuck('player');
+    charging = false; chargePower = 0;
+    compShootCooldown = compStealCooldown = playerStealCooldown = 0;
+    startOverlay.style.display = 'none';
+    gameOverOverlay.style.display = 'none';
+    gameState = 'playing';
+    initAudio();
+}
+window.startGame = startGame;
+
+// ---------------------------------------------------------------------------
+//  Rendering
+// ---------------------------------------------------------------------------
+function drawRink() {
+    // Ice with a soft gradient + faint grain
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#f2fbff'); g.addColorStop(1, '#dcecf5');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // Zone tints
+    ctx.fillStyle = 'rgba(120,170,255,0.05)';
+    ctx.fillRect(0, 0, W * 0.25, H);
+    ctx.fillRect(W * 0.75, 0, W * 0.25, H);
+
+    // Blue lines
+    ctx.strokeStyle = '#2b6cff'; ctx.lineWidth = 6;
+    line(W * 0.25, 0, W * 0.25, H); line(W * 0.75, 0, W * 0.75, H);
+
+    // Center red line
+    ctx.strokeStyle = '#e23b3b'; ctx.lineWidth = 6;
+    ctx.setLineDash([16, 12]); line(W / 2, 0, W / 2, H); ctx.setLineDash([]);
+
+    // Center circle + faceoff dot
+    faceoff(W / 2, H / 2, 62, '#2b6cff');
+    // Zone faceoff circles
+    [[W * 0.2, H * 0.28], [W * 0.2, H * 0.72], [W * 0.8, H * 0.28], [W * 0.8, H * 0.72]].forEach(([x, y]) => faceoff(x, y, 46, '#e23b3b'));
+
+    // Creases
+    crease(leftNet.x + leftNet.width, H / 2, 1);
+    crease(rightNet.x, H / 2, -1);
+
+    // Nets
+    drawNet(leftNet, 1); drawNet(rightNet, -1);
+
+    // Boards
+    ctx.strokeStyle = '#2a3a4a'; ctx.lineWidth = 8;
+    roundRect(4, 4, W - 8, H - 8, 26); ctx.stroke();
+}
+function line(x1, y1, x2, y2) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+function faceoff(x, y, r, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+}
+function crease(x, y, dir) {
+    ctx.fillStyle = 'rgba(80,150,255,0.28)';
+    ctx.beginPath();
+    ctx.moveTo(x, y - 42);
+    ctx.arc(x, y, 42, dir > 0 ? -Math.PI / 2 : Math.PI / 2, dir > 0 ? Math.PI / 2 : -Math.PI / 2, dir < 0);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#2b6cff'; ctx.lineWidth = 2; ctx.stroke();
+}
+function drawNet(net, dir) {
+    // Goal line
+    ctx.strokeStyle = '#e23b3b'; ctx.lineWidth = 3;
+    const goalLineX = dir > 0 ? net.x + net.width : net.x;
+    line(goalLineX, net.y, goalLineX, net.y + net.height);
+
+    // Mesh
+    ctx.save();
+    ctx.strokeStyle = 'rgba(150,150,150,0.55)'; ctx.lineWidth = 1;
+    for (let gx = net.x; gx <= net.x + net.width; gx += 7) line(gx, net.y, gx, net.y + net.height);
+    for (let gy = net.y; gy <= net.y + net.height; gy += 7) line(net.x, gy, net.x + net.width, gy);
+    ctx.restore();
+
+    // Posts + crossbars
+    ctx.strokeStyle = '#c9302c'; ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(goalLineX, net.y); ctx.lineTo(net.x + (dir > 0 ? 0 : net.width), net.y);
+    ctx.lineTo(net.x + (dir > 0 ? 0 : net.width), net.y + net.height);
+    ctx.lineTo(goalLineX, net.y + net.height);
+    ctx.stroke();
+}
+
+function drawShadow(x, y, w) {
+    ctx.fillStyle = 'rgba(0,0,0,0.16)';
+    ctx.beginPath(); ctx.ellipse(x, y, w, w * 0.35, 0, 0, Math.PI * 2); ctx.fill();
+}
+
+// ----- Player: cartoon unicorn -----
+function drawUnicorn(p) {
+    // Draw a simple cartoon unicorn.
+    const cx = p.x + p.width / 2;
+    const bob = Math.sin(p.bob) * 2.2;
+    const top = p.y + bob;
+    const dir = p.facing;
+    drawShadow(cx, p.y + p.height + 2, p.width * 0.6);
+
+    // Body
+    ctx.fillStyle = '#ffffff';
+    roundRect(cx - 14, top + 10, 28, 30, 10); ctx.fill();
+
+    // Legs / hooves
+    ctx.fillStyle = '#f2f2f2'; roundRect(cx - 11, top + 36, 8, 12, 3); ctx.fill();
+    roundRect(cx + 3, top + 36, 8, 12, 3); ctx.fill();
+    ctx.fillStyle = '#bdbdbd'; ctx.fillRect(cx - 11, top + 46, 8, 2); ctx.fillRect(cx + 3, top + 46, 8, 2);
+
+    // Tail (rainbow stripes)
+    const maneColors = ['#ff3b30', '#ff9500', '#ffcc00', '#34c759', '#007aff', '#5856d6'];
+    for (let i = 0; i < 6; i++) {
+        ctx.fillStyle = maneColors[i];
+        ctx.beginPath();
+        ctx.ellipse(cx - 16 - i * 3, top + 30 + i * 2, 6 - i * 0.6, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Head
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(cx, top + 12, 10, 0, Math.PI * 2); ctx.fill();
+    // Eye
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx - 3, top + 10, 1.6, 0, Math.PI * 2); ctx.fill();
+
+    // Horn
+    ctx.beginPath(); ctx.moveTo(cx + 6, top + 2); ctx.lineTo(cx + 10, top - 10); ctx.lineTo(cx + 2, top + 2); ctx.closePath();
+    ctx.fillStyle = '#ffd166'; ctx.fill();
+    ctx.strokeStyle = '#e6b800'; ctx.lineWidth = 1; ctx.stroke();
+
+    // Rainbow mane
+    for (let i = 0; i < maneColors.length; i++) {
+        ctx.fillStyle = maneColors[i];
+        ctx.beginPath(); ctx.ellipse(cx - 2 + i * 2, top + 2 + i * 1.8, 6 - i * 0.8, 3, -0.4, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Stick (held by unicorn)
+    ctx.strokeStyle = '#c79a5b'; ctx.lineWidth = 4;
+    const hx = cx + dir * 6, hy = top + 24;
+    const bx = cx + dir * 30, by = top + 48;
+    line(hx, hy, bx, by);
+    ctx.lineWidth = 6; line(bx - dir * 2, by, bx + dir * 11, by - 2);
+
+    ctx.textAlign = 'left';
+}
+
+// ----- Computer: goofy cartoon shark -----
+function drawShark(p) {
+    const cx = p.x + p.width / 2;
+    const bob = Math.sin(p.bob) * 2.4;
+    const top = p.y + bob;
+    const dir = p.facing;
+    drawShadow(cx, p.y + p.height + 2, p.width * 0.6);
+
+    // Skates
+    ctx.fillStyle = '#e63946';
+    roundRect(cx - 12, top + 47, 11, 7, 3); ctx.fill();
+    roundRect(cx + 1,  top + 47, 11, 7, 3); ctx.fill();
+    ctx.fillStyle = '#eaf1ff';
+    ctx.fillRect(cx - 13, top + 53, 12, 2);
+    ctx.fillRect(cx + 1,  top + 53, 12, 2);
+
+    // Legs
+    ctx.fillStyle = '#5b7688';
+    roundRect(cx - 9, top + 36, 8, 14, 3); ctx.fill();
+    roundRect(cx + 1, top + 36, 8, 14, 3); ctx.fill();
+
+    // Tail fin (behind, opposite the facing direction)
+    ctx.fillStyle = '#6f8a9c';
+    ctx.beginPath();
+    ctx.moveTo(cx - dir * 12, top + 30);
+    ctx.lineTo(cx - dir * 26, top + 21);
+    ctx.lineTo(cx - dir * 24, top + 39);
+    ctx.closePath(); ctx.fill();
+
+    // Body (gray, gradient) + belly
+    const grad = ctx.createLinearGradient(cx, top + 4, cx, top + 42);
+    grad.addColorStop(0, '#8fa7b7'); grad.addColorStop(1, '#6f8a9c');
+    ctx.fillStyle = grad;
+    roundRect(cx - 15, top + 4, 30, 36, 13); ctx.fill();
+    ctx.fillStyle = '#dbe6ec';
+    roundRect(cx - 9, top + 20, 18, 20, 9); ctx.fill();
+
+    // Dorsal fin
+    ctx.fillStyle = '#5f7a8c';
+    ctx.beginPath();
+    ctx.moveTo(cx - 3, top - 2); ctx.lineTo(cx + 9, top + 1); ctx.lineTo(cx + 2, top + 11);
+    ctx.closePath(); ctx.fill();
+
+    // Big goofy grin + interior + teeth
+    ctx.fillStyle = '#3a2030';
+    ctx.beginPath();
+    ctx.moveTo(cx - 12, top + 22);
+    ctx.quadraticCurveTo(cx, top + 31, cx + 12, top + 22);
+    ctx.quadraticCurveTo(cx, top + 25, cx - 12, top + 22);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fff';
+    for (let i = -10; i <= 8; i += 6) {
+        ctx.beginPath();
+        ctx.moveTo(cx + i, top + 22.5);
+        ctx.lineTo(cx + i + 3.5, top + 22.5);
+        ctx.lineTo(cx + i + 1.7, top + 26.5);
+        ctx.closePath(); ctx.fill();
+    }
+
+    // Googly eyes + goofy brows
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(cx - 6, top + 13, 4.6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 6, top + 13, 4.6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.arc(cx - 6 + dir * 1.6, top + 14, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 6 + dir * 1.6, top + 14, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#4a5f6b'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    line(cx - 10, top + 8, cx - 3, top + 10);
+    line(cx + 3, top + 10, cx + 10, top + 8);
+
+    // Pectoral fin + stick
+    ctx.strokeStyle = '#c79a5b'; ctx.lineWidth = 4;
+    const hx = cx + dir * 6, hy = top + 24;
+    const bx = cx + dir * 30, by = top + 48;
+    line(hx, hy, bx, by);
+    ctx.lineWidth = 6; line(bx - dir * 2, by, bx + dir * 11, by - 2);
+    ctx.fillStyle = '#6f8a9c';
+    ctx.beginPath();
+    ctx.moveTo(cx + dir * 10, top + 20);
+    ctx.lineTo(cx + dir * 22, top + 25);
+    ctx.lineTo(cx + dir * 9, top + 29);
+    ctx.closePath(); ctx.fill();
+}
+
+function drawPuck() {
+    // Trail
+    const rainbow = ['#ff3b30','#ff9500','#ffd60a','#34c759','#007aff','#5856d6'];
+    for (let i = 0; i < puck.trail.length; i++) {
+        const t = puck.trail[i];
+        const a = (i / puck.trail.length) * 0.35;
+        if (puckHeldBy === 'player') {
+            const color = rainbow[i % rainbow.length];
+            ctx.fillStyle = color;
+            ctx.globalAlpha = a + 0.15;
+            ctx.beginPath(); ctx.arc(t.x, t.y, puck.radius * (i / puck.trail.length) + 1.5, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = 1;
+        } else {
+            ctx.fillStyle = `rgba(20,20,20,${a})`;
+            ctx.beginPath(); ctx.arc(t.x, t.y, puck.radius * (i / puck.trail.length), 0, Math.PI * 2); ctx.fill();
+        }
+    }
+    drawShadow(puck.x, puck.y + puck.radius + 2, puck.radius * 1.1);
+    // Speed glow
+    const sp = Math.hypot(puck.vx, puck.vy);
+    if (sp > 8) {
+        ctx.fillStyle = 'rgba(255,210,80,0.35)';
+        ctx.beginPath(); ctx.arc(puck.x, puck.y, puck.radius + 4, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = puck.color;
+    ctx.beginPath(); ctx.arc(puck.x, puck.y, puck.radius, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.beginPath(); ctx.arc(puck.x - 2.5, puck.y - 2.5, puck.radius / 2, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawGoalie(g, color) {
+    const cx = g.x + g.width / 2, cy = g.y + g.height / 2;
+    drawShadow(cx, g.y + g.height + 2, g.width * 0.6);
+    // Pads
+    ctx.fillStyle = '#eef3f7';
+    roundRect(cx - 13, cy + 4, 11, 22, 4); ctx.fill();
+    roundRect(cx + 2, cy + 4, 11, 22, 4); ctx.fill();
+    // Body
+    ctx.fillStyle = color;
+    roundRect(cx - 12, cy - 14, 24, 24, 6); ctx.fill();
+    // Blocker + glove
+    ctx.fillStyle = '#2a2a2a'; roundRect(cx - 20, cy - 8, 8, 16, 3); ctx.fill();
+    ctx.fillStyle = '#f6bd60'; ctx.beginPath(); ctx.arc(cx + 16, cy, 7, 0, Math.PI * 2); ctx.fill();
+    // Head / mask
+    ctx.fillStyle = '#e9eef2'; ctx.beginPath(); ctx.arc(cx, cy - 20, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#888'; ctx.lineWidth = 1;
+    line(cx - 6, cy - 20, cx + 6, cy - 20); line(cx, cy - 26, cx, cy - 14);
+    // Stick
+    ctx.strokeStyle = '#8a5a2b'; ctx.lineWidth = 4;
+    line(cx - 14, cy + 6, cx - 22, cy + 26);
+}
+
+function drawMeters() {
+    // Boost meter (bottom-left)
+    const bx = 20, by = H - 26, bw = 150, bh = 12;
+    const ready = player.boostCd <= 0;
+    const fill = ready ? 1 : 1 - player.boostCd / 950;
+    ctx.fillStyle = 'rgba(0,0,0,0.25)'; roundRect(bx - 3, by - 3, bw + 6, bh + 6, 6); ctx.fill();
+    ctx.fillStyle = '#22314a'; roundRect(bx, by, bw, bh, 5); ctx.fill();
+    ctx.fillStyle = ready ? '#43e6a0' : '#f6bd60';
+    roundRect(bx, by, bw * fill, bh, 5); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'left';
+    ctx.fillText(ready ? 'BOOST READY (Shift)' : 'BOOST', bx, by - 6);
+
+    // Charge ring around player while winding up
+    if (charging) {
+        const cx = player.x + player.width / 2, cy = player.y - 16;
+        ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = chargePower > 0.8 ? '#f72585' : '#43e6a0'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(cx, cy, 16, -Math.PI / 2, -Math.PI / 2 + chargePower * Math.PI * 2); ctx.stroke();
+    }
+
+    // Difficulty label (top-right)
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'right';
+    ctx.fillText(`Difficulty: ${diff.label}`, W - 16, 24);
+    ctx.textAlign = 'left';
+}
+
+function drawParticles() {
+    particles.forEach((p) => {
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        if (p.rot !== undefined) {
+            ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.6); ctx.restore();
+        } else {
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        }
+    });
+    ctx.globalAlpha = 1;
+}
+
+// Rounded-rect helpers
+function roundRectPath(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+}
+function roundRect(x, y, w, h, r) { roundRectPath(x, y, w, h, r); }
+
+// ---------------------------------------------------------------------------
+//  Main loop (delta-time)
+// ---------------------------------------------------------------------------
+let lastTime = performance.now();
+function gameLoop(now) {
+    let dtMs = now - lastTime; lastTime = now;
+    dtMs = Math.min(dtMs, 50);           // clamp to avoid huge jumps
+    const f = dtMs / 16.6667;            // frames elapsed
+
+    if (gameState === 'playing') {
+        updatePlayer(f, dtMs);
+        updateComputer(f, dtMs);
+        updatePuck(f);
+        updateGoalies(f, dtMs);
+        keepOffGoalies(player);
+        keepOffGoalies(computerPlayer);
+        handleContacts(dtMs);
+        if (charging) chargePower = Math.min(1, chargePower + dtMs / MAX_CHARGE_MS);
+    }
+    updateParticles(f);
+    if (shakeTime > 0) shakeTime -= dtMs;
+    if (flashTime > 0) flashTime -= dtMs;
+
+    // Screen shake
+    ctx.save();
+    if (shakeTime > 0) {
+        const m = shakeMag * (shakeTime / 500);
+        ctx.translate((Math.random() - 0.5) * m, (Math.random() - 0.5) * m);
+    }
+
+    drawRink();
+    drawShark(computerPlayer);                // computer = goofy shark
+    drawUnicorn(player);                      // player = cartoon unicorn
+    drawGoalie(leftGoalie, '#e63946');
+    drawGoalie(rightGoalie, '#4361ee');
+    drawPuck();
+    drawParticles();
+    if (gameState === 'playing') drawMeters();
+
+    ctx.restore();
+
+    // Goal flash
+    if (flashTime > 0) {
+        ctx.fillStyle = `rgba(255,255,255,${(flashTime / 250) * 0.5})`;
+        ctx.fillRect(0, 0, W, H);
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+scoreDisplay.textContent = 'Player: 0 | Computer: 0';
+requestAnimationFrame(gameLoop);
+
+</script>
 </body>
 </html>

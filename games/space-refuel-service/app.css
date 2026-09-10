@@ -1,1 +1,0 @@
-html,body{padding:0;margin:0;width:100%;height:100%;background:#111}#a{width:100%;height:100%;position:relative}#b,#c{left:0;right:0;margin:auto;position:absolute}#c{z-index:10}#e{position:absolute;display:none;margin:auto;left:0;right:0;z-index:20;top:15%;font:100 42px sans-serif}#d{display:none;position:absolute;bottom:0;color:green;font:100 42px sans-serif}

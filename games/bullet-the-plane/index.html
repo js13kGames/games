@@ -1,17 +1,1 @@
-<html>
-<head>
-	<title>Bullet the Planes</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-<body>
-	<div id='container'>
-		<div id='hero'></div> 
-		<div id='enemies'></div> 
-		<div id='bullets'></div>	
-	</div>
-
-	<div id='score'></div>
-	<div id='instruction'><strong>INSTRUCTIONS</strong></br>1. Press Space to Fire.</br>2. Arrow Keys to move.</br>3. Hit enemies in middle to score.</div>
-<script src="text.js"></script>
-</body>
-</html>
+<html> <head> <title>Bullet the Plane - js13kGames 2018</title> <style>body{padding: 5px;border: 5px groove #00ffff;-webkit-animation: mymove 3s infinite} @-webkit-keyframes mymove{from{background-color: blue} to{background-color: green}} #hero{background: url('./character.gif');background-position: -85px -180px;width:28px;height:28px;position:absolute} .enemy1{background: url('./character.gif');background-position: -30px -10px;width:28px;height:28px;position:absolute} .bullet{background: url('./character.gif');background-position: -185px -400px;width:18px;height:18px;position:absolute} #score{position:absolute;border:10px solid red;top:20px;left:1270px;background-color:yellow;padding:10px;font-size:30px;font-family: Arial} #instruction{position:absolute;border:5px solid red;top:100px;left:1200px;right:35px;background-color:#00ffff;;padding:3px;font-size:15px;font-family: Arial}</style> </head> <body> <div id="container"> <div id="hero"></div> <div id="enemies"></div> <div id="bullets"></div> </div> <div id="score"></div> <div id="instruction"><strong>INSTRUCTIONS</strong><br>1. Press Space to Fire.<br>2. Arrow Keys to move.<br>3. Hit enemies in middle to score.</div> <script>var score=0,hero={x:300,y:400},enemies=[{x:50,y:50},{x:250,y:50},{x:450,y:250},{x:550,y:250}],bullets=[];function displayHero(){document.getElementById("hero").style.top=hero.y+"px",document.getElementById("hero").style.left=hero.x+"px"}function displayEnemies(){for(var e="",l=0;l<enemies.length;l++)e+="<div class='enemy1' style='top:"+enemies[l].y+"px; left:"+enemies[l].x+"px;'></div>";document.getElementById("enemies").innerHTML=e}function moveEnemies(){for(var e=0;e<enemies.length;e++)enemies[e].y+=5,enemies[e].y>540&&(enemies[e].y=0,enemies[e].x=500*Math.random())}function moveBullets(){for(var e=0;e<bullets.length;e++)bullets[e].y-=5,bullets[e].y<0&&(bullets[e]=bullets[bullets.length-1],bullets.pop())}function displayBullets(){for(var e="",l=0;l<bullets.length;l++)e+="<div class='bullet' style='top:"+bullets[l].y+"px; left:"+bullets[l].x+"px;'></div>";document.getElementById("bullets").innerHTML=e}function displayScore(){document.getElementById("score").innerHTML=score}function gameLoop(){displayHero(),moveEnemies(),displayEnemies(),moveBullets(),displayBullets(),detectCollision(),displayScore()}function detectCollision(){for(var e=0;e<bullets.length;e++)for(var l=0;l<enemies.length;l++)Math.abs(bullets[e].x-enemies[l].x)<10&&Math.abs(bullets[e].y-enemies[l].y)<10&&(console.log("bullet",e,"and enemy",l,"collided"),score+=10)}setInterval(gameLoop,20),document.onkeydown=function(e){37==e.keyCode?hero.x-=10:39==e.keyCode&&(hero.x+=10),38==e.keyCode?hero.y-=10:40==e.keyCode?hero.y+=10:32==e.keyCode&&(bullets.push({x:hero.x+6,y:hero.y-15}),displayBullets()),displayHero()},displayHero(),displayEnemies()</script> </body> </html>

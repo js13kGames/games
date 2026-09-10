@@ -1,1 +1,0 @@
-keys={left:!1,up:!1,top:!1,pause:!1,down:!1},onkeydown=onkeypress=function(e){switch(e.keyCode){case 37:keys.left=!0;break;case 38:keys.up=!0;break;case 39:keys.right=!0;break;case 40:keys.down=!0}},onkeyup=function(e){switch(e.keyCode){case 37:keys.left=!1;break;case 38:keys.up=!1;break;case 39:keys.right=!1;break;case 40:keys.down=!1}};

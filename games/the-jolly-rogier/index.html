@@ -1,133 +1,1 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-    </head>
-    <style type="text/css">
-        html, body, div, span, applet, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        a, abbr, acronym, address, big, cite, code,
-        del, dfn, em, img, ins, kbd, q, s, samp,
-        small, strike, strong, sub, sup, tt, var,
-        b, u, i, center,
-        dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed,
-        figure, figcaption, footer, header, hgroup,
-        menu, nav, output, ruby, section, summary,
-        time, mark, audio, video {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            font: inherit;
-            font-size: 100%;
-            vertical-align: baseline;
-        }
-
-        html {
-            line-height: 1;
-        }
-
-        ol, ul {
-            list-style: none;
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        caption, th, td {
-            text-align: left;
-            font-weight: normal;
-            vertical-align: middle;
-        }
-
-        q, blockquote {
-            quotes: none;
-        }
-        q:before, q:after, blockquote:before, blockquote:after {
-            content: "";
-            content: none;
-        }
-
-        a img {
-            border: none;
-        }
-
-        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
-            display: block;
-        }
-
-        body {
-            background-color: white;
-            overflow: hidden;
-            -webkit-transform: translateZ(0);
-            -moz-transform: translateZ(0);
-            -ms-transform: translateZ(0);
-            transform: translateZ(0);
-            -webkit-transform: translate3d(0, 0, 0);
-            -moz-transform: translate3d(0, 0, 0);
-            -ms-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            width : 100%;
-            height : 100%;
-            position : fixed;
-            top: 0px;
-            left: 0px;
-        }
-
-        canvas {
-            position: absolute;
-            -webkit-transform: translateZ(0);
-            -moz-transform: translateZ(0);
-            -ms-transform: translateZ(0);
-            transform: translateZ(0);
-            -webkit-transform: translate3d(0, 0, 0);
-            -moz-transform: translate3d(0, 0, 0);
-            -ms-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        }
-
-        #game_background {
-            display: none;
-            z-index: -1;
-            pointer-events: none;
-            cursor: none;
-        }
-
-
-        .splash{
-            background-color: #FFFFFF;
-        }
-
-        .game {
-        }
-    </style>
-    <body>
-        <!--<canvas id='cv'>-->
-            <!--<canvas id='particles'></canvas>-->
-        <!--</canvas>-->
-
-        <div style="position: relative;">
-            <canvas id="cv"
-                    style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-            <canvas id="particles"
-                    style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
-        </div>
-
-        <!--<canvas id="temp"-->
-                <!--style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>-->
-
-        <!--<script src="src/mountains.js"></script>-->
-        <!--<script src="src/water.js"></script>-->
-        <script src="game.js"></script>
-        <!--<script src="dist/game.js"></script>-->
-    </body>
-</html>
+<!DOCTYPE html> <html> <head><title>The Jolly Rogier - js13kGames 2014</title> </head> <style type="text/css">a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline}html{line-height:1}ol,ul{list-style:none}table{border-collapse:collapse;border-spacing:0}caption,td,th{text-align:left;font-weight:400;vertical-align:middle}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:"";content:none}a img{border:none}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary{display:block}body{background-color:#fff;overflow:hidden;-webkit-transform:translateZ(0);-moz-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0);-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);transform:translate3d(0,0,0);width:100%;height:100%;position:fixed;top:0;left:0}canvas{position:absolute;-webkit-transform:translateZ(0);-moz-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0);-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}#game_background{display:none;z-index:-1;pointer-events:none;cursor:none}.splash{background-color:#fff}</style> <body> <div style="position:relative"> <canvas id="cv" style="position:absolute;left:0;top:0;z-index:0"></canvas> <canvas id="particles" style="position:absolute;left:0;top:0;z-index:1"></canvas> </div> <script>for(Y in _='!{ kĉF¿ĆÈ h{Čc.apply( instanceof a&&b?:b,f.concat()))ªĉ}³""!==typeof )throw TypeError(" - what is trying to be bound is not callable"`f=,1),c=;h.Ċa;Čh}`zĊK(0,.75*l,p,l,64`yĊB(.2*p,.75*l`TĊt;y.^x¿UĊV;uċT,z,y,U`W=.Y-16;X(.Y`n©particles"`n¢(Z=/Mobile|Android|BlackBerry/.test(navigator.userAgØ))?(×ú",$endýcancelýleaveýÂ",aa,!1)):(½Â=aa,½down=$,½up=N))ªt{xmÛy=lq=.15*pc=p-qec+qh=.2*lXxqacpaeS´vÛI=2500uÛU=4E3sÛoa=250i=3*kK´lôfôPSÆ;³!Z){w=nĖ`n.=x=p;n.\t=D=l;~b=ba;b--;)ßlax=xy=.2*DC=20*cos²*F=10*sin²*_x=^x_y=^y;O[b]=a}G=P=x;H=Q=D;setInterval(ma,1)}baPba}da(35*k@l)ea(13*k@f)d=[{x:c+.1Ô.8Ô];bc,ah,d·(cąf(f,c){b+=d*(c+1`ah+f;0==d[0¼0ä0].x=b@d[0À1¼1ä1ðb@d[1À2¼2].x<bd[2ðb@d[2ða»d_nċW²»ªRē,e,qÓ=(d||0)*kV=60ìO=(f||æ)*kH=.96ua=q||!1m=25D=500+æ*w=e||0Ûra=30g=(c||ra)*kw«=7Zôaa=3J=20laªB¹m=5x=b||0y=a||0a=Ä0}=.1ó\t=.1ów«=3y-\tL´Ë=0ªdĉV{LÆKēÓ=dû=f-aA=cna=2E-5H=2.5E-4oôM=d/cm=9maªX²{r\f(X`I=b-W;50<II=50`W=bclear­p,l)­p,l`b¿~h=u;b<h;bÙu[b]&&u[b].Q&&u.splice(u.indexOf(u[b]),1`u.sort(¹Č_m-^m}`£p&&J.p;£&&J.(I)¬Score: "+F,10,50)#5F51F5"ªmĉw.clearsource-over"òrgba(8,8,12,0.0)"òlighter";ea=G-P;fa=H-Q;P=G;Q=H;~b=.86*x,a=.125*xćĔ,f·,c=ba;c--;){e=O[c],qíx,Aíy,míC,gíF,v=M?q-G:q-e._x,l=M?A-H:A-e._y,r=sqrt(v*v+l*l)||.001,v=v/r,l=l/r,ní_x,pí_y,p=p-e.y,p=p*p,n=n-e.x,n=n*n;3>sqrt(n+p)&&ga(e`r<bs=1.4E-4*(1-r/b)*x,m-=v*s,g-=l*s`r<av=5E-5*(1-r/a)*x,m+=ea*v,g+=fa*v`m*=ha;g*=ha;v=f(m`l=f(g`r=(v+l`.1>vm=3*m*d`.1>lg=3*g*d`v=.45*r;v=max(min(v,5*k),2k`q+=m;A+=g;q>x?(q=x,mđqq¤m*î`A>D?(A=D,gđAA¤g*î`e.C=m;e.F=g;e.x=q;e.y=A;m=254*r*.35`g=20.65*r`r=6.3*r`254<mm=254`59<gg=59`18<rr=18`e.Ā"+m+","+g+","+r+")"òÊí¶;w.;w.arc(q,A,v,0,na,!0`w.ò}ªgïßn.ćn.\tć*d)-d;__x+=*a)-a;__y+=d;0>__x__x=º`__x>n.__x=n.-º`0>__y__y=º\t`__y>z.y-.1*n.\t__y=z.y-º\t)ªlĉĀ0,0,0)"b=Ä0}FCxyÛsize=1ªaïßb;MÁ,Õ,Ö`y.tïª$²{C&&.loc.reload;LL´,T.I¤U.reÂ`³!C&&!L)ßb;MÆ;Á;P=Õ;Q=Ö;y.sï}ªN{M´;~b¿b<O;bÙga(O[b]`y.jaªoĉ}({\v=\v?\v:{};\vÜ=\vÜ||\v.webkitNow||\v.za||\v.ya||DĈÜ;.Y=Ü=\vÜ.bind(Î`b=now;Čb+=nowĂb=;.r\f=_r\fÚwebkitR\fÚmsR\fÚmozR\fÚoR\f||Ïb,æ/60)};r\f(oa)Ă b{f--ăï{c++;f--;e+=_message+"\\n"ăd{c&&alert("errors while loading rsc : \\n"+e`Ïka,æ)}.ca=XMLHttpRequest;f=1,c¤e="";.wa=(c,d){eĊc;f++;eêeé`c!==.ca?e.src=d:(e.open("GET",d,!0),e.send(ñ)`Če};êé)});E©cv"),a=EĖ),pāWidth,lāH«;E.=p;E.\t=l;k=p/1920,Z´,F¤u=[],Wî,I¤J=ñ,z,y,U,T,ia=2*k,ja=-k,S=1ì,C´,L´;tbavÛI=æ+3E3*uÛU=1500sÛi=6dë2¯.5<f=-f`1±f)}eë1¯±-(f-2ì))}ÈC||L||vïp^ùx@y)RÌ@c@h)iaR(e@h@e+(c-x)@yü2#000÷#171101"S&&favaÈv+=bv>Iu+=b@K=!K@KĆs+=b@s>oas¤0<i?i++:i--)@u>U?(xX@cqa@epa@ka@P):(x+i@c+i@e+i@i=-i)))kÍ=max(1,4*)),a=4*b*),d¿d<b;dÙuċR(c+q@h,3E3,ñ,ñ,150*dć==a))fabc,hhùb,h`~qf;e<q10¾hahadgï&&_nċW(_n[_n-1])»gaÈ~h´,d¤f=_n;d<f;dÙ{c=_n[d],ex-X¥c.x+e,c.y)¦c.j+eÝ`čĆc.jÐr-c.x)ÝÐB-c.y),c.x<c.r?c.j>:c.j<Ý>=lh´Ý=l,c.B=l))}^2¾;ČhWÈa=_jÚx;b=_kÚy;d=10*;5<11*d=-d`Ďb,r:a+d,B:b+(5+20*),j:a,k:b}R=(bþ~c=h>f,e·(b-d)/l,q·(h-f)/l,k¤m¤g¤ll;g<l;gÙm=c?l[g]:l[l-1-g],k=b+e*g,m=c?h-q*g-m:h+q*g-m,g==l-1k=d,m=f)õk,m)iÍc,hh,kf;e<k};RlÍ¿b<J;bÙßcos®d=sin®a=aåćdåZċĎd})}};Rp0<wĆ2<&&0>çg?(^,^¥x-¥x+2,^red",^):(^@Z^¦x+_x@y+_y»,^Ò1,^Ò,^,^))};RÈw-=b;³!(0<w))³+ O,y.t()@>V&&1<V),0§y- ,-50>y&&1§yî00-æ*@xg+(p-g)*@uaöy.x+y.)@2§D-=b,0>D&&3§ç @y+g>z.y++,z.tÌ+15,.02,Ä*w«})@O=0@m=1,CĆF+=100)`Ē4§{*H;a=5ì<a=a)y+ y-g>l++@QÆ)}Ãp^save;bx,hy;³C){^translĈÌ)yx¿d=PI/180;45>Ë/dË+=2*d)rotĈ(Ë)}dx,fcáeà7Ç,qµ,lmx,gnápy+1.3Ç,rµ,tuáwà65Ç,xáyà3Ç,záB¥m,gm,g,n,p,r,t)¥u,wu,w,x,y,z,Bü3brown÷brown";d;fy+\t;c+.1**^x/k;eà3Ç;q;l5Årestore;Cöb@y=h)ÃÈ³C)ç=1*k;else{z.t(¸.75Ç@w«@a)^y-=.75/(z.y+z.û-y)*b*k)^y+=.001*b*k^y>ia^y=ia)^y<ja^y=ja)^x>S^x=S)^x<-S^x=-S)^x/=1.01y+^yx+^x;b=0ó;a=1ó-x<böbèx>aöaè}ÃsaÈLÆT¨G¨ÃtaÈ³L){a¨;b=_Y||bYTGG=a;a>x+ĕa<µ-ĕb>y-.2Ç&&b<ç\t+.2Ç?NĆ^x+=(G-T)*n.*1E-4@NÆ):N´}ÃjaNL´ÃtÈ³_x<xÚx>µÚy>ç\tÚy<ç.6Çã_xaÆ;_Aa=_x-y.x;C||uċda`CÆ};daYou scored: "+$@¸6ì)¬You did kind of alright, I guess."@¸12reú and try again Swipe acroďboat to Â it Â it."@¸9úreÂQÆømÍo,a¿a<3*A;aÙb[a]=0øpb=^creĈLinearGradiØ(0@y,0@¡°0Đ223, 80%, 24ÿ°1Đ100, 70%, 10ÿ)Ê=b1E-4;boùµ@¡)¦x@¡`h,É;hx;dy;fx+M;cy+b[2]¦h,d`~e=1,k=3;e<A;e+=1,k+=3)h=fćc,fx+(e+1)*M,c=e<A?çb[k+2]:yõh,d)¦µ@yüø=(a){~ho,dA,fna,cH,e¤l=h[2],nî,m¤g¿m<d;m++,g+=3)n=l,l=m<d-1?Þ5]:0,h[g]=(-.3*n+(e-n)+(l-n))*f-Þ1]*c,Þ1]+=h[g]*a*k,Þ2]+=Þ1]*a*k,e=nøt=(aþ³a<x||a>µ||h>¡ãa=0|.5+(a-x)/M;³0>h-y-â2]ãc=f.x*d*3E-4*k;d=f.y*d*k;h<ç30â1]+=c@â2]+=d`!0};M´,na=2*PI,x¤D¤ba=200,ha=.96,O=[],n,w,G,H,ea,fa,P,Q}.call().fĄ..Ĕp^rectÌ@@\t)Ê¶2ÅÑcØer"¬width;^\b.addEvØListener("\th«\v.Î\fequestAnimFramevar .touches[0].;Math.=.lengthbeginPath&&(Ê="windowstrokevelocityY().5*eTo(documØ.lineWidth=fill@,^a._b.`);~for(;eÙcf[e],f=b+d*(e+1),c=h+c,e==f-1fe,ch)õf,c)m=1E4=p\t=.3*lx=p-y=l-\t¶="black"$=Fª,!1),×returnclosePath²{x+­x,D`w.globalCompositeOper="stĈyùd,fÉ,e,q,l)cliØ!"@¸22ì)Ñleft"};Vc.rc.j=c.rÝ=c.B,h=čÆ)floor(ì)¬Preďscreen to ={#DEDEDE"font="20pt Arial"push(d·(bą,f¤c¤e¤Arrayslice.call(argumØs};t++;Ē)bezierCurvFĄbindprototype.forEach(à6Ç,g,0)õx,0+2*g),^thisupdĈq,y:0,n:[]}new ation =b/æ*¡y+û¢.getContext£for(b¿J=u[b++];)J.¤=0,¥mov¦lin§==)¨=_X||bX©=getElemØById("ª} «eight¬Text("­Rect(0,0,®(b/J*2*PI)*g,¯0>d;dÙ{f=b*;°`_addColorStop(±9===d?^0):^²(b)³if(´=!1µx+¶color·=abs¸@y+¹(b,a){º.05*n.»)},)¼].y&&d[½onmouse¾#FF0000÷¿=0;Àða):0==d[Áa=a?a:.evØÂmoveÃ};BÄ{x:0,y:Åwhite÷Æ=!0Ç*\tÈ=Éd,f,cÊStyleËrotÌ(x@yÍa~bÎperformanceÏsetTimeout(Ð+=I/æ*(c.ÑtextAlign="Ò#663F09",^Ó){x=by=aÔ5*,{x:c+ÕG=^X||aXÖH=^Y||aY×body\btouchØentÙ++)Ú||_Û=0Ü.nowÝ,c.kÞh[g+ß{a=ày+.á,âo[3*a+ã)!1;ä].x<b?(d[å+(aa+1)*æ1E3çy+è@^x=-^x)é\berror",aê\bload",b`ëa=¹~d¿ì0*kí=e.î=-1ïa²ð].y=ñnullò;w.ó*E.ô=[]õ,^¦öx=÷"ø};Kù¥ústartûdepthü)ý",Nþ,h,d,f){ÿ%, 0.7)"Ā¶="rgb(ā=.innerĂ});({ă;f||dªĄunctioną-e)/fĆ||(ć,d=Ĉateĉa{Ċ=ċ.Č čc.endedĎ{x:a,y:ďss the Đ,"hsla(đ*î):0>Ēelse ³ē(b,a,ÉĔrandomĕ.2*&&Ė¢("2d"',$="ĖĕĔēĒđĐďĎčČċĊĉĈćĆąĄăĂāĀÿþýüûúùø÷öõôóòñðïîíìëêéèçæåäãâáàßÞÝÜÛÚÙØ×ÖÕÔÓÒÑÐÏÎÍÌËÊÉÈÇÆÅÄÃÂÁÀ¿¾½¼»º¹¸·¶µ´³²±°¯®­¬«ª©¨§¦¥¤£¢¡ ~`_^@\f\v\t\b")with(_.split($[Y]))_=join(pop());eval(_)</script> </body> </html>

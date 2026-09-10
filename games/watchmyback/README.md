@@ -1,4 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
-watchmyback game eat candies before they turn into bugs and shoot at you as a head start you have a free ladybug bodyguard eat more ladybugs foods for more body guards , use direction keys for control and touch buttons for touch enabled devices, for aiming and shooting use the virtual joystick. all insects '🐛', '🐝', '🐜' turn into body guards for web monetisation.

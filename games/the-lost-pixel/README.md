@@ -1,4 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
-One tiny pixel gets lost in the crowd of many other pixels. Find him, click him and proceed through the game!

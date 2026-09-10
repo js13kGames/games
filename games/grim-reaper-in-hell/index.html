@@ -1,10 +1,1 @@
-<!doctype html>
-<html>
-<title>Grim Reaper in Hell</title>
-<meta name="viewport" content="width=device-width">
-<link href="style.css" rel="stylesheet">
-<body>
-	<canvas id="canvas" width="620" height="200"></canvas>
-	<script src="script.js"></script>
-</body>
-</html>
+<!doctype html> <html> <title>Grim Reaper in Hell - js13kGames 2022</title> <meta name="viewport" content="width=device-width"> <style>body{display:flex;align-items:center;justify-content:center;margin:0;height:100vh;background-color:#888}canvas{border:10px dashed #c8c8c8;border-radius:16px;border-top-right-radius:50px}</style> <body> <canvas id="canvas" width="620" height="200"></canvas> <script>function gameloop(){for(ctx.fillStyle="#ffffff",ctx.fillRect(0,0,620,160),ctx.fillStyle="#000000",ctx.fillRect(0,160,620,40),ctx.fillText(score,8,16),ctx.fillStyle="#ffffff",ctx.fillText("js13kGames",554,184),ctx.drawImage(death,26,deathposition),collision=!1,fireposition[0]-=22,fireposition[1]-=14,x=0;x<2;x++)firecolor==x?(ctx.fillStyle="#bb6644",ctx.beginPath(),ctx.moveTo(fireposition[x]+50,156),ctx.lineTo(fireposition[x]+30,156),ctx.lineTo(fireposition[x]+14,136),ctx.lineTo(fireposition[x]+35,146),ctx.lineTo(fireposition[x]+40,126),ctx.lineTo(fireposition[x]+45,146),ctx.lineTo(fireposition[x]+64,136),ctx.fill()):(ctx.fillStyle="#ff9966",ctx.beginPath(),ctx.moveTo(fireposition[x]+50,156),ctx.lineTo(fireposition[x]+30,156),ctx.lineTo(fireposition[x]+24,130),ctx.lineTo(fireposition[x]+40,150),ctx.lineTo(fireposition[x]+54,130),ctx.fill()),fireposition[x]<0&&(fireposition[x]=660,score++),fireposition[x]<30&&fireposition[x]>-40&&deathposition>66&&(collision=!0);firecolor=!firecolor,deathposition%2==0&&deathposition<94?deathposition-=8:deathposition<88&&(deathposition+=8),deathposition<26&&(deathposition=23),collision&&(alert("game over"),deathposition=94,fireposition=[600,800],score=0)}ctx=document.getElementById("canvas").getContext("2d"),firecolor=!1,fireposition=[600,800],deathposition=94,score=0,death=new Image,death.src="death.png",death.onload=function(){ctx.drawImage(death,26,94)},setInterval(gameloop,50),document.addEventListener("keydown",function(){deathposition>80&&(deathposition=88)})</script> </body> </html>

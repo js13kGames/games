@@ -1,13 +1,1 @@
-<!DOCTYPE html>
-<hmtl>
-<head>
-</head>
-<body>
-<style type="text/css">
-    canvas {
-        border: 1px solid black;
-        }
-</style>	
-<script src="./canvas.js"></script>
-</body>
-</hmtl>
+<!DOCTYPE html> <hmtl> <head> </head> <body> <style type="text/css">canvas{border:1px solid #000}</style> <script>var canvas=document.createElement("canvas"),ctx=canvas.getContext("2d");canvas.width=960,canvas.height=600,document.body.appendChild(canvas);var tiles_x=[],tiles_y=[],number_tiles=0,max_number_tiles=10,tile_pointer=0;localStorage.setItem("tile",0),localStorage.setItem("play_again",1);var keysDown={},pacman={x:0,y:0};function draw_pacman(){scale_pacman=.25,ctx.beginPath(),ctx.arc(pacman.x,pacman.y,50*scale_pacman,.25*Math.PI,1.25*Math.PI,!1),ctx.fillStyle="rgb(255, 255, 0)",ctx.fill(),ctx.beginPath(),ctx.arc(pacman.x,pacman.y,50*scale_pacman,.75*Math.PI,1.75*Math.PI,!1),ctx.fill(),ctx.beginPath(),ctx.arc(pacman.x,pacman.y-25*scale_pacman,10*scale_pacman,0,2*Math.PI,!1),ctx.fillStyle="rgb(0, 0, 0)",ctx.fill()}function draw_tiles(e,a){scale_tiles=.25,ctx.beginPath(),console.log("here"+e+" "+a),ctx.rect(e,a,50*scale_tiles,50*scale_tiles),ctx.fillStyle="black",ctx.fill()}addEventListener("keydown",function(e){keysDown[e.keyCode]=!0},!1),addEventListener("keyup",function(e){delete keysDown[e.keyCode]},!1);var update=function(){38 in keysDown&&(pacman.y-=30,pacman.y<0&&(pacman.y=0)),40 in keysDown&&(pacman.y+=30,pacman.y>canvas.height&&(pacman.y=canvas.height)),37 in keysDown&&(pacman.x-=30,pacman.x<0&&(pacman.x=0)),39 in keysDown&&(pacman.x+=30,pacman.x>canvas.width&&(pacman.x=canvas.width));for(var e=0;e<number_tiles;)pacman.x==tiles_x[e]&&pacman.y==tiles_y[e]&&(alert("You Lost with a score of"+localStorage.getItem("tile"))||(window.location.href="./index.html")),e++},render=function(){ctx.clearRect(0,0,canvas.width,canvas.height),ctx.fillStyle="green",ctx.fillRect(0,0,canvas.width,canvas.height),draw_pacman();for(var e=0;e<number_tiles;)draw_tiles(tiles_x[e],tiles_y[e]),e++},w=window;requestAnimationFrame=w.requestAnimationFrame||w.webkitRequestAnimationFrame||w.msRequestAnimationFrame||w.mozRequestAnimationFrame;var main=function(){update(),render(),requestAnimationFrame(main)};function tile_drop(e,a){setTimeout(function(){number_tiles==max_number_tiles?(tiles_x[tile_pointer]=e,tiles_y[tile_pointer]=a,(tile_pointer+=1)>max_number_tiles&&(tile_pointer=0)):(tiles_x.push(e),tiles_y.push(a),number_tiles+=1,(tile_pointer+=1)>max_number_tiles&&(tile_pointer=0)),console.log(e+" "+a),render(),update(),localStorage.setItem("tile",parseInt(localStorage.getItem("tile"))+1)},1e3)}setInterval(function(){tile_drop(pacman.x,pacman.y)},1e3),main()</script> </body> </hmtl>

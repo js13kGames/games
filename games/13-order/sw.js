@@ -1,10 +1,10 @@
-var version = "v1";
+var version = "v2";
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(version)
       .then((cache) =>
-        cache.addAll(["index.html", "bundle.js", "styles.css", "icon.png"])
+        cache.addAll(["index.html", "bundle.js", "icon.png"])
       )
   );
 });

@@ -1,5 +1,4 @@
-<style>
-  * {
+<title>Triskaidekagenesis - js13kGames 2024</title><style> * {
     text-align: center;
     font-family: Verdana;
     color: #220;
@@ -223,51 +222,4 @@
     to {
       transform: rotate(0.3deg);
     }
-  }
-</style>
-
-<script>
-  var _audC = new (window.AudioContext || window.webkitAudioContext);
-  var _aud_MV = 1; //master volumne
-
-  function tone(length, type) {
-    if ((!_audC) || (!_aud_MV)) return { //a null note
-      f: function () { return this; },
-      v: function () { return this; }
-    };
-    var current = _audC.currentTime;
-    var oscillator = _audC.createOscillator();
-    var gain = _audC.createGain();
-
-    if (type) oscillator.type = type;
-    oscillator.frequency.value = 0;
-    gain.gain.value = 0;
-    oscillator.connect(gain);
-    gain.connect(_audC.destination);
-
-    oscillator.start(0);
-    oscillator.stop(current + length);
-
-    return {
-      f: function () {
-        if (arguments.length == 1) { oscillator.frequency.value = arguments[0]; return this; }
-        for (var i = 0; i < arguments.length; i += 1)
-          oscillator.frequency.linearRampToValueAtTime(arguments[i], current + i / (arguments.length - 1) * length);
-        return this;
-      },
-      v: function () {
-        if (arguments.length == 1) { gain.gain.value = arguments[0] * _aud_MV; return this; }
-        for (var i = 0; i < arguments.length; i += 1)
-          gain.gain.linearRampToValueAtTime(arguments[i] * _aud_MV, current + i / (arguments.length - 1) * length);
-        return this;
-      }
-    };
-  }
-
-  window.tone = tone
-</script>
-
-
-<div id=T></div>
-<div id=M></div>
-<script src="bundle.js"></script>
+  } </style> <script>var _audC=new(window.AudioContext||window.webkitAudioContext),_aud_MV=1;function tone(length,type){if(!_audC||!_aud_MV)return{f:function(){return this},v:function(){return this}};var current=_audC.currentTime,oscillator=_audC.createOscillator(),gain=_audC.createGain();return type&&(oscillator.type=type),oscillator.frequency.value=0,gain.gain.value=0,oscillator.connect(gain),gain.connect(_audC.destination),oscillator.start(0),oscillator.stop(current+length),{f:function(){if(1==arguments.length)return oscillator.frequency.value=arguments[0],this;for(var i=0;i<arguments.length;i+=1)oscillator.frequency.linearRampToValueAtTime(arguments[i],current+i/(arguments.length-1)*length);return this},v:function(){if(1==arguments.length)return gain.gain.value=arguments[0]*_aud_MV,this;for(var i=0;i<arguments.length;i+=1)gain.gain.linearRampToValueAtTime(arguments[i]*_aud_MV,current+i/(arguments.length-1)*length);return this}}}window.tone=tone</script> <div id="T"></div> <div id="M"></div> <script>(()=>{var e=!0;function n(e){return"("==e[0]?e.substring(1,e.length-1):e}var t={"+":(e,n)=>Number(e)+Number(n),"*":(e,n)=>e*n,"-":(e,n)=>e-n,"/":(e,n)=>{let t=e/n;return t%1?null:t}},o={};function i(e,n){let o=e.join(",");if(1==e.length)return{[e[0]]:`${e[0]}`};if(null!=n[o])return n[o];let a={};function r(e,n){isFinite(e)&&!isNaN(e)&&null!=e&&null==a[e]&&e>=0&&e<=100&&(a[e]=n)}r(e.reduce((e,n)=>e+n,0),`(${e.join("+")})`),r(e.reduce((e,n)=>e*n,1),`(${e.join("*")})`);for(let s=1;s<2**e.length-1;s++){let l=[],u=[];for(let n=0;n<e.length;n++)s&2**n?u.push(e[n]):l.push(e[n]);let h=i(l,n),d=i(u,n);for(let e in h)r(Number(e),h[e]);for(let e in d)r(Number(e),d[e]);for(let e in h)for(let n in d)for(let o in t)r(t[o](e,n),`(${h[e]}${o}${d[n]})`);n[o]=a}return a}function a(e){let n=[];for(let t in e){if(e[t][13])continue;let o=t.split(",");o.length>n.length&&(n=o)}return n}var r={};cc=e=>{r[e]?delete r[e]:r[e]=!0;let n=u;N()&&!n&&(p+=2*(y-v))},nr=(n,t)=>{null!=t&&(e=t),0==n?w():(v++,r={},M.innerHTML="Thinking...",setTimeout(()=>{!function(){let e=Math.min(v+4,8),n=e<=6?3:4;for(;;)if(i(l=[...new Array(e)].map(e=>1+~~(9*Math.random())).sort((e,n)=>e-n),o={}),(s=a(o)).length>=n)return void console.log(s.join(" "))}(),N()},100))};var s,l,u,h=e=>e.split("\n").map(e=>`<p>${e}</p>`).join(""),d=h("\nAuthor: Nina is a very bright girl.\n👧Nina: Yay! 😊\nAuthor: And she can count to 100 already.\n👧Nina: Yes, I can ! 🧮\nAuthor: She does not know fractions and negative numbers yet, though...\n👧Nina: But I will! 🔢\nAuthor: Of course. She loves to play with number cards, applying four arithmetic operations to them to see which results she can get.\n👧Nina: It's fun! 🥳 \nAuthor: But there is one problem...\n👧Nina: 🥺\nAuthor: Nina hates the number...\n👧Nina: Do not say it!\nAuthor: Number that goes after 12. And when she gets this number in her calculations, she gets very upset.\n👧Nina: 😭\nAuthor: And it takes some time for her to calm down and go back to playing. So, your task is to give Nina a certain amount of number cards from your hand, but it should be impossible to make 13 out of them, using operations +, -, *, / and () and each number card at most once.<br/>")+"<div><button onClick=nr(null,true)>Let's play</button></div>\n   <div><button class=sml onClick=nr(null,false)>Play without sound</button></div>\n<br/>",c='\n<i>Author\'s note: this game can be played without computer too. Just use cards or dice to "draw" some numbers. Then pick as \nmuch of them as possible by the same rules as above, i.e. it should not be possible to make 13 of them using arithmetic operations.\n<br/><br/>\nAlternatively, you can play by other rules. Give each player a random set of numbers (in form of dice and/or cards).\nAnd/or give them a "shared pot" of numbers.\nThen players take turns, placing one number per turn from the hand or from the pot to the table.\nThe player that makes a move resulting in a combination that can be calculated to 13, loses.\n</i>\n',m="👧Nina: That's how many numbers I can make out of these cards!",b="<span style=color:red>👧Nina: Ah, can't you see, it's possible to make THAT number out of them! 🥺</span>",f=h('👧Nina: Oh, you are right! 😊 I have not even noticed that this puny number no longer upsets me. Take that, 13! Nina is not to be bullied by the numbers!\nAuthor: That\'s the spirit!\n👧Nina: Now numbers will bow to Nina! I will command them all. 😈\nAuthor: And thus, the tyranny of Nina the Math Queen has begun.\n👧Nina: Hey! I will be a benevolent ruler. 👸 Maybe... 😏\nAuthor: I completely believe you. By the way, did you know that the fear of number 13 is called "triskaidekaphobia"?\n👧Nina: Eeep! It\'s one scary word. 😵\nAuthor: And there is a word for the fear of the long words too - "hippopotomonstrosesquipedaliophobia"!\n👧Nina: Stop it! 🤯\n\nAuthor: PLAYER, thanks for helping Nina the Math Queen quell the number\'s rebellion!\n')+"<div><button onClick=nr(0)>Play Again</button></div>",p=0,v=0,y=7,g=e=>("0"+e).slice(-2);function $(e){return`${g(~~(e/60))} : ${g(e%60)}`}function N(){let t,i;if(0==v)t=`<div class="story">${d}</div><div class=note>${c}</div>`;else if(v>y)t=`<div class="story"><div>Play time (including the time to console Nina)</div> <div><span class=ft>${$(p)}</span></div>${f}</div>`;else{let a=Object.keys(r).map(e=>l[e]);i=o[a.join(",")]||{};let u=function(e){let t="";for(let o in e)t+=`<span class="${13==o?"IB":"safe"}">${o} = ${n(e[o])}</span><br/>`;return t}(i),h=i[13]&&v!=y;h?(function(){if(!e)return;let n="01234".split("");for(let e=0;e<7-v;e++)setTimeout(()=>window.tone(Math.random()).f(0,...n.map(e=>250*Math.random())).v(0,1,1,0),100*e)}(),v<5&&document.body.classList.add("afraid")):document.body.classList.remove("afraid");let d=Math.min(l.length,s.length+(v==y?1:0));t=`  \n  <div class=round>Round ${v}/${y}</div>\n  <div class="bottom ${v>=y-2?"final":""} ${h?"scary":""}">\n  ${u?`<h4>${h?b:m}${h?"":a.length<d?` But I need ${d} cards. 🃏`:" Let's try another set. 🎉"}</h4>\n  ${!h&&a.length>=d?`<button onClick=nr()>${v==y?"I see you have made 13 too...":"Next round"}</button>`:""}  \n  <div class="variants">${u}</div>`:`<h4>👧Nina: Give me ${d} cards, and I will do math to them. 🧮</h4>`}  \n  <div class=cards>\n  ${l.map((e,n)=>`<div onmousedown="cc(${n})" class="card ${r[n]?"sel":""}">${e}</div>`).join("")}\n  </div>\n  <div class=tip>Give her ${d} cards, such that it's impossible, using only +, -, *, / and () on them, to get 13 from them<br/>\n  <div style="font-size:0.4rem;">See console for the correct answer</div>\n  </div>\n  </div>`}return M.innerHTML=t,u=i&&i[13]}function w(){v=0,p=0,N()}setInterval(()=>{v>0&&v<=y&&(p+=1),T.innerHTML=p?`Time</br> ${$(p)}`:""},1e3),w()})()</script>

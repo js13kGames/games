@@ -1,12 +1,1 @@
-<!doctype html>
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<title>WoE - Player</title>
-		<link rel="stylesheet" href="player.css" />
-	</head>
-	<body>
-		<script src="/socket.io.js"></script>
-		<script src="player.js"></script>
-	</body>
-</html>
+<!doctype html> <html> <head> <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> <title>WoE - Player</title> <style>html{height:100%;overflow-x:hidden}body{min-height:100%;overflow-x:hidden;position:relative}</style> </head> <body> <script src="/socket.io.js"></script> <script>!function(){"use strict";var addEventListener=function(elements,events,callback){elements.forEach(function(element){events.forEach(function(event){element.addEventListener(event,callback)})})},currentX=null,currentY=null,didStart=!1,downStart=null,playerId=null,lastFire=0,socket=io({path:location.pathname+"io",upgrade:!1,transports:["websocket"]});socket.on("connect",function(){socket.emit("playerConnect",decodeURIComponent((new RegExp("[?|&]id=([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g,"%20"))||null)}),socket.on("playerInfo",function(player){playerId=player.id,document.body.style.backgroundColor=player.color}),socket.on("roomFull",function(){window.alert("No slots available."),window.history.back()}),socket.on("noSuchRoom",function(){window.alert("This room doesn't exist anymore."),window.history.back()}),addEventListener([document.body],["mousedown","touchstart"],function(event){downStart=Date.now();var x=event.pageX,y=event.pageY;void 0!==event.touches&&(x=event.touches[0].pageX,y=event.touches[0].pageY),currentX=x,currentY=y,didStart=!0}),addEventListener([document.body],["mouseup","touchend"],function(){var time=Date.now();time-downStart<150&&time-lastFire>1e3&&(lastFire=time,socket.emit("playerFired",playerId)),didStart=!1}),addEventListener([document.body],["mousemove","touchmove"],function(event){event.preventDefault();var x=event.pageX,y=event.pageY;void 0!==event.touches&&(x=event.touches[0].pageX,y=event.touches[0].pageY),null!==currentX&&null!==currentY&&didStart&&socket.emit("playerMoved",(currentX-x)/document.body.clientWidth,(currentY-y)/document.body.clientHeight),currentX=x,currentY=y})}()</script> </body> </html>

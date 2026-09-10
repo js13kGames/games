@@ -1,1 +1,1107 @@
-<!doctypehtml><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><link href=style.css rel=stylesheet><title>13 SECONDS TO MIDNIGHT</title><canvas id=gameCanvas></canvas><div id=timerDisplay></div><div id=healthDisplay></div><div id=gameOverScreen><h1>GAME OVER</h1><button id=restartButton>Try Again</button></div><div id=winGameScreen><h1>YOU HAVE ESCAPED THE FOREST</h1><p id=finalScore></p><button id=playAgain>Play Again</button></div><div id=startScreen><h1>13 SECONDS TO MIDNIGHT</h1><div style=text-align:center;font-size:1.2rem;color:#cacaca><h3>Escape the forest before time runs out!</h3><p>Can you survive until midnight?<div style=display:flex;padding:2rem;gap:2rem;background-color:#251e1e;margin:1rem><div>13X Green Cubes = +5 seconds</div><div>13X Red Balls = 2x player speed</div><div>13X Spiders</div></div><p>Controls: Mouse - look around, WASD / Arrow Keys - Move</div><button id=startButton style=margin-top:2rem>Run!</button></div><div id=healthBar style="z-index:5;width:200px;height:20px;background-color:#333;position:absolute;top:4%;left:10px;animation:distort .5s linear infinite"><div id=healthFill style=width:100%;height:100%;background-color:#a02727></div></div><svg><defs><filter id=shake0><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=0 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=7 /></filter><filter id=shake1><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=1 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=10 /></filter><filter id=shake2><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=2 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=6 /></filter><filter id=shake3><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=3 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=3 /></filter><filter id=shake4><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=4 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=8 /></filter></defs></svg><script src=webgl-framework.js></script><script src=main.js></script>
+<!doctypehtml><html lang=en><meta content="width=device-width,initial-scale=1"name=viewport><style>*{margin:0;padding:0;box-sizing:border-box}body{color:#fafafa;margin:0;overflow:hidden;background:radial-gradient(circle,#767872 100%,#000000 0%);text-wrap:nowrap;font-family:'Times New Roman',Times,serif}button{padding:20px 40px;font-size:18px;color:#fff;border:none;background-color:#a02727;animation:distort .5s linear infinite}button:hover{background-color:#bb3939;animation:none}h1{animation:distort .5s linear infinite;font-size:48px;margin-bottom:20px}#finalScore{font-size:2rem;animation:distort .5s linear infinite;margin-bottom:2rem}#timerDisplay{position:absolute;top:5%;left:50%;transform:translate(-50%,-50%);font-size:2rem;font-weight:700;z-index:10;animation:distort .5s linear infinite}#gameOverScreen{padding:100%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;display:none;background-color:#000000b3;z-index:10}@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}@keyframes distort{0%{filter:url("#shake0")}25%{filter:url("#shake1")}50%{filter:url("#shake2")}75%{filter:url("#shake3")}100%{filter:url("#shake4")}}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background-color:#000c;z-index:1000}#winGameScreen{padding:100%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;display:none;background-color:#000000b3;z-index:10}@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}#winGameScreen{animation:1s fadeIn}#healthDisplay{position:absolute;top:3%;left:10px;font-size:24px;font-weight:700;z-index:10}</style><title>13 Seconds To Midnight - js13kGames 2024</title><canvas id=gameCanvas></canvas><div id=timerDisplay></div><div id=healthDisplay></div><div id=gameOverScreen><h1>GAME OVER</h1><button id=restartButton>Try Again</button></div><div id=winGameScreen><h1>YOU HAVE ESCAPED THE FOREST</h1><p id=finalScore></p><button id=playAgain>Play Again</button></div><div id=startScreen><h1>13 SECONDS TO MIDNIGHT</h1><div style=text-align:center;font-size:1.2rem;color:#cacaca><h3>Escape the forest before time runs out!</h3><p>Can you survive until midnight?<div style=display:flex;padding:2rem;gap:2rem;background-color:#251e1e;margin:1rem><div>13X Green Cubes = +5 seconds</div><div>13X Red Balls = 2x player speed</div><div>13X Spiders</div></div><p>Controls: Mouse - look around, WASD / Arrow Keys - Move</div><button id=startButton style=margin-top:2rem>Run!</button></div><div id=healthBar style="z-index:5;width:200px;height:20px;background-color:#333;position:absolute;top:4%;left:10px;animation:distort .5s linear infinite"><div id=healthFill style=width:100%;height:100%;background-color:#a02727></div></div><svg><defs><filter id=shake0><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=0 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=7 /></filter><filter id=shake1><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=1 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=10 /></filter><filter id=shake2><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=2 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=6 /></filter><filter id=shake3><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=3 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=3 /></filter><filter id=shake4><feTurbulence baseFrequency=0.05 id=turbulence numOctaves=3 seed=4 /><feDisplacementMap id=displacement in=SourceGraphic in2=noise scale=8 /></filter></defs></svg><script>
+
+debug=1;
+W={
+models:{},
+reset:canvas=>{
+W.canvas=canvas;
+W.objs=0;
+W.current={};
+W.next={};
+W.textures={};
+W.gl=canvas.getContext('webgl2');
+W.gl.blendFunc(770,771);
+W.gl.activeTexture(33984);
+W.program=W.gl.createProgram();
+W.gl.enable(2884);
+W.gl.shaderSource(
+t=W.gl.createShader(35633),
+`#version 300 es
+      
+precision highp float;
+in vec4 pos, col, uv, normal;
+uniform mat4 pv, eye, m, im;
+uniform vec4 bb;
+out vec4 v_pos, v_col, v_uv, v_normal;
+out float v_height;
+void main() {
+    gl_Position = pv * (
+        v_pos = bb.z > 0.
+        ? m[3] + eye * (pos * bb)
+        : m * pos
+    );
+    v_col = col;
+    v_uv = uv;
+    v_normal = transpose(inverse(m)) * normal;
+    v_height = pos.y; // Pass the y-coordinate to the fragment shader
+}`
+);
+W.gl.compileShader(t);
+W.gl.attachShader(W.program,t);
+ if(debug)console.log('vertex shader:',W.gl.getShaderInfoLog(t)||'OK');
+W.gl.shaderSource(
+t=W.gl.createShader(35632),
+`#version 300 es
+precision highp float;
+in vec4 v_pos, v_col, v_uv, v_normal;
+in float v_height;
+uniform vec3 light;
+uniform vec4 o;
+uniform sampler2D sampler;
+out vec4 c;
+
+void main() {
+    c = mix(texture(sampler, v_uv.xy), v_col, o[3]);
+    if(o[1] > 0.) {
+        c = vec4(
+            c.rgb * (max(0., dot(light, -normalize(
+                o[0] > 0.
+                ? vec3(v_normal.xyz)
+                : cross(dFdx(v_pos.xyz), dFdy(v_pos.xyz))
+            )))
+            + o[2]),
+            c.a
+        );
+    }
+    
+    // Apply transparency based on height
+    float heightThreshold = 0.1 ; // Adjust this value to control where transparency starts
+    float transparencyFactor = smoothstep(heightThreshold, 5.2, v_height);
+    c.a *= 1.0 - transparencyFactor;
+
+}`
+);
+W.gl.compileShader(t);
+W.gl.attachShader(W.program,t);
+ if(debug)console.log('fragment shader:',W.gl.getShaderInfoLog(t)||'OK');
+W.gl.linkProgram(W.program);
+W.gl.useProgram(W.program);
+ if(debug)console.log('program:',W.gl.getProgramInfoLog(W.program)||'OK');
+W.gl.clearColor(1,1,1,1);
+W.clearColor=c=>W.gl.clearColor(...W.col(c));
+W.clearColor("fff");
+W.gl.enable(2929);
+W.light({y:-1});
+W.camera({fov:30});
+setTimeout(W.draw,16);
+},
+setState:(state,type,texture,i,normal=[],A,B,C,Ai,Bi,Ci,AB,BC)=>{
+state.n||='o'+W.objs++;
+ if(state.size)state.w=state.h=state.d=state.size;
+ if(state.t&&state.t.width&&!W.textures[state.t.id]){
+texture=W.gl.createTexture();
+W.gl.pixelStorei(37441,true);
+W.gl.bindTexture(3553,texture);
+W.gl.pixelStorei(37440,1);
+W.gl.texImage2D(3553,0,6408,6408,5121,state.t);
+W.gl.generateMipmap(3553);
+W.textures[state.t.id]=texture;
+}
+ if(state.fov){
+W.projection=
+new DOMMatrix([
+(1/Math.tan(state.fov*Math.PI/180))/(W.canvas.width/W.canvas.height),0,0,0,
+0,(1/Math.tan(state.fov*Math.PI/180)),0,0,
+0,0,-1001/999,-1,
+0,0,-2002/999,0
+]);
+}
+state={type,...(W.current[state.n]=W.next[state.n]||{w:1,h:1,d:1,x:0,y:0,z:0,rx:0,ry:0,rz:0,b:'888',mode:4,mix:0}),...state,f:0};
+ if(W.models[state.type]?.vertices&&!W.models?.[state.type].verticesBuffer){
+W.gl.bindBuffer(34962,W.models[state.type].verticesBuffer=W.gl.createBuffer());
+W.gl.bufferData(34962,new Float32Array(W.models[state.type].vertices),35044);
+ if(!W.models[state.type].normals&&W.smooth)W.smooth(state);
+ if(W.models[state.type].normals){
+W.gl.bindBuffer(34962,W.models[state.type].normalsBuffer=W.gl.createBuffer());
+W.gl.bufferData(34962,new Float32Array(W.models[state.type].normals.flat()),35044);
+}
+}
+ if(W.models[state.type]?.uv&&!W.models[state.type].uvBuffer){
+W.gl.bindBuffer(34962,W.models[state.type].uvBuffer=W.gl.createBuffer());
+W.gl.bufferData(34962,new Float32Array(W.models[state.type].uv),35044);
+}
+ if(W.models[state.type]?.indices&&!W.models[state.type].indicesBuffer){
+W.gl.bindBuffer(34963,W.models[state.type].indicesBuffer=W.gl.createBuffer());
+W.gl.bufferData(34963,new Uint16Array(W.models[state.type].indices),35044);
+}
+ if(!state.t){
+state.mix=1;
+}
+else if(state.t&&!state.mix){
+state.mix=0;
+}
+W.next[state.n]=state;
+},
+draw:(now,dt,v,i, transparent=[])=>{
+dt=now-W.lastFrame;
+W.lastFrame=now;
+requestAnimationFrame(W.draw);
+ if(W.next.camera.g){
+W.render(W.next[W.next.camera.g],dt,1);
+}
+v=W.animation('camera');
+ if(W.next?.camera?.g){
+v.preMultiplySelf(W.next[W.next.camera.g].M||W.next[W.next.camera.g].m);
+}
+W.gl.uniformMatrix4fv(
+W.gl.getUniformLocation(W.program,'eye'),
+false,
+v.toFloat32Array()
+);
+v.invertSelf();
+v.preMultiplySelf(W.projection);
+W.gl.uniformMatrix4fv(
+W.gl.getUniformLocation(W.program,'pv'),
+false,
+v.toFloat32Array()
+);
+W.gl.clear(16640);
+for(i in W.next){
+ if(!W.next[i].t&&W.col(W.next[i].b)[3]==1){
+W.render(W.next[i],dt);
+}
+else{
+ transparent.push(W.next[i]);
+}
+}
+ transparent.sort((a,b)=>{
+return W.dist(b)-W.dist(a);
+});
+W.gl.enable(3042);
+for(i of transparent){
+ if(["plane","billboard"].includes(i.type))W.gl.depthMask(0);
+W.render(i,dt);
+W.gl.depthMask(1);
+}
+W.gl.disable(3042);
+W.gl.uniform3f(
+W.gl.getUniformLocation(W.program,'light'),
+W.lerp('light','x'),W.lerp('light','y'),W.lerp('light','z')
+);
+},
+render:(object,dt,just_compute=['camera','light','group'].includes(object.type),buffer)=>{
+ if(object.t){
+W.gl.bindTexture(3553,W.textures[object.t.id]);
+W.gl.uniform1i(W.gl.getUniformLocation(W.program,'sampler'),0);
+}
+ if(object.f<object.a)object.f+=dt;
+ if(object.f>object.a)object.f=object.a;
+W.next[object.n].m=W.animation(object.n);
+ if(W.next[object.g]){
+W.next[object.n].m.preMultiplySelf(W.next[object.g].M||W.next[object.g].m);
+}
+W.gl.uniformMatrix4fv(
+W.gl.getUniformLocation(W.program,'m'),
+false,
+(W.next[object.n].M||W.next[object.n].m).toFloat32Array()
+);
+W.gl.uniformMatrix4fv(
+W.gl.getUniformLocation(W.program,'im'),
+false,
+(new DOMMatrix(W.next[object.n].M||W.next[object.n].m)).invertSelf().toFloat32Array()
+);
+ if(!just_compute){
+W.gl.bindBuffer(34962,W.models[object.type].verticesBuffer);
+W.gl.vertexAttribPointer(buffer=W.gl.getAttribLocation(W.program,'pos'),3,5126,false,0,0)
+W.gl.enableVertexAttribArray(buffer);
+ if(W.models[object.type].uvBuffer){
+W.gl.bindBuffer(34962,W.models[object.type].uvBuffer);
+W.gl.vertexAttribPointer(buffer=W.gl.getAttribLocation(W.program,'uv'),2,5126,false,0,0);
+W.gl.enableVertexAttribArray(buffer);
+}
+ if((object.s||W.models[object.type].customNormals)&&W.models[object.type].normalsBuffer){
+W.gl.bindBuffer(34962,W.models[object.type].normalsBuffer);
+W.gl.vertexAttribPointer(buffer=W.gl.getAttribLocation(W.program,'normal'),3,5126,false,0,0);
+W.gl.enableVertexAttribArray(buffer);
+}
+W.gl.uniform4f(
+W.gl.getUniformLocation(W.program,'o'),
+object.s,
+((object.mode>3)||(W.gl[object.mode]>3))&&!object.ns?1:0,
+W.ambientLight||0.2,
+object.mix
+);
+W.gl.uniform4f(
+W.gl.getUniformLocation(W.program,'bb'),
+object.w,
+object.h,
+object.type=='billboard',
+0
+);
+ if(W.models[object.type].indicesBuffer){
+W.gl.bindBuffer(34963,W.models[object.type].indicesBuffer);
+}
+W.gl.vertexAttrib4fv(
+W.gl.getAttribLocation(W.program,'col'),
+W.col(object.b)
+);
+ if(W.models[object.type].indicesBuffer){
+W.gl.drawElements(+object.mode||W.gl[object.mode],W.models[object.type].indices.length,5123,0);
+}
+else{
+W.gl.drawArrays(+object.mode||W.gl[object.mode],0,W.models[object.type].vertices.length/3);
+}
+}
+},
+lerp:(item,property)=>
+W.next[item]?.a
+?W.current[item][property]+(W.next[item][property]-W.current[item][property])*(W.next[item].f/W.next[item].a)
+:W.next[item][property],
+animation:(item,m=new DOMMatrix)=>
+W.next[item]
+?m
+.translateSelf(W.lerp(item,'x'),W.lerp(item,'y'),W.lerp(item,'z'))
+.rotateSelf(W.lerp(item,'rx'),W.lerp(item,'ry'),W.lerp(item,'rz'))
+.scaleSelf(W.lerp(item,'w'),W.lerp(item,'h'),W.lerp(item,'d'))
+:m,
+dist:(a,b=W.next.camera)=>a?.m&&b?.m?(b.m.m41-a.m.m41)**2+(b.m.m42-a.m.m42)**2+(b.m.m43-a.m.m43)**2:0,
+ambient:a=>W.ambientLight=a,
+col:c=>[...c.replace("#","").match(c.length<5?/./g:/../g).map(a=>('0x'+a)/(c.length<5?15:255)),1],
+add:(name,objects)=>{
+W.models[name]=objects;
+ if(objects.normals){
+W.models[name].customNormals=1;
+}
+W[name]=settings=>W.setState(settings,name);
+},
+move:(t,delay)=>setTimeout(()=>{W.setState(t)},delay||1),
+camera:(t,delay)=>setTimeout(()=>{W.setState(t,t.n='camera')},delay||1),
+light:(t,delay)=>delay?setTimeout(()=>{W.setState(t,t.n='light')},delay):W.setState(t,t.n='light'),
+};
+W.smooth=(state,dict={},vertices=[], iterate,iterateSwitch,i,j,A,B,C,Ai,Bi,Ci,normal)=>{
+W.models[state.type].normals=[];
+for(i=0;i<W.models[state.type].vertices.length;i+=3){
+vertices.push(W.models[state.type].vertices.slice(i,i+3));
+}
+ if( iterate=W.models[state.type].indices)iterateSwitch=1;
+else iterate=vertices,iterateSwitch=0;
+for(i=0;i< iterate.length*2;i+=3){
+j=i% iterate.length;
+A=vertices[Ai=iterateSwitch?W.models[state.type].indices[j]:j];
+B=vertices[Bi=iterateSwitch?W.models[state.type].indices[j+1]:j+1];
+C=vertices[Ci=iterateSwitch?W.models[state.type].indices[j+2]:j+2];
+AB=[B[0]-A[0],B[1]-A[1],B[2]-A[2]];
+BC=[C[0]-B[0],C[1]-B[1],C[2]-B[2]];
+normal=i>j?[0,0,0]:[AB[1]*BC[2]-AB[2]*BC[1],AB[2]*BC[0]-AB[0]*BC[2],AB[0]*BC[1]-AB[1]*BC[0]];
+dict[A[0]+"_"+A[1]+"_"+A[2]]||=[0,0,0];
+dict[B[0]+"_"+B[1]+"_"+B[2]]||=[0,0,0];
+dict[C[0]+"_"+C[1]+"_"+C[2]]||=[0,0,0];
+W.models[state.type].normals[Ai]=dict[A[0]+"_"+A[1]+"_"+A[2]]=dict[A[0]+"_"+A[1]+"_"+A[2]].map((a,i)=>a+normal[i]);
+W.models[state.type].normals[Bi]=dict[B[0]+"_"+B[1]+"_"+B[2]]=dict[B[0]+"_"+B[1]+"_"+B[2]].map((a,i)=>a+normal[i]);
+W.models[state.type].normals[Ci]=dict[C[0]+"_"+C[1]+"_"+C[2]]=dict[C[0]+"_"+C[1]+"_"+C[2]].map((a,i)=>a+normal[i]);
+}
+}
+W.add("plane",{
+vertices:[
+.5,.5,0,-.5,.5,0,-.5,-.5,0,
+.5,.5,0,-.5,-.5,0,.5,-.5,0
+],
+uv:[
+1,1,0,1,0,0,
+1,1,0,0,1,0
+],
+});
+W.add("billboard",W.models.plane);
+W.add("cube",{
+vertices:[
+.5,.5,.5,-.5,.5,.5,-.5,-.5,.5,
+.5,.5,.5,-.5,-.5,.5,.5,-.5,.5,
+.5,.5,-.5,.5,.5,.5,.5,-.5,.5,
+.5,.5,-.5,.5,-.5,.5,.5,-.5,-.5,
+.5,.5,-.5,-.5,.5,-.5,-.5,.5,.5,
+.5,.5,-.5,-.5,.5,.5,.5,.5,.5,
+-.5,.5,.5,-.5,.5,-.5,-.5,-.5,-.5,
+-.5,.5,.5,-.5,-.5,-.5,-.5,-.5,.5,
+-.5,.5,-.5,.5,.5,-.5,.5,-.5,-.5,
+-.5,.5,-.5,.5,-.5,-.5,-.5,-.5,-.5,
+.5,-.5,.5,-.5,-.5,.5,-.5,-.5,-.5,
+.5,-.5,.5,-.5,-.5,-.5,.5,-.5,-.5
+],
+uv:[
+1,1,0,1,0,0,
+1,1,0,0,1,0,
+1,1,0,1,0,0,
+1,1,0,0,1,0,
+1,1,0,1,0,0,
+1,1,0,0,1,0,
+1,1,0,1,0,0,
+1,1,0,0,1,0,
+1,1,0,1,0,0,
+1,1,0,0,1,0,
+1,1,0,1,0,0,
+1,1,0,0,1,0
+]
+});
+W.cube=settings=>W.setState(settings,'cube');
+((i,ai,j,aj,p1,p2,vertices=[],indices=[],uv=[],precision=20)=>{
+for(j=0;j<=precision;j++){
+aj=j*Math.PI/precision;
+for(i=0;i<=precision;i++){
+ai=i*2*Math.PI/precision;
+vertices.push(+(Math.sin(ai)*Math.sin(aj)/2).toFixed(6),+(Math.cos(aj)/2).toFixed(6),+(Math.cos(ai)*Math.sin(aj)/2).toFixed(6));
+uv.push((Math.sin((i/precision)))*3.5,-Math.sin(j/precision))
+ if(i<precision&&j<precision){
+indices.push(p1=j*(precision+1)+i,p2=p1+(precision+1),(p1+1),(p1+1),p2,(p2+1));
+}
+}
+}
+W.add("sphere",{vertices,uv,indices});
+})();
+</script><script>
+let gameStarted=false;
+const MAX_PARTICLES=130;
+let PLAYER_SPEED=0.05;
+const SENSITIVITY=0.1;
+const forestRadius=80;
+const treeCount=2000;
+const playerBaseHeight=0.5;
+const TREE_COLLISION_RADIUS=.5;
+const PLAYER_RADIUS=0.2;
+const INITIAL_AMBIENT=0.3;
+const MAX_TIME=13000;
+const SHAKE_INTENSITY=0.05;
+const SHAKE_DURATION=300;
+const ATTACK_COOLDOWN=1000;
+let speedBoostActive=false;
+let speedBoostTimer=null;
+const INITIAL_HEARTBEAT_DELAY=1500;
+const FINAL_HEARTBEAT_DELAY=400;
+const BASE_PLAYER_SPEED=0.05;
+const SPEED_BOOST_MULTIPLIER=2;
+'use strict';
+let 
+zzfxV=.3,
+zzfxX=new AudioContext,
+zzfx=
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0
+,N=0)=>{let M=Math,d=2*M.PI,R=44100,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,
+g=0,H=0,a=0,n=1,I=0,J=0,f=0,h=N<0?-1:1,x=d*h*N*2/R,L=M.cos(x),Z=M.sin,K=Z(x)/4,O=1+K,
+X=-2*L/O,Y=(1-K)/O,P=(1+h*L)/2/O,Q=-(h+L)/O,S=P,T=0,U=0,V=0,W=0;e=R*e+9;m*=R;r*=R;t*=
+R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;p*=zzfxV;for(h=e+m+r+t+c|0;a<h;k[a++]
+=f*p)++J%(100*F|0)||(f=q?1<q?2<q?3<q?Z(g**3):M.max(M.min(M.tan(g),1),-1):1-(2*g/d%2+2)
+%2:1-4*M.abs(M.round(g/d)-g/d):Z(g),f=(l?1-B+B*Z(d*a/l):1)*(f<0?-1:1)*M.abs(f)**D*(a<
+e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/2+(c>a?0:(a<h-c?1:(h
+-a)/c)*k[a-c|0]/2/p):f,N?f=W=S*T+Q*(T=U)+P*(U=f)-Y*V-X*(V=W):0),x=(b+=u+=y)*M.cos(A*
+H++),g+=x+x*E*Z(a**5),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n=n||1);p=zzfxX.
+createBuffer(1,h,R);p.getChannelData(0).set(k);b=zzfxX.createBufferSource();
+b.buffer=p;b.connect(zzfxX.destination);b.start()}
+onload=()=>{
+const canvas=document.getElementById('gameCanvas');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+const timerDisplay=document.getElementById("timerDisplay");
+const healthFill=document.getElementById('healthFill');
+const gameOverScreen=document.getElementById('gameOverScreen');
+const restartButton=document.getElementById("restartButton");
+const winGameScreen=document.getElementById("winGameScreen");
+const playAgain=document.getElementById("playAgain");
+X=0;
+Z=0;
+RY=0;
+let playerHealth=100;
+const particles=[];
+const trees=[];
+const collectibles=[];
+const enemies=[];
+const overlayCanvas=document.createElement('canvas');
+overlayCanvas.id='overlayCanvas';
+overlayCanvas.style.position='absolute';
+overlayCanvas.style.top='0';
+overlayCanvas.style.left='0';
+document.body.appendChild(overlayCanvas);
+const customModelTree={
+vertices:[.157565,0,.157565,-.157565,0,-.157565,.157565,0,-.157565,.102249,5.332085,.10225,-.102249,6.165702,.10225,-.102249,5.332085,.10225,-.157565,0,.157565,-.102249,5.332085,-.102248,.102249,5.332085,-.102248,-.017916,2.437575,-.387225,.061217,2.163112,-.097166,-.058139,2.163112,-.097166,.020994,2.437575,-.387225,.061217,2.270659,-.097166,.020994,2.472636,-.387225,-.058139,2.270659,-.097166,-.017916,2.437575,-.387225,-.058139,2.163112,-.097166,-.058139,2.163112,-.097166,.061217,2.163112,-.097166,.020994,2.437575,-.387225,-.017916,2.472636,-.387225,.053329,1.250192,.157565,-.016467,1.476365,.366027,-.050711,1.250192,.135427,-.050711,1.350576,.135427,.019084,1.510667,.366027,.053329,1.350576,.135427,.019084,1.476365,.366027,.053329,1.250192,.157565,-.050711,1.250192,.135427,.053329,1.250192,.157565,-.016467,1.476365,.366027,-.016467,1.510667,.366027,.357363,1.930699,.013624,.132233,1.879278,.034185,.132233,1.813751,.034185,.357363,1.94831,.013624,.132233,1.879278,-.022051,.357363,1.930699,-.00149,.132233,1.813751,-.024717,.132233,1.813751,.034185,.132233,1.813751,.034185,.132233,1.879278,.034185,.357363,1.94831,.013624,.357363,1.94831,-.00149,-.392656,3.060125,-.024078,-.114001,3.037659,-.03942,-.114001,2.972429,-.03942,-.392656,3.096621,-.024078,-.114001,3.037659,.030237,-.392656,3.060125,.014895,-.114001,2.972429,.030237,-.114001,2.972429,-.03942,-.114001,2.972429,-.03942,-.114001,3.037659,-.03942,-.392656,3.096621,-.024078,-.392656,3.096621,.014895,.03203,3.484732,.157566,-.006541,3.603713,.397595,-.025791,3.484732,.07078,-.025791,3.550155,.07078,-.006541,3.625574,.397595,.03203,3.550155,.07078,.01278,3.625574,.397595,.03203,3.484732,.157566,-.025791,3.484732,.07078,.03203,3.484732,.157566,-.006541,3.603713,.397595,-.024333,4.203851,-.027319,.022481,4.394909,-.400243,.041965,4.203851,-.027319,.041965,4.286136,-.027319,.022481,4.42883,-.400243,-.024333,4.286136,-.027319,-.00485,4.394909,-.400243,-.024333,4.203851,-.027319,-.024333,4.203851,-.027319,.041965,4.203851,-.027319,.022481,4.394909,-.400243,-.00485,4.42883,-.400243,-.388418,.931924,-.004114,-.070566,.84111,-.025226,-.082292,.7847,-.025226,-.385544,.945751,-.004114,-.070566,.84111,.030707,-.388418,.931924,.009595,-.082292,.7847,.030707,-.082292,.7847,-.025226,-.082292,.7847,-.025226,-.070566,.84111,-.025226,-.385544,.945751,-.004114,-.385544,.945751,.009595,.102249,6.165702,.10225,-.102249,6.865098,.10225,.102249,6.165702,-.102248,-.102249,6.165702,-.102248,-.102249,6.865098,-.102248,.102249,6.865098,.10225,.102249,6.865098,-.102248,-.017916,2.437575,-.387225,.019084,1.476365,.366027,.019084,1.476365,.366027,.357363,1.930699,.013624,.357363,1.930699,.013624,-.392656,3.060125,-.024078,-.392656,3.060125,-.024078,.01278,3.603713,.397595,.01278,3.603713,.397595,.01278,3.603713,.397595,-.00485,4.394909,-.400243,-.00485,4.394909,-.400243,-.388418,.931924,-.004114,-.388418,.931924,-.004114],
+uv:[0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,.625,0,.375,.25,.375,0,.625,.25,.375,.5,.625,.5,.375,.75,.625,1,.375,1,.125,.75,.125,.5,.875,.5,.625,.75,.375,0,.625,.25,.375,.25,.375,.5,.625,.75,.375,.75,.625,1,.375,1,.125,.5,.125,.75,.875,.5,.625,.5,.625,0,.375,.25,.375,0,.625,.25,.375,.5,.625,.75,.375,.75,.375,1,.125,.75,.125,.5,.875,.5,.625,.5,.625,0,.375,.25,.375,0,.625,.25,.375,.5,.625,.75,.375,.75,.375,1,.125,.75,.125,.5,.875,.5,.625,.5,.375,0,.625,.25,.375,.25,.375,.5,.625,.5,.375,.75,.625,.75,.375,1,.125,.5,.125,.75,.875,.5,.375,0,.625,.25,.375,.25,.375,.5,.625,.5,.375,.75,.625,1,.375,1,.125,.75,.125,.5,.875,.5,.625,.75,.625,0,.375,.25,.375,0,.625,.25,.375,.5,.625,.75,.375,.75,.375,1,.125,.75,.125,.5,.875,.5,.625,.5,0,1,1,1,0,0,1,0,1,0,0,1,0,0,.875,.75,.625,0,.875,.75,.625,1,.875,.75,.625,1,.875,.75,.625,0,.625,1,.875,.75,.625,0,.875,.75,.625,1,.875,.75],
+indices:[0,1,2,3,4,5,6,7,1,2,3,0,0,5,6,1,8,2,9,10,11,12,13,10,14,15,13,15,16,17,13,18,19,20,21,14,22,23,24,23,25,24,25,26,27,27,28,29,30,27,31,32,26,33,34,35,36,37,38,35,38,39,40,39,41,40,38,42,43,44,39,45,46,47,48,49,50,47,50,51,52,51,53,52,50,54,55,56,51,57,58,59,60,59,61,60,62,63,61,64,65,63,66,63,67,68,64,62,69,70,71,70,72,71,73,74,72,74,75,76,72,77,78,79,80,73,81,82,83,84,85,82,85,86,87,86,88,87,85,89,90,91,86,92,93,94,4,7,95,8,5,96,7,8,93,3,97,98,99,96,99,95,4,97,96,95,98,93,0,6,1,3,93,4,6,5,7,2,8,3,0,3,5,1,7,8,9,12,10,12,14,13,14,21,15,15,21,16,13,15,18,20,100,21,22,101,23,23,33,25,25,33,26,27,26,28,30,25,27,32,102,26,34,37,35,37,45,38,38,45,39,39,103,41,38,40,42,44,104,39,46,49,47,49,57,50,50,57,51,51,105,53,50,52,54,56,106,51,58,107,59,59,62,61,62,64,63,64,108,65,66,61,63,68,109,64,69,110,70,70,73,72,73,80,74,74,80,75,72,74,77,79,111,80,81,84,82,84,92,85,85,92,86,86,112,88,85,87,89,91,113,86,93,98,94,7,96,95,5,4,96,8,95,93,97,94,98,96,97,99,4,94,97,95,99,98]
+}
+const customModelEnemy={
+vertices:[...'@/\u0001 -(:A\u0011_-(V8WI\u0013S@$d)8W6\u0013S@\u0010$6\u0013S)8WV8W_-(\u0001J?/,O)(4I\u0013SV8W@\u0010$6\u0013S -()8WJLP,Ow7F)8WJ?V(4J?\u00087F\u0001JL\u0002\u0001F\u0001JL\u00087F\u0001J?\u00087Fw7FJ?}\u0001FJLw7FM\u001cF2\u001cF)(4V(4\u0001J?*\u0013]8 [4 VK VU\u0013]I\u001aWG [R\u0014_G [O\u0014[-\u0014_-\u0014_0\u0014[8 [6\u001aWR\u0014_'].map(a=>(a.codePointAt())/127),
+uv:[...'@EM&48u\u0009y)`&\u001dg\u0007z\u0012TY\u0006S&$\u0006C\u0006M&VHNpbn)T3z^=`&u\u0009y)OINpFTC\u0006>G9mVHxLs=lzOIFTe=`L`Le=lzs=xLEwEw9mbn>G\u001a0\u0005O\u0012P\u0012P\u001a0 J\u0005O\u00140/R :\u00140\x270 :/R J\x270'].map(a=>(a.codePointAt())/127),
+indices:[0,1,2,3,4,5,6,7,8,9,5,10,2,11,12,0,2,13,14,15,16,17,6,8,18,6,17,3,5,9,0,13,19,19,1,0,20,21,9,22,21,20,13,2,12,6,18,7,23,24,25,26,2,1,27,25,28,29,24,23,30,31,32,33,34,15,35,36,32,32,31,35,37,38,39,40,41,39,14,33,15,24,42,25,43,34,44,29,45,24,25,42,28,39,38,40,34,43,15,34,46,44,47,48,49,50,51,52,51,53,54,55,52,56,47,57,48,58,59,60,49,61,47,51,50,53,61,59,47,59,61,60,62,55,56,51,56,52]
+};
+function createParticle(playerX,playerZ){
+const angle=Math.random()*Math.PI*2;
+const radius=Math.sqrt(Math.random())*30;
+const x=playerX+Math.cos(angle)*radius;
+const z=playerZ+Math.sin(angle)*radius;
+const y=0.4+Math.random()*3;
+return {
+x,y,z,
+vx:(Math.random()-0.2)*0.002,
+vy:-0.0005-Math.random()*0.0001,
+vz:(Math.random()-0.2)*0.002,
+life:2000+Math.random()*2000,
+maxLife:3500,
+size:0.3+Math.random()*0.3,
+opacity:1
+};
+}
+function updateParticles(deltaTime,playerX,playerZ){
+for(let i=particles.length-1;i>=0;i--){
+const p=particles[i];
+p.x+=(p.vx+Math.sin(Date.now()/3000)*0.0005)*deltaTime;
+p.y+=p.vy*deltaTime;
+p.z+=(p.vz+Math.cos(Date.now()/3000)*0.0005)*deltaTime;
+p.life-=deltaTime;
+p.opacity=Math.min(1,p.life/p.maxLife);
+ if(p.life<=0||p.y<0){
+particles.splice(i,1);
+}else{
+W.billboard({
+n:`particle${i}`,
+x:p.x,
+y:p.y,
+z:p.z,
+w:p.size,
+h:p.size,
+b:"ffffff50"+Math.floor(p.opacity*255).toString(16).padStart(2,'0')
+});
+}
+}
+ if(particles.length<MAX_PARTICLES&&Math.random()<0.95){
+particles.push(createParticle(playerX,playerZ));
+}
+}
+function updateTunnelVision(timeRemaining,isUnderAttack=false){
+const totalTime=13000;
+const timeProgress=Math.max(0,Math.min(1,1-(timeRemaining/totalTime)));
+const canvas=document.getElementById('overlayCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+const centerX=canvas.width/2;
+const centerY=canvas.height/2;
+const maxRadius=Math.max(canvas.width,canvas.height);
+const minInnerRadius=10;
+const maxInnerRadius=30;
+const innerRadius=maxInnerRadius-(maxInnerRadius-minInnerRadius)*timeProgress;
+const gradient=ctx.createRadialGradient(
+centerX,centerY,innerRadius,
+centerX,centerY,maxRadius/1.2
+);
+const innerOpacity=-8;
+const outerOpacity=Math.min(0.9,0.9+timeProgress*0.8);
+const innerColor=isUnderAttack?'174, 30, 30':'0, 0, 0';
+gradient.addColorStop(0,`rgba(${innerColor}, ${innerOpacity})`);
+gradient.addColorStop(0.9,`rgba(0, 0, 0, ${outerOpacity*2})`);
+gradient.addColorStop(1,`rgba(0, 0, 0, ${outerOpacity})`);
+ctx.fillStyle=gradient;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle=`rgba(0, 0, 0, ${Math.min(0.6,timeProgress*0.6)})`;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+W.reset(canvas);
+W.add("my_custom_tree",customModelTree);
+const gridSize=Math.ceil(Math.sqrt(treeCount));
+const cellSize=forestRadius*2.2/gridSize;
+const offset=forestRadius/gridSize;
+const clearingRadius=forestRadius*.05;
+for(let i=0;i<treeCount;i++){
+const row=Math.floor(i/gridSize);
+const col=i%gridSize;
+const x=(col*cellSize-forestRadius)+(Math.random()*cellSize-offset);
+const z=(row*cellSize-forestRadius)+(Math.random()*cellSize-offset);
+const distanceFromCenter=Math.sqrt(x*x+z*z);
+ if(distanceFromCenter>=clearingRadius){
+trees.push({x,z});
+}
+}
+trees.forEach((tree,i)=>{
+W.my_custom_tree({
+n:"tree"+i,
+size:2.2,
+x:tree.x,
+z:tree.z,
+y:-.1,
+b:"000",
+ry:Math.random()*360,
+s:1,
+});
+});
+for(let i=0;i<26;i++){
+const angle=Math.random()*Math.PI*2;
+const distance=Math.sqrt(Math.random())*(forestRadius*0.8);
+const x=Math.cos(angle)*distance;
+const z=Math.sin(angle)*distance;
+const isSpeedBoost=i>=13;
+collectibles.push({
+x,
+z,
+collected:false,
+type:isSpeedBoost?'speed':'time'
+});
+ if(isSpeedBoost){
+W.sphere({
+n:"collectible"+i,
+size:.2,
+x:x,
+z:z,
+y:0.6,
+b:"ff0000",
+s:1
+});
+}else{
+W.cube({
+n:"collectible"+i,
+size:.2,
+x:x,
+z:z,
+y:0.4,
+rx:45,
+ry:45,
+b:"c3e5b6",
+s:1
+});
+}
+}
+function animateCollectibles(){
+const time=Date.now()*0.001;
+collectibles.forEach((c,i)=>{
+ if(!c.collected&&c.type==='time'){
+const y=0.4+Math.sin(time+i)*0.1;
+const ry=(time*30+i*30)%360;
+W.move({
+n:"collectible"+i,
+y:y,
+ry:ry
+});
+}
+});
+}
+function showCollectibleFeedback(text){
+const feedback=document.createElement('div');
+feedback.textContent=text;
+feedback.style.position='absolute';
+feedback.style.left='50%';
+feedback.style.top='50%';
+feedback.style.transform='translate(-50%, -50%)';
+feedback.style.fontSize='24px';
+feedback.style.fontWeight='bold';
+feedback.style.color='#fff';
+feedback.style.opacity='1';
+feedback.style.transition='all 1s ease-out';
+document.body.appendChild(feedback);
+setTimeout(()=>{
+feedback.style.opacity='0';
+feedback.style.transform='translate(-50%, -100%)';
+},50);
+setTimeout(()=>{
+document.body.removeChild(feedback);
+},1050);
+}
+W.add("my_custom_model",customModelEnemy);
+for(let i=0;i<13;i++){
+const angle=Math.random()*Math.PI*2;
+const distance=Math.sqrt(Math.random())*(forestRadius*0.8);
+const x=Math.cos(angle)*distance;
+const z=Math.sin(angle)*distance;
+enemies.push({x,z,active:true});
+W.my_custom_model({
+n:"enemy"+i,
+size:.7,
+ry:20,
+x:x,
+z:z,
+y:0,
+b:"000",
+s:1
+});
+}
+function calculateAngle(x1,z1,x2,z2){
+return Math.atan2(x2-x1,z2-z1)*(180/Math.PI);
+}
+function createLayeredFog(options={}){
+const {
+baseSize=canvas.width,
+layers=8,
+startHeight=0,
+totalHeight=0.7,
+startOpacity=0.5,
+endOpacity=0.9,
+baseColor="101010"
+}=options;
+const heightStep=totalHeight/layers;
+const opacityStep=(startOpacity-endOpacity)/(layers-1);
+for(let i=0;i<layers;i++){
+const height=startHeight+(i*heightStep);
+const opacity=Math.max(0,Math.min(1,startOpacity-(i*opacityStep)));
+const hexOpacity=Math.floor(opacity*255).toString(16).padStart(2,'0');
+W.plane({
+size:baseSize,
+b:`${baseColor}${hexOpacity}`,
+y:height,
+rx:-90,
+});
+}
+}
+function initScene(){
+W.cube({n:"player",size:.1,y:0.3,z:0,rx:-90,ry:0,b:"f00",s:1});
+W.camera({g:"player",z:5,y:0,rx:90});
+W.clearColor("767872");
+createLayeredFog({
+baseSize:canvas.width,
+layers:20,
+startHeight:0.02,
+totalHeight:0.30,
+startOpacity:0.08,
+endOpacity:0.13,
+});
+createGrassField();
+W.light({x:.3,y:.3,z:.3});
+}
+initScene();
+function initStartScreen(){
+const startScreen=document.getElementById('startScreen');
+const startButton=document.getElementById('startButton');
+startButton.addEventListener('click',startGame);
+startScreen.style.display='flex';
+}
+function startGame(){
+gameState={
+timeRemaining:MAX_TIME,
+isGameOver:false,
+hasWon:false
+};
+const startScreen=document.getElementById('startScreen');
+startScreen.style.display='none';
+gameStarted=true;
+playerHealth=100;
+X=0;
+Z=0;
+RY=0;
+score=0;
+updateHeartbeat();
+startCricketSounds();
+scheduleHorrorSound();
+PLAYER_SPEED=BASE_PLAYER_SPEED;
+W.move({n:"player",x:X,z:Z,ry:RY});
+updateTunnelVision(13000);
+collectibles.forEach((c,i)=>{
+c.collected=false;
+W.move({n:"collectible"+i,y:.4});
+});
+enemies.forEach((e,i)=>{
+e.active=true;
+W.move({n:"enemy"+i,y:0});
+});
+canvas.requestPointerLock();
+lastTime=performance.now();
+requestAnimationFrame(gameLoop);
+}
+function updateDisplays(){
+timerDisplay.textContent=`${(gameState.timeRemaining/1000).toFixed(1)} \ud835\udde6\u20e5\ud835\uddd8\u20e5\ud835\uddd6\u20e5\ud835\udde2\u20e5\ud835\udde1\u20e5\ud835\uddd7\u20e5\ud835\udde6\u20e5 \ud835\udde7\u20e5\ud835\udde2\u20e5 \ud835\udde0\u20e5\ud835\udddc\u20e5\ud835\uddd7\u20e5\ud835\udde1\u20e5\ud835\udddc\u20e5\ud835\uddda\u20e5\ud835\udddb\u20e5\ud835\udde7\u20e5`;
+healthFill.style.width=`${playerHealth}%`;
+}
+initStartScreen();
+document.addEventListener('pointerlockchange',handlePointerLock);
+document.addEventListener('mozpointerlockchange',handlePointerLock);
+document.addEventListener('webkitpointerlockchange',handlePointerLock);
+function createLargeGrassTexture(){
+const canvas=document.createElement('canvas');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+const ctx=canvas.getContext('2d');
+for(let i=0;i<10000;i++){
+const x=Math.random()*canvas.width;
+const y=Math.random()*canvas.height;
+const height=10+Math.random()*10;
+const gradient=ctx.createLinearGradient(x,y+height,x,y);
+gradient.addColorStop(0,'#ff00');
+gradient.addColorStop(1,'#401313');
+ctx.strokeStyle=gradient;
+ctx.lineWidth=10+Math.random()*9;
+ctx.beginPath();
+ctx.moveTo(x,y+height);
+ctx.lineTo(x+(Math.random()-0.9)*50,y);
+ctx.stroke();
+}
+return canvas;
+}
+function createGrassField(){
+const grassTexture=createLargeGrassTexture();
+W.plane({
+size:200,
+y:.01,
+rx:-90,
+t:grassTexture,
+n:"grassField"
+});
+}
+let gameState={
+timeRemaining:13000,
+isGameOver:false,
+hasWon:false
+};
+let keys={u:0,d:0,l:0,r:0,w:0,s:0,a:0,d:0};
+document.onkeydown=e=>{
+ if(e.key=="ArrowUp"||e.key.toLowerCase()=="w")keys.u=1;
+ if(e.key=="ArrowDown"||e.key.toLowerCase()=="s")keys.d=1;
+ if(e.key=="ArrowLeft"||e.key.toLowerCase()=="a")keys.l=1;
+ if(e.key=="ArrowRight"||e.key.toLowerCase()=="d")keys.r=1;
+};
+document.onkeyup=e=>{
+ if(e.key=="ArrowUp"||e.key.toLowerCase()=="w")keys.u=0;
+ if(e.key=="ArrowDown"||e.key.toLowerCase()=="s")keys.d=0;
+ if(e.key=="ArrowLeft"||e.key.toLowerCase()=="a")keys.l=0;
+ if(e.key=="ArrowRight"||e.key.toLowerCase()=="d")keys.r=0;
+};
+function checkCollision(x,z,objects,playerRadius){
+const combinedRadiusSquared=(TREE_COLLISION_RADIUS+playerRadius)**2;
+for(let obj of objects){
+const dx=obj.x-x;
+const dz=obj.z-z;
+const distanceSquared=dx*dx+dz*dz;
+ if(distanceSquared<combinedRadiusSquared){
+return true;
+}
+}
+return false;
+}
+function playHeartbeat(){
+zzfx(...[.08,.1,400,,.01,,1,,-12,.2,-100,-1.12,.05,,,.1,.4,.7,.1]);
+}
+function playCricketSound(){
+zzfx(...[.05,,597,.01,.04,.09,1,2,-2,,372,.07,,,22,,,.67,,,880]);
+}
+function playHorrorSound(){
+zzfx(...[.05,,64,.1,.33,.32,3,2.2,,13,,,.04,,.1,,.17,.63,.03,,143]);
+}
+function playButtonClickSound(){
+zzfx(...[.02,,840,,.03,.06,4,.1,,,-261,.06,,,,,.03,.52,.01,.35]);
+}
+function addButtonClickSounds(){
+const buttons=document.querySelectorAll('button');
+buttons.forEach(button=>{
+button.addEventListener('click',playButtonClickSound);
+});
+}
+addButtonClickSounds();
+startButton.addEventListener('click',()=>{
+playButtonClickSound();
+startGame();
+});
+restartButton.addEventListener("click",()=>{
+playButtonClickSound();
+gameOverScreen.style.display="none";
+restartGame();
+});
+document.getElementById('playAgain').addEventListener('click',()=>{
+playButtonClickSound();
+winGameScreen.style.display="none";
+restartGame();
+});
+function calculateHeartbeatInterval(timeRemaining){
+const timeProgress=1-(timeRemaining/MAX_TIME);
+return INITIAL_HEARTBEAT_DELAY-(INITIAL_HEARTBEAT_DELAY-FINAL_HEARTBEAT_DELAY)*timeProgress;
+}
+let nextHeartbeatTimeout;
+function updateHeartbeat(){
+ if(nextHeartbeatTimeout){
+clearTimeout(nextHeartbeatTimeout);
+}
+const currentInterval=calculateHeartbeatInterval(gameState.timeRemaining);
+playHeartbeat();
+scheduleNextHeartbeat(currentInterval);
+}
+function scheduleNextHeartbeat(delay){
+nextHeartbeatTimeout=setTimeout(()=>{
+ if(!gameState.isGameOver&&!gameState.hasWon){
+playHeartbeat();
+const newDelay=calculateHeartbeatInterval(gameState.timeRemaining);
+scheduleNextHeartbeat(newDelay);
+}
+},delay);
+}
+let cricketInterval;
+function startCricketSounds(){
+cricketInterval=setInterval(()=>{
+ if(Math.random()<0.1){
+playCricketSound();
+}
+},300);
+}
+let horrorSoundTimeout;
+function scheduleHorrorSound(){
+const delay=5000+Math.random()*10000;
+horrorSoundTimeout=setTimeout(()=>{
+playHorrorSound();
+scheduleHorrorSound();
+},delay);
+}
+function stopSounds(){
+ if(cricketInterval){
+clearInterval(cricketInterval);
+cricketInterval=null;
+}
+ if(horrorSoundTimeout){
+clearTimeout(horrorSoundTimeout);
+horrorSoundTimeout=null;
+}
+ if(nextHeartbeatTimeout){
+clearTimeout(nextHeartbeatTimeout);
+nextHeartbeatTimeout=null;
+}
+}
+function activateSpeedBoost(){
+ if(!speedBoostActive){
+PLAYER_SPEED=BASE_PLAYER_SPEED*SPEED_BOOST_MULTIPLIER;
+}
+speedBoostActive=true;
+ if(speedBoostTimer)clearTimeout(speedBoostTimer);
+speedBoostTimer=setTimeout(()=>{
+speedBoostActive=false;
+PLAYER_SPEED=BASE_PLAYER_SPEED;
+},2000);
+}
+function updateDarkness(timeRemaining){
+const cappedTime=Math.min(timeRemaining,MAX_TIME);
+const timeProgress=1-(cappedTime/MAX_TIME);
+const newAmbient=INITIAL_AMBIENT-(timeProgress*(INITIAL_AMBIENT-0.010));
+W.ambient(newAmbient);
+}
+function calculateScore(timeRemaining,health){
+let timeScore=Math.floor(timeRemaining/10);
+let healthScore=Math.floor(health/10)*100;
+return timeScore+healthScore;
+}
+function checkWinCondition(x,z){
+const distanceFromCenter=Math.sqrt(x*x+z*z);
+return distanceFromCenter>forestRadius;
+}
+function restartGame(){
+stopSounds();
+gameState={
+timeRemaining:MAX_TIME,
+isGameOver:false,
+hasWon:false
+};
+playerHealth=100;
+X=0;
+Z=0;
+RY=0;
+score=0;
+PLAYER_SPEED=BASE_PLAYER_SPEED;
+speedBoostActive=false;
+ if(speedBoostTimer)clearTimeout(speedBoostTimer);
+W.move({n:"player",x:X,z:Z,ry:RY});
+gameOverScreen.style.display="none";
+winGameScreen.style.display="none";
+updateTunnelVision(MAX_TIME);
+collectibles.forEach((c,i)=>{
+c.collected=false;
+const y=c.type==='speed'?0.6:0.4;
+W.move({n:"collectible"+i,y:y});
+});
+enemies.forEach((e,i)=>{
+e.active=true;
+W.move({n:"enemy"+i,y:0});
+});
+mouseX=0;
+mouseY=0;
+updateHeartbeat();
+startCricketSounds();
+scheduleHorrorSound();
+updateDisplays();
+gameStarted=true;
+lastTime=performance.now();
+canvas.requestPointerLock();
+requestAnimationFrame(gameLoop);
+}
+restartButton.addEventListener("click",()=>{
+playButtonClickSound();
+restartGame();
+});
+playAgain.addEventListener("click",()=>{
+playButtonClickSound();
+restartGame();
+});
+function handlePointerLock(){
+ if(document.pointerLockElement===canvas){
+}else{
+ if(gameStarted&&!gameState.isGameOver&&!gameState.hasWon){
+canvas.requestPointerLock();
+}
+}
+}
+let mouseX=0;
+let mouseY=0;
+function updatePlayerRotation(){
+W.move({
+n:"player",
+rx:-90+mouseY*SENSITIVITY,
+ry:mouseX*SENSITIVITY
+});
+}
+document.addEventListener('mousemove',(event)=>{
+ if(document.pointerLockElement===canvas){
+mouseX-=event.movementX;
+mouseY-=event.movementY;
+mouseY=Math.max(-180,Math.min(240,mouseY));
+updatePlayerRotation();
+}
+});
+canvas.addEventListener('click',()=>{
+ if(gameStarted&&!gameState.isGameOver&&!gameState.hasWon){
+canvas.requestPointerLock();
+}
+});
+let cameraShake={x:0,y:0,z:0,duration:0};
+function updateCameraShake(deltaTime){
+ if(cameraShake.duration>0){
+cameraShake.duration-=deltaTime;
+cameraShake.x=(Math.random()-0.5)*SHAKE_INTENSITY;
+cameraShake.y=(Math.random()-0.5)*SHAKE_INTENSITY;
+cameraShake.z=(Math.random()-0.5)*SHAKE_INTENSITY;
+ if(cameraShake.duration<=0){
+cameraShake.x=0;
+cameraShake.y=0;
+cameraShake.z=0;
+}
+}
+}
+function gameOver(){
+gameState.timeRemaining=0;
+gameState.isGameOver=true;
+stopSounds();
+gameOverScreen.style.display='block';
+document.exitPointerLock();
+zzfx(...[.03,,167,.02,.46,.02,4,.1,-76,-25,279,.94,,,,,.27,.97,.48]);
+}
+function winGame(){
+gameState.hasWon=true;
+stopSounds();
+score=calculateScore(gameState.timeRemaining,playerHealth);
+const winGameScreen=document.getElementById('winGameScreen');
+const finalScore=document.getElementById('finalScore');
+finalScore.textContent=`\ud835\uddec\u20e5\ud835\udde2\u20e5\ud835\udde8\u20e5\ud835\udde5\u20e5 \ud835\udde6\u20e5\ud835\uddd6\u20e5\ud835\udde2\u20e5\ud835\udde5\u20e5\ud835\uddd8\u20e5: ${score}`;
+winGameScreen.style.display='block';
+document.exitPointerLock();
+zzfx(...[.5,,699,.03,.2,.17,1,.7,,,,,.09,,,,.13,.98,.13,.39,-1499]);
+}
+let lastTime=performance.now();
+let frameCount=0;
+function gameLoop(currentTime){
+ if(!gameStarted||gameState.isGameOver||gameState.hasWon)return ;
+const deltaTime=currentTime-lastTime;
+lastTime=currentTime;
+gameState.timeRemaining-=deltaTime;
+ if(gameState.timeRemaining<=0||playerHealth<=0){
+gameOver();
+return ;
+}
+const isUnderAttack=enemies.some(e=>{
+const dx=X-e.x;
+const dz=Z-e.z;
+return dx*dx+dz*dz<0.25;
+});
+updateParticles(deltaTime,X,Z);
+updateDarkness(gameState.timeRemaining);
+updateTunnelVision(gameState.timeRemaining,isUnderAttack);
+updateCameraShake(deltaTime);
+updateDisplays();
+frameCount++;
+ if(frameCount%5===0){
+animateCollectibles();
+}
+let moveForward=(keys.u||keys.w)-(keys.d||keys.s);
+let moveSide=(keys.r||keys.d)-(keys.l||keys.a);
+ if(moveForward!==0&&moveSide!==0){
+moveForward*=0.707;
+moveSide*=0.707;
+}
+const playerRotationY=mouseX*SENSITIVITY;
+const rotationRadians=playerRotationY*Math.PI/180;
+const dx=(-moveForward*Math.sin(rotationRadians)+moveSide*Math.cos(rotationRadians))*PLAYER_SPEED;
+const dz=(-moveForward*Math.cos(rotationRadians)-moveSide*Math.sin(rotationRadians))*PLAYER_SPEED;
+let newX=X+dx;
+let newZ=Z+dz;
+ if(!checkCollision(newX,newZ,trees,PLAYER_RADIUS)){
+X=newX;
+Z=newZ;
+}else if(!checkCollision(newX,Z,trees,PLAYER_RADIUS)){
+X=newX;
+}else if(!checkCollision(X,newZ,trees,PLAYER_RADIUS)){
+Z=newZ;
+}
+W.move({
+n:"player",
+x:X+cameraShake.x,
+y:playerBaseHeight+cameraShake.y,
+z:Z+cameraShake.z,
+ry:playerRotationY
+});
+ if(checkWinCondition(X,Z)){
+winGame();
+return ;
+}
+handleCollectibles();
+handleEnemies(deltaTime);
+requestAnimationFrame(gameLoop);
+}
+function handleCollectibles(){
+collectibles.forEach((c,i)=>{
+ if(!c.collected&&checkCollision(X,Z,[c],0.4)){
+c.collected=true;
+ if(c.type==='time'){
+gameState.timeRemaining+=5000;
+showCollectibleFeedback("+5s");
+zzfx(...[.5,,137,.07,.28,.13,1,.6,,198,,,.06,,,,,.67,.23,.47]);
+}else if(c.type==='speed'){
+activateSpeedBoost();
+showCollectibleFeedback("2x Speed!");
+zzfx(...[.5,,106,.02,.15,.29,,1.1,,,,,.1,,.2,.2,.13,.64,.16,.44]);
+}
+W.move({n:"collectible"+i,y:-1000});
+}
+});
+}
+function handleEnemies(deltaTime){
+enemies.forEach((e,i)=>{
+ if(e.active){
+const dx=X-e.x;
+const dz=Z-e.z;
+const distanceSquared=dx*dx+dz*dz;
+ if(distanceSquared<225){
+const distance=Math.sqrt(distanceSquared);
+const speed=0.04;
+e.x+=dx/distance*speed;
+e.z+=dz/distance*speed;
+const targetAngle=calculateAngle(e.x,e.z,X,Z);
+e.currentAngle=e.currentAngle||0;
+let angleDiff=targetAngle-e.currentAngle;
+ if(angleDiff>180)angleDiff-=360;
+ if(angleDiff<-180)angleDiff+=360;
+e.currentAngle+=angleDiff*4*deltaTime/1000;
+e.currentAngle=(e.currentAngle+360)%360;
+W.move({
+n:"enemy"+i,
+x:e.x,
+z:e.z,
+ry:e.currentAngle
+});
+ if(checkCollision(X,Z,[e],0.5)){
+const currentTime=Date.now();
+ if(!e.lastAttackTime||(currentTime-e.lastAttackTime)>=ATTACK_COOLDOWN){
+playerHealth=Math.max(0,playerHealth-10);
+updateDisplays();
+zzfx(...[.5,,147,.01,.08,.21,1,2.2,-7,-2,,,,.3,2.9,.4,,.61,.08,,-2418]);
+e.lastAttackTime=currentTime;
+cameraShake.duration=SHAKE_DURATION;
+ if(playerHealth<=0){
+playerHealth=0;
+gameOver();
+return ;
+}
+e.x-=dx/distance*0.8;
+e.z-=dz/distance*0.8;
+W.move({n:"enemy"+i,x:e.x,z:e.z});
+}
+}
+}
+}
+});
+}
+requestAnimationFrame(gameLoop);
+}
+</script>

@@ -1,1 +1,0 @@
-const randomNumber=(t,o)=>Math.floor(Math.random()*(o-t+1))+t,dom=t=>document.getElementById(t);Array.prototype.random=function(){return this[Math.floor(Math.random()*this.length)]};

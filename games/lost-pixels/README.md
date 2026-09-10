@@ -1,8 +1,0 @@
----
-# See github.com/js13kGames/games for supported frontmatter
----
--> In the given grid, the first(top-left corner) box is considered as the original box. 
--> The game is to find the 'lost' box of the original box.
--> Lost box is the opposite of the original box.(white pixels turned black and black pixels turned white)
--> After every 3 correct answers, level increases.(size of the grid increases)
--> Game has no end.
