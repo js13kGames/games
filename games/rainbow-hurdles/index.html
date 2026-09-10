@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RAINBOW HURDLES</title>
+    <style>
+        body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: monospace; color: #fff; overflow: hidden; }
+        canvas { background: #00c3d3; border: 4px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <canvas id="g" width="800" height="400"></canvas>
+    <script>
+        const c = document.getElementById('g'), x = c.getContext('2d');
+        
+        // Game States: 0=Menu, 1=Playing, 2=Game Over
+        let state = 0, score = 0, hi = 0, speed = 4, distance = 0;
+
+        // Player (Unicorn) object
+        const p = {
+            x: 100, y: 300, w: 50, h: 40,
+            vy: 0, gravity: 0.6, jump: -10, ground: 300,
+            jumps: 0, maxJumps: 2, frame: 0
+        };
+
+        // Hurdles (Rainbows) array
+        let obstacles = [];
+
+        // Input Listener
+        window.addEventListener('keydown', e => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (state === 1) {
+                    if (p.jumps < p.maxJumps) {
+                        p.vy = p.jump;
+                        p.jumps++;
+                    }
+                } else {
+                    reset();
+                    state = 1;
+                }
+            }
+        });
+
+        function reset() {
+            score = 0;
+            speed = 5;
+            distance = 0;
+            obstacles = [];
+            p.y = p.ground;
+            p.vy = 0;
+            p.jumps = 0;
+        }
+
+        function spawnHurdle() {
+            // Heights: 1 = Low (Single jump), 2 = High (Double jump required)
+            const type = Math.random() > 0.5 ? 2 : 1;
+            const h = type === 2 ? 60 : 40;
+            obstacles.push({
+                x: c.width + 60,
+                y: p.ground + p.h - h,
+                w: 30,
+                h: h,
+                type: type,
+                passed: false
+            });
+        }
+
+        // Procedural Retro Art Generators
+        function drawUnicorn(ctx, px, py, frame) {
+            ctx.fillStyle = '#fff'; // Body
+            ctx.fillRect(px, py + 10, 30, 20);
+            ctx.fillRect(px + 20, py, 15, 15); // Neck/Head
+            
+            ctx.fillStyle = '#ff00ff'; // Mane & Tail
+            ctx.fillRect(px - 5, py + 10, 8, 10);
+            ctx.fillRect(px + 25, py - 2, 10, 8);
+            
+            ctx.fillStyle = '#ffff00'; // Horn
+            ctx.fillRect(px + 30, py - 10, 4, 10);
+
+            ctx.fillStyle = '#666'; // Animated Legs
+            const legOffset = Math.sin(frame * 0.2) * 5;
+            if (py >= p.ground) {
+                ctx.fillRect(px + 5, py + 30, 6, 10 + legOffset);
+                ctx.fillRect(px + 25, py + 30, 6, 10 - legOffset);
+            } else { // Jumping pose
+                ctx.fillRect(px + 2, py + 30, 8, 5);
+                ctx.fillRect(px + 28, py + 30, 8, 5);
+            }
+        }
+
+        function drawRainbow(ctx, o) {
+            const colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#8b00ff'];
+            const thick = o.h / colors.length;
+            for (let i = 0; i < colors.length; i++) {
+                ctx.fillStyle = colors[i];
+                ctx.fillRect(o.x, o.y + (i * thick), o.w, thick);
+            }
+        }
+
+        // Main Loop
+        function loop() {
+            // Clear screen
+            x.fillStyle = '#00c3d3';
+            x.fillRect(0, 0, c.width, c.height);
+
+            // Draw Stage Floor (Circus Style)
+            x.fillStyle = '#d2691e';
+            x.fillRect(0, p.ground + p.h, c.width, c.height);
+            x.fillStyle = '#fff';
+            for (let i = 0; i < c.width; i += 50) {
+                x.fillRect(i + (state === 1 ? -(distance % 50) : 0), p.ground + p.h, 20, 5);
+            }
+
+            if (state === 1) {
+                distance += speed;
+                p.frame++;
+
+                // Physics
+                p.vy += p.gravity;
+                p.y += p.vy;
+
+                if (p.y >= p.ground) {
+                    p.y = p.ground;
+                    p.vy = 0;
+                    p.jumps = 0;
+                }
+
+                // Difficulty progression
+                speed = 5 + Math.floor(score / 5) * 0.6;
+
+                // Spawning
+                if (obstacles.length === 0 || (c.width + 50 - obstacles[obstacles.length - 1].x) > (200 + Math.random() * 150)) {
+                    spawnHurdle();
+                }
+
+                // Update & Check Obstacles
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    let o = obstacles[i];
+                    o.x -= speed;
+
+                    // Scoring
+                    if (!o.passed && o.x + o.w < p.x) {
+                        o.passed = true;
+                        score++;
+                        if (score > hi) hi = score;
+                    }
+
+                    // AABB Collision detection
+                    if (p.x < o.x + o.w && p.x + p.w > o.x && p.y < o.y + o.h && p.y + p.h > o.y) {
+                        state = 2; // Crash!
+                    }
+
+                    // Clean screen
+                    if (o.x < -50) obstacles.splice(i, 1);
+                }
+            }
+
+            // Rendering Game Objects
+            obstacles.forEach(o => drawRainbow(x, o));
+            drawUnicorn(x, p.x, p.y, p.frame);
+
+            // HUD UI Text
+            x.fillStyle = '#fff';
+            x.font = '20px monospace';
+            x.fillText(`SCORE: ${score}`, 20, 40);
+            x.fillText(`HI-SCORE: ${hi}`, 20, 70);
+            x.fillText(`SPEED: ${speed.toFixed(1)}x`, 20, 100);
+
+            if (state === 0) {
+                x.fillStyle = 'rgba(0,0,0,0.7)';
+                x.fillRect(0, 0, c.width, c.height);
+                x.fillStyle = '#fff';
+                x.font = '40px monospace';
+                x.fillText('RAINBOW HURDLES', 240, 180);
+                x.font = '20px monospace';
+                x.fillText('Press SPACE to Jump over Rainbows', 210, 240);
+                x.fillText('Double Press SPACE for High Rainbows', 190, 270);
+            } else if (state === 2) {
+                x.fillStyle = 'rgba(255,0,0,0.3)';
+                x.fillRect(0, 0, c.width, c.height);
+                x.fillStyle = '#fff';
+                x.font = '50px monospace';
+                x.fillText('GAME OVER', 270, 185);
+                x.font = '20px monospace';
+                x.fillText('Press SPACE to Restart', 275, 240);
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        // Fire it up
+        loop();
+    </script>
+</body>
+</html>
