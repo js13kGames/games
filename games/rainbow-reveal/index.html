@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Rainbow Reveal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="livesHud"></div>
+  <div id="hud"></div>
+  <div id="hint">wasd / arrows to reveal &middot; enter / ? to guess</div>
+  <button id="guessBtn" class="pulse">?</button>
+  <div id="guessBox">
+    <div>What do you see?</div>
+    <input id="guessInput" type="text" autocomplete="off" spellcheck="false">
+  </div>
+  <div id="overlay">
+    <div id="overlayText" style="font-size:16px; line-height:1.7; max-width:80vw"></div>
+    <button id="restartBtn">&#8635;</button>
+  </div>
+  <div id="toast"></div>
+  <div id="startOverlay">
+    <div id="startDialog">
+      <h1>&#129412; Rainbow Reveal</h1>
+      <p id="startDialogText"></p>
+      <button id="startBtn">Continue</button>
+      <div id="startDialogHint">press Enter to continue &middot; <a id="skipTutorial" href="#">skip</a></div>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
