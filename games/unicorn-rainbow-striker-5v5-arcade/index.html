@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UNICORN RAINBOW STRIKER - 5V5 ARCADE</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070b18;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body{display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#090e20;box-shadow:0 0 50px #000}
+button{font:700 18px system-ui;border:1px solid #8eeaff55;color:#eafcff;background:linear-gradient(#18365a,#0b1b32);padding:14px 30px;border-radius:8px;cursor:pointer;box-shadow:0 0 20px #39d9ff22}
+button:hover{filter:brightness(1.3);box-shadow:0 0 24px #39d9ff55}
+#hint{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#8291ae;font-size:12px;pointer-events:none;text-shadow:0 1px 4px #000}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="hint">WASD / ARROWS Move · J Kick · H Pass · K Dash · L Attack · U Ult · I Horn Charge · O Starlight Shield · TAB Switch · ESC Pause</div>
+<script>
+"use strict";
+
+const canvas=document.getElementById("game"),ctx=canvas.getContext("2d");
+const W=1920,H=1080;
+const FIELD={x:120,y:168,w:1680,h:816,goalDepth:54,goalH:240};
+const GOAL={y:408,h:240};
+const TAU=Math.PI*2;
+
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const norm=(x,y)=>{let l=Math.hypot(x,y)||1;return{x:x/l,y:y/l}};
+const rand=(a,b)=>a+Math.random()*(b-a);
+
+class AudioManager{
+  constructor(){this.ctx=null}
+  init(){if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)(); if(this.ctx.state==="suspended")this.ctx.resume()}
+  tone(freq,dur,type="sine",gain=.04,endFreq=freq){
+    if(!this.ctx)return; const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type=type;o.frequency.setValueAtTime(freq,this.ctx.currentTime);o.frequency.exponentialRampToValueAtTime(Math.max(30,endFreq),this.ctx.currentTime+dur);
+    g.gain.setValueAtTime(gain,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+dur);
+    o.connect(g).connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+dur+.02);
+  }
+  click(){this.tone(480,.06,"square",.025,700)}
+  kick(){this.tone(110,.12,"sawtooth",.055,70);this.tone(620,.07,"triangle",.035,240)}
+  dash(){this.tone(180,.16,"sawtooth",.045,800)}
+  attack(){this.tone(260,.14,"square",.035,90)}
+  hit(){this.tone(90,.11,"square",.055,45)}
+  ult(){this.tone(150,.4,"sawtooth",.08,880)}
+  hornCharge(){this.tone(320,.22,"sawtooth",.07,950)}
+  shield(){this.tone(650,.3,"sine",.06,1250)}
+  goal(){this.tone(220,.16,"sawtooth",.06,440);setTimeout(()=>this.tone(440,.25,"triangle",.07,880),90)}
+  countdown(n){this.tone(n===1?880:520,.12,"sine",.04)}
+  victory(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>this.tone(f,.22,"triangle",.05),i*120))}
+  defeat(){[330,260,190].forEach((f,i)=>setTimeout(()=>this.tone(f,.25,"sine",.05),i*140))}
+}
+const audio=new AudioManager();
+
+class Camera{
+  constructor(){this.x=0;this.y=0;this.shakeAmt=0;this.shakeTime=0}
+  shake(amount,duration){this.shakeAmt=Math.max(this.shakeAmt,amount);this.shakeTime=Math.max(this.shakeTime,duration)}
+  update(dt){if(this.shakeTime>0){this.shakeTime-=dt;this.shakeAmt*=Math.pow(.02,dt);if(this.shakeTime<=0)this.shakeAmt=0}}
+  apply(){if(this.shakeAmt){ctx.translate(rand(-this.shakeAmt,this.shakeAmt),rand(-this.shakeAmt,this.shakeAmt))}}
+}
+const camera=new Camera();
+
+class Particles{
+  constructor(){this.items=[]}
+  burst(x,y,n,color,opts={}){
+    for(let i=0;i<n;i++){let a=rand(0,TAU),s=rand(opts.minSpeed||30,opts.maxSpeed||220),life=rand(opts.minLife||.2,opts.maxLife||.65);
+      this.items.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life,max:life,size:rand(opts.minSize||2,opts.maxSize||6),color,drag:opts.drag||.92});
+    }
+  }
+  trail(x,y,color){this.items.push({x:x+rand(-6,6),y:y+rand(-6,6),vx:0,vy:0,life:.18,max:.18,size:rand(5,12),color,drag:.8})}
+  update(dt){for(let i=this.items.length-1;i>=0;i--){let p=this.items[i];p.life-=dt;if(p.life<=0){this.items.splice(i,1);continue}p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=Math.pow(p.drag,dt*60);p.vy*=Math.pow(p.drag,dt*60)}}
+  draw(){for(const p of this.items){ctx.globalAlpha=p.life/p.max;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.6+.4*p.life/p.max),0,TAU);ctx.fill()}ctx.globalAlpha=1}
+}
+const particles=new Particles();
+
+class Input{
+  constructor(){this.down=new Set();this.pressed=new Set();
+    addEventListener("keydown",e=>{let k=e.key.toLowerCase();if(!this.down.has(k))this.pressed.add(k);this.down.add(k);
+      if(["arrowup","arrowdown","arrowleft","arrowright"," ","tab"].includes(k))e.preventDefault();
+      if(k==="escape")game.togglePause(); if(k==="f3")game.debug=!game.debug;});
+    addEventListener("keyup",e=>this.down.delete(e.key.toLowerCase()));
+  }
+  axis(){let x=(this.down.has("d")||this.down.has("arrowright")?1:0)-(this.down.has("a")||this.down.has("arrowleft")?1:0);
+    let y=(this.down.has("s")||this.down.has("arrowdown")?1:0)-(this.down.has("w")||this.down.has("arrowup")?1:0);
+    let n=norm(x,y); return{x:x||y? n.x:0,y:x||y?n.y:0}}
+  take(k){if(this.pressed.has(k)){this.pressed.delete(k);return true}return false}
+}
+const input=new Input();
+
+class Ball{
+  constructor(){this.radius=15;this.trail=[];this.hueOffset=0;this.reset()}
+  reset(){this.x=W/2;this.y=H/2;this.vx=0;this.vy=0;this.flash=0;this.ultShot=false;this.rainbowShot=false;this.trail=[]}
+  update(dt){
+    this.x+=this.vx*dt;this.y+=this.vy*dt;
+    const fr=Math.pow(this.ultShot?.995:this.rainbowShot?.992:.985,dt*60);this.vx*=fr;this.vy*=fr;
+    if(Math.hypot(this.vx,this.vy)<400)this.ultShot=false;
+    if(Math.hypot(this.vx,this.vy)<300)this.rainbowShot=false;
+
+    this.hueOffset=(this.hueOffset+dt*300)%360;
+    const speed=Math.hypot(this.vx,this.vy);
+    if(speed>60){this.trail.push({x:this.x,y:this.y,size:this.radius*(0.5+Math.min(1,speed/900))});if(this.trail.length>15)this.trail.shift()}
+    else if(this.trail.length)this.trail.shift();
+
+    if(this.ultShot) particles.trail(this.x,this.y,"#ffaa00");
+    if(this.rainbowShot) particles.trail(this.x,this.y,`hsl(${this.hueOffset%360},100%,60%)`);
+
+    if(this.y-this.radius<FIELD.y){this.y=FIELD.y+this.radius;this.vy=Math.abs(this.vy)*.82}
+    if(this.y+this.radius>FIELD.y+FIELD.h){this.y=FIELD.y+FIELD.h-this.radius;this.vy=-Math.abs(this.vy)*.82}
+    if(this.x-this.radius<FIELD.x){if(this.inGoalZone()){return "demon"}this.x=FIELD.x+this.radius;this.vx=Math.abs(this.vx)*.82}
+    if(this.x+this.radius>FIELD.x+FIELD.w){if(this.inGoalZone()){return "heaven"}this.x=FIELD.x+FIELD.w-this.radius;this.vx=-Math.abs(this.vx)*.82}
+    this.flash=Math.max(0,this.flash-dt);return null;
+  }
+  inGoalZone(){return this.y>GOAL.y && this.y<GOAL.y+GOAL.h}
+  drawTrail(){
+    if(this.trail.length<2)return;
+    ctx.save();ctx.lineCap="round";
+    for(let i=1;i<this.trail.length;i++){
+      const p=this.trail[i],prev=this.trail[i-1];
+      ctx.strokeStyle=`hsl(${(i*25+this.hueOffset)%360},100%,60%)`;
+      ctx.globalAlpha=(i/this.trail.length)*.8;
+      ctx.lineWidth=p.size*(i/this.trail.length);
+      ctx.beginPath();ctx.moveTo(prev.x,prev.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+    }
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  draw(){
+    this.drawTrail();
+    ctx.save();ctx.translate(this.x,this.y);ctx.rotate(performance.now()/900);
+    ctx.shadowBlur=this.ultShot?30:this.rainbowShot?26:18;
+    ctx.shadowColor=this.ultShot?"#ffaa00":this.rainbowShot?`hsl(${this.hueOffset},100%,65%)`:"#fff";
+    ctx.fillStyle=this.ultShot?"#fff0aa":this.rainbowShot?`hsl(${this.hueOffset},100%,88%)`:"#f7fbff";ctx.beginPath();ctx.arc(0,0,this.radius,0,TAU);ctx.fill();
+    ctx.shadowBlur=0;ctx.strokeStyle="#b8c7d8";ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle="#8a9bb0";for(let i=0;i<5;i++){let a=i*TAU/5;ctx.beginPath();ctx.arc(Math.cos(a)*7,Math.sin(a)*7,3,0,TAU);ctx.fill()}
+    if(this.flash){ctx.globalAlpha=this.flash;ctx.strokeStyle="#fff";ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,25,0,TAU);ctx.stroke()}
+    ctx.restore();
+  }
+}
+const ball=new Ball();
+
+class Player{
+  constructor(team,role,x,y,index){
+    this.team=team;this.role=role;this.homeX=x;this.homeY=y;this.x=x;this.y=y;this.vx=0;this.vy=0;this.radius=24;
+    this.speed=300;this.hp=100;this.maxHp=100;this.ult=0;this.rainbow=0;
+    this.stun=0;this.kickCD=0;this.dashCD=0;this.attackCD=0;this.dashTime=0;this.faceX=team==="heaven"?1:-1;this.faceY=0;
+    this.controlled=false;this.index=index;this.ko=0;this.anim=0;
+    
+    // KỸ NĂNG MỚI: Horn Charge & Starlight Shield
+    this.hornChargeCD=0; this.hornCharging=0;
+    this.shieldCD=0; this.shieldTimer=0;
+  }
+  get alive(){return this.ko<=0}
+  reset(){
+    this.x=this.homeX;this.y=this.homeY;this.vx=this.vy=0;this.hp=100;this.ult=0;this.rainbow=0;this.stun=0;this.ko=0;
+    this.kickCD=this.dashCD=this.attackCD=this.hornChargeCD=this.shieldCD=0;
+    this.dashTime=this.hornCharging=this.shieldTimer=0;
+  }
+  update(dt){
+    this.anim+=dt;
+    this.kickCD=Math.max(0,this.kickCD-dt);
+    this.dashCD=Math.max(0,this.dashCD-dt);
+    this.attackCD=Math.max(0,this.attackCD-dt);
+    this.hornChargeCD=Math.max(0,this.hornChargeCD-dt);
+    this.shieldCD=Math.max(0,this.shieldCD-dt);
+
+    if(!this.alive){this.ko-=dt;if(this.ko<=0)this.respawn();return}
+
+    // Cập nhật hiệu ứng Horn Charge
+    if(this.hornCharging>0){
+      this.hornCharging-=dt;
+      particles.trail(this.x,this.y,"#fff27a");
+      // Xử lý va chạm hất văng đối thủ & bóng khi đang lao sừng
+      for(const p of game.players){
+        if(p.team!==this.team&&p.alive){
+          if(dist(this,p)<this.radius+p.radius+12){
+            let n=norm(p.x-this.x,p.y-this.y);
+            p.hit(25,n.x*650,n.y*650);
+            p.stun=1.2;
+            particles.burst(p.x,p.y,20,"#fff27a",{maxSpeed:280});
+          }
+        }
+      }
+      if(dist(this,ball)<this.radius+ball.radius+10){
+        let n=norm(this.faceX||1,this.faceY||0);
+        ball.vx=n.x*1200;ball.vy=n.y*1200;ball.flash=.2;ball.teamPossessor=this.team;
+      }
+    }
+
+    // Cập nhật thời gian Lá chắn Tinh tú
+    if(this.shieldTimer>0) this.shieldTimer-=dt;
+
+    if(this.stun>0){this.stun-=dt;this.vx*=Math.pow(.05,dt);this.vy*=Math.pow(.05,dt);this.move(dt);return}
+    if(this.controlled && game.state==="playing")this.human(dt); else this.ai(dt);
+    this.move(dt);this.collideBounds();
+  }
+  human(dt){
+    let a=input.axis();if(a.x||a.y){this.faceX=a.x;this.faceY=a.y}
+    let speed=this.hornCharging>0?1400:this.dashTime>0?950:this.speed;
+    this.vx=lerp(this.vx,a.x*speed,.35);this.vy=lerp(this.vy,a.y*speed,.35);
+    
+    if(input.take("j"))this.kick();
+    if(input.take("h"))this.pass();
+    if(input.take("k"))this.dash();
+    if(input.take("l"))this.attack();
+    if(input.take("u"))this.useUlt();
+    if(input.take("i"))this.useHornCharge();
+    if(input.take("o"))this.useStarlightShield();
+  }
+  ai(dt){
+    const own=this.team==="heaven", enemyGoal={x:own?FIELD.x+FIELD.w:FIELD.x,y:GOAL.y+GOAL.h/2};
+    let bx=ball.x,by=ball.y,dx=bx-this.x,dy=by-this.y,d=Math.hypot(dx,dy);
+    let targetX=this.homeX,targetY=this.homeY;
+
+    if(this.role==="goalkeeper"){
+      targetX=own?FIELD.x+35:FIELD.x+FIELD.w-35;
+      targetY=clamp(by, GOAL.y+20, GOAL.y+GOAL.h-20);
+      if(d<110) { targetX=bx; targetY=by; }
+    } else if(this.role==="defender"){
+      targetX=own?FIELD.x+240:FIELD.x+FIELD.w-240;
+      targetY=lerp(this.homeY,by,.5);
+      if((own&&bx<FIELD.x+FIELD.w*.4)||( !own&&bx>FIELD.x+FIELD.w*.6)){targetX=bx;targetY=by}
+    } else if(this.role==="midfielder"){
+      targetX=lerp(this.homeX,bx,.5);targetY=lerp(this.homeY,by,.6);
+    } else { // striker
+      targetX=own?FIELD.x+FIELD.w-320:FIELD.x+320;targetY=lerp(this.homeY,by,.4);
+      if((own&&bx>FIELD.x+FIELD.w*.45)||(!own&&bx<FIELD.x+FIELD.w*.55)){targetX=bx-(own?35:-35);targetY=by}
+    }
+
+    const teammates=game.players.filter(p=>p.team===this.team&&p.alive&&p.role!=="goalkeeper");
+    let nearest=teammates.slice().sort((a,b)=>dist(a,ball)-dist(b,ball))[0];
+    if(this.role!=="goalkeeper" && (d<120 || (nearest===this&&d<550))){targetX=bx;targetY=by}
+
+    if(d<78 && this.kickCD<=0){
+      this.faceX=own?1:-1;this.faceY=clamp((enemyGoal.y-this.y)/300,-.75,.75);
+      if(this.ult>=100) this.useUlt(); else this.kick();
+    }
+    if(d<65 && this.attackCD<=0 && ball.teamPossessor && ball.teamPossessor!==this.team)this.attack();
+    if(this.dashCD<=0&&d>180&&d<480&&Math.random()<dt*.8)this.dash();
+    if(this.hornChargeCD<=0&&d>220&&d<500&&Math.random()<dt*.35)this.useHornCharge();
+    if(this.shieldCD<=0&&d<90&&ball.teamPossessor!==this.team&&Math.random()<dt*.4)this.useStarlightShield();
+
+    let a=norm(targetX-this.x,targetY-this.y);this.faceX=a.x;this.faceY=a.y;
+    let speed=this.hornCharging>0?1400:this.dashTime>0?950:this.speed*(this.role==="goalkeeper"?0.9:0.82);
+    this.vx=lerp(this.vx,a.x*speed,.2);this.vy=lerp(this.vy,a.y*speed,.2);
+  }
+  move(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;if(this.dashTime>0){this.dashTime-=dt;particles.trail(this.x,this.y,this.team==="heaven"?"#baf6ff":"#ff4d8d")}}
+  collideBounds(){this.x=clamp(this.x,FIELD.x+this.radius,FIELD.x+FIELD.w-this.radius);this.y=clamp(this.y,FIELD.y+this.radius,FIELD.y+FIELD.h-this.radius)}
+  kick(){
+    if(!this.alive||this.kickCD>0||game.state!=="playing")return;
+    this.kickCD=.35;let dx=this.faceX,dy=this.faceY;if(Math.hypot(dx,dy)<.1){dx=this.team==="heaven"?1:-1;dy=0}
+    let d=Math.hypot(ball.x-this.x,ball.y-this.y),range=82;if(d<=range){
+      let n=norm(dx,dy);
+      if(this.rainbow>=100){
+        let power=1450;
+        ball.vx=n.x*power;ball.vy=n.y*power;ball.flash=.2;ball.teamPossessor=this.team;ball.ultShot=false;ball.rainbowShot=true;
+        this.rainbow=0;
+        particles.burst(ball.x,ball.y,35,`hsl(${ball.hueOffset},100%,65%)`,{maxSpeed:400,minSize:3,maxSize:9});
+        camera.shake(10,.2);audio.tone(500,.2,"triangle",.06,1200);
+      } else {
+        let power=920+Math.min(350,Math.hypot(ball.vx,ball.vy)*.18);
+        ball.vx=n.x*power;ball.vy=n.y*power;ball.flash=.12;ball.teamPossessor=this.team;ball.ultShot=false;
+        this.addUlt(15);this.addRainbow(6);
+        particles.burst(ball.x,ball.y,16,this.team==="heaven"?"#bffaff":"#ff4f9b",{maxSpeed:250});
+      }
+      camera.shake(5,.09);audio.kick();this.anim+=.2;game.lastScorer=this;
+    }
+  }
+  addRainbow(v){this.rainbow=Math.min(100,this.rainbow+v)}
+  pass(){
+    if(!this.alive||this.kickCD>0||game.state!=="playing")return;
+    let d=Math.hypot(ball.x-this.x,ball.y-this.y);if(d>85)return;
+    let teammates=game.players.filter(p=>p.team===this.team && p!==this && p.alive);
+    if(teammates.length===0) return this.kick();
+    let target=teammates.sort((a,b)=>dist(a,this)-dist(b,this))[0];
+    let n=norm(target.x-this.x,target.y-this.y);
+    ball.vx=n.x*820;ball.vy=n.y*820;ball.flash=.15;ball.teamPossessor=this.team;this.addRainbow(14);
+    this.addUlt(20);
+    particles.burst(ball.x,ball.y,12,"#ffee77",{maxSpeed:200});
+    audio.kick();this.kickCD=.3;
+  }
+  useUlt(){
+    if(!this.alive||this.ult<100||game.state!=="playing")return;
+    this.ult=0;audio.ult();
+    let d=Math.hypot(ball.x-this.x,ball.y-this.y);
+    if(d<=120){
+      let enemyGoalX=this.team==="heaven"?FIELD.x+FIELD.w:FIELD.x;
+      let n=norm(enemyGoalX-this.x, (GOAL.y+GOAL.h/2)-this.y);
+      ball.vx=n.x*1650;ball.vy=n.y*1650;ball.ultShot=true;ball.teamPossessor=this.team;
+      particles.burst(ball.x,ball.y,45,"#ffaa00",{maxSpeed:500,minSize:4,maxSize:10});
+      camera.shake(16,.3);
+    } else {
+      particles.burst(this.x,this.y,50,this.team==="heaven"?"#67e9ff":"#ff3d83",{maxSpeed:400});
+      for(const p of game.players){
+        if(p.team!==this.team&&p.alive){
+          let pd=dist(p,this);if(pd<280){let n=norm(p.x-this.x,p.y-this.y);p.hit(40,n.x*650,n.y*650)}
+        }
+      }
+      camera.shake(12,.25);
+    }
+  }
+  // KỸ NĂNG 2: Xung Lực Sừng Kỳ Lân
+  useHornCharge(){
+    if(!this.alive||this.hornChargeCD>0||game.state!=="playing")return;
+    this.hornChargeCD=4.0; this.hornCharging=0.25;
+    let n=norm(this.faceX,this.faceY);
+    this.vx=n.x*1400; this.vy=n.y*1400;
+    particles.burst(this.x,this.y,30,"#fff27a",{maxSpeed:350,minSize:3,maxSize:8});
+    camera.shake(8,.15); audio.hornCharge();
+  }
+  // KỸ NĂNG 3: Vòng Bảo Hộ Tinh Tú
+  useStarlightShield(){
+    if(!this.alive||this.shieldCD>0||game.state!=="playing")return;
+    this.shieldTimer=4.0; this.shieldCD=8.0;
+    particles.burst(this.x,this.y,35,"#72efff",{maxSpeed:280,minSize:2,maxSize:7});
+    audio.shield();
+  }
+  addUlt(v){this.ult=Math.min(100,this.ult+v)}
+  dash(){
+    if(!this.alive||this.dashCD>0||game.state!=="playing")return;
+    this.dashCD=1;this.dashTime=.15;let n=norm(this.faceX,this.faceY);this.vx=n.x*950;this.vy=n.y*950;
+    let d=Math.hypot(ball.x-this.x,ball.y-this.y);if(d<68){let push=norm(ball.x-this.x,ball.y-this.y);ball.vx=push.x*750;ball.vy=push.y*750;ball.flash=.1;particles.burst(ball.x,ball.y,10,"#fff",{maxSpeed:180});camera.shake(4,.08)}
+    particles.burst(this.x,this.y,10,this.team==="heaven"?"#aaf7ff":"#ff407f",{maxSpeed:100});audio.dash();
+  }
+  attack(){
+    if(!this.alive||this.attackCD>0||game.state!=="playing")return;
+    this.attackCD=.7;audio.attack();particles.burst(this.x+this.faceX*38,this.y+this.faceY*38,9,this.team==="heaven"?"#d8ffff":"#ff588d",{maxSpeed:130});
+    for(const p of game.players){if(p.team!==this.team&&p.alive){let dx=p.x-this.x,dy=p.y-this.y,d=Math.hypot(dx,dy);let dot=(dx*this.faceX+dy*this.faceY)/(d||1);
+      if(d<75&&dot>.05){p.hit(15,this.faceX*280,this.faceY*280);this.addUlt(10);particles.burst(p.x,p.y,10,"#fff",{maxSpeed:170});}}
+    } camera.shake(3,.06);
+  }
+  hit(dmg,kx,ky){
+    if(!this.alive)return;
+    // Bỏ qua đòn tấn công nếu đang bật Lá Chắn Tinh Tú
+    if(this.shieldTimer>0){
+      particles.burst(this.x,this.y,12,"#ffffff",{maxSpeed:160});
+      audio.tone(750,.08,"triangle",.04,400);
+      return;
+    }
+    this.hp-=dmg;this.stun=.18;this.vx+=kx;this.vy+=ky;audio.hit();
+    if(this.hp<=0){this.hp=0;this.ko=3;this.vx=this.vy=0;particles.burst(this.x,this.y,25,this.team==="heaven"?"#bffaff":"#ff447e",{maxSpeed:300})}
+  }
+  respawn(){this.x=this.homeX;this.y=this.homeY;this.hp=100;this.ko=0;this.stun=.35;particles.burst(this.x,this.y,25,this.team==="heaven"?"#cfffff":"#ff5c9a",{maxSpeed:260})}
+  draw(){
+    if(!this.alive){ctx.globalAlpha=Math.max(0,this.ko/3);ctx.strokeStyle=this.team==="heaven"?"#bffaff":"#ff4b8b";ctx.lineWidth=3;ctx.beginPath();ctx.arc(this.x,this.y,32,0,TAU);ctx.stroke();ctx.globalAlpha=1;return}
+    let bob=Math.sin(this.anim*9)*2, col=this.team==="heaven"?"#e9ffff":"#4a1434", aura=this.team==="heaven"?"#67e9ff":"#ff3d83";
+    ctx.save();ctx.translate(this.x,this.y+bob);ctx.shadowBlur=18;ctx.shadowColor=aura;ctx.fillStyle=aura;ctx.globalAlpha=.22;ctx.beginPath();ctx.arc(0,0,31,0,TAU);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle=col;ctx.strokeStyle=this.team==="heaven"?"#fff":"#ff9bbd";ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,-7,13,0,TAU);ctx.fill();ctx.stroke();
+    
+    // Sừng kỳ lân phát sáng rực rỡ khi xài Horn Charge
+    let hf=norm(this.faceX||0,this.faceY||-1);
+    ctx.save();ctx.shadowBlur=this.hornCharging>0?25:12;ctx.shadowColor=this.hornCharging>0?"#ffffff":"#fff27a";
+    let hg=ctx.createLinearGradient(0,-18,hf.x*6,-32);hg.addColorStop(0,this.hornCharging>0?"#ffffff":"#ffe98a");hg.addColorStop(1,"#fff7d6");
+    ctx.fillStyle=hg;ctx.beginPath();ctx.moveTo(-3,-16);ctx.lineTo(3,-16);ctx.lineTo(hf.x*4,-32);ctx.closePath();ctx.fill();
+    ctx.restore();
+
+    ctx.beginPath();ctx.moveTo(-15,10);ctx.quadraticCurveTo(0,-1,15,10);ctx.lineTo(11,27);ctx.quadraticCurveTo(0,32,-11,27);ctx.closePath();ctx.fill();ctx.stroke();
+    let f=norm(this.faceX,this.faceY);ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(f.x*8-3,f.y*8-10,2.2,0,TAU);ctx.arc(f.x*8+3,f.y*8-10,2.2,0,TAU);ctx.fill();
+    ctx.strokeStyle=aura;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-8,25);ctx.lineTo(-12,36+Math.sin(this.anim*10)*2);ctx.moveTo(8,25);ctx.lineTo(12,36-Math.sin(this.anim*10)*2);ctx.stroke();
+
+    // Vẽ Vòng Bảo Hộ Tinh Tú (Starlight Aura)
+    if(this.shieldTimer>0){
+      ctx.save();
+      ctx.shadowBlur=22; ctx.shadowColor="#6ceaff";
+      ctx.strokeStyle=`hsl(${(performance.now()/5)%360},100%,75%)`;
+      ctx.lineWidth=3.5;
+      ctx.beginPath(); ctx.arc(0,0,this.radius+10,0,TAU); ctx.stroke();
+      
+      // Các ngôi sao xoay quanh lá chắn
+      for(let i=0;i<3;i++){
+        let sa=(performance.now()/250)+(i*TAU/3);
+        let sx=Math.cos(sa)*(this.radius+10), sy=Math.sin(sa)*(this.radius+10);
+        ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(sx,sy,3.5,0,TAU); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    if(this.controlled){ctx.shadowBlur=20;ctx.shadowColor="#fff";ctx.strokeStyle="#fff";ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,42,20,0,TAU);ctx.stroke();ctx.fillStyle="#fff";ctx.beginPath();ctx.moveTo(0,-48);ctx.lineTo(-8,-36);ctx.lineTo(8,-36);ctx.closePath();ctx.fill()}
+    ctx.restore();
+
+    if(this.hp<100||this.ult>0){
+      let w=46;
+      ctx.fillStyle="#111";ctx.fillRect(this.x-w/2,this.y-47,w,5);
+      ctx.fillStyle=this.team==="heaven"?"#72efff":"#ff477f";ctx.fillRect(this.x-w/2,this.y-47,w*(this.hp/100),5);
+      if(this.ult>0){
+        ctx.fillStyle="#111";ctx.fillRect(this.x-w/2,this.y-40,w,3);
+        ctx.fillStyle="#ffaa00";ctx.fillRect(this.x-w/2,this.y-40,w*(this.ult/100),3);
+      }
+    }
+  }
+}
+
+class Game{
+  constructor(){
+    this.state="menu";this.score={heaven:0,demon:0};this.players=[];this.debug=false;this.goalTimer=0;this.message="";this.messageTimer=0;this.lastScorer=null;this.count=3;this.countTimer=0;this.endWinner=null;this.pausedFrom=null;
+    this.createTeams();
+  }
+  createTeams(){
+    // Đội hình 5v5 cân bằng tuyệt đối
+    const specs=[
+      ["goalkeeper",.03,.50],
+      ["defender",.18,.30],
+      ["defender",.18,.70],
+      ["midfielder",.35,.50],
+      ["striker",.46,.50]
+    ];
+    specs.forEach((s,i)=>this.players.push(new Player("heaven",s[0],FIELD.x+FIELD.w*s[1],FIELD.y+FIELD.h*s[2],i)));
+    specs.forEach((s,i)=>this.players.push(new Player("demon",s[0],FIELD.x+FIELD.w*(1-s[1]),FIELD.y+FIELD.h*s[2],i)));
+    this.players[3].controlled=true;
+  }
+  start(){audio.init();this.score={heaven:0,demon:0};this.players.forEach(p=>p.reset());this.players[3].controlled=true;this.players.filter(p=>p.team==="heaven"&&p!==this.players[3]).forEach(p=>p.controlled=false);ball.reset();this.state="countdown";this.count=3;this.countTimer=0;this.endWinner=null;audio.countdown(3)}
+  update(dt){
+    if(this.state==="countdown"){this.countTimer+=dt;if(this.countTimer>=1){this.countTimer=0;this.count--;if(this.count>0)audio.countdown(this.count);else{this.state="playing";audio.tone(900,.2,"triangle",.05,1300)}}return}
+    if(this.state==="goal"){this.goalTimer-=dt;if(this.goalTimer<=0){this.resetAfterGoal();}return}
+    if(this.state!=="playing")return;
+    for(const p of this.players)p.update(dt);
+    this.resolvePlayerCollisions();this.resolveBallPlayers();
+    let g=ball.update(dt);if(g)this.goal(g);
+    particles.update(dt);camera.update(dt);
+    this.messageTimer=Math.max(0,this.messageTimer-dt);
+    
+    if(input.take("tab"))this.switchSmartPlayer();
+  }
+  resolvePlayerCollisions(){
+    for(let i=0;i<this.players.length;i++)for(let j=i+1;j<this.players.length;j++){let a=this.players[i],b=this.players[j];if(!a.alive||!b.alive)continue;let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),min=a.radius+b.radius;if(d<min){let n=norm(dx,dy),push=(min-d)/2;a.x-=n.x*push;a.y-=n.y*push;b.x+=n.x*push;b.y+=n.y*push;a.vx-=n.x*18;b.vx+=n.x*18;a.vy-=n.y*18;b.vy+=n.y*18;a.collideBounds();b.collideBounds()}}
+  }
+  resolveBallPlayers(){
+    for(const p of this.players){if(!p.alive)continue;let dx=ball.x-p.x,dy=ball.y-p.y,d=Math.hypot(dx,dy),min=ball.radius+p.radius;if(d<min){let n=norm(dx,dy);ball.x=p.x+n.x*min;ball.y=p.y+n.y*min;let rel=p.vx*n.x+p.vy*n.y;let impulse=Math.max(35,rel*.65);ball.vx+=n.x*impulse;ball.vy+=n.y*impulse;ball.teamPossessor=p.team;}}
+  }
+  switchSmartPlayer(){
+    let hs=this.players.filter(p=>p.team==="heaven"&&p.alive&&p.role!=="goalkeeper");if(hs.length===0)hs=this.players.filter(p=>p.team==="heaven"&&p.alive);
+    if(hs.length===0)return;
+    let nearest=hs.sort((a,b)=>dist(a,ball)-dist(b,ball))[0];
+    this.players.filter(p=>p.team==="heaven").forEach(p=>p.controlled=false);
+    nearest.controlled=true;
+    audio.click();
+  }
+  goal(team){
+    this.score[team]++;this.state="goal";this.goalTimer=2;this.message="HEAVENLY GOAL!";this.messageTimer=2;camera.shake(18,.45);audio.goal();particles.burst(ball.x,ball.y,70,team==="heaven"?"#bfffff":"#ff4f9a",{maxSpeed:450,maxLife:1});
+    if(this.score[team]>=5){this.endWinner=team;this.goalTimer=2.2}
+  }
+  resetAfterGoal(){
+    if(this.endWinner){this.state="match_end";if(this.endWinner==="heaven")audio.victory();else audio.defeat();return}
+    this.players.forEach(p=>p.reset());ball.reset();this.state="playing";
+  }
+  togglePause(){if(this.state==="playing"){this.pausedFrom="playing";this.state="paused"}else if(this.state==="paused"){this.state=this.pausedFrom||"playing"}}
+  restart(){this.start()}
+  mainMenu(){this.state="menu";ball.reset()}
+  render(){
+    ctx.clearRect(0,0,W,H);drawBackground();ctx.save();camera.apply();drawArena();
+    for(const p of this.players)p.draw();ball.draw();particles.draw();ctx.restore();drawUI();
+    if(this.state==="menu")drawMenu();if(this.state==="countdown")drawCountdown();if(this.state==="goal")drawGoal();if(this.state==="paused")drawPause();if(this.state==="match_end")drawEnd();if(this.debug)drawDebug();
+  }
+}
+const game=new Game();
+
+function drawBackground(){
+  let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#080d24");g.addColorStop(.55,"#111a35");g.addColorStop(1,"#070a17");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#dcecff";ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(1360,105,55,0,TAU);ctx.fill();ctx.fillStyle="#aab9d8";ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(1342,92,45,0,TAU);ctx.fill();ctx.globalAlpha=1;
+  for(let i=0;i<90;i++){let x=(i*173)%W,y=(i*71)%145;ctx.fillStyle="#d8ecff";ctx.globalAlpha=.25+(i%3)*.15;ctx.fillRect(x,y,1.5,1.5)}ctx.globalAlpha=1;
+}
+function drawArena(){
+  // Khung ngoài sân bóng
+  ctx.fillStyle="#0c1426";ctx.fillRect(FIELD.x-8,FIELD.y-8,FIELD.w+16,FIELD.h+16);
+  let g=ctx.createLinearGradient(FIELD.x,FIELD.y,FIELD.x,FIELD.y+FIELD.h);g.addColorStop(0,"#173d4a");g.addColorStop(1,"#0b2630");ctx.fillStyle=g;ctx.fillRect(FIELD.x,FIELD.y,FIELD.w,FIELD.h);
+  ctx.strokeStyle="#65eaff55";ctx.lineWidth=3;ctx.strokeRect(FIELD.x,FIELD.y,FIELD.w,FIELD.h);
+  
+  // Đường giữa sân & Vòng tròn trung tâm
+  ctx.strokeStyle="#d5ffff55";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(W/2,FIELD.y);ctx.lineTo(W/2,FIELD.y+FIELD.h);ctx.stroke();ctx.beginPath();ctx.arc(W/2,H/2,110,0,TAU);ctx.stroke();
+  
+  // Vòng cấm địa 2 bên (Sân đã được căn giữa hoàn hảo)
+  ctx.strokeRect(FIELD.x, GOAL.y-40, 180, GOAL.h+80);
+  ctx.strokeRect(FIELD.x+FIELD.w-180, GOAL.y-40, 180, GOAL.h+80);
+
+  // Khung thành 2 đội (Nằm đối xứng tuyệt đối)
+  drawGoal(FIELD.x, GOAL.y, "#73efff", true);
+  drawGoal(FIELD.x+FIELD.w, GOAL.y, "#ff4d91", false);
+  
+  ctx.fillStyle="#eafcff";ctx.font="bold 16px system-ui";ctx.textAlign="center";ctx.fillText("HEAVEN",FIELD.x+100,FIELD.y+35);ctx.fillStyle="#ffb3cf";ctx.fillText("DEMON",FIELD.x+FIELD.w-100,FIELD.y+35);
+}
+function drawGoal(x,y,c,left){
+  ctx.save();ctx.strokeStyle=c;ctx.shadowBlur=20;ctx.shadowColor=c;ctx.lineWidth=8;
+  ctx.strokeRect(left?x-45:x, y, 45, GOAL.h);
+  ctx.shadowBlur=0;ctx.globalAlpha=.2;ctx.fillStyle=c;
+  ctx.fillRect(left?x-45:x, y, 45, GOAL.h);ctx.restore();
+}
+
+function drawUI(){
+  ctx.fillStyle="#dffcff";ctx.textAlign="center";ctx.font="800 36px system-ui";ctx.fillText(`HEAVEN  ${game.score.heaven} : ${game.score.demon}  DEMON`,W/2,55);
+  ctx.font="600 13px system-ui";ctx.fillStyle="#7186a8";ctx.fillText("5V5 MATCH · FIRST TO 5",W/2,80);
+  let p=game.players.find(p=>p.controlled);if(p){
+    // Bảng thông số cầu thủ ở góc trái dưới
+    ctx.textAlign="left";ctx.fillStyle="#07101caa";ctx.fillRect(25,H-142,320,122);ctx.strokeStyle="#8eeaff33";ctx.lineWidth=1;ctx.strokeRect(25,H-142,320,122);
+    ctx.fillStyle="#fff";ctx.font="700 13px system-ui";ctx.fillText(`${p.role.toUpperCase()} • HEAVEN`,38,H-120);
+    
+    // Thanh HP
+    ctx.fillStyle="#162033";ctx.fillRect(38,H-110,160,7);ctx.fillStyle="#6ceaff";ctx.fillRect(38,H-110,160*p.hp/100,7);
+    // Thanh ULT
+    ctx.fillStyle="#162033";ctx.fillRect(38,H-97,160,7);ctx.fillStyle="#ffaa00";ctx.fillRect(38,H-97,160*p.ult/100,7);
+    // Thanh Rainbow Fever
+    ctx.fillStyle="#162033";ctx.fillRect(38,H-84,160,7);
+    let rg=ctx.createLinearGradient(38,0,198,0);["#ff5c5c","#ffb35c","#ffe75c","#7dff5c","#5cd0ff","#a45cff"].forEach((c,i,a)=>rg.addColorStop(i/(a.length-1),c));
+    ctx.fillStyle=rg;ctx.fillRect(38,H-84,160*p.rainbow/100,7);
+
+    ctx.fillStyle="#9eb0cb";ctx.font="11px system-ui";
+    ctx.fillText(`HP ${Math.ceil(p.hp)}  DASH(K) ${p.dashCD<=0?"READY":p.dashCD.toFixed(1)+"s"}`,38,H-60);
+    ctx.fillText(`ULT(U) ${p.ult>=100?"READY!":Math.ceil(p.ult)+"%"}  🌈 ${p.rainbow>=100?"FEVER!":Math.ceil(p.rainbow)+"%"}`,38,H-44);
+    
+    // Hiển thị cooldown 2 kỹ năng mới
+    ctx.fillStyle=p.hornChargeCD<=0?"#ffe98a":"#7186a8";
+    ctx.fillText(`🦄 HORN CHARGE (I): ${p.hornChargeCD<=0?"READY!":p.hornChargeCD.toFixed(1)+"s"}`,38,H-28);
+    ctx.fillStyle=p.shieldCD<=0?"#72efff":"#7186a8";
+    ctx.fillText(`🛡️ STARLIGHT SHIELD (O): ${p.shieldTimer>0?"ACTIVE!":p.shieldCD<=0?"READY!":p.shieldCD.toFixed(1)+"s"}`,38,H-12);
+  }
+}
+
+function panel(title,sub){
+  ctx.fillStyle="#050914dd";ctx.fillRect(W/2-350,H/2-200,700,400);ctx.strokeStyle="#65eaff55";ctx.lineWidth=2;ctx.strokeRect(W/2-350,H/2-200,700,400);
+  ctx.textAlign="center";ctx.fillStyle="#eaffff";ctx.font="900 58px system-ui";ctx.fillText(title,W/2,H/2-90);ctx.fillStyle="#91a7c7";ctx.font="18px system-ui";ctx.fillText(sub,W/2,H/2-50);
+}
+function drawMenu(){
+  panel("HEAVENLY GOAL","CULTIVATION FOOTBALL (5V5)");
+  ctx.fillStyle="#74eaff";ctx.font="900 18px system-ui";ctx.fillText("5V5 EXPANDED ARCADE COMBAT",W/2,H/2-10);
+  button(W/2-140,H/2+30,280,58,"START MATCH",()=>game.start());
+  ctx.fillStyle="#7186a8";ctx.font="13px system-ui";ctx.fillText("J Kick · H Pass · K Dash · L Attack · U Ult · I Charge · O Shield · TAB Switch",W/2,H/2+120);
+}
+function drawCountdown(){ctx.textAlign="center";ctx.fillStyle="#eaffff";ctx.font="900 140px system-ui";ctx.shadowBlur=35;ctx.shadowColor="#66eaff";ctx.fillText(game.count>0?game.count:"GO!",W/2,H/2+40);ctx.shadowBlur=0}
+function drawGoal(){ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 76px system-ui";ctx.shadowBlur=30;ctx.shadowColor="#7ff3ff";ctx.fillText(game.message,W/2,H/2-10);ctx.shadowBlur=0;ctx.font="700 22px system-ui";ctx.fillText(`${game.score.heaven} : ${game.score.demon}`,W/2,H/2+45)}
+function drawPause(){panel("PAUSED","Match suspended");button(W/2-140,H/2-20,280,52,"RESUME",()=>game.togglePause());button(W/2-140,H/2+45,135,52,"RESTART",()=>game.restart());button(W/2+5,H/2+45,135,52,"MAIN MENU",()=>game.mainMenu())}
+function drawEnd(){panel(game.endWinner==="heaven"?"VICTORY":"DEFEAT",`HEAVEN ${game.score.heaven} : ${game.score.demon} DEMON`);button(W/2-140,H/2,135,52,"REMATCH",()=>game.restart());button(W/2+5,H/2,135,52,"MAIN MENU",()=>game.mainMenu())}
+function button(x,y,w,h,label,fn){ctx.fillStyle="#102b49";ctx.strokeStyle="#71eaff88";ctx.lineWidth=2;ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.fillStyle="#eaffff";ctx.font="800 16px system-ui";ctx.textAlign="center";ctx.fillText(label,x+w/2,y+h/2+6);if(game.mouse&&game.mouse.click&&game.mouse.x>=x&&game.mouse.x<=x+w&&game.mouse.y>=y&&game.mouse.y<=y+h){game.mouse.click=false;fn()}}
+function drawDebug(){ctx.fillStyle="#000b";ctx.fillRect(15,85,255,105);ctx.fillStyle="#8ff5ff";ctx.textAlign="left";ctx.font="12px monospace";ctx.fillText(`FPS ${game.fps||0}`,25,105);ctx.fillText(`BALL ${ball.x.toFixed(1)}, ${ball.y.toFixed(1)}`,25,122);ctx.fillText(`VEL  ${ball.vx.toFixed(1)}, ${ball.vy.toFixed(1)}`,25,139);ctx.fillText(`PLAYERS ${game.players.length}`,25,156);ctx.fillText(`STATE ${game.state}`,25,173)}
+
+game.mouse={x:0,y:0,click:false};
+canvas.addEventListener("mousemove",e=>{let r=canvas.getBoundingClientRect();game.mouse.x=(e.clientX-r.left)*W/r.width;game.mouse.y=(e.clientY-r.top)*H/r.height});
+canvas.addEventListener("click",()=>{game.mouse.click=true;audio.init()});
+
+function resize(){
+  const dpr = window.devicePixelRatio || 1;
+  const s = Math.min(innerWidth / W, innerHeight / H);
+
+  canvas.width = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+
+  canvas.style.width = Math.round(W * s) + "px";
+  canvas.style.height = Math.round(H * s) + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+addEventListener("resize",resize);resize();
+
+let last=performance.now(),fpsT=0,fpsN=0;
+function loop(t){let dt=Math.min(.033,(t-last)/1000);last=t;fpsN++;fpsT+=dt;if(fpsT>=.5){game.fps=Math.round(fpsN/fpsT);fpsT=0;fpsN=0}
+  game.update(dt);game.render();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
