@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A tale of 2 unicorns</title>
+  <script type="module" crossorigin src="./assets/index-0AmgN6G2.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DrOcGZQm.css">
+</head>
+
+<body>
+  <dialog id="instructions">
+    <div class="content">
+      <p class="title">How to play</p>
+      <p>This is the tale of two 🦄, John and Jean.</p>
+      <p>Jean is waiting across the road and running out of patience. But without a pedestrian crossing, John can't get across!</p>
+      <p>Unicorns can only use 🌈 crossings—help him build one!</p>
+      <p>For each stripe, look around for matching real-world colors, line them up with your camera, and tap the screen. The closer the match, the more points you score!</p>
+      <fieldset>
+        <legend>Choose your difficulty</legend>
+        <label>
+          <input type="radio" name="difficulty" value="easy"/>
+          Easy
+        </label>
+        <label>
+          <input type="radio" name="difficulty" value="medium"/>
+          Medium
+        </label>
+        <label>
+          <input type="radio" name="difficulty" value="high"/>
+          High
+        </label>
+      </fieldset>
+    </div>
+    <button type="button" commandfor="instructions" command="close">Ok, let's play!</button>
+  </dialog>
+
+  <dialog id="win">
+    <div class="unicorn">🦄</div>
+    <div class="unicorn john">🦄</div>
+    <div class="heart">❤️</div>
+    <div class="content">
+      <p class="title">You won!</p>
+      <p>John reached Jean and they will spend a perfect day drinking sangria in the park.</p>
+      <p><strong>Your total score is <span class="points">0</span></strong></p>
+    </div>
+    <button type="button" class="restart">Retry to score better</button>
+  </dialog>
+
+  <dialog id="loose">
+    <div class="unicorn">🦄</div>
+    <div class="content">
+      <p class="title">You lose!</p>
+      <p>Unfortunately Jean got bored and left.</p>
+      <p>John is alone and sad 😕.</p>
+    </div>
+    <button type="button" class="restart">retry</button>
+  </dialog>
+
+  <header>
+    <div class="score">
+      <div class="difficulty">difficulty: <span>medium</span></div>
+      <div class="points">points: <span>0</span></div>
+    </div>
+    
+    <div class="timer">1:00</div>
+    
+    <button type="button" class="mute">mute</button>
+  </header>
+
+  <div class="path"></div>
+
+  <color-bar active="true">
+    <div class="target"></div>
+    <user-video></user-video>
+  </color-bar>
+  
+</body>
+
+</html>
