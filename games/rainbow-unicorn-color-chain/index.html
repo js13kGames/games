@@ -505,9 +505,9 @@ function renderCover(){
 
   /* 玩法说明 */
   g.fillStyle='#b8a6e0'; g.font='13px system-ui,sans-serif';
-  g.fillText('Match colors to trigger CHAIN explosions', H/2+148);
+  g.fillText('Match colors to trigger CHAIN explosions', W/2, H/2+148);
   g.fillStyle='#8f7cc4'; g.font='12px system-ui,sans-serif';
-  g.fillText('Move to leave a damaging rainbow trail', H/2+170);
+  g.fillText('Move to leave a damaging rainbow trail', W/2, H/2+170);
 
   /* 颜色图例 */
   var lbl=['R','O','Y','G','B','I','V'];
@@ -523,24 +523,24 @@ function renderCover(){
 
   /* 技能提示 */
   g.fillStyle='#d7c8ff'; g.font='bold 11px system-ui,sans-serif';
-  g.fillText('SKILLS:   Q NOVA   ·   E POWER   ·   R SLOW', H/2+238);
+  g.fillText('SKILLS:   Q NOVA   ·   E POWER   ·   R SLOW', W/2, H/2+238);
 
   /* 开始提示（呼吸闪烁） */
   var blink=0.55+0.45*Math.sin(t*4);
   g.globalAlpha=blink;
   g.fillStyle='#ffffff'; g.font='900 18px system-ui,sans-serif';
-  g.fillText('CLICK / PRESS SPACE TO START', H/2+283);
+  g.fillText('CLICK / PRESS SPACE TO START', W/2, H/2+283);
   g.globalAlpha=1;
 
   /* 最佳分数 */
   if(best>0){
     g.fillStyle='#8f7cc4'; g.font='bold 12px system-ui,sans-serif';
-    g.fillText('BEST  '+best, H/2+315);
+    g.fillText('BEST  '+best, W/2, H/2+315);
   }
 
   /* 底部操作提示 */
   g.fillStyle='#5a4a80'; g.font='11px system-ui,sans-serif';
-  g.fillText('WASD / Arrows / Mouse   ·   Click to lock mouse', H-18);
+  g.fillText('WASD / Arrows / Mouse   ·   Click to lock mouse', W/2, H-18);
 }
 
 /* ================= 玩家绘制 ================= */
@@ -838,13 +838,13 @@ function render(){
 
     g.textAlign='center'; g.textBaseline='middle';
     g.fillStyle='#ffffff'; g.font='900 30px system-ui,sans-serif';
-    g.fillText('SCORE  '+score,H/2-10);
+    g.fillText('SCORE  '+score, W/2, H/2-10);
     g.fillStyle='#9d8bd0'; g.font='bold 18px system-ui,sans-serif';
-    g.fillText('BEST  '+best,H/2+30);
+    g.fillText('BEST  '+best, W/2, H/2+30);
 
     g.fillStyle='#ffffff'; g.font='900 20px system-ui,sans-serif';
     g.globalAlpha=.6+.4*Math.sin(t*4);
-    g.fillText('TAP / SPACE TO RETRY',H/2+110);
+    g.fillText('TAP / SPACE TO RETRY', W/2, H/2+110);
     g.globalAlpha=1;
   }
 }
