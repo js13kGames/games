@@ -1,0 +1,15 @@
+{
+  "name": "Rainbow Runner",
+  "short_name": "RainbowRun",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#bbf2f6",
+  "theme_color": "#bbf2f6",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
