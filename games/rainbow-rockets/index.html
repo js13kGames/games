@@ -1,0 +1,275 @@
+<html>
+<head>
+	<style>
+		body {
+			background: #111;
+			margin: 0;
+			padding: 0;
+			font-family: Verdana, sans-serif;
+			font-size: calc(12px + 1vmin);
+			overflow: hidden;
+		}
+		canvas {
+			border: solid 1px black;
+		}
+		div, b, u {
+			display: block;
+			box-sizing: border-box;
+			text-decoration: none;
+		}
+		u {
+			display: inline-block;
+			padding: 1vh 3vw;
+			min-width: 12em;
+			margin: 1em;
+			border: solid 2px #0000;
+			border-radius: 0.8em;
+			text-align: center;
+			cursor: pointer;
+			user-select: none;
+			background: #00000009;
+		}
+		.touch u, u.next {
+			border-color: #f9f;
+			box-shadow: 0 .5em .25em #0002;
+			background: #0004;
+		}
+		u:hover {
+			background: #0006;
+		}
+		u:active {
+			scale: 0.92;
+			background: #0006;
+		}
+		i {
+			font-family: 'Courier New', monospace;
+			font-size: 1rem;
+		}
+		/* Keyboard tips */
+		u > i {
+			display: none;
+		}
+		.kb u > i {
+			font-family: Arial, Helvetica, sans-serif;
+			display: inline-block;
+			margin-left: .5em;
+			padding: .1em .5em;
+			font-size: 1em;
+			color: #fff;
+			background: #70f;
+			pointer-events: none;
+			box-shadow: 2px 3px 0 #0003;
+		}
+		#tp, #bm {
+			padding: 1em;
+			border-radius: 0.4em;
+			position: absolute;
+			color: #f9f;
+			font-size: 50%;
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+		}
+		#tp {
+			top: 0;
+			align-items: flex-start;
+		}
+		#tp > b {
+			padding: 1em;
+			background: #1115;
+			box-shadow: 0 0 1vmin #0005;
+		}
+		#bm {
+			bottom: 0;
+			align-items: flex-end;
+		}
+		#tp > b, #bm > b {
+			opacity: 0;
+			scale: 0;
+			transition: 1s opacity ease-in-out, 1s scale ease-in-out;
+		}
+		.ui #tp > b, .ui #bm > b {
+			opacity: 1;
+			scale: 1;
+		}
+		progress {
+			accent-color: #f9f;
+		}
+		#atmos {
+			accent-color: #6cf;
+		}
+		#atmosLabel {
+			color: #6cf;
+		}
+		#spd {
+			color: #eee;
+			margin-top: 0.5em;
+		}
+		#alt {
+			/* border: ridge .5vmin; */
+			/* box-shadow: 0 0 1vmin #0005; */
+		}
+		#alt {
+			color: #8ed;
+			top: 2vh;
+			left: 40vw;
+		}
+		#th {
+			bottom: 2vh;
+			left: 2vh;
+			text-align: right;
+		}
+		#msn {
+			top: 2vh;
+			right: 2vh;
+			color: #dd0;
+		}
+		ol {
+			padding: 0;
+		}
+		li {
+			display: block;
+			padding: 1em;
+			margin: 0.4em 0;
+			background: #0003;
+		}
+		li:hover {
+			cursor: pointer;
+			background: #000;
+			text-decoration: underline;
+		}
+		#msnreset, #msndone {
+			display: none;
+		}
+		#msnreset.show, #msndone.show {
+			display: block;
+		}
+		#msndone {
+			color: #ff5;
+		}
+		#fuel {
+			color: orange;
+			writing-mode: vertical-lr;
+			/* rotate: 90deg; */
+		}
+		#flp {
+			accent-color: orange;
+		}
+		.m {
+			padding: 2vh 6vw;
+		}
+		#oc {
+			scale: 0;
+			max-height: 0;
+		}
+		#oc.show {
+			scale: 1;
+			max-height: 40vh;
+		}
+		#tit {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			text-align: center;
+			color: #fff;
+			background: linear-gradient(45deg, #f00a, #f709, #ee03, #3c02, #22e9, #c0ca);
+		}
+		.ui > #tit {
+			scale: 0;
+		}
+		h1, #k13 {
+			transform: skew(-7deg, -15deg);
+			text-shadow: 
+			 	2px 2px 0 #f07,
+				4px 4px 0 #f07,
+				6px 6px 0 #f07,
+				10px 10px 0 #22e,
+				14px 14px 0 #70f,
+				7px 7px 1em #0007;
+			font-size: 10vmin;
+			text-transform: uppercase;
+			margin: .5em 0;
+			letter-spacing: .2em;
+		}
+		#st { /* sub-title */
+			margin-top: 5vh;
+			color: #4ab;
+			text-shadow: 3px 3px 0 #021, 0 0 .5em #021;
+			font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+			letter-spacing: 0.2em;
+			font-size: 3vmin;
+		}
+		#start {
+			margin-top: 14vh;
+		}
+		#k13 {
+			transform: skew(-7deg, -10deg);
+			font-size: 3vmin;
+			margin-left: 16em;
+			translate: 0 -2em;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel=icon href=data:,>
+	<!-- <link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://w3.org viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛳</text></svg>"> -->
+  <script type="module" crossorigin src="./assets/index-BsT3u_aR.js"></script>
+</head>
+<body>
+<canvas id=a></canvas>
+<b id=tp>
+	<b id=fuel>
+		Fuel <progress id=flp value=0 max=1></progress>
+	</b>
+	<b id=alt>
+		Altitude: <i id=altn></i><br>
+		<progress id=atmos value=0 max=1></progress>
+		<b id=atmosLabel>Atmosphere</b>
+		<div id=spd>Speed: <i id=spdn></i></div>
+	</b>
+	<b id=msn>
+		Mission <i id=msnnum></i>/<i id=msntot></i>
+		<br>
+		<ol id=msnos>
+			<li>Do thing</li>
+			<li>Do another thing</li>
+		</ol>
+		<u id=msndone data-key=E class=next>Next mission <i>Enter</i></u>
+		<u id=msnreset data-key=r class=next>Reset <i>R</i></u>
+	</b>
+</b>
+<b id=bm>
+	<b>
+		<u data-key=l class=m>Left <i>&larr;</i> <i>A</i></u>
+		<u data-key=r class=m>Right <i>&rarr;</i> <i>D</i></u>
+		<b>Throttle:
+			<progress id=thp value=0 max=1></progress>
+			<i id=thn></i>
+		</b>
+		<u data-key=C>&darr; <i>Ctrl</i> <i>X</i></u>
+		<u data-key=H>&uarr; <i>Shift</i> <i>Z</i></u>
+	</b>
+	<b id=th>
+		<u data-key=u class=m>Burst Thrust <i>W</i><i>&uarr;</i></u>
+		<div id=oc>
+			Mode: <i id=elMode></i><br>
+			<u data-key=T>Switch Mode <i>Tab</i></u>
+			<br>
+			<u data-key=B>Reset <i>R</i><i>Backspace</i></u><br>
+			<u data-key=b>Break <i>B</i></u><br>
+			<!-- <u data-key=f>Fix <i>F</i></u><br> -->
+			<u data-key=o>Toggle Sound <i>O</i></u>
+		</div>
+		<u data-key=c>Other Controls <i>C</i></u>
+	</b>
+</b>
+<b id=tit>
+	<b id=st>Unicorn Space Program</b>
+	<h1>Rainbow</h1>
+	<h1>Rockets</h1>
+	<b id=k13>13 kb</b>
+	<u data-key=E id=start>Start <i>Enter</i></u>
+</b>
+</body>
+</html>
