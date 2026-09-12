@@ -1,0 +1,183 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>CHROMA ECHO</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#05060f}canvas{width:100vw;height:100vh;display:block;touch-action:none}</style><canvas width=900 height=600></canvas><script>
+const W=900,H=600,C=document.querySelector("canvas"),X=C.getContext("2d");
+let keys={},touch=null,state=0,level=0,score=0,t0=0,muted=0,history=[],echoes=[],particles=[],shake=0,hintT=0,musicT=0,musicN=0;
+const HUE=[0,27,52,140,200,240,280],PAL=HUE.map(h=>`hsl(${h},90%,`);
+const levels=[
+ {name:"AWAKE",stars:[[450,300]],exit:[820,300,45],walls:[[420,0,30,210],[420,390,30,210]],pads:[],doors:[],hints:["MOVE with WASD or ARROWS","COLLECT the GOLDEN STAR","REACH the GLOWING EXIT"]},
+ {name:"FIRST ECHO",stars:[[720,130]],exit:[820,500,45],walls:[[500,0,30,200],[500,320,30,280]],pads:[[150,130,35]],doors:[[500,200,30,120]],hints:["STEP on the YELLOW PAD — the DOOR OPENS","...but leave the pad and the door SLAMS shut","PRESS R to REWIND — an ECHO of you stays on the pad!","Now YOU can run through while ECHO holds the door"]},
+ {name:"DOUBLE HOLD",stars:[[160,490],[460,300],[770,120]],exit:[820,510,45],walls:[[300,0,30,150],[300,270,30,330],[600,0,30,350],[600,470,30,130]],pads:[[140,110,35],[450,520,35]],doors:[[300,150,30,120],[600,350,30,120]],hints:["TWO DOORS — need TWO pads held","ECHO #1 on pad #1 → ECHO #2 on pad #2 → YOU run free","Up to 4 echoes can exist at once"]},
+ {name:"RAINBOW GATE",stars:[[130,500],[340,150],[570,500],[790,150]],exit:[820,300,45],walls:[[225,0,30,100],[225,220,30,380],[450,0,30,280],[450,400,30,200],[675,0,30,440],[675,560,30,40]],pads:[[110,160,35],[335,340,35],[560,500,35]],doors:[[225,100,30,120],[450,280,30,120],[675,440,30,120]],hints:["THREE GATES, THREE PADS, TWO ECHOES + YOU","Each pad opens ONE matching gate","Plan: enter zone → rewind → advance → repeat"]},
+ {name:"CROSSTOWN",stars:[[100,300],[800,300],[260,110],[640,490]],exit:[450,300,50],walls:[[0,240,360,30],[540,240,360,30],[0,330,360,30],[540,330,360,30],[420,0,60,180],[420,420,60,180]],pads:[[200,100,32],[700,100,32],[200,500,32],[700,500,32]],doors:[[360,240,180,30],[360,330,180,30]],hints:["CENTER EXIT — cross the horizontal chasms","Two horizontal doors need ANY matching pad held","Pad pattern: door D needs pads D or D+2 (4 pads → 2 doors)"]},
+ {name:"QUADRANT",stars:[[90,90],[810,90],[90,510],[810,510],[450,300]],exit:[450,540,45],walls:[[180,120,30,420],[380,60,30,420],[520,120,30,420],[720,60,30,420]],pads:[[90,300,32],[290,300,32],[450,60,32],[620,300,32]],doors:[[180,0,30,120],[380,0,30,60],[520,0,30,120],[720,0,30,60]],hints:["Each tall wall has a tiny DOOR at the TOP","Use echoes to hold each pad permanently open","Sweep left→right, rewind on each pad"]},
+ {name:"SYNCHRONY",stars:[[450,80],[450,520]],exit:[820,300,45],walls:[[300,0,30,240],[300,360,30,240],[600,0,30,240],[600,360,30,240]],pads:[[140,140,35],[140,460,35],[760,140,35],[760,460,35]],doors:[[300,240,30,120],[600,240,30,120]],hints:["Door 0 opens when pad 0 OR pad 2 held","Door 1 opens when pad 1 OR pad 3 held","Deploy two echoes — pick optimal pad per door"]},
+ {name:"MIRROR PATH",stars:[[110,120],[790,120],[110,480],[790,480],[450,300]],exit:[450,540,45],walls:[[180,180,210,30],[510,180,210,30],[180,390,210,30],[510,390,210,30],[380,0,30,140],[380,460,30,140],[490,0,30,140],[490,460,30,140]],pads:[[90,300,32],[810,300,32],[300,90,32],[600,90,32]],doors:[[390,180,120,30],[390,390,120,30]],hints:["Left pads open left door, right pads open right door? No!","pad 0 + pad 2 → door 0; pad 1 + pad 3 → door 1","Plan your path so echoes land on matching indices"]},
+ {name:"CHROMA CORE",stars:[[450,300],[130,130],[770,130],[130,470],[770,470],[450,80],[450,520]],exit:[450,300,0],walls:[[230,230,140,30],[480,230,120,30],[230,340,140,30],[480,340,120,30],[230,230,30,140],[570,230,30,140]],pads:[[70,70,32],[830,70,32],[70,530,32],[830,530,32]],doors:[[370,230,110,30],[370,340,110,30]],hints:["EXIT = CENTER! Collect center star first (inside inner box)","Pad 0 OR Pad 2 held → top door opens","Pad 1 OR Pad 3 held → bottom door opens","Plan: reach pad0, rewind; reach pad2, rewind → top door opens. Enter box.","Then open bottom door similarly. Collect all 7 stars → exit at center."]},
+ {name:"ETERNAL ECHO",stars:[[80,80],[360,80],[820,80],[80,300],[450,300],[820,300],[80,520],[360,520],[820,520]],exit:[450,300,75],walls:[[0,180,330,30],[570,180,330,30],[0,390,330,30],[570,390,330,30],[430,0,40,110],[430,490,40,110]],pads:[[240,100,30],[660,100,30],[240,500,30],[660,500,30]],doors:[[330,180,240,30],[330,390,240,30]],hints:["THE FINAL RAINBOW — every echo matters","Top door → pad 0 or 2 held; Bottom door → pad 1 or 3","Two echoes on top-side / bottom-side pads → both doors open → grab all → center exit"]}
+];
+let p={x:70,y:530,r:14,vx:0,vy:0,stars:new Set()};
+function reset(){
+ p={x:60,y:540,r:14,vx:0,vy:0,stars:new Set()};
+ history=[];echoes=[];particles=[];t0=performance.now();state=1;hintT=4.5;
+ if(current().exit[2]===0)current().exit[2]=55;
+}
+function current(){return levels[Math.min(level,levels.length-1)]}
+function hit(x,y,r=14){
+ const L=current();
+ for(const a of L.walls)if(x+r>a[0]&&x-r<a[0]+a[2]&&y+r>a[1]&&y-r<a[1]+a[3])return 1;
+ return x-r<0||x+r>W||y-r<0||y+r>H;
+}
+function doorOpen(d){
+ const L=current(),pads=L.pads,doors=L.doors,nD=doors.length;
+ if(!pads.length)return false;
+ const need=doors.indexOf(d);
+ const actors=[p,...echoes.map(e=>e.pos)];
+ return pads.some((pad,i)=>((i%nD)===need)&&actors.some(a=>Math.hypot(a.x-pad[0],a.y-pad[1])<pad[2]+10));
+}
+function blocked(x,y){
+ if(hit(x,y))return true;
+ for(const d of current().doors)if(!doorOpen(d)&&x+p.r>d[0]&&x-p.r<d[0]+d[2]&&y+p.r>d[1]&&y-p.r<d[1]+d[3])return true;
+ return false;
+}
+function rewind(){
+ if(history.length<25||echoes.length>=4)return;
+ echoes.push({path:history.slice(),i:0,pos:{x:history[0].x,y:history[0].y},birth:performance.now()});
+ p.x=60;p.y=540;history=[];shake=10;beep(160,.12);beep(240,.1);
+}
+function update(dt){
+ if(state!==1)return;
+ hintT=Math.max(0,hintT-dt);
+ shake=Math.max(0,shake-dt*40);
+ let dx=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0);
+ let dy=(keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0);
+ if(touch){dx=touch.x-p.x;dy=touch.y-p.y;const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l}
+ const l=Math.hypot(dx,dy);if(l){dx/=l;dy/=l}
+ p.vx=p.vx*.82+dx*78;p.vy=p.vy*.82+dy*78;
+ for(let k=0;k<2;k++){
+  const nx=p.x+p.vx*dt*.5,ny=p.y+p.vy*dt*.5;
+  if(!blocked(nx,p.y))p.x=nx;else p.vx=0;
+  if(!blocked(p.x,ny))p.y=ny;else p.vy=0;
+ }
+ history.push({x:p.x,y:p.y});
+ if(history.length>900)history.shift();
+ for(const e of echoes){e.i=(e.i+1)%e.path.length;e.pos=e.path[e.i]}
+ const L=current();
+ L.stars.forEach((s,i)=>{if(!p.stars.has(i)&&Math.hypot(p.x-s[0],p.y-s[1])<26){p.stars.add(i);score++;burst(s[0],s[1],30);beep(600+i*110,.09);beep(900+i*80,.07)}});
+ const all=p.stars.size===L.stars.length,z=L.exit;
+ if(all&&z[2]>0&&Math.hypot(p.x-z[0],p.y-z[1])<z[2]){
+  beep(700,.15);beep(1000,.18);beep(1400,.25);state=2;burst(z[0],z[1],80);
+ }
+ particles=particles.filter(q=>(q.t-=dt)>0);
+ for(const q of particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=50*dt;q.vx*=.99}
+ musicT+=dt;if(musicT>.22){musicT=0;musicStep()}
+}
+function burst(x,y,n=20){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=60+Math.random()*200;particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,t:.4+Math.random()*.8,c:i%7})}}
+function rr(i){return PAL[i%7]+"62%)"}
+function trail(path,alpha=1,off=0){
+ if(path.length<2)return;
+ for(let k=2;k<path.length;k+=4){
+  const a=path[k-2],b=path[k],i=((k+off)/6|0)%7;
+  X.strokeStyle=PAL[i]+"60%)";X.globalAlpha=alpha*Math.min(.75,k/path.length+.1);X.lineWidth=4;X.lineCap="round";X.beginPath();X.moveTo(a.x,a.y);X.lineTo(b.x,b.y);X.stroke();
+ }X.globalAlpha=1;
+}
+function uni(a,ghost=false,t=0){
+ X.save();X.translate(a.x+(ghost?Math.sin(t*3+a.x*.02)*1.5:0),a.y);if(ghost)X.globalAlpha=.5;
+ for(let i=0;i<4;i++){X.strokeStyle=PAL[i]+"62%)";X.lineWidth=4;X.beginPath();X.arc(-16-i*4,5+i*3,11+i*2,.3,2.9);X.stroke()}
+ X.fillStyle="#fff";X.beginPath();X.ellipse(0,2,15,10,0,0,7);X.fill();
+ X.beginPath();X.arc(11,-6,9,0,7);X.fill();
+ X.fillStyle=PAL[2]+"62%)";X.beginPath();X.moveTo(14,-14);X.lineTo(19,-28);X.lineTo(23,-13);X.fill();
+ X.fillStyle="#1a1f33";X.beginPath();X.arc(14,-7,2.5,0,7);X.fill();
+ X.restore();
+}
+function drawStar(cx,cy,r,col){X.fillStyle=col;X.beginPath();for(let k=0;k<10;k++){const a=-1.57+k*Math.PI/5,rr=k%2?r*.45:r;const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;k?X.lineTo(x,y):X.moveTo(x,y)}X.fill()}
+function draw(){
+ const sx=(Math.random()-.5)*shake,sy=(Math.random()-.5)*shake;
+ X.save();X.translate(sx,sy);
+ X.clearRect(0,0,W,H);
+ const g=X.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0a0d22");g.addColorStop(.5,"#1a1248");g.addColorStop(1,"#08061a");X.fillStyle=g;X.fillRect(0,0,W,H);
+ const tnow=performance.now()*.001;
+ for(let i=0;i<90;i++){
+  const h=(i*47)%360,px=(i*137+tnow*(5+i%7))%W,py=(i*71)%H;
+  X.fillStyle=`hsla(${h},90%,80%,${.25+(i%5)*.12})`;const s=1+i%3;X.fillRect(px,py,s,s);
+ }
+ const L=current();
+ X.save();X.globalAlpha=.08;for(let i=0;i<7;i++){X.fillStyle=PAL[i]+"50%)";X.fillRect(i*130,0,60,H)}X.restore();
+ X.font="900 16px system-ui";X.fillStyle="#fff";X.fillText("✦ CHROMA ECHO",22,32);
+ X.font="600 13px system-ui";X.fillStyle="#c9d0ff";X.fillText(`LEVEL ${Math.min(level,levels.length-1)+1} / ${levels.length}  —  ${L.name}`,22,54);
+ const hudR=`★ ${p?p.stars.size:0}/${L.stars.length}   ↻ ${echoes.length}/4   ◆ ${score}`;
+ X.font="600 13px system-ui";X.textAlign="right";X.fillStyle="#fff";X.fillText(hudR,W-22,32);X.fillStyle=PAL[2]+"70%)";X.font="500 11px system-ui";X.fillText("[M] MUTE",W-22,54);X.textAlign="left";
+ for(const s of L.walls){
+  const g2=X.createLinearGradient(s[0],s[1],s[0],s[1]+s[3]);g2.addColorStop(0,"#2a2455");g2.addColorStop(1,"#14102b");X.fillStyle=g2;X.fillRect(...s);
+  X.strokeStyle="rgba(255,255,255,.06)";X.lineWidth=1;X.strokeRect(s[0]+.5,s[1]+.5,s[2]-1,s[3]-1);
+ }
+ L.pads.forEach((s,i)=>{
+  const pulse=.5+.5*Math.sin(tnow*4+i),on=doorOpen(L.doors[Math.min(i,L.doors.length-1)])||[p,...echoes.map(e=>e.pos)].some(a=>Math.hypot(a.x-s[0],a.y-s[1])<s[2]+10);
+  X.strokeStyle=on?PAL[2]+"70%)":PAL[i%7]+"70%)";X.lineWidth=on?5:3;X.beginPath();X.arc(s[0],s[1],s[2]+pulse*4,0,7);X.stroke();
+  X.fillStyle=on?"rgba(255,230,90,.22)":PAL[i%7]+"12%)";X.beginPath();X.arc(s[0],s[1],s[2],0,7);X.fill();
+ });
+ L.doors.forEach(d=>{
+  const o=doorOpen(d);
+  if(o){X.fillStyle="rgba(89,227,145,.12)";X.fillRect(...d);X.strokeStyle="rgba(89,227,145,.45)";X.lineWidth=2;X.strokeRect(d[0]+1,d[1]+1,d[2]-2,d[3]-2)}
+  else{X.fillStyle=PAL[0]+"55%)";X.fillRect(...d);for(let yy=d[1]+6;yy<d[1]+d[3]-4;yy+=10){X.fillStyle="rgba(0,0,0,.25)";X.fillRect(d[0]+4,yy,d[2]-8,3)}}
+ });
+ L.stars.forEach((s,i)=>{if(!p.stars.has(i)){drawStar(s[0],s[1],15+Math.sin(tnow*3+i)*2,PAL[2]+"70%)")}});
+ const allCollected=p&&p.stars.size===L.stars.length,z=L.exit;
+ if(z[2]>0){
+  X.strokeStyle=allCollected?"#fff":PAL[level%7]+"45%)";X.lineWidth=allCollected?8:5;
+  X.beginPath();X.arc(z[0],z[1],z[2]+(allCollected?Math.sin(tnow*5)*3:0),0,7);X.stroke();
+  if(allCollected)for(let i=0;i<7;i++){X.strokeStyle=PAL[i]+"55%)";X.lineWidth=2;X.beginPath();X.arc(z[0],z[1],z[2]+10+i*3+Math.sin(tnow*4+i)*2,0,7);X.stroke()}
+ }
+ echoes.forEach((e,i)=>{trail(e.path,.2,i*2);uni(e.pos,true,tnow+e.birth*.001)});
+ if(history.length>2)trail(history,.75);
+ if(p)uni(p,false,tnow);
+ particles.forEach(q=>{X.globalAlpha=Math.min(1,q.t*1.8);X.fillStyle=PAL[q.c]+"62%)";X.fillRect(q.x-2,q.y-2,4,4)});X.globalAlpha=1;
+ X.restore();
+ if(state===0)overlay("CHROMA ECHO","Your past selves become your rainbow bridge.","MOVE: WASD / ARROWS   REWIND: R   MUTE: M","PRESS ENTER OR CLICK TO BEGIN");
+ if(state===2)overlay("MEMORY UNLOCKED ✦",level===levels.length-1?"YOU RESTORED THE LAST RAINBOW ◆":"THE NEXT MEMORY AWAITS","","ENTER: CONTINUE");
+ if(state===3)overlay("◆ THE RAINBOW REMEMBERS ◆","A js13kGames 2026 micro-adventure","FINAL SCORE: "+score,"ENTER / CLICK: PLAY AGAIN",true);
+ if(state===1&&hintT>0&&L.hints){
+  const y0=H-28-L.hints.length*22;
+  X.fillStyle="rgba(8,10,26,.82)";X.fillRect(28,y0-14,W-56,L.hints.length*22+28);
+  X.strokeStyle=PAL[(hintT*3|0)%7]+"60%)";X.lineWidth=2;X.strokeRect(28,y0-14,W-56,L.hints.length*22+28);
+  X.font="600 13px system-ui";X.fillStyle="#ffe65a";X.fillText("✦ HOW TO PROCEED:",44,y0+4);
+  L.hints.forEach((h,i)=>{X.font="500 12px system-ui";X.fillStyle="#e8ebff";X.fillText("  "+h,44,y0+26+i*22)});
+  X.fillStyle="#a4a8c9";X.font="10px system-ui";X.fillText("(hint fades — PRESS H anytime to re-show)",W-260,y0+12+L.hints.length*22);
+ }
+}
+function overlay(a,b,c,d,last=false){
+ X.fillStyle="rgba(4,5,14,.85)";X.fillRect(0,0,W,H);X.textAlign="center";
+ const yy=H/2,tt=performance.now()*.002;
+ for(let i=0;i<7;i++){X.strokeStyle=PAL[i]+"35%)";X.lineWidth=2;X.beginPath();X.arc(W/2,yy-20,120+i*22+Math.sin(tt+i)*5,0,7);X.stroke()}
+ if(last){for(let i=0;i<40;i++){drawStar(W/2+Math.cos(i)*250,yy+Math.sin(i*1.7)*180,8,PAL[i%7]+"70%)")}}
+ X.fillStyle="#fff";X.font="900 56px system-ui";X.fillText(a,W/2,yy-65);
+ X.fillStyle=PAL[2]+"70%)";X.font="600 22px system-ui";X.fillText(b,W/2,yy-14);
+ X.fillStyle="#bfc7ff";X.font="500 15px system-ui";X.fillText(c,W/2,yy+30);
+ X.fillStyle="#fff";X.font="700 18px system-ui";X.fillText(d,W/2,yy+80);X.textAlign="left";
+}
+let AC;function beep(f,d,w="sine",v=.06){
+ if(muted)return;AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+ const o=AC.createOscillator(),g=AC.createGain();o.type=w;o.frequency.value=f;g.gain.value=v;
+ o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d+.02);
+}
+const mel=[[523,.2],[659,.2],[784,.3],[1047,.4],[784,.2],[659,.2],[523,.4],[587,.2],[698,.2],[880,.3],[698,.2],[587,.2],[523,.4],[0,.4]];
+function musicStep(){if(muted||!AC||state===0)return;musicN=(musicN+1)%mel.length;const [f,d]=mel[musicN];if(f)beep(f,d*1.6,"triangle",.022)}
+addEventListener("keydown",e=>{
+ keys[e.key]=1;keys[e.key.toLowerCase?.()||""]=1;
+ if(e.key==="r"||e.key==="R"){if(state===1)rewind()}
+ if(e.key==="h"||e.key==="H"){if(state===1)hintT=6}
+ if(e.key==="m"||e.key==="M"){muted=!muted}
+ if(e.key==="Enter"){
+  if(state===0||state===3){level=0;score=0;reset();AC=AC||new(window.AudioContext||window.webkitAudioContext)()}
+  else if(state===2){if(++level>=levels.length){state=3}else reset()}
+ }
+});
+addEventListener("keyup",e=>{keys[e.key]=0;keys[e.key.toLowerCase?.()||""]=0});
+C.addEventListener("pointerdown",e=>{
+ const r=C.getBoundingClientRect();touch={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};
+ if(state===0){reset();AC=AC||new(window.AudioContext||window.webkitAudioContext)()}
+ else if(state===2){if(++level>=levels.length)state=3;else reset()}
+ else if(state===3){level=0;score=0;reset()}
+});
+C.addEventListener("pointermove",e=>{if(touch){const r=C.getBoundingClientRect();touch={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}});
+addEventListener("pointerup",()=>touch=null);
+let last=0;function loop(t){update(Math.min(.033,(t-last)/1000||0));last=t;draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+</script>
