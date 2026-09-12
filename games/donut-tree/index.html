@@ -1,0 +1,117 @@
+<body style="display:grid;place-items:center;background:#fff"><script src="zz.js"></script><script>(async _=>{
+//import
+eval((await (await fetch("https://play.js13kgames.com/2026/webxr/three.js")).text()).substr(0,716570))
+//utils
+M=Math,PI=M.PI
+a=($,..._)=>new $(..._)
+fr=(n,f=_=>_)=>{_=[];for(let i=0;i<n;i++)_.push(f(i));return _}
+m=c=>a(Bo,{color:c,side:Ri})
+mm=m=>a(Bo,{map:m,transparent:true,side:Ri})
+mn=(c,m)=>a(Ai,{color:c,alphaMap:m,alphaTest:.5})
+ldi=(u,f,_)=>(_=a(Image),_.src=u,_.onload=q=>f(_))
+ldic=(u,c)=>ldi(u,i=>(c.getContext("2d").drawImage(i,0,0)))
+cv=i=>(_=document.createElement('canvas'),_.width=_.height=i,_)
+//modeling
+ccc=[0xffde39,0x0884c0,0xdf1482,0xff9b32,0x1c894c]
+spg=a(Ms,.00056,.00056,.0061,5),
+tree=_=>{let t=a(je),h=.9,mt=m(0x554944),mc=m(0xfe8d59),x=a(lt,a(Ms,.01,.02,h),mt);x.position.y+=h/2;t.add(x);t.add((x=a(lt,a(Ms,.09,.07,.24,32,1,true),mc)),(x=a(lt,a(Ms,.10,.096,.04,32,1,true),mc),x.position.y=.13,x),(x=a(lt,a(Ms,.07,.07,.011),m(0x140600)),x.position.y=.11,x));fr(20,i=>{let r=a(je);r.position.y=M.sin((i/20)*934.485)/5+.5;r.rotateY((i/20)*PI*2);let l=(1-r.position.y)*.7,y=a(lt,a(Ms,.01,.006,l),mt);y.rotateX(PI/-1.4+l/5);y.position.z+=l/2.5;r.add(y);t.add(r);t.add(q=a(lt,a(Ls,.1+(1-i/20)*.14),a(Ai,{color:0x7a843b,transparent:true,opacity:.91,depthWrite:false})));q.scale.y=.6;q.position.set(M.sign(M.sin(((i+1)/20)*48.74))*.16*(1-i/20+.2),.37+i/20*.7,M.sign(M.sin(((i+1)/20)*34.94))*.16*(1-i/20+.1))});return t}
+donut=_=>{let t=a(je),g=a(Ro,.03,.015),x=a(lt,g,m(0xef6eab)),y=a(lt,g,m(0xbf996d));y.castShadow=true;let n=1000,d=a(je),c=a(de),z=a(no,spg,a(Ai),n);fr(n,i=>{let j=i*9345.934,y=i*3484.984,q=M.sin(j)*.5+.5,r=.02+(q*.02);d.position.set(r*M.cos(y),r*M.sin(y),.011+(.0056*M.sin(PI*q)));d.rotateZ(j);d.updateMatrix();z.setMatrixAt(i, d.matrix);c.set(ccc[M.floor((j%390.382)%5)]);z.setColorAt(i,c)});y.position.z-=.001;t.add(x,y,z);z.count=0;z.frustumCulled=false;t.t=1;return t}
+shaker=_=>(t=a(je),t.add(tt=a(je)),t.rotateX(-PI/2),tt.position.z=.015,tt.rotateX(PI/2),tt.add(a(lt,a(Ms,.017,.02,.066),m(0xadadad)),...fr(3,i=>(_=a(lt,spg,m(ccc[i])),_.position.set([.013,.017,.015][i],.015,[.013,.007,.01][i]),_))),t)
+//music/sfx
+sfx=_=>zzfx(..._)
+d=a(Uint8Array,await(await fetch("d")).arrayBuffer())
+dd=_=>{let i=0,j=1,f;setInterval(_=>{j--;while(!j){f=440*2**((d[i*2+1]-69)/12);sfx([0.2*(1/M.pow(10,M.max(0,(f-1e3)/3e3))),0,f,.02,.12,.38,1,1.5,,,,,,,,,,.96,.02,,-1417]);i=(i+1)%(d.length/2);j=d[i*2]}},1e3/69)}
+ssk=[.03,.2,40,.2,,.4,,11,,,,,,199]
+str=[.7,,150,.05,,.05,,1.3,,,,,,3]
+ssp=[,,333,.04,.03,.07,1,.7,6.1,,244,.08,.25,,28,,,.9,.03,.5,-1442]
+shh=[,.15,200,.01,.03,.02,5,1.2,,,,,,1,5.2,.1,,.43,.02,,-1300]
+//3js
+s=a($a),cm=a(vt),r=a(df,{antialias:true})
+r.setClearColor(0x79aacf);r.xr.enabled=true;r.shadowMap.enabled=true
+window.onclick=_=>cst>1e8&&(cst=0,dd(),navigator.xr.requestSession('immersive-vr',{requiredFeatures:["hand-tracking",'local-floor']}).then(_=>r.xr.setSession(_)))
+//interactive
+s.add(hlr=a(je),tre=tree())
+hlr.add(dnt=donut(),shk=shaker())
+tre.position.set(.5,.8,-.6)
+dnt.position.set(.34,1.15,-.35)
+shk.position.set(-.3,.85,-.3)
+hds=fr(4,_=>a(lt,a(Ls,.02),m(0))),hld=[],hlo=[]
+s.add(...hds)
+//emoji/tut
+txb=a(Wc,(txc=_=cv(100),_)),txp=a(w),tts=[],tth=.01
+tx=(i,j=txc.getContext("2d"))=>{j.clearRect(0,0,100,100);j.font="48px Arial";j.textBaseline="top";j.fillText(String.fromCodePoint(i),0,10);txb.needsUpdate=true}
+s.add(txo=a(lt,a(Pr,.1,.1),mm(txb))),txo.position.set(0,1.1,-.4)
+//room&lights
+s.add(
+(_=a(lt,a(Bn,2,1,1),m(0xededed)),_.position.set(0,.3,-.6),_.receiveShadow=true,_),
+(_=a(Yo,0xffffff,3),_.position.set(3,6,2),_.castShadow=true,_.shadow.camera.top=2,_.shadow.camera.bottom=-2,_.shadow.camera.right=2,_.shadow.camera.left=-2,_.shadow.mapSize.set(4096,4096),_),
+(a(Xo,0xbcbcbc,0xa5a5a5,3)),
+)
+//unicorn
+s.add(uno=a(lt,a(Bn,.7,.7,.05),mm(unt=a(Wc,(ldic('c.webp',_=cv(300)),_)))),
+(unp=_=a(lt,a(Bn,.7,.7,.01),m(0xffffff)),_.position.set(-.25,1.1,-.97),_))
+uno.position.set(-.25,1.1,-1)
+//splat
+spi=0,ldic('e.svg',spc=cv(999))
+splat=x=>a(lt,a(Pr,.18,.18),mn(x,a(Wc,spc)))
+
+//mainloop
+lst=0,cst=1e9
+r.setAnimationLoop(t=>{
+//framevars
+dt=t-lst,lst=t
+!cst&&(cst=t)
+t-=cst
+vel=o=>(!o.lp&&(o.vel=a(w),o.lp=a(w)),o.vel.copy(o.position).sub(o.lp).divideScalar(1/dt),o.lp.copy(o.position),o.vel)
+hld.filter(_=>_).map(vel)
+hldshk=hld.find(_=>_===shk)
+//hands
+fr(2,i=>{
+///dots
+let j=r.xr.getHand(i).joints;
+['thumb','index-finger'].map((_,l)=>{let k=j[_+'-tip'];k&&(hds[(i*2)+l].position.copy(k.position))})
+///pinch
+let p=hds[i*2].position,q=hds[i*2+1].position,d=p.distanceTo(q),n=p.clone().lerp(q,.5),
+s=d<.024,w=j['wrist']
+fr(2,j=>hds[i*2+j].visible=!s)
+///hold
+hlr.children.map((p,j)=>{if(!hld[i]&&s&&n.distanceTo(p.position)<.08){hld[i]=p;p.t==1&&(p.t=0,tts[0]=1)||(tts[0]&&(tts[1]=1));hlo[i]=p.quaternion.clone().premultiply(w.quaternion.clone().invert())}})
+tts[0]&&!tts[2]&&(tts[1]=hldshk)
+///letgo/return
+if(hld[i]&&!s){let x=hld[i];x.vel.length()>.15&&sfx(str);setTimeout(_=>{x.parent===hlr&&!hld.some(_=>_===x)&&x.position.distanceTo(cm.position)>1&&x.position.set(0,.8,-.3)},2e3);hld[i]=null}
+///drag
+hld[i]?.position.copy(n)
+hld[i]&&w&&hlo[i]&&hld[i].quaternion.copy(hlo[i]).premultiply(w.quaternion)
+//
+})
+//sprinkles
+if(hldshk&&shk.position.y>dnt.position.y&&(_=dnt.position.clone(),_.y=shk.position.y,_.distanceTo(shk.position)<.05)){dnt.children[2].count+=dt*0.08;dnt.children[2].count>60&&(tts[2]=1);sfx(ssk)}
+//throw/drop
+hlr.children.map(k=>{i=k.position.y>.82,j=k.position.z<-.5;if(!k.t&&k.vel&&!(ish=hld.some(_=>_===k))&&(i||j)){k.vel.y=M.min(.42,k.vel.y-dt*.0008);while(k.vel.length()>0.8)k.vel.multiplyScalar(.9);k.position.addScaledVector(k.vel,dt*.005)};!i&&k.position.y!=.816&&(k.position.y=.816,k.rotation.set(-PI/2,0,0),k.lp.distanceTo(k.position)<.6&&!ish&&sfx(shh))})
+//splat/spawn
+if((_=dnt.position,_.z<-0.95&&_.x>-.55&&_.x<.05&&_.y>.86&&_.y<1.4)&&!dnt.t){dnt.t=1;s.add(_=splat(ccc[2]));_.position.copy(dnt.position);_.position.z=++spi*1e-5-.975;_.rotateZ(PI*2*M.random());s.add(x=dnt.children[2],dnt);x.position.copy(_.position);x.rotation.set(0,0,0);x.scale.z=.2;dnt.visible=false;hlr.add(dnt=donut());dnt.position.set(.34,1.15,-.35);sfx(ssp);tts[3]=1;setTimeout(_=>(tts[4]=1),4e3)}
+//tutorial
+unp.scale.setScalar(M.max(0,M.min(.99,1-(t/2e3)+1)))
+t>5e3&&(tx(0x1F446),txp.copy(dnt.position),txp.y-=.11,txp.x+=.02)
+tts[0]&&(tx(0x1F447),txp.copy(shk.position),txp.y+=.07,txp.x+=.02)
+tts[1]&&(txp.copy(dnt.position),txp.y+=.1)
+tts[2]&&(tx(0x1F446),txp.copy(uno.position),txp.y+=.02,txp.z+=.1)
+tts[3]&&(tx(0x1F44C),txp.copy(uno.position),txp.y+=.4,txo.scale.setScalar(2),tth=0)
+tts[4]&&(txp.set(0,0,-.5))
+txo.position.copy(txp).y+=tth*(M.sin(t/400)**4),txo.lookAt(cm.position)
+//
+r.render(s,cm)
+});
+// TODO: Remove in prod
+// window.onkeydown=_=>r.xr.getSession()?.end()
+// hld=[shk,dnt]
+// dnt.position.set(.3,.8,-.3)
+//test launch
+// dnt.position.set(0,1,-.3);dnt.vel=a(w,0,.3,-.6);setTimeout(()=>dnt.t=0,500)
+// launchvel: x[-.11,.11],y[.18,.41],_.6
+// dnt.children[2].count=200
+// dnt.position.set(-.3,1,-.3);dnt.vel=a(w,.11,.18,-.6);setTimeout(()=>dnt.t=0,500)
+// dnt.position.set(.5,1.32,-.36)
+//window.shk=shk;window.mm=mm;window.Wc=Wc;window.cs=cs
+//window.onkeydown=_=>{cst>1e8&&(cst=0,dd(),navigator.xr.requestSession('immersive-vr',{requiredFeatures:["hand-tracking",'local-floor']}).then(_=>r.xr.setSession(_)))}
+})()</script><a>Click to start</a>
