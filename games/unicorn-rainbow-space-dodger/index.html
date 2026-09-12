@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Samiros Games Industry</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#090d16;display:flex;flex-direction:column;align-items:center;min-height:100vh;font:13px sans-serif;color:#fff;padding:10px 10px 50px 10px;overflow-y:auto}
+.hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.logo{width:36px;height:36px;filter:drop-shadow(0 0 6px #38bdf8)}
+.title{font-size:15px;font-weight:800;color:#38bdf8}
+.bar{width:320px;display:none;justify-content:space-between;align-items:center;margin-bottom:8px}
+#score{color:#38bdf8;font-weight:700}#highScore{color:#facc15}
+.btn{background:#1e293b;border:1px solid #3b82f6;color:#38bdf8;padding:4px 10px;border-radius:6px;cursor:pointer}
+canvas{background:#0f172a;border-radius:12px;border:2px solid #38bdf8;touch-action:none;cursor:pointer}
+.port{margin-top:20px;width:320px;background:#111827;padding:12px;border-radius:12px;border:1px solid #1e3a8a;text-align:center}
+.port h3{color:#38bdf8;font-size:14px;margin-bottom:4px}
+.port p{font-size:11px;color:#94a3b8;margin-bottom:10px}
+.item{display:flex;justify-content:space-between;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px 10px;margin-bottom:8px;align-items:center}
+.item a{color:#38bdf8;text-decoration:none;font-weight:700}
+.bdg{background:#0f172a;color:#facc15;font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid #334155}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+<svg class="logo" viewBox="0 0 100 100">
+<defs><linearGradient id="g"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#c084fc"/></linearGradient></defs>
+<polygon points="50,6 90,27 90,73 50,94 10,73 10,27" fill="#0b0f19" stroke="url(#g)" stroke-width="7" stroke-linejoin="round"/>
+<path d="M64 34C64 24,36 24,36 40C36 56,64 50,64 66C64 80,36 80,36 70" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round"/>
+</svg>
+<span class="title">SAMIROS GAMES INDUSTRY</span>
+</div>
+
+<div class="bar" id="gh">
+<div>Score: <span id="sc">0</span></div>
+<div>Best: <span id="hs">0</span></div>
+<button class="btn" id="pb">⏸ Pause</button>
+</div>
+
+<canvas id="gc" width="320" height="480"></canvas>
+
+<div class="port">
+<h3>🚀 SAMIROS GAMES INDUSTRY</h3>
+<p>Click on these links to play Samiro's games:</p>
+<div id="pl"></div>
+</div>
+
+<script>
+let links=['incandescent-toffee-4fddba','splendorous-bublanina-626e1d','jolly-nougat-3cdf9d','peaceful-lamington-80c6bd','resilient-cobbler-17f84b','serene-fairy-6e4390','unique-klepon-f10bc3'],
+emojis=['🦄','🧩','🏃','🌌','🧱','🎯','🕹️'];
+
+function loadV(){
+  let h='';
+  links.forEach((l,i)=>{
+    let id=i+1,c=localStorage.getItem('sgv_'+id)||0;
+    h+=`<div class="item"><a href="https://${l}.netlify.app" target="_blank" onclick="tr(${id})">${emojis[i]} ${id}. Samiros ${id}</a><span class="bdg" id="v${id}">👁️ ${c} Views</span></div>`;
+  });
+  document.getElementById('pl').innerHTML=h;
+}
+function tr(i){let c=+localStorage.getItem('sgv_'+i)+1;localStorage.setItem('sgv_'+i,c);document.getElementById('v'+i).innerText=`👁️ ${c} Views`}
+window.onload=loadV;
+
+const cv=document.getElementById("gc"),x=cv.getContext("2d"),scE=document.getElementById("sc"),hsE=document.getElementById("hs"),gh=document.getElementById("gh"),pb=document.getElementById("pb");
+let st="MENU",sc=0,hs=localStorage.getItem("srh")||0;hsE.innerText=hs;
+let P={x:140,y:390,w:40,h:40,s:0},B=[],O=[],PW=[],PT=[],S=[],TR=[],f=0,C=["#ef4444","#f97316","#eab308","#22c55e","#06b6d4","#3b82f6","#a855f7"];
+let keys={};
+
+let AC = null;
+function initAudio() { if(!AC) AC=new(window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }
+
+function snd(t){
+  if(!AC) return;
+  try {
+    let o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);
+    if(t==="l"){o.type="sine";o.frequency.setValueAtTime(600,AC.currentTime);o.frequency.exponentialRampToValueAtTime(1200,AC.currentTime+.08);g.gain.setValueAtTime(.08,AC.currentTime);g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.08);o.start();o.stop(AC.currentTime+.08)}
+    else if(t==="e"){o.type="sawtooth";o.frequency.setValueAtTime(180,AC.currentTime);o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+.25);g.gain.setValueAtTime(.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.25);o.start();o.stop(AC.currentTime+.25)}
+    else if(t==="p"){o.type="triangle";o.frequency.setValueAtTime(500,AC.currentTime);o.frequency.exponentialRampToValueAtTime(1500,AC.currentTime+.15);g.gain.setValueAtTime(.15,AC.currentTime);g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.15);o.start();o.stop(AC.currentTime+.15)}
+  } catch(e){}
+}
+
+for(let i=0;i<45;i++)S.push({x:Math.random()*320,y:Math.random()*480,z:Math.random()*2,v:1+Math.random()*2});
+
+function exp(X,Y,r=0){for(let i=0;i<12;i++)PT.push({x:X,y:Y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,s:Math.random()*4+2,c:r?C[Math.floor(Math.random()*7)]:"#ef4444",a:1})}
+
+function gStart(){sc=0;scE.innerText=0;P.x=140;P.s=0;B=[];O=[];PW=[];PT=[];TR=[];f=0;st="PLAYING";gh.style.display="flex";pb.innerText="⏸ Pause"}
+function gOver(){snd("e");if(sc>hs){hs=sc;localStorage.setItem("srh",hs);hsE.innerText=hs}st="GAMEOVER";gh.style.display="none"}
+
+pb.onclick=()=>{if(st==="PLAYING"){st="PAUSED";pb.innerText="▶ Resume"}else if(st==="PAUSED"){st="PLAYING";pb.innerText="⏸ Pause"}};
+
+function getPos(e){
+  let r=cv.getBoundingClientRect();
+  let cx = e.touches ? e.touches[0].clientX : e.clientX;
+  let cy = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: (cx - r.left) * (cv.width / r.width), y: (cy - r.top) * (cv.height / r.height) };
+}
+
+function handlePointer(e){
+  initAudio();
+  let p = getPos(e);
+  if(st === "PLAYING"){
+    P.x = p.x - P.w / 2;
+    if(P.x < 0) P.x = 0;
+    if(P.x > 280) P.x = 280;
+  }
+}
+
+cv.addEventListener("pointerdown", (e)=>{
+  initAudio();
+  let p = getPos(e);
+  if(st==="MENU" && p.x>=60 && p.x<=260 && p.y>=270 && p.y<=325) gStart();
+  else if(st==="PAUSED"){
+    if(p.x>=80 && p.x<=240 && p.y>=200 && p.y<=240){st="PLAYING";pb.innerText="⏸ Pause"}
+    else if(p.x>=80 && p.x<=240 && p.y>=260 && p.y<=300){st="MENU";gh.style.display="none"}
+  }
+  else if(st==="GAMEOVER") st="MENU";
+  else if(st==="PLAYING") handlePointer(e);
+});
+
+cv.addEventListener("pointermove", (e)=>{
+  if(e.buttons > 0 || e.pointerType === "touch" || st === "PLAYING") handlePointer(e);
+});
+
+window.addEventListener("keydown", e => { keys[e.key] = true; });
+window.addEventListener("keyup", e => { keys[e.key] = false; });
+
+function upd(){
+  S.forEach(s=>{s.y+=s.v;if(s.y>480)s.y=0});
+  if(st!=="PLAYING") return;
+  
+  if(keys["ArrowLeft"] || keys["a"] || keys["A"]) P.x -= 5;
+  if(keys["ArrowRight"] || keys["d"] || keys["D"]) P.x += 5;
+  if(P.x < 0) P.x = 0;
+  if(P.x > 280) P.x = 280;
+
+  f++;
+  TR.unshift({x:P.x+20,y:P.y+40}); if(TR.length>10) TR.pop();
+  if(f%10===0){B.push({x:P.x+20,y:P.y,v:9});snd("l")}
+  if(f%24===0)O.push({x:Math.random()*290,y:-30,sz:24+Math.random()*12,v:3+Math.random()*3+Math.floor(sc/120)});
+  if(f%160===0)PW.push({x:Math.random()*300,y:-20,t:Math.random()>.5?"S":"P",v:2.5});
+  
+  for(let i=0;i<B.length;i++){B[i].y-=B[i].v;if(B[i].y<0){B.splice(i,1);i--}}
+  
+  for(let i=0;i<PW.length;i++){
+    let p=PW[i];p.y+=p.v;
+    if(P.x<p.x+20&&P.x+40>p.x&&P.y<p.y+20&&P.y+40>p.y){
+      snd("p");if(p.t==="S")P.s=1;if(p.t==="P"){sc+=40;scE.innerText=sc}exp(p.x,p.y,1);PW.splice(i,1);i--
+    }else if(p.y>480){PW.splice(i,1);i--}
+  }
+  
+  for(let i=0;i<O.length;i++){
+    let o=O[i];o.y+=o.v;
+    for(let j=0;j<B.length;j++){
+      let b=B[j];
+      if(b.x>o.x&&b.x<o.x+o.sz&&b.y>o.y&&b.y<o.y+o.sz){
+        snd("e");exp(o.x+o.sz/2,o.y+o.sz/2,1);sc+=10;scE.innerText=sc;O.splice(i,1);i--;B.splice(j,1);break
+      }
+    }
+    if(o&&P.x<o.x+o.sz&&P.x+40>o.x&&P.y<o.y+o.sz&&P.y+40>o.y){
+      if(P.s){P.s=0;exp(P.x+20,P.y+20,1);O.splice(i,1);i--}
+      else{exp(P.x+20,P.y+20,0);gOver()}
+    }else if(o&&o.y>480){O.splice(i,1);i--}
+  }
+  PT.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.a-=.04;if(p.a<=0)PT.splice(i,1)})
+}
+
+function drawU(X,Y){
+  TR.forEach((t,i)=>{x.fillStyle=C[i%7];x.globalAlpha=(10-i)/10;x.beginPath();x.arc(t.x,t.y+(i*3),8-(i*.5),0,Math.PI*2);x.fill()});
+  x.globalAlpha=1;
+  x.fillStyle="#fff";x.beginPath();x.arc(X+20,Y+20,16,0,Math.PI*2);x.fill();
+  x.fillStyle="#facc15";x.beginPath();x.moveTo(X+20,Y-6);x.lineTo(X+15,Y+10);x.lineTo(X+25,Y+10);x.closePath();x.fill();
+  x.fillStyle="#ec4899";x.beginPath();x.arc(X+11,Y+12,4,0,Math.PI*2);x.arc(X+29,Y+12,4,0,Math.PI*2);x.fill();
+  x.fillStyle="#0f172a";x.beginPath();x.arc(X+15,Y+20,2.5,0,Math.PI*2);x.arc(X+25,Y+20,2.5,0,Math.PI*2);x.fill();
+  if(P.s){x.strokeStyle="#38bdf8";x.lineWidth=3;x.beginPath();x.arc(X+20,Y+18,28,0,Math.PI*2);x.stroke()}
+}
+
+function drw(){
+  x.clearRect(0,0,320,480);
+  x.fillStyle="#fff";S.forEach(s=>{x.globalAlpha=.6;x.fillRect(s.x,s.y,s.z,s.z)});x.globalAlpha=1;
+  
+  if(st==="MENU"){
+    x.fillStyle="#38bdf8";x.font="bold 14px sans-serif";x.textAlign="center";x.fillText("SAMIROS GAMES INDUSTRY",160,90);
+    x.fillStyle="#ec4899";x.font="bold 20px sans-serif";x.fillText("UNICORN & RAINBOW",160,130);x.fillText("SPACE DODGER",160,155);
+    x.font="12px sans-serif";x.fillStyle="#94a3b8";x.fillText("Shoot Stars, Dodge Clouds & Score High!",160,195);
+    x.fillStyle="#22c55e";x.fillRect(60,270,200,55);x.fillStyle="#fff";x.font="bold 18px sans-serif";x.fillText("START GAME",160,304)
+  }
+  else if(st==="PLAYING"){
+    B.forEach(b=>{x.fillStyle="#facc15";x.beginPath();x.arc(b.x,b.y,4,0,Math.PI*2);x.fill()});
+    drawU(P.x,P.y);
+    O.forEach(o=>{x.fillStyle="#334155";x.beginPath();x.arc(o.x+o.sz/2,o.y+o.sz/2,o.sz/2,0,Math.PI*2);x.fill();x.fillStyle="#ef4444";x.beginPath();x.arc(o.x+o.sz/2,o.y+o.sz/2,o.sz/5,0,Math.PI*2);x.fill()});
+    PW.forEach(p=>{x.fillStyle=p.t==="S"?"#38bdf8":"#facc15";x.beginPath();x.arc(p.x+10,p.y+10,9,0,Math.PI*2);x.fill()});
+    PT.forEach(p=>{x.globalAlpha=p.a;x.fillStyle=p.c;x.fillRect(p.x,p.y,p.s,p.s)});x.globalAlpha=1
+  }
+  else if(st==="PAUSED"){
+    x.fillStyle="rgba(11,15,25,.9)";x.fillRect(0,0,320,480);
+    x.fillStyle="#38bdf8";x.font="bold 22px sans-serif";x.textAlign="center";x.fillText("GAME PAUSED",160,150);
+    x.fillStyle="#22c55e";x.fillRect(80,200,160,40);x.fillStyle="#fff";x.font="bold 15px sans-serif";x.fillText("Resume",160,225);
+    x.fillStyle="#ef4444";x.fillRect(80,260,160,40);x.fillStyle="#fff";x.fillText("Main Menu",160,285)
+  }
+  else if(st==="GAMEOVER"){
+    x.fillStyle="rgba(11,15,25,.95)";x.fillRect(0,0,320,480);
+    x.fillStyle="#ef4444";x.font="bold 24px sans-serif";x.textAlign="center";x.fillText("GAME OVER",160,200);
+    x.fillStyle="#fff";x.font="16px sans-serif";x.fillText(`Score: ${sc}`,160,245);
+    x.fillStyle="#facc15";x.fillText(`High Score: ${hs}`,160,270);
+    x.fillStyle="#38bdf8";x.font="13px sans-serif";x.fillText("Tap anywhere to Restart",160,310)
+  }
+}
+
+function loop(){upd();drw();requestAnimationFrame(loop)}
+loop();
+</script>
+</body>
+</html>
