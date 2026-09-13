@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Siderilla - UNI-BITE</title>
+	<style>
+		html,
+		body {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		body {
+			background: rgb(216, 68, 191);
+		}
+
+		canvas {
+			display: block;
+			cursor: none;
+			image-rendering: pixelated;
+		}
+	</style>
+</head>
+
+<body>
+
+	<canvas id="game"></canvas>
+
+	<a href="https://github.com/siderilla" target="_blank" rel="noopener noreferrer" id="github-link">
+		GITHUB · SIDERILLA
+	</a>
+
+	<script>
+		const canvas = document.getElementById("game");
+		const ctx = canvas.getContext("2d");
+		ctx.imageSmoothingEnabled = false;
+
+		const gameStats = {
+			score: 0,
+			combo: 0,
+			maxCombo: 0,
+			missed: 0,
+			rainbows: 0,
+			timeLeft: 60,
+			isGameStarted: false,
+			isGameOver: false,
+			level: 0,
+			poisonFlash: 0,
+			bonusFlash: 0
+		};
+
+		const pixelFont = {
+			'0': "111101101101111", '1': "010110010010111", '2': "111001111100111",
+			'3': "111001011001111", '4': "101101111001001", '5': "111100111001111",
+			'6': "111100111101111", '7': "111001010100100", '8': "111101111101111",
+			'9': "111101111001111", 'a': "010101111101101", 'b': "110101110101110",
+			'c': "011100100100011", 'd': "110101101101110", 'e': "111100111100111",
+			'f': "111100110100100", 'g': "011100101101011", 'h': "101101111101101",
+			'i': "111010010010111", 'j': "001001001101010", 'k': "101110100110101",
+			'l': "100100100100111", 'm': "101111101101101", 'n': "110101101101101",
+			'o': "111101101101111", 'p': "111101111100100", 'q': "111101101111001",
+			'r': "110101110101101", 's': "111100111001111", 't': "111010010010010",
+			'u': "101101101101111", 'v': "101101101101010", 'w': "101101101111101",
+			'x': "101101010101101", 'y': "101101010010010", 'z': "111001010100111",
+			':': "000010000010000", '!': "010010010000010", "'": "010010000000000",
+			'+': "010010111010010", '-': "000000111000000"
+		};
+
+		let particles = [];
+		let floatingTexts = [];
+
+		const boxSprite = new Image();
+		boxSprite.src = "data:image/png;base64,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";
+
+		const candyRegularSprite = new Image();
+		candyRegularSprite.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAQCAYAAAB3AH1ZAAAAXUlEQVRIiWNgGAWjAAv4////f3rpZyRGMyMjI4Y6UizHp5+JGMUk+QiL/k133uPUj+EAegOsDth89wMKG5lPKiCkF2fcYAs2PxVBktMCsgNI0U/QMfTUPwpGAU0BAJsrM3kglAmXAAAAAElFTkSuQmCC";
+
+		const candyRainbowSprite = new Image();
+		candyRainbowSprite.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAQCAYAAAB3AH1ZAAAArUlEQVRIie2TsQkDMQxFvyDgXt313iBlZsgM3sC7HNngdkm6myCuky7gCZTCOTd3OmSOdH7gQlj/S0g20OlscIfIET1Hu5604tdYYhcI7/M6z1LchSJr0VcTjiLDDBlmiGRumsiilczl3LyqP2kXLhBenkswMYCPuYG1VmezgWV0FoNdJgbG/RR1N5JZavGfCaVk3mUd+wg80hMAcAG1vYVq5vUdWjj6qzqdv/IFHcU/8uvJurcAAAAASUVORK5CYII=";
+
+		const unicornSprite = new Image();
+		unicornSprite.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgCAYAAACinX6EAAACGElEQVRoge2YMU/CQBTH/6cNoyROJg4w6GDCoAniLHGHmBgGJxdNHBw7ucnEhom7DvoZTEz8AhCdFZYOJLowgIuh5Dlgz2t7LbRcKZL+kybN9fp+7717944CJEqUKFGixdSgV6BBr0B+c5bmwYkopXUNDHoF7+eqgUREjDEmBq11DdUYTzYAZvb3yOKaqxnmx2cROACzv8fHtK4Blv1UygnCBsBY9tPzvVCO6cUaAUAnV0G6XOLjN/uv9onGGqIIXi/W8MsnXz4AxpgvP/AWcAZfz6dGhg5XgH3H5MwHFBcZ54uq51NyPv62pJe9QE1QL9aok6vYgteq/RFc0M7Jlc2BIIxJ+V+XD7itHuHm8duX32wP0WiZnj4EXp7jC4PE4PGyPnrw9CSd32wPAQC7m5qSUnDxgZEPcj4T+FJ7oZwa9Ao0Dm6BLalKQEg+U5oAS7LyVr3iUfN5D5A1l6BwAMhvLAcxwxUX35YlscMDwP11RprFcY2t2R6GqoA4+K5TwIKnyyX+M5b0LSJ9iyaBT6tZ811ZOn/eJgDuLgv4dnqx9MJWwDzwbaKDA+KXQ42WSY2Wye/F8anBM+QHypJVfs4jTqYoToG4+RCzLGZbvBdXY9H4kMGdDoiOLhqfl6Bzn8mAUSVANX/ijyEvg9a484vr/e5sUtP/gm/LsrgCb7enM/m7K26+bQVmBp0jfjzQOeInSpRoMfUDhvB2N2a+M28AAAAASUVORK5CYII=";
+
+		let W, H;
+
+		function resize() {
+			W = canvas.width = innerWidth;
+			H = canvas.height = innerHeight;
+
+			ctx.imageSmoothingEnabled = false;
+		}
+
+		addEventListener("resize", resize);
+		resize();
+
+
+		// -------------------------
+		// CANDY BOX
+		// -------------------------
+
+		const box = {
+			x: 0,
+			y: 0,
+			w: 64,
+			h: 64,
+
+			scale: 5,
+
+			t: 0,
+
+			frame: 0,
+
+			state: "closed",
+			stateTimer: 0,
+
+			spawnTimer: 0,
+			spawnIndex: 0,
+
+			pattern: null
+		};
+
+		const unicorn = {
+			x: 0,
+			y: 0,
+			w: 32,
+			h: 32,
+
+			scale: 4,
+
+			frame: 0
+		};
+
+		const BOX_TIMINGS = {
+
+			// opening → 0.3 s
+			// open    → 1.2 s
+			// closing → 0.3 s
+			// closed  → 0.7 s
+
+			opening: 400,
+			open: 2500,
+			closing: 400,
+			closed: 1000
+
+		};
+
+		const CANDY_PATTERNS = [
+			// 1
+			{
+				types: ["regular", "rainbow", "regular", "rainbow", "regular"],
+				velocities: [-1.2, -0.6, 0, 0.6, 1.2],
+				interval: 450
+			},
+
+			// 2
+			{
+				types: ["rainbow", "regular", "regular", "rainbow"],
+				velocities: [-1, -0.3, 0.5, 1.1],
+				interval: 500
+			},
+
+			// 3
+			{
+				types: ["regular", "regular", "rainbow", "regular", "rainbow", "regular"],
+				velocities: [-1.3, -0.7, -0.2, 0.4, 0.9, 1.3],
+				interval: 400
+			},
+
+			// 4
+			{
+				types: ["rainbow", "regular", "rainbow", "regular", "regular"],
+				velocities: [1.2, 0.5, 0, -0.5, -1.1],
+				interval: 480
+			},
+
+			// 5
+			{
+				types: ["regular", "rainbow", "regular", "regular"],
+				velocities: [-1.3, -0.4, 0.6, 1.2],
+				interval: 550
+			},
+
+			// 6
+			{
+				types: ["regular", "regular", "rainbow", "rainbow", "regular"],
+				velocities: [1.1, 0.5, -0.1, -0.7, -1.3],
+				interval: 430
+			},
+
+			// 7
+			{
+				types: ["rainbow", "regular", "rainbow", "regular", "rainbow"],
+				velocities: [-0.8, -0.2, 0.4, 0.9, 1.3],
+				interval: 520
+			},
+
+			// 8
+			{
+				types: ["regular", "rainbow", "regular", "rainbow", "regular", "regular"],
+				velocities: [1.3, 0.8, 0.3, -0.3, -0.8, -1.3],
+				interval: 400
+			},
+
+			// 9
+			{
+				types: ["regular", "rainbow", "regular", "regular", "rainbow"],
+				velocities: [-0.5, 0.2, 0.8, 1.2, -1.1],
+				interval: 470
+			},
+
+			// 10
+			{
+				types: ["rainbow", "regular", "regular", "rainbow", "regular", "rainbow"],
+				velocities: [0.6, 1.2, 0.3, -0.4, -1.0, -1.3],
+				interval: 450
+			},
+
+			// 11
+			{
+				types: ["regular", "regular", "rainbow", "regular"],
+				velocities: [1.3, 0.5, -0.4, -1.2],
+				interval: 580
+			},
+
+			// 12
+			{
+				types: ["rainbow", "regular", "rainbow", "regular", "regular"],
+				velocities: [-1.1, -0.5, 0.2, 0.8, 1.3],
+				interval: 500
+			},
+
+			// 13
+			{
+				types: ["regular", "rainbow", "regular", "rainbow", "regular", "rainbow"],
+				velocities: [-1.3, -0.7, 0, 0.7, 1.1, 1.3],
+				interval: 420
+			}
+		];
+
+		let candies = [];
+
+		// -------------------------
+		// UPDATE LOOP
+		// -------------------------
+
+		function update(deltaTime) {
+			if (!gameStats.isGameStarted) return;
+			if (gameStats.isGameOver) return;
+
+			if (gameStats.poisonFlash > 0) {
+				gameStats.poisonFlash -= deltaTime;
+			}
+
+			if (gameStats.bonusFlash > 0) {
+				gameStats.bonusFlash -= deltaTime;
+			}
+
+			// countdown managing
+			if (!gameStats.timeTimer) gameStats.timeTimer = 0;
+			gameStats.timeTimer += deltaTime;
+
+			const boxSpeed = 0.012 + (gameStats.level * 0.0015);
+			box.t += boxSpeed;
+
+			// every 1000ms
+			if (gameStats.timeTimer >= 1000) {
+				gameStats.timeTimer -= 1000;
+				gameStats.timeLeft--;
+
+				// check if time is over
+				if (gameStats.timeLeft <= 0) {
+					gameStats.timeLeft = 0;
+					gameStats.isGameOver = true;
+				}
+			}
+
+			const range = Math.min(W * 0.35, 300);
+
+			box.x = W / 2 + Math.sin(box.t) * range;
+
+			box.y =
+				H / 2 +
+				Math.sin(box.t * 2) * 25;
+
+			updateBoxState(deltaTime);
+			updateCandies(deltaTime);
+			updateEffects();
+		}
+
+		// -------------------------
+		// GAME OVER SCREEN
+		// -------------------------
+
+		function drawGameOver() {
+			ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+			ctx.fillRect(0, 0, W, H);
+
+			drawPixelText("time's up!", W / 2, H / 2 - 100, 8, "#FFFFFF", "center");
+
+			drawPixelText(gameStats.score, W / 2, H / 2 - 20, 10, "#FFFF00", "center");
+
+			drawPixelText("click to restart", W / 2, H / 2 + 80, 4, "#FFC0CB", "center");
+
+			drawPixelText(
+				"GITHUB: SIDERILLA",
+				canvas.width / 2,
+				canvas.height - 55,
+				5,
+				"#ffffff",
+				"center"
+			);
+		}
+
+		// -------------------------
+		// START SCREEN
+		// -------------------------
+
+		function drawStartScreen() {
+			ctx.fillStyle = "rgb(100, 31, 89)";
+			ctx.fillRect(0, 0, W, H);
+
+			drawPixelText("uni-bite", W / 2, H / 2 - 140, 8, "#ffffff", "center");
+
+			drawPixelText("controls:", W / 2, H / 2 - 50, 4, "#FFFFFF", "center");
+			drawPixelText("move mouse ! hold click to eat", W / 2, H / 2 - 10, 3, "#FFFFFF", "center");
+
+			drawPixelText("green candy: poison", W / 2, H / 2 + 50, 3, "#55FF55", "center");
+			drawPixelText("gold candy: +5 sec", W / 2, H / 2 + 80, 3, "#FFD700", "center");
+
+			drawPixelText("eat rainbows for combos! 3x pts", W / 2, H / 2 + 110, 3, "#FF69B4", "center");
+
+			drawPixelText("click or press key", W / 2, H / 2 + 160, 4, "#ff9dff", "center");
+			drawPixelText("to start", W / 2, H / 2 + 195, 4, "#ff9dff", "center");
+
+			drawPixelText(
+				"GITHUB: SIDERILLA",
+				canvas.width / 2,
+				canvas.height - 55,
+				5,
+				"#ffffff",
+				"center"
+			);
+		}
+
+		// -------------------------
+		// DRAW
+		// -------------------------
+
+		function draw() {
+			ctx.clearRect(0, 0, W, H);
+
+			if (!gameStats.isGameStarted) {
+				drawStartScreen();
+				return;
+			}
+
+			drawBox();
+			drawCandies();
+			drawUnicorn();
+			drawEffects();
+
+			const isFlashing = gameStats.poisonFlash > 0 && Math.floor(gameStats.poisonFlash / 75) % 2 !== 0;
+			const isBonusFlashing = gameStats.bonusFlash > 0;
+
+			if (isFlashing) {
+				ctx.fillStyle = "rgba(50, 255, 50, 0.6)";
+				ctx.fillRect(0, 0, W, H);
+			} else if (isBonusFlashing) {
+				ctx.fillStyle = "rgba(255, 255, 255, 0.71)";
+				ctx.fillRect(0, 0, W, H);
+			}
+
+			drawUI();
+
+			if (gameStats.isGameOver) {
+				drawGameOver();
+			}
+		}
+
+		// -------------------------
+		// DRAW TEXT
+		// -------------------------
+
+		function drawPixelText(text, x, y, size, color, align = "left") {
+			ctx.fillStyle = color;
+			const str = String(text).toLowerCase();
+
+			let totalWidth = 0;
+			for (let i = 0; i < str.length; i++) {
+				totalWidth += (str[i] === " ") ? 3 * size : 4 * size;
+			}
+
+			let cursorX = align === "center" ? x - (totalWidth / 2) : x;
+
+			for (let i = 0; i < str.length; i++) {
+				const char = str[i];
+
+				if (pixelFont[char]) {
+					const pattern = pixelFont[char];
+
+					for (let p = 0; p < pattern.length; p++) {
+						if (pattern[p] === "1") {
+							const px = (p % 3) * size;
+							const py = Math.floor(p / 3) * size;
+							ctx.fillRect(cursorX + px, y + py, size, size);
+						}
+					}
+					cursorX += 4 * size;
+				} else if (char === " ") {
+					cursorX += 3 * size;
+				}
+			}
+		}
+
+		// -------------------------
+		// DRAW UI (HUD)
+		// -------------------------
+
+		function drawUI() {
+
+			ctx.drawImage(candyRainbowSprite, 0, 0, 16, 16, 12, 16, 48, 48);
+			drawPixelText(gameStats.score, 60, 24, 4, "#FFFFFF");
+
+			if (gameStats.combo > 1) {
+				drawPixelText(`x${gameStats.combo}`, 60, 50, 3, "#FFFF00");
+			}
+
+			if (gameStats.missed > 0) {
+				ctx.drawImage(boxSprite, 0, 0, 64, 64, 20, 75, 32, 32);
+				drawPixelText(gameStats.missed, 60, 80, 4, "#FFC0CB");
+			}
+
+			const timeText = gameStats.timeLeft < 10 ? `0${gameStats.timeLeft}` : `${gameStats.timeLeft}`;
+
+			let timeColor = "#FFFFFF";
+			if (gameStats.timeLeft <= 20) {
+				const isBlinking = Math.floor(performance.now() / 250) % 2 === 0;
+				timeColor = isBlinking ? "#FF0000" : "#FFD700";
+			}
+
+			drawPixelText(timeText, W - 80, 24, 8, timeColor);
+
+		}
+
+
+		// -------------------------
+		// BOX
+		// -------------------------
+
+		function drawBox() {
+			const frameW = 64;
+			const frameH = 64;
+			const currentScale = box.scale;
+
+			ctx.drawImage(
+				boxSprite,
+				box.frame * frameW,
+				0,
+				frameW,
+				frameH,
+				Math.round(box.x - (frameW * currentScale) / 2),
+				Math.round(box.y - (frameH * currentScale) / 2),
+				frameW * currentScale,
+				frameH * currentScale
+			);
+		}
+
+		function updateBoxState(deltaTime) {
+
+			box.stateTimer += deltaTime;
+
+			switch (box.state) {
+
+				case "closed":
+
+					box.frame = 0;
+
+					if (box.stateTimer >= BOX_TIMINGS.closed) {
+						box.state = "opening";
+						box.stateTimer = 0;
+					}
+
+					break;
+
+
+				case "opening":
+					box.frame = Math.min(
+						3,
+						Math.floor(
+							box.stateTimer /
+							(BOX_TIMINGS.opening / 4)
+						)
+					);
+
+					if (box.stateTimer >= BOX_TIMINGS.opening) {
+						box.state = "open";
+						box.stateTimer = 0;
+						box.frame = 3;
+
+						box.pattern = CANDY_PATTERNS[
+							Math.floor(Math.random() * CANDY_PATTERNS.length)
+						];
+
+						box.spawnTimer = 0;
+						box.spawnIndex = 0;
+					}
+					break;
+
+
+				case "open":
+					box.frame = 3;
+					box.spawnTimer += deltaTime;
+
+					const currentInterval = box.pattern.interval * (1 - (gameStats.level * 0.05));
+					if (
+						box.spawnIndex < box.pattern.types.length &&
+						box.spawnTimer >= currentInterval
+					) {
+						spawnCandy(box.spawnIndex);
+						box.spawnIndex++;
+						box.spawnTimer = 0;
+					}
+
+					if (box.stateTimer >= BOX_TIMINGS.open) {
+						box.state = "closing";
+						box.stateTimer = 0;
+					}
+
+					break;
+
+
+				case "closing":
+
+					// frame 3 → 2 → 1 → 0
+
+					box.frame = Math.max(
+						0,
+						3 - Math.floor(
+							box.stateTimer /
+							(BOX_TIMINGS.closing / 4)
+						)
+					);
+
+					if (box.stateTimer >= BOX_TIMINGS.closing) {
+						box.state = "closed";
+						box.stateTimer = 0;
+						box.frame = 0;
+					}
+
+					break;
+			}
+		}
+
+		// -------------------------
+		// CANDIES
+		// -------------------------
+
+		function drawCandies() {
+			candies.forEach(candy => {
+				const sprite = (candy.type === "rainbow" || candy.type === "clock")
+					? candyRainbowSprite : candyRegularSprite;
+
+				const currentScale = candy.scale;
+				const size = 16 * currentScale;
+
+				if (candy.type === "rotten") {
+					ctx.filter = "sepia(1) hue-rotate(70deg) saturate(3)";
+				} else if (candy.type === "clock") {
+					ctx.filter = "brightness(1.5) sepia(1) hue-rotate(-20deg) saturate(5)";
+				}
+
+				ctx.drawImage(
+					sprite,
+					candy.frame * 16,
+					0,
+					16,
+					16,
+					candy.x - size / 2,
+					candy.y - size / 2,
+					size,
+					size
+				);
+
+				ctx.filter = "none";
+			});
+		}
+
+		// -------------------------
+		// SPAWN CANDIES
+		// -------------------------
+
+		function spawnCandy(index) {
+			let actualType = box.pattern.types[index];
+
+			const chance = Math.random();
+			if (chance < 0.15) {
+				actualType = "rotten";
+			} else if (chance < 0.25 && gameStats.timeLeft <= 20) {
+				actualType = "clock";
+			}
+
+			candies.push({
+				x: box.x,
+				y: box.y - 25,
+				vx: box.pattern.velocities[index],
+				vy: -2.2,
+				type: actualType,
+				frame: 0,
+				frameTimer: 0,
+				scale: 6
+			});
+		}
+
+		function updateCandies(deltaTime) {
+			candies = candies.filter(candy => {
+
+				// 1. EATING CANDY
+				if (checkCandyCollision(candy)) {
+					if (candy.type === "rotten") {
+						// MALUS
+						playSfx(bufMalus); // malus sound
+
+						gameStats.combo = 0;
+						gameStats.score = Math.max(0, gameStats.score - 50);
+						gameStats.timeLeft = Math.max(0, gameStats.timeLeft - 3);
+						gameStats.poisonFlash = 300;
+						spawnFloatingText(candy.x, candy.y - 30, "--3", "#11cc00");
+
+					} else if (candy.type === "clock") {
+						// BONUS
+						playSfx(bufBonus); // bonus sound
+
+						gameStats.combo++;
+						if (gameStats.combo > gameStats.maxCombo) gameStats.maxCombo = gameStats.combo;
+						gameStats.score += 5 * gameStats.combo;
+						gameStats.timeLeft += 5;
+						gameStats.bonusFlash = 80;
+						spawnFloatingText(candy.x, candy.y - 30, "+5", "#FFD700");
+
+					} else {
+						// regular or rainbow
+						if (candy.type === "rainbow") {
+							playSfx(bufMunch); // rainbow sound
+						} else {
+							playSfx(bufMunch); // munch sound
+						}
+
+						gameStats.combo++;
+						if (gameStats.combo > gameStats.maxCombo) gameStats.maxCombo = gameStats.combo;
+						const basePoints = candy.type === "rainbow" ? 3 : 1;
+						if (candy.type === "rainbow") gameStats.rainbows++;
+						const totalPoints = basePoints * gameStats.combo;
+						gameStats.score += totalPoints;
+					}
+
+					gameStats.level = Math.min(10, Math.floor(gameStats.score / 40));
+					spawnParticles(candy.x, candy.y, candy.type);
+					return false;
+				}
+
+				// 2. MISSING CANDY
+				if (candy.y >= H + 50) {
+					if (candy.type !== "rotten") {
+						gameStats.missed++;
+						gameStats.combo = 0; // restart combo
+					}
+					return false;
+				}
+
+				return true;
+			});
+
+			candies.forEach(candy => {
+				candy.x += candy.vx;
+				candy.y += candy.vy;
+				const currentGravity = 0.045 + (gameStats.level * 0.002);
+				candy.vy += currentGravity;
+			});
+		}
+
+		function checkCandyCollision(candy) {
+			if (unicorn.frame !== 1) {
+				return false;
+			}
+
+			const distanceX = candy.x - unicorn.x;
+			const distanceY = candy.y - unicorn.y;
+
+			const distance = Math.sqrt(
+				distanceX * distanceX +
+				distanceY * distanceY
+			);
+
+			const hitRadius = 12 * unicorn.scale;
+
+			return distance < hitRadius;
+		}
+
+		// -------------------------
+		// UNICORN
+		// -------------------------
+
+		function drawUnicorn() {
+			const currentScale = unicorn.scale;
+			const width = unicorn.w * currentScale;
+			const height = unicorn.h * currentScale;
+
+			const isFlashing = gameStats.poisonFlash > 0 && Math.floor(gameStats.poisonFlash / 75) % 2 !== 0;
+			const isBonusFlashing = gameStats.bonusFlash > 0;
+
+			if (isFlashing) {
+				ctx.filter = "brightness(2) sepia(1) hue-rotate(70deg) saturate(5)";
+			} else if (isBonusFlashing) {
+				ctx.filter = "brightness(3)";
+			}
+
+			ctx.drawImage(
+				unicornSprite,
+				unicorn.frame * unicorn.w,
+				0,
+				unicorn.w,
+				unicorn.h,
+				unicorn.x - width / 2,
+				unicorn.y - height / 2,
+				width,
+				height
+			);
+
+			ctx.filter = "none";
+		}
+
+		// -------------------------
+		// SOUNDBOX AUDIO ENGINE
+		// -------------------------
+
+		var CPlayer = function () {
+
+			//--------------------------------------------------------------------------
+			// Private methods
+			//--------------------------------------------------------------------------
+
+			// Oscillators
+			var osc_sin = function (value) {
+				return Math.sin(value * 6.283184);
+			};
+
+			var osc_saw = function (value) {
+				return 2 * (value % 1) - 1;
+			};
+
+			var osc_square = function (value) {
+				return (value % 1) < 0.5 ? 1 : -1;
+			};
+
+			var osc_tri = function (value) {
+				var v2 = (value % 1) * 4;
+				if (v2 < 2) return v2 - 1;
+				return 3 - v2;
+			};
+
+			var getnotefreq = function (n) {
+				// 174.61.. / 44100 = 0.003959503758 (F3)
+				return 0.003959503758 * (2 ** ((n - 128) / 12));
+			};
+
+			var createNote = function (instr, n, rowLen) {
+				var osc1 = mOscillators[instr.i[0]],
+					o1vol = instr.i[1],
+					o1xenv = instr.i[3] / 32,
+					osc2 = mOscillators[instr.i[4]],
+					o2vol = instr.i[5],
+					o2xenv = instr.i[8] / 32,
+					noiseVol = instr.i[9],
+					attack = instr.i[10] * instr.i[10] * 4,
+					sustain = instr.i[11] * instr.i[11] * 4,
+					release = instr.i[12] * instr.i[12] * 4,
+					releaseInv = 1 / release,
+					expDecay = -instr.i[13] / 16,
+					arp = instr.i[14],
+					arpInterval = rowLen * (2 ** (2 - instr.i[15]));
+
+				var noteBuf = new Int32Array(attack + sustain + release);
+
+				// Re-trig oscillators
+				var c1 = 0, c2 = 0;
+
+				// Local variables.
+				var j, j2, e, t, rsample, o1t, o2t;
+
+				// Generate one note (attack + sustain + release)
+				for (j = 0, j2 = 0; j < attack + sustain + release; j++, j2++) {
+					if (j2 >= 0) {
+						// Switch arpeggio note.
+						arp = (arp >> 8) | ((arp & 255) << 4);
+						j2 -= arpInterval;
+
+						// Calculate note frequencies for the oscillators
+						o1t = getnotefreq(n + (arp & 15) + instr.i[2] - 128);
+						o2t = getnotefreq(n + (arp & 15) + instr.i[6] - 128) * (1 + 0.0008 * instr.i[7]);
+					}
+
+					// Envelope
+					e = 1;
+					if (j < attack) {
+						e = j / attack;
+					} else if (j >= attack + sustain) {
+						e = (j - attack - sustain) * releaseInv;
+						e = (1 - e) * (3 ** (expDecay * e));
+					}
+
+					// Oscillator 1
+					c1 += o1t * e ** o1xenv;
+					rsample = osc1(c1) * o1vol;
+
+					// Oscillator 2
+					c2 += o2t * e ** o2xenv;
+					rsample += osc2(c2) * o2vol;
+
+					// Noise oscillator
+					if (noiseVol) {
+						rsample += (2 * Math.random() - 1) * noiseVol;
+					}
+
+					// Add to (mono) channel buffer
+					noteBuf[j] = (80 * rsample * e) | 0;
+				}
+
+				return noteBuf;
+			};
+
+
+			//--------------------------------------------------------------------------
+			// Private members
+			//--------------------------------------------------------------------------
+
+			// Array of oscillator functions
+			var mOscillators = [
+				osc_sin,
+				osc_square,
+				osc_saw,
+				osc_tri
+			];
+
+			// Private variables set up by init()
+			var mSong, mLastRow, mCurrentCol, mNumWords, mMixBuf;
+
+
+			//--------------------------------------------------------------------------
+			// Initialization
+			//--------------------------------------------------------------------------
+
+			this.init = function (song) {
+				// Define the song
+				mSong = song;
+
+				// Init iteration state variables
+				mLastRow = song.endPattern;
+				mCurrentCol = 0;
+
+				// Prepare song info
+				mNumWords = song.rowLen * song.patternLen * (mLastRow + 1) * 2;
+
+				// Create work buffer (initially cleared)
+				mMixBuf = new Int32Array(mNumWords);
+			};
+
+
+			//--------------------------------------------------------------------------
+			// Public methods
+			//--------------------------------------------------------------------------
+
+			// Generate audio data for a single track
+			this.generate = function () {
+				// Local variables
+				var i, j, b, p, row, col, n, cp,
+					k, t, lfor, e, x, rsample, rowStartSample, f, da;
+
+				// Put performance critical items in local variables
+				var chnBuf = new Int32Array(mNumWords),
+					instr = mSong.songData[mCurrentCol],
+					rowLen = mSong.rowLen,
+					patternLen = mSong.patternLen;
+
+				// Clear effect state
+				var low = 0, band = 0, high;
+				var lsample, filterActive = false;
+
+				// Clear note cache.
+				var noteCache = [];
+
+				// Patterns
+				for (p = 0; p <= mLastRow; ++p) {
+					cp = instr.p[p];
+
+					// Pattern rows
+					for (row = 0; row < patternLen; ++row) {
+						// Execute effect command.
+						var cmdNo = cp ? instr.c[cp - 1].f[row] : 0;
+						if (cmdNo) {
+							instr.i[cmdNo - 1] = instr.c[cp - 1].f[row + patternLen] || 0;
+
+							// Clear the note cache since the instrument has changed.
+							if (cmdNo < 17) {
+								noteCache = [];
+							}
+						}
+
+						// Put performance critical instrument properties in local variables
+						var oscLFO = mOscillators[instr.i[16]],
+							lfoAmt = instr.i[17] / 512,
+							lfoFreq = (2 ** (instr.i[18] - 9)) / rowLen,
+							fxLFO = instr.i[19],
+							fxFilter = instr.i[20],
+							fxFreq = instr.i[21] * 43.23529 * 3.141592 / 44100,
+							q = 1 - instr.i[22] / 255,
+							dist = instr.i[23] * 1e-5,
+							drive = instr.i[24] / 32,
+							panAmt = instr.i[25] / 512,
+							panFreq = 6.283184 * (2 ** (instr.i[26] - 9)) / rowLen,
+							dlyAmt = instr.i[27] / 255,
+							dly = instr.i[28] * rowLen & ~1;  // Must be an even number
+
+						// Calculate start sample number for this row in the pattern
+						rowStartSample = (p * patternLen + row) * rowLen;
+
+						// Generate notes for this pattern row
+						for (col = 0; col < 4; ++col) {
+							n = cp ? instr.c[cp - 1].n[row + col * patternLen] : 0;
+							if (n) {
+								if (!noteCache[n]) {
+									noteCache[n] = createNote(instr, n, rowLen);
+								}
+
+								// Copy note from the note cache
+								var noteBuf = noteCache[n];
+								for (j = 0, i = rowStartSample * 2; j < noteBuf.length; j++, i += 2) {
+									chnBuf[i] += noteBuf[j];
+								}
+							}
+						}
+
+						// Perform effects for this pattern row
+						for (j = 0; j < rowLen; j++) {
+							// Dry mono-sample
+							k = (rowStartSample + j) * 2;
+							rsample = chnBuf[k];
+
+							// We only do effects if we have some sound input
+							if (rsample || filterActive) {
+								// State variable filter
+								f = fxFreq;
+								if (fxLFO) {
+									f *= oscLFO(lfoFreq * k) * lfoAmt + 0.5;
+								}
+								f = 1.5 * Math.sin(f);
+								low += f * band;
+								high = q * (rsample - band) - low;
+								band += f * high;
+								rsample = fxFilter == 3 ? band : fxFilter == 1 ? high : low;
+
+								// Distortion
+								if (dist) {
+									rsample *= dist;
+									rsample = rsample < 1 ? rsample > -1 ? osc_sin(rsample * .25) : -1 : 1;
+									rsample /= dist;
+								}
+
+								// Drive
+								rsample *= drive;
+
+								// Is the filter active (i.e. still audiable)?
+								filterActive = rsample * rsample > 1e-5;
+
+								// Panning
+								t = Math.sin(panFreq * k) * panAmt + 0.5;
+								lsample = rsample * (1 - t);
+								rsample *= t;
+							} else {
+								lsample = 0;
+							}
+
+							// Delay is always done, since it does not need sound input
+							if (k >= dly) {
+								// Left channel = left + right[-p] * t
+								lsample += chnBuf[k - dly + 1] * dlyAmt;
+
+								// Right channel = right + left[-p] * t
+								rsample += chnBuf[k - dly] * dlyAmt;
+							}
+
+							// Store in stereo channel buffer (needed for the delay effect)
+							chnBuf[k] = lsample | 0;
+							chnBuf[k + 1] = rsample | 0;
+
+							// ...and add to stereo mix buffer
+							mMixBuf[k] += lsample | 0;
+							mMixBuf[k + 1] += rsample | 0;
+						}
+					}
+				}
+
+				// Next iteration. Return progress (1.0 == done!).
+				mCurrentCol++;
+				return mCurrentCol / mSong.numChannels;
+			};
+
+			// Create a AudioBuffer from the generated audio data
+			this.createAudioBuffer = function (context) {
+				var buffer = context.createBuffer(2, mNumWords / 2, 44100);
+				for (var i = 0; i < 2; i++) {
+					var data = buffer.getChannelData(i);
+					for (var j = i; j < mNumWords; j += 2) {
+						data[j >> 1] = mMixBuf[j] / 65536;
+					}
+				}
+				return buffer;
+			};
+
+			// Create a WAVE formatted Uint8Array from the generated audio data
+			this.createWave = function () {
+				// Create WAVE header
+				var headerLen = 44;
+				var l1 = headerLen + mNumWords * 2 - 8;
+				var l2 = l1 - 36;
+				var wave = new Uint8Array(headerLen + mNumWords * 2);
+				wave.set(
+					[82, 73, 70, 70,
+						l1 & 255, (l1 >> 8) & 255, (l1 >> 16) & 255, (l1 >> 24) & 255,
+						87, 65, 86, 69, 102, 109, 116, 32, 16, 0, 0, 0, 1, 0, 2, 0,
+						68, 172, 0, 0, 16, 177, 2, 0, 4, 0, 16, 0, 100, 97, 116, 97,
+						l2 & 255, (l2 >> 8) & 255, (l2 >> 16) & 255, (l2 >> 24) & 255]
+				);
+
+				// Append actual wave data
+				for (var i = 0, idx = headerLen; i < mNumWords; ++i) {
+					// Note: We clamp here
+					var y = mMixBuf[i];
+					y = y < -32767 ? -32767 : (y > 32767 ? 32767 : y);
+					wave[idx++] = y & 255;
+					wave[idx++] = (y >> 8) & 255;
+				}
+
+				// Return the WAVE formatted typed array
+				return wave;
+			};
+
+			// Get n samples of wave data at time t [s]. Wave data in range [-2,2].
+			this.getData = function (t, n) {
+				var i = 2 * Math.floor(t * 44100);
+				var d = new Array(n);
+				for (var j = 0; j < 2 * n; j += 1) {
+					var k = i + j;
+					d[j] = t > 0 && k < mMixBuf.length ? mMixBuf[k] / 32768 : 0;
+				}
+				return d;
+			};
+		};
+
+		var song = {
+			songData: [
+				{ // Instrument 0
+					i: [3, 100, 128, 0, 0, 201, 128, 0, 0, 0, 5, 6, 58, 0, 0, 0, 0, 195, 6, 1, 2, 135, 0, 0, 32, 147, 6, 121, 6],
+					p: [1],
+					c: [{ n: [152, , , , 156, , , , 161, , , , 159, , , , 152, , , , 156, , , , 161, , , , 159], f: [] }]
+				},
+				{ // Instrument 1
+					i: [1, 51, 128, 64, 0, 53, 128, 0, 64, 60, 4, 7, 52, 85, 64, 0, 2, 60, 4, 1, 2, 255, 0, 0, 32, 61, 5, 32, 6],
+					p: [2],
+					c: [{ n: [], f: [] }, { n: [135, , , , 135, , , , 135, , , , 135, , , , 135, , , , 135, , , , 135, , , , 135], f: [] }]
+				},
+			],
+			rowLen: 5513, patternLen: 32, endPattern: 0, numChannels: 2
+		};
+
+		// -------------------------
+		// SOUNDBOX SFX DATA
+		// -------------------------
+		const sfxBonus = {
+			songData: [{ i: [0, 100, 122, 0, 0, 201, 100, 14, 0, 0, 0, 39, 29, 0, 67, 2, 0, 195, 2, 1, 2, 122, 63, 119, 71, 147, 6, 84, 2], p: [1], c: [{ n: [182], f: [] }] }],
+			rowLen: 5513, patternLen: 32, endPattern: 0, numChannels: 1
+		};
+		const sfxMalus = {
+			songData: [{ i: [0, 100, 146, 0, 0, 201, 128, 0, 0, 63, 0, 6, 29, 0, 117, 0, 0, 195, 4, 1, 2, 122, 63, 119, 71, 147, 6, 84, 2], p: [1], c: [{ n: [134], f: [] }] }],
+			rowLen: 5513, patternLen: 32, endPattern: 0, numChannels: 1
+		};
+		const sfxMunch = {
+			songData: [{ i: [0, 183, 164, 0, 0, 85, 92, 0, 64, 0, 40, 0, 57, 51, 102, 2, 3, 76, 6, 1, 2, 52, 65, 26, 44, 28, 3, 0, 0], p: [1], c: [{ n: [180], f: [] }] }],
+			rowLen: 5513, patternLen: 32, endPattern: 0, numChannels: 1
+		};
+
+		// -------------------------
+		// AUDIO LOADING
+		// -------------------------
+		let audioCtx;
+		let musicAudio;
+		let bufBonus, bufMalus, bufMunch;
+		let musicReady = false;
+
+		let pMusic = new CPlayer(); pMusic.init(song);
+		let pBonus = new CPlayer(); pBonus.init(sfxBonus);
+		let pMalus = new CPlayer(); pMalus.init(sfxMalus);
+		let pMunch = new CPlayer(); pMunch.init(sfxMunch);
+
+		// One completion flag per track, so each only keeps generating until it's done
+		let musicDone = false;
+		let bonusDone = false;
+		let malusDone = false;
+		let munchDone = false;
+
+		let generateInterval = setInterval(function () {
+			// Each track only generates while its own flag is still false
+			if (!musicDone) { if (pMusic.generate() >= 1) musicDone = true; }
+			if (!bonusDone) { if (pBonus.generate() >= 1) bonusDone = true; }
+			if (!malusDone) { if (pMalus.generate() >= 1) malusDone = true; }
+			if (!munchDone) { if (pMunch.generate() >= 1) munchDone = true; }
+
+			// Once all 4 tracks are done, unlock the game
+			if (musicDone && bonusDone && malusDone && munchDone) {
+				clearInterval(generateInterval);
+
+				audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+				bufBonus = pBonus.createAudioBuffer(audioCtx);
+				bufMalus = pMalus.createAudioBuffer(audioCtx);
+				bufMunch = pMunch.createAudioBuffer(audioCtx);
+
+				let wave = pMusic.createWave();
+				musicAudio = document.createElement("audio");
+				musicAudio.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
+				musicAudio.loop = true;
+
+				musicReady = true;
+			}
+		}, 0);
+
+		// -------------------------
+		// SFX PLAYER
+		// -------------------------
+		function playSfx(buffer) {
+			if (!buffer || !audioCtx) return;
+			if (audioCtx.state === "suspended") audioCtx.resume();
+
+			let source = audioCtx.createBufferSource();
+			source.buffer = buffer;
+
+			let gainNode = audioCtx.createGain();
+
+			gainNode.gain.value = 5.5;
+
+			source.connect(gainNode);
+			gainNode.connect(audioCtx.destination);
+
+			source.start();
+		}
+
+		// -------------------------
+		// OPEN / CLOSE MOUTH ON CLICK & START GAME
+		// -------------------------
+
+		addEventListener("mousedown", (event) => {
+			// if the game hasn't started yet
+			if (!gameStats.isGameStarted) {
+				gameStats.isGameStarted = true;
+				lastTime = performance.now();
+
+				if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+
+				if (musicReady && musicAudio) {
+					musicAudio.play();
+				}
+				return;
+			}
+
+			if (gameStats.isGameOver) {
+				gameStats.score = 0;
+				gameStats.combo = 0;
+				gameStats.missed = 0;
+				gameStats.rainbows = 0;
+				gameStats.timeLeft = 60;
+				gameStats.isGameOver = false;
+				gameStats.level = 0;
+				gameStats.poisonFlash = 0;
+				gameStats.bonusFlash = 0;
+
+				candies = [];
+				particles = [];
+				floatingTexts = [];
+
+				box.state = "closed";
+				box.stateTimer = 0;
+				return;
+			}
+
+			if (event.button === 0) {
+				unicorn.frame = 1;
+			}
+		});
+
+		addEventListener("mouseup", (event) => {
+			if (event.button === 0) {
+				unicorn.frame = 0;
+			}
+		});
+
+		addEventListener("mousemove", (event) => {
+			unicorn.x = event.clientX;
+			unicorn.y = event.clientY;
+		});
+
+		addEventListener("keydown", (event) => {
+			if (!gameStats.isGameStarted) {
+				gameStats.isGameStarted = true;
+				lastTime = performance.now();
+
+				if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+
+				// start the actual music
+				if (musicReady && musicAudio) {
+					musicAudio.play();
+				}
+			}
+		});
+
+		// -------------------------
+		// EATEN CANDY PARTICLES EFFECTS
+		// -------------------------
+
+		function spawnParticles(x, y, type) {
+			let colors = ["#FFFFFF", "#FFC0CB"]; // Normal
+			if (type === "rainbow") colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"];
+			if (type === "rotten") colors = ["#00FF00", "#005500", "#224422"];
+			if (type === "clock") colors = ["#FFFF00", "#FFD700", "#FFFFFF"];
+
+			for (let i = 0; i < 7; i++) {
+				particles.push({
+					x: x,
+					y: y,
+					vx: (Math.random() - 0.5) * 4,
+					vy: (Math.random() - 0.5) * 4,
+					life: 1.0,
+					color: colors[Math.floor(Math.random() * colors.length)]
+				});
+			}
+		}
+
+		// -------------------------
+		// FLOATING TEXTS
+		// -------------------------
+
+		function spawnFloatingText(x, y, text, color, size = 6) {
+			floatingTexts.push({
+				x: x,
+				y: y,
+				text: text,
+				color: color,
+				size: size,
+				life: 1.0,
+				vy: -1.5
+			});
+		}
+
+		// -------------------------
+		// UPDATE EFFECTS
+		// -------------------------
+
+		function updateEffects() {
+			// update particles life
+			particles = particles.filter(p => {
+				p.x += p.vx;
+				p.y += p.vy;
+				p.life -= 0.01;
+				return p.life > 0;
+			});
+
+			// update floating texts
+			floatingTexts = floatingTexts.filter(t => {
+				t.y += t.vy;
+				t.life -= 0.015;
+				return t.life > 0;
+			});
+		}
+
+		// -------------------------
+		// DRAW EFFECTS
+		// -------------------------
+
+		function drawEffects() {
+			ctx.globalAlpha = 1.0;
+
+			// draw particles
+			particles.forEach(p => {
+				ctx.fillStyle = p.color;
+				ctx.fillRect(Math.round(p.x), Math.round(p.y), 6, 6);
+			});
+
+			// draw floating texts
+			floatingTexts.forEach(t => {
+				drawPixelText(t.text, Math.round(t.x), Math.round(t.y), t.size, t.color, "center");
+			});
+		}
+
+		// -------------------------
+		// LOOP
+		// -------------------------
+
+		let lastTime = 0;
+
+		function loop(time) {
+			if (lastTime === 0) lastTime = time;
+
+			const deltaTime = time - lastTime;
+			lastTime = time;
+
+			update(deltaTime);
+			draw();
+
+			requestAnimationFrame(loop);
+		}
+
+		requestAnimationFrame(loop);
+	</script>
+
+</body>
+
+</html>
