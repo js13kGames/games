@@ -1,0 +1,321 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Grayfall</title>
+<style>
+html,body{margin:0;height:100%;background:#0a0a0c;overflow:hidden}
+canvas{display:block;margin:40px auto 0;image-rendering:pixelated;image-rendering:crisp-edges;background:#111;box-shadow:0 0 0 4px #000,0 0 30px #000}
+#hint{color:#888;font:12px monospace;text-align:center;margin-top:8px}
+</style></head><body>
+<canvas id="c" width="320" height="180"></canvas>
+<div id="hint">MOVE arrows/AD &nbsp; JUMP space &nbsp; ATTACK X &nbsp; DASH K &nbsp;&nbsp;|&nbsp;&nbsp; hit the boss only while it flashes WHITE</div>
+<script>
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+cv.style.width='960px';cv.style.height='540px';
+const W=320,H=180,GR=0.35,FLOOR=150;
+const KEY={};
+addEventListener('keydown',e=>{KEY[e.code]=1;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();});
+addEventListener('keyup',e=>{KEY[e.code]=0;});
+
+const COL={red:'#e33',orange:'#f80',white:'#fff'};
+const BOSSNAME={red:'FLAME BEAST',orange:'DASH FIEND',thief:'THE COLOR THIEF'};
+
+// --- only two abilities now: fire (ranged attack) and dash (cross gaps / dodge) ---
+let ab={fire:0,dash:0};
+function hasAb(a){return ab[a];}
+
+let levelIdx=0, levels=[];
+function buildLevels(){
+  levels=[
+    { // LEVEL 1 — RED
+      color:'red', width:820, gate:null,
+      enemies:[{x:300,y:FLOOR-10,vx:0.3,dead:0},{x:520,y:FLOOR-10,vx:-0.3,dead:0}],
+      bossX:750, bossName:BOSSNAME.red, atk:'shot', hex:COL.red,
+      crystals:[...Array(5)].map((_,k)=>({x:60+k*160,y:FLOOR-4-((k%2)*10)}))
+    },
+    { // LEVEL 2 — ORANGE, gate needs FIRE (granted by level 1's boss)
+      color:'orange', width:900, gate:'wall', need:'fire', gateX:120,
+      enemies:[{x:260,y:FLOOR-10,vx:0.3,dead:0},{x:460,y:FLOOR-10,vx:-0.3,dead:0},{x:650,y:FLOOR-10,vx:0.3,dead:0}],
+      bossX:830, bossName:BOSSNAME.orange, atk:'charge', hex:COL.orange,
+      crystals:[...Array(5)].map((_,k)=>({x:180+k*140,y:FLOOR-4-((k%2)*10)}))
+    },
+    { // LEVEL 3 — FINALE, gate needs DASH (granted by level 2's boss) to cross the pit
+      final:1, width:640, gate:'gap', need:'dash', gateX:260,
+      enemies:[],
+      bossX:520, bossName:BOSSNAME.thief, atk:'shot', hex:COL.white,
+      crystals:[]
+    }
+  ];
+}
+buildLevels();
+
+function gateSatisfied(L){ return !L.gate || hasAb(L.need); }
+
+let p,cam,boss,proj,particles,msg,msgT,state,shake,pauseT,nextTimer;
+
+function resetPlayer(x){
+  p={x:x||20,y:FLOOR-14,w:9,h:14,vx:0,vy:0,onG:false,face:1,hp:3,maxhp:3,inv:0,dashT:0,dashCD:0,atkT:0};
+}
+function loadLevel(i){
+  levelIdx=i; nextTimer=0;
+  const L=levels[i];
+  resetPlayer(20);
+  cam=0; boss=null; proj=[]; particles=[]; shake=0; pauseT=0;
+  L.gateOpen=gateSatisfied(L);
+  L.enemies.forEach(e=>e.dead=0);
+  L.bossDead=0;
+  msg=(L.final?'THE COLOR THIEF':L.bossName+"\nGUARDIAN OF "+L.color.toUpperCase());
+  msgT=90;
+  state='play';
+}
+
+state='title';
+loadLevel(0);
+state='title';
+
+function grantAbility(color){ if(color=='red')ab.fire=1; if(color=='orange')ab.dash=1; }
+
+function spawnParticles(x,y,hex,n){
+  for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*3,vy:(Math.random()-.5)*3-1,life:30+Math.random()*20,hex});
+}
+
+function update(){
+  const L=levels[levelIdx];
+  if(state=='title'){ if(KEY['Space']||KEY['KeyX'])loadLevel(0); return; }
+  if(state=='win')return;
+  if(msgT>0)msgT--;
+  if(pauseT>0){pauseT--;return;}
+  if(shake>0)shake--;
+  if(state!='play')return;
+
+  // --- movement ---
+  let spd=0.9;
+  if(p.dashT>0){p.dashT--;}
+  else{
+    if(KEY['ArrowLeft']||KEY['KeyA']){p.vx=-spd;p.face=-1;}
+    else if(KEY['ArrowRight']||KEY['KeyD']){p.vx=spd;p.face=1;}
+    else p.vx*=0.7;
+  }
+  if(p.dashCD>0)p.dashCD--;
+  if(p.atkT>0)p.atkT--;
+  if(p.inv>0)p.inv--;
+
+  if(KEY['Space']&&!p.jkey&&p.onG){p.vy=-4.3;p.onG=false;}
+  p.jkey=KEY['Space'];
+
+  if(KEY['KeyK']&&!p.kkey&&hasAb('dash')&&p.dashCD<=0){
+    p.vx=p.face*3.6; p.dashT=14; p.inv=16; p.dashCD=35;
+    spawnParticles(p.x,p.y+7,'#f80',6);
+  }
+  p.kkey=KEY['KeyK'];
+
+  if(KEY['KeyX']&&!p.xkey&&p.atkT<=0){
+    p.atkT=16;
+    if(hasAb('fire')) proj.push({x:p.x+p.w/2,y:p.y+6,vx:p.face*2.6,vy:0,from:'p',t:60});
+  }
+  p.xkey=KEY['KeyX'];
+
+  // gravity — suspended while dashing, so a dash carries you flat across a pit
+  if(p.dashT<=0){ p.vy+=GR; if(p.vy>5)p.vy=5; }
+  p.x+=p.vx; p.y+=p.vy;
+  if(p.x<0)p.x=0;
+
+  // is the player currently over the level's pit?
+  const inGap = L.gate=='gap' && (p.x+p.w>L.gateX-22) && (p.x<L.gateX+22);
+
+  p.onG=false;
+  if(p.y+p.h>=FLOOR && (!inGap || p.dashT>0)){
+    p.y=FLOOR-p.h; p.vy=0; p.onG=true;
+  }
+
+  // solid wall gate
+  if(L.gate=='wall' && !L.gateOpen && Math.abs(p.x-L.gateX)<7){ p.x=L.gateX-7; p.vx=0; }
+  if(L.gate && !L.gateOpen && gateSatisfied(L)) L.gateOpen=true;
+
+  // enemies
+  L.enemies.forEach(e=>{
+    if(e.dead)return;
+    e.x+=e.vx;
+    if(e.x<40||e.x>L.bossX-60)e.vx*=-1;
+    if(Math.abs(p.x-e.x)<10 && Math.abs(p.y-e.y)<12){
+      if(p.atkT>10){ e.dead=1; spawnParticles(e.x+4,e.y+4,'#999',8); }
+      else if(p.inv<=0){ p.hp--; p.inv=40; p.vx=-p.face*2; }
+    }
+  });
+
+  // projectiles
+  proj.forEach(pr=>{
+    pr.x+=pr.vx; pr.y+=pr.vy; pr.t--;
+    if(pr.from=='p'&&boss&&!boss.dead&&Math.abs(pr.x-boss.x)<12&&Math.abs(pr.y-boss.y)<13){
+      pr.t=0;
+      if(boss.state=='vuln'){ boss.hp--; boss.hit=10; spawnParticles(boss.x,boss.y,boss.hex,10); if(boss.hp<=0)killBoss(); }
+    }
+    if(pr.from=='b'&&p.inv<=0&&Math.abs(pr.x-p.x)<8&&Math.abs(pr.y-p.y)<10){ pr.t=0; p.hp--; p.inv=40; }
+  });
+  proj=proj.filter(pr=>pr.t>0);
+
+  // boss trigger
+  if(!boss&&!L.bossDead&&p.x>L.bossX-130){
+    boss={x:L.bossX+30,y:FLOOR-16,w:14,h:16,hp:3,state:'idle',t:50,hex:L.hex,face:-1,atk:L.atk,seq:['shot','charge','shot'],cycle:0};
+    msg='WAIT FOR THE FLASH, THEN ATTACK'; msgT=110;
+  }
+  if(boss) updateBoss();
+
+  if(p.hp<=0){ resetPlayer(Math.max(0,p.x-60)); p.hp=p.maxhp; }
+  if(p.y>H+40){ resetPlayer(Math.max(0,L.gate?L.gateX-60:p.x-40)); p.hp=Math.max(1,p.hp-1); }
+
+  let target=p.x-140; if(target<0)target=0; if(target>L.width-W)target=L.width-W;
+  cam+=(target-cam)*0.15;
+
+  particles.forEach(pt=>{pt.x+=pt.vx;pt.y+=pt.vy;pt.vy+=0.08;pt.life--;});
+  particles=particles.filter(pt=>pt.life>0);
+
+  if(nextTimer>0){ nextTimer--; if(nextTimer==0){ if(levelIdx<levels.length-1)loadLevel(levelIdx+1); else state='win'; } }
+}
+
+function updateBoss(){
+  const b=boss; if(b.dead)return;
+  if(b.hit>0)b.hit--;
+  b.t--;
+  if(b.t<=0){
+    if(b.state=='idle'){ b.state='tele'; b.t=40; }
+    else if(b.state=='tele'){ b.state='atk'; b.t=30; b.atk=(b.seq?b.seq[b.cycle%b.seq.length]:b.atk); b.cycle=(b.cycle||0)+1; doAttack(b); }
+    else if(b.state=='atk'){ b.state='vuln'; b.t=65; }
+    else if(b.state=='vuln'){ b.state='idle'; b.t=45; }
+  }
+  if(b.state=='idle'){ if(b.x>p.x+30)b.x-=0.3; else if(b.x<p.x-30)b.x+=0.3; }
+  b.face=p.x<b.x?-1:1;
+  if(p.inv<=0 && b.state!='vuln' && Math.abs(p.x-b.x)<10 && Math.abs(p.y-b.y)<13){
+    p.hp--; p.inv=40; p.vx=(p.x<b.x?-1:1)*2.4;
+  }
+  if(b.state=='vuln' && p.atkT>10 && Math.abs(p.x-b.x)<14 && Math.abs(p.y-b.y)<14){
+    b.hp--; b.atkT=0; b.hit=10; spawnParticles(b.x,b.y,b.hex,10);
+    if(b.hp<=0)killBoss();
+  }
+}
+function doAttack(b){
+  if(b.atk=='shot') proj.push({x:b.x,y:b.y+6,vx:(p.x<b.x?-1.6:1.6),vy:0,from:'b',t:90});
+  else if(b.atk=='charge'){ b.chargeVx=(p.x<b.x?-2.6:2.6); }
+}
+function killBoss(){
+  const L=levels[levelIdx];
+  boss.dead=1; shake=14; pauseT=12;
+  spawnParticles(boss.x,boss.y,boss.hex,30);
+  if(L.final){ msg='THE RAINBOW SEAL BREAKS'; msgT=140; nextTimer=110; return; }
+  grantAbility(L.color);
+  L.bossDead=1;
+  msg=L.color.toUpperCase()+' RESTORED — '+(L.color=='red'?'FIRE':'DASH')+' UNLOCKED';
+  msgT=100; nextTimer=70;
+}
+
+function draw(){
+  const L=levels[levelIdx];
+  g.save();
+  if(shake>0)g.translate((Math.random()-.5)*4,(Math.random()-.5)*4);
+  if(state=='title'){
+    g.fillStyle='#111'; g.fillRect(0,0,W,H);
+    g.fillStyle='#ccc'; g.font='16px monospace'; g.textAlign='center';
+    g.fillText('GRAYFALL',W/2,70);
+    g.font='8px monospace'; g.fillStyle='#888';
+    g.fillText('a world without color',W/2,86);
+    g.fillText('press SPACE or X',W/2,120);
+    g.restore(); return;
+  }
+  const litLevels=levels.filter(l=>l.bossDead).length;
+  g.fillStyle=`hsl(230,${10+litLevels*6}%,${8+litLevels*3}%)`;
+  g.fillRect(0,0,W,H);
+  g.translate(-cam,0);
+
+  g.fillStyle='#2a2a30'; g.fillRect(cam-4,FLOOR,W+8,H-FLOOR+cam);
+  g.fillStyle='#3a3a42'; g.fillRect(cam-4,FLOOR,W+8,3);
+
+  if(L.final){
+    ['red','orange','yellow','green','blue','indigo'].forEach((c,i)=>{
+      g.fillStyle = (c=='red'&&ab.fire)||(c=='orange'&&ab.dash)? COL[c] : '#333';
+      g.fillRect(20+i*14,FLOOR-14,8,8);
+    });
+  } else {
+    L.crystals.forEach(c=>{
+      g.fillStyle=L.bossDead?L.hex:'#444';
+      g.beginPath(); g.moveTo(c.x,c.y-4); g.lineTo(c.x+3,c.y); g.lineTo(c.x,c.y+4); g.lineTo(c.x-3,c.y); g.closePath(); g.fill();
+    });
+  }
+
+  L.enemies.forEach(e=>{
+    if(e.dead)return;
+    g.fillStyle='#666'; g.fillRect(e.x-4,e.y-6,8,10);
+    g.fillStyle='#222'; g.fillRect(e.x-2,e.y-4,2,2);
+  });
+
+  if(L.gate=='wall' && !L.gateOpen){
+    g.fillStyle='#833'; g.fillRect(L.gateX-4,FLOOR-40,8,40);
+    g.fillStyle='#fbb'; g.font='7px monospace'; g.textAlign='center';
+    g.fillText('NEEDS FIRE',L.gateX,FLOOR-46);
+  }
+  if(L.gate=='gap'){
+    g.fillStyle='#000'; g.fillRect(L.gateX-22,FLOOR,44,30);
+    if(!hasAb('dash')){
+      g.fillStyle='#99f'; g.font='7px monospace'; g.textAlign='center';
+      g.fillText('NEEDS DASH',L.gateX,FLOOR-6);
+    }
+  }
+
+  drawPlayer();
+  if(boss&&!boss.dead)drawBoss();
+
+  proj.forEach(pr=>{ g.fillStyle=pr.from=='p'?'#f80':(boss?boss.hex:'#fff'); g.fillRect(pr.x-2,pr.y-2,4,4); });
+  particles.forEach(pt=>{ g.fillStyle=pt.hex; g.globalAlpha=Math.max(0,pt.life/40); g.fillRect(pt.x,pt.y,2,2); g.globalAlpha=1; });
+
+  g.restore();
+
+  for(let i=0;i<p.maxhp;i++){ g.fillStyle=i<p.hp?'#e33':'#333'; g.fillRect(6+i*10,6,7,7); }
+  if(boss&&!boss.dead){
+    for(let i=0;i<3;i++){ g.fillStyle=i<boss.hp?boss.hex:'#333'; g.fillRect(W/2-16+i*12,8,9,5); }
+    g.fillStyle='#fff'; g.font='7px monospace'; g.textAlign='center';
+    if(boss.state=='vuln') g.fillText('HIT IT NOW!',W/2,20);
+    else if(boss.state=='tele') g.fillText('...',W/2,20);
+  }
+  if(msgT>0){
+    g.fillStyle='rgba(0,0,0,.55)'; g.fillRect(0,H-24,W,24);
+    g.fillStyle='#eee'; g.font='9px monospace'; g.textAlign='center';
+    msg.split('\n').forEach((line,i)=>g.fillText(line,W/2,H-13+i*9));
+  }
+  if(state=='win'){
+    g.fillStyle='rgba(0,0,0,.6)'; g.fillRect(0,0,W,H);
+    g.fillStyle='#fff'; g.font='14px monospace'; g.textAlign='center';
+    g.fillText('THE WORLD IS WHOLE',W/2,H/2);
+    g.font='8px monospace'; g.fillStyle='#aaa';
+    g.fillText('press SPACE to play again',W/2,H/2+16);
+    if(KEY['Space']){ ab={fire:0,dash:0}; buildLevels(); loadLevel(0); }
+  }
+}
+
+function drawPlayer(){
+  const x=p.x,y=p.y;
+  g.fillStyle=(p.inv>0&&p.inv%8<4)?'#fff':'#ddd';
+  g.fillRect(x,y+4,p.w,p.h-4);
+  g.fillRect(x+1,y+2,p.w-2,3);
+  const maneHex= ab.dash?COL.orange: ab.fire?COL.red:'#888';
+  g.fillStyle=maneHex; g.fillRect(x-1,y,3,6);
+  g.beginPath();
+  const hx=p.face>0?x+p.w:x;
+  g.moveTo(hx,y+3); g.lineTo(hx+p.face*4,y-1); g.lineTo(hx,y+1); g.closePath(); g.fill();
+  g.fillStyle='#bbb';
+  g.fillRect(x+1,y+p.h-2,2,3); g.fillRect(x+p.w-3,y+p.h-2,2,3);
+  g.fillStyle='#222'; g.fillRect(p.face>0?x+p.w-3:x+1,y+3,1,1);
+  if(p.atkT>10 && !hasAb('fire')){
+    g.fillStyle='rgba(255,255,255,.5)';
+    g.fillRect(p.face>0?x+p.w:x-8,y+2,8,8);
+  }
+}
+function drawBoss(){
+  const b=boss;
+  g.fillStyle = b.state=='vuln' ? '#fff' : (b.hit>0?'#fff':b.hex);
+  if(b.state=='tele') g.globalAlpha=0.55+0.45*Math.sin(Date.now()/40);
+  g.fillRect(b.x-b.w/2,b.y-b.h,b.w,b.h);
+  g.globalAlpha=1;
+  g.fillStyle='#111'; g.fillRect(b.x-3,b.y-b.h+4,2,2); g.fillRect(b.x+1,b.y-b.h+4,2,2);
+  if(b.state=='atk'&&b.atk=='charge') b.x+=b.chargeVx||0;
+}
+
+function loop(){ update(); draw(); requestAnimationFrame(loop); }
+loop();
+</script>
+</body></html>
