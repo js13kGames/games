@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rainbow Renegades</title>
+  <style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#000;color:#ddd;font:16px/1.2 monospace}#lobby{width:14em;text-align:center}#logo{width:120px;height:72px;margin:auto;position:relative}#logo .hero{position:absolute;top:18px}#logo .hero:first-child{left:28px}#logo .hero:nth-child(2){left:60px}#logo .gem{position:absolute;width:16px;height:16px;background:url(./spritesheet.png) 0 -80px/160px no-repeat;image-rendering:pixelated}#logo .gem:nth-child(3){left:8px;top:0}#logo .gem:nth-child(4){left:52px;top:0;background-position:-16px -80px}#logo .gem:nth-child(5){left:96px;top:0;background-position:-32px -80px}#logo .gem:nth-child(6){left:0;top:28px;background-position:-48px -80px}#logo .gem:nth-child(7){left:104px;top:28px;background-position:-64px -80px}#logo .gem:nth-child(8){left:30px;top:54px;background-position:-80px -80px}#logo .gem:nth-child(9){left:74px;top:54px;background-position:-96px -80px}#title{margin:0 0 1em;font-size:2em;font-weight:bold;letter-spacing:.08em;background:linear-gradient(90deg,#f44,#f90,#ff4,#4d6,#4af,#85e,#e5c,#f44);color:transparent;background-clip:text}button,input{box-sizing:border-box;width:100%;margin:.25em 0;padding:.5em;background:#171717;color:#fff;border:3px solid;border-color:#fff #555 #555 #fff;box-shadow:3px 3px #222;font:inherit;letter-spacing:.08em;text-transform:uppercase}button{cursor:pointer}button:hover{background:#333}button:active{border-color:#555 #fff #fff #555;box-shadow:none;transform:translate(3px,3px)}#players{min-height:1.5em;word-break:break-all}canvas{width:min(480px,100vw)!important;height:auto!important;aspect-ratio:1}#intro p,#victory p{line-height:1.4}.icons{display:flex;align-items:center;justify-content:center;gap:.25em}.icon{width:32px;height:32px;display:inline-block;background:url(./spritesheet.png) no-repeat;background-size:320px;image-rendering:pixelated}.player{background-position:0 0}.boss{background-position:-256px -64px}.totem{background-position:-288px -128px}.light{background-position:0 -192px}.gems{width:112px;height:16px;background-size:160px;background-position:0 -80px}</style>
+<script type="module" crossorigin src="./chunk-dqy5s8zz.js"></script></head>
+
+<body>
+  <main id="lobby">
+    <div id="logo"><i class="icon player hero"></i><i class="icon player hero"></i><i class="gem"></i><i class="gem"></i><i class="gem"></i><i class="gem"></i><i class="gem"></i><i class="gem"></i><i class="gem"></i></div>
+    <h1 id="title">Rainbow Renegades</h1>
+    <button id="host">HOST</button>
+    <form id="join"><input id="room" maxlength="3" placeholder="ROOM" required><button>JOIN</button></form>
+    <p id="code"></p>
+    <p id="players"></p>
+    <button id="ready" hidden>READY</button>
+    <button id="back" hidden>BACK</button>
+    <section id="intro" hidden>
+      <section class="slide"><i class="icon player"></i><p>Save the world from darkness by recovering the Gem of Light and defeating the Unicorn King</p><button>NEXT</button></section>
+      <section class="slide" hidden><i class="icon boss"></i><p>Defeat the Unicorn King imprisoned beyond the door to his lair</p><button>NEXT</button></section>
+      <section class="slide" hidden><div class="icons"><i class="icon totem"></i><i class="icon gems"></i></div><p>Destroy the totems and recover the gems to open the door</p><button>NEXT</button></section>
+      <section class="slide" hidden><i class="icon player"></i><p>[Arrow Keys] to move and [Space] to attack or interact</p><button>START</button></section>
+    </section>
+    <section id="victory" hidden><i class="icon light"></i><p>You recovered the Gem of Light. Now the world can emerge from darkness</p><button>BACK TO START</button></section>
+  </main>
+  
+</body>
+
+</html>
