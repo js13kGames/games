@@ -1,0 +1,358 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦄</text></svg>">
+    <title>Unicorn Kingdoms</title>
+    <style>
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #140f2c;
+}
+
+body {
+  color: #fff8ff;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+#backdrop {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 10%, #533d83, #17132f 65%, #080817);
+}
+
+#app {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+#content {
+  width: min(58rem, 100%);
+  margin: auto;
+  padding: 1rem 0 2rem;
+}
+
+#content h2,
+#content p {
+  margin: 0 0 0rem;
+}
+
+#hud {
+  width: min(58rem, 100%);
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding: .65rem .9rem;
+  border: 1px solid #f7c8ff55;
+  border-radius: .75rem;
+  background: #241947dd;
+  box-shadow: 0 .5rem 2rem #0004;
+}
+
+#hud strong,
+h2 {
+  color: #ffe18f;
+}
+
+h1 {
+  margin: 0 0 .7rem;
+  font-size: clamp(2rem, 7vw, 4rem);
+  letter-spacing: .06em;
+  color: #ffe18f;
+  text-shadow: 0 .15rem #8b3877;
+}
+
+.title-screen h1 {
+  transform-origin: center;
+}
+
+.title-screen h1 span {
+  display: inline-block;
+  transform-origin: center;
+}
+
+.start-screen h1 {
+  animation: title-bob-start 2.1s ease-in-out infinite;
+}
+
+.start-screen h1 span {
+  animation: title-scale-start 1.575s ease-in-out infinite;
+}
+
+.menu-screen h1,
+.about-screen h1,
+.settings-screen h1,
+.gameover-screen h1 {
+  animation: title-bob 2.1s ease-in-out infinite;
+}
+
+.menu-screen h1 span,
+.about-screen h1 span,
+.settings-screen h1 span,
+.gameover-screen h1 span {
+  animation: title-scale 1.575s ease-in-out infinite;
+}
+
+#screen {
+  width: min(30rem, 100%);
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid #f4c6ff77;
+  border-radius: 1rem;
+  background: #21183de8;
+  box-shadow: 0 1rem 4rem #0007;
+}
+
+p {
+  color: #e7d9f4;
+  line-height: 1.5;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.button-row {
+  margin-top: 1rem;
+  display: flex;
+  gap: .6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button.action,
+.direction {
+  border: 1px solid #eab7ff99;
+  border-radius: .5rem;
+  padding: .65rem 1rem;
+  background: #6d398d;
+}
+
+button.action:hover,
+button.action:focus-visible,
+.direction:hover,
+.direction:focus-visible {
+  background: #a755a3;
+  outline: 2px solid #ffe18f;
+  outline-offset: 2px;
+}
+
+#map-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+}
+
+#map {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(2rem, 4rem));
+  grid-auto-rows: minmax(2rem, 4rem);
+  gap: .25rem;
+  padding: .5rem;
+  border: 2px solid #f5d08a99;
+  border-radius: .8rem;
+  background: #29234dcc;
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  border: 1px solid #ffffff12;
+  border-radius: .35rem;
+  background: #4b4271;
+  font-size: clamp(1.2rem, 5vw, 2.2rem);
+}
+
+button.tile {
+  width: 100%;
+  padding: 0;
+}
+
+.tile.path {
+  background: #625377;
+}
+
+.tile.poi {
+  border-color: #ffe18f;
+  background: #76548c;
+}
+
+.tile.player {
+  background: #a64d9b;
+  box-shadow: 0 0 .7rem #ffe18f;
+}
+
+.tile:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+#match {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(2.6rem, 4.5rem));
+  gap: .35rem;
+  padding: .55rem;
+  border: 2px solid #f5d08a99;
+  border-radius: .8rem;
+  background: #29234dcc;
+}
+
+.gem {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: .5rem;
+  background: #443b68;
+  font-size: clamp(1.35rem, 6vw, 2.5rem);
+  transition: transform .1s, border-color .1s;
+}
+
+.gem:hover,
+.gem.selected {
+  border-color: #ffe18f;
+  transform: translateY(-2px);
+}
+
+.gem:disabled {
+  cursor: default;
+  opacity: .7;
+}
+
+.gem.matching {
+  border-color: #ffe18f;
+  background: #76548c;
+  animation: gem-pop .24s ease-in-out infinite alternate;
+}
+
+.gem.removing {
+  animation: gem-burst .18s ease-in forwards;
+}
+
+.gem.hint {
+  border-color: #75e8ff;
+  box-shadow: 0 0 .8rem #75e8ff;
+  animation: hint-pulse .6s ease-in-out infinite alternate;
+}
+
+@keyframes gem-pop {
+  from { transform: scale(1); }
+  to { transform: scale(1.12) rotate(3deg); }
+}
+
+@keyframes gem-burst {
+  to { opacity: 0; transform: scale(.25) rotate(20deg); }
+}
+
+@keyframes hint-pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+@keyframes title-bob-start {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-.18rem) rotate(1deg); }
+}
+
+@keyframes title-scale-start {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes title-bob {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-.16rem) rotate(1deg); }
+}
+
+@keyframes title-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+#fade {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  background: #080511;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+
+#fade.active {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: .55rem;
+  }
+
+  #hud {
+    font-size: .82rem;
+  }
+
+  #map {
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(2.2rem, 1fr));
+  }
+
+  #board {
+    width: 100%;
+    gap: .2rem;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <main id="game">
+      <div id="backdrop"></div>
+      <div id="app">
+        <header id="hud" class="hidden"></header>
+        <section id="content"></section>
+      </div>
+      <div id="fade"></div>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
