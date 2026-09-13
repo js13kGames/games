@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAINBOW UNICORN RUN</title>
+<link rel="icon" href="data:,">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#05010f;color:#fff;font-family:monospace;user-select:none}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+canvas#c,#ui,#flash{position:fixed;inset:0}
+#ui{pointer-events:none;text-shadow:0 0 8px #b8f}
+.rainbow{background:linear-gradient(90deg,#ff4068,#ff9820,#ffe020,#40ff88,#40bbff,#c070ff);background-clip:text;-webkit-background-clip:text;color:transparent}
+#hud{display:none;position:absolute;inset:0}
+#top{display:flex;justify-content:space-between;align-items:start;padding:18px 22px;gap:10px;background:linear-gradient(#08021de8,transparent)}
+#score,#combo{font-size:24px;font-weight:bold}
+small{display:block;font-size:12px;color:#d2bde9;letter-spacing:1px;margin-top:5px}
+#hearts{color:#ff689c;font-size:23px}
+#combo{text-align:right;color:#ffe97b}
+#sequence{position:absolute;top:82px;left:0;right:0;display:flex;justify-content:center;gap:7px}
+#sequence span{padding:5px 8px;border-bottom:2px solid transparent;font-size:12px}
+#sequence .next{border-color:currentColor;background:#ffffff18;border-radius:4px}
+#aim{position:absolute;top:50%;left:50%;width:12px;height:12px;margin:-6px;border:1px solid #fff9;border-radius:50%;box-shadow:0 0 5px #fff8}
+#target{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap}
+#cue{display:flex;justify-content:center;align-items:center;gap:14px;min-height:40px}
+#cueTarget{font-size:27px;font-weight:900;padding:4px 12px;border:2px solid currentColor;border-radius:8px;background:#090216dd}
+#cueNot{font-size:19px;font-weight:bold;color:#fff;background:#6d1239;padding:5px 10px;border-radius:7px}
+#cueNot s{text-decoration-thickness:3px;text-decoration-color:#fff}
+#meter{height:4px;background:#ffffff20;margin-top:9px;border-radius:8px;overflow:hidden}
+#fill{height:100%;background:currentColor;transform-origin:left}
+#feedback{position:absolute;top:30%;left:0;right:0;text-align:center;font-size:clamp(22px,5vw,42px);font-weight:bold;transition:opacity .1s;white-space:pre-line}
+#feedback small{font-size:16px;color:inherit}
+#panel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:24px;background:radial-gradient(ellipse,#10062bcc,#05010f66)}
+h1{font-size:clamp(30px,7vw,64px);letter-spacing:4px;line-height:1.1;max-width:850px}
+#message{font-size:16px;line-height:1.8;max-width:640px}
+.big{font-size:30px;color:#ffe97b;font-weight:bold}
+button{pointer-events:auto;font:inherit;font-size:18px;font-weight:bold;color:#fff;background:#32105b;border:2px solid #c47aff;border-radius:12px;padding:14px 28px;cursor:pointer;box-shadow:0 0 24px #a0f6;margin:4px}
+button:hover,button:focus-visible{background:#582184;outline:2px solid #fff;outline-offset:3px}
+#instructions{font-size:12px;color:#d2bde9;line-height:1.8}
+#flash{background:#ff2455;opacity:0;pointer-events:none}
+#err{position:fixed;left:8px;bottom:5px;max-width:95%;font-size:11px;color:#ffb68d;pointer-events:none}
+@media(max-width:550px){#top{padding:12px}#score,#combo{font-size:19px}#hearts{font-size:18px}#sequence{top:70px;gap:2px}#sequence span{font-size:10px;padding:5px}#message{font-size:14px}#panel{gap:16px}small{font-size:10px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div id="hud">
+    <div id="top">
+      <div><div id="score">0</div><small id="best">BEST 0</small></div>
+      <div id="hearts"></div>
+      <div><div id="combo">x1</div><small id="chain">AIM FOR THE CENTER</small></div>
+    </div>
+    <div id="sequence"></div><div id="aim"></div>
+    <div id="target"><div id="cue"><span id="cueText" class="sr"></span><strong id="cueTarget" aria-hidden="true"></strong><span id="cueNot" aria-hidden="true" hidden></span></div><span id="cueLive" class="sr" role="status" aria-live="polite" aria-atomic="true"></span><small id="progress"></small><div id="meter"><div id="fill"></div></div></div>
+    <div id="feedback" role="status" aria-live="polite"></div>
+  </div>
+  <div id="panel">
+    <h1 class="rainbow">RAINBOW<br>UNICORN RUN</h1>
+    <div id="message">CHASE THE COLOR. FIND YOUR FLOW.<br>Follow the glowing ring in rainbow order.<br>Hit dead center for PERFECT streaks.<br>Wrong color or missed row? Lose a heart.</div>
+    <div><button id="start">LET'S FLY · SPACE</button><button id="vr" hidden>ENTER VR</button></div>
+    <div id="instructions">MOUSE / WASD / ARROWS TO STEER · SPACE TO PLAY<br>3 HEARTS · 6 COLORS · ONE MORE RAINBOW<br>VR: LOOK TO STEER · SELECT OR GAZE TO PLAY</div>
+  </div>
+</div>
+<div id="flash"></div><div id="err" role="status"></div>
+<script id="gameplay-core">
+// Dependency-free rules also exercised by tests/gameplay.mjs.
+globalThis.RainbowRun = (() => {
+  const TAU = Math.PI * 2;
+  const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+  const names = ["RED", "ORANGE", "YELLOW", "GREEN", "BLUE", "PURPLE"];
+  const colors = ["#ff4068", "#ff9820", "#ffe020", "#40ff88", "#40bbff", "#c070ff"];
+  const bestKey = "rainbow-unicorn-best";
+
+  function loadBest(getStorage, warn) {
+    try {
+      const raw = getStorage().getItem(bestKey);
+      if (raw === null) return 0;
+      if (!/^\d+$/.test(raw) || !Number.isSafeInteger(Number(raw))) {
+        throw new Error("invalid saved score");
+      }
+      return Number(raw);
+    } catch (error) {
+      warn("Best score unavailable: " + error.message);
+      return 0;
+    }
+  }
+
+  function saveBest(value, getStorage, warn) {
+    try {
+      if (!Number.isSafeInteger(value) || value < 0) throw new Error("invalid score");
+      getStorage().setItem(bestKey, String(value));
+      return true;
+    } catch (error) {
+      warn("Best score could not be saved: " + error.message);
+      return false;
+    }
+  }
+
+  const cueCountdown = sample => 1 + Math.floor(clamp(sample, 0, 1 - Number.EPSILON) * 5);
+  const negativeCueColor = (target, sample) =>
+    (target + 1 + Math.floor(clamp(sample, 0, 1 - Number.EPSILON) * 5)) % 6;
+
+  function nextCue(state, target, negativeSample, resetSample) {
+    if (state > 0) return {cue: {target, not: null}, state: state - 1};
+    return {
+      cue: {target, not: negativeCueColor(target, negativeSample)},
+      state: cueCountdown(resetSample)
+    };
+  }
+
+  function matchesCue(cue, color) {
+    if (!cue || color === null || color === undefined) return false;
+    return cue.not === null ? color === cue.target : color !== cue.not;
+  }
+
+  function formatCue(cue) {
+    if (!cue) return "";
+    if (cue.not !== null) {
+      const excluded = names[cue.not].toLowerCase();
+      return `Not ${excluded}.`;
+    }
+    const target = names[cue.target].toLowerCase();
+    return target[0].toUpperCase() + target.slice(1) + ".";
+  }
+
+  function formatCuePresentation(cue) {
+    if (!cue) return {accessible: "", target: "", negative: ""};
+    return {
+      accessible: formatCue(cue),
+      target: cue.not === null ? "ENTER " + names[cue.target] : "",
+      negative: cue.not === null ? "" : "NOT " + names[cue.not] + " ✕"
+    };
+  }
+
+  function cueForRun(run) {
+    if (run.phase !== "playing") return run.cue = null;
+    const negative = run.cueRemaining === 0;
+    const result = nextCue(run.cueRemaining, run.target,
+      negative ? run.random() : 0, negative ? run.random() : 0);
+    run.cueRemaining = result.state;
+    return run.cue = result.cue;
+  }
+
+  function createCuePresenter({
+    getRun, speech, Utterance, show, drawXR, announceFallback = () => {}
+  }) {
+    let activeUtterance = null;
+    const cancellationErrors = new Set(["canceled", "interrupted"]);
+    function cancel() {
+      activeUtterance = null;
+    }
+    function presentNextCue() {
+      const run = getRun(), cue = cueForRun(run);
+      if (!cue) return false;
+      const presentation = formatCuePresentation(cue);
+      show(cue, presentation);
+      if (speech && Utterance) {
+        let fallbackAnnounced = false;
+        const announceOnce = () => {
+          if (fallbackAnnounced || run.phase !== "playing") return;
+          fallbackAnnounced = true;
+          announceFallback(presentation.accessible);
+        };
+        try {
+          cancel();
+          speech.cancel();
+          const utterance = new Utterance(presentation.accessible);
+          utterance.lang = "en-US"; utterance.rate = 1.15;
+          activeUtterance = utterance;
+          utterance.onerror = event => {
+            if (activeUtterance !== utterance) return;
+            activeUtterance = null;
+            if (!cancellationErrors.has(event?.error)) announceOnce();
+          };
+          utterance.onend = () => {
+            if (activeUtterance === utterance) activeUtterance = null;
+          };
+          speech.speak(utterance);
+        } catch {
+          activeUtterance = null;
+          announceOnce();
+        }
+      } else {
+        announceFallback(presentation.accessible);
+      }
+      drawXR(cue, presentation);
+      return true;
+    }
+    function afterCrossing(event) {
+      return !event.over && getRun().phase === "playing" ? presentNextCue() : false;
+    }
+    return {presentNextCue, afterCrossing, cancel};
+  }
+
+  function createRun(random = Math.random) {
+    const run = {
+      phase: "playing", score: 0, multiplier: 1, hearts: 3, target: 0,
+      rainbows: 0, perfects: 0, chain: 0, speed: 22, spacing: 26, recovery: 0,
+      random, direction: random() < .5 ? -1 : 1, rowNumber: 0,
+      route: {phase: -Math.PI / 2, x: 0, y: 0, radius: 2.3},
+      destination: null, rows: [], cue: null
+    };
+    for (let i = 0; i < 4; i++) run.rows.push(makeRow(run, -18 - i * run.spacing));
+    run.cueRemaining = cueCountdown(random());
+    return run;
+  }
+
+  function makeRow(run, z) {
+    const index = run.rowNumber++;
+    // Six-row phrases gently alternate arcs, zigzags, and narrow/wide gates.
+    if (index % 6 === 0) {
+      const mode = Math.floor(run.random() * 3);
+      const sign = Math.floor(index / 6) % 2 ? -1 : 1;
+      run.destination = {
+        phase: -Math.PI / 2 + (mode === 0 ? sign * .3 : (run.random() - .5) * .4),
+        x: mode === 1 ? sign * .25 : (run.random() - .5) * .3,
+        y: (run.random() - .5) * .5,
+        radius: mode === 2 ? (sign > 0 ? 2.1 : 2.5) : 2.3
+      };
+    }
+    const route = run.route;
+    for (const key of ["phase", "x", "y", "radius"]) {
+      const step = key === "phase" ? .08 : .07;
+      route[key] += clamp(run.destination[key] - route[key], -step, step);
+    }
+    return {
+      z, crossed: false, ...route,
+      rings: names.map((_, color) => {
+        const angle = route.phase + run.direction * color * TAU / 6;
+        return {color, x: route.x + Math.cos(angle) * route.radius,
+          y: route.y + Math.sin(angle) * route.radius};
+      })
+    };
+  }
+
+  function resolve(run, color, distance) {
+    if (run.phase !== "playing") return null;
+    const cue = run.cue || {target: run.target, not: null};
+    run.cue = null;
+    if (!matchesCue(cue, color)) {
+      run.hearts--;
+      run.multiplier = 1;
+      run.chain = 0;
+      run.recovery = .5;
+      if (!run.hearts) run.phase = "over";
+      return {kind: color === null ? "miss" : "wrong", points: 0, over: !run.hearts};
+    }
+    const perfect = distance <= .4;
+    let points = (perfect ? 150 : 100) * run.multiplier;
+    run.chain = perfect ? run.chain + 1 : 0;
+    if (perfect) run.perfects++;
+    const chainBonus = perfect && run.chain % 3 === 0;
+    if (chainBonus) points += 300;
+    run.score += points;
+    run.multiplier++;
+    run.target = (run.target + 1) % 6;
+    const rainbow = run.target === 0;
+    if (rainbow) {
+      run.rainbows++;
+      run.speed = Math.min(30, 22 + run.rainbows * 1.25);
+      run.spacing = Math.max(24.8, 26 - .2 * run.rainbows);
+    }
+    return {kind: perfect ? "perfect" : "correct", points, rainbow, chainBonus};
+  }
+
+  const travel = (run, dt) => run.speed * (dt - Math.min(dt, run.recovery) * .35);
+
+  function advance(run, dt, from, to) {
+    if (run.phase !== "playing") return [];
+    // A short, smooth breather makes even edge-of-tunnel misses recoverable.
+    const slowTime = Math.min(dt, run.recovery);
+    const slowDistance = run.speed * .65 * slowTime;
+    const movement = travel(run, dt);
+    run.recovery = Math.max(0, run.recovery - dt);
+    const crossings = [];
+    for (const row of run.rows) {
+      const before = row.z;
+      row.z += movement;
+      if (!row.crossed && before <= 0 && row.z >= 0) {
+        row.crossed = true;
+        const crossingTime = -before <= slowDistance
+          ? -before / (run.speed * .65)
+          : slowTime + (-before - slowDistance) / run.speed;
+        crossings.push({row, fraction: dt ? crossingTime / dt : 0});
+      }
+    }
+    const events = [];
+    crossings.sort((a, b) => a.fraction - b.fraction);
+    for (const {row, fraction} of crossings) {
+      if (run.phase !== "playing") break;
+      const x = from.x + (to.x - from.x) * fraction;
+      const y = from.y + (to.y - from.y) * fraction;
+      let hit = null, distance = 1;
+      for (const ring of row.rings) {
+        const gap = Math.hypot(x - ring.x, y - ring.y);
+        if (gap < distance) { distance = gap; hit = ring; }
+      }
+      events.push({...resolve(run, hit ? hit.color : null, distance), row, hit});
+    }
+    if (run.phase === "playing") {
+      for (let i = 0; i < run.rows.length; i++) {
+        if (run.rows[i].z > 7) {
+          const farthest = Math.min(...run.rows.map(row => row.z));
+          run.rows[i] = makeRow(run, farthest - run.spacing);
+        }
+      }
+    }
+    return events;
+  }
+
+  function steer(position, input, keys, dt) {
+    const horizontal = Number(!!(keys.KeyD || keys.ArrowRight)) - Number(!!(keys.KeyA || keys.ArrowLeft));
+    const vertical = Number(!!(keys.KeyW || keys.ArrowUp)) - Number(!!(keys.KeyS || keys.ArrowDown));
+    input.x = clamp(input.x + horizontal * dt * 2, -1, 1);
+    input.y = clamp(input.y + vertical * dt * 2, -1, 1);
+    const smoothing = 1 - Math.exp(-10 * dt);
+    return {x: position.x + (4.2 * input.x - position.x) * smoothing,
+      y: position.y + (3.4 * input.y - position.y) * smoothing};
+  }
+
+  const shouldStart = (phase, code, repeat) => phase !== "playing" && code === "Space" && !repeat;
+  return {names, colors, bestKey, clamp, loadBest, saveBest, cueCountdown, negativeCueColor,
+    nextCue, matchesCue, formatCue, formatCuePresentation, cueForRun, createCuePresenter, createRun,
+    makeRow, resolve, travel, advance, steer, shouldStart};
+})();
+</script>
+<script type="module">
+import * as THREE from "https://play.js13kgames.com/2026/webxr/three.js";
+const $ = id => document.getElementById(id);
+const warn = message => { $("err").textContent = message; console.warn(message); };
+addEventListener("error", event => warn("Game error: " + event.message));
+addEventListener("unhandledrejection", event => warn("Game error: " + event.reason));
+try {
+  const rules = globalThis.RainbowRun;
+  const {names, colors, clamp} = rules;
+  const palette = colors.map(color => new THREE.Color(color));
+  const glowWhite = new THREE.Color(0xffffff);
+  let best = rules.loadBest(() => localStorage, warn);
+  let run = rules.createRun(), position = {x: 0, y: 0};
+  run.phase = "menu";
+  const input = {x: 0, y: 0}, keys = {};
+  let feedbackTime = 0, flashTime = 0, gazeTime = 0, feedbackText = "";
+  let isXR = false, newBest = false;
+
+  const renderer = new THREE.WebGLRenderer({canvas: $("c"), antialias: true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x05010f);
+  renderer.xr.enabled = true;
+  renderer.xr.setReferenceSpaceType("local");
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0a031c, 12, 85);
+  const rig = new THREE.Group();
+  const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, .1, 240);
+  camera.position.z = 5;
+  rig.add(camera);
+  scene.add(rig);
+  addEventListener("resize", () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+  const material = (color, opacity = 1) => new THREE.MeshBasicMaterial({
+    color, transparent: opacity < 1, opacity
+  });
+  function mesh(parent, geometry, paint, x = 0, y = 0, z = 0) {
+    const object = new THREE.Mesh(geometry, paint);
+    object.position.set(x, y, z);
+    parent.add(object);
+    return object;
+  }
+  const sphere = radius => new THREE.SphereGeometry(radius, 10, 8);
+  const torus = (radius, tube) => new THREE.TorusGeometry(radius, tube, 7, 32);
+  const tunnel = [];
+  const tunnelGeometry = torus(6.4, .12);
+  for (let i = 0; i < 20; i++) tunnel.push(mesh(scene, tunnelGeometry, material(colors[i % 6]), 0, 0, -i * 7));
+  for (let i = 0; i < 6; i++) {
+    const angle = i * Math.PI / 3;
+    mesh(scene, new THREE.CylinderGeometry(.035, .035, 220, 4), material(colors[i]),
+      6.2 * Math.cos(angle), 6.2 * Math.sin(angle), -100).rotation.x = Math.PI / 2;
+  }
+  const stars = new Float32Array(900);
+  for (let i = 0; i < stars.length; i += 3) {
+    stars[i] = (Math.random() - .5) * 40;
+    stars[i + 1] = (Math.random() - .5) * 40;
+    stars[i + 2] = -Math.random() * 220;
+  }
+  const starGeometry = new THREE.BufferGeometry();
+  starGeometry.setAttribute("position", new THREE.BufferAttribute(stars, 3));
+  scene.add(new THREE.Points(starGeometry, new THREE.PointsMaterial({color: 0xffffff, size: .12})));
+
+  // Labels and the headset HUD use the same complete, platform monospace font.
+  function textCanvas(width, height) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width; canvas.height = height;
+    return canvas;
+  }
+  const labelMaterials = names.map((name, index) => {
+    const canvas = textCanvas(256, 64), ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#100522dd"; ctx.fillRect(0, 0, 256, 64);
+    ctx.font = "bold 34px monospace"; ctx.textAlign = "center";
+    ctx.fillStyle = colors[index]; ctx.fillText(name, 128, 44);
+    const texture = new THREE.CanvasTexture(canvas);
+    return new THREE.SpriteMaterial({map: texture, transparent: true});
+  });
+  const ringGeometry = torus(.95, .1), haloGeometry = torus(1.13, .035);
+  const rowViews = Array.from({length: 4}, () => names.map((_, color) => {
+    const ring = mesh(scene, ringGeometry, material(colors[color]));
+    const halo = mesh(ring, haloGeometry, material(0xffffff));
+    const label = new THREE.Sprite(labelMaterials[color]);
+    label.position.y = 1.4; label.scale.set(1.35, .34, 1);
+    ring.add(label);
+    return {ring, halo, label};
+  }));
+  function drawRows(time) {
+    run.rows.forEach((row, index) => row.rings.forEach((point, color) => {
+      const {ring, halo, label} = rowViews[index][color];
+      ring.position.set(point.x, point.y, row.z);
+      ring.visible = run.phase === "playing" && !row.crossed;
+      const target = rules.matchesCue(run.cue, color);
+      ring.material.color.copy(palette[color]).multiplyScalar(target ? 1 : .48);
+      halo.visible = target;
+      halo.material.color.copy(palette[color]).lerp(glowWhite, .6);
+      halo.scale.setScalar(1 + .035 * Math.sin(time * 7));
+      label.visible = target || row.z > -28;
+    }));
+  }
+
+  const unicorn = new THREE.Group();
+  unicorn.position.set(0, -.65, -3.2); unicorn.rotation.y = Math.PI / 2;
+  rig.add(unicorn);
+  const white = material(0xffedff);
+  mesh(unicorn, sphere(.6), white).scale.set(1.4, .9, .9);
+  mesh(unicorn, new THREE.CylinderGeometry(.22, .32, .7, 10), white, .7, .45).rotation.z = -.7;
+  mesh(unicorn, sphere(.34), white, 1.05, .75).scale.set(1.2, .9, .9);
+  for (const side of [-1, 1]) {
+    mesh(unicorn, new THREE.ConeGeometry(.09, .24, 10), white, .98, 1.02, side * .14);
+    mesh(unicorn, sphere(.06), material(0x110022), 1.2, .82, side * .2);
+  }
+  for (let i = 0; i < 4; i++) mesh(unicorn, new THREE.CylinderGeometry(.1, .08, .7, 8),
+    white, i < 2 ? .5 : -.4, -.6, i % 2 ? .3 : -.3);
+  mesh(unicorn, new THREE.ConeGeometry(.11, .6, 10), material(0xffe020), 1.28, 1.15).rotation.z = -.35;
+  const horn = mesh(unicorn, sphere(.13), material(0xffffff), 1.42, 1.4);
+  const mane = [], tail = [];
+  for (let i = 0; i < 6; i++) {
+    mane.push(mesh(unicorn, sphere(.14), material(colors[i]), .85 - .12 * i, .9 - .12 * i));
+    tail.push(mesh(unicorn, sphere(.13), material(colors[i]), -1 - .14 * i, .1 - .02 * i));
+  }
+
+  const particles = Array.from({length: 72}, () => {
+    const object = mesh(scene, sphere(.085), material(0xffffff));
+    object.visible = false;
+    return {object, velocity: new THREE.Vector3(), life: 0};
+  });
+  let particleIndex = 0, trailTime = 0;
+  function burst(x, y, z, color, count) {
+    for (let i = 0; i < count; i++) {
+      const particle = particles[particleIndex++ % particles.length];
+      particle.object.visible = true;
+      particle.object.position.set(x, y, z);
+      particle.object.material.color.set(color);
+      particle.object.scale.setScalar(1);
+      const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 4;
+      particle.velocity.set(Math.cos(angle) * speed, Math.sin(angle) * speed, Math.random() * 4);
+      particle.life = .65;
+    }
+  }
+
+  let audio;
+  const voices = new Set();
+  const speech = globalThis.speechSynthesis;
+  function unlockAudio() {
+    try {
+      if (!audio) audio = new (globalThis.AudioContext || globalThis.webkitAudioContext)();
+      if (audio.state === "suspended") audio.resume().catch(error => warn("Audio: " + error.message));
+    } catch (error) { warn("Audio unavailable: " + error.message); }
+  }
+  function tone(frequency, duration = .15, delay = 0, type = "triangle") {
+    if (!audio) return;
+    const oscillator = audio.createOscillator(), gain = audio.createGain();
+    oscillator.type = type; oscillator.frequency.value = frequency;
+    const start = audio.currentTime + delay;
+    gain.gain.setValueAtTime(.0001, start);
+    gain.gain.exponentialRampToValueAtTime(.15, start + .012);
+    gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+    oscillator.connect(gain).connect(audio.destination);
+    voices.add(oscillator);
+    oscillator.onended = () => { voices.delete(oscillator); oscillator.disconnect(); gain.disconnect(); };
+    oscillator.start(start); oscillator.stop(start + duration);
+  }
+  function stopAudio() {
+    for (const voice of voices) voice.stop();
+    voices.clear();
+    try {
+      cuePresenter.cancel();
+      if (speech) speech.cancel();
+    } catch (error) { warn("Speech could not be stopped: " + error.message); }
+  }
+  function showCue(cue, presentation) {
+    $("cueText").textContent = presentation.accessible;
+    $("cueTarget").textContent = presentation.target;
+    $("cueTarget").hidden = !presentation.target;
+    $("cueTarget").style.color = cue && cue.not === null ? colors[cue.target] : "#fff";
+    $("cueNot").hidden = !presentation.negative;
+    $("cueNot").innerHTML = presentation.negative ?
+      `NOT <s>${names[cue.not]}</s> ✕` : "";
+  }
+  function announceCueFallback(text) {
+    $("cueLive").textContent = "";
+    $("cueLive").textContent = text;
+  }
+  const cuePresenter = rules.createCuePresenter({
+    getRun: () => run, speech, Utterance: globalThis.SpeechSynthesisUtterance,
+    show: showCue, drawXR, announceFallback: announceCueFallback
+  });
+  const {presentNextCue} = cuePresenter;
+
+  const hudCanvas = textCanvas(1024, 640), hudContext = hudCanvas.getContext("2d");
+  const hudTexture = new THREE.CanvasTexture(hudCanvas);
+  const xrHud = mesh(camera, new THREE.PlaneGeometry(5.2, 3.25),
+    new THREE.MeshBasicMaterial({map: hudTexture, transparent: true, depthTest: false}), 0, 0, -4);
+  xrHud.renderOrder = 10; xrHud.visible = false;
+  function drawXR(cue = run.cue, presentation = rules.formatCuePresentation(cue)) {
+    const ctx = hudContext;
+    ctx.clearRect(0, 0, 1024, 640);
+    ctx.textAlign = "center";
+    function text(value, y, size = 32, color = "#fff") {
+      ctx.font = `bold ${size}px monospace`; ctx.fillStyle = color;
+      ctx.shadowColor = "#140528"; ctx.shadowBlur = 8;
+      ctx.fillText(value, 512, y);
+    }
+    if (run.phase === "playing") {
+      text(`SCORE ${run.score}   BEST ${Math.max(best, run.score)}   X${run.multiplier}`, 42, 30);
+      text("HEARTS " + run.hearts + "   RAINBOWS " + run.rainbows, 84, 26);
+      text(feedbackText, 175, 32, feedbackTime > 0 ? "#ffe97b" : "transparent");
+      if (cue) {
+        text(presentation.target, 530, 48, colors[cue.target]);
+        if (presentation.negative) {
+          const warning = presentation.negative;
+          text(warning, 580, 30, "#ff8ab5");
+          ctx.strokeStyle = "#fff"; ctx.lineWidth = 5;
+          const width = ctx.measureText(warning).width;
+          ctx.beginPath(); ctx.moveTo(512 - width / 2, 570); ctx.lineTo(512 + width / 2, 584); ctx.stroke();
+        }
+      }
+      text("PERFECT CHAIN " + run.chain, 612, 24);
+    } else {
+      text(run.phase === "menu" ? "RAINBOW UNICORN RUN" : "RAINBOW OVER", 100, 40);
+      text(run.phase === "menu" ? "FOLLOW THE GLOWING COLOR" :
+        `SCORE ${run.score}   ${newBest ? "NEW BEST" : "BEST"} ${best}`, 162);
+      text(run.phase === "menu" ? "CENTER HITS BUILD PERFECT CHAINS" :
+        `${run.rainbows} RAINBOWS   ${run.perfects} PERFECTS`, 215, 27);
+      text("LOOK AT THE CIRCLE OR SELECT TO PLAY", 535, 26);
+      text("WRONG COLOR OR MISS COSTS A HEART", 585, 24);
+    }
+    hudTexture.needsUpdate = true;
+  }
+  const gazeButton = new THREE.Group();
+  gazeButton.position.z = -6; rig.add(gazeButton);
+  mesh(gazeButton, torus(.6, .055), material(0xffffff));
+  const gazeFill = mesh(gazeButton, torus(.6, .09), material(0x40ff88));
+  mesh(gazeButton, sphere(.15), material(0xc070ff));
+  const direction = new THREE.Vector3(), cameraPosition = new THREE.Vector3(), gazeDirection = new THREE.Vector3();
+  const hornPosition = new THREE.Vector3();
+
+  function updateHUD() {
+    const playing = run.phase === "playing";
+    $("hud").style.display = playing ? "block" : "none";
+    $("panel").style.display = playing ? "none" : "flex";
+    $("score").textContent = run.score.toLocaleString();
+    $("best").textContent = "BEST " + Math.max(best, run.score).toLocaleString();
+    $("combo").textContent = "x" + run.multiplier;
+    $("chain").textContent = run.chain ? `PERFECT ${run.chain} · ${3 - run.chain % 3} TO +300` : "AIM FOR THE CENTER";
+    $("hearts").textContent = "♥".repeat(run.hearts) + "♡".repeat(3 - run.hearts);
+    $("target").style.color = colors[run.target];
+    $("progress").textContent = `${run.rainbows} RAINBOWS · ${run.target}/6 COLORS`;
+    $("sequence").innerHTML = names.map((name, index) =>
+      `<span class="${index === run.target ? "next" : ""}" style="color:${colors[index]};opacity:${index < run.target ? .35 : 1}">${name}</span>`).join("");
+    drawXR();
+  }
+  function clearInput() {
+    for (const key of Object.keys(keys)) delete keys[key];
+    input.x = input.y = 0;
+  }
+  function start() {
+    if (run.phase === "playing") return;
+    stopAudio(); unlockAudio(); clearInput();
+    run = rules.createRun();
+    position = {x: 0, y: 0}; rig.position.set(0, 0, 0);
+    feedbackTime = flashTime = gazeTime = trailTime = 0;
+    feedbackText = ""; newBest = false;
+    $("flash").style.opacity = 0; $("feedback").textContent = "";
+    $("feedback").style.opacity = 0;
+    for (const particle of particles) { particle.life = 0; particle.object.visible = false; }
+    particleIndex = 0;
+    clock.getDelta();
+    presentNextCue(); updateHUD(); drawRows(0);
+  }
+  function endRun() {
+    stopAudio(); clearInput(); gazeTime = 0;
+    newBest = run.score > best;
+    if (newBest) {
+      best = run.score;
+      rules.saveBest(best, () => localStorage, warn);
+    }
+    $("message").innerHTML = `RAINBOW OVER<br><span class="big">${run.score.toLocaleString()} POINTS</span><br>` +
+      `${newBest ? "NEW BEST!" : "BEST"} ${best.toLocaleString()}<br>` +
+      `${run.rainbows} RAINBOWS · ${run.perfects} PERFECT HITS<br>Find your flow. Beat your best.`;
+    $("start").textContent = "PLAY AGAIN · SPACE";
+  }
+  function reward(event) {
+    if (event.kind === "miss" || event.kind === "wrong") {
+      feedbackText = event.kind === "miss" ? "MISSED! −1 HEART" : "WRONG COLOR! −1 HEART";
+      feedbackText += " · STAY " + names[run.target];
+      flashTime = .28;
+      tone(100, .22, 0, "sawtooth");
+      if (event.over) endRun();
+    } else {
+      feedbackText = event.chainBonus ? "PERFECT CHAIN!" : event.kind === "perfect" ? "PERFECT!" : "NICE!";
+      if (event.rainbow) feedbackText = "RAINBOW! " + feedbackText;
+      const note = 440 * 2 ** (event.hit.color / 12);
+      tone(note);
+      if (event.kind === "perfect") tone(note * 2, .2, .055);
+      if (event.chainBonus) tone(1318, .25, .1);
+      if (event.rainbow) {
+        [659, 784, 1046].forEach((frequency, index) => tone(frequency, .24, .08 * index));
+      }
+      burst(event.hit.x, event.hit.y, 0, colors[event.hit.color], event.kind === "perfect" ? 22 : 12);
+      feedbackText += " +" + event.points;
+      if (event.chainBonus) feedbackText += " (300 BONUS)";
+    }
+    feedbackTime = .8;
+    $("feedback").textContent = feedbackText;
+    $("feedback").style.color = event.points ? "#ffe97b" : "#ff90ad";
+    $("feedback").style.opacity = 1;
+    cuePresenter.afterCrossing(event);
+    updateHUD();
+  }
+
+  addEventListener("mousemove", event => {
+    if (run.phase !== "playing" || isXR) return;
+    input.x = event.clientX / innerWidth * 2 - 1;
+    input.y = 1 - event.clientY / innerHeight * 2;
+  });
+  addEventListener("keydown", event => {
+    if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) event.preventDefault();
+    if (rules.shouldStart(run.phase, event.code, event.repeat)) start();
+    else if (run.phase === "playing") keys[event.code] = true;
+  });
+  addEventListener("keyup", event => { delete keys[event.code]; });
+  addEventListener("blur", clearInput);
+  addEventListener("visibilitychange", () => {
+    clearInput(); clock.getDelta();
+    if (document.hidden) stopAudio();
+  });
+  $("start").onclick = start;
+  const xr = navigator.xr;
+  if (xr && isSecureContext) xr.isSessionSupported("immersive-vr").then(supported => {
+    $("vr").hidden = !supported;
+  }).catch(error => warn("XR: " + error.message));
+  else if (!isSecureContext) {
+    $("vr").hidden = false; $("vr").disabled = true; $("vr").textContent = "VR NEEDS HTTPS";
+  }
+  $("vr").onclick = async () => {
+    try {
+      const session = await xr.requestSession("immersive-vr");
+      await renderer.xr.setSession(session);
+      unlockAudio(); clearInput();
+      session.addEventListener("select", start);
+      session.addEventListener("end", () => { clearInput(); gazeTime = 0; });
+    } catch (error) { warn("VR failed: " + error.message); }
+  };
+
+  const clock = new THREE.Clock();
+  function frame() {
+    const dt = Math.min(.05, clock.getDelta()), time = clock.elapsedTime;
+    if (document.hidden && !renderer.xr.isPresenting) return;
+    isXR = renderer.xr.isPresenting;
+    const movement = run.phase === "playing" ? rules.travel(run, dt) : 5 * dt;
+    for (const hoop of tunnel) {
+      hoop.position.z += movement;
+      if (hoop.position.z > 8) hoop.position.z -= 140;
+      hoop.material.color.setHSL((time * .04 + (hoop.position.z + 140) * .008) % 1, 1, .55);
+      hoop.rotation.z = .03 * Math.sin(time + hoop.position.z);
+    }
+    for (let i = 2; i < stars.length; i += 3) {
+      stars[i] += movement * 1.4;
+      if (stars[i] > 8) stars[i] -= 220;
+    }
+    starGeometry.attributes.position.needsUpdate = true;
+    unicorn.position.y = -.65 + .07 * Math.sin(time * 5);
+    unicorn.rotation.z = -.15 * input.x;
+    unicorn.rotation.x = .12 * input.y;
+    horn.scale.setScalar(1 + .2 * Math.sin(time * 8));
+    mane.forEach((piece, i) => { piece.position.y = .9 - .12 * i + .04 * Math.sin(time * 6 - i); });
+    tail.forEach((piece, i) => { piece.position.y = .1 - .02 * i + .06 * Math.sin(time * 5 - i); });
+    if (run.phase === "playing") {
+      if (isXR) {
+        camera.getWorldDirection(direction);
+        input.x = clamp(Math.atan2(direction.x, -direction.z) / .6, -1, 1);
+        input.y = clamp(Math.asin(clamp(direction.y, -1, 1)) / .5, -1, 1);
+      }
+      const previous = position;
+      position = rules.steer(position, input, isXR ? {} : keys, dt);
+      rig.position.set(position.x, position.y, 0);
+      for (const event of rules.advance(run, dt, previous, position)) reward(event);
+      trailTime += dt;
+      if (run.phase === "playing" && trailTime > .035) {
+        trailTime = 0; horn.getWorldPosition(hornPosition);
+        burst(hornPosition.x, hornPosition.y, hornPosition.z, colors[run.target], 1);
+      }
+      const nextRow = run.rows.filter(row => !row.crossed).sort((a, b) => b.z - a.z)[0];
+      $("fill").style.transform = `scaleX(${nextRow ? clamp(1 + nextRow.z / run.spacing, 0, 1) : 0})`;
+    }
+    drawRows(time);
+    for (const particle of particles) {
+      if (particle.life <= 0) continue;
+      particle.life -= dt;
+      particle.object.position.addScaledVector(particle.velocity, dt);
+      particle.object.scale.setScalar(Math.max(.01, particle.life * 1.8));
+      particle.object.visible = particle.life > 0;
+    }
+    if (feedbackTime > 0) {
+      feedbackTime -= dt;
+      $("feedback").style.opacity = Math.min(1, Math.max(0, feedbackTime * 4));
+      if (feedbackTime <= 0) { feedbackText = ""; drawXR(); }
+    }
+    flashTime = Math.max(0, flashTime - dt);
+    $("flash").style.opacity = flashTime * 1.3;
+    gazeButton.visible = isXR && run.phase !== "playing";
+    if (gazeButton.visible) {
+      camera.getWorldDirection(direction); camera.getWorldPosition(cameraPosition);
+      gazeButton.getWorldPosition(gazeDirection).sub(cameraPosition).normalize();
+      gazeTime = direction.dot(gazeDirection) > Math.cos(.18) ? gazeTime + dt : 0;
+      gazeFill.scale.setScalar(.2 + .8 * Math.min(1, gazeTime / 1.1));
+      if (gazeTime >= 1.1) start();
+    } else gazeTime = 0;
+    xrHud.visible = isXR;
+    renderer.render(scene, camera);
+  }
+  updateHUD(); drawRows(0);
+  renderer.setAnimationLoop(frame);
+} catch (error) {
+  warn("Initialization failed: " + error.message);
+}
+</script>
+</body>
+</html>
