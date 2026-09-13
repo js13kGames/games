@@ -1,0 +1,98 @@
+<html>
+<h2 id="level">level</h2>
+<div id="app"></div>
+<div id="keyboard-legend">
+	<div><b>movement: </b> arrows</div>
+	<div><b>fire: </b>hold [space] and press and [arrow] to fire in a specific direction</div>
+</div>
+<div>
+energy: <div class="energy-wrapper">
+	<div class="energy"></div>
+</div>
+<div id="congratulations"><div>Congratulations!!!</div><div>You passed all levels!!!</div></div>
+<canvas></canvas>
+<div class="joysticks">
+	<div class="joystick-desc">drag to move
+	<div class="joystick" id="joystick-movement"></div>
+	</div>
+
+	<div>drag to fire
+	<div class="joystick" id="joystick-fire"></div>
+	</div>
+</div>
+
+<script src="index.js"></script>
+<style>
+	body {
+		font-family: sans-serif;
+		font-size: 20px;
+		background: white;
+	}
+	#level {
+		background: black;
+		color: yellow;
+	}
+	#keyboard-legend {
+		display: inline-block;
+		padding: 4px;
+		border: 1px dotted grey;
+	}
+	canvas {
+		background: #600;
+	}
+	* {
+		user-select: none;
+		 -webkit-user-select: none;
+	}
+	.energy-wrapper {
+		border-radius: 4px;
+		top: 0;
+		width: 200px;
+		height: 40px;
+		border: 2px solid white;
+		background: black;
+	}
+	.energy {
+		border-radius: 4px;
+		height: 40px;
+		width: 200px;
+		background: #9a75e1;
+		transition: width 1s;
+	}
+	.joysticks {
+		touch-action: none;
+		display: flex;
+		position: fixed;
+		justify-content: space-between;
+		bottom: 0;
+		width: 100%;
+		padding: 10px;
+	}
+	.joystick {
+		width: 300px;
+		height: 300px;
+		background: #5b4487;
+		border: 1px solid #aa3;
+		border-radius: 50%;
+	}
+	.joystick:hover {
+		background: #7257a7;
+	}
+	.joysticks {
+		font-size: 40px;
+		text-align: center;
+	}
+	.joysticks > div {
+		padding: 20px;
+	}
+	#congratulations {
+		max-height: 0px;
+		overflow: hidden;
+		transition: 1s all;
+		width: 100%;
+		height: 100%;
+		font-size: 100px;
+		background-image: linear-gradient(to right, #ff0f0f, #d69339, #f6dd24, #81b416, #13adc5, #1347c5, #5b4487);
+	}
+</style>
+</html>
