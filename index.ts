@@ -1,4 +1,13 @@
 import sandboxed from './sandboxed'
+import { CSP_EDITION } from './config.js'
+import currentGames from './csp.generated'
+
+const
+  PLAY_ORIGIN = 'https://play.js13kgames.com/',
+  FAVICON_URL = `${PLAY_ORIGIN}favicon.ico`,
+  REPORT_ORIGIN = 'https://csp.js13kgames.com/',
+  RELAY_ORIGIN = 'wss://relay.js13kgames.com',
+  FRAME_ANCESTORS = "frame-ancestors 'self' https://js13kgames.com"
 
 export default {
   async fetch(req: Request, env: Record<string, any>) {
@@ -15,7 +24,8 @@ export default {
           return fetchPackage(uri.slice(0, -4), req)
         }
 
-        return env.ASSETS.fetch(req)
+        const asset = await env.PLAY.fetch(req)
+        return withCsp(asset.status === 404 ? await env.ASSETS.fetch(req) : asset, url.pathname)
       }
 
       // Append trailing slash and redirect. This is rather aggressive since we're not checking for the existence
@@ -35,10 +45,15 @@ export default {
       // assets out of the container image and avoids starting a container for an ordinary asset request.
       if (req.method === 'GET' || req.method === 'HEAD') {
         const asset = await env.ASSETS.fetch(req)
-        if (asset.status !== 404) return asset
+        if (asset.status !== 404) return withCsp(asset, url.pathname, game)
       }
 
-      return env.RUNTIME.fetch(req)
+      return withCsp(await env.RUNTIME.fetch(req), url.pathname, game)
+    }
+
+    if (req.method === 'GET' || req.method === 'HEAD') {
+      const asset = await env.PLAY.fetch(req)
+      if (asset.status !== 404) return withCsp(asset, url.pathname, game)
     }
 
     // Naive filtering here because it's ultimately much cheaper (even if a bit inconvenient) to stick to
@@ -47,17 +62,39 @@ export default {
     if (game.length == 4) {
       let y = parseInt(game)
       if (y >= 2012 && y < 2200) {
-        return env.ASSETS.fetch(req)
+        return withCsp(await env.ASSETS.fetch(req), url.pathname)
       }
     }
 
     // Proxy through to our backend directly as a last resort.
-    return fetchFromOrigin(uri, req)
+    return fetchFromOrigin(uri, req, game)
   }
 }
 
+function sourcePolicy(game: string) {
+  return `default-src 'unsafe-inline' 'unsafe-eval' data: blob: ${PLAY_ORIGIN}${game}/ ${PLAY_ORIGIN}${CSP_EDITION}/ ${FAVICON_URL} ${RELAY_ORIGIN}`
+}
+
+function withCsp(res: Response, pathname: string, game?: string) {
+  if (!res.ok || !(pathname.endsWith('/') || pathname.endsWith('.html'))) return res
+
+  return setCsp(new Response(res.body, res), game)
+}
+
+function setCsp(response: Response, game?: string, strict = false) {
+  response.headers.set('Content-Security-Policy', strict && game
+    ? `${sourcePolicy(game)}; ${FRAME_ANCESTORS}`
+    : FRAME_ANCESTORS)
+
+  if (!strict && game && currentGames.has(game)) {
+    response.headers.set('Content-Security-Policy-Report-Only', `${sourcePolicy(game)}; report-uri ${REPORT_ORIGIN}`)
+  }
+
+  return response
+}
+
 async function fetchPackage(slug: string, req: Request) {
-  let response = await fetch(
+  let res = await fetch(
     `https://raw.githubusercontent.com/js13kGames/${ slug }/HEAD/.website/game.zip`,
     {
       method: req.method,
@@ -69,11 +106,12 @@ async function fetchPackage(slug: string, req: Request) {
     }
   )
 
-  response = new Response(response.body, response)
-  if (response.ok) {
-    response.headers.set('Content-Disposition', `attachment; filename="${ slug }.zip"`)
+  res = new Response(res.body, res)
+  if (res.ok) {
+    res.headers.set('Content-Disposition', `attachment; filename="${ slug }.zip"`)
   }
-  return response
+
+  return res
 }
 
 const naiveBots = /(?<! cu)bots?|crawl|http|scan|search|spider/i
@@ -105,14 +143,14 @@ function isBot(req: Request) {
   )
 }
 
-async function fetchFromOrigin(uri: string, req: Request) {
+async function fetchFromOrigin(uri: string, req: Request, game: string) {
   // Set to cache aggressively, because we invalidate Cloudflare's cache directly whenever content in the backend
   // (like draft data) changes.
   //
   // TODO(alcore) Ideally we'd serve those off R2 directly, but this would require either backend support,
   // or moving the draft submission logic directly into workers. For now this is a good enough stopgap
   // measure to get stable URLs.
-  let response = await fetch(new Request('http://drafts.js13kgames.com/' + uri, req), {
+  const source = await fetch(new Request('http://drafts.js13kgames.com/' + uri, req), {
     cf: {
       cacheEverything: true
     }
@@ -120,7 +158,8 @@ async function fetchFromOrigin(uri: string, req: Request) {
 
   // Our backend uses a perma-cache max-age that we want Cloudflare to respect, but we want clients to actually
   // revalidate through the Worker.
-  response = new Response(response.body, response);
-  response.headers.set("Cache-Control", "max-age=0,must-revalidate");
-  return response
+  const response = new Response(source.body, source)
+  response.headers.set('Cache-Control', 'max-age=0,must-revalidate')
+
+  return setCsp(response, game, true)
 }

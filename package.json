@@ -1,5 +1,10 @@
 {
   "name": "js13kgames-play",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "node build/csp.js",
+    "check": "npm run build && wrangler deploy --dry-run --outdir .wrangler-build",
+    "deploy": "npm run build && wrangler deploy"
+  }
 }
