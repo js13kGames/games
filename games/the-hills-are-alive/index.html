@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unicorn</title>
+<style>
+  .container {
+    position: relative;
+    background-color: black;
+  }
+  div {
+    width: 790px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+  }
+  #overlay {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+  }
+</style>
+</head>
+<body style="background-color: black">
+<script>
+  W={models:{},reset:(e,r)=>{W.canvas=e,W.objs=0,W.current={},W.next={},W.textures={},W.gl=e.getContext("webgl2"),W.gl.blendFunc(770,771),W.gl.activeTexture(33984),W.program=W.gl.createProgram(),W.gl.enable(2884),W.gl.shaderSource(r=W.gl.createShader(35633),"#version 300 es\nprecision highp float;in vec4 pos,col,uv,normal;uniform mat4 pv,eye,m,im;uniform vec4 bb;out vec4 v_pos,v_col,v_uv,v_normal;void main(){gl_Position=pv*(v_pos=bb.z>0.?m[3]+eye*(pos*bb):m*pos);v_col=col;v_uv=uv;v_normal=transpose(inverse(m))*normal;}"),W.gl.compileShader(r),W.gl.attachShader(W.program,r),W.gl.shaderSource(r=W.gl.createShader(35632),"#version 300 es\nprecision highp float;in vec4 v_pos,v_col,v_uv,v_normal;uniform vec3 light;uniform vec4 o;uniform sampler2D sampler;out vec4 c;void main(){c=mix(texture(sampler,v_uv.xy),v_col,o[3]);if(o[1]>0.){c=vec4(c.rgb*(max(0.,dot(light,-normalize(o[0]>0.?vec3(v_normal.xyz):cross(dFdx(v_pos.xyz),dFdy(v_pos.xyz)))))+o[2]),c.a);}}"),W.gl.compileShader(r),W.gl.attachShader(W.program,r),W.gl.linkProgram(W.program),W.gl.useProgram(W.program),W.gl.clearColor(1,1,1,1),W.clearColor=e=>W.gl.clearColor(...W.col(e)),W.gl.enable(2929),W.light({y:-1}),W.camera({fov:30}),setTimeout(W.draw,16)},setState:(e,r,t)=>{e.n||="o"+W.objs++,e.size&&(e.w=e.h=e.d=e.size),e.t&&e.t.width&&!W.textures[e.t.id]&&(t=W.gl.createTexture(),W.gl.pixelStorei(37441,!0),W.gl.bindTexture(3553,t),W.gl.pixelStorei(37440,1),W.gl.texImage2D(3553,0,6408,6408,5121,e.t),W.gl.generateMipmap(3553),W.textures[e.t.id]=t),e.fov&&(W.projection=new DOMMatrix([1/Math.tan(e.fov*Math.PI/180)/(W.canvas.width/W.canvas.height),0,0,0,0,1/Math.tan(e.fov*Math.PI/180),0,0,0,0,-1001/999,-1,0,0,-2002/999,0])),(e={type:r,...W.current[e.n]=W.next[e.n]||{w:1,h:1,d:1,x:0,y:0,z:0,rx:0,ry:0,rz:0,b:"888",mode:4,mix:0},...e,f:0}).t?e.t&&!e.mix&&(e.mix=0):e.mix=1,W.next[e.n]=e},draw:(e,r,t,o=W.animation("camera"),a=[])=>{for(t in r=e-W.lastFrame,W.lastFrame=e,requestAnimationFrame(W.draw),W.gl.uniformMatrix4fv(W.gl.getUniformLocation(W.program,"eye"),!1,o.toFloat32Array()),o.invertSelf(),o.preMultiplySelf(W.projection),W.gl.uniformMatrix4fv(W.gl.getUniformLocation(W.program,"pv"),!1,o.toFloat32Array()),W.gl.clear(16640),W.next)W.next[t].m=W.animation(t),W.next[t].t||1!=W.col(W.next[t].b)[3]?a.push(W.next[t]):W.render(W.next[t],r);for(t of(a.sort((e,r)=>W.dist(r)-W.dist(e)),W.gl.enable(3042),a))["plane","billboard"].includes(t.type)&&W.gl.depthMask(0),W.render(t,r),W.gl.depthMask(1);W.gl.disable(3042),W.gl.uniform3f(W.gl.getUniformLocation(W.program,"light"),W.lerp("light","x"),W.lerp("light","y"),W.lerp("light","z"))},render:(e,r,t,o=W.models[e.type])=>{e.t&&(W.gl.bindTexture(3553,W.textures[e.t.id]),W.gl.uniform1i(W.gl.getUniformLocation(W.program,"sampler"),0)),e.f<e.a&&(e.f+=r),e.f>e.a&&(e.f=e.a),W.gl.uniformMatrix4fv(W.gl.getUniformLocation(W.program,"m"),!1,e.m.toFloat32Array()),W.gl.uniformMatrix4fv(W.gl.getUniformLocation(W.program,"im"),!1,e.m.inverse().toFloat32Array()),o&&(o&&!o.verticesBuffer&&(o.customNormals=!!o.normals,W.gl.bindBuffer(34962,o.verticesBuffer=W.gl.createBuffer()),W.gl.bufferData(34962,new Float32Array(o.vertices),35044),o.normals||W.smooth(o),o.normals&&(W.gl.bindBuffer(34962,o.normalsBuffer=W.gl.createBuffer()),W.gl.bufferData(34962,new Float32Array(o.normals.flat()),35044)),o.uv&&(W.gl.bindBuffer(34962,o.uvBuffer=W.gl.createBuffer()),W.gl.bufferData(34962,new Float32Array(o.uv),35044)),o.indices&&(W.gl.bindBuffer(34963,o.indicesBuffer=W.gl.createBuffer()),W.gl.bufferData(34963,new Uint16Array(o.indices),35044))),W.gl.bindBuffer(34962,o.verticesBuffer),W.gl.vertexAttribPointer(t=W.gl.getAttribLocation(W.program,"pos"),3,5126,!1,0,0),W.gl.enableVertexAttribArray(t),o.uvBuffer&&(W.gl.bindBuffer(34962,o.uvBuffer),W.gl.vertexAttribPointer(t=W.gl.getAttribLocation(W.program,"uv"),2,5126,!1,0,0),W.gl.enableVertexAttribArray(t)),(e.s||o.customNormals)&&o.normalsBuffer&&(W.gl.bindBuffer(34962,o.normalsBuffer),W.gl.vertexAttribPointer(t=W.gl.getAttribLocation(W.program,"normal"),3,5126,!1,0,0),W.gl.enableVertexAttribArray(t)),W.gl.uniform4f(W.gl.getUniformLocation(W.program,"o"),e.s,(e.mode>3||W.gl[e.mode]>3)&&!e.ns?1:0,W.ambientLight||.2,e.mix),W.gl.uniform4f(W.gl.getUniformLocation(W.program,"bb"),e.w,e.h,"billboard"==e.type,0),o.indicesBuffer&&W.gl.bindBuffer(34963,o.indicesBuffer),W.gl.vertexAttrib4fv(W.gl.getAttribLocation(W.program,"col"),W.col(e.b)),o.indicesBuffer?W.gl.drawElements(+e.mode||W.gl[e.mode],o.indices.length,5123,0):W.gl.drawArrays(+e.mode||W.gl[e.mode],0,o.vertices.length/3))},lerp:(e,r)=>W.next[e]?.a?W.current[e][r]+(W.next[e][r]-W.current[e][r])*(W.next[e].f/W.next[e].a):W.next[e][r],animation:(e,r=new DOMMatrix(W.next[e]?.M))=>W.next[e]?r.translateSelf(W.lerp(e,"x"),W.lerp(e,"y"),W.lerp(e,"z")).rotateSelf(W.lerp(e,"rx"),W.lerp(e,"ry"),W.lerp(e,"rz")).scaleSelf(W.lerp(e,"w"),W.lerp(e,"h"),W.lerp(e,"d")).preMultiplySelf(W.animation(W.next[e].g)):r,dist:(e,r=W.next.camera)=>(r.m.m41-e.m.m41)**2+(r.m.m42-e.m.m42)**2+(r.m.m43-e.m.m43)**2,ambient:e=>W.ambientLight=e,col:e=>[...e.replace("#","").match(e.length<5?/./g:/../g).map(r=>("0x"+r)/(e.length<5?15:255)),1],add:(e,r)=>{W.models[e]=r,W[e]=r=>W.setState(r,e)},group:e=>W.setState(e,"group"),move:(e,r)=>setTimeout(()=>{W.setState(e)},r||1),delete:(e,r)=>setTimeout(()=>{delete W.next[e]},r||1),camera:(e,r)=>setTimeout(()=>{W.setState(e,e.n="camera")},r||1),light:(e,r)=>r?setTimeout(()=>{W.setState(e,e.n="light")},r):W.setState(e,e.n="light")},W.smooth=(e,r={},t=[],o,a=0,n,i,l,s,m,W,g,c,f,d)=>{for(e.normals=[];a<e.vertices.length;a+=3)t.push(e.vertices.slice(a,a+3));for(o=(e.indices||t).length,a=0;a<2*o;a+=3)n=a%o,i=t[m=e.indices?.[n]??n],l=t[W=e.indices?.[n+1]??n+1],s=t[g=e.indices?.[n+2]??n+2],c=[l[0]-i[0],l[1]-i[1],l[2]-i[2]],f=[s[0]-l[0],s[1]-l[1],s[2]-l[2]],d=a>n?[0,0,0]:[c[1]*f[2]-c[2]*f[1],c[2]*f[0]-c[0]*f[2],c[0]*f[1]-c[1]*f[0]],r[n=i.join()]??=[0,0,0],e.normals[m]=r[n]=r[n].map((e,r)=>e+d[r]),r[n=l.join()]??=[0,0,0],e.normals[W]=r[n]=r[n].map((e,r)=>e+d[r]),r[n=s.join()]??=[0,0,0],e.normals[g]=r[n]=r[n].map((e,r)=>e+d[r])},W.add("plane",{vertices:[.5,.5,0,-.5,.5,0,-.5,-.5,0,.5,.5,0,-.5,-.5,0,.5,-.5,0],uv:[1,1,0,1,0,0,1,1,0,0,1,0]}),W.add("billboard",W.models.plane),W.add("cube",{vertices:[.5,.5,.5,-.5,.5,.5,-.5,-.5,.5,.5,.5,.5,-.5,-.5,.5,.5,-.5,.5,.5,.5,-.5,.5,.5,.5,.5,-.5,.5,.5,.5,-.5,.5,-.5,.5,.5,-.5,-.5,.5,.5,-.5,-.5,.5,-.5,-.5,.5,.5,.5,.5,-.5,-.5,.5,.5,.5,.5,.5,-.5,.5,.5,-.5,.5,-.5,-.5,-.5,-.5,-.5,.5,.5,-.5,-.5,-.5,-.5,-.5,.5,-.5,.5,-.5,.5,.5,-.5,.5,-.5,-.5,-.5,.5,-.5,.5,-.5,-.5,-.5,-.5,-.5,.5,-.5,.5,-.5,-.5,.5,-.5,-.5,-.5,.5,-.5,.5,-.5,-.5,-.5,.5,-.5,-.5],uv:[1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0]}),W.cube=e=>W.setState(e,"cube"),W.add("pyramid",{vertices:[-.5,-.5,.5,.5,-.5,.5,0,.5,0,.5,-.5,.5,.5,-.5,-.5,0,.5,0,.5,-.5,-.5,-.5,-.5,-.5,0,.5,0,-.5,-.5,-.5,-.5,-.5,.5,0,.5,0,.5,-.5,.5,-.5,-.5,.5,-.5,-.5,-.5,.5,-.5,.5,-.5,-.5,-.5,.5,-.5,-.5],uv:[0,0,1,0,.5,1,0,0,1,0,.5,1,0,0,1,0,.5,1,0,0,1,0,.5,1,1,1,0,1,0,0,1,1,0,0,1,0]}),((e,r,t,o,a,n,i=[],l=[],s=[],m=20)=>{for(t=0;t<=m;t++)for(o=t*Math.PI/m,e=0;e<=m;e++)r=2*e*Math.PI/m,i.push(+(Math.sin(r)*Math.sin(o)/2).toFixed(6),+(Math.cos(o)/2).toFixed(6),+(Math.cos(r)*Math.sin(o)/2).toFixed(6)),s.push(e/m,t/m),e<m&&t<m&&l.push(a=t*(m+1)+e,n=a+(m+1),a+1,a+1,n,n+1);W.add("sphere",{vertices:i,uv:s,indices:l})})();
+</script>
+<div class="container"></div>
+  <canvas id="c" width=800 height=500></canvas>
+  <div id="overlay">
+    <div><span id="title"></span></div>
+    <div>Cows: <span id="cows"></span></div>
+    <div>Aliens: <span id="aliens"></span></div>
+    <div><span id="story"></span></div>
+  </div>
+</div>
+<p id="log"></p>
+<script>
+  onload=()=>{WORLD_SIZE=500,N_CACTI=20,N_MOUNTAINS=20,X=0,Y=0,Z=3,RX=RY=VX=VY=VZ=0,DX1=DX2=DZ1=DZ2=0;let e=X,a=Z;G=.001,ACC=.01,FRIC=.9,grounded=!0,MAX_COWS=10,COW_MIN_Y=1.5,COW_FALLING_SPEED=.1,COW_ALIEN_DIST=2.5,cow=new Array(10).fill(null),cowsAlive=10,MAX_ALIENS=10,ALIEN_MAX_Y=40,ALIEN_MID_Y=20,ALIEN_MIN_Y=4,ALIEN_CLOSE=30,ALIEN_SPEED=.05,ALIEN_ATTACK_SPEED=.1,alien=new Array(10).fill(null),aliensAlive=10,MAX_SHOTS=10,HIT_BOX=1,shot=new Array(10).fill(null),shotsFired=0,mountain=[],N_SPARKS=100,si=0,spark=[],keys={u:0,l:0,r:0,d:0,j:0,f:0,b:0},Y_MIN=0,Y_CAM=2,gameOver=!1,titleE=document.querySelector("#title"),cowE=document.querySelector("#cows"),alienE=document.querySelector("#aliens"),storyE=document.querySelector("#story"),titleN=document.createTextNode("The Hills are Alive"),cowN=document.createTextNode(""),alienN=document.createTextNode(""),document.getElementById("title").style.fontSize="x-large",storyN=document.createTextNode(""),document.getElementById("story").style.fontSize="large",titleE.appendChild(titleN),cowE.appendChild(cowN),alienE.appendChild(alienN),storyE.appendChild(storyN),log=document.getElementById("log"),t("Welcome to the Wild West! I'm sheriff Don Jönson in this quiet frontier town of Pueblo. Not much happens here besides occasionally a cat disappears. But we usually find it quickly. Lately strange things have happened. It started with a few cows disappearing. Then some more disappeared. Rumors started spreading about things in the sky. I never believed any of it of course. We decided to try to find someone to investigate it. Happy to have you here Rainbow Rider. Is that your real name by the way? Anyway, all we ask of you is to look into the case. Keep us updated on what you find. Good luck!"),W.ambient(.7),W.reset(c),W.light({x:.5,y:-.3,z:-.5});const o=[];for(W.group({n:"M",z:3,y:2}),i=0;i<100;i++)W.plane({n:"P"+i,size:0,x:0,y:-1,z:0,b:"f84"}),spark[i]={x:0,y:-1,z:0,vy:0,rx:0,ry:0,rz:0,rvx:0,rvy:0,rvz:0,size:0};for(j=0;j<20;j++){mn=Math.ceil(6*Math.random()),k=3,m=2*k;do{mx=500*(Math.random()-.5),mz=500*(Math.random()-.5)}while(Math.abs(mx)<20&&Math.abs(mz)<20);for(mountain[j]={x:mx,y:k/2,z:mz,s:(mn+1)*k},i=0;i<mn;i++)W.cube({w:(mn-i)*m,d:(mn-i)*m,h:3,x:mx,y:(i+.5)*k,z:mz,b:"884"}),cube={w:(mn-i)*m+3,d:(mn-i)*m+3,h:3.01,x:mx,y:(i+.5)*k,z:mz},o.push(cube)}for(k=0;k<20;k++){do{for(blocked=!1,i=0;i<20;i++)if(cx=500*(Math.random()-.5),cz=500*(Math.random()-.5),Math.abs(mountain[i].x-cx)<mountain[i].s&&Math.abs(mountain[i].z-cz)<mountain[i].s){blocked=!0;break}}while(blocked);W.group({n:"C"+k,x:cx,z:cz,rx:5*Math.random(),ry:360*Math.random(),rz:5*Math.random()}),W.cube({g:"C"+k,b:"4b4",x:0,y:3,w:.5,h:6,d:.5}),W.cube({g:"C"+k,b:"4b4",x:-.5,y:1.25,w:1,h:.5,d:.5}),W.cube({g:"C"+k,b:"4b4",x:0,y:2.25,z:.5,w:.5,h:.5,d:1}),W.cube({g:"C"+k,b:"4b4",x:.5,y:3.25,w:1,h:.5,d:.5}),W.cube({g:"C"+k,b:"4b4",x:0,y:4.25,z:-.5,w:.5,h:.5,d:1})}for(W.group({n:"G",x:0,y:1.5}),W.cube({g:"G",x:0,y:0,w:1,h:1,d:2}),W.cube({g:"G",z:-.9,y:-1,x:-.4,w:.2,h:1,d:.2,rz:0}),W.cube({g:"G",z:-.9,y:-1,x:.4,w:.2,h:1,d:.2}),W.cube({g:"G",z:.9,y:-1,x:-.4,w:.2,h:1,d:.2}),W.cube({g:"G",z:.9,y:-1,x:.4,w:.2,h:1,d:.2}),W.cube({g:"G",z:-1,y:.7,w:.6,h:1,d:.6,rx:-30}),W.cube({g:"G",z:-1.4,y:.8,w:.4,h:.4,d:1,rx:-30}),W.pyramid({g:"G",z:-1.4,y:1.3,w:.2,h:.5,d:.2,rx:-30}),i=0;i<10;i++){do{for(blocked=!1,j=0;j<20;j++)if(cx=500*(Math.random()-.5),cz=500*(Math.random()-.5),Math.abs(mountain[j].x-cx)<mountain[j].s&&Math.abs(mountain[j].z-cz)<mountain[j].s){blocked=!0;break}}while(blocked);cow[i]={x:cx,y:1.5,z:cz,vx:0,vy:0,vz:0,captured:!1,alive:!0},W.group({n:"K"+i,x:cow[i].x,y:cow[i].y,z:cow[i].z}),W.cube({g:"K"+i,x:0,y:0,w:1,h:1,d:2,b:"fff"}),W.cube({g:"K"+i,z:-.9,y:-1,x:-.4,w:.2,h:1,d:.2,rz:0,b:"fff"}),W.cube({g:"K"+i,z:-.9,y:-1,x:.4,w:.2,h:1,d:.2,b:"fff"}),W.cube({g:"K"+i,z:.9,y:-1,x:-.4,w:.2,h:1,d:.2,b:"fff"}),W.cube({g:"K"+i,z:.9,y:-1,x:.4,w:.2,h:1,d:.2,b:"fff"}),W.cube({g:"K"+i,z:-1,y:.7,w:.6,h:1,d:.6,rx:-30,b:"fff"}),W.cube({g:"K"+i,z:-1.4,y:.8,w:.4,h:.4,d:1,rx:-30,b:"fff"})}for(i=0;i<10;i++)alien[i]={x:500*(Math.random()-.5),y:20+20*Math.random(),z:500*(Math.random()-.5),vx:.05*(2*Math.random()-1),vy:0,vz:.05*(2*Math.random()-1),alive:!0,capturedCow:null,searching:!0},W.group({n:"A"+i,x:alien[i].x,y:alien[i].y,z:alien[i].z}),W.sphere({g:"A"+i,x:0,y:0,w:1.5,h:1.5,d:1.5,b:"282"}),W.cube({g:"A"+i,z:.3,y:-1,x:-.3,w:.2,h:1,d:.2,rx:-45,ry:0,rz:-45,b:"282"}),W.cube({g:"A"+i,z:.3,y:-1,x:.3,w:.2,h:1,d:.2,rx:-45,ry:0,rz:45,b:"282"}),W.cube({g:"A"+i,z:-.3,y:-1,x:-.3,w:.2,h:1,d:.2,rx:45,ry:0,rz:-45,b:"282"}),W.cube({g:"A"+i,z:-.3,y:-1,x:.3,w:.2,h:1,d:.2,rx:45,ry:0,rz:45,b:"282"}),W.cube({g:"A"+i,z:.5,y:-1.7,x:-.5,w:.2,h:1,d:.2,rx:15,ry:0,rz:15,b:"282"}),W.cube({g:"A"+i,z:.5,y:-1.7,x:.5,w:.2,h:1,d:.2,rx:15,ry:0,rz:-15,b:"282"}),W.cube({g:"A"+i,z:-.5,y:-1.7,x:-.5,w:.2,h:1,d:.2,rx:-15,ry:0,rz:15,b:"282"}),W.cube({g:"A"+i,z:-.5,y:-1.7,x:.5,w:.2,h:1,d:.2,rx:-15,ry:0,rz:-15,b:"282"});function t(e){alienN.nodeValue=aliensAlive,cowN.nodeValue=cowsAlive,storyN.nodeValue=e}W.camera({n:"cam",g:"M"}),W.clearColor("8Af"),W.plane({size:500,b:"bb6",y:0,rx:-90,ns:1}),document.addEventListener("keydown",function(e){"KeyW"==e.code&&(keys.f=1);"KeyS"==e.code&&(keys.b=1);"KeyA"==e.code&&(keys.l=1);"KeyD"==e.code&&(keys.r=1);"Space"==e.code&&(keys.j=1)}),document.addEventListener("keyup",function(e){"KeyW"==e.code&&(keys.f=0);"KeyS"==e.code&&(keys.b=0);"KeyA"==e.code&&(keys.l=0);"KeyD"==e.code&&(keys.r=0);"Space"==e.code&&(keys.j=0)}),setInterval(()=>{if(VY-=.001,Ytest=Y+VY,Ytest<0?(Y=0,VY=0,grounded=!0):collideTest(X,Ytest,Z)?(VY=0,grounded=!0):(Y=Ytest,grounded=!1),grounded&&keys.j&&(VY=.1,grounded=!1,zzfx(...[,,71,.03,.03,.08,1,3.2,,7,,,,.7,,,,.84,.04])),W.move({n:"G",y:Y}),W.move({n:"M",y:Y+2}),keys.f||keys.b||keys.l||keys.r?(DX1=(-keys.f+keys.b)*Math.sin(RY*Math.PI/180),DZ1=(-keys.f+keys.b)*Math.cos(RY*Math.PI/180),DX2=(-keys.l+keys.r)*Math.sin((RY+90)*Math.PI/180),DZ2=(-keys.l+keys.r)*Math.cos((RY+90)*Math.PI/180)):DX1=DX2=DZ1=DZ2=0,VX+=.01*(DX1+DX2),VZ+=.01*(DZ1+DZ2),VX*=.9,VZ*=.9,Xtest=X+VX,Ztest=Z+VZ,collideTest(Xtest,Y,Ztest)){let i=!1,o=!1;collideTest(Xtest,Y,Z)&&!collideTest(X,Y,Ztest)&&(VX=0,X=e,i=!0),collideTest(X,Y,Ztest)&&!collideTest(Xtest,Y,Z)&&(VZ=0,Z=a,o=!0),i||o||(VX=0,VZ=0,X=e,Z=a)}for((Math.abs(Xtest)>250||Math.abs(Ztest)>250)&&(VX=0,VZ=0,X=e,Z=a),e=X,a=Z,W.move({n:"G",z:Z+=VZ,x:X+=VX}),W.move({n:"M",z:Z+=VZ,x:X+=VX}),i=0;i<10;i++)if(null!==shot[i])if(shot[i].vy-=.001,shot[i].x+=shot[i].vx,shot[i].y+=shot[i].vy,shot[i].z+=shot[i].vz,W.move({n:"S"+i,x:shot[i].x,y:shot[i].y,z:shot[i].z}),collideTest(shot[i].x,shot[i].y,shot[i].z))W.delete({n:"S"+i.toString()}),shot[i]=null;else if(Math.abs(shot[i].x)>250||shot[i].y>250||shot[i].y<0||Math.abs(shot[i].z)>250)W.delete({n:"S"+i}),shot[i]=null;else for(j=0;j<10;j++)if(alien[j].alive&&Math.abs(shot[i].x-alien[j].x)<1&&Math.abs(shot[i].y-alien[j].y)<1&&Math.abs(shot[i].z-alien[j].z)<1){W.delete({n:"S"+i}),W.delete({n:"A"+j}),alien[j].alive=!1,alien[j].vx=0,alien[j].vy=-.05,alien[j].vz=0,null!==alien[j].capturedCow&&(cow[alien[j].capturedCow].captured=!1),shot[i]=null,W.move({n:"A"+j,rx:180}),aliensAlive--,0==aliensAlive?(gameOver=!0,t("Well done! The people of Pueblo thanks you for your valor in bringing these things to justice. Anyway, the kind of justice they deserved. You have surely deserved your reward of $50. There might be another mission. As I mentioned not much is going on here. Until this recent ordeal that is. But you never know. See you around Rainbow Rider and good job solving the case of the Cows of Chaos!")):t(),zzfx(...[.8,,32,.05,.03,.52,4,4,,-3,,,,1,,.6,,.47,.07,,1579]);break}for(i=0;i<10;i++){if(alien[i].alive){for(Math.random()<.001&&(alien[i].vx=.05*(2*Math.random()-1),alien[i].vy=.05*(2*Math.random()-1),alien[i].vz=.05*(2*Math.random()-1)),Math.abs(alien[i].x)>250&&(alien[i].vx=-alien[i].vx),alien[i].y>40&&(alien[i].vy=-alien[i].vy),alien[i].y<20&&(alien[i].vy=-alien[i].vy),Math.abs(alien[i].z)>250&&(alien[i].vz=-alien[i].vz),j=0;j<10;j++)null!==cow[j]&&cow[j].alive&&(cow[j].captured||(Math.abs(alien[i].x-cow[j].x)<30&&Math.abs(alien[i].y-cow[j].y)<30&&Math.abs(alien[i].z-cow[j].z)<30&&(d=Math.sqrt(Math.pow(alien[i].x-cow[j].x,2)+Math.pow(alien[i].y-cow[j].y-2.5,2)+Math.pow(alien[i].z-cow[j].z,2)),alien[i].vx=.05*(cow[j].x-alien[i].x)/d,alien[i].vy=.05*(cow[j].y+2.5-alien[i].y)/d,alien[i].vz=.05*(cow[j].z-alien[i].z)/d),!cow[j].captured&&Math.abs(alien[i].x-cow[j].x)<1&&Math.abs(alien[i].y-cow[j].y-2.5)<1&&Math.abs(alien[i].z-cow[j].z)<1&&(alien[i].capturedCow=j,cow[j].captured=!0,zzfx(...[1.5,,287,,.04,.2,1,.6,17,,,,.06,.3,,,,.65,,.14]))));null!==alien[i].capturedCow&&(alien[i].vx=0,alien[i].vy=.05,alien[i].vz=0,alien[i].y>40&&alien[i].searching&&(j=alien[i].capturedCow,alien[i].searching=!1,cow[j].captured=!1,cow[j].alive=!1,W.move({n:"K"+j,rx:180}),cowsAlive--,t(),zzfx(...[.6,,657,.24,.27,.26,2,.8,17,,120,.61,.04,,,,,.86,,,667]))),!alien[i].searching&&alien[i].alive&&(d=Math.sqrt(Math.pow(alien[i].x-X,2)+Math.pow(alien[i].y-Y,2)+Math.pow(alien[i].z-Z,2)),alien[i].vx=.1*(X-alien[i].x)/d,alien[i].vy=.1*(Y+2.5-alien[i].y)/d,alien[i].vz=.1*(Z-alien[i].z)/d,spark[si]={x:alien[i].x+(4*Math.random()-2),y:alien[i].y+(4*Math.random()-2),z:alien[i].z+(4*Math.random()-2),vy:.1*Math.random(),rx:360*Math.random(),ry:360*Math.random(),rz:360*Math.random(),rvx:2*Math.random()-1,rvy:2*Math.random()-1,rvz:2*Math.random()-1,size:1},W.move({n:"P"+si,x:spark[si].x,y:spark[si].y,z:spark[si].z,rx:spark[si].rx,ry:spark[si].ry,rz:spark[si].z,size:1}),si++,si>=100&&(si=0))}else alien[i].y>0?alien[i].vy=-.05:alien[i].vy=0;collideTest(alien[i].x,alien[i].y,alien[i].z)&&(alien[i].vx=0,alien[i].vy=.05,alien[i].vz=0),alien[i].alive&&Math.abs(alien[i].x-X)<3&&Math.abs(alien[i].y-Y)<3&&Math.abs(alien[i].z-Z)<3&&(titleN.nodeValue="Game Over",location.reload()),W.move({n:"A"+i,x:alien[i].x+=alien[i].vx,y:alien[i].y+=alien[i].vy,z:alien[i].z+=alien[i].vz})}for(i=0;i<10;i++)null!==cow[i]&&(cow[i].captured?cow[i].vy=.05:cow[i].y>1.5?cow[i].vy=-.1:cow[i].vy=0,W.move({n:"K"+i,y:cow[i].y+=cow[i].vy}));for(i=0;i<100;i++)spark[i].rx+=spark[i].rvx,spark[i].ry+=spark[i].rvy,spark[i].rz+=spark[i].rvz,spark[i].y+=spark[i].vy,spark[i].size>0&&(spark[i].size-=.01),W.move({n:"P"+i,y:spark[i].y,rx:spark[i].rx,ry:spark[i].ry,rz:spark[i].rz,size:spark[i].size})}),collideTest=(e,i,a)=>{for(let t=0;t<o.length;t++)if(Math.abs(e-o[t].x)<o[t].w/2&&Math.abs(i-o[t].y)<o[t].h/2&&Math.abs(a-o[t].z)<o[t].d/2)return!0;return!1},c.addEventListener("click",async()=>{document.pointerLockElement||await c.requestPointerLock({unadjustedMovement:!0})}),document.addEventListener("pointerlockchange",function(){document.pointerLockElement===c?(console.log("The pointer lock status is now locked"),document.addEventListener("mousemove",n)):(console.log("The pointer lock status is now unlocked"),document.removeEventListener("mousemove",n))}),document.onpointerdown=e=>{for(colours=["f00","ff0","0f0","0ff","00f","f0f"],foundEmptySlot=!1,i=0;i<10;i++)if(null===shot[i]){foundEmptySlot=!0,shot[i]={x:X,y:Y+1,z:Z,vx:-Math.sin(RY*Math.PI/180),vy:Math.sin(RX*Math.PI/180),vz:-Math.cos(RY*Math.PI/180)},shotsFired++,W.sphere({n:"S"+i.toString(),x:X,y:Y+1,z:Z,w:1,h:1,d:1,b:colours[shotsFired%6]}),gameOver||t(),zzfx(...[1.7,,356,.01,.13,.08,,2.1,-4,9,,,,,,,.06,.52,.09]);break}foundEmptySlot||t("Gun Jammed!")};document.getElementById("tracker");function n(e){RX+=e.movementY,RX>90&&(RX=90),RX<-90&&(RX=-90),W.move({n:"M",ry:RY+=e.movementX,rx:RX}),W.move({n:"G",ry:RY+=e.movementX})}};
+</script>
+<script>
+  let // ZzFXMicro - Zuper Zmall Zound Zynth - v1.3.2 by Frank Force
+zzfxV=.3,               // volume
+zzfxX=new AudioContext, // audio context
+zzfx=                   // play sound
+(p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0
+,N=0)=>{let M=Math,d=2*M.PI,R=44100,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,
+g=0,H=0,a=0,n=1,I=0,J=0,f=0,h=N<0?-1:1,x=d*h*N*2/R,L=M.cos(x),Z=M.sin,K=Z(x)/4,O=1+K,
+X=-2*L/O,Y=(1-K)/O,P=(1+h*L)/2/O,Q=-(h+L)/O,S=P,T=0,U=0,V=0,W=0;e=R*e+9;m*=R;r*=R;t*=
+R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;p*=zzfxV;for(h=e+m+r+t+c|0;a<h;k[a++]
+=f*p)++J%(100*F|0)||(f=q?1<q?2<q?3<q?4<q?(g/d%1<D/2)*2-1:Z(g**3):M.max(M.min(M.tan(g)
+,1),-1):1-(2*g/d%2+2)%2:1-4*M.abs(M.round(g/d)-g/d):Z(g),f=(l?1-B+B*Z(d*a/l):1)*(4<q?
+f:(f<0?-1:1)*M.abs(f)**D)*(a<e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:
+0),f=c?f/2+(c>a?0:(a<h-c?1:(h-a)/c)*k[a-c|0]/2/p):f,N?f=W=S*T+Q*(T=U)+P*(U=f)-Y*V-X*(
+V=W):0),x=(b+=u+=y)*M.cos(A*H++),g+=x+x*E*Z(a**5),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l
+||(b=C,u=G,n=n||1);X=zzfxX,p=X.createBuffer(1,h,R);p.getChannelData(0).set(k);b=X.
+createBufferSource();b.buffer=p;b.connect(X.destination);b.start()}
+</script>
+<script>
+  !function(a,b){"function"==typeof define&&define.amd?define(["exports"],b):b("object"==typeof exports&&"string"!=typeof exports.nodeName?exports:a.TinyMusic={})}(this,function(a){function b(a){var c=a.split(h);this.frequency=b.getFrequency(c[0])||0,this.duration=b.getDuration(c[1])||0}function c(a,b,c){this.ac=a||new AudioContext,this.createFxNodes(),this.tempo=b||120,this.loop=!0,this.smoothing=0,this.staccato=0,this.notes=[],this.push.apply(this,c||[])}var d="B#-C|C#-Db|D|D#-Eb|E-Fb|E#-F|F#-Gb|G|G#-Ab|A|A#-Bb|B-Cb",e=440*Math.pow(Math.pow(2,1/12),-9),f=/^[0-9.]+$/,g=4,h=/\s+/,i=/(\d+)/,j={};d.split("|").forEach(function(a,b){a.split("-").forEach(function(a){j[a]=b})}),b.getFrequency=function(a){var b=a.split(i),c=j[b[0]],d=(b[1]||g)-g,f=e*Math.pow(Math.pow(2,1/12),c);return f*Math.pow(2,d)},b.getDuration=function(a){return f.test(a)?parseFloat(a):a.toLowerCase().split("").reduce(function(a,b){return a+("w"===b?4:"h"===b?2:"q"===b?1:"e"===b?.5:"s"===b?.25:0)},0)},c.prototype.createFxNodes=function(){var a=[["bass",100],["mid",1e3],["treble",2500]],b=this.gain=this.ac.createGain();return a.forEach(function(a,c){c=this[a[0]]=this.ac.createBiquadFilter(),c.type="peaking",c.frequency.value=a[1],b.connect(b=c)}.bind(this)),b.connect(this.ac.destination),this},c.prototype.push=function(){return Array.prototype.forEach.call(arguments,function(a){this.notes.push(a instanceof b?a:new b(a))}.bind(this)),this},c.prototype.createCustomWave=function(a,b){b||(b=a),this.waveType="custom",this.customWave=[new Float32Array(a),new Float32Array(b)]},c.prototype.createOscillator=function(){return this.stop(),this.osc=this.ac.createOscillator(),this.customWave?this.osc.setPeriodicWave(this.ac.createPeriodicWave.apply(this.ac,this.customWave)):this.osc.type=this.waveType||"square",this.osc.connect(this.gain),this},c.prototype.scheduleNote=function(a,b){var c=60/this.tempo*this.notes[a].duration,d=c*(1-(this.staccato||0));return this.setFrequency(this.notes[a].frequency,b),this.smoothing&&this.notes[a].frequency&&this.slide(a,b,d),this.setFrequency(0,b+d),b+c},c.prototype.getNextNote=function(a){return this.notes[a<this.notes.length-1?a+1:0]},c.prototype.getSlideStartDelay=function(a){return a-Math.min(a,60/this.tempo*this.smoothing)},c.prototype.slide=function(a,b,c){var d=this.getNextNote(a),e=this.getSlideStartDelay(c);return this.setFrequency(this.notes[a].frequency,b+e),this.rampFrequency(d.frequency,b+c),this},c.prototype.setFrequency=function(a,b){return this.osc.frequency.setValueAtTime(a,b),this},c.prototype.rampFrequency=function(a,b){return this.osc.frequency.linearRampToValueAtTime(a,b),this},c.prototype.play=function(a){return a="number"==typeof a?a:this.ac.currentTime,this.createOscillator(),this.osc.start(a),this.notes.forEach(function(b,c){a=this.scheduleNote(c,a)}.bind(this)),this.osc.stop(a),this.osc.onended=this.loop?this.play.bind(this,a):null,this},c.prototype.stop=function(){return this.osc&&(this.osc.onended=null,this.osc.disconnect(),this.osc=null),this},a.Note=b,a.Sequence=c});
+</script>
+<script>
+// create the audio context
+var ac = new AudioContext(),
+  // get the current Web Audio timestamp (this is when playback should begin)
+  when = ac.currentTime,
+  // set the tempo
+  tempo = 60,
+  // initialize some vars
+  sequence1,
+  sequence2,
+  sequence3,
+  // create an array of "note strings" that can be passed to a sequence
+  lead = [
+    '- w',
+    '- w',
+    '- w',
+    '- w',     
+    'C#4 e',
+    'D4 e',
+    'E4 e',
+    'D4 e',
+    'E4 e',
+    'G4 e',
+    'A4 e',
+    'G4 e',
+    'E4 e',
+    'G4 e',
+    'E4 e',
+    '- e',
+    '- h',
+    'C#4 e',
+    'D4 e',
+    'E4 e',
+    'D4 e',
+    'E4 e',
+    'G4 e',
+    'A4 e',
+    'G4 e',
+    'E4 e',
+    'G4 e',
+    'E4 e',
+    '- e',
+    '- h',
+    '- w',
+    '- w',
+    '- w',
+    '- w',
+    '- s',
+    'E4 s',
+    'C#5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'F5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    '- e',
+    'E4 s',
+    'C#5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'F5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    '- e',
+    'E4 s',
+    'C#5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'F5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    '- e',
+    'E4 s',
+    'C#5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'F5 s',
+    'A4 s',
+    'E5 s',
+    'A4 s',
+    'D5 s',
+    'A4 s',
+    'E5 s',
+    '- s',
+  ],
+  harmony = [
+    '- w',
+    '- w',
+    '- w',
+    '- w',     
+    '- w',
+    '- w',
+    '- w',
+    '- w',
+    'A4 s',
+    'A#4 s',
+    'C#5 s',
+    'A#4 s',
+    'C#5 s',
+    'D5 s',
+    'C#5 s',
+    'D5 s',  
+    'E5 s',
+    'F5 s',
+    'E5 s',
+    'D5 s',   
+    'E5 s',
+    'D5 s',
+    'C#5 s',
+    '- s', 
+    'A4 s',
+    'A#4 s',
+    'C#5 s',
+    'A#4 s',
+    'C#5 s',
+    'D5 s',
+    'C#5 s',
+    'D5 s',  
+    'E5 s',
+    'F5 s',
+    'E5 s',
+    'D5 s',   
+    'E5 s',
+    'D5 s',
+    'C#5 s',
+    '- s',    
+    'A4 s',
+    'A#4 s',
+    'C#5 s',
+    'A#4 s',
+    'C#5 s',
+    'D5 s',
+    'C#5 s',
+    'D5 s',  
+    'E5 s',
+    'F5 s',
+    'E5 s',
+    'D5 s',   
+    'E5 s',
+    'D5 s',
+    'C#5 s',
+    '- s',    
+    'A4 s',
+    'A#4 s',
+    'C#5 s',
+    'A#4 s',
+    'C#5 s',
+    'D5 s',
+    'C#5 s',
+    'D5 s',  
+    'E5 s',
+    'F5 s',
+    'E5 s',
+    'D5 s',   
+    'E5 s',
+    'D5 s',
+    'C#5 s',
+    '- s',  
+    '- w',
+    '- w',
+    '- w',
+    '- w',     
+  ],
+  bass = [
+    'A3  w',
+    'A3  w',
+    'F3  w',
+    'D3  w',
+    'A3  w',
+    'A3  w',
+    'F3  w',
+    'D3  w',
+    'A3  w',
+    'A3  w',
+    'F3  w',
+    'D3  w',
+    'A3  w',
+    'A3  w',
+    'F3  w',
+    'D3  w',
+  ];
+
+// create 3 new sequences (one for lead, one for harmony, one for bass)
+sequence1 = new TinyMusic.Sequence( ac, tempo, lead );
+sequence2 = new TinyMusic.Sequence( ac, tempo, harmony );
+sequence3 = new TinyMusic.Sequence( ac, tempo, bass );
+
+// wavetypes
+sequence1.waveType = 'triangle';
+sequence2.waveType = 'sine';
+sequence3.waveType = 'triangle';
+
+// set staccato and smoothing values for maximum coolness
+sequence1.staccato = 0.1;
+sequence2.staccato = 0.1;
+sequence3.staccato = 0.05;
+sequence3.smoothing = 0.4;
+
+// adjust the levels so the bass and harmony aren't too loud
+sequence1.gain.gain.value = 0.1;
+sequence2.gain.gain.value = 0.1;
+sequence3.gain.gain.value = 0.1;
+
+// apply EQ settings
+sequence1.mid.frequency.value = 800;
+sequence1.mid.gain.value = 1;
+sequence2.mid.frequency.value = 1200;
+sequence3.mid.gain.value = 1;
+sequence3.bass.gain.value = 1;
+sequence3.bass.frequency.value = 80;
+sequence3.mid.gain.value = -6;
+sequence3.mid.frequency.value = 500;
+sequence3.treble.gain.value = -2;
+sequence3.treble.frequency.value = 1400;
+
+
+//start the lead part immediately
+sequence1.play( when );
+// delay the harmony by 16 beats
+sequence2.play( when );
+// start the bass part immediately
+sequence3.play( when );
+</script>
+</body>
+</html>
