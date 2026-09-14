@@ -41,10 +41,13 @@ export default {
         return Response.redirect('https://js13kgames.com/games/' + game, 308)
       }
 
-      // Only forward a request to the container when the asset service does not have that path. This keeps client
-      // assets out of the container image and avoids starting a container for an ordinary asset request.
+      // Only forward a request to the container when neither asset source has that path. This keeps client assets
+      // out of the container image and avoids starting a container for an ordinary asset request.
       if (req.method === 'GET' || req.method === 'HEAD') {
-        const asset = await env.ASSETS.fetch(req)
+        let asset = await env.PLAY.fetch(req)
+        if (asset.status !== 404) return withCsp(asset, url.pathname, game)
+
+        asset = await env.ASSETS.fetch(req)
         if (asset.status !== 404) return withCsp(asset, url.pathname, game)
       }
 
