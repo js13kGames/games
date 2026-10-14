@@ -11,6 +11,7 @@ const
 
 export default {
   async fetch(req: Request, env: Record<string, any>) {
+    const applyCsp = env.LOCAL_DEV !== 'true'
     const
       url = new URL(req.url),
       uri = url.pathname.slice(1)
@@ -25,7 +26,7 @@ export default {
         }
 
         const asset = await env.PLAY.fetch(req)
-        return withCsp(asset.status === 404 ? await env.ASSETS.fetch(req) : asset, url.pathname)
+        return withCsp(asset.status === 404 ? await env.ASSETS.fetch(req) : asset, url.pathname, undefined, applyCsp)
       }
 
       // Append trailing slash and redirect. This is rather aggressive since we're not checking for the existence
@@ -45,18 +46,18 @@ export default {
       // out of the container image and avoids starting a container for an ordinary asset request.
       if (req.method === 'GET' || req.method === 'HEAD') {
         let asset = await env.PLAY.fetch(req)
-        if (asset.status !== 404) return withCsp(asset, url.pathname, game)
+        if (asset.status !== 404) return withCsp(asset, url.pathname, game, applyCsp)
 
         asset = await env.ASSETS.fetch(req)
-        if (asset.status !== 404) return withCsp(asset, url.pathname, game)
+        if (asset.status !== 404) return withCsp(asset, url.pathname, game, applyCsp)
       }
 
-      return withCsp(await env.RUNTIME.fetch(req), url.pathname, game)
+      return withCsp(await env.RUNTIME.fetch(req), url.pathname, game, applyCsp)
     }
 
     if (req.method === 'GET' || req.method === 'HEAD') {
       const asset = await env.PLAY.fetch(req)
-      if (asset.status !== 404) return withCsp(asset, url.pathname, game)
+      if (asset.status !== 404) return withCsp(asset, url.pathname, game, applyCsp)
     }
 
     // Naive filtering here because it's ultimately much cheaper (even if a bit inconvenient) to stick to
@@ -65,12 +66,12 @@ export default {
     if (game.length == 4) {
       let y = parseInt(game)
       if (y >= 2012 && y < 2200) {
-        return withCsp(await env.ASSETS.fetch(req), url.pathname)
+        return withCsp(await env.ASSETS.fetch(req), url.pathname, undefined, applyCsp)
       }
     }
 
     // Proxy through to our backend directly as a last resort.
-    return fetchFromOrigin(uri, req, game)
+    return fetchFromOrigin(uri, req, game, applyCsp)
   }
 }
 
@@ -78,7 +79,14 @@ function sourcePolicy(game: string) {
   return `default-src 'unsafe-inline' 'unsafe-eval' data: blob: ${PLAY_ORIGIN}${game}/ ${PLAY_ORIGIN}${CSP_EDITION}/ ${FAVICON_URL} ${RELAY_ORIGIN}`
 }
 
-function withCsp(res: Response, pathname: string, game?: string) {
+function withCsp(res: Response, pathname: string, game?: string, applyCsp = true) {
+  if (!applyCsp) {
+    const response = new Response(res.body, res)
+    response.headers.delete('Content-Security-Policy')
+    response.headers.delete('Content-Security-Policy-Report-Only')
+    return response
+  }
+
   if (!res.ok || !(pathname.endsWith('/') || pathname.endsWith('.html'))) return res
 
   return setCsp(new Response(res.body, res), game)
@@ -146,7 +154,7 @@ function isBot(req: Request) {
   )
 }
 
-async function fetchFromOrigin(uri: string, req: Request, game: string) {
+async function fetchFromOrigin(uri: string, req: Request, game: string, applyCsp = true) {
   // Set to cache aggressively, because we invalidate Cloudflare's cache directly whenever content in the backend
   // (like draft data) changes.
   //
@@ -163,6 +171,12 @@ async function fetchFromOrigin(uri: string, req: Request, game: string) {
   // revalidate through the Worker.
   const response = new Response(source.body, source)
   response.headers.set('Cache-Control', 'max-age=0,must-revalidate')
+
+  if (!applyCsp) {
+    response.headers.delete('Content-Security-Policy')
+    response.headers.delete('Content-Security-Policy-Report-Only')
+    return response
+  }
 
   return setCsp(response, game, true)
 }
